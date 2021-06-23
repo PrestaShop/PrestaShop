@@ -574,7 +574,7 @@
       <trans-unit id="387baf0199e7c9cc944fae94e96448fa">
         <source>Miscellaneous</source>
         <target>Miscellaneous</target>
-        <note>Line: 75</note>
+        <note>Line: 76</note>
       </trans-unit>
     </body>
   </file>
@@ -617,15 +617,6 @@
         <source>No Tax</source>
         <target>No Tax</target>
         <note>Line: 276</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCountriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
-        <source>Invalid characters:</source>
-        <target>Invalid characters:</target>
-        <note>Line: 198</note>
       </trans-unit>
     </body>
   </file>
@@ -693,17 +684,17 @@
       <trans-unit id="d1457b72c3fb323a2671125aef3eab5d">
         <source>?</source>
         <target>?</target>
-        <note>Line: 312</note>
+        <note>Line: 324</note>
       </trans-unit>
       <trans-unit id="9c37b7b6ff829e977df287900543ea54">
         <source>Birth date</source>
         <target>Birth date</target>
-        <note>Line: 325</note>
+        <note>Line: 337</note>
       </trans-unit>
       <trans-unit id="eb6b06cab0dd72e04c4da68d511facf2">
         <source>Search results</source>
         <target>Search results</target>
-        <note>Line: 359</note>
+        <note>Line: 371</note>
       </trans-unit>
     </body>
   </file>
@@ -712,12 +703,7 @@
       <trans-unit id="790d59ef178acbc75d233bf4211763c6">
         <source>Countries</source>
         <target>Countries</target>
-        <note>Line: 542</note>
-      </trans-unit>
-      <trans-unit id="fff0d600f8a0b5e19e88bfb821dd1157">
-        <source>Images</source>
-        <target>Images</target>
-        <note>Line: 546</note>
+        <note>Line: 534</note>
       </trans-unit>
     </body>
   </file>
@@ -770,6 +756,15 @@
         <target>Unavailable</target>
         <note>Context:
 File: modules/autoupgrade/views/templates/block/channelInfo.twig:11</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/addons-suggestion.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c3782cf09e0f24e3a31a2dda9d9de9b9">
+        <source>Addons Marketplace</source>
+        <target>Addons Marketplace</target>
+        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>
@@ -841,12 +836,12 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="54e4f98fb34254a6678f0795476811ed">
         <source>By name</source>
         <target>By name</target>
-        <note>Line: 208</note>
+        <note>Line: 240</note>
       </trans-unit>
       <trans-unit id="883f0bd41a4fcee55680446ce7bec0d9">
         <source>By position</source>
         <target>By position</target>
-        <note>Line: 213</note>
+        <note>Line: 245</note>
       </trans-unit>
     </body>
   </file>
@@ -883,12 +878,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="b9b371458ab7c314f88b81c553f6ce51">
         <source>Hook</source>
         <target>Hook</target>
-        <note>Line: 97</note>
-      </trans-unit>
-      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
-        <source>Delete</source>
-        <target>Delete</target>
-        <note>Line: 125</note>
+        <note>Line: 130</note>
       </trans-unit>
     </body>
   </file>
@@ -945,11 +935,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
   </file>
   <file original="modules/statscheckup/statscheckup.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c888438d14855d7d96a2724ee9c306bd">
-        <source>Settings updated</source>
-        <target>Settings updated</target>
-        <note>Line: 91</note>
-      </trans-unit>
       <trans-unit id="59b514174bffe4ae402b3d63aad79fe0">
         <source>images</source>
         <target>images</target>
@@ -963,6 +948,15 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <source>customers</source>
         <target>customers</target>
         <note>Line: 123</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statsproduct/statsproduct.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6602bbeb2956c035fb4cb5e844a4861b">
+        <source>Guide</source>
+        <target>Guide</target>
+        <note>Line: 178</note>
       </trans-unit>
     </body>
   </file>
@@ -991,24 +985,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <source>Average price</source>
         <target>Average price</target>
         <note>Line: 148</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/statsvisits/statsvisits.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6602bbeb2956c035fb4cb5e844a4861b">
-        <source>Guide</source>
-        <target>Guide</target>
-        <note>Line: 97</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/watermark/views/templates/admin/addons-suggestion.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c3782cf09e0f24e3a31a2dda9d9de9b9">
-        <source>Addons Marketplace</source>
-        <target>Addons Marketplace</target>
-        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>
@@ -1114,37 +1090,37 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="9c7f56d70e922a61254366964c01c64a">
         <source>All currencies</source>
         <target>All currencies</target>
-        <note>Line: 501</note>
+        <note>Line: 502</note>
       </trans-unit>
       <trans-unit id="c3987e4cac14a8456515f0d200da04ee">
         <source>All countries</source>
         <target>All countries</target>
-        <note>Line: 502</note>
+        <note>Line: 503</note>
       </trans-unit>
       <trans-unit id="e4c4c68c7515704a91d90207067dcbbe">
         <source>All groups</source>
         <target>All groups</target>
-        <note>Line: 503</note>
+        <note>Line: 504</note>
       </trans-unit>
       <trans-unit id="7e3a51a56ddd2846e21c33f05e0aea6f">
         <source>All customers</source>
         <target>All customers</target>
-        <note>Line: 504</note>
+        <note>Line: 505</note>
       </trans-unit>
       <trans-unit id="58ef6750a23ba432fc1377b7de085d9f">
         <source>Tax excl.</source>
         <target>Tax excl.</target>
-        <note>Line: 452</note>
+        <note>Line: 453</note>
       </trans-unit>
       <trans-unit id="94dfb2009644e42ef41f47aece4c0350">
         <source>Tax incl.</source>
         <target>Tax incl.</target>
-        <note>Line: 450</note>
+        <note>Line: 451</note>
       </trans-unit>
       <trans-unit id="545f6c2f382c04810103b3e5e6f7d841">
         <source>Unlimited</source>
         <target>Unlimited</target>
-        <note>Line: 459</note>
+        <note>Line: 460</note>
       </trans-unit>
     </body>
   </file>
@@ -1159,6 +1135,15 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <source>Days</source>
         <target>Days</target>
         <note>Line: 141</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Form/ChoiceProvider/CustomizationFieldTypeChoiceProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9dffbf69ffba8bc38bc4e01abf4b1675">
+        <source>Text</source>
+        <target>Text</target>
+        <note>Line: 56</note>
       </trans-unit>
     </body>
   </file>
@@ -1180,12 +1165,30 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/Core/Form/ChoiceProvider/PackStockTypeChoiceProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7a1920d61156abc05a60135aefe8bc67">
+        <source>Default</source>
+        <target>Default</target>
+        <note>Line: 67</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Grid/Data/Factory/CatalogPriceRuleGridDataFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="37be07209f53a5d636d5c904ca9ae64c">
         <source>Percentage</source>
         <target>Percentage</target>
         <note>Line: 94</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/AddressGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5d9eca48241c03f20f27586c1f24a4b0">
+        <source>Zip/Postal code</source>
+        <target>Zip/Postal code</target>
+        <note>Line: 118</note>
       </trans-unit>
     </body>
   </file>
@@ -1203,7 +1206,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="c82a6100dace2b41087ba6cf99a5976a">
         <source>Values</source>
         <target>Values</target>
-        <note>Line: 94</note>
+        <note>Line: 96</note>
       </trans-unit>
     </body>
   </file>
@@ -1212,7 +1215,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="1351017ac6423911223bc19a8cb7c653">
         <source>Filename</source>
         <target>Filename</target>
-        <note>Line: 90</note>
+        <note>Line: 91</note>
       </trans-unit>
     </body>
   </file>
@@ -1234,21 +1237,44 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/Core/Grid/Definition/Factory/CustomerGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
+        <source>Social title</source>
+        <target>Social title</target>
+        <note>Line: 131</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Grid/Definition/Factory/LogGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f8c8b903cb2e4f297e4b96d4b9c1e98a">
         <source>Employee</source>
         <target>Employee</target>
-        <note>Line: 108</note>
+        <note>Line: 83</note>
+      </trans-unit>
+      <trans-unit id="9bbf46e755597079e0dddc00952516fe">
+        <source>Shop context</source>
+        <target>Shop context</target>
+        <note>Line: 119</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Grid/Definition/Factory/ManufacturerAddressGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/Grid/Definition/Factory/OrderStatesGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5d9eca48241c03f20f27586c1f24a4b0">
-        <source>Zip/Postal code</source>
-        <target>Zip/Postal code</target>
-        <note>Line: 107</note>
+      <trans-unit id="7ec4f8b296984ffe6ea829b7e1743577">
+        <source>In transit</source>
+        <target>In transit</target>
+        <note>Line: 101</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/OutstandingGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
+        <source>Company</source>
+        <target>Company</target>
+        <note>Line: 125</note>
       </trans-unit>
     </body>
   </file>
@@ -1257,7 +1283,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="7dce122004969d56ae2e0245cb754d35">
         <source>Edit</source>
         <target>Edit</target>
-        <note>Line: 151</note>
+        <note>Line: 130</note>
       </trans-unit>
     </body>
   </file>
@@ -1272,6 +1298,11 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <source>Mobile Phone</source>
         <target>Mobile Phone</target>
         <note>Line: 75</note>
+      </trans-unit>
+      <trans-unit id="bcc254b55c4a1babdf1dcb82c207506b">
+        <source>Phone</source>
+        <target>Phone</target>
+        <note>Line: 74</note>
       </trans-unit>
     </body>
   </file>
@@ -1317,6 +1348,15 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Webservice/WebserviceKeyType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="be8545ae7ab0276e15898aae7acfbd7a">
+        <source>Resource</source>
+        <target>Resource</target>
+        <note>Line: 121</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="336d5ebc5436534e61d16e63ddfca327">
@@ -1345,22 +1385,26 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageCategoryType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
+        <source>Invalid characters:</source>
+        <target>Invalid characters:</target>
+        <note>Line: 84</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/HandlingType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
         <source>(tax excl.)</source>
         <target>(tax excl.)</target>
-        <note>Line: 71</note>
+        <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Product/ProductCustomField.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="9dffbf69ffba8bc38bc4e01abf4b1675">
-        <source>Text</source>
-        <target>Text</target>
-        <note>Line: 82</note>
-      </trans-unit>
       <trans-unit id="b021df6aac4654c454f46c77646e745f">
         <source>Label</source>
         <target>Label</target>
@@ -1373,21 +1417,21 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductQuantity.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7a1920d61156abc05a60135aefe8bc67">
-        <source>Default</source>
-        <target>Default</target>
-        <note>Line: 278</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Product/ProductSpecificPrice.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="0bcef9c45bd8a48eda1b26eb0c61c869">
         <source>%</source>
         <target>%</target>
-        <note>Line: 257</note>
+        <note>Line: 303</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Address/ManufacturerAddressType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="707c73d9fdcfa111db429ab18da2624f">
+        <source>DNI</source>
+        <target>DNI</target>
+        <note>Line: 269</note>
       </trans-unit>
     </body>
   </file>
@@ -1415,6 +1459,51 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Order/CreditSlip/GeneratePdfByDateType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8a7a048a67746f3877ab6cb1bc1d4afd">
+        <source>Format: 2011-12-31 (inclusive).</source>
+        <target>Format: 2011-12-31 (inclusive).</target>
+        <note>Line: 54</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Basic/FeatureValueType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
+        <source>Delete</source>
+        <target>Delete</target>
+        <note>Line: 118</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationFormType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fff0d600f8a0b5e19e88bfb821dd1157">
+        <source>Images</source>
+        <target>Images</target>
+        <note>Line: 80</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/HeaderType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <note>Line: 72</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Image/ImageDropzoneType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c888438d14855d7d96a2724ee9c306bd">
+        <source>Settings updated</source>
+        <target>Settings updated</target>
+        <note>Line: 55</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Common/Grid/Blocks/EmptyState/_default.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="087fb8756d4add87f2d162304ccd486b">
@@ -1429,7 +1518,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="dddc702fcffceb2ac77291954897d747">
         <source>SQL query</source>
         <target>SQL query</target>
-        <note>Line: 47</note>
+        <note>Line: 51</note>
       </trans-unit>
     </body>
   </file>
@@ -1447,7 +1536,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="382b0f5185773fa0f67a8ed8056c7759">
         <source>N/A</source>
         <target>N/A</target>
-        <note>Line: 35</note>
+        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>
@@ -1456,7 +1545,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="4d3d769b812b6faa6b76e1a8abaece2d">
         <source>Active</source>
         <target>Active</target>
-        <note>Line: 215</note>
+        <note>Line: 200</note>
       </trans-unit>
       <trans-unit id="8d3f5eff9c40ee315d452392bed5309b">
         <source>Last name</source>
@@ -1467,6 +1556,21 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <source>First name</source>
         <target>First name</target>
         <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="9d55fc80bbb875322aa67fd22fc98469">
+        <source>Shop association</source>
+        <target>Shop association</target>
+        <note>Line: 215</note>
+      </trans-unit>
+      <trans-unit id="32036005d1f6ed59803ba3e13c80993e">
+        <source>Avatar</source>
+        <target>Avatar</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="ddca0c6e78cb89057c42a7a60f72e489">
+        <source>Enable gravatar</source>
+        <target>Enable gravatar</target>
+        <note>Line: 63</note>
       </trans-unit>
     </body>
   </file>
@@ -1479,21 +1583,17 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Webservice/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="be8545ae7ab0276e15898aae7acfbd7a">
-        <source>Resource</source>
-        <target>Resource</target>
-        <note>Line: 62</note>
+      <trans-unit id="3f64b2beede1082fd32ddb0bf11a641f">
+        <source>Meta description</source>
+        <target>Meta description</target>
+        <note>Line: 64</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Contact/Contacts/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b78a3223503896721cca1303f776159b">
-        <source>Title</source>
-        <target>Title</target>
-        <note>Line: 40</note>
+      <trans-unit id="7d7559ccac6bc30a4d985db11cb34a3a">
+        <source>Meta keywords</source>
+        <target>Meta keywords</target>
+        <note>Line: 75</note>
       </trans-unit>
     </body>
   </file>
@@ -1502,7 +1602,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="0db377921f4ce762c62526131097968f">
         <source>General</source>
         <target>General</target>
-        <note>Line: 38</note>
+        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>
@@ -1512,6 +1612,20 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <source>Processing...</source>
         <target>Processing...</target>
         <note>Line: 43</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Helpers/range_inputs.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="19585a2ae364ec950435233b40a80392">
+        <source>%inputId% Minimum Input</source>
+        <target>%inputId% Minimum Input</target>
+        <note>Line: 121</note>
+      </trans-unit>
+      <trans-unit id="cc973ce7eb8a96bbd24c66228e16343b">
+        <source>%inputId% Maximum Input</source>
+        <target>%inputId% Maximum Input</target>
+        <note>Line: 122</note>
       </trans-unit>
     </body>
   </file>
@@ -1541,30 +1655,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <source>Inside range</source>
         <target>Inside range</target>
         <note>Line: 67</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Cms/Blocks/category_form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3f64b2beede1082fd32ddb0bf11a641f">
-        <source>Meta description</source>
-        <target>Meta description</target>
-        <note>Line: 64</note>
-      </trans-unit>
-      <trans-unit id="7d7559ccac6bc30a4d985db11cb34a3a">
-        <source>Meta keywords</source>
-        <target>Meta keywords</target>
-        <note>Line: 69</note>
-      </trans-unit>
-      <trans-unit id="86754577897acfb25deb69039d49d9a7">
-        <source>Displayed</source>
-        <target>Displayed</target>
-        <note>Line: 47</note>
-      </trans-unit>
-      <trans-unit id="1dec4f55522b828fe5dacf8478021a9e">
-        <source>Friendly URL</source>
-        <target>Friendly URL</target>
-        <note>Line: 74</note>
       </trans-unit>
     </body>
   </file>
@@ -1607,15 +1697,15 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <target>Currencies</target>
         <note>Line: 57</note>
       </trans-unit>
-      <trans-unit id="9d55fc80bbb875322aa67fd22fc98469">
-        <source>Shop association</source>
-        <target>Shop association</target>
-        <note>Line: 113</note>
-      </trans-unit>
       <trans-unit id="0a52730597fb4ffa01fc117d9e71e3a9">
         <source>Example</source>
         <target>Example</target>
         <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="4994a8ffeba4ac3140beb89e8d41f174">
+        <source>Language</source>
+        <target>Language</target>
+        <note>Line: 41</note>
       </trans-unit>
     </body>
   </file>
@@ -1646,15 +1736,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Translations/Blocks/export_language.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4994a8ffeba4ac3140beb89e8d41f174">
-        <source>Language</source>
-        <target>Language</target>
-        <note>Line: 49</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/menu_top.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bfab8bcc21a91d9a7e346bbe1143c3ea">
@@ -1673,6 +1754,58 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Multistore/dropdown.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="03937134cedab9078be39a77ee3a48a0">
+        <source>Group</source>
+        <target>Group</target>
+        <note>Line: 40</note>
+      </trans-unit>
+      <trans-unit id="8245786b2f3d53e4e230c6cf0f6dfc74">
+        <source>No results found for</source>
+        <target>No results found for</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="60cce52409bf43cc214add077f21b4a6">
+        <source>Searching for</source>
+        <target>Searching for</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="c2808546f3e14d267d798f4e0e6f102e">
+        <source>Customized</source>
+        <target>Customized</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="b0b517d3de3f2b55489e488a238a8c25">
+        <source>Inherited</source>
+        <target>Inherited</target>
+        <note>Line: 52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Multistore/header.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="703ddad7cc7f884b4ebf6b79dac842e6">
+        <source>Edit color</source>
+        <target>Edit color</target>
+        <note>Line: 121</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="66141a1c46c4f8d29e2e8a4593cf0fd9">
+        <source>Disable %product_name% input</source>
+        <target>Disable %product_name% input</target>
+        <note>Line: 83</note>
+      </trans-unit>
+      <trans-unit id="f4ee05e3665fd93a9455c24e6038c2dd">
+        <source>Enable %product_name% input</source>
+        <target>Enable %product_name% input</target>
+        <note>Line: 85</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/products_table.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="52f5e0bc3859bc5f5e25130b6c7e8881">
@@ -1688,12 +1821,22 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="78d811e98514cd165dda532286610fd2">
         <source>Min</source>
         <target>Min</target>
-        <note>Line: 148</note>
+        <note>Line: 151</note>
       </trans-unit>
       <trans-unit id="6a061313d22e51e0f25b7cd4dc065233">
         <source>Max</source>
         <target>Max</target>
-        <note>Line: 149</note>
+        <note>Line: 152</note>
+      </trans-unit>
+      <trans-unit id="be484dbfdde5d9e793211c14a1246aa5">
+        <source>%inputId% input</source>
+        <target>%inputId% input</target>
+        <note>Line: 129</note>
+      </trans-unit>
+      <trans-unit id="a5f1fbf373c659df53f6d43427dcd14e">
+        <source>%inputId% select</source>
+        <target>%inputId% select</target>
+        <note>Line: 163</note>
       </trans-unit>
     </body>
   </file>
@@ -1739,7 +1882,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="3601146c4e948c32b6424d2c0a7f0118">
         <source>Price</source>
         <target>Price</target>
-        <note>Line: 215</note>
+        <note>Line: 211</note>
       </trans-unit>
     </body>
   </file>
@@ -1748,66 +1891,31 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="ce26601dac0dea138b7295f02b7620a7">
         <source>Customer</source>
         <target>Customer</target>
-        <note>Line: 155</note>
+        <note>Line: 156</note>
       </trans-unit>
       <trans-unit id="386c339d37e737a436499d423a77df0c">
         <source>Currency</source>
         <target>Currency</target>
-        <note>Line: 152</note>
+        <note>Line: 153</note>
       </trans-unit>
       <trans-unit id="59716c97497eb9694541f7c3d37b1a4d">
         <source>Country</source>
         <target>Country</target>
-        <note>Line: 153</note>
-      </trans-unit>
-      <trans-unit id="03937134cedab9078be39a77ee3a48a0">
-        <source>Group</source>
-        <target>Group</target>
         <note>Line: 154</note>
       </trans-unit>
       <trans-unit id="1901606ea069a83dc7beea17881ef95a">
         <source>Period</source>
         <target>Period</target>
-        <note>Line: 158</note>
+        <note>Line: 159</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Address/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="bcc254b55c4a1babdf1dcb82c207506b">
-        <source>Phone</source>
-        <target>Phone</target>
-        <note>Line: 122</note>
-      </trans-unit>
-      <trans-unit id="41c2fff4867cc204120f001e7af20f7a">
-        <source>Mobile phone</source>
-        <target>Mobile phone</target>
-        <note>Line: 126</note>
-      </trans-unit>
-      <trans-unit id="783cb853aae6984e51583b3bb80c09d2">
-        <source>Address (2)</source>
-        <target>Address (2)</target>
-        <note>Line: 98</note>
-      </trans-unit>
       <trans-unit id="c6e2a9b2d1979c244d18c7e9fbf9a86f">
         <source>Zip/postal code</source>
         <target>Zip/postal code</target>
         <note>Line: 102</note>
-      </trans-unit>
-      <trans-unit id="57d056ed0984166336b7879c2af3657f">
-        <source>City</source>
-        <target>City</target>
-        <note>Line: 106</note>
-      </trans-unit>
-      <trans-unit id="46a2a41cc6e552044816a2d04634545d">
-        <source>State</source>
-        <target>State</target>
-        <note>Line: 117</note>
-      </trans-unit>
-      <trans-unit id="6311ae17c1ee52b36e68aaf4ad066387">
-        <source>Other</source>
-        <target>Other</target>
-        <note>Line: 130</note>
       </trans-unit>
     </body>
   </file>
@@ -1816,21 +1924,31 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="0b27918290ff5323bea1e3b78a9cf04e">
         <source>File</source>
         <target>File</target>
-        <note>Line: 50</note>
+        <note>Line: 33</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="86754577897acfb25deb69039d49d9a7">
+        <source>Displayed</source>
+        <target>Displayed</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="1dec4f55522b828fe5dacf8478021a9e">
+        <source>Friendly URL</source>
+        <target>Friendly URL</target>
+        <note>Line: 169</note>
+      </trans-unit>
       <trans-unit id="98c7393cffa2aced4ce47240790dd450">
         <source>SEO preview</source>
         <target>SEO preview</target>
-        <note>Line: 130</note>
+        <note>Line: 134</note>
       </trans-unit>
       <trans-unit id="4bc7d3555cc5e7252eb5389afdf80668">
         <source>Here is a preview of how your page will appear in search engine results.</source>
         <target>Here is a preview of how your page will appear in search engine results.</target>
-        <note>Line: 134</note>
+        <note>Line: 138</note>
       </trans-unit>
     </body>
   </file>
@@ -1843,17 +1961,51 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Suppliers/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Manufacturer/Blocks/View/addresses.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="41c2fff4867cc204120f001e7af20f7a">
+        <source>Mobile phone</source>
+        <target>Mobile phone</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="783cb853aae6984e51583b3bb80c09d2">
+        <source>Address (2)</source>
+        <target>Address (2)</target>
+        <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="57d056ed0984166336b7879c2af3657f">
+        <source>City</source>
+        <target>City</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="46a2a41cc6e552044816a2d04634545d">
+        <source>State</source>
+        <target>State</target>
+        <note>Line: 40</note>
+      </trans-unit>
+      <trans-unit id="6311ae17c1ee52b36e68aaf4ad066387">
+        <source>Other</source>
+        <target>Other</target>
+        <note>Line: 43</note>
+      </trans-unit>
       <trans-unit id="fe66abce284ec8589e7d791185b5c442">
         <source>Home phone</source>
         <target>Home phone</target>
-        <note>Line: 62</note>
+        <note>Line: 41</note>
       </trans-unit>
-      <trans-unit id="707c73d9fdcfa111db429ab18da2624f">
-        <source>DNI</source>
-        <target>DNI</target>
-        <note>Line: 100</note>
+      <trans-unit id="dd7bf230fde8d4836917806aff6a6b27">
+        <source>Address</source>
+        <target>Address</target>
+        <note>Line: 37</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Form/combination_listing_form_theme.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="47ac923d219501859fb68fed8c8db77b">
+        <source>Combination</source>
+        <target>Combination</target>
+        <note>Line: 82</note>
       </trans-unit>
     </body>
   </file>
@@ -1863,16 +2015,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <source>Addresses</source>
         <target>Addresses</target>
         <note>Line: 29</note>
-      </trans-unit>
-      <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
-        <source>Company</source>
-        <target>Company</target>
-        <note>Line: 47</note>
-      </trans-unit>
-      <trans-unit id="dd7bf230fde8d4836917806aff6a6b27">
-        <source>Address</source>
-        <target>Address</target>
-        <note>Line: 49</note>
       </trans-unit>
     </body>
   </file>
@@ -1922,17 +2064,17 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="ffb7e666a70151215b4c55c6268d7d72">
         <source>Newsletter</source>
         <target>Newsletter</target>
-        <note>Line: 125</note>
+        <note>Line: 126</note>
       </trans-unit>
       <trans-unit id="544ed721c22329e581919041a14e0c72">
         <source>Social Title</source>
         <target>Social Title</target>
-        <note>Line: 50</note>
+        <note>Line: 51</note>
       </trans-unit>
       <trans-unit id="3cab03c00dbd11bc3569afa0748013f0">
         <source>Inactive</source>
         <target>Inactive</target>
-        <note>Line: 157</note>
+        <note>Line: 158</note>
       </trans-unit>
     </body>
   </file>
@@ -1950,15 +2092,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
-        <source>Social title</source>
-        <target>Social title</target>
-        <note>Line: 43</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/addresses.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="065ab3a28ca4f16f55f103adc7d0226f">
@@ -1970,15 +2103,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <source>Invoice</source>
         <target>Invoice</target>
         <note>Line: 53</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/cart.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="47ac923d219501859fb68fed8c8db77b">
-        <source>Combination</source>
-        <target>Combination</target>
-        <note>Line: 78</note>
       </trans-unit>
     </body>
   </file>
@@ -2079,12 +2203,12 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="d98a07f84921b24ee30f86fd8cd85c3c">
         <source>from</source>
         <target>from</target>
-        <note>Line: 32</note>
+        <note>Line: 33</note>
       </trans-unit>
       <trans-unit id="7d0db380a5b95a8ba1da0bca241abda1">
         <source>at</source>
         <target>at</target>
-        <note>Line: 49</note>
+        <note>Line: 50</note>
       </trans-unit>
     </body>
   </file>
@@ -2097,12 +2221,12 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/payments.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/payments_alert.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
         <source>Warning</source>
         <target>Warning</target>
-        <note>Line: 37</note>
+        <note>Line: 28</note>
       </trans-unit>
     </body>
   </file>
@@ -2134,12 +2258,12 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="4b78ac8eb158840e9638a3aeb26c4a9d">
         <source>Tax</source>
         <target>Tax</target>
-        <note>Line: 141</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="a50d4c17f5625c779a41248fad5a4381">
         <source>(%count% more)</source>
         <target>(%count% more)</target>
-        <note>Line: 172</note>
+        <note>Line: 146</note>
       </trans-unit>
     </body>
   </file>
@@ -2148,7 +2272,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="a240fa27925a635b08dc28c9e4f9216d">
         <source>Order</source>
         <target>Order</target>
-        <note>Line: 36</note>
+        <note>Line: 39</note>
       </trans-unit>
     </body>
   </file>
@@ -2168,15 +2292,20 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="b78a3223503896721cca1303f776159b">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Line: 567</note>
+      </trans-unit>
       <trans-unit id="34082694d21dbdcfc31e6e32d9fb2b9f">
         <source>File name</source>
         <target>File name</target>
-        <note>Line: 482</note>
+        <note>Line: 568</note>
       </trans-unit>
       <trans-unit id="2b9a3a8dc90da303d2cfe98c4c2474f7">
         <source>%count% file(s)</source>
         <target>%count% file(s)</target>
-        <note>Line: 735</note>
+        <note>Line: 947</note>
       </trans-unit>
     </body>
   </file>
@@ -2185,7 +2314,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="8524de963f07201e5c086830d370797f">
         <source>Loading...</source>
         <target>Loading...</target>
-        <note>Line: 101</note>
+        <note>Line: 105</note>
       </trans-unit>
     </body>
   </file>
@@ -2194,7 +2323,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="894e565fb7d7a1d846211b1cddf4428c">
         <source>%count% errors</source>
         <target>%count% errors</target>
-        <note>Line: 220</note>
+        <note>Line: 212</note>
       </trans-unit>
     </body>
   </file>

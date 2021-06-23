@@ -30,7 +30,7 @@ use Context;
 use Hook;
 use Order;
 use OrderCarrier;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundUpdater;
@@ -142,7 +142,7 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
      */
     private function issueStandardRefund(IssueStandardRefundCommand $command, Order $order): void
     {
-        $shippingRefundAmount = new Number((string) ($command->refundShippingCost() ? $order->total_shipping_tax_incl : 0));
+        $shippingRefundAmount = new DecimalNumber((string) ($command->refundShippingCost() ? $order->total_shipping_tax_incl : 0));
         $orderRefundSummary = $this->orderRefundCalculator->computeOrderRefund(
             $order,
             $command->getOrderDetailRefunds(),
@@ -156,7 +156,7 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
             $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
             // For standard refund the order is necessarily NOT delivered yet, so reinjection is automatic
             $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
-            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId, 'action' => CancellationActionType::STANDARD_REFUND], null, false, true, false, $order->id_shop);
+            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId, 'cancel_quantity' => $productRefund['quantity'], 'action' => CancellationActionType::STANDARD_REFUND], null, false, true, false, $order->id_shop);
         }
 
         // Update order carrier weight

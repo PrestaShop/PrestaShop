@@ -102,8 +102,8 @@
   "cs": {
     "name": "Čeština (Czech)",
     "iso_code": "cs",
-    "date_format_lite": "Y-m-d",
-    "date_format_full": "Y-m-d H:i:s",
+    "date_format_lite": "d.m.Y",
+    "date_format_full": "d.m.Y H:i:s",
     "is_rtl": "0",
     "language_code": "cs-cz",
     "locale": "cs-CZ"
@@ -543,8 +543,8 @@
   "sk": {
     "name": "Slovenčina (Slovak)",
     "iso_code": "sk",
-    "date_format_lite": "Y-m-d",
-    "date_format_full": "Y-m-d H:i:s",
+    "date_format_lite": "d.m.Y",
+    "date_format_full": "d.m.Y H:i:s",
     "is_rtl": "0",
     "language_code": "sk-sk",
     "locale": "sk-SK"
@@ -575,6 +575,15 @@
     "is_rtl": "0",
     "language_code": "sv-se",
     "locale": "sv-SE"
+  },
+  "sw": {
+    "name": "Kiswahili (Swahili)",
+    "iso_code": "sw",
+    "date_format_lite": "n/d/Y",
+    "date_format_full": "n/d/Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "sw-ke",
+    "locale": "sw-KE"
   },
   "ta": {
     "name": "தமிழ் (Tamil)",
@@ -684,5 +693,14 @@
     "is_rtl": "0",
     "language_code": "zh-cn",
     "locale": "zh-CN"
+  },
+  "ku": {
+    "name": "کوردی (Kurdish)",
+    "iso_code": "ku",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "1",
+    "language_code": "ku-iq",
+    "locale": "ku-IQ"
   }
 }

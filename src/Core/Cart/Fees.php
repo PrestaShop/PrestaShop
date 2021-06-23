@@ -43,7 +43,7 @@ class Fees
     protected $shippingFees;
 
     /**
-     * @var AmountImmutable
+     * @var AmountImmutable|null
      */
     protected $finalShippingFees;
 
@@ -164,7 +164,7 @@ class Fees
     }
 
     /**
-     * @return AmountImmutable
+     * @return AmountImmutable|null
      */
     public function getFinalShippingFees()
     {

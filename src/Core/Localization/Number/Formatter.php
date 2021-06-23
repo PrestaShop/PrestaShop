@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Number;
 
 use InvalidArgumentException as SPLInvalidArgumentException;
-use PrestaShop\Decimal\Number as DecimalNumber;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface as NumberSpecification;
@@ -42,12 +42,12 @@ class Formatter
      * These placeholders are used in CLDR number formatting templates.
      * They are meant to be replaced by the correct localized symbols in the number formatting process.
      */
-    const CURRENCY_SYMBOL_PLACEHOLDER = '¤';
-    const DECIMAL_SEPARATOR_PLACEHOLDER = '.';
-    const GROUP_SEPARATOR_PLACEHOLDER = ',';
-    const MINUS_SIGN_PLACEHOLDER = '-';
-    const PERCENT_SYMBOL_PLACEHOLDER = '%';
-    const PLUS_SIGN_PLACEHOLDER = '+';
+    public const CURRENCY_SYMBOL_PLACEHOLDER = '¤';
+    public const DECIMAL_SEPARATOR_PLACEHOLDER = '.';
+    public const GROUP_SEPARATOR_PLACEHOLDER = ',';
+    public const MINUS_SIGN_PLACEHOLDER = '-';
+    public const PERCENT_SYMBOL_PLACEHOLDER = '%';
+    public const PLUS_SIGN_PLACEHOLDER = '+';
 
     /**
      * @var string The wanted rounding mode when formatting numbers.
@@ -72,11 +72,11 @@ class Formatter
     /**
      * Create a number formatter instance.
      *
-     * @param int $roundingMode
-     *                          The wanted rounding mode when formatting numbers
-     *                          Cf. PrestaShop\Decimal\Operation\Rounding::ROUND_* values
-     * @param string $numberingSystem
-     *                                Numbering system to use when formatting numbers. @see http://cldr.unicode.org/translation/numbering-systems
+     * @param string $roundingMode The wanted rounding mode when formatting numbers
+     *                             Cf. PrestaShop\Decimal\Operation\Rounding::ROUND_* values
+     * @param string $numberingSystem Numbering system to use when formatting numbers
+     *
+     *                             @see http://cldr.unicode.org/translation/numbering-systems
      */
     public function __construct($roundingMode, $numberingSystem)
     {
@@ -138,11 +138,9 @@ class Formatter
     /**
      * Prepares a basic number (either a string, an integer or a float) to be formatted.
      *
-     * @param $number
-     *  The number to be prepared
+     * @param string|float|int $number The number to be prepared
      *
-     * @return DecimalNumber
-     *                       The prepared number
+     * @return DecimalNumber The prepared number
      */
     protected function prepareNumber($number)
     {
@@ -186,11 +184,9 @@ class Formatter
      * e.g.: Given the major digits "1234567", and major group size
      *  configured to 3 digits, the result would be "1 234 567"
      *
-     * @param $majorDigits
-     *  The major digits to be grouped
+     * @param string $majorDigits The major digits to be grouped
      *
-     * @return string
-     *                The grouped major digits
+     * @return string The grouped major digits
      */
     protected function splitMajorGroups($majorDigits)
     {
@@ -218,11 +214,9 @@ class Formatter
     /**
      * Adds or remove trailing zeroes, depending on specified min and max fraction digits numbers.
      *
-     * @param string $minorDigits
-     *                            Digits to be adjusted with (trimmed or padded) zeroes
+     * @param string $minorDigits Digits to be adjusted with (trimmed or padded) zeroes
      *
-     * @return string
-     *                The adjusted minor digits
+     * @return string The adjusted minor digits
      */
     protected function adjustMinorDigitsZeroes($minorDigits)
     {
@@ -338,10 +332,8 @@ class Formatter
      *
      * @see http://cldr.unicode.org/translation/number-patterns
      *
-     * @param $formattedNumber
-     *  Number to process
-     * @param $pattern
-     *  CLDR formatting pattern to use
+     * @param string $formattedNumber Number to process
+     * @param string $pattern CLDR formatting pattern to use
      *
      * @return string
      */
@@ -382,11 +374,9 @@ class Formatter
      *
      * Placeholder will be replaced either by the symbol or the ISO code, depending on price specification
      *
-     * @param $formattedNumber
-     *  The number to format
+     * @param string $formattedNumber The number to format
      *
-     * @return string
-     *                The number after currency replacement
+     * @return string The number after currency replacement
      */
     protected function tryCurrencyReplacement($formattedNumber)
     {

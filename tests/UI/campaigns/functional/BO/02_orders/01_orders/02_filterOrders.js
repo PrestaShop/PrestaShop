@@ -1,27 +1,52 @@
 require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
+
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
-const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_orders_orders_filterOrders';
-
-// importing pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 
+// Import data
 const {Orders} = require('@data/demo/orders');
 
-let numberOfOrders;
+// Import test context
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_orders_orders_filterOrders';
+// Import expect from chai
+const {expect} = require('chai');
+
 let browserContext;
 let page;
+let numberOfOrders;
+
+// Today date
+const today = new Date();
+
+// Current day
+const day = (`0${today.getDate()}`).slice(-2);
+
+// Current month
+const month = (`0${today.getMonth() + 1}`).slice(-2);
+
+// Current year
+const year = today.getFullYear();
+
+// Date today format (yyy-mm-dd)
+const dateToday = `${year}-${month}-${day}`;
+
+// Date today format (mm/dd/yyyy)
+const dateTodayToCheck = `${month}/${day}/${year}`;
 
 /*
 Filter orders By :
-Id, reference, new client, delivery, customer, total, payment and status
+Id, reference, new client, delivery, customer, total, payment, status and date from, date to
 */
-describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
+describe('BO - Orders : Filter the Orders table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -35,7 +60,7 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to the Orders page', async function () {
+  it('should go to \'Orders > Orders\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -156,5 +181,28 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
       const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
     });
+  });
+
+  it('should filter the orders table by \'Date from\' and \'Date to\'', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
+
+    // Filter orders
+    await ordersPage.filterOrdersByDate(page, dateToday, dateToday);
+
+    // Check number of element
+    const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
+    await expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
+
+    for (let i = 1; i <= numberOfOrdersAfterFilter; i++) {
+      const textColumn = await ordersPage.getTextColumn(page, 'date_add', i);
+      await expect(textColumn).to.contains(dateTodayToCheck);
+    }
+  });
+
+  it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+
+    const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
   });
 });

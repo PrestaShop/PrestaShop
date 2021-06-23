@@ -31,11 +31,12 @@ import SortingExtension from '@components/grid/extension/sorting-extension';
 import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 
-const $ = window.$;
+const {$} = window;
 
 class SqlManagerPage {
   constructor() {
@@ -47,6 +48,7 @@ class SqlManagerPage {
     requestSqlGrid.addExtension(new LinkRowActionExtension());
     requestSqlGrid.addExtension(new SubmitGridExtension());
     requestSqlGrid.addExtension(new SubmitBulkExtension());
+    requestSqlGrid.addExtension(new SubmitRowActionExtension());
     requestSqlGrid.addExtension(new BulkActionCheckboxExtension());
     requestSqlGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
@@ -66,7 +68,7 @@ class SqlManagerPage {
       .then((response) => {
         $('.js-table-alert').addClass('d-none');
 
-        const columns = response.columns;
+        const {columns} = response;
 
         $table.removeClass('d-none');
         $table.find('tbody').empty();
@@ -79,8 +81,8 @@ class SqlManagerPage {
               .append($('<button>')
                 .addClass('btn btn-sm btn-outline-secondary js-add-db-table-column-to-query-btn')
                 .attr('data-column', column.name)
-                .html($table.data('action-btn'))
-              )
+                .html($table.data('action-btn')),
+              ),
             );
 
           $table.find('tbody').append($row);
@@ -121,7 +123,7 @@ class SqlManagerPage {
    */
   addToQuery(data) {
     const $queryInput = $('#sql_request_sql');
-    $queryInput.val($queryInput.val() + ' ' + data);
+    $queryInput.val(`${$queryInput.val()} ${data}`);
   }
 }
 

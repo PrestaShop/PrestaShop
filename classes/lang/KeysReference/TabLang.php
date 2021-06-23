@@ -57,7 +57,7 @@ trans('Dashboard', 'Admin.Navigation.Menu');
 trans('Database', 'Admin.Navigation.Menu');
 trans('DB Backup', 'Admin.Navigation.Menu');
 trans('Delivery Slips', 'Admin.Navigation.Menu');
-trans('E-mail', 'Admin.Navigation.Menu');
+trans('Email', 'Admin.Navigation.Menu');
 trans('Employees', 'Admin.Navigation.Menu');
 trans('Team', 'Admin.Navigation.Menu');
 trans('Features', 'Admin.Navigation.Menu');
@@ -133,6 +133,7 @@ trans('Webservice', 'Admin.Navigation.Menu');
 trans('Zones', 'Admin.Navigation.Menu');
 trans('Modules Catalog', 'Admin.Navigation.Menu');
 trans('Module Manager', 'Admin.Navigation.Menu');
+trans('Experimental Features', 'Admin.Navigation.Menu');
 
 // subtab
 trans('Modules', 'Admin.Navigation.Menu');

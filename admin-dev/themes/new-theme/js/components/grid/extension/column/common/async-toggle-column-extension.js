@@ -23,17 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class AsyncToggleColumnExtension submits toggle action using AJAX
  */
 export default class AsyncToggleColumnExtension {
-
   constructor() {
     return {
       extend: (grid) => this.extend(grid),
-    }
+    };
   }
 
   /**
@@ -42,29 +41,36 @@ export default class AsyncToggleColumnExtension {
    * @param {Grid} grid
    */
   extend(grid) {
-    grid.getContainer().find('.js-grid-table').on('click', '.ps-togglable-row', (event) => {
-      event.preventDefault();
+    grid
+      .getContainer()
+      .find('.js-grid-table')
+      .on('click', '.ps-togglable-row', (event) => {
+        const $button = $(event.currentTarget);
 
-      const $button = $(event.currentTarget);
-
-      $.post({
-        url: $button.data('toggle-url'),
-      }).then((response) => {
-        if (response.status) {
-          showSuccessMessage(response.message);
-
-          this._toggleButtonDisplay($button);
-
-          return;
+        if (!$button.hasClass('ps-switch')) {
+          event.preventDefault();
         }
 
-        showErrorMessage(response.message);
-      }).catch((error) => {
-        const response = error.responseJSON;
+        $.post({
+          url: $button.data('toggle-url'),
+        })
+          .then((response) => {
+            if (response.status) {
+              window.showSuccessMessage(response.message);
 
-        showErrorMessage(response.message);
+              this.toggleButtonDisplay($button);
+
+              return;
+            }
+
+            window.showErrorMessage(response.message);
+          })
+          .catch((error) => {
+            const response = error.responseJSON;
+
+            window.showErrorMessage(response.message);
+          });
       });
-    });
   }
 
   /**
@@ -74,7 +80,7 @@ export default class AsyncToggleColumnExtension {
    *
    * @private
    */
-  _toggleButtonDisplay($button) {
+  toggleButtonDisplay($button) {
     const isActive = $button.hasClass('grid-toggler-icon-valid');
 
     const classToAdd = isActive ? 'grid-toggler-icon-not-valid' : 'grid-toggler-icon-valid';
@@ -83,6 +89,9 @@ export default class AsyncToggleColumnExtension {
 
     $button.removeClass(classToRemove);
     $button.addClass(classToAdd);
-    $button.text(icon);
+
+    if ($button.hasClass('material-icons')) {
+      $button.text(icon);
+    }
   }
 }

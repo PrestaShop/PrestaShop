@@ -26,7 +26,7 @@
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderDiscountsRefresher {
   constructor() {

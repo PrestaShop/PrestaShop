@@ -355,7 +355,13 @@ class EmployeeController extends FrameworkBundleAdminController
                 'is_for_editing' => true,
                 'show_addons_connect_button' => $canAccessAddonsConnect,
             ]);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
+            return $this->redirectToRoute('admin_employees_index');
+        }
+
+        try {
             $employeeForm->handleRequest($request);
             $result = $this->getEmployeeFormHandler()->handleFor((int) $employeeId, $employeeForm);
 

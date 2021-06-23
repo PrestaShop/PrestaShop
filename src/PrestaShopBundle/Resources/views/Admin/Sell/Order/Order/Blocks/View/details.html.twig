@@ -108,6 +108,14 @@
         {% endblock %}
       {% endembed %}
     </div>
+
+    {% if orderForViewing.shipping.recycledPackaging %}
+      <span class="badge badge-success">{{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+    {% endif %}
+
+    {% if orderForViewing.shipping.giftWrapping %}
+      <span class="badge badge-success">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+    {% endif %}
   </div>
 </div>
 

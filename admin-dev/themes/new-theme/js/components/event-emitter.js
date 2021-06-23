@@ -30,3 +30,5 @@ import EventEmitterClass from 'events';
  * register/dispatch on the same one and can communicate with each other.
  */
 export const EventEmitter = new EventEmitterClass();
+
+export default EventEmitter;

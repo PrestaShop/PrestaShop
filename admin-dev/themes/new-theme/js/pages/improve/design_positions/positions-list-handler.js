@@ -23,24 +23,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 class PositionsListHandler {
   constructor() {
-    if ($("#position-filters").length === 0) {
+    if ($('#position-filters').length === 0) {
       return;
     }
 
     const self = this;
-    self.$panelSelection = $("#modules-position-selection-panel");
-    self.$panelSelectionSingleSelection = $("#modules-position-single-selection");
-    self.$panelSelectionMultipleSelection = $("#modules-position-multiple-selection");
+    self.$panelSelection = $('#modules-position-selection-panel');
+    self.$panelSelectionSingleSelection = $('#modules-position-single-selection');
+    self.$panelSelectionMultipleSelection = $('#modules-position-multiple-selection');
 
     self.$panelSelectionOriginalY = self.$panelSelection.offset().top;
-    self.$showModules = $("#show-modules");
+    self.$showModules = $('#show-modules');
     self.$modulesList = $('.modules-position-checkbox');
-    self.$hookPosition = $("#hook-position");
-    self.$hookSearch = $("#hook-search");
+    self.$hookPosition = $('#hook-position');
+    self.$hookSearch = $('#hook-search');
     self.$modulePositionsForm = $('#module-positions-form');
     self.$moduleUnhookButton = $('#unhook-button-position-bottom');
     self.$moduleButtonsUpdate = $('.module-buttons-update .btn');
@@ -48,7 +48,7 @@ class PositionsListHandler {
     self.handleList();
     self.handleSortable();
 
-    $('input[name="form[general][enable_tos]"]').on('change', () => self.handle());
+    $('input[name="general[enable_tos]"]').on('change', () => self.handle());
   }
 
   /**
@@ -61,11 +61,11 @@ class PositionsListHandler {
       const $scrollTop = $(window).scrollTop();
       self.$panelSelection.css(
         'top',
-        $scrollTop < 20 ? 0 : $scrollTop - self.$panelSelectionOriginalY
+        $scrollTop < 20 ? 0 : $scrollTop - self.$panelSelectionOriginalY,
       );
     });
 
-    self.$modulesList.on('change', function () {
+    self.$modulesList.on('change', () => {
       const $checkedCount = self.$modulesList.filter(':checked').length;
 
       if ($checkedCount === 0) {
@@ -95,9 +95,9 @@ class PositionsListHandler {
     $('section.hook-panel .hook-name').each(function () {
       const $this = $(this);
       self.$hooksList.push({
-        'title': $this.html(),
-        'element': $this,
-        'container': $this.parents('.hook-panel')
+        title: $this.html(),
+        element: $this,
+        container: $this.parents('.hook-panel'),
       });
     });
 
@@ -116,21 +116,22 @@ class PositionsListHandler {
 
     self.$hookSearch.on('keypress', (e) => {
       const keyCode = e.keyCode || e.which;
+
       return keyCode !== 13;
     });
 
-    $('.hook-checker').on('click', function() {
+    $('.hook-checker').on('click', function () {
       $(`.hook${$(this).data('hook-id')}`).prop('checked', $(this).prop('checked'));
     });
 
-    self.$modulesList.on('click', function() {
+    self.$modulesList.on('click', function () {
       $(`#Ghook${$(this).data('hook-id')}`).prop(
         'checked',
-        $(`.hook${$(this).data('hook-id')}:not(:checked)`).length === 0
+        $(`.hook${$(this).data('hook-id')}:not(:checked)`).length === 0,
       );
     });
 
-    self.$moduleButtonsUpdate.on('click', function() {
+    self.$moduleButtonsUpdate.on('click', function () {
       const $btn = $(this);
       const $current = $btn.closest('.module-item');
       let $destination;
@@ -158,7 +159,7 @@ class PositionsListHandler {
           way: $btn.data('way'),
           positions: [],
         },
-        $btn.closest('ul')
+        $btn.closest('ul'),
       );
 
       return false;
@@ -173,11 +174,11 @@ class PositionsListHandler {
 
     $('.sortable').sortable({
       forcePlaceholderSize: true,
-      start: function(e, ui) {
+      start(e, ui) {
         $(this).data('previous-index', ui.item.index());
       },
-      update: function($event, ui) {
-        const [ hookId, moduleId ] = ui.item.attr('id').split('_');
+      update($event, ui) {
+        const [hookId, moduleId] = ui.item.attr('id').split('_');
 
         const $data = {
           hookId,
@@ -188,7 +189,7 @@ class PositionsListHandler {
 
         self.updatePositions(
           $data,
-          $($event.target)
+          $($event.target),
         );
       },
     });
@@ -196,7 +197,7 @@ class PositionsListHandler {
 
   updatePositions($data, $list) {
     const self = this;
-    $.each($list.children(), function(index, element) {
+    $.each($list.children(), (index, element) => {
       $data.positions.push($(element).attr('id'));
     });
 
@@ -207,13 +208,13 @@ class PositionsListHandler {
       data: $data,
       success: () => {
         let start = 0;
-        $.each($list.children(), function(index, element) {
-          console.log($(element).find('.index-position'));
-          $(element).find('.index-position').html(++start);
+        $.each($list.children(), (index, element) => {
+          start += 1;
+          $(element).find('.index-position').html(start);
         });
 
         window.showSuccessMessage(window.update_success_msg);
-      }
+      },
     });
   }
 
@@ -227,7 +228,7 @@ class PositionsListHandler {
     const $moduleId = self.$showModules.val();
     const $regex = new RegExp(`(${$hookName})`, 'gi');
 
-    for (let $id = 0; $id < self.$hooksList.length; $id++) {
+    for (let $id = 0; $id < self.$hooksList.length; $id += 1) {
       self.$hooksList[$id].container.toggle($hookName === '' && $moduleId === 'all');
       self.$hooksList[$id].element.html(self.$hooksList[$id].title);
       self.$hooksList[$id].container.find('.module-item').removeClass('highlight');
@@ -241,7 +242,7 @@ class PositionsListHandler {
       let $currentHooks;
       let $start;
 
-      for (let $id = 0; $id < self.$hooksList.length; $id++) {
+      for (let $id = 0; $id < self.$hooksList.length; $id += 1) {
         // Prepare highlight when one module is selected
         if ($moduleId !== 'all') {
           $currentHooks = self.$hooksList[$id].container.find(`.module-position-${$moduleId}`);
@@ -259,8 +260,8 @@ class PositionsListHandler {
             self.$hooksList[$id].element.html(
               self.$hooksList[$id].title.replace(
                 $regex,
-                '<span class="highlight">$1</span>'
-              )
+                '<span class="highlight">$1</span>',
+              ),
             );
           }
         }
@@ -277,13 +278,13 @@ class PositionsListHandler {
     }
 
     if (!self.$hookPosition.prop('checked')) {
-      for (let $id = 0; $id < self.$hooksList.length; $id++) {
+      for (let $id = 0; $id < self.$hooksList.length; $id += 1) {
         if (self.$hooksList[$id].container.is('.hook-position')) {
           self.$hooksList[$id].container.hide();
         }
       }
     }
-  };
+  }
 }
 
 export default PositionsListHandler;

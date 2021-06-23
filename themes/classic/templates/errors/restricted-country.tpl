@@ -30,7 +30,7 @@
 
     {block name='page_header_container'}
       <header class="page-header">
-        <div class="logo"><img src="{$shop.logo}" alt="logo"></div>
+        <div class="logo"><img src="{$shop.logo}" alt="logo" loading="lazy"></div>
         {block name='page_header'}
           <h1>{block name='page_title'}{$shop.name}{/block}</h1>
         {/block}

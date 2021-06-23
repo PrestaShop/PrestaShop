@@ -1,0 +1,466 @@
+.table {
+  margin-bottom: 5px;
+  border-spacing: 0 2px 0 0;
+  border-collapse: separate;
+
+  thead {
+    > tr > th {
+      font-weight: 500;
+      vertical-align: top;
+      border: none;
+      border-bottom: solid 1px darken(#cae5f4, 10%);
+
+      span.title_box {
+        display: block;
+        color: #656565;
+        word-wrap: nowrap;
+        white-space: nowrap;
+
+        &.active {
+          font-weight: 700;
+        }
+
+        a {
+          text-decoration: none;
+        }
+
+        a.active {
+          color: #000;
+        }
+
+        .label-tooltip {
+          padding: 0 5px;
+          color: #3586ae;
+          background-color: lighten(#d8edf7, 5%);
+          border: none;
+          border-bottom: solid 1px #d8edf7;
+        }
+      }
+    }
+
+    > tr.filter > th {
+      background-color: lighten(#cae5f4, 8%);
+
+      input[type="text"].filter,
+      input[type="password"].filter,
+      select.filter {
+        padding: 4px;
+        font-size: 11px;
+        border-color: darken(#cae5f4, 10%);
+      }
+    }
+  }
+
+  input,
+  select {
+    margin: 0;
+
+    &.center {
+      margin: 0 auto;
+    }
+  }
+
+  tbody {
+    > tr > td {
+      padding: 3px 7px;
+      font-size: 12px;
+      color: lighten(#000, 40%);
+      word-wrap: nowrap;
+      vertical-align: middle;
+      background-color: #fff;
+      border-top: none;
+      border-bottom: solid 1px #eaedef;
+    }
+
+    > tr.odd > td {
+      background-color: #fcfdfe;
+    }
+
+    > tr:hover > td {
+      background-color: darken(#fcfdfe, 2%);
+    }
+  }
+
+  td.center,
+  th.center {
+    text-align: center;
+  }
+
+  td.pointer {
+    cursor: pointer;
+  }
+
+  td.dragHandle {
+    .dragGroup {
+      position: relative;
+      width: 80px;
+      font-size: $icon-size-base;
+      text-align: center;
+      cursor: move;
+      @include padding(4px, 4px, 4px, 20px);
+      @include border-radius(5px);
+
+      &:hover {
+        color: #fff;
+        background-color: $brand-primary;
+      }
+
+      &::before {
+        @extend .icon;
+        @extend .icon-arrows;
+        position: absolute;
+        top: 8px;
+        display: block;
+        width: 16px;
+        height: 16px;
+        @include left(6px);
+      }
+
+      .positions {
+        display: inline-block;
+        width: 43px;
+        padding: 0 5px;
+        color: #aaa;
+        text-shadow: #fff 1px 1px;
+        background-color: #eee;
+        border: solid 1px #ccc;
+        @include border-radius(3px);
+        @include box-shadow(rgba(0,0,0,0.2) 0 1px 3px inset);
+      }
+    }
+  }
+
+  tr.actions {
+    @include text-align(right);
+  }
+
+  td.actions {
+    @include text-align(right);
+    @include padding-right(5px);
+  }
+
+  th.actions .btn {
+    margin-bottom: 4px !important;
+  }
+
+  tr.myDragClass {
+    padding: 10px;
+    background-color: #eee;
+
+    td {
+      color: #fff;
+      background-color: $brand-primary !important;
+      @include transform(translate(5px,10px));
+    }
+  }
+
+  &.tableDnD td {
+    @include transition-property(all);
+    @include transition-duration(0.2s);
+    @include transition-timing-function(ease-out);
+  }
+
+  .btn-group-action,
+  .btn-group {
+    a,
+    button {
+      @extend .btn-default;
+      // stylelint-disable-next-line
+      display: inline-flex !important;
+      align-items: center;
+
+      i {
+        // stylelint-disable-next-line
+        height: 17px !important;
+      }
+    }
+
+    .dropdown-menu {
+      padding: 0;
+
+      a {
+        width: 100%;
+        padding: 0.5rem 1rem;
+      }
+
+      .divider {
+        margin: 0;
+      }
+    }
+
+    a {
+      i {
+        margin-right: 3px;
+      }
+    }
+  }
+}
+
+tr.highlighted td {
+  color: #fff;
+  background-color: $brand-primary !important;
+}
+
+.bulk-actions {
+  @include margin(17px, 0, 0, 0);
+
+  ul i {
+    font-size: 14px;
+  }
+}
+
+.list-action-enable {
+  display: inline-block;
+  width: 30px;
+  font-size: 1.3em;
+  color: rgba(#fff, 0.8);
+  text-align: center;
+  @include border-radius(3px);
+
+  &.action-enabled {
+    color: $brand-success;
+  }
+
+  &.action-disabled {
+    color: $brand-danger;
+  }
+
+  &:hover {
+    color: #25b9d7;
+  }
+}
+
+.list-empty {
+  background-color: #fcfdfe !important;
+
+  .list-empty-msg {
+    display: block;
+    width: 50%;
+    margin: 20px auto;
+    font-family: $headings-font-family;
+    font-size: 1.4em;
+    color: #999;
+    text-align: center;
+  }
+
+  .list-empty-icon {
+    display: block;
+    clear: both;
+    font-size: $icon-size-base * 6;
+    color: #dedede;
+    text-shadow: #fff 1px 1px 0;
+  }
+}
+
+.date_range .input-group:first-child {
+  margin-bottom: 5px;
+}
+@media (max-width: $screen-sm-max) {
+  .table-responsive-row {
+    overflow: visible;
+
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+      display: block;
+    }
+
+    thead tr {
+      display: block;
+      float: left;
+      width: 70%;
+
+      &:first-child {
+        width: 30%;
+
+        th {
+          width: 100% !important;
+        }
+      }
+
+      &:first-child:last-child {
+        display: none;
+      }
+    }
+
+    th {
+      height: 48px;
+      text-align: center;
+    }
+
+    th .fixed-width-md {
+      float: left;
+    }
+
+    th .fixed-width-sm {
+      width: 100% !important;
+    }
+
+    tr {
+      width: 100%;
+      margin-bottom: 6px;
+      border: 1px solid #ccc;
+      @include box-shadow(#EAEDEF 0 2px 0 0 );
+
+      &:last-child {
+        border-bottom: 1px solid #ccc;
+      }
+    }
+
+    td {
+      position: relative;
+      width: 100% !important;
+      padding-left: 35% !important;
+      overflow: hidden;
+      font-size: 1.15em !important;
+      line-height: 2em !important;
+      text-align: left !important;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &:last-child {
+        padding: 0 !important;
+        text-align: right !important;
+        border: none;
+
+        &::before {
+          content: none !important;
+        }
+      }
+
+      .btn-group-action {
+        .dropdown-toggle {
+          display: none !important;
+        }
+
+        ul.dropdown-menu,
+        .dropdown-menu li {
+          position: relative;
+          z-index: 13;
+          display: inline-block;
+          float: right;
+          padding: 0;
+          margin: 0;
+          background: transparent;
+          border: none;
+          @include box-shadow(none);
+        }
+      }
+
+      .dropdown-menu li a,
+      a.btn,
+      button.btn {
+        z-index: 13;
+        display: inline-block;
+        float: right;
+        padding: 12px 10px !important;
+        margin: 0 !important;
+        margin-right: 5px;
+        font-weight: 700;
+        color: $brand-primary;
+        background-color: #fff;
+        border: none;
+        border-left: 1px solid #eaedef;
+        @include box-shadow(none);
+        @include border-radius(0);
+
+        i {
+          color: $brand-primary;
+        }
+
+        &:hover {
+          color: #fff;
+          background-color: $brand-primary;
+
+          i {
+            color: #fff;
+          }
+        }
+      }
+    }
+
+    .odd td {
+      background-color: #fcfdfe !important;
+    }
+
+    td.row-selector {
+      display: none;
+    }
+
+    td::before {
+      position: absolute;
+      top: 4px;
+      left: 12px;
+      width: 30%;
+      padding-right: 10px;
+      font-size: 0.9em;
+      font-style: italic;
+      color: #aaa;
+      text-align: right;
+      white-space: nowrap;
+      border-right: 1px solid #eaedef;
+    }
+
+    .btn-group {
+      float: none !important;
+    }
+  }
+
+  .table-responsive {
+    width: 100%;
+    margin-bottom: ($line-height-computed * 0.75);
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 1px solid $table-border-color;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    -webkit-overflow-scrolling: touch;
+
+    > .table {
+      margin-bottom: 0;
+
+      > thead,
+      > tbody,
+      > tfoot {
+        > tr {
+          > th,
+          > td {
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+
+    > .table-bordered {
+      border: 0;
+
+      > thead,
+      > tbody,
+      > tfoot {
+        > tr {
+          > th:first-child,
+          > td:first-child {
+            @include border-left(0);
+          }
+
+          > th:last-child,
+          > td:last-child {
+            @include border-right(0);
+          }
+        }
+      }
+
+      > tbody,
+      > tfoot {
+        > tr:last-child {
+          > th,
+          > td {
+            border-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}

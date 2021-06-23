@@ -23,18 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 class StockManagementOptionHandler {
   constructor() {
     this.handle();
 
-    $('input[name="form[stock][stock_management]"]').on('change', () => this.handle());
+    $('input[name="stock[stock_management]"]').on('change', () => this.handle());
   }
 
   handle() {
-    const stockManagementVal = $('input[name="form[stock][stock_management]"]:checked').val();
-    const isStockManagementEnabled = parseInt(stockManagementVal);
+    const stockManagementVal = $('input[name="stock[stock_management]"]:checked').val();
+    const isStockManagementEnabled = parseInt(stockManagementVal, 10);
 
     this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
     this.handleDisplayAvailableQuantitiesOption(isStockManagementEnabled);
@@ -48,13 +48,13 @@ class StockManagementOptionHandler {
    * @param {int} isStockManagementEnabled
    */
   handleAllowOrderingOutOfStockOption(isStockManagementEnabled) {
-    const allowOrderingOosRadios = $('input[name="form[stock][allow_ordering_oos]"]');
+    const allowOrderingOosRadios = $('input[name="stock[allow_ordering_oos]"]');
 
     if (isStockManagementEnabled) {
-        allowOrderingOosRadios.removeAttr('disabled');
+      allowOrderingOosRadios.removeAttr('disabled');
     } else {
-        allowOrderingOosRadios.val([1]);
-        allowOrderingOosRadios.attr('disabled', 'disabled');
+      allowOrderingOosRadios.val([1]);
+      allowOrderingOosRadios.attr('disabled', 'disabled');
     }
   }
 
@@ -66,13 +66,13 @@ class StockManagementOptionHandler {
    * @param {int} isStockManagementEnabled
    */
   handleDisplayAvailableQuantitiesOption(isStockManagementEnabled) {
-    const displayQuantitiesRadio = $('input[name="form[page][display_quantities]"]');
+    const displayQuantitiesRadio = $('input[name="page[display_quantities]"]');
 
     if (isStockManagementEnabled) {
-        displayQuantitiesRadio.removeAttr('disabled');
+      displayQuantitiesRadio.removeAttr('disabled');
     } else {
-        displayQuantitiesRadio.val([0]);
-        displayQuantitiesRadio.attr('disabled', 'disabled');
+      displayQuantitiesRadio.val([0]);
+      displayQuantitiesRadio.attr('disabled', 'disabled');
     }
   }
 }

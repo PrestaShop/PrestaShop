@@ -243,7 +243,7 @@ class EditManufacturerCommand
     }
 
     /**
-     * @param $associatedShops
+     * @param array $associatedShops
      *
      * @return self
      */

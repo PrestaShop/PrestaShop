@@ -6,27 +6,27 @@
   margin-top: 0.9375rem;
 
   h2 {
-    color: $gray-darker;
-    text-transform: uppercase;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-bottom: 1px solid $gray;
-    margin-left: -15px;
     width: 100%;
     height: 35px;
+    margin-left: -15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $gray-darker;
+    text-transform: uppercase;
+    border-bottom: 1px solid $gray;
   }
 
   ul {
-    margin-left: -15px;
     margin-top: 20px;
+    margin-left: -15px;
 
     &.nested {
       margin-left: 20px;
     }
 
     li {
-      font-size: 0.9rem;
       margin-bottom: 1rem;
+      font-size: 0.9rem;
     }
   }
 }

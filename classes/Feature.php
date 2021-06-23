@@ -29,7 +29,7 @@
  */
 class FeatureCore extends ObjectModel
 {
-    /** @var string Name */
+    /** @var array<string> Name */
     public $name;
 
     /** @var int */

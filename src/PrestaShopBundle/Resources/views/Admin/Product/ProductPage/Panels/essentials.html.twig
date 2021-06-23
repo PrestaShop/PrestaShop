@@ -40,7 +40,7 @@
               <div id="product-images-dropzone" class="panel dropzone ui-sortable col-md-12"
                   url-upload="{{ path('admin_product_image_upload', {'idProduct': productId}) }}"
                   url-position="{{ path('admin_product_image_positions') }}"
-                  data-max-size="{{ 'PS_LIMIT_UPLOAD_IMAGE_VALUE'|configuration }}"
+                  data-max-size="{{ configuration('PS_LIMIT_UPLOAD_IMAGE_VALUE') }}"
               >
                 <div id="product-images-dropzone-error" class="text-danger"></div>
                 <div class="dz-default dz-message openfilemanager">
@@ -91,18 +91,14 @@
             </div>
 
             <div class="summary-description-container">
-              <ul class="nav nav-tabs bordered">
-                <li id="tab_description_short" class="nav-item"><a href="#description_short" data-toggle="tab" class="nav-link description-tab active">{{ 'Summary'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-                <li id="tab_description" class="nav-item"><a href="#description" data-toggle="tab" class="nav-link description-tab">{{ 'Description'|trans({}, 'Admin.Global') }}</a></li>
-              </ul>
+              <h2>{{ 'Summary'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+              <div id="description_short" class="mb-3">
+                {{ form_widget(formShortDescription) }}
+              </div>
 
-              <div class="tab-content bordered">
-                <div class="tab-pane panel panel-default active" id="description_short">
-                  {{ form_widget(formShortDescription) }}
-                </div>
-                <div class="tab-pane panel panel-default " id="description">
-                  {{ form_widget(formDescription) }}
-                </div>
+              <h2>{{ 'Description'|trans({}, 'Admin.Global') }}</h2>
+              <div id="description" class="mb-3">
+                {{ form_widget(formDescription) }}
               </div>
             </div>
 
@@ -169,7 +165,7 @@
                         <div id="product_type_combinations_shortcut">
                           <span class="small font-secondary">
                             {# First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed). #}
-                            {{ "Advanced settings in [1][2]Combinations[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').tab(\'show\');" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
+                            {{ "Advanced settings in [1][2]Combinations[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').click();" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
                           </span>
                         </div>
                       </div>
@@ -190,7 +186,7 @@
                     </div>
                   </div>
 
-                  {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                  {% if configuration('PS_STOCK_MANAGEMENT') %}
                     <div class="form-group mb-4" id="product_qty_0_shortcut_div">
                       <h2>
                         {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
@@ -205,7 +201,7 @@
                       </div>
                       <span class="small font-secondary">
                         {# First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed). #}
-                        {{ "Advanced settings in [1][2]Quantities[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').tab(\'show\');" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
+                        {{ "Advanced settings in [1][2]Quantities[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').click();" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
                       </span>
                     </div>
                   {% endif %}
@@ -243,7 +239,7 @@
                       <div class="col-md-12">
                         <span class="small font-secondary">
                           {# First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed). #}
-                          {{ "Advanced settings in [1][2]Pricing[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step2" onclick="$(\'a[href=\\\'#step2\\\']\').tab(\'show\');" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
+                          {{ "Advanced settings in [1][2]Pricing[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step2" onclick="$(\'a[href=\\\'#step2\\\']\').click();" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
                         </span>
                       </div>
                     </div>

@@ -13,8 +13,8 @@ class Monitoring extends BOBasePage {
     this.gridHeaderTitle = table => `${this.gridPanel(table)} div.card-header h3`;
     // Filters
     this.filterColumn = (table, filterBY) => `${this.gridTable(table)} #${table}_${filterBY}`;
-    this.filterSearchButton = table => `${this.gridTable(table)} button[name='${table}[actions][search]']`;
-    this.filterResetButton = table => `${this.gridTable(table)} button[name='${table}[actions][reset]']`;
+    this.filterSearchButton = table => `${this.gridTable(table)} .grid-search-button`;
+    this.filterResetButton = table => `${this.gridTable(table)} .grid-reset-button`;
     // Table
     this.tableBody = table => `${this.gridTable(table)} tbody`;
     this.tableRow = (table, row) => `${this.tableBody(table)} tr:nth-child(${row})`;
@@ -25,19 +25,34 @@ class Monitoring extends BOBasePage {
     this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
     // Actions buttons in Row
     this.actionsColumn = (table, row) => `${this.tableRow(table, row)} td.column-actions`;
+    this.editRowLink = (table, row) => `${this.actionsColumn(table, row)} a.grid-edit-row-link`;
     this.dropdownToggleButton = (table, row) => `${this.actionsColumn(table, row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = (table, row) => `${this.actionsColumn(table, row)} div.dropdown-menu`;
-    this.deleteRowLink = (table, row) => `${this.dropdownToggleMenu(table, row)} a[href*='/delete']`;
+    this.deleteRowLink = (table, row) => `${this.dropdownToggleMenu(table, row)} a.grid-delete-row-link`;
+    // Category selectors
+    this.viewCategoryRowLink = row => `${this.actionsColumn('empty_category', row)} a.grid-view-row-link`;
+    this.editCategoryRowLink = row => `${this.dropdownToggleMenu('empty_category', row)} a.grid-edit-row-link`;
     this.deleteCategoryRowLink = row => `${this.dropdownToggleMenu('empty_category', row)
-    } a.js-delete-category-row-action`;
-    this.deleteModeModal = '#empty_category_grid_delete_categories_modal';
-    this.deleteModeInput = position => `#delete_categories_delete_mode_${position}`;
-    this.submitDeleteModeButton = `${this.deleteModeModal} button.js-submit-delete-categories`;
+    } a.grid-delete-row-link`;
+    this.deleteModeCategoryModal = '#empty_category_grid_delete_categories_modal';
+    this.deleteModeInput = position => `#delete_categories_delete_mode_${position} + i`;
+    this.deleteModeCategoryModalDiv = '#delete_categories_delete_mode';
+    this.submitDeleteCategoryButton = `${this.deleteModeCategoryModal} button.js-submit-delete-categories`;
     // Sort Selectors
     this.tableHead = table => `${this.gridTable(table)} thead`;
     this.sortColumnDiv = (table, column) => `${this.tableHead(table)
     } div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = (table, column) => `${this.sortColumnDiv(table, column)} span.ps-sort`;
+
+    // Modal products list
+    this.deleteProductModal = table => `#${table}-grid-confirm-modal`;
+    this.submitDeleteProductButton = table => `${this.deleteProductModal(table)} button.btn-confirm-submit`;
+
+    // Pagination selectors
+    this.paginationLimitSelect = table => `${this.gridPanel(table)} #paginator_select_page_limit`;
+    this.paginationLabel = table => `${this.gridPanel(table)} .col-form-label`;
+    this.paginationNextLink = table => `${this.gridPanel(table)} #pagination_next_url`;
+    this.paginationPreviousLink = table => `${this.gridPanel(table)} [aria-label='Previous']`;
   }
 
   /* Reset Methods */
@@ -45,7 +60,7 @@ class Monitoring extends BOBasePage {
    * Get number of element in table grid
    * @param page
    * @param table, which table to get number of element from
-   * @returns {Promise<number>}
+   * @return {Promise<number>}
    */
   async getNumberOfElementInGrid(page, table) {
     return this.getNumberFromText(page, this.gridHeaderTitle(table));
@@ -67,7 +82,7 @@ class Monitoring extends BOBasePage {
    * Reset Filter And get number of elements in list
    * @param page
    * @param table, which table to reset
-   * @returns {Promise<number>}
+   * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page, table) {
     await this.resetFilter(page, table);
@@ -107,7 +122,7 @@ class Monitoring extends BOBasePage {
    * @param table, which table to get text from
    * @param row, row in table
    * @param column, which column
-   * @returns {Promise<string>}
+   * @return {Promise<string>}
    */
   async getTextColumnFromTable(page, table, row, column) {
     return this.getTextContent(page, this.tableColumn(table, row, column));
@@ -132,34 +147,64 @@ class Monitoring extends BOBasePage {
    * @param page
    * @param table
    * @param row, row to delete
-   * @returns {Promise<string>}
+   * @return {Promise<string>}
    */
   async deleteProductInGrid(page, table, row) {
-    this.dialogListener(page, true);
     await this.openDropdownMenu(page, table, row);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(table, row));
+
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.deleteRowLink(table, row)),
+      this.waitForVisibleSelector(page, `${this.deleteProductModal(table)}.show`),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.submitDeleteProductButton(table));
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Categories methods */
+  /**
+   * View category in table
+   * @param row
+   * @return {Promise<void>}
+   */
+  async viewCategoryInGrid(row) {
+    await this.clickAndWaitForNavigation(this.viewCategoryRowLink(row));
+  }
+
+  /**
+   * Go to edit category page
+   * @param row
+   * @return {Promise<void>}
+   */
+  async editCategoryInGrid(row) {
+    await Promise.all([
+      this.page.click(this.dropdownToggleButton(row)),
+      this.waitForVisibleSelector(
+        `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
+      ),
+    ]);
+    await this.clickAndWaitForNavigation(this.editCategoryRowLink(row));
+  }
+
   /**
    * Delete Row in table empty categories
    * @param page
    * @param table
    * @param row, row to delete
    * @param deletionModePosition, which mode to choose for delete
-   * @returns {Promise<string>}
+   * @return {Promise<string>}
    */
   async deleteCategoryInGrid(page, table, row, deletionModePosition) {
     this.dialogListener(page, true);
     await this.openDropdownMenu(page, table, row);
     await Promise.all([
       page.click(this.deleteCategoryRowLink(row)),
-      this.waitForVisibleSelector(page, this.deleteModeModal),
+      this.waitForVisibleSelector(page, this.deleteModeCategoryModal),
     ]);
     // choose deletion mode
     await page.click(this.deleteModeInput(deletionModePosition));
-    await this.clickAndWaitForNavigation(page, this.submitDeleteModeButton);
+    await this.clickAndWaitForNavigation(page, this.submitDeleteCategoryButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -168,7 +213,7 @@ class Monitoring extends BOBasePage {
    * @param page
    * @param table
    * @param row
-   * @returns {Promise<boolean>}
+   * @return {Promise<boolean>}
    */
   async getStatus(page, table, row = 1) {
     return this.elementVisible(page, this.enableColumnValidIcon(table, row), 100);
@@ -185,13 +230,16 @@ class Monitoring extends BOBasePage {
   async getAllRowsColumnContent(page, table, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page, table);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       let rowContent = await this.getTextContent(page, this.tableColumn(table, i, column));
+
       if (column === 'active') {
         rowContent = await this.getStatus(page, table, i).toString();
       }
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -214,6 +262,51 @@ class Monitoring extends BOBasePage {
     }
 
     await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  // Methods for pagination
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page, table) {
+    return this.getTextContent(page, this.paginationLabel(table));
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, table, number) {
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect(table), number),
+      page.waitForNavigation({waitUntil: 'networkidle'}),
+    ]);
+
+    return this.getPaginationLabel(page, table);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page, table) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink(table));
+    return this.getPaginationLabel(page, table);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page, table) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink(table));
+    return this.getPaginationLabel(page, table);
   }
 }
 

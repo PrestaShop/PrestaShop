@@ -4,6 +4,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 class SqlManager extends BOBasePage {
   constructor() {
     super();
+
     this.pageTitle = 'SQL Manager •';
     this.successfulDeleteMessage = 'Successful deletion';
 
@@ -20,15 +21,19 @@ class SqlManager extends BOBasePage {
     this.sqlQueryListTableColumnActions = row => `${this.sqlQueryListTableRow(row)} td.column-actions`;
     this.sqlQueryListTableToggleDropDown = row => `${this.sqlQueryListTableColumnActions(row)
     } a[data-toggle='dropdown']`;
-    this.sqlQueryListTableViewLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/view']`;
-    this.sqlQueryListTableEditLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/edit']`;
-    this.sqlQueryListTableDeleteLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/delete']`;
+    this.sqlQueryListTableViewLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-view-row-link`;
+    this.sqlQueryListTableEditLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-edit-row-link`;
+    this.sqlQueryListTableDeleteLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-delete-row-link`;
     this.sqlQueryListTableExportLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/export']`;
 
     // Filters
     this.filterInput = filterBy => `${this.sqlQueryListForm} #sql_request_${filterBy}`;
-    this.filterSearchButton = `${this.sqlQueryListForm} button[name='sql_request[actions][search]']`;
-    this.filterResetButton = `${this.sqlQueryListForm} button[name='sql_request[actions][reset]']`;
+    this.filterSearchButton = `${this.sqlQueryListForm} .grid-search-button`;
+    this.filterResetButton = `${this.sqlQueryListForm} .grid-reset-button`;
+
+    // Delete modal
+    this.confirmDeleteModal = '#sql_request-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
     // Sort Selectors
     this.tableHead = `${this.sqlQueryListForm} thead`;
@@ -42,9 +47,13 @@ class SqlManager extends BOBasePage {
     this.paginationPreviousLink = `${this.sqlQueryGridPanel} [aria-label='Previous']`;
 
     // Bulk Actions
-    this.selectAllRowsDiv = `${this.sqlQueryListForm} #sql_request_grid_bulk_action_select_all + i`;
+    this.selectAllRowsDiv = `${this.sqlQueryListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.sqlQueryListForm} button.dropdown-toggle`;
-    this.bulkActionsDeleteButton = `${this.sqlQueryListForm} #sql_request_grid_bulk_action_delete_all`;
+    this.bulkActionsDeleteButton = `${this.sqlQueryListForm} #sql_request_grid_bulk_action_delete_selection`;
+
+    // Modal Dialog
+    this.deleteModal = '#sql_request-grid-confirm-modal.show';
+    this.modalDeleteButton = `${this.deleteModal} button.btn-confirm-submit`;
   }
 
   /* Header Methods */
@@ -178,7 +187,6 @@ class SqlManager extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteSQLQuery(page, row = 1) {
-    this.dialogListener(page);
     // Click on dropDown
     await Promise.all([
       page.click(this.sqlQueryListTableToggleDropDown(row)),
@@ -187,23 +195,33 @@ class SqlManager extends BOBasePage {
         `${this.sqlQueryListTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
-    // Click on delete
-    await this.clickAndWaitForNavigation(page, this.sqlQueryListTableDeleteLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.sqlQueryListTableDeleteLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+
+    await this.confirmDeleteSQLQuery(page);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Export sql result to csv
-   * @param page
-   * @param row
-   * @returns {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param row {number} Row of the sql result on table
+   * @returns {Promise<string>}
    */
-  async exportSqlResultDataToCsv(page, row = 1) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      await page.click(this.sqlQueryListTableExportLink(row)),
-    ]);
-    return download.path();
+  exportSqlResultDataToCsv(page, row = 1) {
+    return this.clickAndWaitForDownload(page, this.sqlQueryListTableExportLink(row));
+  }
+
+  /**
+   * Confirm delete with modal
+   * @param page
+   * @return {Promise<void>}
+   */
+  async confirmDeleteSQLQuery(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
   /* Sort functions */
@@ -280,7 +298,6 @@ class SqlManager extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteWithBulkActions(page) {
-    this.dialogListener(page, true);
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsDiv, el => el.click()),
@@ -294,7 +311,11 @@ class SqlManager extends BOBasePage {
     ]);
 
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, this.deleteModal),
+    ]);
+    await this.clickAndWaitForNavigation(page, this.modalDeleteButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

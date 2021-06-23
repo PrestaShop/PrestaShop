@@ -22,34 +22,110 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
+
+{#
+# This form theme is an implementation of PrestaShop UI kit, it based on the bootstrap4 layout and overrides a few
+# blocks to match our expected integration of the UI kit.
+#
+# This theme uses/extends the basic bootstrap_4_layout meaning the form labels/inputs are displayed one under the other.
+# Unlike our prestashop_ui_kit.html.twig theme which extends this base kit but uses bootstrap_4_horizontal_layout as a
+# base, where labels/inputs are displayed horizontally in a column way.
+#}
+
+{#
+# We need to radio_widget and checkbox_widget from the original bootstrap 4 layout because we need to add form-check-radio
+# on the last wrapping div which is not possible with the attributes, so we basically copied the content, but then we cannot
+# use parent() to render the internal widget because it would reuse the one from bootstrap_4_layout and duplicate content.
+#
+# So we extract the initial widget from the bootstrap_base_layout to inject them as the internal widget, it is important
+# to do it before we use bootstrap_4_layout or the base layout will override the blocks from bootstrap_4_layout.
+#
+# See https://symfony.com/doc/3.4/form/form_customization.html#referencing-blocks-from-inside-the-same-template-as-the-form
+#}
+{% use 'bootstrap_base_layout.html.twig' with radio_widget as base_radio_widget, checkbox_widget as base_checkbox_widget %}
+
+{# Use bootstrap4 theme (from the Symfony framework) as default base #}
 {% use 'bootstrap_4_layout.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/material.html.twig' %}
 
-{# overrides from form_div_layout #}
-
-{#--deleted {% block form_start -%}
-  {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-horizontal')|trim}) %}
-  {{- parent() -}}
-{%- endblock form_start %}#}
+{# overrides from bootstrap_4_layout #}
 
 {# Widgets #}
 
 {%- block form_widget -%}
+  {% if columns_number is defined %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-columns-' ~ columns_number)|trim}) %}
+  {% endif %}
   {{ parent() }}
   {{- block('form_help') -}}
 {%- endblock form_widget -%}
 
 {%- block form_widget_simple -%}
   {{ parent() }}
-  {% include "@Twig/form_max_length.html.twig" with {"attr": attr} %}
+  {% include '@PrestaShop/Admin/TwigTemplateForm/form_max_length.html.twig' with {'attr': attr} %}
 {%- endblock form_widget_simple -%}
 
-{#--deleted {%- block checkbox_widget -%}
-  {% set switch = switch|default('') -%}
-  <input type="checkbox"
-         {% if switch %}data-toggle="switch"{% endif %} {% if switch %}class="{{ switch }}"{% endif %} {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-{%- endblock checkbox_widget -%}#}
+{% block text_with_unit_widget %}
+  <div class="input-group">
+    {{- block('form_widget_simple') -}}
+    {% if form.vars.unit is defined %}
+      <div class="input-group-append">
+        <span class="input-group-text">{{ form.vars.unit }}</span>
+      </div>
+    {% endif %}
+  </div>
+  {{ block('form_help') }}
+{% endblock text_with_unit_widget %}
+
+{% block ip_address_text_widget %}
+  <div class="input-group">
+    {{- block('form_widget_simple') -}}
+    <button type="button" class="btn btn-outline-primary add_ip_button" data-ip="{{ currentIp }}">
+      <i class="material-icons">add_circle</i> {{ 'Add my IP'|trans({}, 'Admin.Actions') }}
+    </button>
+  </div>
+  {{ block('form_help') }}
+{% endblock ip_address_text_widget %}
+
+{# Rows #}
+
+{% block form_row -%}
+  <div class="form-group{{ block('widget_type_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}">
+    {{- form_label(form) -}}
+    {{- block('form_prepend_alert') -}}
+
+    {{- form_widget(form) -}}
+    {{- form_errors(form) -}}
+
+    {{- block('form_external_link') -}}
+    {{- block('form_append_alert') -}}
+  </div>
+
+  {% if column_breaker %}
+  <div class="form-group form-column-breaker"></div>
+  {% endif %}
+{%- endblock form_row %}
+
+{% block widget_type_class %}
+{% if not compound and form.vars.block_prefixes|length > 2 %}
+ {% spaceless %}
+
+    {% set index = form.vars.block_prefixes|length - 2 %}
+    {% set widgetType = form.vars.block_prefixes[index] %}
+    {% if widgetType == 'choice' %}
+      {% if not expanded %}
+        {% set widgetType = 'select' %}
+      {% elseif multiple %}
+        {% set widgetType = 'checboxes' %}
+      {% else %}
+        {% set widgetType = 'radio' %}
+      {% endif %}
+    {% endif %}
+    {{ widgetType }}-widget
+{% endspaceless %}
+{% endif %}
+{% endblock %}
 
 {# Labels #}
 
@@ -71,41 +147,37 @@
         {% set label = name|humanize %}
       {%- endif -%}
     {%- endif -%}
-    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ translation_domain is same as(false) ? label|raw : label|raw }}
+
+    {% set labelTag = label_tag_name|default('label') %}
+    <{{ labelTag }}{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+    {% if required %}
+      <span class="text-danger">*</span>
+    {% endif %}
+    {{ translation_domain is same as(false) ? label|raw : label|raw }}
     {% if label_attr['tooltip'] is defined %}
       {% set placement = label_attr['tooltip_placement'] is defined ? label_attr['tooltip_placement'] : 'top' %}
       <i class="icon-question" data-toggle="pstooltip" data-placement="{{ placement }}"
          title="{{ label_attr['tooltip'] }}"></i>
     {% endif %}
 
-    {% if label_attr['popover'] is defined %}
+    {% if label_help_box is defined or label_attr['popover'] is defined %}
+      {% set content = label_help_box is defined ? label_help_box : label_attr['popover'] %}
       {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
-      <span class="help-box" data-toggle="popover" data-placement="{{ placement }}"
-            data-content="{{ label_attr['popover'] }}"></span>
+      {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": content } %}
     {% endif %}
-    </label>
-
+    </{{ labelTag }}>
+    {% if label_subtitle is defined %}
+      <p class="subtitle">{{ label_subtitle }}</p>
+    {% endif %}
   {%- endif -%}
 {%- endblock form_label -%}
-
-{# Misc #}
-
-{#--deleted {%- block form_row -%}
-  {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-
-  {{- ps.form_group_row(form, { attr: form.vars.attr }, {
-    'label': form.vars.label
-  }) -}}
-{% endblock form_row %}#}
-
-{# overrides from bootstrap_4_layout #}
 
 {# Widgets #}
 
 {% block textarea_widget -%}
   {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
   {{- parent() -}}
-
+  {% include '@PrestaShop/Admin/TwigTemplateForm/form_max_length.html.twig' with {'attr': attr} %}
   {{ block('form_help') }}
 {%- endblock textarea_widget %}
 
@@ -124,6 +196,8 @@
       </div>
     {% endif %}
   </div>
+
+  {{ block('form_help') }}
 {%- endblock money_widget %}
 
 {% block percent_widget -%}
@@ -148,6 +222,12 @@
     </div>
   {%- endif %}
 {%- endblock datetime_widget %}
+
+{%- block url_widget -%}
+  {%- set type = type|default('url') -%}
+  {{ block('form_widget_simple') }}
+  {{ block('form_help') }}
+{%- endblock url_widget -%}
 
 {% block date_widget -%}
   {% if widget == 'single_text' %}
@@ -183,32 +263,35 @@
   {% endif %}
 {%- endblock time_widget %}
 
+{%- block email_widget -%}
+  {%- set type = type|default('email') -%}
+  {{ block('form_widget_simple') }}
+  {{ block('form_help') }}
+{%- endblock email_widget -%}
+
 {% block button_widget -%}
   {% set attr = attr|merge({class: (attr.class|default('btn-default') ~ ' btn')|trim}) %}
   {{- parent() -}}
 {%- endblock %}
 
-{#{% block checkbox_widget -%}
-  {% set parent_label_class = parent_label_class|default('') -%}
-  {% if 'checkbox-inline' in parent_label_class %}
-    {{- form_label(form, null, { widget: parent() }) -}}
-  {% else -%}
-    <div class="checkbox">
-      {{- form_label(form, null, { widget: parent() }) -}}
-    </div>
-  {%- endif %}
-{%- endblock checkbox_widget %}
+{% block icon_button_widget -%}
+  {% set attr = attr|merge({class: (attr.class|default('btn-default') ~ ' btn')|trim}) %}
+  {% if button_type == 'link' %}
+    {% set buttonTag = 'a' %}
+    {# Link tags need extra class for disabled, the attribute itself is not enough #}
+    {% if attr.disabled|default(false) %}
+      {% set attr = attr|merge({class: (attr.class ~ ' disabled')|trim}) %}
+    {% endif %}
+  {% else %}
+    {% set buttonTag = 'button' %}
+    {% set attr = attr|merge({type: 'button'}) %}
+  {% endif %}
 
-{% block radio_widget -%}
-  {%- set parent_label_class = parent_label_class|default('') -%}
-  {% if 'radio-inline' in parent_label_class %}
-    {{- form_label(form, null, { widget: parent() }) -}}
-  {% else -%}
-    <div class="radio">
-      {{- form_label(form, null, { widget: parent() }) -}}
-    </div>
-  {%- endif %}
-{%- endblock radio_widget %}#}
+  <{{ buttonTag }} {{ block('button_attributes') }}>
+    <i class="material-icons">{{ button_icon }}</i>
+    {{ label }}
+  </{{ buttonTag }}>
+{%- endblock %}
 
 {% block choice_widget %}
   {{- parent() -}}
@@ -338,9 +421,8 @@
         {% set classes = classes ~ ' d-none' %}
       {% endif %}
 
-      {% set attr = translateField.vars.attr %}
-
-      {{ form_widget(translateField, {attr: {'class': classes|trim}}) }}
+      {%- set attr = attr|merge({class: classes|trim}) -%}
+      {{ block('form_widget') }}
     {% endfor %}
 
     {% if not hide_locales %}
@@ -355,7 +437,7 @@
           {{ form.vars.default_locale.iso_code }}
         </button>
 
-        <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
           {% endfor %}
@@ -393,7 +475,7 @@
           {{ form.vars.default_locale.iso_code }}
         </button>
 
-        <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item"
                   data-locale="{{ locale.iso_code }}"
@@ -418,6 +500,7 @@
         </div>
       </div>
     </div>
+    {{ block('form_help') }}
   {% endspaceless %}
 {% endblock date_picker_widget %}
 
@@ -457,6 +540,7 @@
 
 {% block switch_widget %}
   {% spaceless %}
+  <div class="input-group">
     <span class="ps-switch">
         {% for choice in choices %}
           {% set inputId = id ~'_' ~ choice.value %}
@@ -465,7 +549,9 @@
         {% endfor %}
         <span class="slide-button"></span>
     </span>
+  </div>
   {% endspaceless %}
+  {{- block('form_help') -}}
 {% endblock switch_widget %}
 
 {% block _form_step6_attachments_widget %}
@@ -527,7 +613,15 @@
       {% set label = name|humanize %}
     {% endif %}
 
-    {% if material_design is defined or attr.material_design is defined %}
+    {% if block_prefixes[2] == 'radio' %}
+      <label class="form-check-label"{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+        {{- widget|raw -}}
+
+        <i class="form-check-round"></i>
+
+        {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
+      </label>
+    {% else %}
       <div class="md-checkbox md-checkbox-inline">
         <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
         {{- widget|raw -}}
@@ -535,46 +629,129 @@
         {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
         </label>
       </div>
-    {% else %}
-      <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-      {{- widget|raw -}}
-      {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
-      </label>
     {% endif %}
   {% endif %}
 {% endblock checkbox_radio_label %}
 
+{% block radio_widget -%}
+    {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
+    {%- if 'radio-custom' in parent_label_class -%}
+        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' custom-control-input')|trim}) -%}
+        <div class="custom-control custom-radio{{ 'radio-inline' in parent_label_class ? ' custom-control-inline' }}">
+            {{- form_label(form, null, { widget: block('base_radio_widget') }) -}}
+        </div>
+    {%- else -%}
+        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-check-input')|trim}) -%}
+        <div class="form-check form-check-radio form-radio{{ 'radio-inline' in parent_label_class ? ' form-check-inline' }}">
+            {{- form_label(form, null, { widget: block('base_radio_widget') }) -}}
+        </div>
+    {%- endif -%}
+{%- endblock radio_widget %}
+
+{% block checkbox_widget -%}
+    {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-check-input')|trim}) -%}
+    <div class="form-check form-check-radio form-checkbox">
+        {{- form_label(form, null, { widget: block('base_checkbox_widget') }) -}}
+    </div>
+{%- endblock checkbox_widget %}
+
 {# Errors #}
 
 {% block form_errors -%}
+  {% if attr['fieldError'] is defined and attr['fieldError'] == true %}
+    {{ block('form_errors_field') }}
+  {% else %}
+    {{ block('form_errors_other') }}
+  {% endif %}
+{%- endblock form_errors %}
+
+{% block form_errors_field %}
   {% if errors|length > 0 -%}
-    <div class="alert alert-danger">
-      {%- if errors|length > 1 -%}
-        <ul class="alert-text">
-          {%- for error in errors -%}
-            <li> {{
-              error.messagePluralization is null
-              ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-              : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-              }}
-            </li>
-          {%- endfor -%}
-        </ul>
-      {%- else -%}
-        <div class="alert-text">
-          {%- for error in errors -%}
+    {# If we got more then one error then we need to display popover instead of errors list #}
+    {%- if errors|length > 1 -%}
+
+      {% set popoverContainer = 'popover-error-container-'~form.vars.id %}
+      <div class="{{ popoverContainer }}"></div>
+
+      {% set popoverErrorContent %}
+        <div class="popover-error-list">
+          <ul>
+            {%- for error in errors -%}
+              <li class="text-danger"> {{
+                error.messagePluralization is null
+                ? error.messageTemplate|trans(error.messageParameters, 'form_error')
+                : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
+                }}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endset %}
+
+      <template class="js-popover-error-content" data-id="{{ form.vars.id }}">
+        {{ popoverErrorContent }}
+      </template>
+
+      {% set errorPopover %}
+        <span
+          data-toggle="form-popover-error"
+          data-id="{{ form.vars.id }}"
+          data-placement="bottom"
+          data-template='<div class="popover form-popover-error" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+          data-trigger="hover"
+          data-container=".{{ popoverContainer }}"
+        >
+          <i class="material-icons form-error-icon">error_outline</i> <u> {{ '%count% errors'|transchoice(errors|length, {}, 'Admin.Global') }}</u>
+        </span>
+      {% endset %}
+
+      <div class="invalid-feedback-container">
+        <div class="text-danger">
+          {{ errorPopover }}
+        </div>
+      </div>
+
+      {# If there is only one error then display it without popover #}
+    {%- else -%}
+      <div class="d-inline-block text-danger align-top">
+        <i class="material-icons form-error-icon">error_outline</i>
+      </div>
+      <div class="d-inline-block">
+        {% for error in errors %}
+          <div class="text-danger">
             <p> {{
               error.messagePluralization is null
               ? error.messageTemplate|trans(error.messageParameters, 'form_error')
               : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
               }}
             </p>
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
-    </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
   {%- endif %}
-{%- endblock form_errors %}
+{% endblock %}
+
+{% block form_errors_other %}
+  {% if errors|length > 0 -%}
+    <div class="alert alert-danger d-print-none" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true"><i class="material-icons">close</i></span>
+      </button>
+      <div class="alert-text">
+        {% for error in errors %}
+            <p> {{
+              error.messagePluralization is null
+              ? error.messageTemplate|trans(error.messageParameters, 'form_error')
+              : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
+              }}
+            </p>
+        {%- endfor -%}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
 
 {# Material design widgets #}
 
@@ -611,11 +788,11 @@
 
 {% block material_multiple_choice_table_widget %}
   {% spaceless %}
-    <div class="choice-table table-responsive">
+    <div class="choice-table{% if headers_fixed %}-headers-fixed{% endif %} table-responsive">
       <table class="table">
         <thead>
         <tr>
-          <th>{{ label }}</th>
+          <th>{{ table_label }}</th>
           {% for child_choice in form %}
             <th class="text-center">
               {% if child_choice.vars.multiple and child_choice.vars.name not in headers_to_disable %}
@@ -662,40 +839,75 @@
   {% endspaceless %}
 {% endblock material_multiple_choice_table_widget %}
 
-{% block translatable_widget -%}
-  <div class="input-group locale-input-group js-locale-input-group d-flex">
-    {% for translateField in form %}
-      {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
-      {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
-      {% if default_locale.id_lang != translateField.vars.name %}
-        {% set classes = classes ~ ' d-none' %}
-      {% endif %}
-      <div class="{{ classes }}" style="flex-grow: 1;">
-        {{ form_widget(translateField) }}
-      </div>
-    {% endfor %}
-    {% if not hide_locales %}
-      <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle js-locale-btn"
-                type="button"
-                data-toggle="dropdown"
-          {% if change_form_language_url is defined %}
-            data-change-language-url="{{ form.vars.change_form_language_url }}"
-          {% endif %}
-                aria-haspopup="true"
-                aria-expanded="false"
-                id="{{ form.vars.id }}"
-        >
-          {{ form.vars.default_locale.iso_code }}
-        </button>
-        <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
-          {% for locale in locales %}
-            <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
-          {% endfor %}
-        </div>
-      </div>
+{# Copied translatablefields_widget made to be compatible with TranslatableType.php and to be used in translatable widget#}
+{% block translatable_fields_with_tabs %}
+  <div class="translations tabbable" id="{{ form.vars.id }}">
+    {% if hide_locales == false and form|length > 1 %}
+      <ul class="translationsLocales nav nav-pills">
+        {% for translationsFields in form %}
+          <li class="nav-item">
+            <a href="#" data-locale="{{ translationsFields.vars.label }}" class="{% if default_locale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
+              {{ translationsFields.vars.label|capitalize }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
     {% endif %}
+
+    <div class="translationsFields tab-content">
+      {% for translationsFields in form %}
+        <div data-locale="{{ translationsFields.vars.label }}" class="translationsFields-{{ translationsFields.vars.id }} tab-pane translation-field {% if hide_locales == false and form|length > 1 %}panel panel-default{% endif %} {% if default_locale.id_lang == translationsFields.vars.name %}show active{% endif %} {% if not form.vars.valid %}field-error{% endif %} translation-label-{{ translationsFields.vars.label }}">
+          {{ form_widget(translationsFields) }}
+        </div>
+      {% endfor %}
+    </div>
   </div>
+{% endblock %}
+
+{% block translatable_fields_with_dropdown -%}
+    {% set formClass = (form.vars.attr.class|default('') ~ ' input-group locale-input-group js-locale-input-group d-flex')|trim %}
+    <div class="{{ formClass }}">
+      {% for translateField in form %}
+        {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
+        {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
+        {% if default_locale.id_lang != translateField.vars.name %}
+          {% set classes = classes ~ ' d-none' %}
+        {% endif %}
+        <div class="{{ classes }}" style="flex-grow: 1;">
+          {{ form_widget(translateField) }}
+        </div>
+      {% endfor %}
+      {% if not hide_locales %}
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle js-locale-btn"
+                  type="button"
+                  data-toggle="dropdown"
+            {% if change_form_language_url is defined %}
+              data-change-language-url="{{ form.vars.change_form_language_url }}"
+            {% endif %}
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  id="{{ form.vars.id }}"
+          >
+            {{ form.vars.default_locale.iso_code }}
+          </button>
+          <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+            {% for locale in locales %}
+              <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+{%- endblock %}
+
+{% block translatable_widget -%}
+  {% if use_tabs %}
+    {{ block('translatable_fields_with_tabs') }}
+  {% else %}
+    {{ block('translatable_fields_with_dropdown') }}
+  {% endif %}
+  {{ block('form_help') }}
 {%- endblock translatable_widget %}
 
 {% block birthday_widget %}
@@ -707,9 +919,9 @@
       <div {{ block('widget_container_attributes') -}}>
     {%- endif %}
 
-    {% set yearWidget = '<div class="col pl-0">' ~ form_widget(form.year) ~ '</div>'|raw %}
-    {% set monthWidget = '<div class="col">' ~ form_widget(form.month) ~ '</div>'|raw %}
-    {% set dayWidget = '<div class="col pr-0">' ~ form_widget(form.day) ~ '</div>'|raw %}
+    {% set yearWidget = '<div class="col pl-0 birthday-select-container">' ~ form_widget(form.year) ~ '</div>'|raw %}
+    {% set monthWidget = '<div class="col birthday-select-container">' ~ form_widget(form.month) ~ '</div>'|raw %}
+    {% set dayWidget = '<div class="col pr-0 birthday-select-container">' ~ form_widget(form.day) ~ '</div>'|raw %}
 
     {{- date_pattern|replace({
       '{{ year }}': yearWidget,
@@ -741,14 +953,19 @@
         class: attr.class ~ ' disabled'
       }) %}
     {% endif %}
-
-    {{ form_widget(form, {'attr': attr}) }}
+    {{- block('form_widget_simple') -}}
 
     <label class="custom-file-label" for="{{ form.vars.id }}">
       {% set attributes = form.vars.attr %}
       {{ attributes.placeholder is defined ?  attributes.placeholder : 'Choose file(s)'|trans({}, 'Admin.Actions') }}
     </label>
   </div>
+  {{- block('form_help') -}}
+  {% if form.vars.download_url %}
+    <a target="_blank" href="{{ form.vars.download_url }}">
+      {{ 'Download file'|trans({}, 'Admin.Actions') }}
+    </a>
+  {% endif %}
 {% endblock file_widget %}
 
 {% block shop_restriction_checkbox_widget %}
@@ -770,7 +987,11 @@
 
 {% block generatable_text_widget %}
   <div class="input-group">
-    {{- block('form_widget') -}}
+    {% if compound %}
+      {{- block('form_widget_compound') -}}
+    {% else %}
+      {{- block('form_widget_simple') -}}
+    {% endif %}
     <span class="input-group-btn ml-1">
       <button class="btn btn-outline-secondary js-generator-btn"
               type="button"
@@ -781,6 +1002,7 @@
       </button>
    </span>
   </div>
+  {{ block('form_help') }}
 {% endblock generatable_text_widget %}
 
 {% block text_with_recommended_length_widget %}
@@ -807,7 +1029,36 @@
       })|raw }}
     </em>
   </small>
-{% endblock text_with_recommended_length_widget %}
+{% endblock %}
+
+{% block text_with_length_counter_widget %}
+  <div class="input-group js-text-with-length-counter">
+    {% set current_length = form.vars.max_length - form.vars.value|length %}
+
+    {% if form.vars.position == 'before' %}
+      <div class="input-group-prepend">
+        <span class="input-group-text js-countable-text">{{ current_length }}</span>
+      </div>
+    {% endif %}
+
+    {% set attr = attr|merge({'data-max-length': form.vars.max_length, 'maxlength': form.vars.max_length, 'class': 'js-countable-input'}) -%}
+    {% set attr = attr|merge(input_attr) -%}
+
+    {% if form.vars.input == 'input' %}
+      {{- block('form_widget_simple') -}}
+    {% elseif form.vars.input == 'textarea' %}
+      {{- block('textarea_widget') -}}
+    {% else %}
+      {{- block('form_widget') -}}
+    {% endif %}
+
+    {% if form.vars.position == 'after' %}
+      <div class="input-group-append">
+        <span class="input-group-text js-countable-text">{{ current_length }}</span>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
 
 {% block integer_min_max_filter_widget %}
   {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
@@ -819,6 +1070,12 @@
   {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
 {% endblock %}
 
+{%- block number_widget -%}
+  {%- set type = type|default('text') -%}
+  {{ block('form_widget_simple') }}
+  {{- block('form_help') -}}
+{%- endblock number_widget -%}
+
 {% block form_help %}
   {% if help %}
     <small class="form-text">{{ help|raw }}</small>
@@ -828,11 +1085,39 @@
   {% endif %}
 {% endblock form_help %}
 
+{% block form_external_link %}
+  {% if external_link is defined %}
+    {%- set openingTag -%}
+      <a {{ block('form_external_link_attributes') }}>
+        <i class="material-icons">open_in_new</i>
+    {%- endset -%}
+
+    <div class="small font-secondary{% if external_link.align is same as('right') %} text-right{% endif %}">
+      {{ external_link.text|replace({'[1]': openingTag, '[/1]': '</a>'})|raw }}
+    </div>
+  {% endif %}
+{% endblock form_external_link %}
+
+{%- block form_external_link_attributes -%}
+  {% set external_link_attr = external_link.attr|merge({class: (external_link.attr.class|default('') ~ ' btn btn-link px-0 align-right')|trim}) %}
+
+  {% for attrname, attrvalue in external_link_attr %}
+    {% if attrname not in ['href', 'class'] %}
+      {{ attrname }}="{{ attrvalue }}"
+    {% endif %}
+  {% endfor %}
+
+  target="_blank"
+  href="{{ external_link.href }}"
+  class="{{ external_link_attr.class }}"
+{%- endblock -%}
+
 {% block custom_content_widget %}
   {% include template with data %}
 {% endblock %}
 
 {% block text_widget %}
+  {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
   {% if data_list is not null %}
     {%- set attr = attr|merge({'list': id ~ '_datalist'}) -%}
   {% endif %}
@@ -847,3 +1132,56 @@
     </datalist>
   {% endif %}
 {% endblock text_widget %}
+
+{%- block form_prepend_alert -%}
+  {% if alert_position is defined and alert_position == 'prepend' %}
+  {{- block('form_alert') -}}
+  {% endif %}
+{% endblock %}
+
+{%- block form_append_alert -%}
+  {% if alert_position is defined and alert_position == 'append' %}
+  {{- block('form_alert') -}}
+  {% endif %}
+{% endblock %}
+
+{%- block form_alert -%}
+  {% if alert_message is defined %}
+    <div class="alert alert-{{ alert_type }}{% if alert_title is defined %} expandable-alert{% endif %}" role="alert">
+    {% if alert_title is defined %}
+      <p class="alert-text">
+        {{ alert_title|raw }}
+      </p>
+    {% else %}
+      {% for message in alert_message %}
+        <p class="alert-text">
+          {{ message|raw }}
+        </p>
+      {% endfor %}
+    {% endif %}
+
+    {% if alert_title is defined %}
+      <div class="alert-more collapse" id="expandable_{{form.vars.id}}" style="">
+        {% for message in alert_message %}
+          <p>
+            {{ message|raw }}
+          </p>
+        {% endfor %}
+      </div>
+      <div class="read-more-container">
+         <button type="button" class="read-more btn-link" data-toggle="collapse" data-target="#expandable_{{form.vars.id}}" aria-expanded="true" aria-controls="collapseDanger">
+            {{ 'Read more'|trans({}, 'Admin.Actions') }}
+          </button>
+       </div>
+    {% endif %}
+  </div>
+  {% endif %}
+{%- endblock -%}
+
+{% block unavailable_widget %}
+  <div class="alert alert-unavailable" role="alert">
+    <p class="alert-text">
+      {{ 'Not available yet'|trans({}, 'Admin.Catalog.Feature') }}
+    </p>
+  </div>
+{% endblock %}

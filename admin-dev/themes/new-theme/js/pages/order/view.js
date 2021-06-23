@@ -25,13 +25,14 @@
 
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 import OrderShippingManager from '@pages/order/order-shipping-manager';
+import InvoiceNoteManager from '@pages/order/invoice-note-manager';
 import OrderViewPage from '@pages/order/view/order-view-page';
 import OrderProductAutocomplete from '@pages/order/view/order-product-add-autocomplete';
 import OrderProductAdd from '@pages/order/view/order-product-add';
-import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
 import TextWithLengthCounter from '@components/form/text-with-length-counter';
+import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const DISCOUNT_TYPE_AMOUNT = 'amount';
@@ -53,18 +54,25 @@ $(() => {
   orderViewPage.listenForCancelProduct();
 
   orderAddAutocomplete.listenForSearch();
-  orderAddAutocomplete.onItemClickedCallback = product => orderAdd.setProduct(product);
+  orderAddAutocomplete.onItemClickedCallback = (product) => orderAdd.setProduct(product);
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
+  handleOrderNoteChange();
   handleUpdateOrderStatusButton();
 
+  new InvoiceNoteManager();
   const orderViewPageMessageHandler = new OrderViewPageMessagesHandler();
   orderViewPageMessageHandler.listenForPredefinedMessageSelection();
   orderViewPageMessageHandler.listenForFullMessagesOpen();
-  $(OrderViewPageMap.privateNoteToggleBtn).on('click', event => {
+  $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();
     togglePrivateNoteBlock();
+  });
+
+  $(OrderViewPageMap.orderNoteToggleBtn).on('click', (event) => {
+    event.preventDefault();
+    toggleOrderNoteBlock();
   });
 
   $(OrderViewPageMap.printOrderViewPageButton).on('click', () => {
@@ -85,7 +93,7 @@ $(() => {
   }
 
   function handlePaymentDetailsToggle() {
-    $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', event => {
+    $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
       const $paymentDetailRow = $(event.currentTarget)
         .closest('tr')
         .next(':first');
@@ -119,9 +127,30 @@ $(() => {
     });
   }
 
+  function toggleOrderNoteBlock() {
+    const $block = $(OrderViewPageMap.orderNoteBlock);
+    const $btn = $(OrderViewPageMap.orderNoteToggleBtn);
+    const isNoteOpened = $btn.hasClass('is-opened');
+
+    $btn.toggleClass('is-opened', !isNoteOpened);
+    $block.toggleClass('d-none', isNoteOpened);
+
+    const $icon = $btn.find('.material-icons');
+    $icon.text(isNoteOpened ? 'add' : 'remove');
+  }
+
+  function handleOrderNoteChange() {
+    const $submitBtn = $(OrderViewPageMap.orderNoteSubmitBtn);
+
+    $(OrderViewPageMap.orderNoteInput).on('input', () => {
+      $submitBtn.prop('disabled', false);
+    });
+  }
+
   function initAddCartRuleFormHandler() {
     const $modal = $(OrderViewPageMap.addCartRuleModal);
     const $form = $modal.find('form');
+    const $invoiceSelect = $modal.find(OrderViewPageMap.addCartRuleInvoiceIdSelect);
     const $valueHelp = $modal.find(OrderViewPageMap.cartRuleHelpText);
     const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
     const $valueFormGroup = $valueInput.closest('.form-group');
@@ -133,6 +162,11 @@ $(() => {
     $form.find(OrderViewPageMap.addCartRuleNameInput).on('keyup', (event) => {
       const cartRuleName = $(event.currentTarget).val();
       $(OrderViewPageMap.addCartRuleSubmit).attr('disabled', cartRuleName.trim().length === 0);
+    });
+
+    $form.find(OrderViewPageMap.addCartRuleApplyOnAllInvoicesCheckbox).on('change', (event) => {
+      const isChecked = $(event.currentTarget).is(':checked');
+      $invoiceSelect.attr('disabled', isChecked);
     });
 
     $form.find(OrderViewPageMap.addCartRuleTypeSelect).on('change', (event) => {
@@ -164,7 +198,7 @@ $(() => {
     const $btn = $(OrderViewPageMap.updateOrderStatusActionBtn);
     const $wrapper = $(OrderViewPageMap.updateOrderStatusActionInputWrapper);
 
-    $(OrderViewPageMap.updateOrderStatusActionInput).on('change', event => {
+    $(OrderViewPageMap.updateOrderStatusActionInput).on('change', (event) => {
       const $element = $(event.currentTarget);
       const $option = $('option:selected', $element);
       const selectedOrderStatusId = $element.val();
@@ -179,7 +213,7 @@ $(() => {
   function initChangeAddressFormHandler() {
     const $modal = $(OrderViewPageMap.updateCustomerAddressModal);
 
-    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', event => {
+    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', (event) => {
       $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($(event.currentTarget).data('addressType'));
     });
   }

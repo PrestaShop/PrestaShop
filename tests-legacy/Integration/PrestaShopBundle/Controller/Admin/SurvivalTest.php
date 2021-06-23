@@ -26,6 +26,7 @@
 
 namespace LegacyTests\Integration\PrestaShopBundle\Controller\Admin;
 
+use Cookie;
 use LegacyTests\Integration\PrestaShopBundle\Test\WebTestCase;
 use PrestaShopBundle\Security\Admin\Employee as LoggedEmployee;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
@@ -180,6 +181,7 @@ class SurvivalTest extends WebTestCase
             'admin_attachments_create' => ['Add new', 'admin_attachments_create'],
             'admin_orders_index' => ['Orders', 'admin_orders_index'],
             'admin_orders_create' => ['Add new', 'admin_orders_create'],
+            'admin_carriers_index' => ['Carriers', 'admin_carriers_index'],
         ];
     }
 
@@ -227,6 +229,10 @@ class SurvivalTest extends WebTestCase
         $tokenStorageMock->method('getToken')
             ->willReturn($tokenMock);
 
-        self::$kernel->getContainer()->set('security.token_storage', $tokenStorageMock);
+        $container = self::$kernel->getContainer();
+        $container->set('security.token_storage', $tokenStorageMock);
+
+        $cookie = new Cookie('psAdmin', '', 3600);
+        $container->get('prestashop.adapter.legacy.context')->getContext()->cookie = $cookie;
     }
 }

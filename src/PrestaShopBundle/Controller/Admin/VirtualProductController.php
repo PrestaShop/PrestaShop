@@ -40,7 +40,7 @@ class VirtualProductController extends FrameworkBundleAdminController
     /**
      * Process Ajax Form to create/update virtual product.
      *
-     * @param $idProduct
+     * @param string|int $idProduct
      * @param Request $request
      *
      * @return JsonResponse
@@ -54,7 +54,7 @@ class VirtualProductController extends FrameworkBundleAdminController
         $router = $this->get('router');
 
         //get product
-        $product = $productAdapter->getProduct((int) $idProduct, true);
+        $product = $productAdapter->getProduct((int) $idProduct);
 
         if (!$product || !$request->isXmlHttpRequest()) {
             return $response;
@@ -121,7 +121,7 @@ class VirtualProductController extends FrameworkBundleAdminController
     /**
      * Process Ajax Form to remove attached file.
      *
-     * @param $idProduct
+     * @param string|int $idProduct
      * @param Request $request
      *
      * @return JsonResponse
@@ -147,7 +147,7 @@ class VirtualProductController extends FrameworkBundleAdminController
     /**
      * Process Ajax remove action.
      *
-     * @param $idProduct
+     * @param string|int $idProduct
      * @param Request $request
      *
      * @return JsonResponse

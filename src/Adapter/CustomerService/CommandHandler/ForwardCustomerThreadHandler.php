@@ -131,7 +131,7 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
         );
 
         if ($forwardEmailSent) {
-            $customerMessage->private = 1;
+            $customerMessage->private = true;
             $customerMessage->message = sprintf(
                 '%s %s %s %s %s %s',
                 $this->translator->trans('Message forwarded to', [], 'Admin.Catalog.Feature'),
@@ -306,7 +306,7 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
         $customerMessage = new CustomerMessage();
         $customerMessage->id_employee = (int) $this->context->employee->id;
         $customerMessage->id_customer_thread = (int) $command->getCustomerThreadId()->getValue();
-        $customerMessage->ip_address = (int) ip2long(Tools::getRemoteAddr());
+        $customerMessage->ip_address = (string) (int) ip2long(Tools::getRemoteAddr());
 
         if (false === $customerMessage->validateField('message', $command->getComment())) {
             throw new CustomerServiceException(sprintf('Comment "%s" is not valid.', $command->getComment()));

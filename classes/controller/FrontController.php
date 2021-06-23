@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\IpUtils;
 
 class FrontControllerCore extends Controller
 {
@@ -173,6 +174,25 @@ class FrontControllerCore extends Controller
      * @var array Contains the result of getTemplateVarUrls method
      */
     protected $urls;
+
+    /**
+     * Set this parameter to false if you don't want cart's invoice address
+     * to be set automatically (this behavior is kept for legacy and BC purpose)
+     *
+     * @var bool automaticallyAllocateInvoiceAddress
+     */
+    protected $automaticallyAllocateInvoiceAddress = true;
+
+    /**
+     * Set this parameter to false if you don't want cart's delivery address
+     * to be set automatically (this behavior is kept for legacy and BC purpose)
+     *
+     * @var bool automaticallyAllocateDeliveryAddress
+     */
+    protected $automaticallyAllocateDeliveryAddress = true;
+
+    /** @var string Page name */
+    public $page_name;
 
     /**
      * Controller constructor.
@@ -341,8 +361,15 @@ class FrontControllerCore extends Controller
             }
 
             if ((!$has_currency || $has_country) && !$has_address_type) {
-                $id_country = $has_country && !Validate::isLanguageIsoCode($this->context->cookie->iso_code_country) ?
-                    (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country)) : (int) Tools::getCountry();
+                if ($has_country && Validate::isLanguageIsoCode($this->context->cookie->iso_code_country)) {
+                    $id_country = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country));
+                } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
+                        && preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array)
+                        && Validate::isLanguageIsoCode($array[0])) {
+                    $id_country = (int) Country::getByIso($array[0], true);
+                } else {
+                    $id_country = Tools::getCountry();
+                }
 
                 $country = new Country($id_country, (int) $this->context->cookie->id_lang);
 
@@ -396,13 +423,13 @@ class FrontControllerCore extends Controller
             }
             /* Select an address if not set */
             if (isset($cart) && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 ||
-                !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
+                    !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
                 $to_update = false;
-                if (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0) {
+                if ($this->automaticallyAllocateDeliveryAddress && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0)) {
                     $to_update = true;
                     $cart->id_address_delivery = (int) Address::getFirstCustomerAddressId($cart->id_customer);
                 }
-                if (!isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) {
+                if ($this->automaticallyAllocateInvoiceAddress && (!isset($cart->id_address_invoice) || $cart->id_address_invoice == 0)) {
                     $to_update = true;
                     $cart->id_address_invoice = (int) Address::getFirstCustomerAddressId($cart->id_customer);
                 }
@@ -446,14 +473,10 @@ class FrontControllerCore extends Controller
 
         Product::initPricesComputation();
 
-        $display_tax_label = $this->context->country->display_tax_label;
         if (isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) {
             $infos = Address::getCountryAndState((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
             $country = new Country((int) $infos['id_country']);
             $this->context->country = $country;
-            if (Validate::isLoadedObject($country)) {
-                $display_tax_label = $country->display_tax_label;
-            }
         }
 
         /*
@@ -739,7 +762,8 @@ class FrontControllerCore extends Controller
     {
         if ($this->maintenance == true || !(int) Configuration::get('PS_SHOP_ENABLE')) {
             $this->maintenance = true;
-            if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))) {
+            $allowed_ips = array_map('trim', explode(',', Configuration::get('PS_MAINTENANCE_IP')));
+            if (!IpUtils::checkIp(Tools::getRemoteAddr(), $allowed_ips)) {
                 header('HTTP/1.1 503 Service Unavailable');
                 header('Retry-After: 3600');
 
@@ -810,29 +834,7 @@ class FrontControllerCore extends Controller
 
         $match_url = rawurldecode(Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         if (!preg_match('/^' . Tools::pRegexp(rawurldecode($canonical_url), '/') . '([&?].*)?$/', $match_url)) {
-            $params = [];
-            $url_details = parse_url($canonical_url);
-
-            if (!empty($url_details['query'])) {
-                parse_str($url_details['query'], $query);
-                foreach ($query as $key => $value) {
-                    $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
-                }
-            }
-            $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
-            $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
-            foreach ($_GET as $key => $value) {
-                if (!in_array($key, $excluded_key) && Validate::isUrl($key) && Validate::isUrl($value)) {
-                    $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
-                }
-            }
-
-            $str_params = http_build_query($params, '', '&');
-            if (!empty($str_params)) {
-                $final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url) . '?' . $str_params;
-            } else {
-                $final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url);
-            }
+            $final_url = $this->sanitizeUrl($canonical_url);
 
             // Don't send any cookie
             Context::getContext()->cookie->disallowWriting();
@@ -856,7 +858,7 @@ class FrontControllerCore extends Controller
      */
     protected function geolocationManagement($defaultCountry)
     {
-        if (!in_array(Tools::getRemoteAddr(), ['localhost', '127.0.0.1', '::1'])) {
+        if (!in_array(Tools::getRemoteAddr(), ['127.0.0.1', '::1'])) {
             /* Check if Maxmind Database exists */
             if (@filemtime(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_)) {
                 if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
@@ -1432,13 +1434,11 @@ class FrontControllerCore extends Controller
         }
 
         $products_need_cache = [];
-        foreach ($products as &$product) {
+        foreach ($products as $product) {
             if (!$this->isCached(_PS_THEME_DIR_ . 'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']))) {
                 $products_need_cache[] = (int) $product['id_product'];
             }
         }
-
-        unset($product);
 
         $colors = false;
         if (count($products_need_cache)) {
@@ -1576,7 +1576,7 @@ class FrontControllerCore extends Controller
     public function getTemplateVarCurrency()
     {
         $curr = [];
-        $fields = ['name', 'iso_code', 'iso_code_num', 'sign'];
+        $fields = ['id', 'name', 'iso_code', 'iso_code_num', 'sign'];
         foreach ($fields as $field_name) {
             $curr[$field_name] = $this->context->currency->{$field_name};
         }
@@ -1600,6 +1600,7 @@ class FrontControllerCore extends Controller
             $cust['id_lang']
         );
 
+        $cust['id'] = $this->context->customer->id;
         $cust['is_logged'] = $this->context->customer->isLogged(true);
 
         $cust['gender'] = $this->objectPresenter->present(new Gender($cust['id_gender']));
@@ -1625,6 +1626,7 @@ class FrontControllerCore extends Controller
         $psImageUrl = $urls['img_ps_url'] ?? _PS_IMG_;
 
         $shop = [
+            'id' => $this->context->shop->id,
             'name' => Configuration::get('PS_SHOP_NAME'),
             'email' => Configuration::get('PS_SHOP_EMAIL'),
             'registration_number' => Configuration::get('PS_SHOP_DETAILS'),
@@ -2006,9 +2008,86 @@ class FrontControllerCore extends Controller
         }
 
         foreach ($languages as $lang) {
-            $alternativeLangs[$lang['language_code']] = $this->context->link->getLanguageLink($lang['id_lang']);
+            $langUrl = $this->context->link->getLanguageLink($lang['id_lang']);
+            $alternativeLangs[$lang['language_code']] = $this->sanitizeUrl($langUrl);
         }
 
         return $alternativeLangs;
+    }
+
+    /**
+     * Sanitize / Clean params of an URL
+     *
+     * @param string $url URL to clean
+     *
+     * @return string cleaned URL
+     */
+    protected function sanitizeUrl(string $url): string
+    {
+        $params = [];
+        $url_details = parse_url($url);
+
+        if (!empty($url_details['query'])) {
+            parse_str($url_details['query'], $query);
+            $params = $this->sanitizeQueryOutput($query);
+        }
+
+        $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
+        $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
+        foreach ($_GET as $key => $value) {
+            if (in_array($key, $excluded_key)
+                || !Validate::isUrl($key)
+                || !$this->validateInputAsUrl($value)
+            ) {
+                continue;
+            }
+
+            $params[Tools::safeOutput($key)] = is_array($value) ? array_walk_recursive($value, 'Tools::safeOutput') : Tools::safeOutput($value);
+        }
+
+        $str_params = http_build_query($params, '', '&');
+        $sanitizedUrl = preg_replace('/^([^?]*)?.*$/', '$1', $url) . (!empty($str_params) ? '?' . $str_params : '');
+
+        return $sanitizedUrl;
+    }
+
+    /**
+     * Recursively sanitize output query
+     *
+     * @param array $query URL query
+     *
+     * @return array
+     */
+    protected function sanitizeQueryOutput(array $query): array
+    {
+        $params = [];
+        foreach ($query as $key => $value) {
+            if (is_array($value)) {
+                $params[Tools::safeOutput($key)] = $this->sanitizeQueryOutput($value);
+            } else {
+                $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
+            }
+        }
+
+        return $params;
+    }
+
+    /**
+     * Validate data recursively to be sure it's URL compliant
+     *
+     * @return bool
+     */
+    protected function validateInputAsUrl($data): bool
+    {
+        if (is_array($data)) {
+            $returnStatement = true;
+            foreach ($data as $value) {
+                $returnStatement = $returnStatement && $this->validateInputAsUrl($value);
+            }
+
+            return $returnStatement;
+        }
+
+        return Validate::isUrl($data);
     }
 }

@@ -38,8 +38,8 @@ class PackItemsManager
     /**
      * Get the Products contained in the given Pack.
      *
-     * @param \Pack $pack
-     * @param int $id_lang Optional
+     * @param Pack $pack
+     * @param bool|int $id_lang Optional
      *
      * @return array(Product) The products contained in this Pack, with special dynamic attributes [pack_quantity, id_pack_product_attribute]
      */
@@ -90,7 +90,7 @@ class PackItemsManager
      * else this method will match a product if at least one of all its combination is in a pack.
      *
      * @param Product $product
-     * @param int $id_product_attribute Optional combination of the product
+     * @param int|bool $id_product_attribute Optional combination of the product
      *
      * @return bool
      */

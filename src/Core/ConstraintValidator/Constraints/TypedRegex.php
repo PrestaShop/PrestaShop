@@ -37,19 +37,23 @@ class TypedRegex extends Constraint
     /**
      * Available types
      */
-    const TYPE_NAME = 'name';
-    const TYPE_CATALOG_NAME = 'catalog_name';
-    const TYPE_GENERIC_NAME = 'generic_name';
-    const TYPE_CITY_NAME = 'city_name';
-    const TYPE_ADDRESS = 'address';
-    const TYPE_POST_CODE = 'post_code';
-    const TYPE_PHONE_NUMBER = 'phone_number';
-    const TYPE_MESSAGE = 'message';
-    const TYPE_LANGUAGE_ISO_CODE = 'language_iso_code';
-    const TYPE_LANGUAGE_CODE = 'language_code';
-    const TYPE_CURRENCY_ISO_CODE = 'currency_iso_code';
-    const TYPE_FILE_NAME = 'file_name';
-    const TYPE_DNI_LITE = 'dni_lite';
+    public const TYPE_NAME = 'name';
+    public const TYPE_CATALOG_NAME = 'catalog_name';
+    public const TYPE_GENERIC_NAME = 'generic_name';
+    public const TYPE_CITY_NAME = 'city_name';
+    public const TYPE_ADDRESS = 'address';
+    public const TYPE_POST_CODE = 'post_code';
+    public const TYPE_PHONE_NUMBER = 'phone_number';
+    public const TYPE_MESSAGE = 'message';
+    public const TYPE_LANGUAGE_ISO_CODE = 'language_iso_code';
+    public const TYPE_LANGUAGE_CODE = 'language_code';
+    public const TYPE_CURRENCY_ISO_CODE = 'currency_iso_code';
+    public const TYPE_FILE_NAME = 'file_name';
+    public const TYPE_DNI_LITE = 'dni_lite';
+    public const TYPE_UPC = 'upc';
+    public const TYPE_EAN_13 = 'ean_13';
+    public const TYPE_ISBN = 'isbn';
+    public const TYPE_REFERENCE = 'reference';
 
     /**
      * @var string
@@ -75,5 +79,13 @@ class TypedRegex extends Constraint
     public function validatedBy()
     {
         return TypedRegexValidator::class;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDefaultOption()
+    {
+        return 'type';
     }
 }

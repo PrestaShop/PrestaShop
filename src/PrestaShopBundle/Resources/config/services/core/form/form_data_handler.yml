@@ -84,11 +84,13 @@ services:
       - '@prestashop.adapter.employee.form_access_checker'
       - '@prestashop.adapter.employee.data_provider'
       - '@prestashop.core.crypto.hashing'
+      - '@prestashop.adapter.image.uploader.employee_image_uploader'
 
   prestashop.core.form.identifiable_object.data_handler.profile_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProfileFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
+      - '@prestashop.adapter.image.uploader.profile_image_uploader'
 
   prestashop.core.form.identifiable_object.data_handler.cms_page_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CmsPageFormDataHandler'
@@ -165,3 +167,40 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
       - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.order_state_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderStateFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.order_return_state_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderReturnStateFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.product_form_data_handler:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductFormDataHandler'
+      arguments:
+          - '@prestashop.core.command_bus'
+          - '@prestashop.core.form.command_builder.product_commands_builder'
+
+  prestashop.core.form.identifiable_object.data_handler.combination_form_data_handler:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationFormDataHandler'
+      arguments:
+          - '@prestashop.core.command_bus'
+          - '@prestashop.core.form.command_builder.combination.combination_commands_builder'
+
+  prestashop.core.form.identifiable_object.data_handler.combination_item_form_data_handler:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationItemFormDataHandler'
+      arguments:
+          - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.product_image_form_data_handler:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductImageFormDataHandler'
+      arguments:
+          - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.zone_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ZoneFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'

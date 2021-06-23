@@ -1,9 +1,14 @@
 parameters:
     AdapterSecurityAdminClass:                LegacyTests\PrestaShopBundle\Mock\AdapterSecurityAdminMock
     prestashop.security.voter.product.class:  LegacyTests\PrestaShopBundle\Mock\PageVoter
+    resources_dir: "%kernel.project_dir%/tests/Resources"
+    test_translations_dir: "%resources_dir%/translations"
+    translations_theme_dir: "%resources_dir%/themes"
+    translations_modules_dir: "%resources_dir%/modules"
 
 imports:
     - { resource: config_dev.yml }
+    - { resource: "../../tests/Resources/config/services.yml" }
 
 framework:
     test: ~
@@ -19,13 +24,12 @@ web_profiler:
 swiftmailer:
     disable_delivery: true
 
-services:
-    prestashop.bundle.routing.converter.cache:
-        class: Symfony\Component\Cache\Adapter\ArrayAdapter
-
 # Doctrine Configuration
 doctrine:
     dbal:
         connections:
             default:
                 dbname: "test_%database_name%"
+    orm:
+        metadata_cache_driver: "array"
+        query_cache_driver: "array"

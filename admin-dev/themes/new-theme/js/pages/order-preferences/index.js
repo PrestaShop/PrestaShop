@@ -25,7 +25,7 @@
 
 import TermsAndConditionsOptionHandler from './terms-and-conditions-option-handler';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   new TermsAndConditionsOptionHandler();

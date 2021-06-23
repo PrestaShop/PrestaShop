@@ -173,7 +173,7 @@ class OrderForViewing
     private $shopId;
 
     /**
-     * @var int
+     * @var bool
      */
     private $invoiceManagementIsEnabled;
 
@@ -191,6 +191,11 @@ class OrderForViewing
      * @var string
      */
     private $invoiceAddressFormatted;
+
+    /**
+     * @var string
+     */
+    private $note;
 
     /**
      * @param int $orderId
@@ -225,6 +230,7 @@ class OrderForViewing
      * @param LinkedOrdersForViewing $linkedOrders
      * @param string $shippingAddressFormatted
      * @param string $invoiceAddressFormatted
+     * @param string $note
      */
     public function __construct(
         int $orderId,
@@ -258,7 +264,8 @@ class OrderForViewing
         OrderSourcesForViewing $sources,
         LinkedOrdersForViewing $linkedOrders,
         string $shippingAddressFormatted = '',
-        string $invoiceAddressFormatted = ''
+        string $invoiceAddressFormatted = '',
+        string $note = ''
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
@@ -292,6 +299,7 @@ class OrderForViewing
         $this->linkedOrders = $linkedOrders;
         $this->shippingAddressFormatted = $shippingAddressFormatted;
         $this->invoiceAddressFormatted = $invoiceAddressFormatted;
+        $this->note = $note;
     }
 
     /**
@@ -568,5 +576,13 @@ class OrderForViewing
     public function getInvoiceAddressFormatted(): string
     {
         return $this->invoiceAddressFormatted;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNote(): string
+    {
+        return $this->note;
     }
 }

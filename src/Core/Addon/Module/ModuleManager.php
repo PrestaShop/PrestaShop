@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\FailedToEnableThemeModuleException;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -252,7 +253,7 @@ class ModuleManager implements AddonManagerInterface
     /**
      * @param Module $installedProduct
      *
-     * @return array
+     * @return string|array
      */
     protected function getModuleInstallationWarnings(Module $installedProduct)
     {
@@ -294,7 +295,16 @@ class ModuleManager implements AddonManagerInterface
         if (!empty($source)) {
             $this->moduleZipManager->storeInModulesFolder($source);
         } elseif (!$this->moduleProvider->isOnDisk($name)) {
-            $this->moduleUpdater->setModuleOnDiskFromAddons($name);
+            if (!$this->moduleUpdater->setModuleOnDiskFromAddons($name)) {
+                throw new FailedToEnableThemeModuleException(
+                    $name,
+                    $this->translator->trans(
+                        'The module %name% could not be found on Addons.',
+                        ['%name%' => $name],
+                        'Admin.Modules.Notification'
+                    )
+                );
+            }
         }
 
         $module = $this->moduleRepository->getModule($name);
@@ -331,7 +341,7 @@ class ModuleManager implements AddonManagerInterface
         $result = $module->onUninstall();
 
         if ($result && $this->actionParams->get('deletion', false)) {
-            $result = $result && $this->removeModuleFromDisk($name);
+            $result = $this->removeModuleFromDisk($name);
         }
 
         $this->checkAndClearCache($result);
@@ -344,7 +354,7 @@ class ModuleManager implements AddonManagerInterface
      * Download new files from source, backup old files, replace files with new ones
      * and execute all necessary migration scripts form current version to the new one.
      *
-     * @param Addon $name the theme you want to upgrade
+     * @param string $name the theme you want to upgrade
      * @param string $version the version you want to up upgrade to
      * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
      *
@@ -645,7 +655,7 @@ class ModuleManager implements AddonManagerInterface
      * This function is a refacto of the event dispatching.
      *
      * @param string $event
-     * @param \PrestaShop\PrestaShop\Core\Addon\Module\Module $module
+     * @param Module $module
      */
     private function dispatch($event, $module)
     {

@@ -108,9 +108,9 @@ namespace PrestaShopBundle\Install {
         // used for translations
         public static $l_cache;
 
-        const FILE_PREFIX = 'PREFIX_';
-        const ENGINE_TYPE = 'ENGINE_TYPE';
-        const DB_NAME = 'DB_NAME';
+        public const FILE_PREFIX = 'PREFIX_';
+        public const ENGINE_TYPE = 'ENGINE_TYPE';
+        public const DB_NAME = 'DB_NAME';
 
         private static $classes14 = ['Cache', 'CacheFS', 'CarrierModule', 'Db', 'FrontController', 'Helper', 'ImportModule',
             'MCached', 'Module', 'ModuleGraph', 'ModuleGraphEngine', 'ModuleGrid', 'ModuleGridEngine',
@@ -164,7 +164,6 @@ namespace PrestaShopBundle\Install {
             'blockpaymentlogo',
             'blockstore',
             'blocktags',
-            'blockwishlist',
             'productpaymentlogos',
             'sendtoafriend',
             'themeconfigurator',
@@ -326,22 +325,18 @@ namespace PrestaShopBundle\Install {
 
         private function getConfValue($name)
         {
-            $full = version_compare('1.5.0.10', AppKernel::VERSION) < 0;
-
             $sql = 'SELECT IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value
 			FROM `' . _DB_PREFIX_ . 'configuration` c
 			LEFT JOIN `' . _DB_PREFIX_ . 'configuration_lang` cl ON (c.`id_configuration` = cl.`id_configuration`)
 			WHERE c.`name`=\'' . pSQL($name) . '\'';
 
-            if ($full) {
-                $id_shop = Shop::getContextShopID(true);
-                $id_shop_group = Shop::getContextShopGroupID(true);
-                if ($id_shop) {
-                    $sql .= ' AND c.`id_shop` = ' . (int) $id_shop;
-                }
-                if ($id_shop_group) {
-                    $sql .= ' AND c.`id_shop_group` = ' . (int) $id_shop_group;
-                }
+            $id_shop = Shop::getContextShopID(true);
+            $id_shop_group = Shop::getContextShopGroupID(true);
+            if ($id_shop) {
+                $sql .= ' AND c.`id_shop` = ' . (int) $id_shop;
+            }
+            if ($id_shop_group) {
+                $sql .= ' AND c.`id_shop_group` = ' . (int) $id_shop_group;
             }
 
             return $this->db->getValue($sql);
@@ -362,8 +357,6 @@ namespace PrestaShopBundle\Install {
                 $this->logError('Current version: %current%. Version to install: %future%.', 27, ['%current%' => $this->oldVersion, '%future%' => _PS_INSTALL_VERSION_]);
             } elseif ($versionCompare == 0) {
                 $this->logError('You already have the %future% version.', 28, ['%future%' => _PS_INSTALL_VERSION_]);
-            } elseif ($versionCompare === false) {
-                $this->logError('There is no older version. Did you delete or rename the app/config/parameters.php file?', 29);
             }
 
             if (strpos(_PS_INSTALL_VERSION_, '.') === false) {
@@ -470,6 +463,7 @@ namespace PrestaShopBundle\Install {
                                 foreach ($parameters as &$parameter) {
                                     $parameter = str_replace('\'', '', $parameter);
                                 }
+                                unset($parameter);
                             }
 
                             $phpRes = null;
@@ -528,6 +522,7 @@ namespace PrestaShopBundle\Install {
                 ->removeStatus(AddonListFilterStatus::UNINSTALLED);
 
             $installedProducts = $moduleRepository->getFilteredList($filters);
+            /** @var \PrestaShop\PrestaShop\Adapter\Module\Module $installedProduct */
             foreach ($installedProducts as $installedProduct) {
                 if (!(
                         $installedProduct->attributes->has('origin_filter_value')
@@ -562,6 +557,8 @@ namespace PrestaShopBundle\Install {
             $filters->setStatus(AddonListFilterStatus::ON_DISK | AddonListFilterStatus::INSTALLED);
 
             $list = $moduleManagerRepository->getFilteredList($filters, true);
+            /** @var string $moduleName */
+            /** @var \PrestaShop\PrestaShop\Adapter\Module\Module $module */
             foreach ($list as $moduleName => $module) {
                 if (in_array($moduleName, self::$incompatibleModules)) {
                     $this->logInfo("Uninstalling module $moduleName, not supported in this PrestaShop version.");
@@ -592,6 +589,8 @@ namespace PrestaShopBundle\Install {
             $filters->setOrigin(AddonListFilterOrigin::ADDONS_NATIVE | AddonListFilterOrigin::ADDONS_NATIVE_ALL);
 
             $list = $moduleManagerRepository->getFilteredList($filters, true);
+            /** @var string $moduleName */
+            /** @var \PrestaShop\PrestaShop\Adapter\Module\Module $module */
             foreach ($list as $moduleName => $module) {
                 if ('PrestaShop' === $module->attributes->get('author')) {
                     if (!$moduleManagerBuilder->build()->isInstalled($moduleName)) {
@@ -765,8 +764,8 @@ namespace PrestaShopBundle\Install {
                 $mailTheme,
                 $locale,
                 false,
-                !empty($coreOutputFolder) ? $coreOutputFolder : '',
-                !empty($modulesOutputFolder) ? $modulesOutputFolder : ''
+                '',
+                ''
             );
             /** @var CommandBusInterface $commandBus */
             $commandBus = $sfContainer->get('prestashop.core.command_bus');
@@ -787,6 +786,7 @@ namespace PrestaShopBundle\Install {
                 eval('class Tools2 extends \ToolsCore{}');
             }
 
+            /* @phpstan-ignore-next-line */
             if (class_exists('\Tools2') && method_exists('\Tools2', 'generateHtaccess')) {
                 $url_rewrite = (bool) $this->db->getValue('SELECT `value` FROM `' . _DB_PREFIX_ . 'configuration` WHERE name=\'PS_REWRITING_SETTINGS\'');
 
@@ -1089,11 +1089,13 @@ namespace PrestaShopBundle\Install {
             return !empty($this->failureList);
         }
 
-        const SETTINGS_FILE = 'config/settings.inc.php';
+        public const SETTINGS_FILE = 'config/settings.inc.php';
 
+        /* @phpstan-ignore-next-line */
         public static function migrateSettingsFile(Event $event = null)
         {
             if ($event !== null) {
+                /* @phpstan-ignore-next-line */
                 $event->getIO()->write('Migrating old setting file...');
             }
 
@@ -1107,7 +1109,9 @@ namespace PrestaShopBundle\Install {
                     $addNewCookieKey = true;
                 } else {
                     if ($event !== null) {
+                        /* @phpstan-ignore-next-line */
                         $event->getIO()->write('parameters file already exists!');
+                        /* @phpstan-ignore-next-line */
                         $event->getIO()->write('Finished...');
                     }
 
@@ -1118,7 +1122,9 @@ namespace PrestaShopBundle\Install {
             if (!file_exists($phpParametersFilepath) && !file_exists($root_dir . '/app/config/parameters.yml')
                 && !file_exists($root_dir . '/' . self::SETTINGS_FILE)) {
                 if ($event !== null) {
+                    /* @phpstan-ignore-next-line */
                     $event->getIO()->write('No file to migrate!');
+                    /* @phpstan-ignore-next-line */
                     $event->getIO()->write('Finished...');
                 }
 
@@ -1145,8 +1151,11 @@ namespace PrestaShopBundle\Install {
             if ($addNewCookieKey) {
                 $exportPhpConfigFile($default_parameters, $phpParametersFilepath);
                 if ($event !== null) {
+                    /* @phpstan-ignore-next-line */
                     $event->getIO()->write('parameters file already exists!');
+                    /* @phpstan-ignore-next-line */
                     $event->getIO()->write("add new parameter 'new_cookie_key'");
+                    /* @phpstan-ignore-next-line */
                     $event->getIO()->write('Finished...');
                 }
 
@@ -1226,8 +1235,10 @@ namespace PrestaShopBundle\Install {
 
             if ($event !== null) {
                 if (!$fileMigrated) {
+                    /* @phpstan-ignore-next-line */
                     $event->getIO()->write('No old config file present!');
                 }
+                /* @phpstan-ignore-next-line */
                 $event->getIO()->write('Finished...');
             }
 

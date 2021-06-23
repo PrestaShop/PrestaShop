@@ -69,7 +69,7 @@ class CarrierCore extends ObjectModel
     /** @var bool True if carrier has been deleted (staying in database as deleted) */
     public $deleted = 0;
 
-    /** @var bool Active or not the shipping handling */
+    /** @var bool True if extra shipping handling cost should be applied to this Carrier */
     public $shipping_handling = true;
 
     /** @var int Behavior taken for unknown range */
@@ -81,16 +81,24 @@ class CarrierCore extends ObjectModel
     /** @var bool Free carrier */
     public $is_free = false;
 
-    /** @var int shipping behavior: by weight or by price */
+    /** @var int Shipping cost calculation method: by weight or by price or free */
     public $shipping_method = 0;
 
-    /** @var bool Shipping external */
+    /**
+     * @var bool True if external module calculates shipping cost
+     *
+     * @see Cart::getPackageShippingCostFromModule()
+     */
     public $shipping_external = 0;
 
-    /** @var string Shipping external */
+    /** @var string Name of external module responsible for this Carrier */
     public $external_module_name = null;
 
-    /** @var bool Need Range */
+    /**
+     * @var bool True if module needs core range-based shipping cost to calculate final cost
+     *
+     * @see Cart::getPackageShippingCostFromModule()
+     */
     public $need_range = 0;
 
     /** @var int Position */
@@ -601,7 +609,7 @@ class CarrierCore extends ObjectModel
 						ORDER BY n DESC
 						LIMIT 1
 					) most_used'
-                );
+        );
     }
 
     /**
@@ -639,10 +647,10 @@ class CarrierCore extends ObjectModel
 			ORDER BY cl.name ASC');
 
         $countries = [];
-        foreach ($result as &$country) {
+        foreach ($result as $country) {
             $countries[$country['id_country']] = $country;
         }
-        foreach ($states as &$state) {
+        foreach ($states as $state) {
             if (isset($countries[$state['id_country']])) { /* Does not keep the state if its country has been disabled and not selected */
                 if ($state['active'] == 1) {
                     $countries[$state['id_country']]['states'][] = $state;
@@ -1319,7 +1327,7 @@ class CarrierCore extends ObjectModel
      *
      * @param Address $address Address
      *
-     * @return TaxCalculator Tax calculator object
+     * @return TaxCalculator|AverageTaxOfProductsTaxCalculator Tax calculator object
      */
     public function getTaxCalculator(Address $address, $id_order = null, $use_average_tax_of_products = false)
     {
@@ -1594,14 +1602,20 @@ class CarrierCore extends ObjectModel
                 $carrier = new Carrier($id_carrier);
 
                 // Get the sizes of the carrier and the product and sort them to check if the carrier can take the product.
-                $carrier_sizes = [(int) $carrier->max_width, (int) $carrier->max_height, (int) $carrier->max_depth];
-                $product_sizes = [(int) $product->width, (int) $product->height, (int) $product->depth];
-                rsort($carrier_sizes, SORT_NUMERIC);
-                rsort($product_sizes, SORT_NUMERIC);
+                $carrier_sizes = [
+                    'width' => (int) $carrier->max_width,
+                    'height' => (int) $carrier->max_height,
+                    'depth' => (int) $carrier->max_depth,
+                ];
+                $product_sizes = [
+                    'width' => (int) $product->width,
+                    'height' => (int) $product->height,
+                    'depth' => (int) $product->depth,
+                ];
 
-                if (($carrier_sizes[0] > 0 && $carrier_sizes[0] < $product_sizes[0])
-                    || ($carrier_sizes[1] > 0 && $carrier_sizes[1] < $product_sizes[1])
-                    || ($carrier_sizes[2] > 0 && $carrier_sizes[2] < $product_sizes[2])) {
+                if (($carrier_sizes['width'] > 0 && $carrier_sizes['width'] < $product_sizes['width'])
+                    || ($carrier_sizes['height'] > 0 && $carrier_sizes['height'] < $product_sizes['height'])
+                    || ($carrier_sizes['depth'] > 0 && $carrier_sizes['depth'] < $product_sizes['depth'])) {
                     $error[$carrier->id] = Carrier::SHIPPING_SIZE_EXCEPTION;
                     unset($carrier_list[$key]);
                 }

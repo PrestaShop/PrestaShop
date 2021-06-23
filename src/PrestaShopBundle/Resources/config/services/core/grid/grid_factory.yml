@@ -6,7 +6,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.logs'
-            - '@prestashop.core.grid.data_factory.log'
+            - '@prestashop.core.grid.data.factory.log_decorator'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
@@ -85,6 +85,22 @@ services:
         arguments:
             - '@prestashop.core.grid.definition.factory.customer'
             - '@prestashop.core.grid.data_provider.customer_decorator'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.customer.discount:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.customer.discount'
+            - '@prestashop.core.grid.data_provider.customer_discount'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.customer.address:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.customer.address'
+            - '@prestashop.core.grid.data_provider.customer_address_decorator'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
@@ -224,6 +240,14 @@ services:
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
+    prestashop.core.grid.grid_factory.cart_rule:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+          - '@prestashop.core.grid.definition.factory.cart_rule'
+          - '@prestashop.core.grid.data.factory.cart_rule'
+          - '@prestashop.core.grid.filter.form_factory'
+          - '@prestashop.core.hook.dispatcher'
+
     prestashop.core.grid.grid_factory.catalog_price_rule:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
@@ -295,3 +319,43 @@ services:
             - '@prestashop.core.grid.data.factory.credit_slip_decorator'
             - '@prestashop.core.grid.filter.credit_slip_form_factory'
             - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.order_states:
+      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+      arguments:
+        - '@prestashop.core.grid.definition.factory.order_states'
+        - '@prestashop.core.grid.data_provider.order_states'
+        - '@prestashop.core.grid.filter.form_factory'
+        - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.order_return_states:
+      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+      arguments:
+        - '@prestashop.core.grid.definition.factory.order_return_states'
+        - '@prestashop.core.grid.data_provider.order_return_states'
+        - '@prestashop.core.grid.filter.form_factory'
+        - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.outstanding:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+          - '@prestashop.core.grid.definition.factory.outstanding'
+          - '@prestashop.core.grid.data.factory.outstanding_decorator'
+          - '@prestashop.core.grid.filter.form_factory'
+          - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.carrier:
+      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+      arguments:
+        - '@prestashop.core.grid.definition.factory.carrier'
+        - '@prestashop.core.grid.data.factory.carrier_decorator'
+        - '@prestashop.core.grid.filter.form_factory'
+        - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.zone:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+          - '@prestashop.core.grid.definition.factory.zone'
+          - '@prestashop.core.grid.data.factory.zone'
+          - '@prestashop.core.grid.filter.form_factory'
+          - '@prestashop.core.hook.dispatcher'

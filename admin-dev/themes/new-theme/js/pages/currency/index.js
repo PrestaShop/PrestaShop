@@ -24,20 +24,26 @@
  */
 
 import Grid from '@components/grid/grid';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
 import SortingExtension from '@components/grid/extension/sorting-extension';
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
 import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
 import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import ExchangeRatesUpdateScheduler from '@pages/currency/ExchangeRatesUpdateScheduler';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const currency = new Grid('currency');
+
+  currency.addExtension(new BulkActionCheckboxExtension());
+  currency.addExtension(new SubmitBulkExtension());
+  currency.addExtension(new ExportToSqlManagerExtension());
   currency.addExtension(new SortingExtension());
   currency.addExtension(new FiltersResetExtension());
   currency.addExtension(new ReloadListActionExtension());

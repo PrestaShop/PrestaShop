@@ -43,7 +43,7 @@ import TaggableField from '@components/taggable-field';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const cmsCategory = new Grid('cms_page_category');
@@ -64,6 +64,7 @@ $(() => {
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="cms_page_category[name]"]',
+    /* eslint-disable-next-line max-len */
     destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="cms_page_category[friendly_url]"]`,
   });
 
@@ -71,7 +72,6 @@ $(() => {
 
   const shopChoiceTree = new ChoiceTree('#cms_page_category_shop_association');
   shopChoiceTree.enableAutoCheckChildren();
-
 
   new TaggableField({
     tokenFieldSelector: 'input[name^="cms_page_category[meta_keywords]"]',

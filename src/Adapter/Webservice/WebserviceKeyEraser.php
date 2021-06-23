@@ -39,7 +39,7 @@ final class WebserviceKeyEraser
      *
      * @param int[] $webServiceKeyIds
      *
-     * @return string[] - array of errors. If array is empty then erase operation succeeded.
+     * @return array<int, array<string, array|string>> - array of errors. If array is empty then erase operation succeeded.
      *
      * @throws \PrestaShopException
      */

@@ -67,11 +67,10 @@ class TaxController extends FrameworkBundleAdminController
 
         $taxGridFactory = $this->get('prestashop.core.grid.factory.tax');
         $taxGrid = $taxGridFactory->getGrid($filters);
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $taxOptionsForm = $this->getTaxOptionsFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Improve/International/Tax/index.html.twig', [
-            'taxGrid' => $gridPresenter->present($taxGrid),
+            'taxGrid' => $this->presentGrid($taxGrid),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'taxOptionsForm' => $taxOptionsForm->createView(),
@@ -89,7 +88,7 @@ class TaxController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function saveOptionsAction(Request $request)
     {
@@ -114,6 +113,8 @@ class TaxController extends FrameworkBundleAdminController
     }
 
     /**
+     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
+     *
      * Provides filters functionality.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
@@ -156,10 +157,23 @@ class TaxController extends FrameworkBundleAdminController
 
         try {
             $taxForm = $taxFormBuilder->getForm();
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
+
+            return $this->redirectToRoute('admin_taxes_index');
+        }
+
+        try {
             $taxForm->handleRequest($request);
             $result = $taxFormHandler->handle($taxForm);
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                );
 
                 return $this->redirectToRoute('admin_taxes_index');
             }
@@ -171,6 +185,11 @@ class TaxController extends FrameworkBundleAdminController
             'taxForm' => $taxForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'multistoreInfoTip' => $this->trans(
+                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Admin.Notifications.Info'
+            ),
+            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
         ]);
     }
 
@@ -194,6 +213,16 @@ class TaxController extends FrameworkBundleAdminController
 
         try {
             $taxForm = $taxFormBuilder->getFormFor((int) $taxId);
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
+
+            return $this->redirectToRoute('admin_taxes_index');
+        }
+
+        try {
             $taxForm->handleRequest($request);
             $result = $taxFormHandler->handleFor((int) $taxId, $taxForm);
 
@@ -368,7 +397,7 @@ class TaxController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getTaxOptionsFormHandler()
+    private function getTaxOptionsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.tax_options.form_handler');
     }

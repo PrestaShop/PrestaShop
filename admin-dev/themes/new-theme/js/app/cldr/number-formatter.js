@@ -75,6 +75,7 @@ class NumberFormatter {
 
     // Assemble the final number
     let formattedNumber = majorDigits;
+
     if (minorDigits) {
       formattedNumber += DECIMAL_SEPARATOR_PLACEHOLDER + minorDigits;
     }
@@ -108,6 +109,7 @@ class NumberFormatter {
     const result = number.toString().split('.');
     const majorDigits = result[0];
     const minorDigits = (result[1] === undefined) ? '' : result[1];
+
     return [majorDigits, minorDigits];
   }
 
@@ -156,6 +158,7 @@ class NumberFormatter {
    */
   adjustMinorDigitsZeroes(minorDigits) {
     let digit = minorDigits;
+
     if (digit.length > this.numberSpecification.getMaxFractionDigits()) {
       // Strip any trailing zeroes.
       digit = digit.replace(/0+$/, '');
@@ -225,11 +228,11 @@ class NumberFormatter {
    */
   strtr(str, pairs) {
     const substrs = Object.keys(pairs).map(escapeRE);
-    return str.split(RegExp(`(${substrs.join('|')})`))
-              .map(part => pairs[part] || part)
-              .join('');
-  }
 
+    return str.split(RegExp(`(${substrs.join('|')})`))
+      .map((part) => pairs[part] || part)
+      .join('');
+  }
 
   /**
    * Add missing placeholders to the number using the passed CLDR pattern.
@@ -285,6 +288,7 @@ class NumberFormatter {
 
   static build(specifications) {
     let symbol;
+
     if (undefined !== specifications.numberSymbols) {
       symbol = new NumberSymbol(...specifications.numberSymbols);
     } else {
@@ -292,6 +296,7 @@ class NumberFormatter {
     }
 
     let specification;
+
     if (specifications.currencySymbol) {
       specification = new PriceSpecification(
         specifications.positivePattern,

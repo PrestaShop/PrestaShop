@@ -362,12 +362,12 @@ class AdminGroupsControllerCore extends AdminController
                         [
                             'id' => 'show_prices_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'show_prices_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                     'hint' => $this->trans('Customers in this group can view prices.', [], 'Admin.Shopparameters.Help'),

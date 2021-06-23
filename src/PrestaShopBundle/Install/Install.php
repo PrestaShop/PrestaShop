@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Install;
 
 use AppKernel;
-use InstallSession;
 use Language as LanguageLegacy;
 use PhpEncryption;
 use PrestaShop\PrestaShop\Adapter\Entity\Cache;
@@ -63,8 +62,8 @@ use Symfony\Component\Yaml\Yaml;
 
 class Install extends AbstractInstall
 {
-    const SETTINGS_FILE = 'config/settings.inc.php';
-    const BOOTSTRAP_FILE = 'config/bootstrap.php';
+    public const SETTINGS_FILE = 'config/settings.inc.php';
+    public const BOOTSTRAP_FILE = 'config/bootstrap.php';
 
     protected $logger;
 
@@ -76,11 +75,21 @@ class Install extends AbstractInstall
     protected $bootstrapFile = null;
 
     /**
+     * @var array
+     */
+    public $xml_loader_ids = [];
+
+    /**
      * The path of the settings file we want to use for the installation.
      *
      * @var string
      */
     protected $settingsFile = null;
+
+    /**
+     * @var bool
+     */
+    protected $isDebug = null;
 
     public function __construct($settingsFile = null, $bootstrapFile = null)
     {
@@ -94,6 +103,7 @@ class Install extends AbstractInstall
 
         $this->settingsFile = $settingsFile;
         $this->bootstrapFile = $bootstrapFile;
+        $this->isDebug = _PS_MODE_DEV_;
         parent::__construct();
     }
 
@@ -215,7 +225,7 @@ class Install extends AbstractInstall
     /**
      * Replace "parameters.yml" with "parameters.php" in "app/config".
      *
-     * @param $parameters
+     * @param array $parameters
      *
      * @return bool|int
      */
@@ -301,22 +311,18 @@ class Install extends AbstractInstall
             return false;
         }
 
-        return $this->generateSf2ProductionEnv();
+        return $this->updateSchema();
     }
 
     /**
-     * Pass SF2 to production
      * cache:clear
      * assetic:dump
      * doctrine:schema:update.
      *
      * @return bool
      */
-    public function generateSf2ProductionEnv()
+    public function updateSchema()
     {
-        if (defined('_PS_IN_TEST_')) {
-            return true;
-        }
         $schemaUpgrade = new UpgradeDatabase();
         $schemaUpgrade->addDoctrineSchemaUpdate();
         $output = $schemaUpgrade->execute();
@@ -341,8 +347,8 @@ class Install extends AbstractInstall
         $instance->execute('SET FOREIGN_KEY_CHECKS=0');
         foreach ($instance->executeS('SHOW TABLES') as $row) {
             $table = current($row);
-            if (!_DB_PREFIX_ || preg_match('#^' . _DB_PREFIX_ . '#i', $table)) {
-                $instance->execute((($truncate) ? 'TRUNCATE TABLE ' : 'DROP TABLE ') . '`' . $table . '`');
+            if (empty(_DB_PREFIX_) || preg_match('#^' . _DB_PREFIX_ . '#i', $table)) {
+                $instance->execute(($truncate ? 'TRUNCATE TABLE ' : 'DROP TABLE ') . '`' . $table . '`');
             }
         }
 
@@ -429,11 +435,10 @@ class Install extends AbstractInstall
                         }
                     }
                 }
-                $iso_codes_to_install = array_unique($iso_codes_to_install);
+                $languages = $this->installLanguages(array_unique($iso_codes_to_install));
             } else {
-                $iso_codes_to_install = null;
+                $languages = $this->installLanguages();
             }
-            $languages = $this->installLanguages($iso_codes_to_install);
         } catch (PrestashopInstallerException $e) {
             $this->setError($e->getMessage());
 
@@ -454,6 +459,10 @@ class Install extends AbstractInstall
     /**
      * PROCESS : populateDatabase
      * Populate database with default data.
+     *
+     * @param string|null $entity [default=null] If provided, entity to populate
+     *
+     * @return bool
      */
     public function populateDatabase($entity = null)
     {
@@ -473,9 +482,13 @@ class Install extends AbstractInstall
 
         try {
             if ($entity) {
-                $xml_loader->populateEntity($entity);
+                $this->callWithUnityAutoincrement(function () use ($xml_loader, $entity) {
+                    $xml_loader->populateEntity($entity);
+                });
             } else {
-                $xml_loader->populateFromXmlFiles();
+                $this->callWithUnityAutoincrement(function () use ($xml_loader) {
+                    $xml_loader->populateFromXmlFiles();
+                });
             }
             if ($errors = $xml_loader->getErrors()) {
                 $this->setError($errors);
@@ -525,6 +538,8 @@ class Install extends AbstractInstall
 
         // Create default shop
         $shop = new Shop();
+        $shop->id = 1;
+        $shop->force_id = true;
         $shop->active = true;
         $shop->id_shop_group = $shop_group->id;
         $shop->id_category = 2;
@@ -558,11 +573,13 @@ class Install extends AbstractInstall
     /**
      * Install languages.
      *
+     * @param array|null $languages_list
+     *
      * @return array Association between ID and iso array(id_lang => iso, ...)
      */
     public function installLanguages($languages_list = null)
     {
-        if ($languages_list == null || !is_array($languages_list) || !count($languages_list)) {
+        if ($languages_list === null || (is_array($languages_list) && !count($languages_list))) {
             $languages_list = $this->language->getIsoList();
         }
 
@@ -573,7 +590,9 @@ class Install extends AbstractInstall
 
         foreach ($languages_list as $iso) {
             if (!in_array($iso, $languages_available)) {
-                EntityLanguage::downloadAndInstallLanguagePack($iso);
+                $this->callWithUnityAutoincrement(function () use ($iso) {
+                    EntityLanguage::downloadAndInstallLanguagePack($iso);
+                });
 
                 continue;
             }
@@ -594,27 +613,36 @@ class Install extends AbstractInstall
                 'locale' => (string) $xml->locale,
             ];
 
-            if (InstallSession::getInstance()->safe_mode) {
-                EntityLanguage::checkAndAddLanguage($iso, false, true, $params_lang);
-            } else {
-                if (file_exists(_PS_TRANSLATIONS_DIR_ . (string) $iso . '.gzip') == false) {
-                    $language = EntityLanguage::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
+            if (file_exists(_PS_TRANSLATIONS_DIR_ . (string) $iso . '.gzip') == false) {
+                $language = EntityLanguage::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
 
-                    if ($language == false) {
-                        throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', ['%iso%' => $iso], 'Install'));
-                    }
+                if ($language == false) {
+                    throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', ['%iso%' => $iso], 'Install'));
                 }
-
-                $errors = [];
-                EntityLanguage::installLanguagePack($iso, $params_lang, $errors);
             }
 
-            EntityLanguage::loadLanguages();
+            $errors = [];
+            $locale = $params_lang['locale'];
 
-            Tools::clearCache();
+            /* @todo check if a newer pack is available */
+            if (!EntityLanguage::translationPackIsInCache($locale)) {
+                EntityLanguage::downloadXLFLanguagePack($locale, $errors);
+
+                if (!empty($errors)) {
+                    throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', ['%iso%' => $iso], 'Install'));
+                }
+            }
+
+            $this->callWithUnityAutoincrement(function () use ($iso, $params_lang, &$errors) {
+                EntityLanguage::installFirstLanguagePack($iso, $params_lang, $errors);
+            });
 
             if (!$id_lang = EntityLanguage::getIdByIso($iso, true)) {
-                throw new PrestashopInstallerException($this->translator->trans('Cannot install language "%iso%"', ['%iso%' => ($xml->name ? $xml->name : $iso)], 'Install'));
+                throw new PrestashopInstallerException($this->translator->trans(
+                    'Cannot install language "%iso%"',
+                    ['%iso%' => (string) $xml->name],
+                    'Install'
+                ));
             }
 
             $languages[$id_lang] = $iso;
@@ -755,6 +783,7 @@ class Install extends AbstractInstall
                 $group_default = $group_default['name'];
             }
         }
+        unset($group_default);
 
         if (is_array($groups) && count($groups)) {
             foreach ($groups as $key => $group) {
@@ -772,6 +801,7 @@ class Install extends AbstractInstall
                 $state_default = $state_default['name'];
             }
         }
+        unset($state_default);
 
         if (is_array($states) && count($states)) {
             foreach ($states as $key => $state) {
@@ -791,7 +821,7 @@ class Install extends AbstractInstall
         }
 
         // Disable cache for debug mode
-        if (_PS_MODE_DEV_) {
+        if ($this->isDebug) {
             Configuration::updateGlobalValue('PS_SMARTY_CACHE', 1);
         }
 
@@ -804,11 +834,15 @@ class Install extends AbstractInstall
         $localization_file_content = $this->getLocalizationPackContent($version, $data['shop_country']);
 
         $locale = new LocalizationPack();
-        $locale->loadLocalisationPack($localization_file_content, false, true);
+        $this->callWithUnityAutoincrement(function () use ($locale, $localization_file_content) {
+            $locale->loadLocalisationPack($localization_file_content, false, true);
+        });
 
         // Create default employee
         if (isset($data['admin_firstname'], $data['admin_lastname'], $data['admin_password'], $data['admin_email'])) {
             $employee = new Employee();
+            $employee->id = 1;
+            $employee->force_id = true;
             $employee->firstname = Tools::ucfirst($data['admin_firstname']);
             $employee->lastname = Tools::ucfirst($data['admin_lastname']);
             $employee->email = $data['admin_email'];
@@ -818,13 +852,14 @@ class Install extends AbstractInstall
             $employee->default_tab = 1;
             $employee->active = true;
             $employee->id_profile = 1;
-            $employee->id_lang = Configuration::get('PS_LANG_DEFAULT');
-            $employee->bo_menu = 1;
+            $employee->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
+            $employee->bo_menu = true;
             if (!$employee->add()) {
                 $this->setError($this->translator->trans('Cannot create admin account', [], 'Install'));
 
                 return false;
             }
+            Context::getContext()->employee = $employee;
         } else {
             $this->setError($this->translator->trans('Cannot create admin account', [], 'Install'));
 
@@ -834,8 +869,10 @@ class Install extends AbstractInstall
         // Update default contact
         if (isset($data['admin_email'])) {
             Configuration::updateGlobalValue('PS_SHOP_EMAIL', $data['admin_email']);
+            Configuration::updateGlobalValue('PS_LOGS_EMAIL_RECEIVERS', $data['admin_email']);
 
             $contacts = new PrestaShopCollection('Contact');
+            /** @var \Contact $contact */
             foreach ($contacts as $contact) {
                 $contact->email = $data['admin_email'];
                 $contact->update();
@@ -853,76 +890,62 @@ class Install extends AbstractInstall
 
     public function getModulesList()
     {
-        $modules = [];
-        if (false) {
-            foreach (scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE) as $module) {
-                if ($module[0] != '.' && is_dir(_PS_MODULE_DIR_ . $module) && file_exists(_PS_MODULE_DIR_ . $module . '/' . $module . '.php')) {
-                    $modules[] = $module;
-                }
-            }
-        } else {
-            $modules = [
-                'contactform',
-                'dashactivity',
-                'dashgoals',
-                'dashproducts',
-                'dashtrends',
-                'graphnvd3',
-                'gridhtml',
-                'gsitemap',
-                'pagesnotfound',
-                'productcomments',
-                'ps_banner',
-                'ps_categorytree',
-                'ps_checkpayment',
-                'ps_contactinfo',
-                'ps_crossselling',
-                'ps_currencyselector',
-                'ps_customeraccountlinks',
-                'ps_customersignin',
-                'ps_customtext',
-                'ps_dataprivacy',
-                'ps_emailsubscription',
-                'ps_facetedsearch',
-                'ps_faviconnotificationbo',
-                'ps_featuredproducts',
-                'ps_imageslider',
-                'ps_languageselector',
-                'ps_linklist',
-                'ps_mainmenu',
-                'ps_searchbar',
-                'ps_sharebuttons',
-                'ps_shoppingcart',
-                'ps_socialfollow',
-                'ps_themecusto',
-                'ps_wirepayment',
-                'sekeywords',
-                'statsbestcategories',
-                'statsbestcustomers',
-                'statsbestproducts',
-                'statsbestsuppliers',
-                'statsbestvouchers',
-                'statscarrier',
-                'statscatalog',
-                'statscheckup',
-                'statsdata',
-                'statsequipment',
-                'statsforecast',
-                'statslive',
-                'statsnewsletter',
-                'statsorigin',
-                'statspersonalinfos',
-                'statsproduct',
-                'statsregistrations',
-                'statssales',
-                'statssearch',
-                'statsstock',
-                'statsvisits',
-                'welcome',
-            ];
-        }
-
-        return $modules;
+        return [
+            'blockwishlist',
+            'contactform',
+            'dashactivity',
+            'dashtrends',
+            'dashgoals',
+            'dashproducts',
+            'graphnvd3',
+            'gridhtml',
+            'gsitemap',
+            'pagesnotfound',
+            'productcomments',
+            'ps_banner',
+            'ps_categorytree',
+            'ps_checkpayment',
+            'ps_contactinfo',
+            'ps_crossselling',
+            'ps_currencyselector',
+            'ps_customeraccountlinks',
+            'ps_customersignin',
+            'ps_customtext',
+            'ps_dataprivacy',
+            'ps_emailsubscription',
+            'ps_facetedsearch',
+            'ps_faviconnotificationbo',
+            'ps_featuredproducts',
+            'ps_imageslider',
+            'ps_languageselector',
+            'ps_linklist',
+            'ps_mainmenu',
+            'ps_searchbar',
+            'ps_sharebuttons',
+            'ps_shoppingcart',
+            'ps_socialfollow',
+            'ps_themecusto',
+            'ps_wirepayment',
+            'statsbestcategories',
+            'statsbestcustomers',
+            'statsbestproducts',
+            'statsbestsuppliers',
+            'statsbestvouchers',
+            'statscarrier',
+            'statscatalog',
+            'statscheckup',
+            'statsdata',
+            'statsforecast',
+            'statslive',
+            'statsnewsletter',
+            'statspersonalinfos',
+            'statsproduct',
+            'statsregistrations',
+            'statssales',
+            'statssearch',
+            'statsstock',
+            'welcome',
+        ];
     }
 
     public function getAddonsModulesList($params = [])
@@ -965,7 +988,6 @@ class Install extends AbstractInstall
             'blocktopmenu',
             'blockuserinfo',
             'blockviewed',
-            'blockwishlist',
             'cheque',
             'crossselling',
             'homefeatured',
@@ -1017,6 +1039,10 @@ class Install extends AbstractInstall
     /**
      * PROCESS : installModules
      * Download module from addons and Install all modules in ~/modules/ directory.
+     *
+     * @param array|string|null $module Module to install. If not provided, installs all modules.
+     *
+     * @return bool
      */
     public function installModules($module = null)
     {
@@ -1096,8 +1122,8 @@ class Install extends AbstractInstall
             }
         } else {
             $xml_loader = new XmlLoader();
-            $xml_loader->setTranslator($this->translator);
         }
+        $xml_loader->setTranslator($this->translator);
 
         // Install XML data (data/xml/ folder)
         $xml_loader->setFixturesPath($fixtures_path);
@@ -1112,9 +1138,13 @@ class Install extends AbstractInstall
         $xml_loader->setLanguages($languages);
 
         if ($entity) {
-            $xml_loader->populateEntity($entity);
+            $this->callWithUnityAutoincrement(function () use ($xml_loader, $entity) {
+                $xml_loader->populateEntity($entity);
+            });
         } else {
-            $xml_loader->populateFromXmlFiles();
+            $this->callWithUnityAutoincrement(function () use ($xml_loader) {
+                $xml_loader->populateFromXmlFiles();
+            });
             Tools::deleteDirectory($temp_dir, true);
             @unlink($zip_file);
         }
@@ -1170,5 +1200,29 @@ class Install extends AbstractInstall
         }
 
         return true;
+    }
+
+    /**
+     * Call callback with database connection temporary
+     * configured with auto increment value and offset to 1.
+     */
+    public function callWithUnityAutoincrement(callable $callback, ...$args)
+    {
+        $db = Db::getInstance();
+
+        $backupAiIncrement = $db->executeS('SELECT @@SESSION.auto_increment_increment AS v;', true, false)[0]['v'];
+        $backupAiOffset = $db->executeS('SELECT @@SESSION.auto_increment_offset AS v;', true, false)[0]['v'];
+        if ($backupAiIncrement > 1 || $backupAiOffset > 1) {
+            $db->execute('SET SESSION auto_increment_offset = 1', false);
+            $db->execute('SET SESSION auto_increment_increment = 1', false);
+        }
+        try {
+            return $callback(...$args);
+        } finally {
+            if ($backupAiIncrement > 1 || $backupAiOffset > 1) {
+                $db->execute('SET SESSION auto_increment_offset = ' . (int) $backupAiOffset, false);
+                $db->execute('SET SESSION auto_increment_increment = ' . (int) $backupAiIncrement, false);
+            }
+        }
     }
 }

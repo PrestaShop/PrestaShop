@@ -198,9 +198,9 @@ abstract class PaymentModuleCore extends Module
      * @param string $payment_method Payment method (eg. 'Credit card')
      * @param string|null $message Message to attach to order
      * @param array $extra_vars
-     * @param null $currency_special
+     * @param int|null $currency_special
      * @param bool $dont_touch_amount
-     * @param bool $secure_key
+     * @param string|bool $secure_key
      * @param Shop $shop
      *
      * @return bool
@@ -320,7 +320,7 @@ abstract class PaymentModuleCore extends Module
             // We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
             // if ($order->total_paid != $order->total_paid_real)
             // We use number_format in order to compare two string
-            if ($order_status->logable && number_format($cart_total_paid, _PS_PRICE_COMPUTE_PRECISION_) != number_format($amount_paid, _PS_PRICE_COMPUTE_PRECISION_)) {
+            if ($order_status->logable && number_format($cart_total_paid, Context::getContext()->getComputingPrecision()) != number_format($amount_paid, _PS_PRICE_COMPUTE_PRECISION_)) {
                 $id_order_state = Configuration::get('PS_OS_ERROR');
             }
 
@@ -431,6 +431,7 @@ abstract class PaymentModuleCore extends Module
 
                         $product_var_tpl = [
                             'id_product' => $product['id_product'],
+                            'id_product_attribute' => $product['id_product_attribute'],
                             'reference' => $product['reference'],
                             'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
                             'price' => Tools::getContextLocale($this->context)->formatPrice($product_price * $product['quantity'], $this->context->currency->iso_code),
@@ -472,7 +473,7 @@ abstract class PaymentModuleCore extends Module
                         }
 
                         $product_var_tpl_list[] = $product_var_tpl;
-                        // Check if is not a virutal product for the displaying of shipping
+                        // Check if is not a virtual product for the displaying of shipping
                         if (!$product['is_virtual']) {
                             $virtual_product &= false;
                         }
@@ -527,7 +528,7 @@ abstract class PaymentModuleCore extends Module
                         $customer_message->id_customer_thread = $customer_thread->id;
                         $customer_message->id_employee = 0;
                         $customer_message->message = $update_message->message;
-                        $customer_message->private = 1;
+                        $customer_message->private = 0;
 
                         if (!$customer_message->add()) {
                             $this->errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
@@ -585,75 +586,21 @@ abstract class PaymentModuleCore extends Module
                         $delivery_state = $delivery->id_state ? new State((int) $delivery->id_state) : false;
                         $invoice_state = $invoice->id_state ? new State((int) $invoice->id_state) : false;
                         $carrier = $order->id_carrier ? new Carrier($order->id_carrier) : false;
-
-                        $data = [
-                            '{firstname}' => $this->context->customer->firstname,
-                            '{lastname}' => $this->context->customer->lastname,
-                            '{email}' => $this->context->customer->email,
-                            '{delivery_block_txt}' => $this->_getFormatedAddress($delivery, AddressFormat::FORMAT_NEW_LINE),
-                            '{invoice_block_txt}' => $this->_getFormatedAddress($invoice, AddressFormat::FORMAT_NEW_LINE),
-                            '{delivery_block_html}' => $this->_getFormatedAddress($delivery, '<br />', [
-                                'firstname' => '<span style="font-weight:bold;">%s</span>',
-                                'lastname' => '<span style="font-weight:bold;">%s</span>',
-                            ]),
-                            '{invoice_block_html}' => $this->_getFormatedAddress($invoice, '<br />', [
-                                'firstname' => '<span style="font-weight:bold;">%s</span>',
-                                'lastname' => '<span style="font-weight:bold;">%s</span>',
-                            ]),
-                            '{delivery_company}' => $delivery->company,
-                            '{delivery_firstname}' => $delivery->firstname,
-                            '{delivery_lastname}' => $delivery->lastname,
-                            '{delivery_address1}' => $delivery->address1,
-                            '{delivery_address2}' => $delivery->address2,
-                            '{delivery_city}' => $delivery->city,
-                            '{delivery_postal_code}' => $delivery->postcode,
-                            '{delivery_country}' => $delivery->country,
-                            '{delivery_state}' => $delivery->id_state ? $delivery_state->name : '',
-                            '{delivery_phone}' => ($delivery->phone) ? $delivery->phone : $delivery->phone_mobile,
-                            '{delivery_other}' => $delivery->other,
-                            '{invoice_company}' => $invoice->company,
-                            '{invoice_vat_number}' => $invoice->vat_number,
-                            '{invoice_firstname}' => $invoice->firstname,
-                            '{invoice_lastname}' => $invoice->lastname,
-                            '{invoice_address2}' => $invoice->address2,
-                            '{invoice_address1}' => $invoice->address1,
-                            '{invoice_city}' => $invoice->city,
-                            '{invoice_postal_code}' => $invoice->postcode,
-                            '{invoice_country}' => $invoice->country,
-                            '{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
-                            '{invoice_phone}' => ($invoice->phone) ? $invoice->phone : $invoice->phone_mobile,
-                            '{invoice_other}' => $invoice->other,
-                            '{order_name}' => $order->getUniqReference(),
-                            '{id_order}' => $order->id,
-                            '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
-                            '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $this->trans('No carrier', [], 'Admin.Payment.Notification') : $carrier->name,
-                            '{payment}' => Tools::substr($order->payment, 0, 255) . ($order->hasBeenPaid() ? '' : '&nbsp;' . $this->trans('(waiting for validation)', [], 'Emails.Body')),
-                            '{products}' => $product_list_html,
-                            '{products_txt}' => $product_list_txt,
-                            '{discounts}' => $cart_rules_list_html,
-                            '{discounts_txt}' => $cart_rules_list_txt,
-                            '{total_paid}' => Tools::getContextLocale($this->context)->formatPrice($order->total_paid, $this->context->currency->iso_code),
-                            '{total_products}' => Tools::getContextLocale($this->context)->formatPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? $order->total_products : $order->total_products_wt, $this->context->currency->iso_code),
-                            '{total_discounts}' => Tools::getContextLocale($this->context)->formatPrice($order->total_discounts, $this->context->currency->iso_code),
-                            '{total_shipping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping, $this->context->currency->iso_code),
-                            '{total_shipping_tax_excl}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping_tax_excl, $this->context->currency->iso_code),
-                            '{total_shipping_tax_incl}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping_tax_incl, $this->context->currency->iso_code),
-                            '{total_wrapping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_wrapping, $this->context->currency->iso_code),
-                            '{total_tax_paid}' => Tools::getContextLocale($this->context)->formatPrice(($order->total_paid_tax_incl - $order->total_paid_tax_excl), $this->context->currency->iso_code),
-                        ];
-
-                        if (is_array($extra_vars)) {
-                            $data = array_merge($data, $extra_vars);
-                        }
+                        $orderLanguage = new Language((int) $order->id_lang);
 
                         // Join PDF invoice
                         if ((int) Configuration::get('PS_INVOICE') && $order_status->invoice && $order->invoice_number) {
+                            $currentLanguage = $this->context->language;
+                            $this->context->language = $orderLanguage;
+                            $this->context->getTranslator()->setLocale($orderLanguage->locale);
                             $order_invoice_list = $order->getInvoicesCollection();
                             Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
                             $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
                             $file_attachement['content'] = $pdf->render(false);
                             $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
                             $file_attachement['mime'] = 'application/pdf';
+                            $this->context->language = $currentLanguage;
+                            $this->context->getTranslator()->setLocale($currentLanguage->locale);
                         } else {
                             $file_attachement = null;
                         }
@@ -662,13 +609,71 @@ abstract class PaymentModuleCore extends Module
                             PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int) $id_cart, true);
                         }
 
-                        $orderLanguage = new Language((int) $order->id_lang);
-
                         if (Validate::isEmail($this->context->customer->email)) {
+                            $data = [
+                                '{firstname}' => $this->context->customer->firstname,
+                                '{lastname}' => $this->context->customer->lastname,
+                                '{email}' => $this->context->customer->email,
+                                '{delivery_block_txt}' => $this->_getFormatedAddress($delivery, AddressFormat::FORMAT_NEW_LINE),
+                                '{invoice_block_txt}' => $this->_getFormatedAddress($invoice, AddressFormat::FORMAT_NEW_LINE),
+                                '{delivery_block_html}' => $this->_getFormatedAddress($delivery, '<br />', [
+                                    'firstname' => '<span style="font-weight:bold;">%s</span>',
+                                    'lastname' => '<span style="font-weight:bold;">%s</span>',
+                                ]),
+                                '{invoice_block_html}' => $this->_getFormatedAddress($invoice, '<br />', [
+                                    'firstname' => '<span style="font-weight:bold;">%s</span>',
+                                    'lastname' => '<span style="font-weight:bold;">%s</span>',
+                                ]),
+                                '{delivery_company}' => $delivery->company,
+                                '{delivery_firstname}' => $delivery->firstname,
+                                '{delivery_lastname}' => $delivery->lastname,
+                                '{delivery_address1}' => $delivery->address1,
+                                '{delivery_address2}' => $delivery->address2,
+                                '{delivery_city}' => $delivery->city,
+                                '{delivery_postal_code}' => $delivery->postcode,
+                                '{delivery_country}' => $delivery->country,
+                                '{delivery_state}' => $delivery->id_state ? $delivery_state->name : '',
+                                '{delivery_phone}' => ($delivery->phone) ? $delivery->phone : $delivery->phone_mobile,
+                                '{delivery_other}' => $delivery->other,
+                                '{invoice_company}' => $invoice->company,
+                                '{invoice_vat_number}' => $invoice->vat_number,
+                                '{invoice_firstname}' => $invoice->firstname,
+                                '{invoice_lastname}' => $invoice->lastname,
+                                '{invoice_address2}' => $invoice->address2,
+                                '{invoice_address1}' => $invoice->address1,
+                                '{invoice_city}' => $invoice->city,
+                                '{invoice_postal_code}' => $invoice->postcode,
+                                '{invoice_country}' => $invoice->country,
+                                '{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
+                                '{invoice_phone}' => ($invoice->phone) ? $invoice->phone : $invoice->phone_mobile,
+                                '{invoice_other}' => $invoice->other,
+                                '{order_name}' => $order->getUniqReference(),
+                                '{id_order}' => $order->id,
+                                '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
+                                '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $this->trans('No carrier', [], 'Admin.Payment.Notification') : $carrier->name,
+                                '{payment}' => Tools::substr($order->payment, 0, 255) . ($order->hasBeenPaid() ? '' : '&nbsp;' . $this->trans('(waiting for validation)', [], 'Emails.Body')),
+                                '{products}' => $product_list_html,
+                                '{products_txt}' => $product_list_txt,
+                                '{discounts}' => $cart_rules_list_html,
+                                '{discounts_txt}' => $cart_rules_list_txt,
+                                '{total_paid}' => Tools::getContextLocale($this->context)->formatPrice($order->total_paid, $this->context->currency->iso_code),
+                                '{total_products}' => Tools::getContextLocale($this->context)->formatPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? $order->total_products : $order->total_products_wt, $this->context->currency->iso_code),
+                                '{total_discounts}' => Tools::getContextLocale($this->context)->formatPrice($order->total_discounts, $this->context->currency->iso_code),
+                                '{total_shipping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping, $this->context->currency->iso_code),
+                                '{total_shipping_tax_excl}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping_tax_excl, $this->context->currency->iso_code),
+                                '{total_shipping_tax_incl}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping_tax_incl, $this->context->currency->iso_code),
+                                '{total_wrapping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_wrapping, $this->context->currency->iso_code),
+                                '{total_tax_paid}' => Tools::getContextLocale($this->context)->formatPrice(($order->total_paid_tax_incl - $order->total_paid_tax_excl), $this->context->currency->iso_code),
+                            ];
+
+                            if (is_array($extra_vars)) {
+                                $data = array_merge($data, $extra_vars);
+                            }
+
                             Mail::Send(
                                 (int) $order->id_lang,
                                 'order_conf',
-                                Context::getContext()->getTranslator()->trans(
+                                $this->context->getTranslator()->trans(
                                     'Order confirmation',
                                     [],
                                     'Emails.Subject',
@@ -749,9 +754,9 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * @param object Address $the_address that needs to be txt formated
+     * @param Address $the_address that needs to be txt formatted
      *
-     * @return string the txt formated address block
+     * @return string the txt formatted address block
      */
     protected function _getTxtFormatedAddress($the_address)
     {
@@ -772,7 +777,9 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * @param object Address $the_address that needs to be txt formated
+     * @param Address Address $the_address that needs to be txt formatted
+     * @param string $line_sep
+     * @param array $fields_style
      *
      * @return string the txt formated address block
      */
@@ -782,9 +789,9 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * @param int $current_id_currency optional but on 1.5 it will be REQUIRED
+     * @param int $current_id_currency
      *
-     * @return Currency|false
+     * @return Currency|array|false
      */
     public function getCurrency($current_id_currency = null)
     {
@@ -796,10 +803,10 @@ abstract class PaymentModuleCore extends Module
             return false;
         }
         if ($this->currencies_mode == 'checkbox') {
-            $currencies = Currency::getPaymentCurrencies($this->id);
+            return Currency::getPaymentCurrencies($this->id);
+        }
 
-            return $currencies;
-        } elseif ($this->currencies_mode == 'radio') {
+        if ($this->currencies_mode == 'radio') {
             $currencies = Currency::getPaymentCurrenciesSpecial($this->id);
             $currency = $currencies['id_currency'];
             if ($currency == -1) {
@@ -813,9 +820,8 @@ abstract class PaymentModuleCore extends Module
         if (!isset($id_currency) || empty($id_currency)) {
             return false;
         }
-        $currency = new Currency((int) $id_currency);
 
-        return $currency;
+        return Currency::getCurrencyInstance((int) $id_currency);
     }
 
     /**
@@ -858,7 +864,7 @@ abstract class PaymentModuleCore extends Module
      * @see Module::getPaymentModules() if you need a list of module related to the user context
      * @since 1.4.5
      *
-     * @return array module informations
+     * @return array module information
      */
     public static function getInstalledPaymentModules()
     {
@@ -1061,7 +1067,7 @@ abstract class PaymentModuleCore extends Module
         }
 
         // Amount paid by customer is not the right one -> Status = payment error
-        // We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
+        // We don't use the following condition to avoid the float precision issues : https://www.php.net/manual/en/language.types.float.php
         // if ($order->total_paid != $order->total_paid_real)
         // We use number_format in order to compare two string
         if ($order_status->logable
@@ -1163,12 +1169,12 @@ abstract class PaymentModuleCore extends Module
                 // Set the new voucher value
                 $voucher->reduction_amount = $remainingValue;
                 if ($voucher->reduction_tax) {
-                    // Add total shipping amout only if reduction amount > total shipping
+                    // Add total shipping amount only if reduction amount > total shipping
                     if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_incl) {
                         $voucher->reduction_amount -= $order->total_shipping_tax_incl;
                     }
                 } else {
-                    // Add total shipping amout only if reduction amount > total shipping
+                    // Add total shipping amount only if reduction amount > total shipping
                     if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_excl) {
                         $voucher->reduction_amount -= $order->total_shipping_tax_excl;
                     }

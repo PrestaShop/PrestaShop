@@ -24,7 +24,7 @@
  */
 import Router from '../../router';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class BulkOpenTabsExtension
@@ -69,7 +69,8 @@ export default class BulkOpenTabsExtension {
       const routeParams = {};
       routeParams[routeParamName] = $checkbox.val();
 
-      let handle = window.open(this.router.generate(route, routeParams));
+      const handle = window.open(this.router.generate(route, routeParams));
+
       if (handle) {
         handle.blur();
         window.focus();

@@ -24,7 +24,7 @@
  */
 import Vue from 'vue';
 import app from './components/app';
-import store from './store/';
+import store from './store';
 import router from './router';
 import Translation from './mixins/translate';
 
@@ -35,7 +35,7 @@ new Vue({
   store,
   el: '#stock-app',
   template: '<app />',
-  components: { app },
+  components: {app},
   beforeMount() {
     this.$store.dispatch('getTranslations');
   },

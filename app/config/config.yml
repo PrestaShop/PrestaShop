@@ -16,6 +16,7 @@ parameters:
     env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
     mail_themes_uri: "/mails/themes"
     mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
+    modules_translation_paths: []
 
 # Autowires Core controllers
 services:
@@ -32,7 +33,9 @@ framework:
 
     #esi:             ~
     secret:          "%secret%"
-    translator:      { fallbacks: ["default"] }
+    translator:
+        fallbacks: ["default"]
+        paths: "%modules_translation_paths%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
@@ -72,12 +75,14 @@ twig:
     paths:
         '%admin_page%/Product': Product
         '%admin_page%/TwigTemplateForm': Twig
+        '%admin_page%/Common': Common
         '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
         '%admin_page%/Configure/ShopParameters': ShopParameters
         '%kernel.root_dir%/../modules': Modules
         '%mail_themes_dir%': MailThemes
     globals:
         webpack_server: false
+        multistore_field_prefix: !php/const:PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -102,6 +107,9 @@ csa_guzzle:
                     timeout: "5.0"
                 headers:
                     Accept: "application/json"
+                curl:
+                    forbid_reuse: true
+                    fresh_connect: true
 
 prestashop:
     addons:

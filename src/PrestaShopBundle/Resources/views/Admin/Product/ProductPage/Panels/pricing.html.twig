@@ -66,7 +66,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-2 col-md-offset-1 {% if 'PS_USE_ECOTAX'|configuration != 1 %}hide{% endif %}">
+              <div class="col-md-2 col-md-offset-1 {% if configuration('PS_USE_ECOTAX') != 1 %}hide{% endif %}">
                 <label class="form-control-label">{{ pricingForm.ecotax.vars.label }}</label>
                 {{ form_errors(pricingForm.ecotax) }}
                 {{ form_widget(pricingForm.ecotax) }}
@@ -147,6 +147,7 @@
                       data-action-edit="{{ path('admin_get_specific_price_update_form', { 'idSpecificPrice': 1 }) }}">
                     <thead class="thead-default">
                     <tr>
+                      <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
                       <th>{{ 'Rule'|trans({}, 'Admin.Catalog.Feature') }}</th>
                       <th>{{ 'Combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
                       <th>{{ 'Currency'|trans({}, 'Admin.Global') }}</th>

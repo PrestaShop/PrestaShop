@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\LogsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\Repository\LogRepository;
@@ -44,7 +45,7 @@ class LogsController extends FrameworkBundleAdminController
     /**
      * @var string the controller name for routing
      */
-    const CONTROLLER_NAME = 'AdminLogs';
+    public const CONTROLLER_NAME = 'AdminLogs';
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
@@ -83,22 +84,16 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.logs');
-        $logsDefinition = $definitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $searchParametersForm = $gridFilterFormFactory->create($logsDefinition);
-
-        $searchParametersForm->handleRequest($request);
-        $filters = [];
-
         $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', ['controller' => $this]);
 
-        if ($searchParametersForm->isSubmitted()) {
-            $filters = $searchParametersForm->getData();
-        }
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
-        return $this->redirectToRoute('admin_logs_index', ['filters' => $filters]);
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.logs'),
+            $request,
+            LogGridDefinitionFactory::GRID_ID,
+            'admin_logs_index'
+        );
     }
 
     /**
@@ -152,7 +147,7 @@ class LogsController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface the form handler to set the severity level
      */
-    private function getFormHandler()
+    private function getFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.logs.form_handler');
     }

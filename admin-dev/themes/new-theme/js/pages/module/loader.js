@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Module Admin Page Loader.
@@ -47,7 +47,7 @@ class ModuleLoader {
           moduleImport.removeClass('onclick');
           moduleImport.addClass('validate', 450, callback);
         },
-        2250
+        2250,
       );
     }
     function callback() {
@@ -55,7 +55,7 @@ class ModuleLoader {
         () => {
           moduleImport.removeClass('validate');
         },
-        1250
+        1250,
       );
     }
   }
@@ -72,7 +72,7 @@ class ModuleLoader {
           $(modulePoppin).html(data);
           $(modulePoppin).modal();
         });
-      }
+      },
     );
   }
 }

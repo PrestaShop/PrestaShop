@@ -10,7 +10,9 @@ admin_languages_search:
   path: /
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:searchGrid'
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.language
+    redirectRoute: admin_languages_index
     _legacy_controller: AdminLanguages
     _legacy_link:
       - AdminLanguages:submitFilterlang
@@ -36,7 +38,7 @@ admin_languages_edit:
 
 admin_languages_delete:
   path: /{languageId}/delete
-  methods: [POST]
+  methods: [POST, DELETE]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Language:delete'
     _legacy_controller: AdminLanguages

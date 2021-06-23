@@ -24,62 +24,89 @@
  *-->
 
 <template>
-  <div class="container-fluid">
-     <div class="row py-2">
-       <div class="col row ml-1">
-         <PSCheckbox ref="low-filter" id="low-filter" class="mt-1" @checked="onCheck">
-           <span slot="label" class="ml-2">{{trans('filter_low_stock')}}</span>
-         </PSCheckbox>
-       </div>
-       <div class="col mr-3 d-flex align-items-center justify-content-end">
-         <a :href="stockExporttUrl">
-           <span data-toggle="pstooltip" :title="stockExportTitle" data-html="true" data-placement="top">
-             <i class="material-icons">cloud_upload</i>
-           </span>
-         </a>
-         <a class="ml-2" :href="stockImportUrl" target="_blank">
-           <span data-toggle="pstooltip" :title="stockImportTitle" data-html="true" data-placement="top">
-             <i class="material-icons">cloud_download</i>
-           </span>
-         </a>
-       </div>
-     </div>
+  <div class="content-topbar container-fluid">
+    <div class="row py-2">
+      <div class="col row ml-1">
+        <PSCheckbox
+          ref="low-filter"
+          id="low-filter"
+          class="mt-1"
+          @checked="onCheck"
+        >
+          <span
+            slot="label"
+            class="ml-2"
+          >{{ trans('filter_low_stock') }}</span>
+        </PSCheckbox>
+      </div>
+      <div class="content-topbar-right col mr-3 d-flex align-items-center justify-content-end">
+        <a :href="stockExportUrl">
+          <span
+            data-toggle="pstooltip"
+            :title="stockExportTitle"
+            data-html="true"
+            data-placement="top"
+          >
+            <i class="material-icons">cloud_upload</i>
+          </span>
+        </a>
+        <a
+          class="ml-2"
+          :href="stockImportUrl"
+          target="_blank"
+        >
+          <span
+            data-toggle="pstooltip"
+            :title="stockImportTitle"
+            data-html="true"
+            data-placement="top"
+          >
+            <i class="material-icons">cloud_download</i>
+          </span>
+        </a>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import PSCheckbox from '@app/widgets/ps-checkbox';
+  import PSCheckbox from '@app/widgets/ps-checkbox';
 
-export default {
-  props: {
-    filters: {},
-  },
-  computed: {
-    stockImportTitle() {
-      return this.trans('title_import');
+  export default {
+    props: {
+      filters: {
+        type: Object,
+        required: false,
+        default: () => ({}),
+      },
     },
-    stockExportTitle() {
-      return this.trans('title_export');
+    computed: {
+      stockImportTitle() {
+        return this.trans('title_import');
+      },
+      stockExportTitle() {
+        return this.trans('title_export');
+      },
+      stockImportUrl() {
+        return window.data.stockImportUrl;
+      },
+      stockExportUrl() {
+        const params = $.param(this.filters);
+
+        return `${window.data.stockExportUrl}&${params}`;
+      },
     },
-    stockImportUrl() {
-      return window.data.stockImportUrl;
+    methods: {
+      onCheck(checkbox) {
+        const isChecked = checkbox.checked ? 1 : 0;
+        this.$emit('lowStockChecked', isChecked);
+      },
     },
-    stockExporttUrl() {
-      const params = $.param(this.filters);
-      return `${window.data.stockExportUrl}&${params}`;
+    mounted() {
+      $('[data-toggle="pstooltip"]').pstooltip();
     },
-  },
-  methods: {
-    onCheck(checkbox) {
-      const isChecked = checkbox.checked ? 1 : 0;
-      this.$emit('lowStockChecked', isChecked);
+    components: {
+      PSCheckbox,
     },
-  },
-  mounted() {
-    $('[data-toggle="pstooltip"]').pstooltip();
-  },
-  components: {
-    PSCheckbox,
-  },
-};
+  };
 </script>

@@ -81,7 +81,7 @@ describe('Quick edit order status in BO', async () => {
     await expect(numberOfLinesAfterFilter).to.be.above(0);
 
     for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
-      const textColumn = await statusesPage.getTextColumn(page, tableName, row, 'name', 2);
+      const textColumn = await statusesPage.getTextColumn(page, tableName, row, 'name');
       await expect(textColumn).to.contains(Statuses.shipped.status);
     }
   });
@@ -89,32 +89,32 @@ describe('Quick edit order status in BO', async () => {
   const statuses = [
     {
       args: {
-        status: 'disable', enable: false, columnName: 'Send email to customer', columnID: 4,
+        status: 'disable', enable: false, columnName: 'send_email',
       },
     },
     {
       args: {
-        status: 'enable', enable: true, columnName: 'Send email to customer', columnID: 4,
+        status: 'enable', enable: true, columnName: 'send_email',
       },
     },
     {
       args: {
-        status: 'disable', enable: false, columnName: 'Delivery', columnID: 5,
+        status: 'disable', enable: false, columnName: 'delivery',
       },
     },
     {
       args: {
-        status: 'enable', enable: true, columnName: 'Delivery', columnID: 5,
+        status: 'enable', enable: true, columnName: 'delivery',
       },
     },
     {
       args: {
-        status: 'disable', enable: false, columnName: 'Invoice', columnID: 6,
+        status: 'disable', enable: false, columnName: 'invoice',
       },
     },
     {
       args: {
-        status: 'enable', enable: true, columnName: 'Invoice', columnID: 6,
+        status: 'enable', enable: true, columnName: 'invoice',
       },
     },
   ];
@@ -126,7 +126,7 @@ describe('Quick edit order status in BO', async () => {
       const isActionPerformed = await statusesPage.setStatus(
         page,
         1,
-        orderStatus.args.columnID,
+        orderStatus.args.columnName,
         orderStatus.args.enable,
       );
 
@@ -135,7 +135,7 @@ describe('Quick edit order status in BO', async () => {
         await expect(resultMessage).to.contains(statusesPage.successfulUpdateStatusMessage);
       }
 
-      const currentStatus = await statusesPage.getStatus(page, 1, orderStatus.args.columnID);
+      const currentStatus = await statusesPage.getStatus(page, 1, orderStatus.args.columnName);
       await expect(currentStatus).to.be.equal(orderStatus.args.enable);
     });
   });

@@ -31,7 +31,9 @@ use Product;
 
 class ProductService
 {
-    /** @var ProductDataProvider */
+    /**
+     * @var ProductDataProvider
+     */
     protected $dataProvider;
 
     public function __construct(ProductDataProvider $dataProvider)
@@ -46,9 +48,7 @@ class ProductService
         foreach ($oldProducts as $oldProduct) {
             $id_product = $oldProduct['id_product'];
             $product = $this->dataProvider->getProduct($id_product);
-            if ($product) {
-                $product->delete();
-            }
+            $product->delete();
         }
     }
 }

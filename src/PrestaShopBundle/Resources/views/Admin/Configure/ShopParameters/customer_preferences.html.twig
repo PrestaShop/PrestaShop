@@ -25,12 +25,8 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 
-{% set generalForm = form.general %}
-
 {% block content %}
-    {{ form_start(form, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
-    <div class="row justify-content-center">
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/customer_preferences_general.html.twig' %}
-    </div>
-    {{ form_end(form) }}
+    {{ form_start(generalForm, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
+      {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/customer_preferences_general.html.twig' %}
+    {{ form_end(generalForm) }}
 {% endblock %}

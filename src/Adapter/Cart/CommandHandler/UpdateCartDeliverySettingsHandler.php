@@ -143,7 +143,7 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
         $freeShippingCartRule->reduction_currency = (int) $cart->id_currency;
         $freeShippingCartRule->date_from = date('Y-m-d H:i:s');
         $freeShippingCartRule->date_to = date('Y-m-d H:i:s', time() + 24 * 36000);
-        $freeShippingCartRule->active = 1;
+        $freeShippingCartRule->active = true;
         $freeShippingCartRule->add();
 
         return $freeShippingCartRule;

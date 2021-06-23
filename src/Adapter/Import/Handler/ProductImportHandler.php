@@ -338,7 +338,7 @@ final class ProductImportHandler extends AbstractImportHandler
 
         $category->id_shop_default = $this->isMultistoreEnabled ? (int) $this->currentContextShopId : 1;
         $category->name = $this->dataFormatter->createMultiLangField(trim($categoryName));
-        $category->active = 1;
+        $category->active = true;
         $category->id_parent = (int) ($parentCategoryId ? $parentCategoryId : $homeCategoryId);
         $category->link_rewrite = $this->dataFormatter->createMultiLangField(
             $this->dataFormatter->createFriendlyUrl($category->name[$defaultLanguageId])
@@ -638,7 +638,7 @@ final class ProductImportHandler extends AbstractImportHandler
      * Load category data into product object.
      *
      * @param Product $product
-     * @param $validateOnly
+     * @param bool $validateOnly
      */
     private function loadCategory(Product $product, $validateOnly)
     {
@@ -656,7 +656,7 @@ final class ProductImportHandler extends AbstractImportHandler
                         $category = new Category();
                         $category->id = (int) $value;
                         $category->name = $this->dataFormatter->createMultiLangField($value);
-                        $category->active = 1;
+                        $category->active = true;
                         $category->id_parent = $homeCategoryId;
                         $category->link_rewrite = $this->dataFormatter->createMultiLangField(
                             $this->dataFormatter->createFriendlyUrl($category->name[$defaultLanguageId])
@@ -758,7 +758,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 'Rewrite link for %1$s (ID %2$s): re-written as %3$s.',
                 [
                     '%1$s' => $product->name[$this->languageId],
-                    '%2$s' => !empty($info['id']) ? $info['id'] : 'null',
+                    '%2$s' => 'null',
                     '%3$s' => $linkRewrite,
                 ],
                 'Admin.Advparameters.Notification'
@@ -932,12 +932,12 @@ final class ProductImportHandler extends AbstractImportHandler
      * Save specific price for a product.
      *
      * @param Product $product
-     * @param $reductionPrice
-     * @param $reductionPercent
-     * @param $reductionFrom
-     * @param $reductionTo
-     * @param $validateOnly
-     * @param $productName
+     * @param string $reductionPrice
+     * @param string $reductionPercent
+     * @param string $reductionFrom
+     * @param string $reductionTo
+     * @param bool $validateOnly
+     * @param string $productName
      */
     private function saveSpecificPrice(
         Product $product,
@@ -1137,7 +1137,7 @@ final class ProductImportHandler extends AbstractImportHandler
                         $this->translator->trans(
                             'Product #%id%: the picture (%url%) cannot be saved.',
                             [
-                                '%id%' => $image->id_product,
+                                '%id%' => isset($image) ? $image->id_product : '',
                                 '%url%' => $url,
                             ],
                             'Admin.Advparameters.Notification'

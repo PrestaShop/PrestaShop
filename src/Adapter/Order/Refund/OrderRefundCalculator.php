@@ -35,7 +35,7 @@ use Group;
 use Order;
 use OrderDetail;
 use OrderSlip;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
@@ -54,9 +54,9 @@ class OrderRefundCalculator
     /**
      * @param Order $order
      * @param array $orderDetailRefunds
-     * @param Number $shippingRefund
+     * @param DecimalNumber $shippingRefund
      * @param int $voucherRefundType
-     * @param Number|null $chosenVoucherAmount
+     * @param DecimalNumber|null $chosenVoucherAmount
      *
      * @return OrderRefundSummary
      *
@@ -67,9 +67,9 @@ class OrderRefundCalculator
     public function computeOrderRefund(
         Order $order,
         array $orderDetailRefunds,
-        Number $shippingRefund,
+        DecimalNumber $shippingRefund,
         int $voucherRefundType,
-        ?Number $chosenVoucherAmount
+        ?DecimalNumber $chosenVoucherAmount
     ): OrderRefundSummary {
         $isTaxIncluded = $this->isTaxIncludedInOrder($order);
         $precision = $this->getPrecision($order);
@@ -82,17 +82,17 @@ class OrderRefundCalculator
             $precision
         );
 
-        $numberZero = new Number('0');
+        $numberZero = new DecimalNumber('0');
 
         $refundedAmount = $numberZero;
         foreach ($productRefunds as $orderDetailId => $productRefund) {
-            $refundedAmount = $refundedAmount->plus(new Number((string) $productRefund['amount']));
+            $refundedAmount = $refundedAmount->plus(new DecimalNumber((string) $productRefund['amount']));
         }
 
         $voucherChosen = false;
         $voucherAmount = $numberZero;
         if ($voucherRefundType === VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND) {
-            $voucherAmount = new Number((string) $order->total_discounts);
+            $voucherAmount = new DecimalNumber((string) $order->total_discounts);
             $refundedAmount = $refundedAmount->minus($voucherAmount);
         } elseif ($voucherRefundType === VoucherRefundType::SPECIFIC_AMOUNT_REFUND) {
             $voucherChosen = true;
@@ -101,14 +101,14 @@ class OrderRefundCalculator
 
         $shippingCostAmount = $shippingRefund ?? $numberZero;
         if ($shippingCostAmount->isPositive()) {
-            $shippingMaxRefund = new Number(
+            $shippingMaxRefund = new DecimalNumber(
                 $isTaxIncluded ?
                     (string) $order->total_shipping_tax_incl :
                     (string) $order->total_shipping_tax_excl
             );
 
             $shippingSlipResume = OrderSlip::getShippingSlipResume($order->id);
-            $shippingSlipTotalTaxIncl = new Number((string) ($shippingSlipResume['total_shipping_tax_incl'] ?? 0));
+            $shippingSlipTotalTaxIncl = new DecimalNumber((string) ($shippingSlipResume['total_shipping_tax_incl'] ?? 0));
             $shippingMaxRefund = $shippingMaxRefund->minus($shippingSlipTotalTaxIncl);
 
             if ($shippingCostAmount->isGreaterThan($shippingMaxRefund)) {
@@ -159,7 +159,6 @@ class OrderRefundCalculator
      * @param array $orderDetailRefunds
      * @param bool $isTaxIncluded
      * @param array $orderDetails
-     * @param TaxCalculator $taxCalculator
      * @param int $precision
      *
      * @return array

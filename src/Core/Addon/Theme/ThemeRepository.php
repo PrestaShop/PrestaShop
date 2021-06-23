@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShopException;
 use Shop;
 use Symfony\Component\Filesystem\Filesystem;
@@ -39,9 +38,22 @@ use Symfony\Component\Yaml\Parser;
 
 class ThemeRepository implements AddonRepositoryInterface
 {
+    /**
+     * @var ConfigurationInterface
+     */
     private $appConfiguration;
+    /**
+     * @var Filesystem
+     */
     private $filesystem;
+    /**
+     * @var Shop|null
+     */
     private $shop;
+    /**
+     * @var array
+     */
+    public $themes;
 
     public function __construct(ConfigurationInterface $configuration, Filesystem $filesystem, Shop $shop = null)
     {
@@ -50,6 +62,13 @@ class ThemeRepository implements AddonRepositoryInterface
         $this->shop = $shop;
     }
 
+    /**
+     * @param string $name
+     *
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonInterface|Theme
+     *
+     * @throws PrestaShopException
+     */
     public function getInstanceByName($name)
     {
         $dir = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $name;
@@ -66,7 +85,7 @@ class ThemeRepository implements AddonRepositoryInterface
             $data = $this->getConfigFromFile($dir . '/config/theme.yml');
 
             // Write parsed yml data into json conf (faster parsing next time)
-            $this->filesystem->dumpFile($jsonConf, json_encode($data), PsFileSystem::DEFAULT_MODE_FILE);
+            $this->filesystem->dumpFile($jsonConf, json_encode($data));
         }
 
         $data['directory'] = $dir;
@@ -130,10 +149,7 @@ class ThemeRepository implements AddonRepositoryInterface
         $themes = [];
         foreach ($themeDirectories as $directory) {
             $name = basename(substr($directory, 0, -strlen($suffix)));
-            $theme = $this->getInstanceByName($name);
-            if (isset($theme)) {
-                $themes[$name] = $theme;
-            }
+            $themes[$name] = $this->getInstanceByName($name);
         }
 
         return $themes;

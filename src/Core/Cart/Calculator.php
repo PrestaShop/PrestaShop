@@ -85,7 +85,7 @@ class Calculator
 
     /**
      * @param Cart $cart
-     * @param $carrierId
+     * @param int $carrierId
      * @param int|null $computePrecision
      * @param int|null $orderId
      */
@@ -240,7 +240,7 @@ class Calculator
 
         $allowedMaxDiscount = $this->getRowTotalWithoutDiscount();
 
-        if (null !== $this->getFees()->getInitialShippingFees() && null !== $this->getFees()->getFinalShippingFees()) {
+        if (null !== $this->getFees()->getFinalShippingFees()) {
             $shippingDiscount = (new AmountImmutable())
                 ->add($this->getFees()->getInitialShippingFees())
                 ->sub($this->getFees()->getFinalShippingFees())
@@ -256,7 +256,7 @@ class Calculator
     }
 
     /**
-     * @param \CartCore $cart
+     * @param Cart $cart
      *
      * @return Calculator
      */

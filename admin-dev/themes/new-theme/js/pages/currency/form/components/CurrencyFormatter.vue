@@ -45,10 +45,9 @@
 </template>
 
 <script>
+  import {showGrowl} from '@app/utils/growl';
   import LanguageList from './LanguageList';
   import CurrencyModal from './CurrencyModal';
-  import {showGrowl} from '@app/utils/growl';
-
 
   export default {
     name: 'CurrencyFormatter',
@@ -89,17 +88,19 @@
         this.currencyData.transformations[language.id] = '';
         this.currencyData.symbols[language.id] = language.currencySymbol;
 
-        showGrowl('notice', this.$t('list.reset.success'));
+        showGrowl('success', this.$t('list.reset.success'));
       },
       applyCustomization(customData) {
-        const selectedPattern = this.selectedLanguage.transformations[customData.transformation];
+        const selectedPattern = this.selectedLanguage.transformations[
+          customData.transformation
+        ];
         const patterns = selectedPattern.split(';');
 
         this.selectedLanguage.priceSpecification.currencySymbol = customData.symbol;
         this.selectedLanguage.priceSpecification.positivePattern = patterns[0];
-        this.selectedLanguage.priceSpecification.negativePattern = patterns.length > 1
-          ? patterns[1]
-          : `-${patterns[0]}`;
+        // eslint-disable-next-line
+      this.selectedLanguage.priceSpecification.negativePattern =
+          patterns.length > 1 ? patterns[1] : `-${patterns[0]}`;
 
         this.currencyData.transformations[this.selectedLanguage.id] = customData.transformation;
         this.currencyData.symbols[this.selectedLanguage.id] = customData.symbol;

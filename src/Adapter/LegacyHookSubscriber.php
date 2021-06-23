@@ -39,174 +39,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * The legacy hooks are registered one by one in the dispatcher, but each corresponding
  * function is a magic method catched by __call().
  * This ensure the listeners' count is real.
- *
- *
- * <h3>COVERED HOOKS FROM PrestaShop v1.7</h3>
- *
- * <div>
- *   <h4>ProductController</h4>
- *   <ul>
- *     <li><h5>actionProductAdd</h5>
- *       <ul>
- *         <li>Legacy code (for legacy Admin controller, Product pages) is not modified</li>
- *         <li>Since 1.7 (refactored Admin Product pages), triggered by an adapter from legacy code: not modified</li>
- *         <li>Parameters:
- *           <ol>
- *             <li>product: [object] Product (unchanged)</li>
- *             <li>cookie: [object] Cookie (unchanged)</li>
- *             <li>cart: [object] Cart (unchanged)</li>
- *             <li>altern: ???</li>
- *           </ol>
- *         </li>
- *         <li>Returns: void</li>
- *       </ul>
- *     </li>
- *     <li><h5>actionProductDelete</h5>
- *       <ul>
- *         <li>Legacy code (for legacy Admin controller, Product pages) is not modified</li>
- *         <li>Since 1.7 (refactored Admin Product pages), triggered by an adapter from legacy code: not modified</li>
- *         <li>Parameters:
- *           <ol>
- *             <li>id_product: [int] Product ID to be deleted (unchanged)</li>
- *             <li>product: [object] Product (unchanged)</li>
- *             <li>cookie: [object] Cookie (unchanged)</li>
- *             <li>cart: [object] Cart (unchanged)</li>
- *             <li>altern: ???</li>
- *           </ol>
- *         </li>
- *         <li>Returns: void</li>
- *       </ul>
- *     </li>
- *     <li><h5>actionProductUpdate</h5>
- *       <ul>
- *         <li>Legacy code (for legacy Admin controller, Product pages) is not modified</li>
- *         <li>Since 1.7 (refactored Admin Product pages), triggered by an adapter from legacy code or directly from an adapter: duplicated behavior.</li>
- *         <li>Parameters:
- *           <ol>
- *             <li>id_product: [int] Product ID to be deleted (unchanged)</li>
- *             <li>product: [object] Product (unchanged)</li>
- *             <li>cookie: [object] Cookie (unchanged)</li>
- *             <li>cart: [object] Cart (unchanged)</li>
- *             <li>altern: ???</li>
- *           </ol>
- *         </li>
- *         <li>Returns: void</li>
- *       </ul>
- *     </li>
- *     <li><h5>actionAdminProductsListingFieldsModifier</h5>
- *       <ul>
- *         <li>Legacy code (for legacy Admin controller, Product pages) is not modified</li>
- *         <li>Since 1.7 (refactored Admin Product pages), triggered by an adapter with a DIFFERENT BEHAVIOR.</li>
- *         <li>Parameters for the new 1.7 behavior (if _ps_version present and >=1.7.0):
- *           <ol>
- *             <li>_ps_version: [int] value of _PS_VERSION_ is present only if triggered on new Product catalog page (>=1.7)</li>
- *             <li>sql_select: [&array] SELECT fields (to modify directly if needed)</li>
- *             <li>sql_table: [&array] TABLES to join (to modify directly if needed)</li>
- *             <li>sql_where: [&array] WHERE clauses (to modify directly if needed)</li>
- *             <li>sql_order: [&array] ORDER BY clauses (to modify directly if needed)</li>
- *             <li>sql_limit: [&string] LIMIT clause (to modify directly if needed)</li>
- *             <li>cookie: [object] Cookie (unchanged)</li>
- *             <li>cart: [object] Cart (unchanged)</li>
- *             <li>altern: ???</li>
- *           </ol>
- *         </li>
- *         <li>{@see AbstractAdminQueryBuilder::compileSqlQuery()} for more details about how to build these arrays.</li>
- *         <li>{@see AdminProductDataProvider::getCatalogProductList()} for an example.</li>
- *         <li>Returns: void (but you can modify input parameters passed by reference)</li>
- *       </ul>
- *     </li>
- *     <li><h5>actionAdminProductsListingResultsModifier</h5>
- *       <ul>
- *         <li>Legacy code (for legacy Admin controller, Product pages) is not modified</li>
- *         <li>Since 1.7 (refactored Admin Product pages), triggered by an adapter with a DIFFERENT BEHAVIOR.</li>
- *         <li>Parameters for the new 1.7 behavior (if _ps_version present and >=1.7.0):
- *           <ol>
- *             <li>_ps_version: [int] value of _PS_VERSION_ is present only if triggered on new Product catalog page (>=1.7)</li>
- *             <li>products: [&array] List of the products on the requested page, after sql query (modified by actionAdminProductsListingFieldsModifier hook)</li>
- *             <li>total: [integer] total count of products (without pagination) that matches with the requested filters</li>
- *             <li>cookie: [object] Cookie (unchanged)</li>
- *             <li>cart: [object] Cart (unchanged)</li>
- *             <li>altern: ???</li>
- *           </ol>
- *         </li>
- *         <li>{@see AdminProductDataProvider::getCatalogProductList()} for an example.</li>
- *         <li>Returns: void (but you can modify input parameters passed by reference)</li>
- *       </ul>
- *     </li>
- *     <li><h5>displayAdminProductsExtra</h5>
- *       <ul>
- *         <li>Legacy code (for legacy Admin controller, Product pages) is not modified</li>
- *         <li>Since 1.7 (refactored Admin Product pages), triggered by the new architecture in Twig template.</li>
- *         <li>Parameters for the new 1.7 behavior (if _ps_version present and >=1.7.0):
- *           <ol>
- *             <li>_ps_version: [int] value of _PS_VERSION_ is present only if triggered on new Product details page (>=1.7)</li>
- *             <li>id_product: [int] Product ID to be detailed in the form</li>
- *             <li>cookie: [object] Cookie (unchanged)</li>
- *             <li>cart: [object] Cart (unchanged)</li>
- *             <li>altern: ???</li>
- *           </ol>
- *         </li>
- *         <li>Returns: HTML code, all embedded. While the page has been refactored, JS and legacy HTML/CSS classes are all changed.</li>
- *       </ul>
- *     </li>
- *     <li><h5>actionUpdateQuantity</h5>
- *       <ul>
- *         <li>Legacy code (for legacy Admin controller, Product pages) is not modified</li>
- *         <li>Since 1.7 (refactored Admin Product pages), triggered by an adapter from legacy code or directly from an adapter: duplicated behavior.</li>
- *         <li>Parameters:
- *           <ol>
- *             <li>id_product: [int] Product ID to be updated (unchanged)</li>
- *             <li>id_product_attribute: [int] Product attribute ID to be updated (unchanged, 0 if the product has no attribute)</li>
- *             <li>quantity: [int] Quantity to set (unchanged)</li>
- *             <li>cookie: [object] Cookie (unchanged)</li>
- *             <li>cart: [object] Cart (unchanged)</li>
- *             <li>altern: ???</li>
- *           </ol>
- *         </li>
- *         <li>Returns: void</li>
- *       </ul>
- *     </li>
- *     <li><h5>action{Admin|AdminProductsController}{Duplicate|Delete|Sort|Activate|Deactivate}{Before|After}</h5>
- *       <ul>
- *         <li>Since 1.7, triggered from the Controller</li>
- *         <li>Parameter, one of these:
- *           <ol>
- *             <li>product_list_id: [array] A list of product IDs concerning the action</li>
- *             <li>product_id: [int] The product ID concerning the action</li>
- *             <li>product_list_position: [array] The positions of products in the product_list_id parameter, to sort</li>
- *           </ol>
- *         </li>
- *         <li>Returns: void</li>
- *       </ul>
- *     </li>
- *     <li><h5>shouldUseLegacyPage</h5>
- *       <ul>
- *         <li>Since 1.7, triggered from the Controller. This is a transitional behavior and can be removed in the future.</li>
- *         <li>Parameters:
- *           <ol>
- *             <li>page: [string] The page name concerning the parameter change ('product', etc...)</li>
- *             <li>use_legacy: [boolean] True if the user ask to use legacy page instead of the new one.</li>
- *           </ol>
- *         </li>
- *         <li>Returns: void</li>
- *       </ul>
- *     </li>
- *     <li><h5>actionProductActivation</h5>
- *       <ul>
- *         <li>Since 1.7, triggered from the AdminProductDataUpdater via sf ProductController.</li>
- *         <li>Parameters:
- *           <ol>
- *             <li>id_product: [int] Product ID to be updated</li>
- *             <li>product: [object] Product</li>
- *             <li>activated: [boolean] True if activation, False if deactivation.</li>
- *           </ol>
- *         </li>
- *         <li>Returns: void</li>
- *       </ul>
- *     </li>
- *   </ul>
- * </div>
- * <hr />
  */
 class LegacyHookSubscriber implements EventSubscriberInterface
 {
@@ -224,7 +56,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
     {
         $listeners = [];
 
-        //Hack SF2 cache clear : if context not mounted, bypass legacy call
+        // Hack Symfony cache clear : if context not mounted, bypass legacy call
         $legacyContext = Context::getContext();
         if (!$legacyContext || empty($legacyContext->shop) || empty($legacyContext->employee)) {
             return $listeners;
@@ -239,7 +71,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
 
                 $moduleListeners = [];
                 $modules = [];
-                //SF2 cache clear bug fix : call bqSQL alias function
+                // Symfony cache clear bug fix : call bqSQL alias function
                 if (function_exists('bqSQL')) {
                     $modules = Hook::getHookModuleExecList($name);
                 }
@@ -288,7 +120,6 @@ class LegacyHookSubscriber implements EventSubscriberInterface
         $moduleId = (int) $ids[1];
         list($event, $hookName) = $args;
 
-        /** @var $event HookEvent */
         $content = Hook::exec($hookName, $event->getHookParameters(), $moduleId, ($event instanceof RenderingHookEvent));
 
         if (

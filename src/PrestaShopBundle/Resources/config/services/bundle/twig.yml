@@ -11,7 +11,7 @@ services:
             'Twig': '/Admin/TwigTemplateForm'
             'AdvancedParameters': '/Admin/Configure/AdvancedParameters'
             'ShopParameters': '/Admin/Configure/ShopParameters'
-          - '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
+          - '@=service("prestashop.adapter.module.repository.module_repository").getActiveModulesPaths()'
         tags:
           - { name: twig.loader, priority: 1}
 
@@ -118,3 +118,17 @@ services:
       class: 'PrestaShopBundle\Twig\Extension\NumberExtension'
       tags:
         - { name: twig.extension }
+
+    prestashop.twig.extension.multistore_header_extension:
+      class: 'PrestaShopBundle\Twig\Extension\MultistoreHeaderExtension'
+      arguments:
+        - '@prestashop.core.admin.multistore'
+      tags:
+        - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.multistore_url:
+        class: 'PrestaShopBundle\Twig\Extension\MultistoreUrlExtension'
+        arguments:
+          - '@=service("request_stack")'
+        tags:
+            - { name: twig.extension }

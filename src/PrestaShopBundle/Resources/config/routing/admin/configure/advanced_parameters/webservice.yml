@@ -7,10 +7,12 @@ admin_webservice_keys_index:
         _legacy_link: AdminWebservice
 
 admin_webservice_keys_search:
-  path: /
-  methods: POST
-  defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:search'
+    path: /
+    methods: POST
+    defaults:
+        _controller: PrestaShopBundle:Admin\Common:searchGrid
+        gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.webservice_key
+        redirectRoute: admin_webservice_keys_index
         _legacy_controller: AdminWebservice
         _legacy_link: AdminWebservice:submitFilterwebservice_account
 
@@ -44,7 +46,7 @@ admin_webservice_keys_edit:
 
 admin_webservice_keys_delete:
     path: /{webserviceKeyId}/delete
-    methods: DELETE
+    methods: [DELETE, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:delete'
         _legacy_controller: AdminWebservice

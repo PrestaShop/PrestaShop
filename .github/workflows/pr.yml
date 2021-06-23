@@ -1,0 +1,16 @@
+name: Pull Request Validator
+
+on: pull_request
+
+jobs:
+  message-check:
+    if: "!endsWith(github.event.pull_request.title, '[merge]')"
+    name: Block Merge Commits
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Block Merge Commits
+        uses: z3by/block-merge-commits-action@master
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

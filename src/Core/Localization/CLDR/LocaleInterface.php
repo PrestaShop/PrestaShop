@@ -69,68 +69,55 @@ interface LocaleInterface
     /**
      * Get all available number symbols lists, by numbering system.
      *
-     * @return NumberSymbolsData[]
-     *                             All number symbols lists (by numbering system)
+     * @return NumberSymbolsData[] All number symbols lists (by numbering system)
      */
     public function getAllNumberSymbols();
 
     /**
      * Get the number symbols to use for a given numbering system.
      *
-     * @param string|null $numberingSystem
-     *                                     The numbering system of the wanted symbols set.
+     * @param string|null $numberingSystem The numbering system of the wanted symbols set.
      *                                     If null, the default numbering system of this locale will be used.
      *
-     * @return NumberSymbolsData
-     *                           The wanted number symbols
+     * @return NumberSymbolsData The wanted number symbols
      *
-     * @throws LocalizationException
-     *                               When passed $numberingSystem is invalid
+     * @throws LocalizationException When passed $numberingSystem is invalid
      */
     public function getNumberSymbolsByNumberingSystem($numberingSystem = null);
 
     /**
      * Get the pattern to use when formatting a decimal number (for a given numbering system).
      *
-     * @param string|null $numberingSystem
-     *                                     The numbering system of the wanted symbols set.
+     * @param string|null $numberingSystem The numbering system of the wanted symbols set.
      *                                     If null, the default numbering system of this locale will be used.
      *
-     * @return string
-     *                The decimal pattern
+     * @return string The decimal pattern
      *
-     * @throws LocalizationException
-     *                               When passed numbering system is invalid
+     * @throws LocalizationException When passed numbering system is invalid
      */
     public function getDecimalPattern($numberingSystem = null);
 
     /**
      * Get the pattern to use when formatting a percentage (for a given numbering system).
      *
-     * @param string|null $numberingSystem
-     *                                     The numbering system of the wanted symbols set.
+     * @param string|null $numberingSystem The numbering system of the wanted symbols set.
      *                                     If null, the default numbering system of this locale will be used.
      *
-     * @return string
-     *                The percent pattern
+     * @return string The percent pattern
      *
-     * @throws LocalizationException
-     *                               When passed numbering system is invalid
+     * @throws LocalizationException When passed numbering system is invalid
      */
     public function getPercentPattern($numberingSystem = null);
 
     /**
      * Get the pattern to use when formatting a price (for a given numbering system).
      *
-     * @param string|null $numberingSystem
-     *                                     The numbering system of the wanted symbols set.
+     * @param string|null $numberingSystem The numbering system of the wanted symbols set.
      *                                     If null, the default numbering system of this locale will be used.
      *
-     * @return string
-     *                The currency pattern
+     * @return string The currency pattern
      *
-     * @throws LocalizationException
-     *                               When passed numbering system is invalid
+     * @throws LocalizationException When passed numbering system is invalid
      */
     public function getCurrencyPattern($numberingSystem = null);
 
@@ -146,19 +133,16 @@ interface LocaleInterface
     /**
      * Get CLDR data of a given currency.
      *
-     * @param string $currencyCode
-     *                             An ISO 4217 currency code
+     * @param string $currencyCode An ISO 4217 currency code
      *
-     * @return CurrencyData|null
-     *                           The wanted currency data. Null if this currency is not available for this locale.
+     * @return CurrencyData|null The wanted currency data. Null if this currency is not available for this locale.
      */
     public function getCurrencyData($currencyCode);
 
     /**
      * Get CLDR data of all currencies.
      *
-     * @return currencyData[]
-     *                        Data of all currencies
+     * @return CurrencyData[] Data of all currencies
      */
     public function getAllCurrencies();
 }

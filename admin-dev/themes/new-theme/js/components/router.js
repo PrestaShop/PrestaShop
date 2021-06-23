@@ -26,7 +26,7 @@
 import Routing from 'fos-routing';
 import routes from '@js/fos_js_routes.json';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Wraps FOSJsRoutingbundle with exposed routes.
@@ -43,8 +43,16 @@ const $ = window.$;
  */
 export default class Router {
   constructor() {
+    if (window.prestashop && window.prestashop.customRoutes) {
+      Object.assign(routes.routes, window.prestashop.customRoutes);
+    }
+
     Routing.setData(routes);
-    Routing.setBaseUrl($(document).find('body').data('base-url'));
+    Routing.setBaseUrl(
+      $(document)
+        .find('body')
+        .data('base-url'),
+    );
 
     return this;
   }
@@ -58,7 +66,11 @@ export default class Router {
    * @returns {String}
    */
   generate(route, params = {}) {
-    const tokenizedParams = Object.assign(params, {_token: $(document).find('body').data('token')});
+    const tokenizedParams = Object.assign(params, {
+      _token: $(document)
+        .find('body')
+        .data('token'),
+    });
 
     return Routing.generate(route, tokenizedParams);
   }

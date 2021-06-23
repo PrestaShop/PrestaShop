@@ -26,10 +26,10 @@
   <!--  product line left content: image-->
   <div class="product-line-grid-left col-md-3 col-xs-4">
     <span class="product-image media-middle">
-      {if $product.cover}
-        <img src="{$product.cover.bySize.cart_default.url}" alt="{$product.name|escape:'quotes'}">
+      {if $product.default_image}
+        <img src="{$product.default_image.bySize.cart_default.url}" alt="{$product.name|escape:'quotes'}" loading="lazy">
       {else}
-        <img src="{$urls.no_picture_image.bySize.cart_default.url}" />
+        <img src="{$urls.no_picture_image.bySize.cart_default.url}" loading="lazy" />
       {/if}
     </span>
   </div>
@@ -61,6 +61,7 @@
           <div class="unit-price-cart">{$product.unit_price_full}</div>
         {/if}
       </div>
+      {hook h='displayProductPriceBlock' product=$product type="unit_price"}
     </div>
 
     <br/>
@@ -100,7 +101,7 @@
                             {$field.text}
                           {/if}
                         {elseif $field.type == 'image'}
-                          <img src="{$field.image.small.url}">
+                          <img src="{$field.image.small.url}" loading="lazy">
                         {/if}
                       </div>
                     </div>
@@ -121,7 +122,7 @@
       <div class="col-md-10 col-xs-6">
         <div class="row">
           <div class="col-md-6 col-xs-6 qty">
-            {if isset($product.is_gift) && $product.is_gift}
+            {if !empty($product.is_gift)}
               <span class="gift-quantity">{$product.quantity}</span>
             {else}
               <input
@@ -131,15 +132,18 @@
                 data-update-url="{$product.update_quantity_url}"
                 data-product-id="{$product.id_product}"
                 type="number"
+                inputmode="numeric"
+                pattern="[0-9]*"
                 value="{$product.quantity}"
                 name="product-quantity-spin"
+                aria-label="{l s='%productName% product quantity field' sprintf=['%productName%' => $product.name] d='Shop.Theme.Checkout'}"
               />
             {/if}
           </div>
           <div class="col-md-6 col-xs-2 price">
             <span class="product-price">
               <strong>
-                {if isset($product.is_gift) && $product.is_gift}
+                {if !empty($product.is_gift)}
                   <span class="gift">{l s='Gift' d='Shop.Theme.Checkout'}</span>
                 {else}
                   {$product.total}
@@ -160,8 +164,8 @@
               data-id-product-attribute   = "{$product.id_product_attribute|escape:'javascript'}"
               data-id-customization   	  = "{$product.id_customization|escape:'javascript'}"
           >
-            {if !isset($product.is_gift) || !$product.is_gift}
-            <i class="material-icons float-xs-left">delete</i>
+            {if empty($product.is_gift)}
+              <i class="material-icons float-xs-left">delete</i>
             {/if}
           </a>
 

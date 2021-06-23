@@ -68,12 +68,9 @@ use SpecificPrice;
 use State;
 use Tests\Integration\Behaviour\Features\Context\ProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
-use Tests\Integration\Behaviour\Features\Transform\StringToBooleanTransform;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
 {
-    use StringToBooleanTransform;
-
     /**
      * @var ProductFeatureContext
      */
@@ -166,7 +163,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         $productId = $this->getProductIdByName($productName);
 
-        $this->lastException = null;
+        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(
                 new AddProductToCartCommand(
@@ -180,7 +177,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             // Clear cart static cache or it will have no products in next calls
             Cart::resetStaticCache();
         } catch (MinimalQuantityException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -267,7 +264,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         $productId = $this->getProductIdByName($productName);
 
-        $this->lastException = null;
+        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductQuantityInCartCommand(
@@ -281,14 +278,14 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             // Clear cart static cache or it will have no products in next calls
             Cart::resetStaticCache();
         } catch (MinimalQuantityException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         } catch (PackOutOfStockException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
     /**
-     * @When /^(?:I )?add (\d+) customized products? with reference "(.+)" with(out)? all its customizations to the cart "(.+)"$/
+     * @When /^(?:I )?add (\d+) customized products? with reference "(.+)" (with|without)? all its customizations to the cart "(.+)"$/
      */
     public function addCustomizedProductToCartsWithCustomization(
         int $quantity,
@@ -296,7 +293,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         string $withCombinations,
         string $reference
     ) {
-        $hasCombinations = ($withCombinations === '');
+        $hasCombinations = ($withCombinations === 'with');
         $cartId = (int) SharedStorage::getStorage()->get($reference);
         $productId = (int) Product::getIdByReference($productReference);
         $product = new Product($productId);
@@ -335,7 +332,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (Exception $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -367,7 +364,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $combinationId = (int) $this->productFeatureContext->getCombinationWithName($productName, $combinationName)->id;
         $cartId = (int) SharedStorage::getStorage()->get($cartReference);
 
-        $this->lastException = null;
+        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductQuantityInCartCommand(
@@ -381,7 +378,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             // Clear cart static cache or it will have no products in next calls
             Cart::resetStaticCache();
         } catch (MinimalQuantityException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -481,7 +478,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $cartId = (int) SharedStorage::getStorage()->get($cartReference);
         $carrierId = (int) SharedStorage::getStorage()->get($carrierReference);
 
-        $this->lastException = null;
         try {
             $this->getCommandBus()->handle(
                 new UpdateCartCarrierCommand(
@@ -490,7 +486,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (CartConstraintException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -645,7 +641,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 $productId
             ));
         } catch (CartException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -1025,7 +1021,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
         return $this->getQueryBus()->handle(
             (new GetCartForOrderCreation($cartId))
-            ->setHideDiscounts(true)
+                ->setHideDiscounts(true)
         );
     }
 
@@ -1098,11 +1094,11 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(
             MinimalQuantityException::class
         );
-        if ($minQuantity !== $this->lastException->getMinimalQuantity()) {
+        if ($minQuantity !== $this->getLastException()->getMinimalQuantity()) {
             throw new RuntimeException(sprintf(
                 'Minimal quantity in exception, expected %s but got %s',
                 $minQuantity,
-                $this->lastException->getMinimalQuantity()
+                $this->getLastException()->getMinimalQuantity()
             ));
         }
     }

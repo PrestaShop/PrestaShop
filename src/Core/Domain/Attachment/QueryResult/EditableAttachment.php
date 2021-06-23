@@ -44,7 +44,7 @@ class EditableAttachment
     private $name;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
     private $description;
 
@@ -56,7 +56,7 @@ class EditableAttachment
     /**
      * @param string $fileName
      * @param string[] $name
-     * @param string[]|null $description
+     * @param string[] $description
      */
     public function __construct(
         string $fileName,

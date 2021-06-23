@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Component which allows submitting very simple forms without having to use <form> element.
@@ -58,7 +58,7 @@ export default class FormSubmitButton {
 
       const $btn = $(this);
 
-      if ($btn.data('form-confirm-message') && false === confirm($btn.data('form-confirm-message'))) {
+      if ($btn.data('form-confirm-message') && window.confirm($btn.data('form-confirm-message')) === false) {
         return;
       }
 
@@ -74,14 +74,14 @@ export default class FormSubmitButton {
           addInput = $('<input>', {
             type: '_hidden',
             name: '_method',
-            value: method,
+            value: btnMethod,
           });
         }
       }
 
       const $form = $('<form>', {
-        'action': $btn.data('form-submit-url'),
-        'method': method,
+        action: $btn.data('form-submit-url'),
+        method,
       });
 
       if (addInput) {
@@ -90,9 +90,9 @@ export default class FormSubmitButton {
 
       if ($btn.data('form-csrf-token')) {
         $form.append($('<input>', {
-          'type': '_hidden',
-          'name': '_csrf_token',
-          'value': $btn.data('form-csrf-token')
+          type: '_hidden',
+          name: '_csrf_token',
+          value: $btn.data('form-csrf-token'),
         }));
       }
 

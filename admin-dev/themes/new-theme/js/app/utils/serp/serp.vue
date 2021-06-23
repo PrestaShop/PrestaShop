@@ -1,4 +1,3 @@
-
 <!--**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,16 +25,22 @@
 <template>
   <div id="serp">
     <div class="serp-preview">
-      <div class="serp-title">{{ displayedTitle }}</div>
-      <div class="serp-url">{{ url }}<span class="serp-arrow"></span></div>
-      <div class="serp-description">{{ displayedDescription }}</div>
+      <div class="serp-title">
+        {{ displayedTitle }}
+      </div>
+      <div class="serp-url">
+        {{ url }}<span class="serp-arrow" />
+      </div>
+      <div class="serp-description">
+        {{ displayedDescription }}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'serp',
+    name: 'Serp',
     props: {
       url: {
         type: String,

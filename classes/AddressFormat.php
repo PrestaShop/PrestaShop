@@ -418,10 +418,6 @@ class AddressFormatCore extends ObjectModel
             }
         }
         AddressFormat::cleanOrderedAddress($addressFormat);
-        // Free the instanciate objects
-        foreach ($temporyObject as &$object) {
-            unset($object);
-        }
 
         return $tab;
     }

@@ -22,6 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+import _ from 'lodash';
 import * as types from './mutation-types';
 
 export default {
@@ -120,6 +122,7 @@ export default {
       product_id: updatedProduct.product_id,
       combination_id: updatedProduct.combination_id,
     });
+
     if (index !== -1) {
       state.productsToUpdate.splice(index, 1, updatedProduct);
     } else {
@@ -165,6 +168,7 @@ export default {
       product_id: product.product_id,
       combination_id: product.combination_id,
     });
+
     if (index !== -1) {
       state.selectedProducts.splice(index, 1, product);
     } else {
@@ -176,10 +180,10 @@ export default {
       product_id: product.product_id,
       combination_id: product.combination_id,
     });
+
     if (index !== -1) {
       state.selectedProducts[index].qty = 0;
     }
     state.selectedProducts.splice(index, 1);
   },
 };
-

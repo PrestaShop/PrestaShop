@@ -22,252 +22,218 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-var Tree = function (element, options)
-{
-	this.$element = $(element);
-	this.options = $.extend({}, $.fn.tree.defaults, options);
-	this.init();
+
+window.Tree = function (element, options) {
+  this.$element = $(element);
+  this.options = $.extend({}, $.fn.tree.defaults, options);
+  this.init();
 };
 
-function getCategoryById(param) {
-	var elem = null;
-	$('input[name=id_parent]').each(function (index) {
-		if ($(this).val() === param + '') {
-			elem = $(this);
-		}
-	});
-	return elem;
-}
+Tree.prototype = {
+  constructor: Tree,
 
-function disableTreeItem(item) {
-	item.find('input[name=id_parent]').attr('disabled', 'disabled');
-	if (item.hasClass('tree-folder')) {
-		item.find('span.tree-folder-name').addClass('tree-folder-name-disable');
-		item.find('ul li').each(function (index) {
-			disableTreeItem($(this));
-		});
-	} else if (item.hasClass('tree-item')) {
-		item.addClass('tree-item-disable');
-	}
-}
+  init() {
+    const name = this.$element.parent().find('ul.tree input').first().attr('name');
+    const idTree = this.$element.parent().find('.cattree.tree').first().attr('id');
+    this.$element.find('label.tree-toggler, .icon-folder-close, .icon-folder-open').unbind('click');
+    this.$element.find('label.tree-toggler, .icon-folder-close, .icon-folder-open').click(
+      function () {
+        if ($(this).parent().parent().children('ul.tree')
+          .is(':visible')) {
+          $(this).parent().children('.icon-folder-open')
+            .removeClass('icon-folder-open')
+            .addClass('icon-folder-close');
 
-function organizeTree() {
-	if ($('#id_category').length != 0) {
-		var id = $('#id_category').val();
-		var item = getCategoryById(id).parent().parent();
-		disableTreeItem(item);
-	}
-}
+          $(this).trigger('collapse');
+          $(this).parent().parent().children('ul.tree')
+            .toggle(300);
+        } else {
+          $(this).parent().children('.icon-folder-close')
+            .removeClass('icon-folder-close')
+            .addClass('icon-folder-open');
 
-Tree.prototype =
-{
-	constructor: Tree,
+          const loadTree = (typeof (idTree) !== 'undefined' && $(this).parent().closest('.tree-folder')
+            .find('ul.tree .tree-toggler')
+            .first()
+            .html() === '');
 
-	init: function ()
-	{
-		var name = this.$element.parent().find('ul.tree input').first().attr('name');
-		var idTree = this.$element.parent().find('.cattree.tree').first().attr('id');
-		this.$element.find("label.tree-toggler, .icon-folder-close, .icon-folder-open").unbind('click');
-		this.$element.find("label.tree-toggler, .icon-folder-close, .icon-folder-open").click(
-			function ()
-			{
-				if ($(this).parent().parent().children("ul.tree").is(":visible"))
-				{
-					$(this).parent().children(".icon-folder-open")
-						.removeClass("icon-folder-open")
-						.addClass("icon-folder-close");
+          if (loadTree) {
+            const category = $(this).parent().children('ul.tree input').first()
+              .val();
+            const inputType = $(this).parent().children('ul.tree input').first()
+              .attr('type');
 
-					$(this).trigger('collapse');
-					$(this).parent().parent().children("ul.tree").toggle(300);
-				}
-				else
-				{
-					$(this).parent().children(".icon-folder-close")
-						.removeClass("icon-folder-close")
-						.addClass("icon-folder-open");
+            const useCheckBox = inputType === 'checkbox' ? 1 : 0;
 
-					var load_tree = (typeof(idTree) != 'undefined'
-									 && $(this).parent().closest('.tree-folder').find('ul.tree .tree-toggler').first().html() == '');
-					if (load_tree)
-					{
-						var category = $(this).parent().children('ul.tree input').first().val();
-						var inputType = $(this).parent().children('ul.tree input').first().attr('type');
-						var useCheckBox = 0;
-						if (inputType == 'checkbox')
-						{
-							useCheckBox = 1;
-						}
+            $.get(
+              'ajax-tab.php',
+              {
+                controller: 'AdminProducts',
+                token: currentToken,
+                action: 'getCategoryTree',
+                type: idTree,
+                category,
+                inputName: name,
+                useCheckBox,
+              },
+              (content) => {
+                const targetTree = $(`#${idTree}`);
+                $(this).parent().closest('.tree-folder').find('ul.tree')
+                  .html(content);
+                targetTree.tree('collapse', $(this).closest('.tree-folder').children('ul.tree'));
+                $(this).trigger('expand');
+                $(this).parent().parent().children('ul.tree')
+                  .toggle(300);
+                targetTree.tree('init');
+              },
+            );
+          } else {
+            $(this).trigger('expand');
+            $(this).parent().parent().children('ul.tree')
+              .toggle(300);
+          }
+        }
+      },
+    );
+    this.$element.find('li').unbind('click');
+    this.$element.find('li').click(
+      () => {
+        $('.tree-selected').removeClass('tree-selected');
+        $('li input:checked').parent().addClass('tree-selected');
+      },
+    );
 
-						$.get(
-							'ajax-tab.php',
-							{ controller:'AdminProducts', token:currentToken, action:'getCategoryTree', type:idTree, category:category, inputName:name, useCheckBox:useCheckBox},
-							function(content)
-							{
-								$(this).parent().closest('.tree-folder').find('ul.tree').html(content);
-								$('#'+idTree).tree('collapse', $(this).closest('.tree-folder').children("ul.tree"));
-								$(this).trigger('expand');
-								$(this).parent().parent().children("ul.tree").toggle(300);
-								$('#'+idTree).tree('init');
-							}
-						);
-					}
-					else
-					{
-						$(this).trigger('expand');
-						$(this).parent().parent().children("ul.tree").toggle(300);
-					}
-				}
-			}
-		);
-		this.$element.find("li").unbind('click');
-		this.$element.find("li").click(
-			function ()
-			{
-				$('.tree-selected').removeClass("tree-selected");
-				$('li input:checked').parent().addClass("tree-selected");
-			}
-		);
+    if (typeof (idTree) !== 'undefined') {
+      if ($('select#id_category_default').length) {
+        this.$element.find(':input[type=checkbox]').unbind('click');
+        this.$element.find(':input[type=checkbox]').click(function () {
+          // eslint-disable-next-line
+          if ($(this).prop('checked')) addDefaultCategory($(this));
+          else {
+            $(`select#id_category_default option[value=${$(this).val()}]`).remove();
+            if ($('select#id_category_default option').length === 0) {
+              $('select#id_category_default').closest('.form-group').hide();
+              $('#no_default_category').show();
+            }
+          }
+        });
+      }
+      if (typeof (treeClickFunc) !== 'undefined') {
+        this.$element.find(':input[type=radio]').unbind('click');
 
-		if (typeof(idTree) != 'undefined')
-		{
-			if ($('select#id_category_default').length)
-			{
-				this.$element.find(':input[type=checkbox]').unbind('click');
-				this.$element.find(':input[type=checkbox]').click(function()
-				{
-					if ($(this).prop('checked'))
-						addDefaultCategory($(this));
-					else
-					{
-						$('select#id_category_default option[value=' + $(this).val() + ']').remove();
-						if ($('select#id_category_default option').length == 0)
-						{
-							$('select#id_category_default').closest('.form-group').hide();
-							$('#no_default_category').show();
-						}
-					}
-				});
-			}
-			if (typeof(treeClickFunc) != 'undefined')
-			{
-				this.$element.find(":input[type=radio]").unbind('click');
-				this.$element.find(":input[type=radio]").click(treeClickFunc);
-			}
-		}
+        // eslint-disable-next-line
+        this.$element.find(':input[type=radio]').click(treeClickFunc);
+      }
+    }
 
-		return $(this);
-	},
+    return $(this);
+  },
 
-	collapse : function(elem, $speed)
-	{
-		elem.find("label.tree-toggler").each(
-			function()
-			{
-				$(this).parent().children(".icon-folder-open")
-					.removeClass("icon-folder-open")
-					.addClass("icon-folder-close");
-				$(this).parent().parent().children("ul.tree").hide($speed);
-			}
-		);
+  collapse(elem, $speed) {
+    elem.find('label.tree-toggler').each(
+      function () {
+        $(this).parent().children('.icon-folder-open')
+          .removeClass('icon-folder-open')
+          .addClass('icon-folder-close');
+        $(this).parent().parent().children('ul.tree')
+          .hide($speed);
+      },
+    );
 
-		return $(this);
-	},
+    return $(this);
+  },
 
-	collapseAll : function($speed)
-	{
-		this.$element.find("label.tree-toggler").each(
-			function()
-			{
-				$(this).parent().children(".icon-folder-open")
-					.removeClass("icon-folder-open")
-					.addClass("icon-folder-close");
-				$(this).parent().parent().children("ul.tree").hide($speed);
-			}
-		);
+  collapseAll($speed) {
+    this.$element.find('label.tree-toggler').each(
+      function () {
+        $(this).parent().children('.icon-folder-open')
+          .removeClass('icon-folder-open')
+          .addClass('icon-folder-close');
+        $(this).parent().parent().children('ul.tree')
+          .hide($speed);
+      },
+    );
 
-		return $(this);
-	},
+    return $(this);
+  },
 
-	expandAll : function($speed)
-	{
-		var idTree = this.$element.parent().find('.cattree.tree').first().attr('id');
-		if (typeof(idTree) != 'undefined' && !$('#'+idTree).hasClass('full_loaded'))
-		{
-			var targetTree = $('#'+idTree);
-			var selected = [];
-			targetTree.find('.tree-selected input').each(
-				function()
-				{
-					selected.push($(this).val());
-				}
-			);
-			var name = targetTree.find('ul.tree input').first().attr('name');
-			var inputType = targetTree.find('ul.tree input').first().attr('type');
-			var useCheckBox = 0;
-			if (inputType == 'checkbox')
-			{
-				useCheckBox = 1;
-			}
+  expandAll($speed) {
+    const idTree = this.$element.parent().find('.cattree.tree').first().attr('id');
+    const targetTree = $(`#${idTree}`);
 
-			$.get(
-				'ajax-tab.php',
-				{ controller:'AdminProducts', token:currentToken, action:'getCategoryTree', type:idTree, fullTree:1, selected:selected, inputName:name, useCheckBox:useCheckBox },
-				function(content)
-				{
-					targetTree.html(content);
-          // Function organizeTree() disabled because it no longer has known usage - Crezzur
-					// organizeTree();
-					targetTree.tree('init');
-					targetTree.find("label.tree-toggler").each(
-						function()
-						{
-							$(this).parent().children(".icon-folder-close")
-								.removeClass("icon-folder-close")
-								.addClass("icon-folder-open");
-							$(this).parent().parent().children("ul.tree").show($speed);
-							targetTree.addClass('full_loaded');
-						}
-					);
-				}
-			);
-		}
-		else
-		{
-			this.$element.find("label.tree-toggler").each(
-				function()
-				{
-					$(this).parent().children(".icon-folder-close")
-						.removeClass("icon-folder-close")
-						.addClass("icon-folder-open");
-					$(this).parent().parent().children("ul.tree").show($speed);
-				}
-			);
-		}
+    if (typeof (idTree) !== 'undefined' && !targetTree.hasClass('full_loaded')) {
+      const selected = [];
+      targetTree.find('.tree-selected input').each(
+        function () {
+          selected.push($(this).val());
+        },
+      );
+      const name = targetTree.find('ul.tree input').first().attr('name');
+      const inputType = targetTree.find('ul.tree input').first().attr('type');
 
-		return $(this);
-	}
+      const useCheckBox = inputType === 'checkbox' ? 1 : 0;
+
+      $.get(
+        'ajax-tab.php',
+        {
+          controller: 'AdminProducts',
+          token: currentToken,
+          action: 'getCategoryTree',
+          type: idTree,
+          fullTree: 1,
+          selected,
+          inputName: name,
+          useCheckBox,
+        },
+        (content) => {
+          targetTree.html(content);
+          targetTree.tree('init');
+          targetTree.find('label.tree-toggler').each(
+            function () {
+              $(this).parent().children('.icon-folder-close')
+                .removeClass('icon-folder-close')
+                .addClass('icon-folder-open');
+              $(this).parent().parent().children('ul.tree')
+                .show($speed);
+              targetTree.addClass('full_loaded');
+            },
+          );
+        },
+      );
+    } else {
+      this.$element.find('label.tree-toggler').each(
+        function () {
+          $(this).parent().children('.icon-folder-close')
+            .removeClass('icon-folder-close')
+            .addClass('icon-folder-open');
+          $(this).parent().parent().children('ul.tree')
+            .show($speed);
+        },
+      );
+    }
+
+    return $(this);
+  },
 };
 
-$.fn.tree = function (option, value)
-{
-	var methodReturn;
-	var $set = this.each(
-		function ()
-		{
-			var $this = $(this);
-			var data = $this.data('tree');
-			var options = typeof option === 'object' && option;
+$.fn.tree = function (option, value) {
+  let methodReturn;
+  const $set = this.each(
+    function () {
+      const $this = $(this);
+      let data = $this.data('tree');
+      const options = typeof option === 'object' && option;
 
-			if (!data){
-				$this.data('tree', (data = new Tree(this, options)));
-			}
-			if (typeof option === 'string') {
-				methodReturn = data[option](value);
-			}
-		}
-	);
+      if (!data) {
+        $this.data('tree', (data = new Tree(this, options)));
+      }
+      if (typeof option === 'string') {
+        methodReturn = data[option](value);
+      }
+    },
+  );
 
-	return (methodReturn === undefined) ? $set : methodReturn;
+  return (methodReturn === undefined) ? $set : methodReturn;
 };
 
 $.fn.tree.Constructor = Tree;

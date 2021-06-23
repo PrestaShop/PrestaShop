@@ -26,26 +26,53 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use TaxRulesGroup;
 
 /**
  * Provides tax rule group choices with tax rule name as key and id as value
  */
-final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface
+final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, FormChoiceAttributeProviderInterface
 {
     /**
      * {@inheritdoc}
      */
     public function getChoices()
     {
-        $rules = TaxRulesGroup::getTaxRulesGroupsForOptions();
-
         $choices = [];
-        foreach ($rules as $rule) {
+        foreach ($this->getRules() as $rule) {
             $choices[$rule['name']] = $rule['id_tax_rules_group'];
         }
 
         return $choices;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChoicesAttributes(): array
+    {
+        $attrs = [];
+        foreach ($this->getRules() as $rule) {
+            // Keep first one found
+            if (!empty($attrs[$rule['name']]['data-tax-rate'])) {
+                continue;
+            }
+
+            $attrs[$rule['name']] = [
+                'data-tax-rate' => !empty($rule['rate']) ? $rule['rate'] : null,
+            ];
+        }
+
+        return $attrs;
+    }
+
+    /**
+     * @return array
+     */
+    private function getRules(): array
+    {
+        return TaxRulesGroup::getTaxRulesGroupsForOptions();
     }
 }

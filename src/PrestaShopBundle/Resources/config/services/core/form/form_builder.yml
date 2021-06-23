@@ -168,3 +168,53 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Sell\Address\CustomerAddressType'
       - '@prestashop.core.form.identifiable_object.data_provider.address_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.order_state_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
+      - '@prestashop.core.form.identifiable_object.data_provider.order_state_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.order_return_state_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderReturnStates\OrderReturnStateType'
+      - '@prestashop.core.form.identifiable_object.data_provider.order_return_state_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.product_form_builder:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+      factory: 'prestashop.core.form.builder.form_builder_factory:create'
+      arguments:
+          - 'PrestaShopBundle\Form\Admin\Sell\Product\ProductFormType'
+          - '@prestashop.core.form.identifiable_object.data_provider.product_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.combination_form_builder:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+      factory: 'prestashop.core.form.builder.form_builder_factory:create'
+      arguments:
+          - 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationFormType'
+          - '@prestashop.core.form.identifiable_object.data_provider.combination_form_data_provider'
+          - '@prestashop.core.form.identifiable_object.option_provider.combination_form_options_provider'
+
+  prestashop.core.form.identifiable_object.builder.combination_item_form_builder:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+      factory: 'prestashop.core.form.builder.form_builder_factory:create'
+      arguments:
+          - 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationItemType'
+          - '@prestashop.core.form.identifiable_object.data_provider.empty_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.product_image_form_builder:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+      factory: 'prestashop.core.form.builder.form_builder_factory:create'
+      arguments:
+          - 'PrestaShopBundle\Form\Admin\Sell\Product\Image\ProductImageType'
+          - '@prestashop.core.form.identifiable_object.data_provider.product_image_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.zone_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\International\Locations\ZoneType'
+      - '@prestashop.core.form.identifiable_object.data_provider.zone_form_data_provider'

@@ -32,11 +32,11 @@
         id="bulk-action"
         ref="bulk-action"
         class="mt-3"
-        :isIndeterminate="isIndeterminate"
+        :is-indeterminate="isIndeterminate()"
         @checked="bulkChecked"
       />
       <div class="ml-2">
-        <small>{{trans('title_bulk')}}</small>
+        <small>{{ trans('title_bulk') }}</small>
         <PSNumber
           class="bulk-qty"
           :danger="danger"
@@ -59,7 +59,7 @@
         @click="sendQty"
       >
         <i class="material-icons">edit</i>
-        {{trans('button_movement_type')}}
+        {{ trans('button_movement_type') }}
       </PSButton>
     </div>
   </div>
@@ -69,7 +69,7 @@
   import PSNumber from '@app/widgets/ps-number';
   import PSCheckbox from '@app/widgets/ps-checkbox';
   import PSButton from '@app/widgets/ps-button';
-  import { EventBus } from '@app/utils/event-bus';
+  import {EventBus} from '@app/utils/event-bus';
 
   export default {
     computed: {
@@ -78,15 +78,6 @@
       },
       bulkEditQty() {
         return this.$store.state.bulkEditQty;
-      },
-      isIndeterminate() {
-        const selectedProductsLng = this.selectedProductsLng;
-        const productsLng = this.$store.state.products.length;
-        const isIndeterminate = (selectedProductsLng > 0 && selectedProductsLng < productsLng);
-        if (isIndeterminate) {
-          this.$refs['bulk-action'].checked = true;
-        }
-        return isIndeterminate;
       },
       selectedProductsLng() {
         return this.$store.getters.selectedProductsLng;
@@ -104,6 +95,16 @@
       },
     },
     methods: {
+      isIndeterminate() {
+        const {selectedProductsLng} = this;
+        const productsLng = this.$store.state.products.length;
+        const isIndeterminate = (selectedProductsLng > 0 && selectedProductsLng < productsLng);
+
+        if (isIndeterminate) {
+          this.$refs['bulk-action'].checked = true;
+        }
+        return isIndeterminate;
+      },
       focusIn() {
         this.danger = !this.selectedProductsLng;
         this.isFocused = !this.danger;
@@ -119,7 +120,7 @@
         if (!checkbox.checked) {
           this.$store.dispatch('updateBulkEditQty', null);
         }
-        if (!this.isIndeterminate) {
+        if (!this.isIndeterminate()) {
           EventBus.$emit('toggleProductsCheck', checkbox.checked);
         }
       },

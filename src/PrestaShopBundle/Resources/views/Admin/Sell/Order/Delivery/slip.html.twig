@@ -27,10 +27,13 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block content %}
-  {{ form_start(pdfForm, {'attr' : {'class': 'form', 'autocomplete': 'off'}, 'action': path('admin_order_delivery_slip_pdf') }) }}
+  {{ form_start(pdfForm, {
+    'attr' : {'class': 'form', 'autocomplete': 'off', id: 'form-delivery-slips-print-pdf'},
+    'action': path('admin_order_delivery_slip_pdf') })
+  }}
     <div class="row justify-content-center">
       {% block admin_form_order_delivery_slip_pdf %}
-        <div class="col-xl-10">
+        <div class="col-xl-12">
           <div class="card" id="delivery_pdf_fieldset">
             <h3 class="card-header">
               <i class="material-icons">print</i> {{ 'Print PDF'|trans }}
@@ -40,15 +43,15 @@
                 <div class="form-group row">
                   {{ ps.label_with_help('From'|trans({}, 'Admin.Global'), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
                   <div class="col-sm">
-                    {{ form_errors(pdfForm.pdf.date_from) }}
-                    {{ form_widget(pdfForm.pdf.date_from) }}
+                    {{ form_errors(pdfForm.date_from) }}
+                    {{ form_widget(pdfForm.date_from) }}
                   </div>
                 </div>
                 <div class="form-group row">
                   {{ ps.label_with_help('To'|trans({}, 'Admin.Global'), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
                   <div class="col-sm">
-                    {{ form_errors(pdfForm.pdf.date_to) }}
-                    {{ form_widget(pdfForm.pdf.date_to) }}
+                    {{ form_errors(pdfForm.date_to) }}
+                    {{ form_widget(pdfForm.date_to) }}
                   </div>
                 </div>
                 {{ form_rest(pdfForm) }}
@@ -56,7 +59,7 @@
             </div>
             <div class="card-footer">
               <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Generate PDF'|trans }}</button>
+                <button class="btn btn-primary" id="generate-delivery-slip-by-date">{{ 'Generate PDF'|trans }}</button>
               </div>
             </div>
           </div>
@@ -65,10 +68,10 @@
     </div>
   {{ form_end(pdfForm) }}
 
-  {{ form_start(optionsForm, {'attr' : {'class': 'form'} }) }}
+  {{ form_start(optionsForm, {'attr' : {'class': 'form', 'id': 'form-delivery-slips-options'} }) }}
     <div class="row justify-content-center">
       {% block admin_form_order_delivery_slip_options %}
-        <div class="col-xl-10">
+        <div class="col-xl-12">
           <div class="card" id="delivery_options_fieldset">
             <h3 class="card-header">
               <i class="material-icons">settings</i> {{ 'Delivery slip options'|trans }}
@@ -78,22 +81,22 @@
                 <div class="form-group row">
                   {{ ps.label_with_help(('Delivery prefix'|trans), ('Prefix used for delivery slips.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
                   <div class="col-sm">
-                    {{ form_errors(optionsForm.options.prefix) }}
-                    {{ form_widget(optionsForm.options.prefix) }}
+                    {{ form_errors(optionsForm.prefix) }}
+                    {{ form_widget(optionsForm.prefix) }}
                   </div>
                 </div>
                 <div class="form-group row">
-                  {{ ps.label_with_help(('Delivery Number'|trans), ('The next delivery slip will begin with this number and then increase with each additional slip.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
+                  {{ ps.label_with_help(('Delivery number'|trans), ('The next delivery slip will begin with this number and then increase with each additional slip.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
                   <div class="col-sm">
-                    {{ form_errors(optionsForm.options.number) }}
-                    {{ form_widget(optionsForm.options.number) }}
+                    {{ form_errors(optionsForm.number) }}
+                    {{ form_widget(optionsForm.number) }}
                   </div>
                 </div>
                 <div class="form-group row">
-                  {{ ps.label_with_help(('Enable product image'|trans), ('Adds an image before product name on Delivery-slip'|trans({}, 'Admin.Orderscustomers.Help'))) }}
+                  {{ ps.label_with_help(('Enable product image'|trans), ('Add an image before product name on delivery slip'|trans({}, 'Admin.Orderscustomers.Help'))) }}
                   <div class="col-sm">
-                    {{ form_errors(optionsForm.options.enable_product_image) }}
-                    {{ form_widget(optionsForm.options.enable_product_image) }}
+                    {{ form_errors(optionsForm.enable_product_image) }}
+                    {{ form_widget(optionsForm.enable_product_image) }}
                   </div>
                 </div>
                 {{ form_rest(optionsForm) }}
@@ -101,7 +104,7 @@
             </div>
             <div class="card-footer">
               <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                <button class="btn btn-primary" id="save-delivery-slip-options-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
               </div>
             </div>
           </div>
@@ -112,7 +115,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
+  {{ parent() }}
 
-    <script src="{{ asset('themes/new-theme/public/order_delivery.bundle.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/order_delivery.bundle.js') }}"></script>
 {% endblock %}

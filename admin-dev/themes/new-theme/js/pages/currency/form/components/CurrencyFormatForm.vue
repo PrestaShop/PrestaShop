@@ -25,14 +25,26 @@
 <template>
   <div class="row">
     <div class="col-4">
-      <h4>{{$t('step.symbol')}}</h4>
-      <input type="text" v-model="customSymbol">
+      <h4>{{ $t('step.symbol') }}</h4>
+      <input
+        type="text"
+        v-model="customSymbol"
+      >
     </div>
     <div class="col-8 border-left">
-      <h4>{{$t('step.format')}}</h4>
+      <h4>{{ $t('step.format') }}</h4>
       <div class="row">
-        <div class="ps-radio col-6" v-for="(pattern, transformation) in availableFormats" :key="transformation" :id="transformation">
-          <input type="radio" :checked="transformation === customTransformation" :value="transformation" />
+        <div
+          class="ps-radio col-6"
+          v-for="(pattern, transformation) in availableFormats"
+          :key="transformation"
+          :id="transformation"
+        >
+          <input
+            type="radio"
+            :checked="transformation === customTransformation"
+            :value="transformation"
+          >
           <label @click.prevent.stop="customTransformation = transformation">
             {{ displayPattern(pattern) }}
           </label>
@@ -43,73 +55,73 @@
 </template>
 
 <script>
-  import { NumberFormatter } from '@app/cldr';
+  import {NumberFormatter} from '@app/cldr';
 
   export default {
-    name: 'currency-format-form',
-    data: () => {
-      return {
-        value: {
-          symbol: '',
-          transformation: '',
-        },
-      };
-    },
+    name: 'CurrencyFormatForm',
+    data: () => ({
+      value: {
+        symbol: '',
+        transformation: '',
+      },
+    }),
     props: {
       language: {
         type: Object,
         required: true,
         default: () => {},
-      }
+      },
     },
     computed: {
       availableFormats() {
         return this.language.transformations;
       },
       customSymbol: {
-        get: function() {
+        get() {
           return this.value.symbol;
         },
-        set: function(symbol) {
+        set(symbol) {
           this.value.symbol = symbol;
           this.$emit('input', this.value);
         },
       },
       customTransformation: {
-        get: function() {
+        get() {
           return this.value.transformation;
         },
-        set: function(transformation) {
+        set(transformation) {
           this.value.transformation = transformation;
           this.$emit('input', this.value);
-        }
+        },
       },
     },
     methods: {
       displayPattern(pattern) {
         const patterns = pattern.split(';');
-        const priceSpecification = Object.assign({}, this.language.priceSpecification);
+        const priceSpecification = {...this.language.priceSpecification};
         priceSpecification.positivePattern = patterns[0];
-        priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : '-' + pattern;
+        priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : `-${pattern}`;
         priceSpecification.currencySymbol = this.customSymbol;
 
         const currencyFormatter = NumberFormatter.build(priceSpecification);
 
         return currencyFormatter.format(14251999.42);
-      }
+      },
     },
     mounted() {
       this.customSymbol = this.language.priceSpecification.currencySymbol;
       const currencyPattern = this.language.priceSpecification.positivePattern;
 
       // Detect which transformation matches the language pattern
-      for (let transformation in this.language.transformations) {
-        let transformationPatterns = this.language.transformations[transformation].split(';');
+      /* eslint-disable-next-line no-restricted-syntax,guard-for-in */
+      for (const transformation in this.language.transformations) {
+        const transformationPatterns = this.language.transformations[transformation].split(';');
+
         if (transformationPatterns[0] === currencyPattern) {
           this.customTransformation = transformation;
           break;
         }
       }
-    }
-  }
+    },
+  };
 </script>

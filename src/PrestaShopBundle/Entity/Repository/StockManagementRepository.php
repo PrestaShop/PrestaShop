@@ -105,7 +105,7 @@ abstract class StockManagementRepository
      * @param Connection $connection
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
-     * @param $tablePrefix
+     * @param string $tablePrefix
      *
      * @throws NotImplementedException
      */
@@ -229,7 +229,7 @@ abstract class StockManagementRepository
     /**
      * @param QueryParamsCollection $queryParams
      *
-     * @return bool|string
+     * @return int
      */
     public function countPages(QueryParamsCollection $queryParams)
     {
@@ -415,6 +415,35 @@ abstract class StockManagementRepository
     }
 
     /**
+     * Get the attribute name subquery to be used in the select field of the main query.
+     *
+     * @return string
+     */
+    protected function getAttributeNameSubquery()
+    {
+        return '(SELECT GROUP_CONCAT(
+                        DISTINCT CONCAT(agl.name)
+                        SEPARATOR ", "
+                    )
+                    FROM ' . $this->tablePrefix . 'product_attribute pa2
+                    JOIN ' . $this->tablePrefix . 'product_attribute_combination pac ON (
+                        pac.id_product_attribute = pa2.id_product_attribute
+                    )
+                    JOIN ' . $this->tablePrefix . 'attribute a ON (
+                        a.id_attribute = pac.id_attribute
+                    )
+                    JOIN ' . $this->tablePrefix . 'attribute_group ag ON (
+                        ag.id_attribute_group = a.id_attribute_group
+                    )
+                    JOIN ' . $this->tablePrefix . 'attribute_group_lang agl ON (
+                        ag.id_attribute_group = agl.id_attribute_group
+                        AND agl.id_lang = :language_id
+                    )
+                    WHERE pa2.id_product=p.id_product AND pa2.id_product_attribute=pa.id_product_attribute)
+                    AS attribute_name';
+    }
+
+    /**
      * Get the combination name subquery to be used in the select field of the main query.
      *
      * @return string
@@ -428,7 +457,7 @@ abstract class StockManagementRepository
                     FROM ' . $this->tablePrefix . 'product_attribute pa2
                     JOIN ' . $this->tablePrefix . 'product_attribute_combination pac ON (
                         pac.id_product_attribute = pa2.id_product_attribute
-                    )                    
+                    )
                     JOIN ' . $this->tablePrefix . 'attribute a ON (
                         a.id_attribute = pac.id_attribute
                     )
@@ -442,7 +471,7 @@ abstract class StockManagementRepository
                     JOIN ' . $this->tablePrefix . 'attribute_group_lang agl ON (
                         ag.id_attribute_group = agl.id_attribute_group
                         AND agl.id_lang = :language_id
-                    )                    
+                    )
                     WHERE pa2.id_product=p.id_product AND pa2.id_product_attribute=pa.id_product_attribute)
                     AS combination_name';
     }
@@ -490,7 +519,7 @@ abstract class StockManagementRepository
      */
     protected function getCombinationCoverId(array $row)
     {
-        $query = 'SELECT id_image 
+        $query = 'SELECT id_image
                   FROM ' . $this->tablePrefix . 'product_attribute_image pai
                   WHERE id_product_attribute=:id_product_attribute
                   LIMIT 1';
@@ -520,7 +549,7 @@ abstract class StockManagementRepository
                         )
                         JOIN ' . $this->tablePrefix . 'attribute_group ag ON (
                             ag.id_attribute_group = a.id_attribute_group
-                        )                    
+                        )
                     WHERE pac.id_product_attribute=:id_product_attribute';
         $statement = $this->connection->prepare($query);
         $statement->bindValue('id_product_attribute', (int) $row['combination_id'], \PDO::PARAM_INT);

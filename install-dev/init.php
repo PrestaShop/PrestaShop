@@ -116,12 +116,20 @@ if (!defined('_THEME_NAME_')) {
          * @deprecated since 1.7.5.x to be removed in 1.8.x
          * Rely on "PS_THEME_NAME" environment variable value
          */
-        $themes = glob(dirname(__DIR__).'/themes/*/config/theme.yml', GLOB_NOSORT);
-        usort($themes, function ($a, $b) {
-            return strcmp($b, $a);
-        });
-
-        define('_THEME_NAME_', basename(substr($themes[0], 0, -strlen('/config/theme.yml'))));
+        $dirThemes = dirname(__DIR__).'/themes/';
+        $fileConfig = '/config/theme.yml';
+        $defaultTheme = 'classic';
+        // Choose classic theme as default
+        if (file_exists($dirThemes . $defaultTheme . $fileConfig)) {
+            define('_THEME_NAME_', $defaultTheme);
+        } else {
+            // Choose the first theme alphabetically
+            $themes = glob($dirThemes . '*' . $fileConfig, GLOB_NOSORT);
+            usort($themes, function ($a, $b) {
+                return strcmp($a, $b);
+            });
+            define('_THEME_NAME_', basename(substr($themes[0], 0, -strlen('/config/theme.yml'))));
+        }
     }
 }
 

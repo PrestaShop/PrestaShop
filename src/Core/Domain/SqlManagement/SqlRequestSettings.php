@@ -34,7 +34,7 @@ class SqlRequestSettings
     /**
      * Name of the setting for SqlRequest SQL query result file encoding in ps_configuration.
      */
-    const FILE_ENCODING = 'PS_ENCODING_FILE_MANAGER_SQL';
+    public const FILE_ENCODING = 'PS_ENCODING_FILE_MANAGER_SQL';
 
     /**
      * @var string Encoding in which downloaded SqlRequest SQL query result files will be encoded
@@ -42,7 +42,7 @@ class SqlRequestSettings
     private $fileEncoding;
 
     /**
-     * @param $fileEncoding
+     * @param string $fileEncoding
      */
     public function __construct($fileEncoding)
     {

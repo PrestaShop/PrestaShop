@@ -267,7 +267,7 @@ class CartCore extends ObjectModel
         }
 
         $return = parent::add($autoDate, $nullValues);
-        Hook::exec('actionCartSave');
+        Hook::exec('actionCartSave', ['cart' => $this]);
 
         return $return;
     }
@@ -294,7 +294,7 @@ class CartCore extends ObjectModel
 
         $this->_products = null;
         $return = parent::update($nullValues);
-        Hook::exec('actionCartSave');
+        Hook::exec('actionCartSave', ['cart' => $this]);
 
         return $return;
     }
@@ -1189,6 +1189,11 @@ class CartCore extends ObjectModel
         $pa_implode = [];
         $separator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
 
+        if ($separator === '-') {
+            // Add a space before the dash between attributes
+            $separator = ' -';
+        }
+
         foreach ($ipa_list as $id_product_attribute) {
             if ((int) $id_product_attribute && !array_key_exists($id_product_attribute . '-' . $id_lang, self::$_attributesLists)) {
                 $pa_implode[] = (int) $id_product_attribute;
@@ -1217,9 +1222,11 @@ class CartCore extends ObjectModel
             ORDER BY ag.`position` ASC, a.`position` ASC'
         );
 
+        $colon = Context::getContext()->getTranslator()->trans(': ', [], 'Shop.Pdf');
         foreach ($result as $row) {
-            self::$_attributesLists[$row['id_product_attribute'] . '-' . $id_lang]['attributes'] .= $row['public_group_name'] . ' : ' . $row['attribute_name'] . $separator . ' ';
-            self::$_attributesLists[$row['id_product_attribute'] . '-' . $id_lang]['attributes_small'] .= $row['attribute_name'] . $separator . ' ';
+            $key = $row['id_product_attribute'] . '-' . $id_lang;
+            self::$_attributesLists[$key]['attributes'] .= $row['public_group_name'] . $colon . $row['attribute_name'] . $separator . ' ';
+            self::$_attributesLists[$key]['attributes_small'] .= $row['attribute_name'] . $separator . ' ';
         }
 
         foreach ($pa_implode as $id_product_attribute) {
@@ -1464,7 +1471,7 @@ class CartCore extends ObjectModel
      * @param bool $preserveGiftRemoval
      * @param bool $useOrderPrices
      *
-     * @return bool Whether the quantity has been successfully updated
+     * @return bool|int Whether the quantity has been successfully updated
      */
     public function updateQty(
         $quantity,
@@ -3111,23 +3118,14 @@ class CartCore extends ObjectModel
             $order_by_price = !Configuration::get('PS_CARRIER_DEFAULT_SORT');
         }
         if (null === $order_way) {
-            $order_way = Configuration::get('PS_CARRIER_DEFAULT_ORDER');
+            $order_way = Configuration::get('PS_CARRIER_DEFAULT_ORDER') ? 1 : -1;
         }
 
         if ($order_by_price) {
-            if ($order_way) {
-                return ($option1['total_price_with_tax'] < $option2['total_price_with_tax']) * 2 - 1;
-            } else {
-                // return -1 or 1
-                return ($option1['total_price_with_tax'] >= $option2['total_price_with_tax']) * 2 - 1;
-            }
-        } elseif ($order_way) {
-            // return -1 or 1
-            return ($option1['position'] < $option2['position']) * 2 - 1;
-        } else {
-            // return -1 or 1
-            return ($option1['position'] >= $option2['position']) * 2 - 1;
+            return $option1['total_price_with_tax'] < $option2['total_price_with_tax'] ? $order_way : -$order_way;
         }
+
+        return $option1['position'] < $option2['position'] ? $order_way : -$order_way;
     }
 
     /**
@@ -4165,6 +4163,7 @@ class CartCore extends ObjectModel
                 WHERE NOT EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'orders o WHERE o.`id_cart` = c.`id_cart`
                                     AND o.`id_customer` = ' . (int) $id_customer . ')
                 AND c.`id_customer` = ' . (int) $id_customer . '
+                AND c.`id_cart` = (SELECT `id_cart` FROM `' . _DB_PREFIX_ . 'cart` c2 WHERE c2.`id_customer` = ' . (int) $id_customer . ' ORDER BY `id_cart` DESC LIMIT 1)
                 AND c.`id_guest` != 0
                     ' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'c') . '
                 ORDER BY c.`date_upd` DESC';
@@ -4443,7 +4442,7 @@ class CartCore extends ObjectModel
     /**
      * Duplicate this Cart in the database.
      *
-     * @return array Duplicated cart, with success bool
+     * @return array|bool Duplicated cart, with success bool
      */
     public function duplicate()
     {

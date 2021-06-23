@@ -61,7 +61,7 @@ final class InvoicesByStatusDataProvider implements FormDataProviderInterface
     private function validate(array $data)
     {
         $errors = [];
-        $orderStates = $data['generate_by_status']['order_states'];
+        $orderStates = $data['order_states'];
 
         if (!is_array($orderStates) || !count($orderStates)) {
             $errors[] = [

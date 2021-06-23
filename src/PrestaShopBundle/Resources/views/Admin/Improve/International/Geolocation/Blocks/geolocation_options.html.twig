@@ -24,56 +24,27 @@
  *#}
 
 {% trans_default_domain 'Admin.International.Feature' %}
+{% form_theme geolocationOptionsForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block geolocation_options %}
   <div class="card">
     <h3 class="card-header">
       {{ 'Options'|trans({}, 'Admin.Global') }}
+
+      <span
+        class="help-box"
+        data-container="body"
+        data-toggle="popover"
+        data-trigger="hover"
+        data-placement="right"
+        data-content="{{ 'The following features are only available if you enable the Geolocation by IP address feature.'|trans }}"
+        title=""
+      >
+      </span>
     </h3>
     <div class="card-block row">
       <div class="card-text">
-        <div class="row">
-          <div class="col">
-            <div class="alert alert-info" role="alert">
-              <span class="alert-text">
-                {{ 'The following features are only available if you enable the Geolocation by IP address feature.'|trans }}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label class="form-control-label">
-            {{ 'Geolocation behavior for restricted countries'|trans }}
-          </label>
-          <div class="col-sm">
-            {{ form_errors(geolocationOptionsForm.geolocation_behaviour) }}
-            {{ form_widget(geolocationOptionsForm.geolocation_behaviour) }}
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label class="form-control-label">
-            {{ 'Geolocation behavior for other countries'|trans }}
-          </label>
-          <div class="col-sm">
-            {{ form_errors(geolocationOptionsForm.geolocation_na_behaviour) }}
-            {{ form_widget(geolocationOptionsForm.geolocation_na_behaviour) }}
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label class="form-control-label">
-            {{ 'Select the countries from which your store is accessible'|trans }}
-          </label>
-
-          <div class="col-sm">
-            <div class="form-group">
-              {{ form_errors(geolocationOptionsForm.geolocation_countries) }}
-              {{ form_widget(geolocationOptionsForm.geolocation_countries) }}
-            </div>
-          </div>
-        </div>
+        {{ form_widget(geolocationOptionsForm) }}
       </div>
     </div>
     <div class="card-footer">

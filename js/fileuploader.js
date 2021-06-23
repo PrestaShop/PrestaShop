@@ -14,8 +14,8 @@
  * Licensed under MIT license, GNU GPL 2 or later, GNU LGPL 2 or later, see license.txt.
  */
 
- /**
- * Deprecated since 1.6.0.4
+/**
+ * /!\ Deprecated since 1.6.0.4, it will be deleted in next major release /!\
  */
 
 

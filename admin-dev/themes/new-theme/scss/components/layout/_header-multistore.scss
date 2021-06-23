@@ -1,0 +1,158 @@
+// stylelint-disable-next-line
+$component-name: header-multishop;
+
+.#{$component-name} {
+  position: relative;
+  z-index: 1000;
+
+  &-top-bar {
+    position: relative;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.5625rem 1rem;
+    background-color: $multishop-header-default-background;
+  }
+
+  &-allshops .#{$component-name}-top-bar {
+    background-color: $primary;
+
+    .#{$component-name}-title {
+      color: $white;
+    }
+  }
+
+  &-title {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 18px;
+    color: $white;
+    text-align: center;
+  }
+
+  &-right {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    z-index: 1002;
+    transform: translateY(-50%);
+
+    @include media-breakpoint-down(sm) {
+      a {
+        font-size: 0;
+
+        i {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  &-dark {
+    .#{$component-name}-title,
+    .#{$component-name}-center,
+    .#{$component-name}-view-action {
+      color: $multishop-header-default-color;
+
+      i {
+        color: #757575;
+      }
+    }
+
+    .#{$component-name}-button {
+      background: $white;
+    }
+
+    .#{$component-name}-center {
+      svg {
+        opacity: 0.8;
+      }
+    }
+
+    .#{$component-name}-view-action {
+      &:hover {
+        color: $multishop-header-default-color;
+      }
+    }
+  }
+
+  &-view-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    line-height: 18px;
+    color: $white;
+    @include transition(0.25s ease-out);
+
+    i {
+      margin-top: 0.1rem;
+      margin-left: 0.5rem;
+      font-size: 1.25rem;
+      color: $white;
+    }
+
+    &:hover {
+      color: $white;
+      text-decoration: none;
+      opacity: 0.7;
+    }
+  }
+
+  &-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-left: 1rem;
+    color: $white;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    @include border-radius(3px);
+
+    i {
+      font-size: 1.2rem;
+      @include transition(0.25s ease-out);
+    }
+
+    &:active,
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &-center {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    cursor: pointer;
+    @include transition(0.25s ease-out);
+
+    &:hover {
+      opacity: 0.6;
+    }
+
+    &.active {
+      .#{$component-name}-button {
+        i {
+          transform: rotate(-180deg);
+        }
+      }
+    }
+
+    svg {
+      position: absolute;
+      right: calc(100% + 0.75rem);
+      bottom: -0.5625rem;
+
+      @include media-breakpoint-down(sm) {
+        display: none;
+      }
+    }
+  }
+}

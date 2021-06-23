@@ -49,11 +49,15 @@
 {% block translate_javascripts %}
   <script>
     var translate_javascripts = {{ js_translatable|json_encode()|raw }};
-    var PS_ALLOW_ACCENTED_CHARS_URL = {{ 'PS_ALLOW_ACCENTED_CHARS_URL'|configuration|intCast }};
+    var PS_ALLOW_ACCENTED_CHARS_URL = {{ configuration('PS_ALLOW_ACCENTED_CHARS_URL')|intCast }};
   </script>
 {% endblock %}
 
 {% block content_header %}
+  {{ block('session_alert') }}
+{% endblock %}
+
+{% block session_alert %}
   {% macro alert(type, flashbagContent) %}
     <div class="alert alert-{{ type }} d-print-none" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -94,7 +98,7 @@
   <nav
     id="right-sidebar"
     role="navigation"
-    class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-sm-center"
+    class="col-lg-3 sidebar sidebar-right sidebar-animate text-sm-center"
   >
     <img
       src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}"

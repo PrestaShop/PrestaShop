@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ChangePasswordHandler from "../change-password-handler";
-import PasswordValidator from "../password-validator";
+import ChangePasswordHandler from '../change-password-handler';
+import PasswordValidator from '../password-validator';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class responsible for actions related to "change password" form type.
@@ -43,7 +43,7 @@ export default class ChangePasswordControl {
     newPasswordInputSelector,
     confirmNewPasswordInputSelector,
     generatedPasswordDisplaySelector,
-    passwordStrengthFeedbackContainerSelector
+    passwordStrengthFeedbackContainerSelector,
   ) {
     // Block that contains password inputs
     this.$inputsBlock = $(inputsBlockSelector);
@@ -85,16 +85,16 @@ export default class ChangePasswordControl {
       .add(this.confirmNewPasswordInputSelector);
 
     this.passwordHandler = new ChangePasswordHandler(
-      passwordStrengthFeedbackContainerSelector
+      passwordStrengthFeedbackContainerSelector,
     );
 
     this.passwordValidator = new PasswordValidator(
       this.newPasswordInputSelector,
-      this.confirmNewPasswordInputSelector
+      this.confirmNewPasswordInputSelector,
     );
 
-    this._hideInputsBlock();
-    this._initEvents();
+    this.hideInputsBlock();
+    this.initEvents();
 
     return {};
   }
@@ -104,16 +104,16 @@ export default class ChangePasswordControl {
    *
    * @private
    */
-  _initEvents() {
+  initEvents() {
     // Show the inputs block when show button is clicked
     $(document).on('click', this.showButtonSelector, (e) => {
-      this._hide($(e.currentTarget));
-      this._showInputsBlock();
+      this.hide($(e.currentTarget));
+      this.showInputsBlock();
     });
 
     $(document).on('click', this.hideButtonSelector, () => {
-      this._hideInputsBlock();
-      this._show($(this.showButtonSelector));
+      this.hideInputsBlock();
+      this.show($(this.showButtonSelector));
     });
 
     // Watch and display feedback about password's strength
@@ -125,13 +125,17 @@ export default class ChangePasswordControl {
 
       // Copy the generated password from main input to additional inputs
       this.$copyPasswordInputs.val(this.$newPasswordInputs.val());
-      this._checkPasswordValidity();
+      this.checkPasswordValidity();
     });
 
     // Validate new password and it's confirmation when any of the inputs is changed
-    $(document).on('keyup', `${this.newPasswordInputSelector},${this.confirmNewPasswordInputSelector}`, () => {
-      this._checkPasswordValidity();
-    });
+    $(document).on(
+      'keyup',
+      `${this.newPasswordInputSelector},${this.confirmNewPasswordInputSelector}`,
+      () => {
+        this.checkPasswordValidity();
+      },
+    );
 
     // Prevent submitting the form if new password is not valid
     $(document).on('submit', $(this.oldPasswordInputSelector).closest('form'), (event) => {
@@ -151,19 +155,16 @@ export default class ChangePasswordControl {
    *
    * @private
    */
-  _checkPasswordValidity() {
+  checkPasswordValidity() {
     const $firstPasswordErrorContainer = $(this.newPasswordInputSelector).parent().find('.form-text');
     const $secondPasswordErrorContainer = $(this.confirmNewPasswordInputSelector).parent().find('.form-text');
 
     $firstPasswordErrorContainer
-      .text(this._getPasswordLengthValidationMessage())
-      .toggleClass('text-danger', !this.passwordValidator.isPasswordLengthValid())
-    ;
-
+      .text(this.getPasswordLengthValidationMessage())
+      .toggleClass('text-danger', !this.passwordValidator.isPasswordLengthValid());
     $secondPasswordErrorContainer
-      .text(this._getPasswordConfirmationValidationMessage())
-      .toggleClass('text-danger', !this.passwordValidator.isPasswordMatchingConfirmation())
-    ;
+      .text(this.getPasswordConfirmationValidationMessage())
+      .toggleClass('text-danger', !this.passwordValidator.isPasswordMatchingConfirmation());
   }
 
   /**
@@ -173,7 +174,7 @@ export default class ChangePasswordControl {
    *
    * @private
    */
-  _getPasswordConfirmationValidationMessage() {
+  getPasswordConfirmationValidationMessage() {
     if (!this.passwordValidator.isPasswordMatchingConfirmation()) {
       return $(this.confirmNewPasswordInputSelector).data('invalid-password');
     }
@@ -188,9 +189,9 @@ export default class ChangePasswordControl {
    *
    * @private
    */
-  _getPasswordLengthValidationMessage() {
+  getPasswordLengthValidationMessage() {
     if (this.passwordValidator.isPasswordTooShort()) {
-      return $(this.newPasswordInputSelector).data('password-too-short')
+      return $(this.newPasswordInputSelector).data('password-too-short');
     }
 
     if (this.passwordValidator.isPasswordTooLong()) {
@@ -205,8 +206,8 @@ export default class ChangePasswordControl {
    *
    * @private
    */
-  _showInputsBlock() {
-    this._show(this.$inputsBlock);
+  showInputsBlock() {
+    this.show(this.$inputsBlock);
     this.$submittableInputs.removeAttr('disabled');
     this.$submittableInputs.attr('required', 'required');
   }
@@ -216,8 +217,8 @@ export default class ChangePasswordControl {
    *
    * @private
    */
-  _hideInputsBlock() {
-    this._hide(this.$inputsBlock);
+  hideInputsBlock() {
+    this.hide(this.$inputsBlock);
     this.$submittableInputs.attr('disabled', 'disabled');
     this.$submittableInputs.removeAttr('required');
     this.$inputsBlock.find('input').val('');
@@ -231,7 +232,7 @@ export default class ChangePasswordControl {
    *
    * @private
    */
-  _hide($el) {
+  hide($el) {
     $el.addClass('d-none');
   }
 
@@ -242,7 +243,7 @@ export default class ChangePasswordControl {
    *
    * @private
    */
-  _show($el) {
+  show($el) {
     $el.removeClass('d-none');
   }
 }

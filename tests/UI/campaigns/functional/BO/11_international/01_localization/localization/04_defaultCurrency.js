@@ -124,6 +124,7 @@ describe('Update default currency', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCurrency${index}`, baseContext);
 
         const textResult = await localizationPage.setDefaultCurrency(page, test.args.defaultCurrency);
+        await expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
         await expect(textResult).contain(localizationPage.successfulSettingsUpdateMessage);
       });
 

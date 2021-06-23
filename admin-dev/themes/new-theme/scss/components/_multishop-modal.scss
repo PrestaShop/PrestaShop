@@ -1,0 +1,261 @@
+// stylelint-disable-next-line
+$component-name: multishop-modal;
+
+.#{$component-name} {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  height: calc(100vh - 78px);
+  pointer-events: all;
+  background-color: rgba(0, 0, 0, 0.6);
+  opacity: 1;
+  transform: translateX(-50%);
+  @include transition(0.25s ease-out);
+
+  &-hidden {
+    pointer-events: none;
+    opacity: 0;
+
+    .#{$component-name}-dialog {
+      transform: translateY(-2rem);
+    }
+  }
+
+  &-dialog {
+    width: 100%;
+    max-width: 39.375rem;
+    max-height: 100%;
+    padding: 1.875rem 2.125rem;
+    overflow: auto;
+    background: $white;
+    border: 1px solid #b7ced3;
+    // stylelint-disable
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    // stylelint-enable
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
+    transform: translateY(0);
+    @include transition(0.25s ease-out);
+
+    @include media-breakpoint-down(sm) {
+      padding: 1.875rem 1.5rem;
+    }
+
+    ul,
+    li {
+      padding: 0;
+      margin-left: 0;
+      list-style-type: none;
+    }
+  }
+
+  &-search {
+    min-height: auto;
+    padding: 0.3rem 1rem;
+    padding-left: 2.2rem;
+
+    &-container {
+      position: relative;
+      margin-bottom: 2rem;
+
+      @include media-breakpoint-down(sm) {
+        display: none;
+      }
+
+      i {
+        position: absolute;
+        top: 0.5rem;
+        left: 0.75rem;
+        z-index: 1;
+        font-size: 1.2rem;
+        color: $medium-gray;
+        pointer-events: none;
+      }
+
+      .tt-menu {
+        width: 100%;
+        overflow: hidden;
+        background-color: $white;
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
+        @include border-bottom-radius(4px);
+
+        .tt-dataset > div {
+          padding: 0.5rem 1rem;
+          cursor: pointer;
+          @include transition(0.25s ease-out);
+
+          &:hover,
+          &.tt-cursor {
+            background-color: #f4fcfd;
+          }
+        }
+      }
+    }
+  }
+
+  &-all-name,
+  &-group-name,
+  &-shop-name {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    line-height: 19px;
+    color: #4a4a4a;
+    text-decoration: underline;
+
+    i {
+      text-decoration: none;
+    }
+  }
+
+  &-shop-name.#{$component-name}-no-url {
+    cursor: not-allowed;
+  }
+
+  &-shop-name.#{$component-name}-no-url:hover {
+    color: #4a4a4a;
+  }
+
+  &-all-name,
+  &-group-name {
+    font-weight: 600;
+  }
+
+  &-group-item {
+    &.#{$component-name}-item {
+      justify-content: flex-start;
+      margin-bottom: 1.425rem;
+    }
+
+    &:not(:nth-child(2)) {
+      margin-top: 3.4rem;
+    }
+  }
+
+  &-shop-item:not(:last-of-type) {
+    margin-bottom: 1.275rem;
+  }
+
+  &-color {
+    display: block;
+    width: 1rem;
+    min-width: 1rem;
+    height: 1rem;
+    margin-right: 1rem;
+    background-color: $multishop-header-default-background;
+    @include border-radius(3px);
+
+    &-container {
+      &.#{$component-name}-color-check {
+        margin-right: 0.95rem;
+
+        a {
+          display: none;
+          margin: 0.2rem 0;
+        }
+
+        i {
+          width: 1rem;
+          font-size: 1.15rem;
+        }
+      }
+
+      &:not(.#{$component-name}-color-check) {
+        i {
+          display: none;
+        }
+
+        a {
+          display: block;
+        }
+      }
+
+      &.#{$component-name}-color-check:hover {
+        a {
+          display: block;
+        }
+
+        i {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    > .multishop-modal-color-check .material-icons {
+      font-size: 1.25rem;
+    }
+
+    &-left {
+      display: flex;
+      align-items: center;
+
+      > i {
+        margin-right: 0.825rem;
+        font-size: 1.2rem;
+      }
+
+      @include media-breakpoint-down(sm) {
+        max-width: 80%;
+      }
+    }
+  }
+
+  &-all {
+    justify-content: flex-start;
+    margin-bottom: 2rem;
+
+    i {
+      margin-right: 1rem;
+      font-size: 1.15rem;
+    }
+
+    &-name {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      span {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  ul.#{$component-name}-group-list {
+    position: relative;
+    max-height: 500px;
+    padding-right: 1rem;
+  }
+
+  &-shop-view {
+    min-width: 18%;
+
+    i {
+      display: none;
+      color: $primary;
+    }
+
+    @include media-breakpoint-down(sm) {
+      min-width: auto;
+      font-size: 0;
+
+      i {
+        display: block;
+        font-size: 1rem;
+      }
+    }
+  }
+}

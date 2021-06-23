@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<tr class="column-filters {% if 0 == grid.data.records_total and grid.filters is empty %}d-none{% endif %}">
+<tr class="column-filters{% if grid.attributes.is_empty_state %} d-none{% endif %}">
   {% for column in grid.columns %}
     <td>
       {% if loop.first and grid.actions.bulk|length > 0 %}

@@ -207,24 +207,31 @@ class GuestCore extends ObjectModel
      *
      * @param int $idGuest Guest ID
      * @param int $idCustomer Customer ID
+     *
+     * @return bool
      */
     public function mergeWithCustomer($idGuest, $idCustomer)
     {
         // Since the guests are merged, the guest id in the connections table must be changed too
-        Db::getInstance()->execute('
-		UPDATE `' . _DB_PREFIX_ . 'connections` c
-		SET c.`id_guest` = ' . (int) ($idGuest) . '
-		WHERE c.`id_guest` = ' . (int) ($this->id));
+        Db::getInstance()->update('connections', [
+            'id_guest' => (int) $idGuest,
+        ], 'id_guest = ' . (int) $this->id);
+
+        // The existing guest is removed from the database
+        $existingGuest = new Guest((int) $idGuest);
+        $existingGuest->delete();
 
         // The current guest is removed from the database
         $this->delete();
 
         // $this is still filled with values, so it's id is changed for the old guest
-        $this->id = (int) ($idGuest);
-        $this->id_customer = (int) ($idCustomer);
+        $this->id = (int) $idGuest;
+        $this->id_customer = (int) $idCustomer;
 
         // $this is now the old guest but filled with the most up to date values
-        $this->update();
+        $this->force_id = true;
+
+        return $this->add();
     }
 
     /**

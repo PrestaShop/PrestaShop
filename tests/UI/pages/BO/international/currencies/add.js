@@ -14,8 +14,8 @@ class AddCurrency extends BOBasePage {
     this.isoCodeInput = '#currency_iso_code';
     this.exchangeRateInput = '#currency_exchange_rate';
     this.precisionInput = '#currency_precision';
-    this.statusSwitch = id => `label[for='currency_active_${id}']`;
-    this.saveButton = 'div.card-footer button[type=\'submit\']';
+    this.statusToggleInput = toggle => `#currency_active_${toggle}`;
+    this.saveButton = '#save-button';
 
     // currency modal
     this.currencyLoadingModal = '#currency_loading_data_modal';
@@ -38,6 +38,7 @@ class AddCurrency extends BOBasePage {
     // Waiting for currency to be loaded : 10 sec max
     // To check if modal still exist
     let displayed = false;
+
     for (let i = 0; i < 50 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
@@ -48,7 +49,20 @@ class AddCurrency extends BOBasePage {
       await page.waitForTimeout(200);
     }
 
-    await page.click(this.statusSwitch(currencyData.enabled ? 1 : 0));
+    // Wait for input to have value
+    let inputHasValue = false;
+
+    for (let i = 0; i < 50 && !inputHasValue; i++) {
+      /* eslint-env browser */
+      inputHasValue = await page.evaluate(
+        selector => document.querySelector(selector).value !== '',
+        this.currencyNameInput(1),
+      );
+
+      await page.waitForTimeout(200);
+    }
+
+    await page.check(this.statusToggleInput(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -66,7 +80,7 @@ class AddCurrency extends BOBasePage {
     await this.setValue(page, this.currencyNameInput(1), currencyData.name);
     await this.setValue(page, this.isoCodeInput, currencyData.isoCode);
     await this.setValue(page, this.exchangeRateInput, currencyData.exchangeRate.toString());
-    await page.click(this.statusSwitch(currencyData.enabled ? 1 : 0));
+    await page.check(this.statusToggleInput(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }

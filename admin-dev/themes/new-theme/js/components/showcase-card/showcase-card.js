@@ -23,13 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class ShowcaseCard is responsible for handling events related with showcase card.
  */
 export default class ShowcaseCard {
-
   /**
    * Showcase card id.
    *
@@ -37,7 +36,7 @@ export default class ShowcaseCard {
    */
   constructor(id) {
     this.id = id;
-    this.$container = $('#' + this.id);
+    this.$container = $(`#${this.id}`);
   }
 
   /**

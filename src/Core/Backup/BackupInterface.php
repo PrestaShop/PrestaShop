@@ -57,7 +57,7 @@ interface BackupInterface
     /**
      * Get backup file size in bytes.
      *
-     * @return string
+     * @return int
      */
     public function getSize();
 

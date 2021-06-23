@@ -27,18 +27,22 @@
 namespace PrestaShopBundle\Twig;
 
 use Doctrine\Common\Util\Inflector;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Twig_Extension;
+use Twig_SimpleFunction;
 
-class TranslationsExtension extends \Twig_Extension
+class TranslationsExtension extends Twig_Extension
 {
     /**
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * @var TranslatorInterface
      */
     public $translator;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     public $logger;
 
@@ -71,8 +75,8 @@ class TranslationsExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('getTranslationsTree', [$this, 'getTranslationsTree']),
-            new \Twig_SimpleFunction('getTranslationsForms', [$this, 'getTranslationsForms']),
+            new Twig_SimpleFunction('getTranslationsTree', [$this, 'getTranslationsTree']),
+            new Twig_SimpleFunction('getTranslationsForms', [$this, 'getTranslationsForms']),
         ];
     }
 
@@ -80,7 +84,7 @@ class TranslationsExtension extends \Twig_Extension
      * Returns concatenated edit translation forms.
      *
      * @param array $translationsTree
-     * @param null $themeName
+     * @param string|null $themeName
      *
      * @return string
      */
@@ -132,7 +136,7 @@ class TranslationsExtension extends \Twig_Extension
      * Returns a tree of translations key values.
      *
      * @param array $translationsTree
-     * @param null $themeName
+     * @param string|null $themeName
      *
      * @return string
      */
@@ -150,7 +154,7 @@ class TranslationsExtension extends \Twig_Extension
     }
 
     /**
-     * @param $tree
+     * @param array $tree
      * @param int $level
      *
      * @return string
@@ -229,7 +233,7 @@ class TranslationsExtension extends \Twig_Extension
     }
 
     /**
-     * @param $properties
+     * @param array $properties
      *
      * @return mixed|string
      */
@@ -280,10 +284,10 @@ class TranslationsExtension extends \Twig_Extension
     }
 
     /**
-     * @param $translationKey
-     * @param $domain
-     * @param $locale
-     * @param $translationValue
+     * @param string $translationKey
+     * @param string $domain
+     * @param string $locale
+     * @param array $translationValue
      *
      * @return array
      */
@@ -300,7 +304,7 @@ class TranslationsExtension extends \Twig_Extension
     }
 
     /**
-     * @param $translation
+     * @param array $translation
      *
      * @return mixed
      */
@@ -310,7 +314,7 @@ class TranslationsExtension extends \Twig_Extension
     }
 
     /**
-     * @param $tree
+     * @param array $tree
      *
      * @return bool
      */
@@ -330,8 +334,8 @@ class TranslationsExtension extends \Twig_Extension
     }
 
     /**
-     * @param $subdomain
-     * @param $subtree
+     * @param string $subdomain
+     * @param array $subtree
      * @param int $level
      *
      * @return string
@@ -394,8 +398,8 @@ class TranslationsExtension extends \Twig_Extension
     }
 
     /**
-     * @param $subtree
-     * @param $output
+     * @param array $subtree
+     * @param string $output
      *
      * @return string
      */
@@ -447,8 +451,8 @@ class TranslationsExtension extends \Twig_Extension
     }
 
     /**
-     * @param $output
-     * @param $subtree
+     * @param string $output
+     * @param array $subtree
      *
      * @return string
      */
@@ -509,9 +513,9 @@ class TranslationsExtension extends \Twig_Extension
     }
 
     /**
-     * @param $subtree
+     * @param array $subtree
      *
-     * @return mixed
+     * @return string
      */
     protected function parseDomain($subtree)
     {
@@ -522,7 +526,7 @@ class TranslationsExtension extends \Twig_Extension
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      *
      * @return string
      */
@@ -535,9 +539,9 @@ class TranslationsExtension extends \Twig_Extension
     }
 
     /**
-     * @param $subject
-     * @param $isLastChild
-     * @param null $id
+     * @param string $subject
+     * @param bool $isLastChild
+     * @param string|null $id
      *
      * @return string
      */

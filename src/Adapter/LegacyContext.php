@@ -47,7 +47,7 @@ class LegacyContext
     /** @var Context */
     protected static $instance = null;
 
-    /** @var Currency */
+    /** @var Currency|null */
     private $employeeCurrency;
 
     /** @var string Contains the base uri for mail themes (by default https://domain.com/mails/themes/). Used for mails assets. */
@@ -117,7 +117,7 @@ class LegacyContext
      *
      * @param string $controller the controller name
      * @param bool $withToken
-     * @param array[string] $extraParams
+     * @param array<string> $extraParams
      *
      * @return string
      */
@@ -251,11 +251,11 @@ class LegacyContext
      * @param int|bool $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
-     * @return array Languages
+     * @return array<int|array> Languages
      */
     public function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {
-        $languages = Language::getLanguages($active, $id_shop, $ids_only);
+        $languages = $this->getLegacyLanguages($active, $id_shop, $ids_only);
         $defaultLanguageFirst = $this->getLanguage();
         usort($languages, function ($a, $b) use ($defaultLanguageFirst) {
             if ($a['id_lang'] == $defaultLanguageFirst->id) {
@@ -284,12 +284,12 @@ class LegacyContext
     /**
      * Returns Currency set for the current employee.
      *
-     * @return Currency
+     * @return Currency|null
      */
     public function getEmployeeCurrency()
     {
         if (null === $this->employeeCurrency && $this->getContext()->currency) {
-            $this->employeeCurrency = $this->getContext()->currency->sign;
+            $this->employeeCurrency = $this->getContext()->currency;
         }
 
         return $this->employeeCurrency;
@@ -343,7 +343,19 @@ class LegacyContext
      */
     public function getAvailableLanguages()
     {
-        return $this->getLanguages(false);
+        return $this->getLegacyLanguages(false);
+    }
+
+    /**
+     * @param bool $active
+     * @param bool|int $id_shop
+     * @param bool $ids_only
+     *
+     * @return array
+     */
+    private function getLegacyLanguages(bool $active = true, $id_shop = false, bool $ids_only = false): array
+    {
+        return Language::getLanguages($active, $id_shop, $ids_only);
     }
 
     /**

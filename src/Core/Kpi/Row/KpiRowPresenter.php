@@ -42,7 +42,7 @@ final class KpiRowPresenter implements KpiRowPresenterInterface
 
         /** @var KpiInterface $kpi */
         foreach ($kpiRow->getKpis() as $kpi) {
-            $renderedKpis[] = $kpi->render($kpiRow->getOptions());
+            $renderedKpis[] = $kpi->render();
         }
 
         return [

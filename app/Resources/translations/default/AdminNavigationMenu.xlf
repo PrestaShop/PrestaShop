@@ -228,7 +228,7 @@
       <trans-unit id="bf17ac149e2e7a530c677e9bd51d3fd2">
         <source>Modules</source>
         <target>Modules</target>
-        <note>Line: 138
+        <note>Line: 139
 Comment: subtab</note>
       </trans-unit>
       <trans-unit id="423e555c5ec3885f2bb5d9d2d6627f63">
@@ -245,11 +245,6 @@ Comment: subtab</note>
         <source>Order Settings</source>
         <target>Order Settings</target>
         <note>Line: 89</note>
-      </trans-unit>
-      <trans-unit id="a860ed9926b241b7d4dca2d00610ab2c">
-        <source>Outstanding</source>
-        <target>Outstanding</target>
-        <note>Line: 91</note>
       </trans-unit>
       <trans-unit id="c453a4b8e8d98e82f35b67f433e3b4da">
         <source>Payment</source>
@@ -326,11 +321,6 @@ Comment: subtab</note>
         <target>Stats</target>
         <note>Line: 114</note>
       </trans-unit>
-      <trans-unit id="61fe9018991004014d12b8d81568df90">
-        <source>Statuses</source>
-        <target>Statuses</target>
-        <note>Line: 115</note>
-      </trans-unit>
       <trans-unit id="89de17fb747c585a81e444f70312de3f">
         <source>Stock Coverage</source>
         <target>Stock Coverage</target>
@@ -406,15 +396,20 @@ Comment: subtab</note>
         <target>Module Manager</target>
         <note>Line: 135</note>
       </trans-unit>
+      <trans-unit id="559c42f0eb9cc586d7994f4e9e496609">
+        <source>Experimental Features</source>
+        <target>Experimental Features</target>
+        <note>Line: 136</note>
+      </trans-unit>
       <trans-unit id="9ac41b6a577daadd588f0fcde0071e8b">
         <source>Updates</source>
         <target>Updates</target>
-        <note>Line: 139</note>
+        <note>Line: 140</note>
       </trans-unit>
       <trans-unit id="df583ae7ba964fd4806b55904da81813">
         <source>Alerts</source>
         <target>Alerts</target>
-        <note>Line: 140</note>
+        <note>Line: 141</note>
       </trans-unit>
     </body>
   </file>
@@ -432,7 +427,7 @@ Comment: subtab</note>
       <trans-unit id="eb5782af6c84c44ab4147000928cbb78">
         <source>DB Backup</source>
         <target>DB Backup</target>
-        <note>Line: 57</note>
+        <note>Line: 58</note>
       </trans-unit>
     </body>
   </file>
@@ -441,7 +436,7 @@ Comment: subtab</note>
       <trans-unit id="af1b98adf7f686b84cd0b443e022b7a0">
         <source>Categories</source>
         <target>Categories</target>
-        <note>Line: 108</note>
+        <note>Line: 109</note>
       </trans-unit>
     </body>
   </file>
@@ -450,7 +445,7 @@ Comment: subtab</note>
       <trans-unit id="9aa698f602b1e5694855cee73a683488">
         <source>Contacts</source>
         <target>Contacts</target>
-        <note>Line: 89</note>
+        <note>Line: 90</note>
       </trans-unit>
     </body>
   </file>
@@ -468,7 +463,7 @@ Comment: subtab</note>
       <trans-unit id="dfcfc43722eef1eab1e4a12e50a068b1">
         <source>Currencies</source>
         <target>Currencies</target>
-        <note>Line: 65</note>
+        <note>Line: 74</note>
       </trans-unit>
     </body>
   </file>
@@ -479,6 +474,11 @@ Comment: subtab</note>
         <target>E-mail</target>
         <note>Line: 100</note>
       </trans-unit>
+      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
+        <source>Email</source>
+        <target>Email</target>
+        <note>Line: 101</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/Core/Grid/Definition/Factory/LogGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -486,7 +486,7 @@ Comment: subtab</note>
       <trans-unit id="b2d37ae1cedf42ff874289b721860af2">
         <source>Logs</source>
         <target>Logs</target>
-        <note>Line: 90</note>
+        <note>Line: 65</note>
       </trans-unit>
     </body>
   </file>
@@ -495,7 +495,7 @@ Comment: subtab</note>
       <trans-unit id="194506bb3f2a5aea2ced4ea98cb22fb4">
         <source><![CDATA[SEO & URLs]]></source>
         <target><![CDATA[SEO & URLs]]></target>
-        <note>Line: 63</note>
+        <note>Line: 67</note>
       </trans-unit>
     </body>
   </file>
@@ -508,12 +508,21 @@ Comment: subtab</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/Core/Grid/Definition/Factory/OutstandingGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a860ed9926b241b7d4dca2d00610ab2c">
+        <source>Outstanding</source>
+        <target>Outstanding</target>
+        <note>Line: 93</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Grid/Definition/Factory/ProfileGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d0f25115288c15321ecf672f0d6a83ea">
         <source>Profiles</source>
         <target>Profiles</target>
-        <note>Line: 98</note>
+        <note>Line: 99</note>
       </trans-unit>
     </body>
   </file>
@@ -522,7 +531,7 @@ Comment: subtab</note>
       <trans-unit id="e836c2a96e7ef38a39afe4be2beddddd">
         <source>SQL Manager</source>
         <target>SQL Manager</target>
-        <note>Line: 88</note>
+        <note>Line: 67</note>
       </trans-unit>
     </body>
   </file>
@@ -531,7 +540,7 @@ Comment: subtab</note>
       <trans-unit id="1814d65a76028fdfbadab64a5a8076df">
         <source>Suppliers</source>
         <target>Suppliers</target>
-        <note>Line: 75</note>
+        <note>Line: 76</note>
       </trans-unit>
     </body>
   </file>
@@ -549,7 +558,7 @@ Comment: subtab</note>
       <trans-unit id="7258e7251413465e0a3eb58094430bde">
         <source>Administration</source>
         <target>Administration</target>
-        <note>Line: 59</note>
+        <note>Line: 68</note>
       </trans-unit>
     </body>
   </file>
@@ -567,7 +576,7 @@ Comment: subtab</note>
       <trans-unit id="9446a98ad14416153cc4d45ab8b531bf">
         <source>Performance</source>
         <target>Performance</target>
-        <note>Line: 67</note>
+        <note>Line: 72</note>
       </trans-unit>
     </body>
   </file>
@@ -585,7 +594,7 @@ Comment: subtab</note>
       <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
         <source>Customers</source>
         <target>Customers</target>
-        <note>Line: 58</note>
+        <note>Line: 96</note>
       </trans-unit>
     </body>
   </file>
@@ -603,7 +612,7 @@ Comment: subtab</note>
       <trans-unit id="6f23811c1a55219e38a63b7a8520f842">
         <source>Order settings</source>
         <target>Order settings</target>
-        <note>Line: 54</note>
+        <note>Line: 56</note>
       </trans-unit>
     </body>
   </file>
@@ -612,7 +621,7 @@ Comment: subtab</note>
       <trans-unit id="3821c92eff2643b0d1ccdce26d2e8e48">
         <source>Product Settings</source>
         <target>Product Settings</target>
-        <note>Line: 55</note>
+        <note>Line: 59</note>
       </trans-unit>
     </body>
   </file>
@@ -621,7 +630,7 @@ Comment: subtab</note>
       <trans-unit id="9312b7e2a7e98ff341ddb219397c0d9c">
         <source>Email Theme</source>
         <target>Email Theme</target>
-        <note>Line: 84</note>
+        <note>Line: 83</note>
       </trans-unit>
     </body>
   </file>
@@ -630,7 +639,7 @@ Comment: subtab</note>
       <trans-unit id="3160eb21973806e4291c3979d4aa242e">
         <source>Positions</source>
         <target>Positions</target>
-        <note>Line: 125</note>
+        <note>Line: 131</note>
       </trans-unit>
     </body>
   </file>
@@ -648,7 +657,7 @@ Comment: subtab</note>
       <trans-unit id="323d4eb70b252acb4a04eaf9e0882597">
         <source>Geolocation</source>
         <target>Geolocation</target>
-        <note>Line: 59</note>
+        <note>Line: 61</note>
       </trans-unit>
     </body>
   </file>
@@ -657,7 +666,7 @@ Comment: subtab</note>
       <trans-unit id="369686331c93d55e587441143ccdf427">
         <source>Localization</source>
         <target>Localization</target>
-        <note>Line: 66</note>
+        <note>Line: 68</note>
       </trans-unit>
     </body>
   </file>
@@ -666,7 +675,7 @@ Comment: subtab</note>
       <trans-unit id="6ea7071301eeb50e00bf88f5a46ded8e">
         <source>Modules catalog</source>
         <target>Modules catalog</target>
-        <note>Line: 72</note>
+        <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>
@@ -693,7 +702,7 @@ Comment: subtab</note>
       <trans-unit id="d0834fcec6337785ee749c8f5464f6f6">
         <source>Preferences</source>
         <target>Preferences</target>
-        <note>Line: 55</note>
+        <note>Line: 159</note>
       </trans-unit>
     </body>
   </file>
@@ -702,7 +711,7 @@ Comment: subtab</note>
       <trans-unit id="127458a6096e6f3224228922cfd45c49">
         <source>Order Messages</source>
         <target>Order Messages</target>
-        <note>Line: 66</note>
+        <note>Line: 68</note>
       </trans-unit>
     </body>
   </file>
@@ -720,7 +729,7 @@ Comment: subtab</note>
       <trans-unit id="0b8d92bc19b720bb1065649535463409">
         <source>Translations</source>
         <target>Translations</target>
-        <note>Line: 110</note>
+        <note>Line: 111</note>
       </trans-unit>
     </body>
   </file>
@@ -730,6 +739,15 @@ Comment: subtab</note>
         <source>Webservice</source>
         <target>Webservice</target>
         <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderStates/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="61fe9018991004014d12b8d81568df90">
+        <source>Statuses</source>
+        <target>Statuses</target>
+        <note>Line: 27</note>
       </trans-unit>
     </body>
   </file>

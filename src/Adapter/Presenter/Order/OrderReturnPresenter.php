@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
 use Exception;
+use Hook;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 
@@ -45,7 +46,7 @@ class OrderReturnPresenter implements PresenterInterface
     /**
      * OrderReturnPresenter constructor.
      *
-     * @param $prefix
+     * @param string $prefix
      * @param Link $link
      */
     public function __construct($prefix, Link $link)
@@ -55,7 +56,7 @@ class OrderReturnPresenter implements PresenterInterface
     }
 
     /**
-     * @param $orderReturn
+     * @param array $orderReturn
      *
      * @return OrderReturnLazyArray
      *
@@ -67,6 +68,12 @@ class OrderReturnPresenter implements PresenterInterface
             throw new Exception('orderReturnPresenter can only present order_return passed as array');
         }
 
-        return new OrderReturnLazyArray($this->prefix, $this->link, $orderReturn);
+        $orderReturnLazyArray = new OrderReturnLazyArray($this->prefix, $this->link, $orderReturn);
+
+        Hook::exec('actionPresentOrderReturn',
+            ['presentedOrderReturn' => &$orderReturnLazyArray]
+        );
+
+        return $orderReturnLazyArray;
     }
 }

@@ -45,14 +45,12 @@ class CombinationController extends FrameworkBundleAdminController
         $response = new Response();
 
         $combinationIds = explode('-', $combinationIds);
-        if ($combinationIds === false || count($combinationIds) == 0) {
-            return $response;
-        }
 
         $combinationDataProvider = $this->get('prestashop.adapter.data_provider.combination');
         $combinations = $combinationDataProvider->getFormCombinations($combinationIds, (int) $this->getContext()->language->id);
 
         $formFactory = $this->get('form.factory');
+        $forms = [];
         foreach ($combinations as $combinationId => $combination) {
             $forms[] = $formFactory->createNamed(
                 "combination_$combinationId",

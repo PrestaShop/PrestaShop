@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<table class="table mb-3">
+<table class="table mb-3{% if orderForViewing.documents.documents is empty %} table-empty{% endif %}">
   <thead>
   <tr>
     <th>
@@ -47,10 +47,10 @@
   {% if  orderForViewing.documents.documents is not empty %}
     {% for document in orderForViewing.documents.documents %}
       <tr>
-        <td>
+        <td class="documents-table-column-date">
           {{ document.createdAt|date_format_lite }}
         </td>
-        <td>
+        <td class="documents-table-column-type">
           {% if document.type == 'invoice' %}
             {{ 'Invoice'|trans({}, 'Admin.Global') }}
           {% elseif document.type == 'credit_slip' %}
@@ -59,15 +59,15 @@
             {{ 'Delivery slip'|trans({}, 'Admin.Orderscustomers.Feature') }}
           {% endif %}
         </td>
-        <td>
+        <td class="documents-table-column-download-link">
           {% if document.type == 'invoice' %}
-            <a class="_blank"
+            <a target="_blank" rel="noopener noreferrer nofollow"
                href="{{ getAdminLink('AdminPdf', true, {'submitAction': 'generateInvoicePDF', 'id_order_invoice': document.id}) }}"
             >
               {{ document.referenceNumber }}
             </a>
           {% elseif document.type == 'delivery_slip' %}
-            <a class="_blank"
+            <a target="_blank" rel="noopener noreferrer nofollow"
                href="{{ getAdminLink('AdminPdf', true, {'submitAction': 'generateDeliverySlipPDF', 'id_order_invoice': document.id}) }}"
             >
               {{ document.referenceNumber }}
@@ -78,7 +78,7 @@
             </a>
           {% endif %}
         </td>
-        <td>
+        <td class="documents-table-column-amount">
           {% if document.amount %}
             <p class="mb-0">
               {{ document.amount }}
@@ -91,7 +91,7 @@
             --
           {% endif %}
         </td>
-        <td class="text-right">
+        <td class="text-right documents-table-column-actions">
           {% if document.type == 'invoice' %}
             {% if (document.isAddPaymentAllowed and document.amount) %}
               <button href="#" class="js-enter-payment-btn btn btn-primary btn-sm" data-payment-amount="{{ document.numericalAmount }}">

@@ -23,21 +23,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 
- <template>
-  <div class="ps-number" :class="{'hover-buttons': hoverButtons}">
+<template>
+  <div
+    class="ps-number"
+    :class="{ 'hover-buttons': hoverButtons }"
+  >
     <input
       type="number"
       class="form-control"
-      :class="{'danger': danger}"
+      :class="{ danger }"
       :value="value"
       placeholder="0"
       @keyup="onKeyup($event)"
       @focus="focusIn"
       @blur.native="focusOut($event)"
-    />
-    <div class="ps-number-spinner d-flex" v-if="buttons">
-      <span class="ps-number-up" @click="increment"></span>
-      <span class="ps-number-down" @click="decrement"></span>
+    >
+    <div
+      class="ps-number-spinner d-flex"
+      v-if="buttons"
+    >
+      <span
+        class="ps-number-up"
+        @click="increment"
+      />
+      <span
+        class="ps-number-down"
+        @click="decrement"
+      />
     </div>
   </div>
 </template>
@@ -45,10 +57,22 @@
 <script>
   export default {
     props: {
-      value: '',
-      danger: false,
-      buttons: false,
-      hoverButtons: false,
+      value: {
+        type: Number,
+        default: 0,
+      },
+      danger: {
+        type: Boolean,
+        default: false,
+      },
+      buttons: {
+        type: Boolean,
+        default: false,
+      },
+      hoverButtons: {
+        type: Boolean,
+        default: false,
+      },
     },
     methods: {
       onKeyup($event) {
@@ -62,11 +86,11 @@
       },
       increment() {
         const value = parseInt(this.value === '' ? 0 : this.value, 10);
-        this.$emit('change', isNaN(value) ? 0 : value + 1);
+        this.$emit('change', Number.isNaN(value) ? 0 : value + 1);
       },
       decrement() {
         const value = parseInt(this.value, 10);
-        this.$emit('change', isNaN(value) ? -1 : value - 1);
+        this.$emit('change', Number.isNaN(value) ? -1 : value - 1);
       },
     },
   };

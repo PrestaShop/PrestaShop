@@ -25,18 +25,16 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 
-{% set generalForm, giftOptionsForm = form.general, form.gift_options %}
-
 {% block content %}
-    {{ form_start(form, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
-    <div class="row justify-content-center">
-        {# General options block #}
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_general.html.twig' %}
+  {{ form_start(generalForm, {attr : {class: 'form', id: 'configuration_general_form'}, action: path('admin_order_preferences_general_save') }) }}
+    {# General options block #}
+    {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_general.html.twig' %}
+  {{ form_end(generalForm) }}
 
-        {# Gift options block #}
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_gift_options.html.twig' %}
-    </div>
-    {{ form_end(form) }}
+  {{ form_start(giftOptionsForm, {attr : {class: 'form', id: 'configuration_gift_options_form'}, action: path('admin_order_preferences_gift_options_save') }) }}
+    {# Gift options block #}
+    {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_gift_options.html.twig' %}
+  {{ form_end(giftOptionsForm) }}
 {% endblock %}
 
 {% block javascripts %}

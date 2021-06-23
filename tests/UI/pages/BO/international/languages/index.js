@@ -17,8 +17,8 @@ class Languages extends LocalizationBasePage {
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #language_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='language[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='language[actions][reset]']`;
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
@@ -26,18 +26,19 @@ class Languages extends LocalizationBasePage {
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Column actions selectors
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.editRowLink = row => `${this.actionsColumn(row)} a[data-original-title='Edit']`;
+    this.editRowLink = row => `${this.actionsColumn(row)} a.grid-edit-row-link`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
-    this.enabledColumnValidIcon = row => `${this.tableColumn(row, 'active')} i.grid-toggler-icon-valid`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
+    this.statusColumn = row => `${this.tableColumn(row, 'active')} .ps-switch`;
+    this.statusColumnToggleInput = row => `${this.statusColumn(row)} input`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsEnableButton = '#language_grid_bulk_action_enable_selection';
     this.bulkActionsDisableButton = '#language_grid_bulk_action_disable_selection';
     this.bulkActionsDeleteButton = '#language_grid_bulk_action_delete_selection';
-    this.confirmDeleteModal = '#language_grid_confirm_modal';
+    this.confirmDeleteModal = '#language-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
@@ -137,10 +138,12 @@ class Languages extends LocalizationBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTable(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -161,7 +164,6 @@ class Languages extends LocalizationBasePage {
    * @returns {Promise<string>}
    */
   async deleteLanguage(page, row = 1) {
-    this.dialogListener(page, true);
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
@@ -169,7 +171,13 @@ class Languages extends LocalizationBasePage {
         `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteLanguages(page, this.bulkActionsDeleteButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -180,8 +188,16 @@ class Languages extends LocalizationBasePage {
    * @param row
    * @return {Promise<boolean>}
    */
-  getStatus(page, row) {
-    return this.elementVisible(page, this.enabledColumnValidIcon(row), 100);
+  async getStatus(page, row) {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.statusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -192,11 +208,12 @@ class Languages extends LocalizationBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async setStatus(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.tableColumn(row, 'active'), 2000);
     if (await this.getStatus(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.tableColumn(row, 'active'));
+      await this.clickAndWaitForNavigation(page, this.statusColumn(row));
+
       return true;
     }
+
     return false;
   }
 

@@ -143,6 +143,21 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     }
 
     /**
+     * @param mixed $key
+     * @param \Closure $closure
+     */
+    public function appendClosure($key, \Closure $closure)
+    {
+        $this->arrayAccessList->offsetSet(
+            $key,
+            [
+                'type' => 'closure',
+                'value' => $closure,
+            ]
+        );
+    }
+
+    /**
      * The number of keys defined into the lazyArray.
      *
      * @return int
@@ -188,9 +203,8 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      * The properties are provided as an array. But callers checking the type of this class (is_object === true)
      * think they must use the object syntax.
      *
-     * @param mixed $offset
+     * @param mixed $name
      * @param mixed $value
-     * @param bool $force if set, allow override of an existing method
      *
      * @throws RuntimeException
      */
@@ -203,8 +217,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      * The properties are provided as an array. But callers checking the type of this class (is_object === true)
      * think they must use the object syntax.
      *
-     * @param mixed $offset
-     * @param bool $force if set, allow unset of an existing method
+     * @param mixed $name
      *
      * @throws RuntimeException
      */
@@ -234,21 +247,44 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     public function offsetGet($index)
     {
         if (isset($this->arrayAccessList[$index])) {
-            // if the index is associated with a method, execute the method an cache the result
-            if ($this->arrayAccessList[$index]['type'] === 'method') {
-                if (!isset($this->methodCacheResults[$index])) {
-                    $methodName = $this->arrayAccessList[$index]['value'];
-                    $this->methodCacheResults[$index] = $this->{$methodName}();
-                }
-                $result = $this->methodCacheResults[$index];
-            } else { // if the index is associated with a value, just return the value
-                $result = $this->arrayAccessList[$index]['value'];
+            $type = $this->arrayAccessList[$index]['type'];
+            switch ($type) {
+                case 'method':
+                    $isResultAvailableInCache = (isset($this->methodCacheResults[$index]));
+
+                    if (!$isResultAvailableInCache) {
+                        $methodName = $this->arrayAccessList[$index]['value'];
+                        $this->methodCacheResults[$index] = $this->{$methodName}();
+                    }
+                    $result = $this->methodCacheResults[$index];
+
+                    break;
+
+                case 'closure':
+                    $isResultAvailableInCache = (isset($this->methodCacheResults[$index]));
+
+                    if (!$isResultAvailableInCache) {
+                        $methodName = $this->arrayAccessList[$index]['value'];
+                        $this->methodCacheResults[$index] = $methodName();
+                    }
+                    $result = $this->methodCacheResults[$index];
+
+                    break;
+
+                default:
+                    $result = $this->arrayAccessList[$index]['value'];
+                    break;
             }
 
             return $result;
         }
 
         return [];
+    }
+
+    public function clearMethodCacheResults()
+    {
+        $this->methodCacheResults = [];
     }
 
     /**

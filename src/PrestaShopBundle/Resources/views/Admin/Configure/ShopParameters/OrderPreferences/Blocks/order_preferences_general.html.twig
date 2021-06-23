@@ -24,26 +24,26 @@
  *#}
 
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme generalForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block order_preferences_general %}
-<div class="col-xl-10">
-    <div class="card">
-        <h3 class="card-header">
-            <i class="material-icons">settings</i> {{ 'General'|trans({}, 'Admin.Global') }}
-        </h3>
-        <div class="card-block row">
-            <div class="card-text">
-                {% block order_general_preferences_form_rest %}
-                  {{ form_rest(generalForm) }}
-                {% endblock %}
-            </div>
-        </div>
-        <div class="card-footer">
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-            </div>
-        </div>
-    </div>
+<div class="row justify-content-center">
+  <div class="col">
+      <div class="card">
+          <h3 class="card-header">
+              <i class="material-icons">settings</i> {{ 'General'|trans({}, 'Admin.Global') }}
+          </h3>
+          <div class="card-block row">
+              <div class="card-text">
+                {{ form_widget(generalForm) }}
+              </div>
+          </div>
+          <div class="card-footer">
+              <div class="d-flex justify-content-end">
+                  <button class="btn btn-primary" id="form-general-save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+              </div>
+          </div>
+      </div>
+  </div>
 </div>
 {% endblock %}

@@ -26,7 +26,7 @@
 
 {% block mailThemeConfigurationFormBlock %}
   <div class="row justify-content-center">
-    <div class="col-xl-10">
+    <div class="col-xl-12">
       {{ form_start(mailThemeConfigurationForm, {'action': path('admin_mail_theme_save_configuration')}) }}
       <div class="card">
         <h3 class="card-header">
@@ -44,8 +44,8 @@
                 ) }}
               </label>
               <div class="col-sm">
-                {{ form_errors(mailThemeConfigurationForm.configuration.defaultTheme) }}
-                {{ form_widget(mailThemeConfigurationForm.configuration.defaultTheme) }}
+                {{ form_errors(mailThemeConfigurationForm.defaultTheme) }}
+                {{ form_widget(mailThemeConfigurationForm.defaultTheme) }}
               </div>
             </div>
           </div>
@@ -53,7 +53,7 @@
 
         <div class="card-footer">
           <div class="d-flex justify-content-end">
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" id="save-configuration-form">
               <span>{{ 'Save'|trans({}, 'Admin.Actions') }}</span>
             </button>
           </div>

@@ -39,7 +39,7 @@ class HookFinder
      * instance of specific classes.
      * Please note it must implement the function toArray().
      *
-     * @var string
+     * @var array<int, string>
      */
     protected $expectedInstanceClasses = [];
 
@@ -157,7 +157,7 @@ class HookFinder
      *
      * @param string|array $expectedInstanceClasses
      *
-     * @return \PrestaShopBundle\Service\Hook\Finder
+     * @return self
      */
     public function addExpectedInstanceClasses($expectedInstanceClasses)
     {
@@ -175,7 +175,7 @@ class HookFinder
      *
      * @param array $expectedInstanceClasses
      *
-     * @return \PrestaShopBundle\Service\Hook\Finder
+     * @return self
      */
     public function setExpectedInstanceClasses($expectedInstanceClasses)
     {
@@ -189,7 +189,7 @@ class HookFinder
      *
      * @param string $hookName
      *
-     * @return \PrestaShopBundle\Service\Hook\Finder
+     * @return self
      */
     public function setHookName($hookName)
     {
@@ -203,7 +203,7 @@ class HookFinder
      *
      * @param array $params
      *
-     * @return \PrestaShopBundle\Service\Hook\Finder
+     * @return self
      */
     public function addParams($params)
     {
@@ -217,7 +217,7 @@ class HookFinder
      *
      * @param array $params
      *
-     * @return \PrestaShopBundle\Service\Hook\Finder
+     * @return self
      */
     public function setParams($params)
     {

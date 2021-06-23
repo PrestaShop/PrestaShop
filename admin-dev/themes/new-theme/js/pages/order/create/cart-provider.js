@@ -28,7 +28,7 @@ import Router from '@components/router';
 import {EventEmitter} from '@components/event-emitter';
 import eventMap from '@pages/order/create/event-map';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Provides ajax calls for getting cart information

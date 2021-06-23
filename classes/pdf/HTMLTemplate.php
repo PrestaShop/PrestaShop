@@ -29,14 +29,29 @@
  */
 abstract class HTMLTemplateCore
 {
+    /**
+     * @var string
+     */
     public $title;
+
+    /**
+     * @var string
+     */
     public $date;
+
+    /**
+     * @var bool
+     */
     public $available_in_your_account = true;
 
-    /** @var Smarty */
+    /**
+     * @var Smarty
+     */
     public $smarty;
 
-    /** @var Shop */
+    /**
+     * @var Shop
+     */
     public $shop;
 
     /**
@@ -93,6 +108,8 @@ abstract class HTMLTemplateCore
 
     /**
      * Returns the invoice logo.
+     *
+     * @return string|null
      */
     protected function getLogo()
     {
@@ -160,7 +177,14 @@ abstract class HTMLTemplateCore
         $hook_name = 'displayPDF' . $template;
 
         $this->smarty->assign([
-            'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, ['object' => $object]),
+            'HOOK_DISPLAY_PDF' => Hook::exec(
+                $hook_name,
+                [
+                    'object' => $object,
+                    // The smarty instance is a clone that does NOT escape HTML
+                    'smarty' => $this->smarty,
+                ]
+            ),
         ]);
     }
 

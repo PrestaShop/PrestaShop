@@ -132,7 +132,7 @@ describe('Import combinations', async () => {
       await expect(pageTitle).to.contains(attributesPage.pageTitle);
     });
 
-    it('should reset all filters and get number of attributes in BO\'', async function () {
+    it('should reset all filters and get number of attributes in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
       numberOfAttributes = await attributesPage.resetAndGetNumberOfLines(page);

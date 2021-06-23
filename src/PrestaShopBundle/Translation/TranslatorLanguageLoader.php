@@ -27,63 +27,133 @@
 
 namespace PrestaShopBundle\Translation;
 
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
+use Symfony\Component\Translation\Translator as BaseTranslatorComponent;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class TranslatorLanguageLoader
 {
-    const TRANSLATION_DIR = _PS_ROOT_DIR_ . '/app/Resources/translations';
+    public const TRANSLATION_DIR = _PS_ROOT_DIR_ . '/app/Resources/translations';
+    private const MODULE_TRANSLATION_FILENAME_PATTERN = '#^%s[A-Z][\w.-]+\.%s\.xlf$#';
+
     /**
      * @var bool
      */
-    private $isAdminContext;
+    private $isAdminContext = false;
+
+    /**
+     * @var ModuleRepository
+     */
+    private $moduleRepository;
 
     /**
      * TranslatorLanguageLoader constructor.
      *
-     * @param $isAdminContext
+     * @param ModuleRepository $moduleRepository
      */
-    public function __construct($isAdminContext)
+    public function __construct(ModuleRepository $moduleRepository)
+    {
+        $this->moduleRepository = $moduleRepository;
+    }
+
+    /**
+     * @param bool $isAdminContext
+     *
+     * @return self
+     */
+    public function setIsAdminContext(bool $isAdminContext): self
     {
         $this->isAdminContext = $isAdminContext;
+
+        return $this;
     }
 
     /**
      * Loads a language into a translator
      *
-     * @param TranslatorInterface $translator Translator to modifiy
+     * @param TranslatorInterface $translator Translator to modify
      * @param string $locale Locale code for the language to load
      * @param bool $withDB [default=true] Whether to load translations from the database or not
      * @param Theme|null $theme [default=false] Currently active theme (Front office only)
      */
     public function loadLanguage(TranslatorInterface $translator, $locale, $withDB = true, Theme $theme = null)
     {
-        if (!$translator->isLanguageLoaded($locale)) {
-            $translator->addLoader('xlf', new XliffFileLoader());
+        if (!method_exists($translator, 'isLanguageLoaded')) {
+            return;
+        }
+        if ($translator->isLanguageLoaded($locale)) {
+            return;
+        }
+        if (!($translator instanceof BaseTranslatorComponent)) {
+            return;
+        }
+        $translator->addLoader('xlf', new XliffFileLoader());
 
+        // Load the theme translations catalogue
+        $finder = Finder::create()
+            ->files()
+            ->name('*.' . $locale . '.xlf')
+            ->notName($this->isAdminContext ? '^Shop*' : '^Admin*')
+            ->in($this->getTranslationResourcesDirectories($theme));
+
+        foreach ($finder as $file) {
+            list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+            $translator->addResource($format, $file, $locale, $domain);
             if ($withDB) {
-                $sqlTranslationLoader = new SqlTranslationLoader();
-                if (null !== $theme) {
-                    $sqlTranslationLoader->setTheme($theme);
-                }
-                $translator->addLoader('db', $sqlTranslationLoader);
+                $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
             }
+        }
 
-            $finder = Finder::create()
-                ->files()
-                ->name('*.' . $locale . '.xlf')
-                ->notName($this->isAdminContext ? '^Shop*' : '^Admin*')
-                ->in($this->getTranslationResourcesDirectories($theme));
+        // Load modules translation catalogues
+        $activeModulesPaths = $this->moduleRepository->getActiveModulesPaths();
+        foreach ($activeModulesPaths as $activeModuleName => $activeModulePath) {
+            $this->loadModuleTranslations($translator, $activeModuleName, $activeModulePath, $locale, $withDB);
+        }
 
-            foreach ($finder as $file) {
-                list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
-                $translator->addResource($format, $file, $locale, $domain);
-                if ($withDB) {
-                    $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
-                }
+        if ($withDB) {
+            $sqlTranslationLoader = new SqlTranslationLoader();
+            if (null !== $theme) {
+                $sqlTranslationLoader->setTheme($theme);
+            }
+            $translator->addLoader('db', $sqlTranslationLoader);
+        }
+    }
+
+    /**
+     * Loads translations for a single module
+     */
+    private function loadModuleTranslations(
+        BaseTranslatorComponent $translator,
+        string $moduleName,
+        string $modulePath,
+        string $locale,
+        bool $withDB = true
+    ): void {
+        $translationDir = sprintf('%s/translations/%s', $modulePath, $locale);
+        if (!is_dir($translationDir)) {
+            return;
+        }
+
+        $filenamePattern = sprintf(
+            self::MODULE_TRANSLATION_FILENAME_PATTERN,
+            preg_quote(DomainHelper::buildModuleBaseDomain($moduleName)),
+            $locale
+        );
+        $modulesCatalogueFinder = Finder::create()
+            ->files()
+            ->name($filenamePattern)
+            ->in($translationDir);
+
+        foreach ($modulesCatalogueFinder as $file) {
+            list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+            $translator->addResource($format, $file, $locale, $domain);
+            if ($withDB) {
+                $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
             }
         }
     }
@@ -93,7 +163,7 @@ class TranslatorLanguageLoader
      *
      * @return array
      */
-    protected function getTranslationResourcesDirectories(Theme $theme = null)
+    protected function getTranslationResourcesDirectories(Theme $theme = null): array
     {
         $locations = [self::TRANSLATION_DIR];
 

@@ -84,7 +84,7 @@ abstract class ControllerCore
     /**
      * Set to true to display page footer.
      *
-     * @var string
+     * @var bool
      */
     protected $display_footer;
 
@@ -739,9 +739,9 @@ abstract class ControllerCore
     }
 
     /**
-     * @param null $value
-     * @param null $controller
-     * @param null $method
+     * @param string|null $value
+     * @param string|null $controller
+     * @param string|null $method
      *
      * @throws PrestaShopException
      */
@@ -808,7 +808,7 @@ abstract class ControllerCore
     /**
      * Gets the dependency container.
      *
-     * @return ContainerBuilder
+     * @return ContainerBuilder|null
      */
     public function getContainer()
     {

@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = global.$;
+const {$} = window;
 
 /**
  * This extension enables submit functionality of the choice fields in grid.
@@ -36,7 +36,7 @@ const $ = global.$;
  */
 export default class ChoiceExtension {
   constructor() {
-    this.lock = [];
+    this.locks = [];
   }
 
   extend(grid) {
@@ -48,7 +48,7 @@ export default class ChoiceExtension {
       const $parent = $button.closest('.js-choice-options');
       const url = $parent.data('url');
 
-      this._submitForm(url, $button);
+      this.submitForm(url, $button);
     });
   }
 
@@ -58,10 +58,10 @@ export default class ChoiceExtension {
    * @param {jQuery} $button
    * @private
    */
-  _submitForm(url, $button) {
+  submitForm(url, $button) {
     const selectedStatusId = $button.data('value');
 
-    if (this._isLocked(url)) {
+    if (this.isLocked(url)) {
       return;
     }
 
@@ -78,7 +78,7 @@ export default class ChoiceExtension {
     $form.appendTo('body');
     $form.submit();
 
-    this._lock(url);
+    this.lock(url);
   }
 
   /**
@@ -89,8 +89,8 @@ export default class ChoiceExtension {
    *
    * @private
    */
-  _isLocked(url) {
-    return this.lock.includes(url);
+  isLocked(url) {
+    return this.locks.includes(url);
   }
 
   /**
@@ -98,7 +98,7 @@ export default class ChoiceExtension {
    * @param url
    * @private
    */
-  _lock(url) {
-    this.lock.push(url);
+  lock(url) {
+    this.locks.push(url);
   }
 }

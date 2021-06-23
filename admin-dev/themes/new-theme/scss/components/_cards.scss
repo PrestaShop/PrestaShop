@@ -8,7 +8,7 @@
   margin-bottom: $card-spacer-y;
   background-color: $card-bg;
   border: $card-border-width solid $card-border-color;
-  border-radius: $card-border-radius;
+  @include border-radius($card-border-radius);
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
 }
 
@@ -38,7 +38,7 @@
 // }
 
 .card-link {
-  @include hover {
+  @include hover () {
     text-decoration: none;
   }
 
@@ -51,13 +51,13 @@
   .card {
     > .list-group:first-child {
       .list-group-item:first-child {
-        border-radius: $card-border-radius $card-border-radius 0 0;
+        @include border-radius($card-border-radius $card-border-radius 0 0);
       }
     }
 
     > .list-group:last-child {
       .list-group-item:last-child {
-        border-radius: 0 0 $card-border-radius $card-border-radius;
+        @include border-radius(0 0 $card-border-radius $card-border-radius);
       }
     }
   }
@@ -70,10 +70,10 @@
 
 .card-header {
   padding: $card-spacer-y $card-spacer-x;
-  background-color: $card-cap-bg;
-  border-bottom: $card-border-width solid $card-border-color;
   font-weight: 600;
   line-height: 1.5rem; // same as material icons
+  background-color: $card-cap-bg;
+  border-bottom: $card-border-width solid $card-border-color;
 
   .card-header-title {
     font-weight: 600;
@@ -81,13 +81,13 @@
   }
 
   &:first-child {
-    border-radius: $card-border-radius-inner $card-border-radius-inner 0 0;
+    @include border-radius($card-border-radius-inner $card-border-radius-inner 0 0);
   }
 
   .material-icons {
-    vertical-align: text-bottom;
-    color: $medium-gray;
     margin-right: 5px;
+    color: $medium-gray;
+    vertical-align: text-bottom;
   }
 
   h3 {
@@ -97,7 +97,7 @@
   // toolbar buttons at the top of the card
   .btn-toolbar {
     .btn {
-      padding: 0 .125rem;
+      padding: 0 0.125rem;
     }
   }
 }
@@ -108,7 +108,7 @@
   border-top: $card-border-width solid $card-border-color;
 
   &:last-child {
-    border-radius: 0 0 $card-border-radius-inner $card-border-radius-inner;
+    @include border-radius(0 0 $card-border-radius-inner $card-border-radius-inner);
   }
 }
 
@@ -120,15 +120,19 @@
 .card-primary {
   @include card-variant($brand-primary, $brand-primary);
 }
+
 .card-success {
   @include card-variant($brand-success, $brand-success);
 }
+
 .card-info {
   @include card-variant($brand-info, $brand-info);
 }
+
 .card-warning {
   @include card-variant($brand-warning, $brand-warning);
 }
+
 .card-danger {
   @include card-variant($brand-danger, $brand-danger);
 }
@@ -137,18 +141,23 @@
 .card-primary-outline {
   @include card-outline-variant($btn-primary-bg);
 }
+
 .card-secondary-outline {
   @include card-outline-variant($btn-secondary-border);
 }
+
 .card-info-outline {
   @include card-outline-variant($btn-info-bg);
 }
+
 .card-success-outline {
   @include card-outline-variant($btn-success-bg);
 }
+
 .card-warning-outline {
   @include card-outline-variant($btn-warning-bg);
 }
+
 .card-danger-outline {
   @include card-outline-variant($btn-danger-bg);
 }
@@ -158,7 +167,7 @@
 //
 
 .card-inverse {
-  @include card-inverse;
+  @include card-inverse ();
 }
 
 //
@@ -174,8 +183,9 @@
 // Card image
 .card-img {
   // margin: -1.325rem;
-  border-radius: .25rem;
+  @include border-radius(0.25rem);
 }
+
 .card-img-overlay {
   position: absolute;
   top: 0;
@@ -186,13 +196,13 @@
 }
 
 
-
 // Card image caps
 .card-img-top {
-  border-radius: $card-border-radius-inner $card-border-radius-inner 0 0;
+  @include border-radius($card-border-radius-inner $card-border-radius-inner 0 0);
 }
+
 .card-img-bottom {
-  border-radius: 0 0 $card-border-radius-inner $card-border-radius-inner;
+  @include border-radius(0 0 $card-border-radius-inner $card-border-radius-inner);
 }
 
 
@@ -204,13 +214,13 @@
   .card-deck {
     display: flex;
     flex-flow: row wrap;
-    margin-right: -.625rem;
-    margin-left: -.625rem;
+    margin-right: -0.625rem;
+    margin-left: -0.625rem;
 
     .card {
       flex: 1 0 0;
-      margin-right: .625rem;
-      margin-left: .625rem;
+      margin-right: 0.625rem;
+      margin-left: 0.625rem;
     }
   }
 }
@@ -232,35 +242,40 @@
         border-left: 0;
       }
 
-      // Handle rounded corners
+      // Handle rounded corners and disabling stylelint because there are no mixins for these properties
       @if $enable-rounded {
+        /* stylelint-disable property-blacklist */
         &:first-child {
           @include border-right-radius(0);
 
           .card-img-top {
             border-top-right-radius: 0;
           }
+
           .card-img-bottom {
             border-bottom-right-radius: 0;
           }
         }
+
         &:last-child {
           @include border-left-radius(0);
 
           .card-img-top {
             border-top-left-radius: 0;
           }
+
           .card-img-bottom {
             border-bottom-left-radius: 0;
           }
         }
+        /* stylelint-enable property-blacklist */
 
         &:not(:first-child):not(:last-child) {
-          border-radius: 0;
+          @include border-radius(0);
 
           .card-img-top,
           .card-img-bottom {
-            border-radius: 0;
+            @include border-radius(0);
           }
         }
       }

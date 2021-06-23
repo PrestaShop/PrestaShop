@@ -61,7 +61,7 @@
             <a href="{{ product.url|default('') }}#tab-step2">{{ product.price_final|default('N/A'|trans({}, 'Admin.Global')) }}</a>
         </td>
 
-        {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+        {% if configuration('PS_STOCK_MANAGEMENT') %}
             <td class="product-sav-quantity text-center" data-product-quantity-value="{{ product.sav_quantity|default('') }}">
                 <a href="{{ product.url|default('') }}#tab-step3">
                     {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
@@ -75,28 +75,30 @@
             <td></td>
         {% endif %}
         <td class="text-center">
-            {% if product.active|default(0) == 0 %}
-                <a href="#" onclick="unitProductAction(this, 'activate'); return false;">
-                    <i class="material-icons action-disabled">clear</i>
-                </a>
-            {% else %}
-                <a href="#" onclick="unitProductAction(this, 'deactivate'); return false;">
-                    <i class="material-icons action-enabled ">check</i>
-                </a>
-            {% endif %}
-        </td>
-        {% if product.position is defined %}
-            <td {% if activate_drag_and_drop %}class="placeholder"{% endif %} style="cursor: pointer; cursor: hand;">
-                {% if activate_drag_and_drop %}
-                    <big><big>⇅</big></big>
-                {% endif %}
-                <span class="position">{{ product.position }}</span>
-                <input type="hidden" name="mass_edit_action_sorted_products[]" value="{{ product.id_product }}" />
-                <input type="hidden" name="mass_edit_action_sorted_positions[]" value="{{ product.position }}" />
-            </td>
-        {% endif %}
-        <td class="text-right">
-            <div class="btn-group-action">
+
+          <div
+            class="ps-switch ps-switch-sm ps-switch-nolabel ps-switch-center"
+            onclick="unitProductAction(this, {% if product.active|default(0) == 0 %}'activate'{% else %}'deactivate'{% endif %});"
+          >
+          <input type="radio" name="input-{{ product.id_product }}" id="input-false-{{ product.id_product }}" value="0" {% if product.active|default(0) == 0 %}checked{% endif %} aria-label="{{ "Disable %product_name% input"|trans({'%product_name%': product.name}, 'Admin.Global') }}">
+              <label for="input-false-{{ product.id_product }}">Off</label>
+              <input type="radio" name="input-{{ product.id_product }}" id="input-true-{{ product.id_product }}" value="1" {% if product.active|default(0) != 0 %}checked{% endif %} aria-label="{{ "Enable %product_name% input"|trans({'%product_name%': product.name}, 'Admin.Global') }}">
+              <label for="input-true-{{ product.id_product }}">On</label>
+              <span class="slide-button"></span>
+            </div>
+      </td>
+      {% if product.position is defined %}
+          <td {% if activate_drag_and_drop %}class="placeholder"{% endif %} style="cursor: pointer; cursor: hand;">
+              {% if activate_drag_and_drop %}
+                  <big><big>⇅</big></big>
+              {% endif %}
+              <span class="position">{{ product.position }}</span>
+              <input type="hidden" name="mass_edit_action_sorted_products[]" value="{{ product.id_product }}" />
+              <input type="hidden" name="mass_edit_action_sorted_positions[]" value="{{ product.position }}" />
+          </td>
+      {% endif %}
+      <td class="text-right">
+          <div class="btn-group-action">
 
                 {% set buttons_action = [
                     {
@@ -122,6 +124,16 @@
                         "label": "Delete"|trans({}, 'Admin.Actions')
                     }
                 ]) %}
+
+                {% if productPageV2IsEnabled == true %}
+                    {% set buttons_action = buttons_action|merge([
+                        {
+                          "href": product.url_v2|default('#'),
+                          "icon": "mode_edit",
+                          "label": "Edit on experimental page"|trans({}, 'Admin.Catalog.Feature')
+                        }
+                    ]) %}
+                {% endif %}
 
                 {% include '@Product/CatalogPage/Forms/form_edit_dropdown.html.twig' with {
                     'button_id': "product_list_id_" ~ product.id_product ~ "_menu",

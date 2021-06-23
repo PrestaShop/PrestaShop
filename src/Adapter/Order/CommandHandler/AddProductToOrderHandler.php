@@ -145,8 +145,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $combination = null !== $command->getCombinationId() ? $this->getCombination($command->getCombinationId()->getValue()) : null;
         $combinationId = null !== $combination ? (int) $combination->id : 0;
 
-        $this->checkProductInStock($product, $command);
-
         $this->contextStateManager
             ->setCurrency(new Currency($order->id_currency))
             ->setCustomer(new Customer($order->id_customer))
@@ -156,6 +154,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $this->computingPrecision = $this->getPrecisionFromCart($cart);
         try {
+            $this->checkProductInStock($product, $command, (int) $order->id_shop);
+
             $cartComparator = new CartProductsComparator($cart);
             $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
             $updatedCartProducts = $cart->getProducts(true);
@@ -453,7 +453,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $freeShippingCartRule->minimum_amount_currency = $order->id_currency;
             $freeShippingCartRule->reduction_currency = $order->id_currency;
             $freeShippingCartRule->free_shipping = true;
-            $freeShippingCartRule->active = 1;
+            $freeShippingCartRule->active = true;
             $freeShippingCartRule->add();
 
             // Add cart rule to cart and in order
@@ -555,15 +555,20 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     /**
      * @param Product $product
      * @param AddProductToOrderCommand $command
+     * @param int $shopId
      *
      * @throws ProductOutOfStockException
      */
-    private function checkProductInStock(Product $product, AddProductToOrderCommand $command): void
+    private function checkProductInStock(Product $product, AddProductToOrderCommand $command, int $shopId): void
     {
         //check if product is available in stock
         if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($command->getProductId()->getValue()))) {
             $combinationId = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
-            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($command->getProductId()->getValue(), $combinationId);
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct(
+                $command->getProductId()->getValue(),
+                $combinationId,
+                $shopId
+            );
 
             if ($availableQuantity < $command->getProductQuantity()) {
                 throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));

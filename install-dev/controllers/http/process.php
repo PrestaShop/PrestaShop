@@ -91,8 +91,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                 $this->processInstallDefaultData();
             } elseif (Tools::getValue('populateDatabase') && !empty($this->session->process_validated['installDatabase'])) {
                 $this->processPopulateDatabase();
-                // download and install language pack
-                Language::downloadAndInstallLanguagePack($this->session->lang);
             } elseif (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase'])) {
                 Language::getRtlStylesheetProcessor()
                     ->setIsInstall(true)
@@ -165,7 +163,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
      */
     public function processInstallDefaultData()
     {
-        /** @todo remove true in populateDatabase for 1.5.0 RC version */
         $result = $this->model_install->installDefaultData($this->session->shop_name, $this->session->shop_country, false, true);
 
         if (!$result || $this->model_install->getErrors()) {
@@ -201,16 +198,17 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->initializeContext();
 
         $success = $this->model_install->configureShop(array(
-            'shop_name' =>                $this->session->shop_name,
-            'shop_activity' =>            $this->session->shop_activity,
-            'shop_country' =>            $this->session->shop_country,
-            'shop_timezone' =>            $this->session->shop_timezone,
+            'shop_name' =>              $this->session->shop_name,
+            'shop_activity' =>          $this->session->shop_activity,
+            'shop_country' =>           $this->session->shop_country,
+            'shop_timezone' =>          $this->session->shop_timezone,
             'admin_firstname' =>        $this->session->admin_firstname,
-            'admin_lastname' =>            $this->session->admin_lastname,
-            'admin_password' =>            $this->session->admin_password,
+            'admin_lastname' =>         $this->session->admin_lastname,
+            'admin_password' =>         $this->session->admin_password,
             'admin_email' =>            $this->session->admin_email,
-            'configuration_agrement' =>    $this->session->configuration_agrement,
-            'rewrite_engine' =>            $this->session->rewrite_engine,
+            'configuration_agrement' => $this->session->configuration_agrement,
+            'enable_ssl' =>             $this->session->enable_ssl,
+            'rewrite_engine' =>         $this->session->rewrite_engine,
         ));
 
         if (!$success || $this->model_install->getErrors()) {
@@ -229,7 +227,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         $this->initializeContext();
 
-        $result = $this->model_install->installModules(Tools::getValue('module'));
+        $result = $this->model_install->installModules(Tools::getValue('module', null));
         if (!$result || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }

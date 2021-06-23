@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme taxForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {{ form_start(taxForm) }}
 <div class="card">
@@ -34,32 +34,8 @@
   <div class="card-block row">
     <div class="card-text">
       {{ form_errors(taxForm) }}
-
-      {% set nameHint %}
-        {{ 'Tax name to display in carts and on invoices (e.g. "VAT").'|trans({}, 'Admin.International.Help') }}
-        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
-      {% endset %}
-
-      {{ ps.form_group_row(taxForm.name, {}, {
-        'label': 'Name'|trans({}, 'Admin.Global'),
-        'help': nameHint,
-      }) }}
-
-      {% set rateHint %}
-        {{ 'Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)'|trans({}, 'Admin.International.Help') }}
-      {% endset %}
-
-      {{ ps.form_group_row(taxForm.rate, {}, {
-        'label': 'Rate'|trans({}, 'Admin.International.Feature'),
-        'help': rateHint,
-      }) }}
-
-      {{ ps.form_group_row(taxForm.is_enabled, {}, {
-        'label': 'Enable'|trans({}, 'Admin.Actions')
-      }) }}
-
-      {% block tax_form_rest %}
-        {{ form_rest(taxForm) }}
+      {% block tax_form_widget %}
+        {{ form_widget(taxForm) }}
       {% endblock %}
     </div>
   </div>
@@ -71,7 +47,7 @@
       </a>
     </div>
     <div class="d-inline-flex float-right">
-      <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      <button class="btn btn-primary" id="save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
     </div>
   </div>
 

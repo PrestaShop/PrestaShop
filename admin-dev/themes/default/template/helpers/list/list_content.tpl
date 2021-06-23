@@ -45,6 +45,7 @@
 						id="td_{if !empty($position_group_identifier)}{$position_group_identifier}{else}0{/if}_{$tr.$identifier}{if $smarty.capture.tr_count > 1}_{($smarty.capture.tr_count - 1)|intval}{/if}"
 					{/if}
 					class="{strip}{if !$no_link}pointer{/if}
+					{if isset($key)} column-{$key|lower}{/if}
 					{if isset($params.position) && $order_by == 'position'  && $order_way != 'DESC'} dragHandle{/if}
 					{if isset($params.class)} {$params.class}{/if}
 					{if isset($params.align)} {$params.align}{/if}{/strip}"
@@ -182,7 +183,7 @@
 					{$compiled_actions[0]}
 					{if $compiled_actions|count > 1}
 					<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-						<i class="icon-caret-down"></i>&nbsp;
+						<i class="icon-caret-down"></i>
 					</button>
 						<ul class="dropdown-menu">
 						{foreach $compiled_actions AS $key => $action}

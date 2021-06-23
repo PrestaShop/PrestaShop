@@ -227,12 +227,14 @@ describe('Filter, sort and pagination SQL manager', async () => {
         await sqlManagerPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
         let sortedTable = await sqlManagerPage.getAllRowsColumnContent(page, test.args.sortBy);
+
         if (test.args.isFloat) {
           nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
         const expectedResult = await sqlManagerPage.sortArray(nonSortedTable, test.args.isFloat);
+
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
         } else {

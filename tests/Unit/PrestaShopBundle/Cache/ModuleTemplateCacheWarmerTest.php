@@ -36,10 +36,10 @@ class ModuleTemplateCacheWarmerTest extends TestCase
     public function testOnlyGenerateTwig()
     {
         $twigMock = $this
-        ->getMockBuilder(Environment::class)
-        ->disableOriginalConstructor()
-        ->setMethods(['loadTemplate'])
-        ->getMock();
+            ->getMockBuilder(Environment::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['loadTemplate'])
+            ->getMock();
 
         $container = $this->getMockBuilder(ContainerInterface::class)->disableOriginalConstructor()->getMock();
         $container->expects($this->any())->method('get')->with('twig')->will($this->returnValue($twigMock));

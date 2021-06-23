@@ -29,10 +29,14 @@ class Translations extends BOBasePage {
     this.searchLanguageResult = 'li.select2-results__option--highlighted';
     this.addUpdateLanguageButton = `${this.addUpdateLanguageForm} .card-footer button`;
     // Export language form
-    this.exportLanguageForm = 'form[action*=\'translations/export\']';
     this.exportLanguageSelect = '#form_iso_code';
-    this.exportLanguageThemeSelect = '#form_theme_name';
-    this.exportLanguageButton = `${this.exportLanguageForm} .card-footer button`;
+    // Prestashop translation
+    this.prestashopTranslationRadio = '#form_core_selectors_core_type';
+    this.prestashopTranslationTypeCheckbox = position => `#form_core_selectors_selected_value_${position}`;
+    // Theme translation
+    this.themeTranslationRadio = '#form_themes_selectors_themes_type';
+    this.exportLanguageThemeSelect = '#form_themes_selectors_selected_value';
+    this.exportLanguageButton = '#form-export-language-button';
   }
 
   /*
@@ -105,22 +109,54 @@ class Translations extends BOBasePage {
   }
 
   /**
-   * Export language
-   * @param page
-   * @param language
-   * @param theme
-   * @return {Promise<*>}
+   * Select export language
+   * @param page {Page} Browser tab
+   * @param language {string} language to export
+   * @return {Promise<void>}
    */
-  async exportLanguage(page, language, theme) {
+  async selectExportLanguage(page, language) {
     await this.selectByVisibleText(page, this.exportLanguageSelect, language);
-    await this.selectByVisibleText(page, this.exportLanguageThemeSelect, theme);
+  }
 
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.exportLanguageButton),
-    ]);
+  /**
+   * Export Prestashop translation by type (BO, FO, Email or Other)
+   * @param page {Page} Browser type
+   * @param language {string} language to export
+   * @param types {Array<string>} Array of strings of what to export
+   * @returns {Promise<string>}
+   */
+  async exportPrestashopTranslations(page, language, types = ['Other']) {
+    await this.selectExportLanguage(page, language);
+    await page.click(this.prestashopTranslationRadio);
 
-    return download.path();
+    for (let i = 0; i < types.length; i++) {
+      let selector;
+
+      switch (types[i]) {
+        case 'Back office':
+          selector = this.prestashopTranslationTypeCheckbox(0);
+          break;
+
+        case 'Front office':
+          selector = this.prestashopTranslationTypeCheckbox(1);
+          break;
+
+        case 'Email':
+          selector = this.prestashopTranslationTypeCheckbox(2);
+          break;
+
+        case 'Other':
+          selector = this.prestashopTranslationTypeCheckbox(3);
+          break;
+
+        default:
+          throw new Error(`${types[i]} was not found as a translation option`);
+      }
+
+      await this.setHiddenCheckboxValue(page, selector, true);
+    }
+
+    return this.clickAndWaitForDownload(page, this.exportLanguageButton);
   }
 }
 

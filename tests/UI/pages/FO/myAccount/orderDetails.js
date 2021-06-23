@@ -9,7 +9,25 @@ class OrderHistory extends FOBasePage {
     this.successMessageText = 'Message successfully sent';
 
     // Selectors
+    this.headerTitle = '.page-header h1';
+    this.reorderLink = '#order-infos a';
+
+    // Order return form selectors
     this.orderReturnForm = '#order-return-form';
+    this.gridTable = '#order-products';
+    this.returnTextarea = `${this.orderReturnForm} textarea[name='returnText']`;
+    this.requestReturnButton = `${this.orderReturnForm} button[name='submitReturnMerchandise']`;
+
+    // Order products table body selectors
+    this.tableBody = `${this.gridTable} tbody`;
+    this.tableBodyRows = `${this.tableBody} tr`;
+    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row, column) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
+
+    // Order product table content
+    this.productName = (row, column) => `${this.tableBodyColumn(row, column)} a`;
+
+    // Add message form selectors
     this.productIdSelect = '[name=id_product]';
     this.messageTextarea = '[name=msgText]';
     this.submitMessageButton = '[name=submitMessage]';
@@ -21,7 +39,7 @@ class OrderHistory extends FOBasePage {
 
   /**
    * Is orderReturn form visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isOrderReturnFormVisible(page) {
@@ -29,10 +47,21 @@ class OrderHistory extends FOBasePage {
   }
 
   /**
-   * Add a message to order history
+   * Request merchandise return
    * @param page
-   * @param messageOption
-   * @param messageText
+   * @returns {Promise<void>}
+   */
+  async requestMerchandiseReturn(page, messageText) {
+    await page.check(`${this.tableBodyColumn(1, 1)} input`);
+    await this.setValue(page, this.returnTextarea, messageText);
+    await this.clickAndWaitForNavigation(page, this.requestReturnButton);
+  }
+
+  /**
+   * Add a message to order history
+   * @param page {Page} Browser tab
+   * @param messageOption {String} The reference of the order
+   * @param messageText {String} The message content
    * @returns {Promise<string>}
    */
   async addAMessage(page, messageOption, messageText) {
@@ -40,6 +69,36 @@ class OrderHistory extends FOBasePage {
     await this.setValue(page, this.messageTextarea, messageText);
     await this.clickAndWaitForNavigation(page, this.submitMessageButton);
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Retrieve and return product name from order detail page
+   * @param page {Page} Browser tab
+   * @param row {Number} row in orders details table
+   * @param column {Number} column in orders details table
+   * @returns {Promise<string>}
+   */
+  getProductName(page, row = 1, column = 1) {
+    return this.getTextContent(page, this.productName(row, column));
+  }
+
+  /**
+   * @override
+   * Get the page title from the main section
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getPageTitle(page) {
+    return this.getTextContent(page, this.headerTitle);
+  }
+
+  /**
+   * Click on the reorder link in the order detail
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnReorderLink(page) {
+    await this.clickAndWaitForNavigation(page, this.reorderLink);
   }
 }
 

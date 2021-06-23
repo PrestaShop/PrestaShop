@@ -22,83 +22,88 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-var PerformancePageUI = {
-    displaySmartyCache: function() {
-        var CACHE_ENABLED = '1';
-        var smartyCacheSelected = document.querySelector('input[name="form[smarty][cache]"]:checked');
-        var smartyCacheOptions = document.querySelectorAll('.smarty-cache-option');
-        if (smartyCacheSelected && smartyCacheSelected.value === CACHE_ENABLED) {
-          for(var i = 0; i < smartyCacheOptions.length; i++) {
-            smartyCacheOptions[i].classList.remove('d-none');
-          }
+const PerformancePageUI = {
+  displaySmartyCache() {
+    const CACHE_ENABLED = '1';
+    const smartyCacheSelected = document.querySelector('input[name="smarty[cache]"]:checked');
+    const smartyCacheOptions = document.querySelectorAll('.smarty-cache-option');
 
-          return;
-        }
-
-      for(var i = 0; i < smartyCacheOptions.length; i++) {
-        smartyCacheOptions[i].classList.add('d-none');
+    if (smartyCacheSelected && smartyCacheSelected.value === CACHE_ENABLED) {
+      for (let i = 0; i < smartyCacheOptions.length; i += 1) {
+        smartyCacheOptions[i].classList.remove('d-none');
       }
-    },
-    displayCacheSystems: function() {
-        var CACHE_ENABLED = '1';
-        var cacheEnabledInput = document.querySelector('input[name="form[caching][use_cache]"]:checked');
-        var cachingElements = document.getElementsByClassName('memcache');
 
-        if(cacheEnabledInput.value === CACHE_ENABLED) {
-            for (var i = 0; i < cachingElements.length; i++) {
-                cachingElements[i].style.display = "";
-            }
-            return;
-        }
-
-        for (var i = 0; i < cachingElements.length; i++) {
-            cachingElements[i].style.display = "none";
-        }
-    },
-    displayMemcacheServers: function() {
-        var CACHE_ENABLED = '1';
-        var cacheEnabledInput = document.querySelector('input[name="form[caching][use_cache]"]:checked');
-        var cacheSelected = document.querySelector('input[name="form[caching][caching_system]"]:checked');
-        var memcacheServersListBlock = document.getElementById('servers-list');
-        var newServerBtn = document.getElementById('new-server-btn');
-        var isMemcache = cacheSelected && (cacheSelected.value === "CacheMemcache" || cacheSelected.value === "CacheMemcached");
-
-        if (isMemcache && cacheEnabledInput.value === CACHE_ENABLED) {
-            memcacheServersListBlock.style.display = "block";
-            newServerBtn.style.display = "block";
-
-            return;
-        }
-
-        memcacheServersListBlock.style.display = "none";
-        newServerBtn.style.display = "none";
+      return;
     }
+
+    for (let i = 0; i < smartyCacheOptions.length; i += 1) {
+      smartyCacheOptions[i].classList.add('d-none');
+    }
+  },
+  displayCacheSystems() {
+    const CACHE_ENABLED = '1';
+    const cacheEnabledInput = document.querySelector('input[name="caching[use_cache]"]:checked');
+    const cachingElements = document.getElementsByClassName('memcache');
+
+    if (cacheEnabledInput.value === CACHE_ENABLED) {
+      for (let i = 0; i < cachingElements.length; i += 1) {
+        cachingElements[i].style.display = '';
+      }
+
+      return;
+    }
+
+    for (let i = 0; i < cachingElements.length; i += 1) {
+      cachingElements[i].style.display = 'none';
+    }
+  },
+  displayMemcacheServers() {
+    const CACHE_ENABLED = '1';
+    const cacheEnabledInput = document.querySelector('input[name="caching[use_cache]"]:checked');
+    const cacheSelected = document.querySelector('input[name="caching[caching_system]"]:checked');
+    const memcacheServersListBlock = document.getElementById('servers-list');
+    const newServerBtn = document.getElementById('new-server-btn');
+    const isMemcache = cacheSelected
+      && (cacheSelected.value === 'CacheMemcache' || cacheSelected.value === 'CacheMemcached');
+
+    if (isMemcache && cacheEnabledInput.value === CACHE_ENABLED) {
+      memcacheServersListBlock.style.display = 'block';
+      newServerBtn.style.display = 'block';
+
+      return;
+    }
+
+    memcacheServersListBlock.style.display = 'none';
+    newServerBtn.style.display = 'none';
+  },
 };
 
 /**
  * Animations on form values.
  */
-window.addEventListener('load', function() {
-    PerformancePageUI.displaySmartyCache();
-    PerformancePageUI.displayCacheSystems();
-    PerformancePageUI.displayMemcacheServers();
+window.addEventListener('load', () => {
+  PerformancePageUI.displaySmartyCache();
+  PerformancePageUI.displayCacheSystems();
+  PerformancePageUI.displayMemcacheServers();
 });
 
-var cacheSystemInputs = document.querySelectorAll('input[type=radio]');
-var length = cacheSystemInputs.length;
+const cacheSystemInputs = document.querySelectorAll('input[type=radio]');
+let {length} = cacheSystemInputs;
 
-while(length--) {
-    cacheSystemInputs[length].addEventListener('change', function(e) {
-        var name = e.target.getAttribute('name');
-        if ('form[caching][use_cache]' === name) {
-            return PerformancePageUI.displayCacheSystems();
-        }
-        if ('form[smarty][cache]' === name) {
-            return PerformancePageUI.displaySmartyCache();
-        }
-        if ('form[caching][caching_system]' === name) {
-            return PerformancePageUI.displayMemcacheServers();
-        }
-    });
+// eslint-disable-next-line
+while (length--) {
+  // eslint-disable-next-line
+  cacheSystemInputs[length].addEventListener('change', (e) => {
+    const name = e.target.getAttribute('name');
+
+    if (name === 'caching[use_cache]') {
+      return PerformancePageUI.displayCacheSystems();
+    }
+    if (name === 'smarty[cache]') {
+      return PerformancePageUI.displaySmartyCache();
+    }
+    if (name === 'caching[caching_system]') {
+      return PerformancePageUI.displayMemcacheServers();
+    }
+  });
 }
-

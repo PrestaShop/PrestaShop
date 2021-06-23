@@ -33,9 +33,9 @@
 <div id="dashboard">
 	<div class="row">
 		<div class="col-lg-12">
-{if $warning}
-			<div class="alert alert-warning">{$warning}</div>
-{/if}
+      {if $warning}
+        <div class="alert alert-warning">{$warning}</div>
+      {/if}
 			<div id="calendar" class="panel">
 				<form action="{$action|escape}" method="post" id="calendar_form" name="calendar_form" class="form-inline">
 					<div class="btn-group">
@@ -90,7 +90,7 @@
 		<div class="col-md-8 col-lg-7" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
 			<div id="dashaddons" class="row-margin-bottom">
-				<a href="https://addons.prestashop.com/en/209-dashboards?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">
+				<a href="https://addons.prestashop.com/en/209-dashboards?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" target="_blank" rel="noopener noreferrer nofollow">
 					<i class="icon-plus"></i> {l s='Add more dashboard modules' d='Admin.Dashboard.Feature'}
 				</a>
 			</div>
@@ -107,11 +107,11 @@
 			<section class="dash_links panel">
 				<h3><i class="icon-link"></i> {l s="We stay by your side!" d='Admin.Dashboard.Feature'}</h3>
 					<dl>
-						<dt><a href="{$help_center_link}" class="_blank">{l s="Help Center" d='Admin.Global'}</a></dt>
+						<dt><a href="{$help_center_link}" target="_blank" rel="noopener noreferrer nofollow">{l s="Help Center" d='Admin.Global'}</a></dt>
 						<dd>{l s="Documentation, support, experts, training... PrestaShop and all of its community are here to guide you" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>
-						<dt><a href="https://addons.prestashop.com?utm_source=back-office&amp;utm_medium=links&amp;utm_campaign=addons-{$lang_iso}&amp;utm_content=download17" class="_blank">{l s="PrestaShop Marketplace" d='Admin.Dashboard.Feature'}</a></dt>
+						<dt><a href="https://addons.prestashop.com?utm_source=back-office&amp;utm_medium=links&amp;utm_campaign=addons-{$lang_iso}&amp;utm_content=download17" target="_blank" rel="noopener noreferrer nofollow">{l s="PrestaShop Marketplace" d='Admin.Dashboard.Feature'}</a></dt>
 						<dd>{l s="Traffic, conversion rate, customer loyalty... Increase your sales with all of the PrestaShop modules and themes" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 			</section>

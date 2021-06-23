@@ -106,7 +106,7 @@
 		{elseif $key == 'allcheckbox'}
 			<div id="data_list" {if !$checked}display:none{/if}>
 				<label class="control-label col-lg-3">{$field.label}</label>
-				<div class="col-lg-9">
+				<div class="col-lg-9 multiple-checkboxes">
 				{foreach $field.values as $key => $label}
 					<p class="checkbox"><input type="checkbox" name="importData[{$key}]" checked="checked" /> {$label}</p>
 				{/foreach}

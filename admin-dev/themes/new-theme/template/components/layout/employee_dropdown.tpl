@@ -29,21 +29,21 @@
   </div>
   <div class="dropdown-menu dropdown-menu-right">
     <div class="employee-wrapper-avatar">
-      
-      <span class="employee_avatar"><img class="avatar rounded-circle" src="{$employee->getImage()}" /></span>
+
+      <span class="employee-avatar"><img class="avatar rounded-circle" src="{$employee->getImage()}" /></span>
       <span class="employee_profile">{l s='Welcome back %name%' sprintf=['%name%' => $employee->firstname] d='Admin.Navigation.Header'}</span>
       <a class="dropdown-item employee-link profile-link" href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}">
-      <i class="material-icons">settings</i>
-      {l s='Your profile' d='Admin.Navigation.Header'}
+      <i class="material-icons">edit</i>
+      <span>{l s='Your profile' d='Admin.Navigation.Header'}</span>
     </a>
     </div>
-    
+
     <p class="divider"></p>
-    <a class="dropdown-item" href="{l s='https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">book</i> {l s='Resources' d='Admin.Navigation.Header'}</a>
-    <a class="dropdown-item" href="{l s='https://www.prestashop.com/en/training?utm_source=back-office&utm_medium=profile&utm_campaign=training-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">school</i> {l s='Training' d='Admin.Navigation.Header'}</a>
-    <a class="dropdown-item" href="{l s='https://www.prestashop.com/en/experts?utm_source=back-office&utm_medium=profile&utm_campaign=expert-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">person_pin_circle</i> {l s='Find an Expert' d='Admin.Navigation.Header'}</a>
-    <a class="dropdown-item" href="{l s='https://addons.prestashop.com?utm_source=back-office&utm_medium=profile&utm_campaign=addons-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">extension</i> {l s='PrestaShop Marketplace' d='Admin.Navigation.Header'}</a>
-    <a class="dropdown-item" href="{l s='https://www.prestashop.com/en/contact?utm_source=back-office&utm_medium=profile&utm_campaign=help-center-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">help</i> {l s='Help Center' d='Admin.Navigation.Header'}</a>
+    <a class="dropdown-item" href="{l s='https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank" rel="noreferrer"><i class="material-icons">book</i> {l s='Resources' d='Admin.Navigation.Header'}</a>
+    <a class="dropdown-item" href="{l s='https://www.prestashop.com/en/training?utm_source=back-office&utm_medium=profile&utm_campaign=training-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank" rel="noreferrer"><i class="material-icons">school</i> {l s='Training' d='Admin.Navigation.Header'}</a>
+    <a class="dropdown-item" href="{l s='https://www.prestashop.com/en/experts?utm_source=back-office&utm_medium=profile&utm_campaign=expert-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank" rel="noreferrer"><i class="material-icons">person_pin_circle</i> {l s='Find an Expert' d='Admin.Navigation.Header'}</a>
+    <a class="dropdown-item" href="{l s='https://addons.prestashop.com?utm_source=back-office&utm_medium=profile&utm_campaign=addons-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank" rel="noreferrer"><i class="material-icons">extension</i> {l s='PrestaShop Marketplace' d='Admin.Navigation.Header'}</a>
+    <a class="dropdown-item" href="{l s='https://www.prestashop.com/en/contact?utm_source=back-office&utm_medium=profile&utm_campaign=help-center-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank" rel="noreferrer"><i class="material-icons">help</i> {l s='Help Center' d='Admin.Navigation.Header'}</a>
     <p class="divider"></p>
     <a class="dropdown-item employee-link text-center" id="header_logout" href="{$logout_link|escape:'html':'UTF-8'}">
       <i class="material-icons d-lg-none">power_settings_new</i>

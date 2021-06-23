@@ -34,7 +34,7 @@
     'desc': 'Add new webservice key'|trans({}, 'Admin.Advparameters.Feature'),
     'icon': 'add_circle_outline'
   }
-} %}
+  } %}
 
 {% block content %}
 
@@ -58,19 +58,19 @@
     </div>
   </div>
 
-    <div class="row justify-content-center">
-      <div class="col">
-        {{ form_start(form, {'action': path('admin_webservice_save_settings') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
+  <div class="row justify-content-center">
+    <div class="col">
+      {{ form_start(webserviceConfigurationForm, {'action': path('admin_webservice_save_settings') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
 
         {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice_settings.html.twig') }}
 
         {% block webservice_configuration_form_rest %}
-          {{ form_rest(form) }}
+          {{ form_rest(webserviceConfigurationForm) }}
         {% endblock %}
 
-        {{ form_end(form) }}
-      </div>
+      {{ form_end(webserviceConfigurationForm) }}
     </div>
+  </div>
 {% endblock %}
 
 {% block javascripts %}

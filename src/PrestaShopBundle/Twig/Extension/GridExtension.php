@@ -30,6 +30,7 @@ use RuntimeException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
+use Twig\Loader\ExistsLoaderInterface;
 use Twig_SimpleFunction as SimpleFunction;
 
 /**
@@ -40,8 +41,8 @@ use Twig_SimpleFunction as SimpleFunction;
  */
 class GridExtension extends AbstractExtension
 {
-    const BASE_COLUMN_CONTENT_TEMPLATE_PATH = '@PrestaShop/Admin/Common/Grid/Columns/Content';
-    const BASE_COLUMN_HEADER_TEMPLATE_PATH = '@PrestaShop/Admin/Common/Grid/Columns/Header/Content';
+    public const BASE_COLUMN_CONTENT_TEMPLATE_PATH = '@PrestaShop/Admin/Common/Grid/Columns/Content';
+    public const BASE_COLUMN_HEADER_TEMPLATE_PATH = '@PrestaShop/Admin/Common/Grid/Columns/Header/Content';
 
     /**
      * @var Environment
@@ -168,8 +169,7 @@ class GridExtension extends AbstractExtension
     {
         if (empty($grid['columns'])
             || empty($grid['sorting']['order_by'])
-            || empty($grid['sorting']['order_way'])
-            || 'asc' != strtolower($grid['sorting']['order_way'])) {
+            || empty($grid['sorting']['order_way'])) {
             return false;
         }
 
@@ -205,15 +205,20 @@ class GridExtension extends AbstractExtension
         $gridTemplate = sprintf('%s/%s_%s.html.twig', $basePath, $gridId, $columnType);
         $columnTemplate = sprintf('%s/%s.html.twig', $basePath, $columnType);
 
-        if ($this->twig->getLoader()->exists($columnGridTemplate)) {
+        $loader = $this->twig->getLoader();
+        if (!($loader instanceof ExistsLoaderInterface)) {
+            return null;
+        }
+
+        if ($loader->exists($columnGridTemplate)) {
             return $columnGridTemplate;
         }
 
-        if ($this->twig->getLoader()->exists($gridTemplate)) {
+        if ($loader->exists($gridTemplate)) {
             return $gridTemplate;
         }
 
-        if ($this->twig->getLoader()->exists($columnTemplate)) {
+        if ($loader->exists($columnTemplate)) {
             return $columnTemplate;
         }
 

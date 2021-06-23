@@ -16,17 +16,17 @@ class Suppliers extends BOBasePage {
     this.gridTable = '#supplier_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsEnableButton = `${this.gridPanel} #supplier_grid_bulk_action_suppliers_enable_selection`;
     this.bulkActionsDisableButton = `${this.gridPanel} #supplier_grid_bulk_action_suppliers_disable_selection`;
     this.bulkActionsDeleteButton = `${this.gridPanel} #supplier_grid_bulk_action_delete_selection`;
-    this.confirmDeleteModal = '#supplier_grid_confirm_modal';
+    this.confirmDeleteModal = '#supplier-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #supplier_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='supplier[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='supplier[actions][reset]']`;
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
@@ -34,14 +34,14 @@ class Suppliers extends BOBasePage {
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.viewRowLink = row => `${this.actionsColumn(row)} a[data-original-title='View']`;
+    this.viewRowLink = row => `${this.actionsColumn(row)} a.grid-view-row-link`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.editRowLink = row => `${this.dropdownToggleMenu(row)} a[href*='/edit']`;
+    this.editRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-edit-row-link`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
-    // enable column
-    this.enableColumn = row => this.tableColumn(row, 'active');
-    this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
+    // Column status
+    this.statusColumn = row => `${this.tableColumn(row, 'active')} .ps-switch`;
+    this.statusColumnToggleInput = row => `${this.statusColumn(row)} input`;
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
@@ -96,15 +96,18 @@ class Suppliers extends BOBasePage {
    * Delete Row in table
    * @param page
    * @param row, row to delete
-   * @returns {Promise<string>}
+   * @return {Promise<string>}
    */
   async deleteSupplier(page, row = 1) {
-    this.dialogListener(page, true);
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+    await Promise.all([
+      page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteSuppliers(page);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -112,10 +115,18 @@ class Suppliers extends BOBasePage {
    * Get toggle column value for a row
    * @param page
    * @param row
-   * @returns {Promise<boolean>}
+   * @return {Promise<boolean>}
    */
   async getStatus(page, row = 1) {
-    return this.elementVisible(page, this.enableColumnValidIcon(row), 100);
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.statusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -126,9 +137,8 @@ class Suppliers extends BOBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async setStatus(page, row = 1, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.enableColumn(row), 2000);
     if (await this.getStatus(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.enableColumn(row));
+      await this.clickAndWaitForNavigation(page, this.statusColumn(row));
       return true;
     }
 
@@ -140,7 +150,7 @@ class Suppliers extends BOBasePage {
    * @param page
    * @param row, row in table
    * @param column, which column
-   * @returns {Promise<string>}
+   * @return {Promise<string>}
    */
   async getTextColumnFromTableSupplier(page, row, column) {
     return this.getTextContent(page, this.tableColumn(row, column));
@@ -161,7 +171,7 @@ class Suppliers extends BOBasePage {
   /**
    * Get number of elements in grid
    * @param page
-   * @returns {Promise<number>}
+   * @return {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
     return this.getNumberFromText(page, this.gridHeaderTitle);
@@ -216,7 +226,7 @@ class Suppliers extends BOBasePage {
    * Enable / disable Suppliers by Bulk Actions
    * @param page
    * @param enable
-   * @returns {Promise<string>}
+   * @return {Promise<string>}
    */
   async bulkSetStatus(page, enable = true) {
     // Click on Select All
@@ -237,7 +247,7 @@ class Suppliers extends BOBasePage {
   /**
    * Delete with bulk actions
    * @param page
-   * @returns {Promise<string>}
+   * @return {Promise<string>}
    */
   async deleteWithBulkActions(page) {
     // Click on Select All
@@ -255,9 +265,19 @@ class Suppliers extends BOBasePage {
       page.click(this.bulkActionsDeleteButton),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.confirmDeleteSuppliers(page);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
+
+  /**
+   * Confirm delete with modal
+   * @param page
+   * @return {Promise<void>}
+   */
+  async confirmDeleteSuppliers(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+  }
+
 
   // Sort methods
   /**
@@ -269,13 +289,16 @@ class Suppliers extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       let rowContent = await this.getTextContent(page, this.tableColumn(i, column));
+
       if (column === 'active') {
         rowContent = await this.getStatus(page, i).toString();
       }
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 

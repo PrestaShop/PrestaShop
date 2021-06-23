@@ -163,7 +163,7 @@ describe('Filter and quick edit countries', async () => {
     });
   });
 
-  describe('Quick edit country', async () => {
+  describe('Quick edit zone', async () => {
     it('should filter by name \'Germany\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
@@ -188,7 +188,7 @@ describe('Filter and quick edit countries', async () => {
 
     statuses.forEach((status) => {
       it(`should ${status.args.status} the first country`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}Country`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}Zone`, baseContext);
 
         await countriesPage.setCountryStatus(
           page,

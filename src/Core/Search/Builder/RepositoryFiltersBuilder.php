@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Search\Builder;
 
 use PrestaShop\PrestaShop\Core\Search\Filters;
-use PrestaShopBundle\Entity\AdminFilter;
 
 /**
  * This builder is able to get the employee saved filter:
@@ -42,6 +41,10 @@ final class RepositoryFiltersBuilder extends AbstractRepositoryFiltersBuilder
     public function buildFilters(Filters $filters = null)
     {
         if (!$this->employeeProvider->getId() || !$this->shopId) {
+            return $filters;
+        }
+
+        if (null !== $filters && !$filters->needsToBePersisted()) {
             return $filters;
         }
 
@@ -69,14 +72,12 @@ final class RepositoryFiltersBuilder extends AbstractRepositoryFiltersBuilder
         }
 
         if (!empty($filterId)) {
-            /** @var AdminFilter $adminFilter */
             $adminFilter = $this->adminFilterRepository->findByEmployeeAndFilterId(
                 $this->employeeProvider->getId(),
                 $this->shopId,
                 $filterId
             );
         } else {
-            /** @var AdminFilter $adminFilter */
             $adminFilter = $this->adminFilterRepository->findByEmployeeAndRouteParams(
                 $this->employeeProvider->getId(),
                 $this->shopId,

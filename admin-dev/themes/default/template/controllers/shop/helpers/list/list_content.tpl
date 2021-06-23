@@ -36,7 +36,7 @@
 {block name="td_content"}
 	{if $key == 'url'}
 		{if isset($tr.$key)}
-			<a href="{$tr.$key}" onmouseover="$(this).css('text-decoration', 'underline')" onmouseout="$(this).css('text-decoration', 'none')" class="_blank">{$tr.$key}</a>
+			<a href="{$tr.$key}" onmouseover="$(this).css('text-decoration', 'underline')" onmouseout="$(this).css('text-decoration', 'none')" target="_blank" rel="noopener noreferrer nofollow">{$tr.$key}</a>
 		{else}
 			<a href="{$link->getAdminLink('AdminShopUrl', true, [], ['addshop_url' => 1, 'shop_id' => $tr.$identifier|intval])|escape:'html':'UTF-8'}" class="multishop_warning">{l s='Click here to set a URL for this shop.' d='Admin.Shopparameters.Notification'}</a>
 		{/if}

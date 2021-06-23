@@ -460,7 +460,7 @@ class CategoriesProviderTest extends TestCase
     private function mockModule(string $moduleName, string $tab = null, string $categoryName = null)
     {
         $mock = $this->getMockBuilder(Module::class)
-              ->getMock();
+            ->getMock();
         $mock->attributes->set('name', $moduleName);
 
         if ($tab !== null) {

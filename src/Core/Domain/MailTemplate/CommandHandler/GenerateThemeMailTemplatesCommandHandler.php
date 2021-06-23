@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
@@ -89,7 +88,6 @@ class GenerateThemeMailTemplatesCommandHandler implements GenerateThemeMailTempl
      */
     public function handle(GenerateThemeMailTemplatesCommand $command)
     {
-        /** @var LanguageInterface $language */
         $language = $this->languageRepository->getOneByLocaleOrIsoCode($command->getLanguage());
         if (null === $language) {
             throw new InvalidArgumentException(sprintf('Could not find Language for locale: %s', $command->getLanguage()));

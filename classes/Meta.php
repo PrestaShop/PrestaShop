@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use Symfony\Component\HttpFoundation\IpUtils;
 
 /**
  * Class MetaCore.
@@ -294,7 +295,7 @@ class MetaCore extends ObjectModel
     public static function getMetaTags($idLang, $pageName, $title = '')
     {
         if (Configuration::get('PS_SHOP_ENABLE')
-            || in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))) {
+            || IpUtils::checkIp(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))) {
             if ($pageName == 'product' && ($idProduct = Tools::getValue('id_product'))) {
                 return Meta::getProductMetas($idProduct, $idLang, $pageName);
             } elseif ($pageName == 'category' && ($idCategory = Tools::getValue('id_category'))) {

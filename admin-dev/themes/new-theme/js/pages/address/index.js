@@ -34,7 +34,7 @@ import SubmitRowActionExtension from '@components/grid/extension/action/row/subm
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import ChoiceTable from '@components/choice-table';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const addressGrid = new Grid('address');

@@ -23,15 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{{
-  renderhook(
-    'displayAdminGridTableBefore',
-    {
-      'grid': grid,
-      'legacy_controller': app.request.attributes.get('_legacy_controller'),
-      'controller': app.request.attributes.get('_controller')
-    }
-  )
+{{ renderhook('displayAdminGridTableBefore', {
+    'grid': grid,
+    'legacy_controller': app.request.attributes.get('_legacy_controller'),
+    'controller': app.request.attributes.get('_controller')
+  })
 }}
 
 {{ form_start(grid.filter_form, {'attr': {'id': grid.id ~ '_filter_form', 'class': 'table-responsive'}}) }}
@@ -43,7 +39,9 @@
   <thead class="thead-default">
   {% block grid_table_head %}
     {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/headers_row.html.twig', {'grid': grid}) }}
-    {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/filters_row.html.twig', {'grid': grid}) }}
+    {% if grid.actions.bulk|length > 0 or grid.filter_form|length > 1 %}
+      {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/filters_row.html.twig', {'grid': grid}) }}
+    {% endif %}
   {% endblock %}
   </thead>
   <tbody>
@@ -65,15 +63,12 @@
   </tbody>
   {% block grid_table_footer %}{% endblock %}
 </table>
+
 {{ form_end(grid.filter_form) }}
 
-{{
-  renderhook(
-    'displayAdminGridTableAfter',
-    {
+{{ renderhook('displayAdminGridTableAfter', {
       'grid': grid,
       'legacy_controller': app.request.attributes.get('_legacy_controller'),
       'controller': app.request.attributes.get('_controller')
-    }
-  )
+    })
 }}

@@ -23,7 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+import ConfirmModal from '@components/modal';
+
+const {$} = window;
 
 /**
  * Class SubmitRowActionExtension handles submitting of row action
@@ -39,29 +41,63 @@ export default class SubmitRowActionExtension {
       event.preventDefault();
 
       const $button = $(event.currentTarget);
-      const confirmMessage = $button.data('confirm-message');
-
-      if (confirmMessage.length && !confirm(confirmMessage)) {
-        return;
-      }
+      const confirmMessage = $button.data('confirmMessage');
+      const confirmTitle = $button.data('title');
 
       const method = $button.data('method');
-      const isGetOrPostMethod = ['GET', 'POST'].includes(method);
 
-      const $form = $('<form>', {
-        'action': $button.data('url'),
-        'method': isGetOrPostMethod ? method : 'POST',
-      }).appendTo('body');
+      if (confirmTitle) {
+        this.showConfirmModal($button, grid, confirmMessage, confirmTitle, method);
+      } else {
+        if (confirmMessage.length && !window.confirm(confirmMessage)) {
+          return;
+        }
 
-      if (!isGetOrPostMethod) {
-        $form.append($('<input>', {
-          'type': '_hidden',
-          'name': '_method',
-          'value': method
-        }));
+        this.postForm($button, method);
       }
-
-      $form.submit();
     });
+  }
+
+  postForm($button, method) {
+    const isGetOrPostMethod = ['GET', 'POST'].includes(method);
+
+    const $form = $('<form>', {
+      action: $button.data('url'),
+      method: isGetOrPostMethod ? method : 'POST',
+    }).appendTo('body');
+
+    if (!isGetOrPostMethod) {
+      $form.append($('<input>', {
+        type: '_hidden',
+        name: '_method',
+        value: method,
+      }));
+    }
+
+    $form.submit();
+  }
+
+  /**
+   * @param {jQuery} $submitBtn
+   * @param {Grid} grid
+   * @param {string} confirmMessage
+   * @param {string} confirmTitle
+   * @param {string} method
+   */
+  showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle, method) {
+    const confirmButtonLabel = $submitBtn.data('confirmButtonLabel');
+    const closeButtonLabel = $submitBtn.data('closeButtonLabel');
+    const confirmButtonClass = $submitBtn.data('confirmButtonClass');
+
+    const modal = new ConfirmModal({
+      id: `${grid.getId()}-grid-confirm-modal`,
+      confirmTitle,
+      confirmMessage,
+      confirmButtonLabel,
+      closeButtonLabel,
+      confirmButtonClass,
+    }, () => this.postForm($submitBtn, method));
+
+    modal.show();
   }
 }

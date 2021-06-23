@@ -536,7 +536,11 @@ class OrderProductQuantityUpdater
     {
         //check if product is available in stock
         if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
-            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($orderDetail->product_id, $orderDetail->product_attribute_id);
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct(
+                $orderDetail->product_id,
+                $orderDetail->product_attribute_id,
+                $orderDetail->id_shop
+            );
             $quantityDiff = $newQuantity - (int) $orderDetail->product_quantity;
 
             if ($quantityDiff > $availableQuantity) {

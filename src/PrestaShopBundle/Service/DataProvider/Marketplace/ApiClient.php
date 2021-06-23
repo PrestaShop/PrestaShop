@@ -27,10 +27,18 @@
 namespace PrestaShopBundle\Service\DataProvider\Marketplace;
 
 use GuzzleHttp\Client;
+use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 
 class ApiClient
 {
+    /**
+     * @var Client
+     */
     private $addonsApiClient;
+
+    /**
+     * @var array<string, string>
+     */
     private $queryParameters = [
         'format' => 'json',
     ];
@@ -191,13 +199,15 @@ class ApiClient
      * Call API for module ZIP content (= download).
      *
      * @param int $moduleId
+     * @param string $moduleChannel
      *
      * @return string binary content (zip format)
      */
-    public function getModuleZip($moduleId)
+    public function getModuleZip($moduleId, string $moduleChannel = AddonsDataProvider::ADDONS_API_MODULE_CHANNEL_STABLE)
     {
         return $this->setMethod('module')
             ->setModuleId($moduleId)
+            ->setModuleChannel($moduleChannel)
             ->getPostResponse();
     }
 
@@ -235,7 +245,7 @@ class ApiClient
             return $responseDecoded->themes;
         }
 
-        return [];
+        return new \stdClass();
     }
 
     public function getResponse()
@@ -298,6 +308,18 @@ class ApiClient
         return $this;
     }
 
+    /**
+     * @param string $moduleChannel
+     *
+     * @return self
+     */
+    public function setModuleChannel(string $moduleChannel): self
+    {
+        $this->queryParameters['channel'] = $moduleChannel;
+
+        return $this;
+    }
+
     public function setModuleId($moduleId)
     {
         $this->queryParameters['id_module'] = $moduleId;
@@ -340,7 +362,11 @@ class ApiClient
         return $this;
     }
 
-    /*
-     * END OF REQUEST PARAMETER SETTERS.
+    /**
+     * @return array<string, string>
      */
+    public function getQueryParameters(): array
+    {
+        return $this->queryParameters;
+    }
 }

@@ -24,8 +24,7 @@
  *#}
 
 {% trans_default_domain "Admin.Advparameters.Feature" %}
-
-{% set webserviceConfigurationForm = form.webservice_configuration %}
+{% form_theme webserviceConfigurationForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block webservice_form_configuration %}
   <div class="card">
@@ -35,39 +34,7 @@
 
     <div class="card-block row">
       <div class="card-text">
-        <div class="form-group row">
-          <label class="form-control-label">{{ 'Enable PrestaShop\'s webservice'|trans }}</label>
-
-          <div class="col-sm">
-            {{ form_errors(webserviceConfigurationForm.enable_webservice) }}
-            {{ form_widget(webserviceConfigurationForm.enable_webservice) }}
-
-            <small class="form-text">
-              {{ 'Before activating the webservice, you must be sure to: '|trans({}, 'Admin.Advparameters.Help') }}
-              <br/>
-              1. {{ 'Check that URL rewriting is available on this server.'|trans({}, 'Admin.Advparameters.Help') }}
-              <br/>
-              2. {{ 'Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.'|trans({}, 'Admin.Advparameters.Help') }}
-            </small>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label class="form-control-label">{{ 'Enable CGI mode for PHP'|trans }}</label>
-
-          <div class="col-sm">
-            {{ form_errors(webserviceConfigurationForm.enable_cgi) }}
-            {{ form_widget(webserviceConfigurationForm.enable_cgi) }}
-
-            <small class="form-text">
-              {{ 'Before choosing "Yes", check that PHP is not configured as an Apache module on your server.'|trans({}, 'Admin.Advparameters.Help') }}
-            </small>
-          </div>
-        </div>
-
-        {% block webservice_configuration_form_rest %}
-          {{ form_rest(webserviceConfigurationForm) }}
-        {% endblock %}
+        {{ form_widget(webserviceConfigurationForm) }}
       </div>
     </div>
     <div class="card-footer">

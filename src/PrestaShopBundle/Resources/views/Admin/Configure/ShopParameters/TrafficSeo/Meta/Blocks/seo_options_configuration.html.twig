@@ -24,7 +24,7 @@
  *#}
 
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme seoOptionsForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block seo_options_configuration %}
   <div class="card">
@@ -33,23 +33,14 @@
     </h3>
     <div class="card-block row">
       <div class="card-text">
-
-        <div class="form-group row">
-          {{ ps.label_with_help(('Display attributes in the product meta title'|trans), ('Enable this option if you want to display your product\'s attributes in its meta title.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-          <div class="col-sm">
-            {{ form_errors(metaForm.seo_options.product_attributes_in_title) }}
-            {{ form_widget(metaForm.seo_options.product_attributes_in_title) }}
-          </div>
-        </div>
-
-        {% block meta_form_rest %}
-          {{ form_rest(metaForm.seo_options) }}
-        {% endblock %}
+        {{ form_widget(seoOptionsForm) }}
       </div>
     </div>
     <div class="card-footer">
       <div class="d-flex justify-content-end">
-        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        <button class="btn btn-primary" id="meta_settings_seo_options_form_save_button">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
       </div>
     </div>
   </div>

@@ -133,3 +133,14 @@ services:
 
     prestashop.core.api.improve.design.postions.controller:
         alias:  PrestaShopBundle\Controller\Api\Improve\Design\PositionsController
+
+    prestashop.core.admin.multistore:
+        class: PrestaShopBundle\Controller\Admin\MultistoreController
+        parent: PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController
+        public: true
+        properties:
+            multistoreFeature: "@prestashop.adapter.multistore_feature"
+            multistoreContext: "@prestashop.adapter.shop.context"
+            entityManager: "@doctrine.orm.entity_manager"
+        tags:
+            - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }

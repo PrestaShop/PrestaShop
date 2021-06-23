@@ -29,14 +29,20 @@
         <div class="thumb-mask">
           <div class="mask">
             <a href="{$product.url}" title="{$product.name}">
-              {if $product.default_image}
+              {if !empty($product.default_image.medium)}
                 <img
-                  src="{$product.default_image.medium.url}"
-                  alt="{$product.default_image.legend}"
-                  data-full-size-image-url="{$product.default_image.large.url}"
+                        src="{$product.default_image.medium.url}"
+                        {if !empty($product.default_image.legend)}
+                          alt="{$product.default_image.legend}"
+                          title="{$product.default_image.legend}"
+                        {else}
+                          alt="{$product.name}"
+                        {/if}
+                        loading="lazy"
+                        data-full-size-image-url="{$product.default_image.large.url}"
                 >
               {else}
-                <img src="{$urls.no_picture_image.bySize.cart_default.url}" />
+                <img src="{$urls.no_picture_image.bySize.medium_default.url}" loading="lazy" />
               {/if}
             </a>
           </div>

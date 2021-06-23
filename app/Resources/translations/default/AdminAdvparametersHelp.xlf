@@ -24,22 +24,22 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="c127560c7252928dc38d9a0ebf312ba4">
         <source>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</source>
         <target>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</target>
-        <note>Line: 600</note>
+        <note>Line: 592</note>
       </trans-unit>
       <trans-unit id="41ff4b3ea277bdc597fce74850a85510">
         <source>Click here to display the shops in the %name% shop group</source>
         <target>Click here to display the shops in the %name% shop group</target>
-        <note>Line: 778</note>
+        <note>Line: 784</note>
       </trans-unit>
       <trans-unit id="d916f5b0696f10712fad55220707fab9">
         <source>Click here to display the URLs of the %name% shop</source>
         <target>Click here to display the URLs of the %name% shop</target>
-        <note>Line: 800</note>
+        <note>Line: 806</note>
       </trans-unit>
       <trans-unit id="01af4d9c4808ce3ccd662c0e5ef7f203">
         <source>Click here to display the list of shop groups</source>
         <target>Click here to display the list of shop groups</target>
-        <note>Line: 852</note>
+        <note>Line: 858</note>
       </trans-unit>
     </body>
   </file>
@@ -53,27 +53,27 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="ee5d0efc6b5d41f7ee2ac5ea831f2a7f">
         <source>Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.</source>
         <target>Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.</target>
-        <note>Line: 208</note>
+        <note>Line: 217</note>
       </trans-unit>
       <trans-unit id="dace58c348a19d7bddb7a3fe4fd3ebfa">
         <source>Warning: you will not be able to disable this option once you have registered customers.</source>
         <target>Warning: you will not be able to disable this option once you have registered customers.</target>
-        <note>Line: 208</note>
+        <note>Line: 217</note>
       </trans-unit>
       <trans-unit id="059a6f0b1a0a28d15ee51fe80670f6f2">
         <source>Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer's cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.</source>
         <target>Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer's cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.</target>
-        <note>Line: 247</note>
+        <note>Line: 256</note>
       </trans-unit>
       <trans-unit id="697ce708715d1f771177623968e8c6a4">
         <source>Warning: You will not be able to disable this option once you've started to accept orders.</source>
         <target>Warning: You will not be able to disable this option once you've started to accept orders.</target>
-        <note>Line: 247</note>
+        <note>Line: 256</note>
       </trans-unit>
       <trans-unit id="e667b16af30e0820218ad32242e284dc">
         <source>Enable or disable this shop group?</source>
         <target>Enable or disable this shop group?</target>
-        <note>Line: 266</note>
+        <note>Line: 275</note>
       </trans-unit>
     </body>
   </file>
@@ -233,6 +233,187 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="99059a2047f475cdc6428076e3360134">
+        <source>New modules and updates are displayed on the modules page.</source>
+        <target>New modules and updates are displayed on the modules page.</target>
+        <note>Line: 78</note>
+      </trans-unit>
+      <trans-unit id="0f81567617bb8ebc23f48e74d8ae8acf">
+        <source>Check the IP address of the cookie in order to prevent your cookie from being stolen.</source>
+        <target>Check the IP address of the cookie in order to prevent your cookie from being stolen.</target>
+        <note>Line: 86</note>
+      </trans-unit>
+      <trans-unit id="20d6b6498eab9f749d55c9b53151e00a">
+        <source>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</source>
+        <target>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</target>
+        <note>Line: 90</note>
+      </trans-unit>
+      <trans-unit id="b67a6169f1139b421eabe8278277b0ae">
+        <source>When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.</source>
+        <target>When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.</target>
+        <note>Line: 94</note>
+      </trans-unit>
+      <trans-unit id="08319380906c95a9d06d789bf8edaf5a">
+        <source>Choose a stability level for the modules downloaded from the Addons Marketplace. All zips pushed on Addons are in stable state unless stated otherwise.</source>
+        <target>Choose a stability level for the modules downloaded from the Addons Marketplace. All zips pushed on Addons are in stable state unless stated otherwise.</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="c8d06889e023d3130c1bf60009d5417b">
+        <source>Allows you to declare if your cookie should be restricted to a first-party or same-site context.</source>
+        <target>Allows you to declare if your cookie should be restricted to a first-party or same-site context.</target>
+        <note>Line: 98</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dae623d110235f2837ca0a6e753305b8">
+        <source>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
+        <target>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
+        <note>Line: 90</note>
+      </trans-unit>
+      <trans-unit id="2a59c5a630e01a9a88e9bcb2863fd69f">
+        <source>Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
+        <target>Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
+        <note>Line: 122</note>
+      </trans-unit>
+      <trans-unit id="eb191ef572b6d5c4e7a86734ba10fb5e">
+        <source>Set the maximum size allowed for attachment files (in megabytes). This value has to be lower than or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
+        <target>Set the maximum size allowed for attachment files (in megabytes). This value has to be lower than or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
+        <note>Line: 58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Backup/BackupOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1589ac76f2f88749f51028f09b23f9d4">
+        <source>Drop existing tables during import.</source>
+        <target>Drop existing tables during import.</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="a1e749fdff79ab0d40843bacb8fe0de2">
+        <source>If enabled, the backup script will drop your tables prior to restoring data. (ie. "DROP TABLE IF EXISTS")</source>
+        <target>If enabled, the backup script will drop your tables prior to restoring data. (ie. "DROP TABLE IF EXISTS")</target>
+        <note>Line: 79</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/EmailConfigurationType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e6f52e23510fd010aa5460c96fd67142">
+        <source>Where customers send messages from the order page.</source>
+        <target>Where customers send messages from the order page.</target>
+        <note>Line: 78</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/SmtpConfigurationType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a60bc065c0296646c5a07e55c0cfff6e">
+        <source>Fully qualified domain name (keep this field empty if you don't know).</source>
+        <target>Fully qualified domain name (keep this field empty if you don't know).</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="2a3c280f73a3389c6ba4b2d87c8aa15f">
+        <source>IP address or server name (e.g. smtp.mydomain.com).</source>
+        <target>IP address or server name (e.g. smtp.mydomain.com).</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="a5d35e0a66d41c7d12c0df6e643fa0ff">
+        <source>Leave blank if not applicable.</source>
+        <target>Leave blank if not applicable.</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="5b8df4265c79cd43831e740281850c84">
+        <source>SSL does not seem to be available on your server.</source>
+        <target>SSL does not seem to be available on your server.</target>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="762160912d2bac8eb64bc00b711d6f6c">
+        <source>Port number to use.</source>
+        <target>Port number to use.</target>
+        <note>Line: 82</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1d3be023802846145f9b75fc90b4cf21">
+        <source>If enabled, the product's reference number MUST be unique!</source>
+        <target>If enabled, the product's reference number MUST be unique!</target>
+        <note>Line: 107</note>
+      </trans-unit>
+      <trans-unit id="45af6698125d6f9be9517cd8879d0285">
+        <source>e.g. 1; Blouse; 129.90; 5</source>
+        <target>e.g. 1; Blouse; 129.90; 5</target>
+        <note>Line: 83</note>
+      </trans-unit>
+      <trans-unit id="7d97fc4385e615ed69cc4e1613790123">
+        <source>e.g. Blouse; red.jpg, blue.jpg, green.jpg; 129.90 </source>
+        <target>e.g. Blouse; red.jpg, blue.jpg, green.jpg; 129.90</target>
+        <note>Line: 87</note>
+      </trans-unit>
+      <trans-unit id="193ec293f59bd6bafda920d87cb07212">
+        <source>Enable this option to keep your imported items’ ID number as is. Otherwise, PrestaShop will ignore them and create auto-incremented ID numbers.</source>
+        <target>Enable this option to keep your imported items’ ID number as is. Otherwise, PrestaShop will ignore them and create auto-incremented ID numbers.</target>
+        <note>Line: 120</note>
+      </trans-unit>
+      <trans-unit id="4719ac638ec9a37d72c81b550b911945">
+        <source>Receive an email when the import is complete. It can be useful when handling large files, as the import may take some time.</source>
+        <target>Receive an email when the import is complete. It can be useful when handling large files, as the import may take some time.</target>
+        <note>Line: 124</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Logs/LogsByEmailType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7dda1e48a0dcceda4b3e9ce35271cc2c">
+        <source>Click on "None" to disable log alerts by email or enter the recipients of these emails in the following field.</source>
+        <target>Click on "None" to disable log alerts by email or enter the recipients of these emails in the following field.</target>
+        <note>Line: 56</note>
+      </trans-unit>
+      <trans-unit id="f88eb52dea2a0d6eb6d90304a91be4a0">
+        <source>Log alerts will be sent to these emails. Please use a comma to separate them (e.g. pub@prestashop.com, anonymous@psgdpr.com).</source>
+        <target>Log alerts will be sent to these emails. Please use a comma to separate them (e.g. pub@prestashop.com, anonymous@psgdpr.com).</target>
+        <note>Line: 66</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Webservice/WebserviceConfigurationType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e8602bda90ef985a71054950e6f1981e">
+        <source>Before activating the webservice, you must be sure to: </source>
+        <target>Before activating the webservice, you must be sure to:</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="45d7b1d28cb1afbb45fdb620db725c10">
+        <source>Check that URL rewriting is available on this server.</source>
+        <target>Check that URL rewriting is available on this server.</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="60da463f081084680c973ec554a995bb">
+        <source>Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.</source>
+        <target>Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="c03f07bc287e77654a26af409b4d93fa">
+        <source>Before choosing "Yes", check that PHP is not configured as an Apache module on your server.</source>
+        <target>Before choosing "Yes", check that PHP is not configured as an Apache module on your server.</target>
+        <note>Line: 74</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Webservice/WebserviceKeyType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a5cb039db72d4c240b6cca34b48d61bc">
+        <source>Quick description of the key: who it is for, what permissions it has, etc.</source>
+        <target>Quick description of the key: who it is for, what permissions it has, etc.</target>
+        <note>Line: 109</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Common/Grid/Columns/Content/severity_level.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b80c52e7f679fba3c2837b42705fe779">
@@ -333,11 +514,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Backup/Blocks/options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1589ac76f2f88749f51028f09b23f9d4">
-        <source>Drop existing tables during import.</source>
-        <target>Drop existing tables during import.</target>
-        <note>Line: 44</note>
-      </trans-unit>
       <trans-unit id="b07ccf1ffff29007509d45dbcc13f923">
         <source>If enabled, the backup script will drop your tables prior to restoring data.</source>
         <target>If enabled, the backup script will drop your tables prior to restoring data.</target>
@@ -355,7 +531,7 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="084ad8abffc138f8d43f0a77824396b9">
         <source>You can read information on import at:</source>
         <target>You can read information on import at:</target>
-        <note>Line: 37</note>
+        <note>Line: 38</note>
       </trans-unit>
       <trans-unit id="4e7357d876d6d15fe084be41934e6555">
         <source>http://doc.prestashop.com/display/PS17/Import</source>
@@ -365,32 +541,27 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="9d23c31f2dcc1ace9296037f327563a4">
         <source>https://en.wikipedia.org/wiki/Comma-separated_values</source>
         <target>https://en.wikipedia.org/wiki/Comma-separated_values</target>
-        <note>Line: 45</note>
+        <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="a27780d9bb7b3595998465aadcaaeed7">
         <source>Allowed formats: .csv, .xls, .xlsx, .xlst, .ods, .ots</source>
         <target>Allowed formats: .csv, .xls, .xlsx, .xlst, .ods, .ots</target>
-        <note>Line: 90</note>
+        <note>Line: 89</note>
       </trans-unit>
       <trans-unit id="c9f7248e8f5712f5438def77389e1c46">
         <source>Only UTF-8 and ISO 8859-1 encodings are allowed</source>
         <target>Only UTF-8 and ISO 8859-1 encodings are allowed</target>
-        <note>Line: 91</note>
+        <note>Line: 90</note>
       </trans-unit>
       <trans-unit id="6578c8c9a3dbadb0a3672c3ca6c0b513">
         <source>You can also upload your file via FTP to the following directory: %s .</source>
         <target>You can also upload your file via FTP to the following directory: %s .</target>
-        <note>Line: 92</note>
+        <note>Line: 91</note>
       </trans-unit>
       <trans-unit id="b070d64c5a2f10b4b8eb361ba4f61833">
         <source>e.g. </source>
         <target>e.g.</target>
         <note>Line: 134</note>
-      </trans-unit>
-      <trans-unit id="1d3be023802846145f9b75fc90b4cf21">
-        <source>If enabled, the product's reference number MUST be unique!</source>
-        <target>If enabled, the product's reference number MUST be unique!</target>
-        <note>Line: 148</note>
       </trans-unit>
       <trans-unit id="f66963da2d51d637afa80ff8edf8d734">
         <source>If you enable this option, your imported items' ID number will be used as is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.</source>
@@ -405,40 +576,12 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="3bb4a695db0c87a3d70a2deffddeb743">
         <source>Read more about the CSV format at:</source>
         <target>Read more about the CSV format at:</target>
-        <note>Line: 43</note>
+        <note>Line: 44</note>
       </trans-unit>
       <trans-unit id="de7b4d4ecc0e454c441f08058fdac203">
         <source>https://doc.prestashop.com/display/PS17/Import</source>
         <target>https://doc.prestashop.com/display/PS17/Import</target>
-        <note>Line: 39</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Email/Blocks/email_configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e6f52e23510fd010aa5460c96fd67142">
-        <source>Where customers send messages from the order page.</source>
-        <target>Where customers send messages from the order page.</target>
-        <note>Line: 41</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Email/Blocks/smtp_configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a60bc065c0296646c5a07e55c0cfff6e">
-        <source>Fully qualified domain name (keep this field empty if you don't know).</source>
-        <target>Fully qualified domain name (keep this field empty if you don't know).</target>
-        <note>Line: 37</note>
-      </trans-unit>
-      <trans-unit id="2a3c280f73a3389c6ba4b2d87c8aa15f">
-        <source>IP address or server name (e.g. smtp.mydomain.com).</source>
-        <target>IP address or server name (e.g. smtp.mydomain.com).</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="a5d35e0a66d41c7d12c0df6e643fa0ff">
-        <source>Leave blank if not applicable.</source>
-        <target>Leave blank if not applicable.</target>
-        <note>Line: 61</note>
+        <note>Line: 40</note>
       </trans-unit>
     </body>
   </file>
@@ -452,7 +595,7 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="d222c4d0463bd3f146536ac89c0d7c77">
         <source>Password should be at least %num% characters long.</source>
         <target>Password should be at least %num% characters long.</target>
-        <note>Line: 80</note>
+        <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="0b2827832fff3d973ee0ed2e6c7d4b23">
         <source>PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.</source>
@@ -462,17 +605,17 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="c4e326fcaa83c6b1ca3856175bb86d2e">
         <source>This page will be displayed just after login.</source>
         <target>This page will be displayed just after login.</target>
-        <note>Line: 206</note>
+        <note>Line: 223</note>
       </trans-unit>
       <trans-unit id="d970370797ba19bba5524b480d3526fb">
         <source>Allow or disallow this employee to log in to the Admin panel.</source>
         <target>Allow or disallow this employee to log in to the Admin panel.</target>
-        <note>Line: 216</note>
+        <note>Line: 201</note>
       </trans-unit>
       <trans-unit id="1a7f0b984884e66e95a86b9b5d857b5b">
         <source>Select the shops the employee is allowed to access.</source>
         <target>Select the shops the employee is allowed to access.</target>
-        <note>Line: 231</note>
+        <note>Line: 216</note>
       </trans-unit>
     </body>
   </file>
@@ -548,56 +691,8 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Webservice/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a5cb039db72d4c240b6cca34b48d61bc">
-        <source>Quick description of the key: who it is for, what permissions it has, etc.</source>
-        <target>Quick description of the key: who it is for, what permissions it has, etc.</target>
-        <note>Line: 45</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Webservice/webservice_settings.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e8602bda90ef985a71054950e6f1981e">
-        <source>Before activating the webservice, you must be sure to: </source>
-        <target>Before activating the webservice, you must be sure to:</target>
-        <note>Line: 46</note>
-      </trans-unit>
-      <trans-unit id="45d7b1d28cb1afbb45fdb620db725c10">
-        <source>Check that URL rewriting is available on this server.</source>
-        <target>Check that URL rewriting is available on this server.</target>
-        <note>Line: 48</note>
-      </trans-unit>
-      <trans-unit id="60da463f081084680c973ec554a995bb">
-        <source>Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.</source>
-        <target>Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.</target>
-        <note>Line: 50</note>
-      </trans-unit>
-      <trans-unit id="c03f07bc287e77654a26af409b4d93fa">
-        <source>Before choosing "Yes", check that PHP is not configured as an Apache module on your server.</source>
-        <target>Before choosing "Yes", check that PHP is not configured as an Apache module on your server.</target>
-        <note>Line: 63</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="99059a2047f475cdc6428076e3360134">
-        <source>New modules and updates are displayed on the modules page.</source>
-        <target>New modules and updates are displayed on the modules page.</target>
-        <note>Line: 43</note>
-      </trans-unit>
-      <trans-unit id="0f81567617bb8ebc23f48e74d8ae8acf">
-        <source>Check the IP address of the cookie in order to prevent your cookie from being stolen.</source>
-        <target>Check the IP address of the cookie in order to prevent your cookie from being stolen.</target>
-        <note>Line: 50</note>
-      </trans-unit>
-      <trans-unit id="20d6b6498eab9f749d55c9b53151e00a">
-        <source>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</source>
-        <target>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</target>
-        <note>Line: 57</note>
-      </trans-unit>
       <trans-unit id="a676520f8296be0319ad6268657471ea">
         <source>Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.</source>
         <target>Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.</target>
@@ -608,20 +703,10 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <target>Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
         <note>Line: 91</note>
       </trans-unit>
-      <trans-unit id="dae623d110235f2837ca0a6e753305b8">
-        <source>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
-        <target>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
-        <note>Line: 98</note>
-      </trans-unit>
-      <trans-unit id="2a59c5a630e01a9a88e9bcb2863fd69f">
-        <source>Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
-        <target>Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
-        <note>Line: 105</note>
-      </trans-unit>
       <trans-unit id="2566fed9ede40ae26636b773594094cf">
         <source>Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop's name. They display the number of new items since you last clicked on them.</source>
         <target>Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop's name. They display the number of new items since you last clicked on them.</target>
-        <note>Line: 134</note>
+        <note>Line: 89</note>
       </trans-unit>
       <trans-unit id="e0853b619fbd24fdabc3ae78beb81193">
         <source>This will display notifications when new orders are made in your shop.</source>
@@ -638,11 +723,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <target>This will display notifications when new messages are posted in your shop.</target>
         <note>Line: 153</note>
       </trans-unit>
-      <trans-unit id="b67a6169f1139b421eabe8278277b0ae">
-        <source>When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.</source>
-        <target>When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.</target>
-        <note>Line: 64</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -650,12 +730,26 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="bb3656a5447418f8f2644f3ac91b5c6f">
         <source>Some features can be disabled in order to improve performance.</source>
         <target>Some features can be disabled in order to improve performance.</target>
-        <note>Line: 93</note>
+        <note>Line: 103</note>
       </trans-unit>
       <trans-unit id="ecffc19cb5ada347980c0fd06ca337f4">
         <source>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.</source>
         <target>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.</target>
         <note>Line: 121</note>
+      </trans-unit>
+      <trans-unit id="460e080fb0af5e1ca93a24dbf1e3da2f">
+        <source>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.7+. Otherwise, CCC will cause problems.</source>
+        <target>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.7+. Otherwise, CCC will cause problems.</target>
+        <note>Line: 141</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/edit.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b5c5b3a0a7208392aaf2c4d23a81879c">
+        <source>This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.</source>
+        <target>This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.</target>
+        <note>Line: 67</note>
       </trans-unit>
     </body>
   </file>

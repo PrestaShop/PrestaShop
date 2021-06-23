@@ -117,7 +117,7 @@ class ImageManagerCore
     /**
      * Check if memory limit is too long or not.
      *
-     * @param mixed $image
+     * @param string $image
      *
      * @return bool
      */

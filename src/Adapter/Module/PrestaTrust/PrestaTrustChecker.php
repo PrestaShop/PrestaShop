@@ -31,6 +31,7 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZip;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
+use stdClass;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
 use ZipArchive;
@@ -45,11 +46,11 @@ class PrestaTrustChecker
      */
     protected $checked_extensions = ['php', 'js', 'css', 'tpl'];
 
-    const SMART_CONTRACT_PATTERN = 'prestatrust-license-verification: ';
-    const CHECKS_ALL_OK = 'Module is authenticated.';
-    const CHECKS_INTEGRITY_NOK = 'Warning, the module has been modified since its purchase from the Addons Marketplace.';
-    const CHECKS_PROPERTY_NOK = 'Warning, the purchase proof is invalid. This license has already been used on another shop.';
-    const CHECKS_ALL_NOK = 'Warning, the module has been modified and its purchase proof is invalid.';
+    public const SMART_CONTRACT_PATTERN = 'prestatrust-license-verification: ';
+    public const CHECKS_ALL_OK = 'Module is authenticated.';
+    public const CHECKS_INTEGRITY_NOK = 'Warning, the module has been modified since its purchase from the Addons Marketplace.';
+    public const CHECKS_PROPERTY_NOK = 'Warning, the purchase proof is invalid. This license has already been used on another shop.';
+    public const CHECKS_ALL_NOK = 'Warning, the module has been modified and its purchase proof is invalid.';
 
     /**
      * @var Cache
@@ -97,7 +98,7 @@ class PrestaTrustChecker
         }
 
         // Merge 2 existing sources of data
-        $details = (object) array_merge((array) $module->get('prestatrust', new \stdClass()), (array) $this->cache->fetch($module->get('name')));
+        $details = (object) array_merge((array) $module->get('prestatrust'), (array) $this->cache->fetch($module->get('name')));
 
         $details->check_list = $this->requestCheck($details->hash, $this->findSmartContrat($module->disk->get('path')));
         $details->status = array_sum($details->check_list) == count($details->check_list); // True if all content is True
@@ -112,14 +113,13 @@ class PrestaTrustChecker
      * or remaining one from another zip.
      * Any module copy pasted in the module folder won't go through this function.
      *
-     * @param string $name Module technical name
-     * @param string $zipFile Module Zip location
+     * @param ModuleZip $zipFile
      */
     public function checkModuleZip(ModuleZip $zipFile)
     {
         // Do we need to check something in order to validate only PrestaTrust related modules?
 
-        $details = new \stdClass();
+        $details = new stdClass();
         $details->hash = $this->calculateHash($zipFile->getSource());
 
         $this->cache->save($zipFile->getName(), $details);

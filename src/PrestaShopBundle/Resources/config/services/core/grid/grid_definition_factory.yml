@@ -13,9 +13,6 @@ services:
     prestashop.core.grid.definition.factory.logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'logs', 'action': 'index'})"
-            - "@=service('router').generate('admin_logs_index')"
         public: true
 
     prestashop.core.grid.definition.factory.email_logs:
@@ -30,9 +27,6 @@ services:
     prestashop.core.grid.definition.factory.request_sql:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\RequestSqlGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'sqlmanager', 'action': 'index'})"
-            - "@=service('router').generate('admin_sql_requests_index')"
         public: true
 
     prestashop.core.grid.definition.factory.backup:
@@ -45,8 +39,6 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.status").getChoices()'
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'webservice', 'action': 'index'})"
-            - "@=service('router').generate('admin_webservice_keys_index')"
         public: true
 
     prestashop.core.grid.definition.factory.meta:
@@ -87,6 +79,18 @@ services:
             - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
             - '@=service("prestashop.adapter.form.choice_provider.gender_by_id_choice_provider").getChoices()'
+        public: true
+
+    prestashop.core.grid.definition.factory.customer.discount:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerDiscountGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.customer.address:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerAddressGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - '@=service("request_stack").getCurrentRequest()'
         public: true
 
     prestashop.core.grid.definition.factory.language:
@@ -198,6 +202,13 @@ services:
             - '@prestashop.core.form.choice_provider.order_state_by_id'
         public: true
 
+    prestashop.core.grid.definition.factory.cart_rule:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartRuleGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+        arguments:
+          - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
+
     prestashop.core.grid.definition.factory.catalog_price_rule:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
@@ -222,7 +233,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - '@=service("request_stack").getCurrentRequest().attributes.getInt("attributeGroupId")'
-            - '@prestashop.core.attribute_group.attribute_group_view_data_provider'
+            - '@prestashop.adapter.product.attribute_group.attribute_group_view_data_provider'
         public: true
 
     prestashop.core.grid.definition.factory.attribute_group:
@@ -251,3 +262,31 @@ services:
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_lite'
         public: true
+
+    prestashop.core.grid.definition.factory.order_states:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
+
+    prestashop.core.grid.definition.factory.order_return_states:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
+
+    prestashop.core.grid.definition.factory.outstanding:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+        public: true
+
+    prestashop.core.grid.definition.factory.carrier:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CarrierGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.zone:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ZoneGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true

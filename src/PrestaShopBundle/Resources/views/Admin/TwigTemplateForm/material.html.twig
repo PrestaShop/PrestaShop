@@ -24,7 +24,7 @@
  *#}
 
 {% block material_choice_tree_widget %}
-<div class="material-choice-tree-container js-choice-tree-container" id="{{ form.vars.id }}">
+  <div class="material-choice-tree-container js-choice-tree-container{% if required %} required{% endif %}" id="{{ form.vars.id }}">
   <div class="choice-tree-actions">
     <span class="form-control-label js-toggle-choice-tree-action"
           data-expanded-text="{{ 'Expand'|trans({}, 'Admin.Actions') }}"
@@ -72,12 +72,12 @@
     <div class="md-checkbox md-checkbox-inline">
       <label>
         <input type="checkbox"
-               {% if choice[choice_value] is not null %}
-                 name="{{ form.vars.full_name }}[]"
-                 value="{{ choice[choice_value] }}"
-                 {% if choice[choice_value] in selected_values %}checked{% endif %}
-               {% endif %}
-               {% if disabled or choice[choice_value] in disabled_values %}disabled{% endif %}
+         {% if choice[choice_value] is not null %}
+           name="{{ form.vars.full_name }}[]"
+           value="{{ choice[choice_value] }}"
+           {% if choice[choice_value] in selected_values %}checked{% endif %}
+         {% endif %}
+         {% if disabled or choice[choice_value] in disabled_values %}disabled{% endif %}
         >
         <i class="md-checkbox-control"></i>
         {{ choice[choice_label] }}
@@ -87,14 +87,16 @@
 {% endblock material_choice_tree_item_checkbox_widget %}
 
 {% block material_choice_tree_item_radio_widget %}
-  <div class="radio js-input-wrapper">
-    <label>
+  <div class="radio js-input-wrapper form-check form-check-radio">
+    <label class="form-check-label">
       <input type="radio"
-             name="{{ form.vars.full_name }}"
-             value="{{ choice[choice_value] }}"
-             {% if choice[choice_value] in selected_values %}checked{% endif %}
-             {% if disabled or choice[choice_value] in disabled_values %}disabled{% endif %}
+       name="{{ form.vars.full_name }}"
+       value="{{ choice[choice_value] }}"
+       {% if choice[choice_value] in selected_values %}checked{% endif %}
+       {% if disabled or choice[choice_value] in disabled_values %}disabled{% endif %}
+       {% if required %}required{% endif %}
       >
+      <i class="form-check-round"></i>
       {{ choice[choice_label] }}
     </label>
   </div>

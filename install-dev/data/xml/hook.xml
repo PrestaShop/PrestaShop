@@ -16,6 +16,16 @@
       <title>Maintenance Page</title>
       <description>This hook displays new elements on the maintenance page</description>
     </hook>
+    <hook id="displayCartModalContent">
+      <name>displayCartModalContent</name>
+      <title>Content of Add-to-cart modal</title>
+      <description>This hook displays content in the middle of the window that appears after adding product to cart</description>
+    </hook>
+    <hook id="displayCartModalFooter">
+      <name>displayCartModalFooter</name>
+      <title>Bottom of Add-to-cart modal</title>
+      <description>This hook displays content in the bottom of window that appears after adding product to cart</description>
+    </hook>
     <hook id="displayProductPageDrawer">
       <name>displayProductPageDrawer</name>
       <title>Product Page Drawer</title>
@@ -96,10 +106,20 @@
       <title>Product update</title>
       <description>This hook is displayed after a product has been updated</description>
     </hook>
+    <hook id="displayAfterTitleTag">
+      <name>displayAfterTitleTag</name>
+      <title>After title tag</title>
+      <description>Use this hook to add content after title tag</description>
+    </hook>
     <hook id="displayAfterBodyOpeningTag">
       <name>displayAfterBodyOpeningTag</name>
       <title>Very top of pages</title>
       <description>Use this hook for advertisement or modals you want to load first</description>
+    </hook>
+    <hook id="displayBanner">
+      <name>displayBanner</name>
+      <title>Very top of pages</title>
+      <description>Use this hook for banners on top of every pages</description>
     </hook>
     <hook id="displayBeforeBodyClosingTag">
       <name>displayBeforeBodyClosingTag</name>
@@ -150,6 +170,16 @@
       <name>actionOrderStatusUpdate</name>
       <title>Order status update - Event</title>
       <description>This hook launches modules when the status of an order changes</description>
+    </hook>
+    <hook id="displayAdminGridTableBefore">
+      <name>displayAdminGridTableBefore</name>
+      <title>Display before Grid table</title>
+      <description>This hook adds new blocks before Grid component table</description>
+    </hook>
+    <hook id="displayAdminGridTableAfter">
+      <name>displayAdminGridTableAfter</name>
+      <title>Display after Grid table</title>
+      <description>This hook adds new blocks after Grid component table</description>
     </hook>
     <hook id="displayAdminOrder">
       <name>displayAdminOrder</name>
@@ -509,6 +539,16 @@
     <hook id="actionModuleInstallAfter">
       <name>actionModuleInstallAfter</name>
       <title>actionModuleInstallAfter</title>
+      <description/>
+    </hook>
+    <hook id="actionModuleUninstallBefore">
+      <name>actionModuleUninstallBefore</name>
+      <title>actionModuleUninstallBefore</title>
+      <description/>
+    </hook>
+    <hook id="actionModuleUninstallAfter">
+      <name>actionModuleUninstallAfter</name>
+      <title>actionModuleUninstallAfter</title>
       <description/>
     </hook>
     <hook id="displayTopColumn">
@@ -1010,508 +1050,402 @@
     <hook id="actionSqlRequestFormBuilderModifier">
       <name>actionSqlRequestFormBuilderModifier</name>
       <title>Modify sql request identifiable object form</title>
-      <description>This hook allows to modify sql request identifiable object forms content by modifying form
-          builder data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify sql request identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionCustomerFormBuilderModifier">
       <name>actionCustomerFormBuilderModifier</name>
       <title>Modify customer identifiable object form</title>
-      <description>This hook allows to modify customer identifiable object forms content by modifying form builder
-          data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify customer identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionLanguageFormBuilderModifier">
       <name>actionLanguageFormBuilderModifier</name>
       <title>Modify language identifiable object form</title>
-      <description>This hook allows to modify language identifiable object forms content by modifying form builder
-          data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify language identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionCurrencyFormBuilderModifier">
       <name>actionCurrencyFormBuilderModifier</name>
       <title>Modify currency identifiable object form</title>
-      <description>This hook allows to modify currency identifiable object forms content by modifying form builder
-          data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify currency identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionWebserviceKeyFormBuilderModifier">
       <name>actionWebserviceKeyFormBuilderModifier</name>
       <title>Modify webservice key identifiable object form</title>
-      <description>This hook allows to modify webservice key identifiable object forms content by modifying form
-          builder data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify webservice key identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionMetaFormBuilderModifier">
       <name>actionMetaFormBuilderModifier</name>
       <title>Modify meta identifiable object form</title>
-      <description>This hook allows to modify meta identifiable object forms content by modifying form builder
-          data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify meta identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionCategoryFormBuilderModifier">
       <name>actionCategoryFormBuilderModifier</name>
       <title>Modify category identifiable object form</title>
-      <description>This hook allows to modify category identifiable object forms content by modifying form builder
-          data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify category identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionRootCategoryFormBuilderModifier">
       <name>actionRootCategoryFormBuilderModifier</name>
       <title>Modify root category identifiable object form</title>
-      <description>This hook allows to modify root category identifiable object forms content by modifying form
-          builder data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify root category identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionContactFormBuilderModifier">
       <name>actionContactFormBuilderModifier</name>
       <title>Modify contact identifiable object form</title>
-      <description>This hook allows to modify contact identifiable object forms content by modifying form builder
-          data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify contact identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionCmsPageCategoryFormBuilderModifier">
       <name>actionCmsPageCategoryFormBuilderModifier</name>
       <title>Modify cms page category identifiable object form</title>
-      <description>This hook allows to modify cms page category identifiable object forms content by modifying
-          form builder data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify cms page category identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionTaxFormBuilderModifier">
       <name>actionTaxFormBuilderModifier</name>
       <title>Modify tax identifiable object form</title>
-      <description>This hook allows to modify tax identifiable object forms content by modifying form builder data
-          or FormBuilder itself
-      </description>
+      <description>This hook allows to modify tax identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionManufacturerFormBuilderModifier">
       <name>actionManufacturerFormBuilderModifier</name>
       <title>Modify manufacturer identifiable object form</title>
-      <description>This hook allows to modify manufacturer identifiable object forms content by modifying form
-          builder data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify manufacturer identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionEmployeeFormBuilderModifier">
       <name>actionEmployeeFormBuilderModifier</name>
       <title>Modify employee identifiable object form</title>
-      <description>This hook allows to modify employee identifiable object forms content by modifying form builder
-          data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify employee identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionProfileFormBuilderModifier">
       <name>actionProfileFormBuilderModifier</name>
       <title>Modify profile identifiable object form</title>
-      <description>This hook allows to modify profile identifiable object forms content by modifying form builder
-          data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify profile identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionCmsPageFormBuilderModifier">
       <name>actionCmsPageFormBuilderModifier</name>
       <title>Modify cms page identifiable object form</title>
-      <description>This hook allows to modify cms page identifiable object forms content by modifying form builder
-          data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify cms page identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionManufacturerAddressFormBuilderModifier">
       <name>actionManufacturerAddressFormBuilderModifier</name>
       <title>Modify manufacturer address identifiable object form</title>
-      <description>This hook allows to modify manufacturer address identifiable object forms content by modifying
-          form builder data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify manufacturer address identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionBeforeUpdateSqlRequestFormHandler">
       <name>actionBeforeUpdateSqlRequestFormHandler</name>
       <title>Modify sql request identifiable object data before updating it</title>
-      <description>This hook allows to modify sql request identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify sql request identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateCustomerFormHandler">
       <name>actionBeforeUpdateCustomerFormHandler</name>
       <title>Modify customer identifiable object data before updating it</title>
-      <description>This hook allows to modify customer identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify customer identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateLanguageFormHandler">
       <name>actionBeforeUpdateLanguageFormHandler</name>
       <title>Modify language identifiable object data before updating it</title>
-      <description>This hook allows to modify language identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify language identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateCurrencyFormHandler">
       <name>actionBeforeUpdateCurrencyFormHandler</name>
       <title>Modify currency identifiable object data before updating it</title>
-      <description>This hook allows to modify currency identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify currency identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateWebserviceKeyFormHandler">
       <name>actionBeforeUpdateWebserviceKeyFormHandler</name>
       <title>Modify webservice key identifiable object data before updating it</title>
-      <description>This hook allows to modify webservice key identifiable object forms data before it was
-          updated
-      </description>
+      <description>This hook allows to modify webservice key identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateMetaFormHandler">
       <name>actionBeforeUpdateMetaFormHandler</name>
       <title>Modify meta identifiable object data before updating it</title>
-      <description>This hook allows to modify meta identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify meta identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateCategoryFormHandler">
       <name>actionBeforeUpdateCategoryFormHandler</name>
       <title>Modify category identifiable object data before updating it</title>
-      <description>This hook allows to modify category identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify category identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateRootCategoryFormHandler">
       <name>actionBeforeUpdateRootCategoryFormHandler</name>
       <title>Modify root category identifiable object data before updating it</title>
-      <description>This hook allows to modify root category identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify root category identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateContactFormHandler">
       <name>actionBeforeUpdateContactFormHandler</name>
       <title>Modify contact identifiable object data before updating it</title>
-      <description>This hook allows to modify contact identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify contact identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateCmsPageCategoryFormHandler">
       <name>actionBeforeUpdateCmsPageCategoryFormHandler</name>
       <title>Modify cms page category identifiable object data before updating it</title>
-      <description>This hook allows to modify cms page category identifiable object forms data before it was
-          updated
-      </description>
+      <description>This hook allows to modify cms page category identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateTaxFormHandler">
       <name>actionBeforeUpdateTaxFormHandler</name>
       <title>Modify tax identifiable object data before updating it</title>
-      <description>This hook allows to modify tax identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify tax identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateManufacturerFormHandler">
       <name>actionBeforeUpdateManufacturerFormHandler</name>
       <title>Modify manufacturer identifiable object data before updating it</title>
-      <description>This hook allows to modify manufacturer identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify manufacturer identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateEmployeeFormHandler">
       <name>actionBeforeUpdateEmployeeFormHandler</name>
       <title>Modify employee identifiable object data before updating it</title>
-      <description>This hook allows to modify employee identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify employee identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateProfileFormHandler">
       <name>actionBeforeUpdateProfileFormHandler</name>
       <title>Modify profile identifiable object data before updating it</title>
-      <description>This hook allows to modify profile identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify profile identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateCmsPageFormHandler">
       <name>actionBeforeUpdateCmsPageFormHandler</name>
       <title>Modify cms page identifiable object data before updating it</title>
-      <description>This hook allows to modify cms page identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify cms page identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateManufacturerAddressFormHandler">
       <name>actionBeforeUpdateManufacturerAddressFormHandler</name>
       <title>Modify manufacturer address identifiable object data before updating it</title>
-      <description>This hook allows to modify manufacturer address identifiable object forms data before it was
-          updated
-      </description>
+      <description>This hook allows to modify manufacturer address identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionAfterUpdateSqlRequestFormHandler">
       <name>actionAfterUpdateSqlRequestFormHandler</name>
       <title>Modify sql request identifiable object data after updating it</title>
-      <description>This hook allows to modify sql request identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify sql request identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateCustomerFormHandler">
       <name>actionAfterUpdateCustomerFormHandler</name>
       <title>Modify customer identifiable object data after updating it</title>
-      <description>This hook allows to modify customer identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify customer identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateLanguageFormHandler">
       <name>actionAfterUpdateLanguageFormHandler</name>
       <title>Modify language identifiable object data after updating it</title>
-      <description>This hook allows to modify language identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify language identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateCurrencyFormHandler">
       <name>actionAfterUpdateCurrencyFormHandler</name>
       <title>Modify currency identifiable object data after updating it</title>
-      <description>This hook allows to modify currency identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify currency identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateWebserviceKeyFormHandler">
       <name>actionAfterUpdateWebserviceKeyFormHandler</name>
       <title>Modify webservice key identifiable object data after updating it</title>
-      <description>This hook allows to modify webservice key identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify webservice key identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateMetaFormHandler">
       <name>actionAfterUpdateMetaFormHandler</name>
       <title>Modify meta identifiable object data after updating it</title>
-      <description>This hook allows to modify meta identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify meta identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateCategoryFormHandler">
       <name>actionAfterUpdateCategoryFormHandler</name>
       <title>Modify category identifiable object data after updating it</title>
-      <description>This hook allows to modify category identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify category identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateRootCategoryFormHandler">
       <name>actionAfterUpdateRootCategoryFormHandler</name>
       <title>Modify root category identifiable object data after updating it</title>
-      <description>This hook allows to modify root category identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify root category identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateContactFormHandler">
       <name>actionAfterUpdateContactFormHandler</name>
       <title>Modify contact identifiable object data after updating it</title>
-      <description>This hook allows to modify contact identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify contact identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateCmsPageCategoryFormHandler">
       <name>actionAfterUpdateCmsPageCategoryFormHandler</name>
       <title>Modify cms page category identifiable object data after updating it</title>
-      <description>This hook allows to modify cms page category identifiable object forms data after it was
-          updated
-      </description>
+      <description>This hook allows to modify cms page category identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateTaxFormHandler">
       <name>actionAfterUpdateTaxFormHandler</name>
       <title>Modify tax identifiable object data after updating it</title>
-      <description>This hook allows to modify tax identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify tax identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateManufacturerFormHandler">
       <name>actionAfterUpdateManufacturerFormHandler</name>
       <title>Modify manufacturer identifiable object data after updating it</title>
-      <description>This hook allows to modify manufacturer identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify manufacturer identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateEmployeeFormHandler">
       <name>actionAfterUpdateEmployeeFormHandler</name>
       <title>Modify employee identifiable object data after updating it</title>
-      <description>This hook allows to modify employee identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify employee identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateProfileFormHandler">
       <name>actionAfterUpdateProfileFormHandler</name>
       <title>Modify profile identifiable object data after updating it</title>
-      <description>This hook allows to modify profile identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify profile identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateCmsPageFormHandler">
       <name>actionAfterUpdateCmsPageFormHandler</name>
       <title>Modify cms page identifiable object data after updating it</title>
-      <description>This hook allows to modify cms page identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify cms page identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateManufacturerAddressFormHandler">
       <name>actionAfterUpdateManufacturerAddressFormHandler</name>
       <title>Modify manufacturer address identifiable object data after updating it</title>
-      <description>This hook allows to modify manufacturer address identifiable object forms data after it was
-          updated
-      </description>
+      <description>This hook allows to modify manufacturer address identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionBeforeCreateSqlRequestFormHandler">
       <name>actionBeforeCreateSqlRequestFormHandler</name>
       <title>Modify sql request identifiable object data before creating it</title>
-      <description>This hook allows to modify sql request identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify sql request identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateCustomerFormHandler">
       <name>actionBeforeCreateCustomerFormHandler</name>
       <title>Modify customer identifiable object data before creating it</title>
-      <description>This hook allows to modify customer identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify customer identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateLanguageFormHandler">
       <name>actionBeforeCreateLanguageFormHandler</name>
       <title>Modify language identifiable object data before creating it</title>
-      <description>This hook allows to modify language identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify language identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateCurrencyFormHandler">
       <name>actionBeforeCreateCurrencyFormHandler</name>
       <title>Modify currency identifiable object data before creating it</title>
-      <description>This hook allows to modify currency identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify currency identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateWebserviceKeyFormHandler">
       <name>actionBeforeCreateWebserviceKeyFormHandler</name>
       <title>Modify webservice key identifiable object data before creating it</title>
-      <description>This hook allows to modify webservice key identifiable object forms data before it was
-          created
-      </description>
+      <description>This hook allows to modify webservice key identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateMetaFormHandler">
       <name>actionBeforeCreateMetaFormHandler</name>
       <title>Modify meta identifiable object data before creating it</title>
-      <description>This hook allows to modify meta identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify meta identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateCategoryFormHandler">
       <name>actionBeforeCreateCategoryFormHandler</name>
       <title>Modify category identifiable object data before creating it</title>
-      <description>This hook allows to modify category identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify category identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateRootCategoryFormHandler">
       <name>actionBeforeCreateRootCategoryFormHandler</name>
       <title>Modify root category identifiable object data before creating it</title>
-      <description>This hook allows to modify root category identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify root category identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateContactFormHandler">
       <name>actionBeforeCreateContactFormHandler</name>
       <title>Modify contact identifiable object data before creating it</title>
-      <description>This hook allows to modify contact identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify contact identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateCmsPageCategoryFormHandler">
       <name>actionBeforeCreateCmsPageCategoryFormHandler</name>
       <title>Modify cms page category identifiable object data before creating it</title>
-      <description>This hook allows to modify cms page category identifiable object forms data before it was
-          created
-      </description>
+      <description>This hook allows to modify cms page category identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateTaxFormHandler">
       <name>actionBeforeCreateTaxFormHandler</name>
       <title>Modify tax identifiable object data before creating it</title>
-      <description>This hook allows to modify tax identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify tax identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateManufacturerFormHandler">
       <name>actionBeforeCreateManufacturerFormHandler</name>
       <title>Modify manufacturer identifiable object data before creating it</title>
-      <description>This hook allows to modify manufacturer identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify manufacturer identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateEmployeeFormHandler">
       <name>actionBeforeCreateEmployeeFormHandler</name>
       <title>Modify employee identifiable object data before creating it</title>
-      <description>This hook allows to modify employee identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify employee identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateProfileFormHandler">
       <name>actionBeforeCreateProfileFormHandler</name>
       <title>Modify profile identifiable object data before creating it</title>
-      <description>This hook allows to modify profile identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify profile identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateCmsPageFormHandler">
       <name>actionBeforeCreateCmsPageFormHandler</name>
       <title>Modify cms page identifiable object data before creating it</title>
-      <description>This hook allows to modify cms page identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify cms page identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateManufacturerAddressFormHandler">
       <name>actionBeforeCreateManufacturerAddressFormHandler</name>
       <title>Modify manufacturer address identifiable object data before creating it</title>
-      <description>This hook allows to modify manufacturer address identifiable object forms data before it was
-          created
-      </description>
+      <description>This hook allows to modify manufacturer address identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionAfterCreateSqlRequestFormHandler">
       <name>actionAfterCreateSqlRequestFormHandler</name>
       <title>Modify sql request identifiable object data after creating it</title>
-      <description>This hook allows to modify sql request identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify sql request identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateCustomerFormHandler">
       <name>actionAfterCreateCustomerFormHandler</name>
       <title>Modify customer identifiable object data after creating it</title>
-      <description>This hook allows to modify customer identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify customer identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateLanguageFormHandler">
       <name>actionAfterCreateLanguageFormHandler</name>
       <title>Modify language identifiable object data after creating it</title>
-      <description>This hook allows to modify language identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify language identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateCurrencyFormHandler">
       <name>actionAfterCreateCurrencyFormHandler</name>
       <title>Modify currency identifiable object data after creating it</title>
-      <description>This hook allows to modify currency identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify currency identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateWebserviceKeyFormHandler">
       <name>actionAfterCreateWebserviceKeyFormHandler</name>
       <title>Modify webservice key identifiable object data after creating it</title>
-      <description>This hook allows to modify webservice key identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify webservice key identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateMetaFormHandler">
       <name>actionAfterCreateMetaFormHandler</name>
       <title>Modify meta identifiable object data after creating it</title>
-      <description>This hook allows to modify meta identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify meta identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateCategoryFormHandler">
       <name>actionAfterCreateCategoryFormHandler</name>
       <title>Modify category identifiable object data after creating it</title>
-      <description>This hook allows to modify category identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify category identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateRootCategoryFormHandler">
       <name>actionAfterCreateRootCategoryFormHandler</name>
       <title>Modify root category identifiable object data after creating it</title>
-      <description>This hook allows to modify root category identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify root category identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateContactFormHandler">
       <name>actionAfterCreateContactFormHandler</name>
       <title>Modify contact identifiable object data after creating it</title>
-      <description>This hook allows to modify contact identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify contact identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateCmsPageCategoryFormHandler">
       <name>actionAfterCreateCmsPageCategoryFormHandler</name>
       <title>Modify cms page category identifiable object data after creating it</title>
-      <description>This hook allows to modify cms page category identifiable object forms data after it was
-          created
-      </description>
+      <description>This hook allows to modify cms page category identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateTaxFormHandler">
       <name>actionAfterCreateTaxFormHandler</name>
       <title>Modify tax identifiable object data after creating it</title>
-      <description>This hook allows to modify tax identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify tax identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateManufacturerFormHandler">
       <name>actionAfterCreateManufacturerFormHandler</name>
       <title>Modify manufacturer identifiable object data after creating it</title>
-      <description>This hook allows to modify manufacturer identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify manufacturer identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateEmployeeFormHandler">
       <name>actionAfterCreateEmployeeFormHandler</name>
       <title>Modify employee identifiable object data after creating it</title>
-      <description>This hook allows to modify employee identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify employee identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateProfileFormHandler">
       <name>actionAfterCreateProfileFormHandler</name>
       <title>Modify profile identifiable object data after creating it</title>
-      <description>This hook allows to modify profile identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify profile identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateCmsPageFormHandler">
       <name>actionAfterCreateCmsPageFormHandler</name>
       <title>Modify cms page identifiable object data after creating it</title>
-      <description>This hook allows to modify cms page identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify cms page identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateManufacturerAddressFormHandler">
       <name>actionAfterCreateManufacturerAddressFormHandler</name>
       <title>Modify manufacturer address identifiable object data after creating it</title>
-      <description>This hook allows to modify manufacturer address identifiable object forms data after it was
-          created
-      </description>
+      <description>This hook allows to modify manufacturer address identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionShippingPreferencesPageForm">
       <name>actionShippingPreferencesPageForm</name>
@@ -1636,62 +1570,52 @@
     <hook id="actionPerformancePageSave">
       <name>actionPerformancePageSave</name>
       <title>Modify performance page options form saved data</title>
-      <description>This hook allows to modify data of performance page options form after it was saved
-      </description>
+      <description>This hook allows to modify data of performance page options form after it was saved</description>
     </hook>
     <hook id="actionMaintenancePageSave">
       <name>actionMaintenancePageSave</name>
       <title>Modify maintenance page options form saved data</title>
-      <description>This hook allows to modify data of maintenance page options form after it was saved
-      </description>
+      <description>This hook allows to modify data of maintenance page options form after it was saved</description>
     </hook>
     <hook id="actionAdministrationPageSave">
       <name>actionAdministrationPageSave</name>
       <title>Modify administration page options form saved data</title>
-      <description>This hook allows to modify data of administration page options form after it was saved
-      </description>
+      <description>This hook allows to modify data of administration page options form after it was saved</description>
     </hook>
     <hook id="actionShippingPreferencesPageSave">
       <name>actionShippingPreferencesPageSave</name>
       <title>Modify shipping preferences page options form saved data</title>
-      <description>This hook allows to modify data of shipping preferences page options form after it was saved
-      </description>
+      <description>This hook allows to modify data of shipping preferences page options form after it was saved</description>
     </hook>
     <hook id="actionOrdersInvoicesByDateSave">
       <name>actionOrdersInvoicesByDateSave</name>
       <title>Modify orders invoices by date options form saved data</title>
-      <description>This hook allows to modify data of orders invoices by date options form after it was saved
-      </description>
+      <description>This hook allows to modify data of orders invoices by date options form after it was saved</description>
     </hook>
     <hook id="actionOrdersInvoicesByStatusSave">
       <name>actionOrdersInvoicesByStatusSave</name>
       <title>Modify orders invoices by status options form saved data</title>
-      <description>This hook allows to modify data of orders invoices by status options form after it was saved
-      </description>
+      <description>This hook allows to modify data of orders invoices by status options form after it was saved</description>
     </hook>
     <hook id="actionOrdersInvoicesOptionsSave">
       <name>actionOrdersInvoicesOptionsSave</name>
       <title>Modify orders invoices options options form saved data</title>
-      <description>This hook allows to modify data of orders invoices options options form after it was saved
-      </description>
+      <description>This hook allows to modify data of orders invoices options options form after it was saved</description>
     </hook>
     <hook id="actionCustomerPreferencesPageSave">
       <name>actionCustomerPreferencesPageSave</name>
       <title>Modify customer preferences page options form saved data</title>
-      <description>This hook allows to modify data of customer preferences page options form after it was saved
-      </description>
+      <description>This hook allows to modify data of customer preferences page options form after it was saved</description>
     </hook>
     <hook id="actionOrderPreferencesPageSave">
       <name>actionOrderPreferencesPageSave</name>
       <title>Modify order preferences page options form saved data</title>
-      <description>This hook allows to modify data of order preferences page options form after it was saved
-      </description>
+      <description>This hook allows to modify data of order preferences page options form after it was saved</description>
     </hook>
     <hook id="actionProductPreferencesPageSave">
       <name>actionProductPreferencesPageSave</name>
       <title>Modify product preferences page options form saved data</title>
-      <description>This hook allows to modify data of product preferences page options form after it was saved
-      </description>
+      <description>This hook allows to modify data of product preferences page options form after it was saved</description>
     </hook>
     <hook id="actionGeneralPageSave">
       <name>actionGeneralPageSave</name>
@@ -1706,39 +1630,32 @@
     <hook id="actionOrderDeliverySlipOptionsSave">
       <name>actionOrderDeliverySlipOptionsSave</name>
       <title>Modify order delivery slip options options form saved data</title>
-      <description>This hook allows to modify data of order delivery slip options options form after it was
-          saved
-      </description>
+      <description>This hook allows to modify data of order delivery slip options options form after it was saved</description>
     </hook>
     <hook id="actionOrderDeliverySlipPdfSave">
       <name>actionOrderDeliverySlipPdfSave</name>
       <title>Modify order delivery slip pdf options form saved data</title>
-      <description>This hook allows to modify data of order delivery slip pdf options form after it was saved
-      </description>
+      <description>This hook allows to modify data of order delivery slip pdf options form after it was saved</description>
     </hook>
     <hook id="actionGeolocationPageSave">
       <name>actionGeolocationPageSave</name>
       <title>Modify geolocation page options form saved data</title>
-      <description>This hook allows to modify data of geolocation page options form after it was saved
-      </description>
+      <description>This hook allows to modify data of geolocation page options form after it was saved</description>
     </hook>
     <hook id="actionLocalizationPageSave">
       <name>actionLocalizationPageSave</name>
       <title>Modify localization page options form saved data</title>
-      <description>This hook allows to modify data of localization page options form after it was saved
-      </description>
+      <description>This hook allows to modify data of localization page options form after it was saved</description>
     </hook>
     <hook id="actionPaymentPreferencesSave">
       <name>actionPaymentPreferencesSave</name>
       <title>Modify payment preferences options form saved data</title>
-      <description>This hook allows to modify data of payment preferences options form after it was saved
-      </description>
+      <description>This hook allows to modify data of payment preferences options form after it was saved</description>
     </hook>
     <hook id="actionEmailConfigurationSave">
       <name>actionEmailConfigurationSave</name>
       <title>Modify email configuration options form saved data</title>
-      <description>This hook allows to modify data of email configuration options form after it was saved
-      </description>
+      <description>This hook allows to modify data of email configuration options form after it was saved</description>
     </hook>
     <hook id="actionRequestSqlSave">
       <name>actionRequestSqlSave</name>
@@ -1753,8 +1670,7 @@
     <hook id="actionWebservicePageSave">
       <name>actionWebservicePageSave</name>
       <title>Modify webservice page options form saved data</title>
-      <description>This hook allows to modify data of webservice page options form after it was saved
-      </description>
+      <description>This hook allows to modify data of webservice page options form after it was saved</description>
     </hook>
     <hook id="actionMetaPageSave">
       <name>actionMetaPageSave</name>
@@ -2084,82 +2000,67 @@
     <hook id="actionCategoryGridPresenterModifier">
       <name>actionCategoryGridPresenterModifier</name>
       <title>Modify category grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for category grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for category grid</description>
     </hook>
     <hook id="actionEmployeeGridPresenterModifier">
       <name>actionEmployeeGridPresenterModifier</name>
       <title>Modify employee grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for employee grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for employee grid</description>
     </hook>
     <hook id="actionContactGridPresenterModifier">
       <name>actionContactGridPresenterModifier</name>
       <title>Modify contact grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for contact grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for contact grid</description>
     </hook>
     <hook id="actionCustomerGridPresenterModifier">
       <name>actionCustomerGridPresenterModifier</name>
       <title>Modify customer grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for customer grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for customer grid</description>
     </hook>
     <hook id="actionLanguageGridPresenterModifier">
       <name>actionLanguageGridPresenterModifier</name>
       <title>Modify language grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for language grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for language grid</description>
     </hook>
     <hook id="actionCurrencyGridPresenterModifier">
       <name>actionCurrencyGridPresenterModifier</name>
       <title>Modify currency grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for currency grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for currency grid</description>
     </hook>
     <hook id="actionSupplierGridPresenterModifier">
       <name>actionSupplierGridPresenterModifier</name>
       <title>Modify supplier grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for supplier grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for supplier grid</description>
     </hook>
     <hook id="actionProfileGridPresenterModifier">
       <name>actionProfileGridPresenterModifier</name>
       <title>Modify profile grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for profile grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for profile grid</description>
     </hook>
     <hook id="actionCmsPageCategoryGridPresenterModifier">
       <name>actionCmsPageCategoryGridPresenterModifier</name>
       <title>Modify cms page category grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for cms page category
-          grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for cms page category grid</description>
     </hook>
     <hook id="actionTaxGridPresenterModifier">
       <name>actionTaxGridPresenterModifier</name>
       <title>Modify tax grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for tax grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for tax grid</description>
     </hook>
     <hook id="actionManufacturerGridPresenterModifier">
       <name>actionManufacturerGridPresenterModifier</name>
       <title>Modify manufacturer grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for manufacturer grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for manufacturer grid</description>
     </hook>
     <hook id="actionManufacturerAddressGridPresenterModifier">
       <name>actionManufacturerAddressGridPresenterModifier</name>
       <title>Modify manufacturer address grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for manufacturer address
-          grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for manufacturer address grid</description>
     </hook>
     <hook id="actionCmsPageGridPresenterModifier">
       <name>actionCmsPageGridPresenterModifier</name>
       <title>Modify cms page grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for cms page grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for cms page grid</description>
     </hook>
     <hook id="displayAdminOrderTop">
       <name>displayAdminOrderTop</name>
@@ -2206,6 +2107,26 @@
       <title>Admin Order Buttons</title>
       <description>This hook is used to generate the buttons collection on the order view page (see ActionsBarButtonsCollection)</description>
     </hook>
+    <hook id="actionPresentCart">
+      <name>actionPresentCart</name>
+      <title>Cart Presenter</title>
+      <description>This hook is called before a cart is presented</description>
+    </hook>
+    <hook id="actionPresentOrder">
+      <name>actionPresentOrder</name>
+      <title>Order Presenter</title>
+      <description>This hook is called before an order is presented</description>
+    </hook>
+    <hook id="actionPresentOrderReturn">
+      <name>actionPresentOrderReturn</name>
+      <title>Order Return Presenter</title>
+      <description>This hook is called before an order return is presented</description>
+    </hook>
+    <hook id="actionPresentProduct">
+      <name>actionPresentProduct</name>
+      <title>Product Presenter</title>
+      <description>This hook is called before a product is presented</description>
+    </hook>
     <hook id="actionAdminAdminPreferencesControllerPostProcessBefore">
       <name>actionAdminAdminPreferencesControllerPostProcessBefore</name>
       <title>On post-process in Admin Preferences</title>
@@ -2215,29 +2136,22 @@
       <name>actionFeatureFormBuilderModifier</name>
       <title>Modify feature identifiable object form</title>
       <description>This hook allows to modify feature identifiable object forms content by modifying form builder data
-        or FormBuilder itself
-      </description>
+      or FormBuilder itself</description>
     </hook>
     <hook id="actionOrderMessageFormBuilderModifier">
       <name>actionOrderMessageFormBuilderModifier</name>
       <title>Modify order message identifiable object form</title>
-      <description>This hook allows to modify order message identifiable object forms content by modifying form builder
-        data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify order message identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionCatalogPriceRuleFormBuilderModifier">
       <name>actionCatalogPriceRuleFormBuilderModifier</name>
       <title>Modify catalog price rule identifiable object form</title>
-      <description>This hook allows to modify catalog price rule identifiable object forms content by modifying form
-        builder data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify catalog price rule identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionAttachmentFormBuilderModifier">
       <name>actionAttachmentFormBuilderModifier</name>
       <title>Modify attachment identifiable object form</title>
-      <description>This hook allows to modify attachment identifiable object forms content by modifying form builder
-        data or FormBuilder itself
-      </description>
+      <description>This hook allows to modify attachment identifiable object forms content by modifying form builder data or FormBuilder itself</description>
     </hook>
     <hook id="actionBeforeUpdateFeatureFormHandler">
       <name>actionBeforeUpdateFeatureFormHandler</name>
@@ -2247,20 +2161,17 @@
     <hook id="actionBeforeUpdateOrderMessageFormHandler">
       <name>actionBeforeUpdateOrderMessageFormHandler</name>
       <title>Modify order message identifiable object data before updating it</title>
-      <description>This hook allows to modify order message identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify order message identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateCatalogPriceRuleFormHandler">
       <name>actionBeforeUpdateCatalogPriceRuleFormHandler</name>
       <title>Modify catalog price rule identifiable object data before updating it</title>
-      <description>This hook allows to modify catalog price rule identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify catalog price rule identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionBeforeUpdateAttachmentFormHandler">
       <name>actionBeforeUpdateAttachmentFormHandler</name>
       <title>Modify attachment identifiable object data before updating it</title>
-      <description>This hook allows to modify attachment identifiable object forms data before it was updated
-      </description>
+      <description>This hook allows to modify attachment identifiable object forms data before it was updated</description>
     </hook>
     <hook id="actionAfterUpdateFeatureFormHandler">
       <name>actionAfterUpdateFeatureFormHandler</name>
@@ -2270,20 +2181,17 @@
     <hook id="actionAfterUpdateOrderMessageFormHandler">
       <name>actionAfterUpdateOrderMessageFormHandler</name>
       <title>Modify order message identifiable object data after updating it</title>
-      <description>This hook allows to modify order message identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify order message identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateCatalogPriceRuleFormHandler">
       <name>actionAfterUpdateCatalogPriceRuleFormHandler</name>
       <title>Modify catalog price rule identifiable object data after updating it</title>
-      <description>This hook allows to modify catalog price rule identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify catalog price rule identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionAfterUpdateAttachmentFormHandler">
       <name>actionAfterUpdateAttachmentFormHandler</name>
       <title>Modify attachment identifiable object data after updating it</title>
-      <description>This hook allows to modify attachment identifiable object forms data after it was updated
-      </description>
+      <description>This hook allows to modify attachment identifiable object forms data after it was updated</description>
     </hook>
     <hook id="actionBeforeCreateFeatureFormHandler">
       <name>actionBeforeCreateFeatureFormHandler</name>
@@ -2293,20 +2201,17 @@
     <hook id="actionBeforeCreateOrderMessageFormHandler">
       <name>actionBeforeCreateOrderMessageFormHandler</name>
       <title>Modify order message identifiable object data before creating it</title>
-      <description>This hook allows to modify order message identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify order message identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateCatalogPriceRuleFormHandler">
       <name>actionBeforeCreateCatalogPriceRuleFormHandler</name>
       <title>Modify catalog price rule identifiable object data before creating it</title>
-      <description>This hook allows to modify catalog price rule identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify catalog price rule identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionBeforeCreateAttachmentFormHandler">
       <name>actionBeforeCreateAttachmentFormHandler</name>
       <title>Modify attachment identifiable object data before creating it</title>
-      <description>This hook allows to modify attachment identifiable object forms data before it was created
-      </description>
+      <description>This hook allows to modify attachment identifiable object forms data before it was created</description>
     </hook>
     <hook id="actionAfterCreateFeatureFormHandler">
       <name>actionAfterCreateFeatureFormHandler</name>
@@ -2316,20 +2221,17 @@
     <hook id="actionAfterCreateOrderMessageFormHandler">
       <name>actionAfterCreateOrderMessageFormHandler</name>
       <title>Modify order message identifiable object data after creating it</title>
-      <description>This hook allows to modify order message identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify order message identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateCatalogPriceRuleFormHandler">
       <name>actionAfterCreateCatalogPriceRuleFormHandler</name>
       <title>Modify catalog price rule identifiable object data after creating it</title>
-      <description>This hook allows to modify catalog price rule identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify catalog price rule identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionAfterCreateAttachmentFormHandler">
       <name>actionAfterCreateAttachmentFormHandler</name>
       <title>Modify attachment identifiable object data after creating it</title>
-      <description>This hook allows to modify attachment identifiable object forms data after it was created
-      </description>
+      <description>This hook allows to modify attachment identifiable object forms data after it was created</description>
     </hook>
     <hook id="actionMerchandiseReturnForm">
       <name>actionMerchandiseReturnForm</name>
@@ -2441,14 +2343,12 @@
     <hook id="actionNoQtyProductWithCombinationGridQueryBuilderModifier">
       <name>actionNoQtyProductWithCombinationGridQueryBuilderModifier</name>
       <title>Modify no qty product with combination grid query builder</title>
-      <description>This hook allows to alter Doctrine query builder for no qty product with combination grid
-      </description>
+      <description>This hook allows to alter Doctrine query builder for no qty product with combination grid</description>
     </hook>
     <hook id="actionNoQtyProductWithoutCombinationGridQueryBuilderModifier">
       <name>actionNoQtyProductWithoutCombinationGridQueryBuilderModifier</name>
       <title>Modify no qty product without combination grid query builder</title>
-      <description>This hook allows to alter Doctrine query builder for no qty product without combination grid
-      </description>
+      <description>This hook allows to alter Doctrine query builder for no qty product without combination grid</description>
     </hook>
     <hook id="actionDisabledProductGridQueryBuilderModifier">
       <name>actionDisabledProductGridQueryBuilderModifier</name>
@@ -2678,49 +2578,37 @@
     <hook id="actionEmptyCategoryGridPresenterModifier">
       <name>actionEmptyCategoryGridPresenterModifier</name>
       <title>Modify empty category grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for empty category grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for empty category grid</description>
     </hook>
     <hook id="actionNoQtyProductWithCombinationGridPresenterModifier">
       <name>actionNoQtyProductWithCombinationGridPresenterModifier</name>
       <title>Modify no qty product with combination grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for no qty product with
-        combination grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for no qty product with combination grid</description>
     </hook>
     <hook id="actionNoQtyProductWithoutCombinationGridPresenterModifier">
       <name>actionNoQtyProductWithoutCombinationGridPresenterModifier</name>
       <title>Modify no qty product without combination grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for no qty product without
-        combination grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for no qty product without combination grid</description>
     </hook>
     <hook id="actionDisabledProductGridPresenterModifier">
       <name>actionDisabledProductGridPresenterModifier</name>
       <title>Modify disabled product grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for disabled product grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for disabled product grid</description>
     </hook>
     <hook id="actionProductWithoutImageGridPresenterModifier">
       <name>actionProductWithoutImageGridPresenterModifier</name>
       <title>Modify product without image grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for product without image
-        grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for product without image grid</description>
     </hook>
     <hook id="actionProductWithoutDescriptionGridPresenterModifier">
       <name>actionProductWithoutDescriptionGridPresenterModifier</name>
       <title>Modify product without description grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for product without description
-        grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for product without description grid</description>
     </hook>
     <hook id="actionProductWithoutPriceGridPresenterModifier">
       <name>actionProductWithoutPriceGridPresenterModifier</name>
       <title>Modify product without price grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for product without price
-        grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for product without price grid</description>
     </hook>
     <hook id="actionOrderGridPresenterModifier">
       <name>actionOrderGridPresenterModifier</name>
@@ -2730,38 +2618,32 @@
     <hook id="actionCatalogPriceRuleGridPresenterModifier">
       <name>actionCatalogPriceRuleGridPresenterModifier</name>
       <title>Modify catalog price rule grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for catalog price rule grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for catalog price rule grid</description>
     </hook>
     <hook id="actionOrderMessageGridPresenterModifier">
       <name>actionOrderMessageGridPresenterModifier</name>
       <title>Modify order message grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for order message grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for order message grid</description>
     </hook>
     <hook id="actionAttachmentGridPresenterModifier">
       <name>actionAttachmentGridPresenterModifier</name>
       <title>Modify attachment grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for attachment grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for attachment grid</description>
     </hook>
     <hook id="actionAttributeGroupGridPresenterModifier">
       <name>actionAttributeGroupGridPresenterModifier</name>
       <title>Modify attribute group grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for attribute group grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for attribute group grid</description>
     </hook>
     <hook id="actionMerchandiseReturnGridPresenterModifier">
       <name>actionMerchandiseReturnGridPresenterModifier</name>
       <title>Modify merchandise return grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for merchandise return grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for merchandise return grid</description>
     </hook>
     <hook id="actionTaxRulesGroupGridPresenterModifier">
       <name>actionTaxRulesGroupGridPresenterModifier</name>
       <title>Modify tax rules group grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for tax rules group grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for tax rules group grid</description>
     </hook>
     <hook id="actionAddressGridPresenterModifier">
       <name>actionAddressGridPresenterModifier</name>
@@ -2771,8 +2653,7 @@
     <hook id="actionCreditSlipGridPresenterModifier">
       <name>actionCreditSlipGridPresenterModifier</name>
       <title>Modify credit slip grid template data</title>
-      <description>This hook allows to modify data which is about to be used in template for credit slip grid
-      </description>
+      <description>This hook allows to modify data which is about to be used in template for credit slip grid</description>
     </hook>
     <hook id="displayAdditionalCustomerAddressFields">
       <name>displayAdditionalCustomerAddressFields</name>
@@ -2784,6 +2665,201 @@
       <title>Category footer</title>
       <description>This hook adds new blocks under the products listing in a category/search</description>
     </hook>
+    <hook id="displayHeaderCategory">
+      <name>displayHeaderCategory</name>
+      <title>Category header</title>
+      <description>This hook adds new blocks above the products listing in a category/search</description>
+    </hook>
+    <hook id="actionAdminAdministrationControllerPostProcessBefore">
+      <name>actionAdminAdministrationControllerPostProcessBefore</name>
+      <title>On post-process in Admin Configure Advanced Parameters Administration Controller</title>
+      <description>This hook is called on Admin Configure Advanced Parameters Administration post-process before processing any form</description>
+    </hook>
+    <hook id="actionAdminAdministrationControllerPostProcessGeneralBefore">
+      <name>actionAdminAdministrationControllerPostProcessGeneralBefore</name>
+      <title>On post-process in Admin Configure Advanced Parameters Administration Controller</title>
+      <description>This hook is called on Admin Configure Advanced Parameters Administration post-process before processing the General form</description>
+    </hook>
+    <hook id="actionAdminAdministrationControllerPostProcessUploadQuotaBefore">
+      <name>actionAdminAdministrationControllerPostProcessUploadQuotaBefore</name>
+      <title>On post-process in Admin Configure Advanced Parameters Administration Controller</title>
+      <description>This hook is called on Admin Configure Advanced Parameters Administration post-process before processing the Upload Quota form</description>
+    </hook>
+    <hook id="actionAdminAdministrationControllerPostProcessNotificationsBefore">
+      <name>actionAdminAdministrationControllerPostProcessNotificationsBefore</name>
+      <title>On post-process in Admin Configure Advanced Parameters Administration Controller</title>
+      <description>This hook is called on Admin Configure Advanced Parameters Administration post-process before processing the Notifications form</description>
+    </hook>
+    <hook id="actionAdminAdvancedParametersPerformanceControllerPostProcessSmartyBefore">
+      <name>actionAdminAdvancedParametersPerformanceControllerPostProcessSmartyBefore</name>
+      <title>On post-process in Admin Configure Advanced Parameters Performance Controller</title>
+      <description>This hook is called on Admin Configure Advanced Parameters Performance post-process before processing the Smarty form</description>
+    </hook>
+    <hook id="actionAdminAdvancedParametersPerformanceControllerPostProcessDebugModeBefore">
+      <name>actionAdminAdvancedParametersPerformanceControllerPostProcessDebugModeBefore</name>
+      <title>On post-process in Admin Configure Advanced Parameters Performance Controller</title>
+      <description>This hook is called on Admin Configure Advanced Parameters Performance post-process before processing the Debug Mode form</description>
+    </hook>
+    <hook id="actionAdminAdvancedParametersPerformanceControllerPostProcessOptionalFeaturesBefore">
+      <name>actionAdminAdvancedParametersPerformanceControllerPostProcessOptionalFeaturesBefore</name>
+      <title>On post-process in Admin Configure Advanced Parameters Performance Controller</title>
+      <description>This hook is called on Admin Configure Advanced Parameters Performance post-process before processing the Optional Features form</description>
+    </hook>
+    <hook id="actionAdminAdvancedParametersPerformanceControllerPostProcessCombineCompressCacheBefore">
+      <name>actionAdminAdvancedParametersPerformanceControllerPostProcessCombineCompressCacheBefore</name>
+      <title>On post-process in Admin Configure Advanced Parameters Performance Controller</title>
+      <description>This hook is called on Admin Configure Advanced Parameters Performance post-process before processing the Combine Compress Cache form</description>
+    </hook>
+    <hook id="actionAdminAdvancedParametersPerformanceControllerPostProcessMediaServersBefore">
+      <name>actionAdminAdvancedParametersPerformanceControllerPostProcessMediaServersBefore</name>
+      <title>On post-process in Admin Configure Advanced Parameters Performance Controller</title>
+      <description>This hook is called on Admin Configure Advanced Parameters Performance post-process before processing the Media Servers form</description>
+    </hook>
+    <hook id="actionAdminAdvancedParametersPerformanceControllerPostProcessCachingBefore">
+      <name>actionAdminAdvancedParametersPerformanceControllerPostProcessCachingBefore</name>
+      <title>On post-process in Admin Configure Advanced Parameters Performance Controller</title>
+      <description>This hook is called on Admin Configure Advanced Parameters Performance post-process before processing the Caching form</description>
+    </hook>
+    <hook id="actionAdminAdvancedParametersPerformanceControllerPostProcessBefore">
+      <name>actionAdminAdvancedParametersPerformanceControllerPostProcessBefore</name>
+      <title>On post-process in Admin Configure Advanced Parameters Performance Controller</title>
+      <description>This hook is called on Admin Configure Advanced Parameters Performance post-process before processing any form</description>
+    </hook>
+    <hook id="actionAdminShopParametersMetaControllerPostProcessSetUpUrlsBefore">
+      <name>actionAdminShopParametersMetaControllerPostProcessSetUpUrlsBefore</name>
+      <title>On post-process in Admin Configure Shop Parameters Meta Controller</title>
+      <description>This hook is called on Admin Configure Shop Parameters Meta post-process before processing the SetUp Urls form</description>
+    </hook>
+    <hook id="actionAdminShopParametersMetaControllerPostProcessShopUrlsBefore">
+      <name>actionAdminShopParametersMetaControllerPostProcessShopUrlsBefore</name>
+      <title>On post-process in Admin Configure Shop Parameters Meta Controller</title>
+      <description>This hook is called on Admin Configure Shop Parameters Meta post-process before processing the Shop Urls form</description>
+    </hook>
+    <hook id="actionAdminShopParametersMetaControllerPostProcessUrlSchemaBefore">
+      <name>actionAdminShopParametersMetaControllerPostProcessUrlSchemaBefore</name>
+      <title>On post-process in Admin Configure Shop Parameters Meta Controller</title>
+      <description>This hook is called on Admin Configure Shop Parameters Meta post-process before processing the Url Schema form</description>
+    </hook>
+    <hook id="actionAdminShopParametersMetaControllerPostProcessSeoOptionsBefore">
+      <name>actionAdminShopParametersMetaControllerPostProcessSeoOptionsBefore</name>
+      <title>On post-process in Admin Configure Shop Parameters Meta Controller</title>
+      <description>This hook is called on Admin Configure Shop Parameters Meta post-process before processing the Seo Options form</description>
+    </hook>
+    <hook id="actionAdminAdminShopParametersMetaControllerPostProcessBefore">
+      <name>actionAdminAdminShopParametersMetaControllerPostProcessBefore</name>
+      <title>On post-process in Admin Configure Shop Parameters Meta Controller</title>
+      <description>This hook is called on Admin Configure Shop Parameters Meta post-process before processing any form</description>
+    </hook>
+    <hook id="actionAdminShopParametersOrderPreferencesControllerPostProcessGeneralBefore">
+      <name>actionAdminShopParametersOrderPreferencesControllerPostProcessGeneralBefore</name>
+      <title>On post-process in Admin Configure Shop Parameters Order Preferences Controller</title>
+      <description>This hook is called on Admin Configure Shop Parameters Order Preferences post-process before processing the General form</description>
+    </hook>
+    <hook id="actionAdminShopParametersOrderPreferencesControllerPostProcessGiftOptionsBefore">
+      <name>actionAdminShopParametersOrderPreferencesControllerPostProcessGiftOptionsBefore</name>
+      <title>On post-process in Admin Configure Shop Parameters Order Preferences Controller</title>
+      <description>This hook is called on Admin Configure Shop Parameters Order Preferences post-process before processing the Gift Options form</description>
+    </hook>
+    <hook id="actionAdminShopParametersOrderPreferencesControllerPostProcessBefore">
+      <name>actionAdminShopParametersOrderPreferencesControllerPostProcessBefore</name>
+      <title>On post-process in Admin Configure Shop Parameters Order Preferences Controller</title>
+      <description>This hook is called on Admin Configure Shop Parameters Order Preferences post-process before processing any form</description>
+    </hook>
+    <hook id="actionAdminInternationalGeolocationControllerPostProcessByIpAddressBefore">
+      <name>actionAdminInternationalGeolocationControllerPostProcessByIpAddressBefore</name>
+      <title>On post-process in Admin Improve International Geolocation Controller</title>
+      <description>This hook is called on Admin Improve International Geolocation post-process before processing the By Ip Address form</description>
+    </hook>
+    <hook id="actionAdminInternationalGeolocationControllerPostProcessWhitelistBefore">
+      <name>actionAdminInternationalGeolocationControllerPostProcessWhitelistBefore</name>
+      <title>On post-process in Admin Improve International Geolocation Controller</title>
+      <description>This hook is called on Admin Improve International Geolocation post-process before processing the Whitelist form</description>
+    </hook>
+    <hook id="actionAdminInternationalGeolocationControllerPostProcessOptionsBefore">
+      <name>actionAdminInternationalGeolocationControllerPostProcessOptionsBefore</name>
+      <title>On post-process in Admin Improve International Geolocation Controller</title>
+      <description>This hook is called on Admin Improve International Geolocation post-process before processing the Options form</description>
+    </hook>
+    <hook id="actionAdminInternationalGeolocationControllerPostProcessBefore">
+      <name>actionAdminInternationalGeolocationControllerPostProcessBefore</name>
+      <title>On post-process in Admin Improve International Geolocation Controller</title>
+      <description>This hook is called on Admin Improve International Geolocation post-process before processing any form</description>
+    </hook>
+    <hook id="actionAdminInternationalLocalizationControllerPostProcessConfigurationBefore">
+      <name>actionAdminInternationalLocalizationControllerPostProcessConfigurationBefore</name>
+      <title>On post-process in Admin Improve International Localization Controller</title>
+      <description>This hook is called on Admin Improve International Localization post-process before processing the Configuration form</description>
+    </hook>
+    <hook id="actionAdminInternationalLocalizationControllerPostProcessLocalUnitsBefore">
+      <name>actionAdminInternationalLocalizationControllerPostProcessLocalUnitsBefore</name>
+      <title>On post-process in Admin Improve International Localization Controller</title>
+      <description>This hook is called on Admin Improve International Localization post-process before processing the Local Units form</description>
+    </hook>
+    <hook id="actionAdminInternationalLocalizationControllerPostProcessAdvancedBefore">
+      <name>actionAdminInternationalLocalizationControllerPostProcessAdvancedBefore</name>
+      <title>On post-process in Admin Improve International Localization Controller</title>
+      <description>This hook is called on Admin Improve International Localization post-process before processing the Advanced form</description>
+    </hook>
+    <hook id="actionAdminInternationalLocalizationControllerPostProcessBefore">
+      <name>actionAdminInternationalLocalizationControllerPostProcessBefore</name>
+      <title>On post-process in Admin Improve International Localization Controller</title>
+      <description>This hook is called on Admin Improve International Localization post-process before processing any form</description>
+    </hook>
+    <hook id="actionAdminShippingPreferencesControllerPostProcessHandlingBefore">
+      <name>actionAdminShippingPreferencesControllerPostProcessHandlingBefore</name>
+      <title>On post-process in Admin Improve Shipping Preferences Controller</title>
+      <description>This hook is called on Admin Improve Shipping Preferences post-process before processing the Handling form</description>
+    </hook>
+    <hook id="actionAdminShippingPreferencesControllerPostProcessCarrierOptionsBefore">
+      <name>actionAdminShippingPreferencesControllerPostProcessCarrierOptionsBefore</name>
+      <title>On post-process in Admin Improve Shipping Preferences Controller</title>
+      <description>This hook is called on Admin Improve Shipping Preferences post-process before processing the Carrier Options form</description>
+    </hook>
+    <hook id="actionAdminShippingPreferencesControllerPostProcessBefore">
+      <name>actionAdminShippingPreferencesControllerPostProcessBefore</name>
+      <title>On post-process in Admin Improve Shipping Preferences Controller</title>
+      <description>This hook is called on Admin Improve Shipping Preferences post-process before processing any form</description>
+    </hook>
+    <hook id="actionCheckoutRender">
+      <name>actionCheckoutRender</name>
+      <title>Modify checkout process</title>
+      <description>This hook is called when constructing the checkout process</description>
+    </hook>
+    <hook id="actionPresentProductListing">
+      <name>actionPresentProductListing</name>
+      <title>Product Listing Presenter</title>
+      <description>This hook is called before a product listing is presented</description>
+    </hook>
+    <hook id="actionGetProductPropertiesAfterUnitPrice">
+      <name>actionGetProductPropertiesAfterUnitPrice</name>
+      <title>Product Properties</title>
+      <description>This hook is called after defining the properties of a product</description>
+    </hook>
+    <hook id="actionOverrideEmployeeImage">
+      <name>actionOverrideEmployeeImage</name>
+      <title>Get Employee Image</title>
+      <description>This hook is used to get the employee image</description>
+    </hook>
+    <hook id="actionProductSearchProviderRunQueryBefore">
+      <name>actionProductSearchProviderRunQueryBefore</name>
+      <title>Runs an action before ProductSearchProviderInterface::RunQuery()</title>
+      <description>Required to modify an SQL query before executing it</description>
+    </hook>
+    <hook id="actionProductSearchProviderRunQueryAfter">
+      <name>actionProductSearchProviderRunQueryAfter</name>
+      <title>Runs an action after ProductSearchProviderInterface::RunQuery()</title>
+      <description>Required to return a previous state of an SQL query or/and to change a result of the SQL query after executing it</description>
+    </hook>
+    <hook id="actionFrontControllerSetVariables">
+      <name>actionFrontControllerSetVariables</name>
+      <title>Add variables in JavaScript object and Smarty templates</title>
+      <description>Add variables to javascript object that is available in Front Office. These are also available in smarty templates in modules.your_module_name.</description>
+    </hook>
+    <hook id="displayAdminOrderCreateExtraButtons">
+      <name>displayAdminOrderCreateExtraButtons</name>
+      <title>Add buttons on the create order page dropdown</title>
+      <description>Add buttons on the create order page dropdown</description>
+    </hook>
     <hook id="displayAdminGridTableBefore">
       <name>displayAdminGridTableBefore</name>
       <title>Display before Grid table</title>
@@ -2793,6 +2869,606 @@
       <name>displayAdminGridTableAfter</name>
       <title>Display after Grid table</title>
       <description>This hook adds new blocks after Grid component table</description>
+    </hook>
+    <hook id="actionProductFormBuilderModifier">
+      <name>actionProductFormBuilderModifier</name>
+      <title>Modify product identifiable object form</title>
+      <description>This hook allows to modify product identifiable object form content by modifying form builder data or FormBuilder itself</description>
+    </hook>
+    <hook id="actionBeforeCreateProductFormHandler">
+      <name>actionBeforeCreateProductFormHandler</name>
+      <title>Modify product identifiable object data before creating it</title>
+      <description>This hook allows to modify product identifiable object form data before it was created</description>
+    </hook>
+    <hook id="actionAfterCreateProductFormHandler">
+      <name>actionBeforeCreateProductFormHandler</name>
+      <title>Modify product identifiable object data after creating it</title>
+      <description>This hook allows to modify product identifiable object form data after it was created</description>
+    </hook>
+    <hook id="actionBeforeUpdateProductFormHandler">
+      <name>actionBeforeUpdateProductFormHandler</name>
+      <title>Modify product identifiable object data before updating it</title>
+      <description>This hook allows to modify product identifiable object form data before it was updated</description>
+    </hook>
+    <hook id="actionAfterUpdateProductFormHandler">
+      <name>actionAfterUpdateProductFormHandler</name>
+      <title>Modify product identifiable object data after updating it</title>
+      <description>This hook allows to modify product identifiable object form data after it was updated</description>
+    </hook>
+    <hook id="actionCustomerDiscountGridDefinitionModifier">
+      <name>actionCustomerDiscountGridDefinitionModifier</name>
+      <title>Modify customer discount grid definition</title>
+      <description>This hook allows to alter customer discount grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionCustomerAddressGridDefinitionModifier">
+      <name>actionCustomerAddressGridDefinitionModifier</name>
+      <title>Modify customer address grid definition</title>
+      <description>This hook allows to alter customer address grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionCartRuleGridDefinitionModifier">
+      <name>actionCartRuleGridDefinitionModifier</name>
+      <title>Modify cart rule grid definition</title>
+      <description>This hook allows to alter cart rule grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionOrderStatesGridDefinitionModifier">
+      <name>actionOrderStatesGridDefinitionModifier</name>
+      <title>Modify order states grid definition</title>
+      <description>This hook allows to alter order states grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionOrderReturnStatesGridDefinitionModifier">
+      <name>actionOrderReturnStatesGridDefinitionModifier</name>
+      <title>Modify order return states grid definition</title>
+      <description>This hook allows to alter order return states grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionOutstandingGridDefinitionModifier">
+      <name>actionOutstandingGridDefinitionModifier</name>
+      <title>Modify outstanding grid definition</title>
+      <description>This hook allows to alter outstanding grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionCarrierGridDefinitionModifier">
+      <name>actionCarrierGridDefinitionModifier</name>
+      <title>Modify carrier grid definition</title>
+      <description>This hook allows to alter carrier grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionZoneGridDefinitionModifier">
+      <name>actionZoneGridDefinitionModifier</name>
+      <title>Modify zone grid definition</title>
+      <description>This hook allows to alter zone grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionCustomerDiscountGridQueryBuilderModifier">
+      <name>actionCustomerDiscountGridQueryBuilderModifier</name>
+      <title>Modify customer discount grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for customer discount grid</description>
+    </hook>
+    <hook id="actionCustomerAddressGridQueryBuilderModifier">
+      <name>actionCustomerAddressGridQueryBuilderModifier</name>
+      <title>Modify customer address grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for customer address grid</description>
+    </hook>
+    <hook id="actionCartRuleGridQueryBuilderModifier">
+      <name>actionCartRuleGridQueryBuilderModifier</name>
+      <title>Modify cart rule grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for cart rule grid</description>
+    </hook>
+    <hook id="actionOrderStatesGridQueryBuilderModifier">
+      <name>actionOrderStatesGridQueryBuilderModifier</name>
+      <title>Modify order states grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for order states grid</description>
+    </hook>
+    <hook id="actionOrderReturnStatesGridQueryBuilderModifier">
+      <name>actionOrderReturnStatesGridQueryBuilderModifier</name>
+      <title>Modify order return states grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for order return states grid</description>
+    </hook>
+    <hook id="actionOutstandingGridQueryBuilderModifier">
+      <name>actionOutstandingGridQueryBuilderModifier</name>
+      <title>Modify outstanding grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for outstanding grid</description>
+    </hook>
+    <hook id="actionCarrierGridQueryBuilderModifier">
+      <name>actionCarrierGridQueryBuilderModifier</name>
+      <title>Modify carrier grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for carrier grid</description>
+    </hook>
+    <hook id="actionZoneGridQueryBuilderModifier">
+      <name>actionZoneGridQueryBuilderModifier</name>
+      <title>Modify zone grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for zone grid</description>
+    </hook>
+    <hook id="actionCustomerDiscountGridDataModifier">
+      <name>actionCustomerDiscountGridDataModifier</name>
+      <title>Modify customer discount grid data</title>
+      <description>This hook allows to modify customer discount grid data</description>
+    </hook>
+    <hook id="actionCustomerAddressGridDataModifier">
+      <name>actionCustomerAddressGridDataModifier</name>
+      <title>Modify customer address grid data</title>
+      <description>This hook allows to modify customer address grid data</description>
+    </hook>
+    <hook id="actionCartRuleGridDataModifier">
+      <name>actionCartRuleGridDataModifier</name>
+      <title>Modify cart rule grid data</title>
+      <description>This hook allows to modify cart rule grid data</description>
+    </hook>
+    <hook id="actionOrderStatesGridDataModifier">
+      <name>actionOrderStatesGridDataModifier</name>
+      <title>Modify order states grid data</title>
+      <description>This hook allows to modify order states grid data</description>
+    </hook>
+    <hook id="actionOrderReturnStatesGridDataModifier">
+      <name>actionOrderReturnStatesGridDataModifier</name>
+      <title>Modify order return states grid data</title>
+      <description>This hook allows to modify order return states grid data</description>
+    </hook>
+    <hook id="actionOutstandingGridDataModifier">
+      <name>actionOutstandingGridDataModifier</name>
+      <title>Modify outstanding grid data</title>
+      <description>This hook allows to modify outstanding grid data</description>
+    </hook>
+    <hook id="actionCarrierGridDataModifier">
+      <name>actionCarrierGridDataModifier</name>
+      <title>Modify carrier grid data</title>
+      <description>This hook allows to modify carrier grid data</description>
+    </hook>
+    <hook id="actionZoneGridDataModifier">
+      <name>actionZoneGridDataModifier</name>
+      <title>Modify zone grid data</title>
+      <description>This hook allows to modify zone grid data</description>
+    </hook>
+    <hook id="actionCustomerDiscountGridFilterFormModifier">
+      <name>actionCustomerDiscountGridFilterFormModifier</name>
+      <title>Modify customer discount grid filters</title>
+      <description>This hook allows to modify filters for customer discount grid</description>
+    </hook>
+    <hook id="actionCustomerAddressGridFilterFormModifier">
+      <name>actionCustomerAddressGridFilterFormModifier</name>
+      <title>Modify customer address grid filters</title>
+      <description>This hook allows to modify filters for customer address grid</description>
+    </hook>
+    <hook id="actionCartRuleGridFilterFormModifier">
+      <name>actionCartRuleGridFilterFormModifier</name>
+      <title>Modify cart rule grid filters</title>
+      <description>This hook allows to modify filters for cart rule grid</description>
+    </hook>
+    <hook id="actionOrderStatesGridFilterFormModifier">
+      <name>actionOrderStatesGridFilterFormModifier</name>
+      <title>Modify order states grid filters</title>
+      <description>This hook allows to modify filters for order states grid</description>
+    </hook>
+    <hook id="actionOrderReturnStatesGridFilterFormModifier">
+      <name>actionOrderReturnStatesGridFilterFormModifier</name>
+      <title>Modify order return states grid filters</title>
+      <description>This hook allows to modify filters for order return states grid</description>
+    </hook>
+    <hook id="actionOutstandingGridFilterFormModifier">
+      <name>actionOutstandingGridFilterFormModifier</name>
+      <title>Modify outstanding grid filters</title>
+      <description>This hook allows to modify filters for outstanding grid</description>
+    </hook>
+    <hook id="actionCarrierGridFilterFormModifier">
+      <name>actionCarrierGridFilterFormModifier</name>
+      <title>Modify carrier grid filters</title>
+      <description>This hook allows to modify filters for carrier grid</description>
+    </hook>
+    <hook id="actionZoneGridFilterFormModifier">
+      <name>actionZoneGridFilterFormModifier</name>
+      <title>Modify zone grid filters</title>
+      <description>This hook allows to modify filters for zone grid</description>
+    </hook>
+    <hook id="actionCustomerDiscountGridPresenterModifier">
+      <name>actionCustomerDiscountGridPresenterModifier</name>
+      <title>Modify customer discount grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for customer discount grid
+      </description>
+    </hook>
+    <hook id="actionCustomerAddressGridPresenterModifier">
+      <name>actionCustomerAddressGridPresenterModifier</name>
+      <title>Modify customer address grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for customer address grid
+      </description>
+    </hook>
+    <hook id="actionCartRuleGridPresenterModifier">
+      <name>actionCartRuleGridPresenterModifier</name>
+      <title>Modify cart rule grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for cart rule grid
+      </description>
+    </hook>
+    <hook id="actionOrderStatesGridPresenterModifier">
+      <name>actionOrderStatesGridPresenterModifier</name>
+      <title>Modify order states grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for order states grid
+      </description>
+    </hook>
+    <hook id="actionOrderReturnStatesGridPresenterModifier">
+      <name>actionOrderReturnStatesGridPresenterModifier</name>
+      <title>Modify order return states grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for order return states grid
+      </description>
+    </hook>
+    <hook id="actionOutstandingGridPresenterModifier">
+      <name>actionOutstandingGridPresenterModifier</name>
+      <title>Modify outstanding grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for outstanding grid
+      </description>
+    </hook>
+    <hook id="actionCarrierGridPresenterModifier">
+      <name>actionCarrierGridPresenterModifier</name>
+      <title>Modify carrier grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for carrier grid</description>
+    </hook>
+    <hook id="actionZoneGridPresenterModifier">
+      <name>actionZoneGridPresenterModifier</name>
+      <title>Modify zone grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for zone grid</description>
+    </hook>
+    <hook id="actionPerformancePageSmartyForm">
+      <name>actionPerformancePageSmartyForm</name>
+      <title>Modify performance page smarty options form content</title>
+      <description>This hook allows to modify performance page smarty options form FormBuilder</description>
+    </hook>
+    <hook id="actionPerformancePageDebugModeForm">
+      <name>actionPerformancePageDebugModeForm</name>
+      <title>Modify performance page debug mode options form content</title>
+      <description>This hook allows to modify performance page debug mode options form FormBuilder</description>
+    </hook>
+    <hook id="actionPerformancePageOptionalFeaturesForm">
+      <name>actionPerformancePageOptionalFeaturesForm</name>
+      <title>Modify performance page optional features options form content</title>
+      <description>This hook allows to modify performance page optional features options form FormBuilder</description>
+    </hook>
+    <hook id="actionPerformancePageCombineCompressCacheForm">
+      <name>actionPerformancePageCombineCompressCacheForm</name>
+      <title>Modify performance page combine compress cache options form content</title>
+      <description>This hook allows to modify performance page combine compress cache options form FormBuilder
+      </description>
+    </hook>
+    <hook id="actionPerformancePageMediaServersForm">
+      <name>actionPerformancePageMediaServersForm</name>
+      <title>Modify performance page media servers options form content</title>
+      <description>This hook allows to modify performance page media servers options form FormBuilder</description>
+    </hook>
+    <hook id="actionPerformancePagecachingForm">
+      <name>actionPerformancePagecachingForm</name>
+      <title>Modify performance pagecaching options form content</title>
+      <description>This hook allows to modify performance pagecaching options form FormBuilder</description>
+    </hook>
+    <hook id="actionAdministrationPageGeneralForm">
+      <name>actionAdministrationPageGeneralForm</name>
+      <title>Modify administration page general options form content</title>
+      <description>This hook allows to modify administration page general options form FormBuilder</description>
+    </hook>
+    <hook id="actionAdministrationPageUploadQuotaForm">
+      <name>actionAdministrationPageUploadQuotaForm</name>
+      <title>Modify administration page upload quota options form content</title>
+      <description>This hook allows to modify administration page upload quota options form FormBuilder</description>
+    </hook>
+    <hook id="actionAdministrationPageNotificationsForm">
+      <name>actionAdministrationPageNotificationsForm</name>
+      <title>Modify administration page notifications options form content</title>
+      <description>This hook allows to modify administration page notifications options form FormBuilder</description>
+    </hook>
+    <hook id="actionShippingPreferencesPageHandlingForm">
+      <name>actionShippingPreferencesPageHandlingForm</name>
+      <title>Modify shipping preferences page handling options form content</title>
+      <description>This hook allows to modify shipping preferences page handling options form FormBuilder</description>
+    </hook>
+    <hook id="actionShippingPreferencesPageCarrierOptionsForm">
+      <name>actionShippingPreferencesPageCarrierOptionsForm</name>
+      <title>Modify shipping preferences page carrier options options form content</title>
+      <description>This hook allows to modify shipping preferences page carrier options options form FormBuilder
+      </description>
+    </hook>
+    <hook id="actionOrderPreferencesPageGeneralForm">
+      <name>actionOrderPreferencesPageGeneralForm</name>
+      <title>Modify order preferences page general options form content</title>
+      <description>This hook allows to modify order preferences page general options form FormBuilder</description>
+    </hook>
+    <hook id="actionOrderPreferencesPageGiftOptionsForm">
+      <name>actionOrderPreferencesPageGiftOptionsForm</name>
+      <title>Modify order preferences page gift options options form content</title>
+      <description>This hook allows to modify order preferences page gift options options form FormBuilder</description>
+    </hook>
+    <hook id="actionProductPreferencesPageGeneralForm">
+      <name>actionProductPreferencesPageGeneralForm</name>
+      <title>Modify product preferences page general options form content</title>
+      <description>This hook allows to modify product preferences page general options form FormBuilder</description>
+    </hook>
+    <hook id="actionProductPreferencesPagePaginationForm">
+      <name>actionProductPreferencesPagePaginationForm</name>
+      <title>Modify product preferences page pagination options form content</title>
+      <description>This hook allows to modify product preferences page pagination options form FormBuilder</description>
+    </hook>
+    <hook id="actionProductPreferencesPagePageForm">
+      <name>actionProductPreferencesPagePageForm</name>
+      <title>Modify product preferences page page options form content</title>
+      <description>This hook allows to modify product preferences page page options form FormBuilder</description>
+    </hook>
+    <hook id="actionProductPreferencesPageStockForm">
+      <name>actionProductPreferencesPageStockForm</name>
+      <title>Modify product preferences page stock options form content</title>
+      <description>This hook allows to modify product preferences page stock options form FormBuilder</description>
+    </hook>
+    <hook id="actionGeolocationPageByAddressForm">
+      <name>actionGeolocationPageByAddressForm</name>
+      <title>Modify geolocation page by address options form content</title>
+      <description>This hook allows to modify geolocation page by address options form FormBuilder</description>
+    </hook>
+    <hook id="actionGeolocationPageWhitelistForm">
+      <name>actionGeolocationPageWhitelistForm</name>
+      <title>Modify geolocation page whitelist options form content</title>
+      <description>This hook allows to modify geolocation page whitelist options form FormBuilder</description>
+    </hook>
+    <hook id="actionGeolocationPageOptionsForm">
+      <name>actionGeolocationPageOptionsForm</name>
+      <title>Modify geolocation page options options form content</title>
+      <description>This hook allows to modify geolocation page options options form FormBuilder</description>
+    </hook>
+    <hook id="actionLocalizationPageConfigurationForm">
+      <name>actionLocalizationPageConfigurationForm</name>
+      <title>Modify localization page configuration options form content</title>
+      <description>This hook allows to modify localization page configuration options form FormBuilder</description>
+    </hook>
+    <hook id="actionLocalizationPageLocalUnitsForm">
+      <name>actionLocalizationPageLocalUnitsForm</name>
+      <title>Modify localization page local units options form content</title>
+      <description>This hook allows to modify localization page local units options form FormBuilder</description>
+    </hook>
+    <hook id="actionLocalizationPageAdvancedForm">
+      <name>actionLocalizationPageAdvancedForm</name>
+      <title>Modify localization page advanced options form content</title>
+      <description>This hook allows to modify localization page advanced options form FormBuilder</description>
+    </hook>
+    <hook id="actionFeatureFlagForm">
+      <name>actionFeatureFlagForm</name>
+      <title>Modify feature flag page form content</title>
+      <description>This hook allows to modify the Feature Flag page form's FormBuilder</description>
+    </hook>
+    <hook id="actionPerformancePageSmartySave">
+      <name>actionPerformancePageSmartySave</name>
+      <title>Modify performance page smarty options form saved data</title>
+      <description>This hook allows to modify data of performance page smarty options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionPerformancePageDebugModeSave">
+      <name>actionPerformancePageDebugModeSave</name>
+      <title>Modify performance page debug mode options form saved data</title>
+      <description>This hook allows to modify data of performance page debug mode options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionPerformancePageOptionalFeaturesSave">
+      <name>actionPerformancePageOptionalFeaturesSave</name>
+      <title>Modify performance page optional features options form saved data</title>
+      <description>This hook allows to modify data of performance page optional features options form after it was
+        saved
+      </description>
+    </hook>
+    <hook id="actionPerformancePageCombineCompressCacheSave">
+      <name>actionPerformancePageCombineCompressCacheSave</name>
+      <title>Modify performance page combine compress cache options form saved data</title>
+      <description>This hook allows to modify data of performance page combine compress cache options form after it was
+        saved
+      </description>
+    </hook>
+    <hook id="actionPerformancePageMediaServersSave">
+      <name>actionPerformancePageMediaServersSave</name>
+      <title>Modify performance page media servers options form saved data</title>
+      <description>This hook allows to modify data of performance page media servers options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionPerformancePagecachingSave">
+      <name>actionPerformancePagecachingSave</name>
+      <title>Modify performance pagecaching options form saved data</title>
+      <description>This hook allows to modify data of performance pagecaching options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionAdministrationPageGeneralSave">
+      <name>actionAdministrationPageGeneralSave</name>
+      <title>Modify administration page general options form saved data</title>
+      <description>This hook allows to modify data of administration page general options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionAdministrationPageUploadQuotaSave">
+      <name>actionAdministrationPageUploadQuotaSave</name>
+      <title>Modify administration page upload quota options form saved data</title>
+      <description>This hook allows to modify data of administration page upload quota options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionAdministrationPageNotificationsSave">
+      <name>actionAdministrationPageNotificationsSave</name>
+      <title>Modify administration page notifications options form saved data</title>
+      <description>This hook allows to modify data of administration page notifications options form after it was
+        saved
+      </description>
+    </hook>
+    <hook id="actionShippingPreferencesPageHandlingSave">
+      <name>actionShippingPreferencesPageHandlingSave</name>
+      <title>Modify shipping preferences page handling options form saved data</title>
+      <description>This hook allows to modify data of shipping preferences page handling options form after it was
+        saved
+      </description>
+    </hook>
+    <hook id="actionShippingPreferencesPageCarrierOptionsSave">
+      <name>actionShippingPreferencesPageCarrierOptionsSave</name>
+      <title>Modify shipping preferences page carrier options options form saved data</title>
+      <description>This hook allows to modify data of shipping preferences page carrier options options form after it
+        was saved
+      </description>
+    </hook>
+    <hook id="actionOrderPreferencesPageGeneralSave">
+      <name>actionOrderPreferencesPageGeneralSave</name>
+      <title>Modify order preferences page general options form saved data</title>
+      <description>This hook allows to modify data of order preferences page general options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionOrderPreferencesPageGiftOptionsSave">
+      <name>actionOrderPreferencesPageGiftOptionsSave</name>
+      <title>Modify order preferences page gift options options form saved data</title>
+      <description>This hook allows to modify data of order preferences page gift options options form after it was
+        saved
+      </description>
+    </hook>
+    <hook id="actionProductPreferencesPageGeneralSave">
+      <name>actionProductPreferencesPageGeneralSave</name>
+      <title>Modify product preferences page general options form saved data</title>
+      <description>This hook allows to modify data of product preferences page general options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionProductPreferencesPagePaginationSave">
+      <name>actionProductPreferencesPagePaginationSave</name>
+      <title>Modify product preferences page pagination options form saved data</title>
+      <description>This hook allows to modify data of product preferences page pagination options form after it was
+        saved
+      </description>
+    </hook>
+    <hook id="actionProductPreferencesPagePageSave">
+      <name>actionProductPreferencesPagePageSave</name>
+      <title>Modify product preferences page page options form saved data</title>
+      <description>This hook allows to modify data of product preferences page page options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionProductPreferencesPageStockSave">
+      <name>actionProductPreferencesPageStockSave</name>
+      <title>Modify product preferences page stock options form saved data</title>
+      <description>This hook allows to modify data of product preferences page stock options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionGeolocationPageByAddressSave">
+      <name>actionGeolocationPageByAddressSave</name>
+      <title>Modify geolocation page by address options form saved data</title>
+      <description>This hook allows to modify data of geolocation page by address options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionGeolocationPageWhitelistSave">
+      <name>actionGeolocationPageWhitelistSave</name>
+      <title>Modify geolocation page whitelist options form saved data</title>
+      <description>This hook allows to modify data of geolocation page whitelist options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionGeolocationPageOptionsSave">
+      <name>actionGeolocationPageOptionsSave</name>
+      <title>Modify geolocation page options options form saved data</title>
+      <description>This hook allows to modify data of geolocation page options options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionLocalizationPageConfigurationSave">
+      <name>actionLocalizationPageConfigurationSave</name>
+      <title>Modify localization page configuration options form saved data</title>
+      <description>This hook allows to modify data of localization page configuration options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionLocalizationPageLocalUnitsSave">
+      <name>actionLocalizationPageLocalUnitsSave</name>
+      <title>Modify localization page local units options form saved data</title>
+      <description>This hook allows to modify data of localization page local units options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionLocalizationPageAdvancedSave">
+      <name>actionLocalizationPageAdvancedSave</name>
+      <title>Modify localization page advanced options form saved data</title>
+      <description>This hook allows to modify data of localization page advanced options form after it was saved
+      </description>
+    </hook>
+    <hook id="actionFeatureFlagSave">
+      <name>actionFeatureFlagSave</name>
+      <title>Modify feature flag form submitted data</title>
+      <description>This hook allows to modify the Feature Flag data being submitted through the form after it was
+        saved
+      </description>
+    </hook>
+    <hook id="actionOrderStateFormBuilderModifier">
+      <name>actionOrderStateFormBuilderModifier</name>
+      <title>Modify order state identifiable object form</title>
+      <description>This hook allows to modify order state identifiable object forms content by modifying form builder
+        data or FormBuilder itself
+      </description>
+    </hook>
+    <hook id="actionOrderReturnStateFormBuilderModifier">
+      <name>actionOrderReturnStateFormBuilderModifier</name>
+      <title>Modify order return state identifiable object form</title>
+      <description>This hook allows to modify order return state identifiable object forms content by modifying form
+        builder data or FormBuilder itself
+      </description>
+    </hook>
+    <hook id="actionZoneFormBuilderModifier">
+      <name>actionZoneFormBuilderModifier</name>
+      <title>Modify zone identifiable object form</title>
+      <description>This hook allows to modify zone identifiable object forms content by modifying form builder data or
+        FormBuilder itself
+      </description>
+    </hook>
+    <hook id="actionBeforeUpdateOrderStateFormHandler">
+      <name>actionBeforeUpdateOrderStateFormHandler</name>
+      <title>Modify order state identifiable object data before updating it</title>
+      <description>This hook allows to modify order state identifiable object forms data before it was updated
+      </description>
+    </hook>
+    <hook id="actionBeforeUpdateOrderReturnStateFormHandler">
+      <name>actionBeforeUpdateOrderReturnStateFormHandler</name>
+      <title>Modify order return state identifiable object data before updating it</title>
+      <description>This hook allows to modify order return state identifiable object forms data before it was updated
+      </description>
+    </hook>
+    <hook id="actionBeforeUpdateZoneFormHandler">
+      <name>actionBeforeUpdateZoneFormHandler</name>
+      <title>Modify zone identifiable object data before updating it</title>
+      <description>This hook allows to modify zone identifiable object forms data before it was updated</description>
+    </hook>
+    <hook id="actionAfterUpdateOrderStateFormHandler">
+      <name>actionAfterUpdateOrderStateFormHandler</name>
+      <title>Modify order state identifiable object data after updating it</title>
+      <description>This hook allows to modify order state identifiable object forms data after it was updated
+      </description>
+    </hook>
+    <hook id="actionAfterUpdateOrderReturnStateFormHandler">
+      <name>actionAfterUpdateOrderReturnStateFormHandler</name>
+      <title>Modify order return state identifiable object data after updating it</title>
+      <description>This hook allows to modify order return state identifiable object forms data after it was updated
+      </description>
+    </hook>
+    <hook id="actionAfterUpdateProductImageFormHandler">
+      <name>actionAfterUpdateProductImageFormHandler</name>
+      <title>Modify product image identifiable object data after updating it</title>
+      <description>This hook allows to modify product image identifiable object forms data after it was updated
+      </description>
+    </hook>
+    <hook id="actionAfterUpdateZoneFormHandler">
+      <name>actionAfterUpdateZoneFormHandler</name>
+      <title>Modify zone identifiable object data after updating it</title>
+      <description>This hook allows to modify zone identifiable object forms data after it was updated</description>
+    </hook>
+    <hook id="actionBeforeCreateOrderStateFormHandler">
+      <name>actionBeforeCreateOrderStateFormHandler</name>
+      <title>Modify order state identifiable object data before creating it</title>
+      <description>This hook allows to modify order state identifiable object forms data before it was created
+      </description>
+    </hook>
+    <hook id="actionBeforeCreateOrderReturnStateFormHandler">
+      <name>actionBeforeCreateOrderReturnStateFormHandler</name>
+      <title>Modify order return state identifiable object data before creating it</title>
+      <description>This hook allows to modify order return state identifiable object forms data before it was created
+      </description>
+    </hook>
+    <hook id="actionBeforeCreateZoneFormHandler">
+      <name>actionBeforeCreateZoneFormHandler</name>
+      <title>Modify zone identifiable object data before creating it</title>
+      <description>This hook allows to modify zone identifiable object forms data before it was created</description>
+    </hook>
+    <hook id="actionAfterCreateOrderStateFormHandler">
+      <name>actionAfterCreateOrderStateFormHandler</name>
+      <title>Modify order state identifiable object data after creating it</title>
+      <description>This hook allows to modify order state identifiable object forms data after it was created
+      </description>
+    </hook>
+    <hook id="actionAfterCreateOrderReturnStateFormHandler">
+      <name>actionAfterCreateOrderReturnStateFormHandler</name>
+      <title>Modify order return state identifiable object data after creating it</title>
+      <description>This hook allows to modify order return state identifiable object forms data after it was created
+      </description>
+    </hook>
+    <hook id="actionAfterCreateZoneFormHandler">
+      <name>actionAfterCreateZoneFormHandler</name>
+      <title>Modify zone identifiable object data after creating it</title>
+      <description>This hook allows to modify zone identifiable object forms data after it was created</description>
     </hook>
   </entities>
 </entity_hook>

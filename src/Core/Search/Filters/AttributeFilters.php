@@ -45,7 +45,7 @@ final class AttributeFilters extends Filters
         return [
             'limit' => 50,
             'offset' => 0,
-            'orderBy' => 'id_attribute',
+            'orderBy' => 'position',
             'sortOrder' => 'asc',
             'filters' => [],
         ];

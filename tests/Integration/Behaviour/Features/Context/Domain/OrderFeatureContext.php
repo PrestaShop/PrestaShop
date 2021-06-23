@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeComman
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
@@ -193,8 +194,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
         }
 
-        $this->lastException = null;
-
         try {
             $hasFreeShipping = null;
             if (isset($data['free_shipping'])) {
@@ -212,11 +211,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (InvalidProductQuantityException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         } catch (ProductOutOfStockException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         } catch (DuplicateProductInOrderException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -252,13 +251,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             );
         }
 
-        $this->lastException = null;
         try {
             $this->getCommandBus()->handle(
                 new DeleteProductFromOrderCommand($orderId, $orderDetailId)
             );
         } catch (OrderException | OrderNotFoundException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -290,7 +288,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
         }
 
-        $this->lastException = null;
+        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::toExistingInvoice(
@@ -304,9 +302,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (InvalidProductQuantityException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         } catch (DuplicateProductInOrderException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -646,7 +644,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $invoice = $this->getInvoiceFromOrder($order, $data['invoice']);
             $invoiceId = (int) $invoice->id;
         }
-        $this->lastException = null;
 
         // If tax included price is not given, it is calculated
         if (!isset($data['price_tax_incl'])) {
@@ -666,18 +663,18 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (InvalidProductQuantityException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         } catch (ProductOutOfStockException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         } catch (DuplicateProductInOrderInvoiceException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         } catch (CannotFindProductInOrderException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
     /**
-     * @Then I should get error that product quantity is invalid
+     * @Then I should get error that product quantity is invalid for order
      */
     public function assertLastErrorIsNegativeProductQuantity()
     {
@@ -1065,12 +1062,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then product :productName in order :orderReference has following details:
+     * @Then product :productReference named :productName in order :orderReference has following details:
      *
      * @param string $orderReference
      * @param string $productName
      * @param TableNode $table
+     * @param string|null $productReference saves product reference to shared storage if provided
      */
-    public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table)
+    public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table, ?string $productReference = null)
     {
         $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference);
         $expectedDetails = $table->getRowsHash();
@@ -1086,6 +1085,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     $productOrderDetail[$detailName]
                 )
             );
+        }
+
+        if ($productReference) {
+            $this->getSharedStorage()->set($productReference, $this->getProductIdByName($productName));
         }
     }
 
@@ -1215,7 +1218,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $data['value'] ?? null
             ));
         } catch (InvalidCartRuleDiscountValueException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -1320,6 +1323,33 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When /^I change order "(.*)" note to "(.*)"$/
+     *
+     * @param string $orderReference
+     * @param string $internalNote
+     */
+    public function changeOrderInternalNoteTo(string $orderReference, string $internalNote)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $this->getCommandBus()->handle(new SetInternalOrderNoteCommand($orderId, $internalNote));
+    }
+
+    /**
+     * @Then /^order "(.*)" note should be "(.*)"$/
+     *
+     * @param string $orderReference
+     * @param string $internalNote
+     */
+    public function internalNoteShouldBe(string $orderReference, string $internalNote)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $expectedInternalNote = $orderForViewing->getNote();
+        Assert::assertSame($expectedInternalNote, $internalNote);
+    }
+
+    /**
      * Sales-taxes US-FL 6%
      *
      * @Given tax :taxName is applied to order :ordeReference
@@ -1412,7 +1442,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then order :orderReference preview shipping address should have the following details:
      */
-    public function getOrderPreviewShippingAddress(string $orderReference, TableNode $table)
+    public function getOrderPreviewShippingAddress(string $orderReference, TableNode $table): void
     {
         $orderId = $this->getSharedStorage()->get($orderReference);
         $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));

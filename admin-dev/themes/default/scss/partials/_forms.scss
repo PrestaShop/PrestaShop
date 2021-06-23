@@ -1,0 +1,325 @@
+//form
+label.control-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: $main-color;
+}
+
+label.control-label span.label-tooltip {
+  padding: 0 5px;
+  font-size: 14px;
+  color: $main-color;
+  text-decoration: none;
+  border: none;
+}
+
+label.required::before {
+  position: relative;
+  font-size: 14px;
+  line-height: 12px;
+  color: #f00;
+  content: "*";
+}
+
+.tooltip {
+  font-family: $font-family-sans-serif;
+  font-size: 12px;
+  white-space: normal;
+
+  &-inner {
+    padding: 10px;
+    background-color: $main-color;
+  }
+
+  &.top .tooltip-arrow {
+    border-top-color: $main-color;
+  }
+}
+
+select.input-tiny,
+input[type="text"].input-tiny,
+input[type="password"].input-tiny {
+  width: 80px;
+  @include float(left);
+}
+
+textarea {
+  resize: none;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {
+  background-color: $input-focus-background;
+  border-color: $input-focus-border;
+  @include box-shadow(none);
+}
+
+textarea:hover,
+input[type="text"]:hover,
+input[type="password"]:focus,
+input[type="datetime"]:hover,
+input[type="datetime-local"]:hover,
+input[type="date"]:hover,
+input[type="month"]:hover,
+input[type="time"]:hover,
+input[type="week"]:hover,
+input[type="number"]:hover,
+input[type="email"]:hover,
+input[type="url"]:hover,
+input[type="search"]:hover,
+input[type="tel"]:hover,
+input[type="color"]:hover,
+.uneditable-input:hover {
+  background-color: $input-focus-background;
+}
+//buttons
+.btn {
+  .caret {
+    border-top-color: $gray-dark !important;
+  }
+
+  &:hover {
+    .caret {
+      border-top-color: #fff !important;
+    }
+  }
+
+  &.btn-default {
+    i {
+      color: $gray;
+    }
+
+    &:hover {
+      color: #fff;
+      background-color: $brand-primary;
+      border-color: darken($brand-primary, 10%);
+      @include box-shadow(none);
+
+      i {
+        color: #fff;
+      }
+    }
+  }
+
+  &.btn-primary {
+    i {
+      color: #fff;
+    }
+    color: #fff;
+    text-transform: uppercase;
+    background-color: $brand-primary;
+
+    &:hover {
+      background-color: darken($brand-primary, 10%);
+      @include box-shadow(none);
+    }
+  }
+
+  &.btn-default[disabled] {
+    color: $gray-light;
+    background-color: lighten($gray-light, 35%);
+    border-color: $gray-light;
+  }
+}
+
+.dropdown-menu {
+  @include text-align(left);
+
+  > li a {
+    padding: 5px 10px;
+
+    &:hover {
+      i {
+        color: #fff;
+      }
+    }
+  }
+}
+
+.btn-group-action {
+  line-height: 0;
+
+  .btn {
+    font-family: $font-family-sans-serif;
+  }
+
+  .btn-group {
+    white-space: nowrap;
+
+    > a,
+    button {
+      display: inline-block;
+      float: none;
+      text-decoration: none;
+    }
+
+    > a:first-child {
+      @include margin-right(-3px);
+    }
+
+    i {
+      font-size: 14px;
+    }//form file upload
+  }
+}
+
+.dummyfile {
+  position: relative;
+
+  .hide-file-upload {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    @include opacity(0);
+  }
+  //typeahead
+}
+
+.tt-query {
+  @include border-right-radius(3px!important);
+}
+
+.tt-dropdown-menu {
+  font-size: 0.9em;
+  text-transform: none;
+  background-color: #fff;
+  border: solid 1px #ccc;
+}
+
+.tt-suggestions {
+  padding: 0 6px;
+  @include box-shadow(rgba(black,0.25) 0 1px 4px);
+}
+
+.tt-suggestion p {
+  padding: 0 !important;
+  margin: 0 !important;
+  border-bottom: solid 1px #ccc;
+}
+
+.tt-suggestion:last-child p {
+  border-bottom: none;
+}
+//tag
+.tagify-container {
+  min-height: 30px;
+  padding: 0 3px;
+  overflow: auto;
+  background-color: #fff;
+  border: solid 1px #ccc;
+  @include border-radius(3px);
+  @include box-shadow(rgba(0, 0, 0, 0.075) 0 1px 1px inset);
+
+  span {
+    @include float(left);
+  }
+
+  > span {
+    display: inline-block;
+    padding: 2px 5px;
+    margin: 3px;
+    color: #fff;
+    background-color: lighten($brand-primary, 15%);
+    border: 1px solid $brand-primary;
+    border-radius: 2px;
+
+    > a {
+      font-weight: 700;
+      color: $brand-primary;
+      text-decoration: none;
+      @include padding-left(5px);
+    }
+  }
+
+  > input {
+    width: 140px;
+    height: auto;
+    margin-top: 2px;
+    border: 0 none;
+    @include box-shadow(none);
+  }
+
+  > input:focus {
+    outline: 0;
+    @include box-shadow(none);
+  }
+}
+
+.form-group {
+  @media (max-width: $screen-lg) {
+    input[type="text"],
+    input[type="search"],
+    input[type="password"],
+    textarea,
+    select {
+      margin: 4px 0;
+    }
+
+    .input-group {
+      margin: 4px 0;
+
+      input[type="text"],
+      input[type="search"],
+      input[type="password"],
+      textarea,
+      select {
+        margin: 0;
+      }
+    }
+  }
+
+  .input-group {
+    &-btn {
+      > .btn {
+        height: $input-height-base;
+      }
+    }
+  }
+
+  .translatable-field {
+    .btn.dropdown-toggle {
+      height: $input-height-base;
+    }
+  }
+}
+
+input[type="text"],
+input[type="search"],
+input[type="password"],
+input[type="email"],
+input[type="tel"] {
+  font-family: $url-font-content-name, Helvetica, Arial, $icon-font-family, sans-serif !important;
+}
+
+
+@media (min-width: $screen-sm-min) {
+  .control-label {
+    padding-top: 7px;
+    padding-right: 25px;
+  }
+}
+
+.form-horizontal {
+  .form-wrapper {
+    flex: 0 0 83.33333%;
+    max-width: 83.33333%;
+    padding: 14px 0;
+    margin: auto;
+  }
+}

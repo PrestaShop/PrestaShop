@@ -350,7 +350,7 @@ abstract class CacheCore
             return;
         }
 
-        if (empty($result) || $result === false) {
+        if (empty($result)) {
             $result = [];
         }
 
@@ -415,9 +415,9 @@ abstract class CacheCore
      *
      * @param string $key query hash
      * @param string $table table name
-     * @param array $tables the tables associated with the query
+     * @param array $otherTables the tables associated with the query
      */
-    private function addQueryKeyToTableMap($key, $table, $tables)
+    private function addQueryKeyToTableMap($key, $table, $otherTables)
     {
         // the name of the cache entry which cache the table map
         $cacheKey = $this->getTableMapCacheKey($table);
@@ -425,12 +425,11 @@ abstract class CacheCore
         $this->initializeTableCache($table);
 
         if (!isset($this->sql_tables_cached[$table][$key])) {
-            if ((count($this->sql_tables_cached[$table]) + 1) > $this->maxCachedObjectsByTable) {
+            if (count($this->sql_tables_cached[$table]) >= $this->maxCachedObjectsByTable) {
                 $this->adjustTableCacheSize($table);
             }
 
-            $otherTables = $tables;
-            unset($otherTables[array_search($table, $tables)]);
+            unset($otherTables[array_search($table, $otherTables)]);
             $this->sql_tables_cached[$table][$key] = [
                 'count' => 1,
                 'otherTables' => $otherTables,
@@ -485,6 +484,7 @@ abstract class CacheCore
         $invalidKeys = [];
         if (isset($this->sql_tables_cached[$table])) {
             if ($keyToKeep && isset($this->sql_tables_cached[$table][$keyToKeep])) {
+                $toKeep = $this->sql_tables_cached[$table][$keyToKeep];
                 // remove the key we plan to keep before adjusting the table cache size
                 unset($this->sql_tables_cached[$table][$keyToKeep]);
             }
@@ -512,7 +512,7 @@ abstract class CacheCore
             $this->_deleteMulti($invalidKeys);
 
             if ($keyToKeep) {
-                $this->sql_tables_cached[$table][$keyToKeep] = 1;
+                $this->sql_tables_cached[$table][$keyToKeep] = $toKeep;
             }
         }
         $this->adjustTableCacheSize = false;
@@ -677,7 +677,7 @@ abstract class CacheCore
     /**
      * @param string $key
      *
-     * @return mixed
+     * @return mixed|null The cache item if found, null otherwise
      */
     public static function retrieve($key)
     {

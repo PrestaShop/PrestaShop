@@ -80,6 +80,26 @@ class HelperFormCore extends Helper
         $tinymce = true;
         $textarea_autosize = true;
         $file = true;
+        $translator = Context::getContext()->getTranslator();
+
+        $default_switch_labels = [
+            'active_on' => $translator->trans('Yes', [], 'Admin.Global'),
+            'active_off' => $translator->trans('No', [], 'Admin.Global'),
+        ];
+
+        $default_switch_values = [
+            [
+                'id' => 'active_off',
+                'value' => 0,
+                'label' => $default_switch_labels['active_off'],
+            ],
+            [
+                'id' => 'active_on',
+                'value' => 1,
+                'label' => $default_switch_labels['active_on'],
+            ],
+        ];
+
         foreach ($this->fields_form as $fieldset_key => &$fieldset) {
             if (isset($fieldset['form']['tabs'])) {
                 $tabs[] = $fieldset['form']['tabs'];
@@ -92,6 +112,21 @@ class HelperFormCore extends Helper
                         unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
                     }
                     switch ($params['type']) {
+                        case 'switch':
+                            $switch_values = $params['values'];
+                            if (!empty($params['values'])) {
+                                foreach ($switch_values as $k => $value) {
+                                    if (!isset($value['label'])) {
+                                        $default_key = (int) $value['value'] ? 1 : 0;
+                                        $defautl_label = $default_switch_labels[$value['id']] ?? $default_switch_values[$default_key]['label'];
+                                        $this->fields_form[$fieldset_key]['form']['input'][$key]['values'][$k]['label'] = $defautl_label;
+                                    }
+                                }
+                            } else {
+                                $this->fields_form[$fieldset_key]['form']['input'][$key]['values'] = $default_switch_values;
+                            }
+                            break;
+
                         case 'select':
                             $field_name = (string) $params['name'];
                             // If multiple select check that 'name' field is suffixed with '[]'
@@ -339,13 +374,6 @@ class HelperFormCore extends Helper
                     break;
             }
         }
-
-        /*$nb_shop = 0;
-        foreach ($tree as &$value)
-        {
-            $value['disable_shops'] = (isset($value[$disable_shared]) && $value[$disable_shared]);
-            $nb_shop += count($value['shops']);
-        }*/
 
         $tree = new HelperTreeShops('shop-tree', 'Shops');
         if (isset($template_directory)) {

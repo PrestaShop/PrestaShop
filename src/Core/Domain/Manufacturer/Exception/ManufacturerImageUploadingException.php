@@ -34,15 +34,15 @@ class ManufacturerImageUploadingException extends ManufacturerException
     /**
      * @var int Code is used when there are less memory than needed to upload image
      */
-    const MEMORY_LIMIT_RESTRICTION = 1;
+    public const MEMORY_LIMIT_RESTRICTION = 1;
 
     /**
      * @var int Code is used when unexpected error occurs while uploading image
      */
-    const UNEXPECTED_ERROR = 2;
+    public const UNEXPECTED_ERROR = 2;
 
     /**
      * Code is used when image/images cannot be resized
      */
-    const UNABLE_RESIZE = 3;
+    public const UNABLE_RESIZE = 3;
 }

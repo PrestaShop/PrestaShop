@@ -24,7 +24,7 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Advparameters.Feature" %}
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme logsByEmailForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block content %}
   {% block logs_severity_level_meaning %}
@@ -51,18 +51,7 @@
           </h3>
           <div class="card-block row">
             <div class="card-text">
-              <div class="form-group row">
-                {% set helptip = 'Enter "5" if you do not want to receive any emails.'|trans({}, 'Admin.Advparameters.Help') ~ ' ' ~ 'Emails will be sent to the shop owner.'|trans({}, 'Admin.Advparameters.Help') %}
-                {{ ps.label_with_help(('Minimum severity level'|trans), helptip, 'col-sm-2') }}
-                <div class="col-sm">
-                  {{ form_errors(logsByEmailForm.logs_by_email) }}
-                  {{ form_widget(logsByEmailForm.logs_by_email) }}
-                </div>
-              </div>
-
-              {% block logs_by_email_form_rest %}
-                {{ form_rest(logsByEmailForm) }}
-              {% endblock %}
+                {{ form_widget(logsByEmailForm) }}
             </div>
           </div>
           <div class="card-footer">

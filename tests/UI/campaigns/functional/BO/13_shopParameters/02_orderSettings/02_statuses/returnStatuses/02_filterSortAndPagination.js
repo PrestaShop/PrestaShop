@@ -126,7 +126,6 @@ describe('Filter, sort and pagination order return status', async () => {
             tableName,
             row,
             test.args.filterBy,
-            test.args.idColumn,
           );
           await expect(textColumn).to.contains(test.args.filterValue);
         }
@@ -280,7 +279,7 @@ describe('Filter, sort and pagination order return status', async () => {
       const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page, tableName);
 
       for (let i = 1; i <= numberOfLinesAfterFilter; i++) {
-        const textColumn = await statusesPage.getTextColumn(page, tableName, i, 'name', 3);
+        const textColumn = await statusesPage.getTextColumn(page, tableName, i, 'name');
         await expect(textColumn).to.contains('todelete');
       }
     });

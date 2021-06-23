@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-class EmailThemes extends BOBasePage {
+/**
+ * Email theme page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
+class EmailTheme extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on email theme page
+   */
   constructor() {
     super();
 
@@ -9,24 +18,23 @@ class EmailThemes extends BOBasePage {
     this.emailThemeConfigurationSuccessfulMessage = 'Email theme configuration saved successfully';
 
     // Configuration form selectors
-    this.configurationForm = 'form[action*=\'save-configuration\']';
-    this.defaultEmailThemeSelect = '#form_configuration_defaultTheme';
-    this.configurationFormSaveButton = `${this.configurationForm} .card-footer button`;
+    this.defaultEmailThemeSelect = '#form_defaultTheme';
+    this.configurationFormSaveButton = '#save-configuration-form';
 
     // Email Theme table selectors
     this.emailThemeTable = 'table.grid-table';
     this.tableBody = `${this.emailThemeTable} tbody`;
     this.tableRows = `${this.tableBody} tr`;
-    this.columnName = 'td.data-type:nth-child(1)';
-    this.columnActionPreviewLink = 'td.action-type a[href*=\'/preview\']';
+    this.columnName = 'td.column-name';
+    this.columnActionPreviewLink = 'td.action-type a.preview-link';
   }
 
   /* Configuration form methods */
 
   /**
    * Choose default email theme and save configuration
-   * @param page
-   * @param emailTheme
+   * @param page {Page} Browser tab
+   * @param emailTheme {string} Value of email theme to select
    * @return {Promise<string>}
    */
   async selectDefaultEmailTheme(page, emailTheme) {
@@ -39,15 +47,17 @@ class EmailThemes extends BOBasePage {
   /* Email themes grid methods */
   /**
    * Preview email theme
-   * @param page
-   * @param name
+   * @param page {Page} Browser tab
+   * @param name {string} Value of theme to choose
    * @return {Promise<void>}
    */
   async previewEmailTheme(page, name) {
     const tableRows = await page.$$(this.tableRows);
     let found = false;
+
     for (let i = 0; i < tableRows.length; i++) {
       const textColumnName = await tableRows[i].$eval(this.columnName, columnName => columnName.textContent);
+
       if (textColumnName.includes(name)) {
         await Promise.all([
           tableRows[i].$eval(this.columnActionPreviewLink, el => el.click()),
@@ -63,4 +73,4 @@ class EmailThemes extends BOBasePage {
   }
 }
 
-module.exports = new EmailThemes();
+module.exports = new EmailTheme();

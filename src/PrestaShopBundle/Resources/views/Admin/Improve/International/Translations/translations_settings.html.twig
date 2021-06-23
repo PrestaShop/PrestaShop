@@ -28,8 +28,8 @@
 
 {% block content %}
   <div class="row justify-content-center">
-    <div class="col-xl-10">
-      <div class="card">
+    <div class="col-xl-12">
+      <div class="card card-kpis">
         {% block translations_kpis_row %}
           <div class="row">
             {{ render(controller(
@@ -41,19 +41,19 @@
       </div>
     </div>
 
-    <div class="col-xl-10">
+    <div class="col-xl-12">
       {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig' %}
     </div>
 
-    <div class="col-xl-10">
+    <div class="col-xl-12">
       {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/add_update_language.html.twig' %}
     </div>
 
-    <div class="col-xl-10">
+    <div class="col-xl-12">
       {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/export_language.html.twig' %}
     </div>
 
-    <div class="col-xl-10">
+    <div class="col-xl-12">
       {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/copy_language.html.twig' %}
     </div>
   </div>

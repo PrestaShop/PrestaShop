@@ -492,7 +492,7 @@ class OrderDetailCore extends ObjectModel
 
     public function getTaxList()
     {
-        return self::getTaxList($this->id);
+        return self::getTaxListStatic($this->id);
     }
 
     public static function getTaxListStatic($id_order_detail)
@@ -566,6 +566,8 @@ class OrderDetailCore extends ObjectModel
             $tax_manager = TaxManagerFactory::getManager($this->vat_address, $this->id_tax_rules_group);
             $this->tax_calculator = $tax_manager->getTaxCalculator();
             $this->tax_computation_method = (int) $this->tax_calculator->computation_method;
+            $this->tax_rate = (float) $this->tax_calculator->getTotalRate();
+            $this->tax_name = $this->tax_calculator->getTaxesName();
         }
 
         $this->ecotax_tax_rate = 0;
@@ -734,7 +736,7 @@ class OrderDetailCore extends ObjectModel
         $this->id_customization = $product['id_customization'] ? (int) $product['id_customization'] : 0;
         $this->product_name = $product['name'] .
             ((isset($product['attributes']) && $product['attributes'] != null) ?
-                ' - ' . $product['attributes'] : '');
+                ' (' . $product['attributes'] . ')' : '');
 
         $this->product_quantity = (int) $product['cart_quantity'];
         $this->product_ean13 = empty($product['ean13']) ? null : pSQL($product['ean13']);

@@ -2,9 +2,6 @@ services:
   _defaults:
     public: true
 
-  prestashop.adapter.admin.controller.category:
-    class: PrestaShop\PrestaShop\Adapter\Category\AdminCategoryControllerWrapper
-
   prestashop.adapter.category.category_view_data_provider:
     class: PrestaShop\PrestaShop\Adapter\Category\CategoryViewDataProvider
     arguments:
@@ -114,3 +111,14 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled
+
+  prestashop.adapter.category.repository.category_repository:
+    class: PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository
+
+  prestashop.adapter.category.query_handler.get_categories_tree_handler:
+    class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoriesTreeHandler
+    arguments:
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree

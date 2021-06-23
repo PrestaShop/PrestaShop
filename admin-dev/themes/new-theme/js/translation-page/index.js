@@ -22,15 +22,15 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import initMessagesVisibilityToggling from './messages-visibility'
-import initMessagesEdition from './messages-edition'
-import initMessagesPagination from './messages-pagination'
-import initMessagesTree from './messages-tree'
-import initSearch from './messages-search'
+import initMessagesVisibilityToggling from './messages-visibility';
+import initMessagesEdition from './messages-edition';
+import initMessagesPagination from './messages-pagination';
+import initMessagesTree from './messages-tree';
+import initSearch from './messages-search';
 
 $(() => {
   initMessagesVisibilityToggling(initMessagesPagination);
-  var search = initSearch();
+  const search = initSearch();
   initMessagesEdition(search);
-  initMessagesTree()
+  initMessagesTree();
 });

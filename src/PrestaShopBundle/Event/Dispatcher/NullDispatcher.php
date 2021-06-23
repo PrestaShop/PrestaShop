@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Event\Dispatcher;
 
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookInterface;
+use PrestaShop\PrestaShop\Core\Hook\RenderedHookInterface;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -41,14 +43,30 @@ class NullDispatcher implements EventDispatcherInterface, HookDispatcherInterfac
     {
     }
 
-    public function dispatch($eventName, \Symfony\Component\EventDispatcher\Event $event = null)
+    /**
+     * @param string $eventName
+     * @param Event|null $event
+     *
+     * @return Event|void
+     */
+    public function dispatch($eventName, Event $event = null)
     {
     }
 
+    /**
+     * @param null $eventName
+     *
+     * @return array|void
+     */
     public function getListeners($eventName = null)
     {
     }
 
+    /**
+     * @param null $eventName
+     *
+     * @return bool|void
+     */
     public function hasListeners($eventName = null)
     {
     }
@@ -61,6 +79,12 @@ class NullDispatcher implements EventDispatcherInterface, HookDispatcherInterfac
     {
     }
 
+    /**
+     * @param string $eventName
+     * @param callable $listener
+     *
+     * @return int|void|null
+     */
     public function getListenerPriority($eventName, $listener)
     {
     }
@@ -73,10 +97,21 @@ class NullDispatcher implements EventDispatcherInterface, HookDispatcherInterfac
     {
     }
 
+    /**
+     * @param HookInterface $hook
+     *
+     * @return RenderedHookInterface|void
+     */
     public function dispatchRendering(HookInterface $hook)
     {
     }
 
+    /**
+     * @param string $hookName
+     * @param array $hookParameters
+     *
+     * @return RenderedHookInterface|void
+     */
     public function dispatchRenderingWithParameters($hookName, array $hookParameters = [])
     {
     }

@@ -24,14 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
+use Configuration;
 use Context;
 use ImageManager;
 use ImageType;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Domain\Language\Command\ToggleLanguageStatusCommandInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CopyingNoPictureException;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\DefaultLanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
@@ -51,7 +56,7 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
     protected function copyNoPictureImage(IsoCode $isoCode, $noPictureImagePath)
     {
         if (!($temporaryImage = tempnam(_PS_TMP_IMG_DIR_, 'PS'))
-            || !move_uploaded_file($noPictureImagePath, $temporaryImage)
+            || !copy($noPictureImagePath, $temporaryImage)
         ) {
             return;
         }
@@ -88,6 +93,7 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
             }
         }
 
+        unlink($noPictureImagePath);
         unlink($temporaryImage);
     }
 
@@ -103,7 +109,7 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
             return;
         }
 
-        if (!move_uploaded_file($newImagePath, $temporaryImage)) {
+        if (!copy($newImagePath, $temporaryImage)) {
             return;
         }
 
@@ -126,6 +132,7 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
             }
         }
 
+        unlink($newImagePath);
         unlink($temporaryImage);
     }
 
@@ -143,5 +150,30 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
         }
 
         return $language;
+    }
+
+    /**
+     * @param Language $language
+     */
+    protected function assertLanguageIsNotInUse(Language $language)
+    {
+        if ($language->id === (int) Context::getContext()->language->id) {
+            throw new DefaultLanguageException(sprintf('Used language "%s" cannot be deleted', $language->iso_code), DefaultLanguageException::CANNOT_DELETE_IN_USE_ERROR);
+        }
+    }
+
+    /**
+     * @param Language $language
+     * @param ToggleLanguageStatusCommandInterface $command
+     */
+    protected function assertLanguageIsNotDefault(Language $language, ToggleLanguageStatusCommandInterface $command = null)
+    {
+        if ($command != null && true === $command->getStatus()) {
+            return;
+        }
+
+        if ($language->id === (int) Configuration::get('PS_LANG_DEFAULT')) {
+            throw new DefaultLanguageException(sprintf('Default language "%s" cannot be disabled', $language->iso_code), DefaultLanguageException::CANNOT_DISABLE_ERROR);
+        }
     }
 }

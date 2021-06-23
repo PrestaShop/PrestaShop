@@ -39,8 +39,6 @@ class MetaId
     private $id;
 
     /**
-     * MetaId constructor.
-     *
      * @param int $metaId
      *
      * @throws MetaException
@@ -61,7 +59,7 @@ class MetaId
     }
 
     /**
-     * @param $metaId
+     * @param int $metaId
      *
      * @throws MetaException
      */

@@ -50,6 +50,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\Stream;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,9 +82,6 @@ class SqlManagerController extends FrameworkBundleAdminController
         $gridLogFactory = $this->get('prestashop.core.grid.factory.request_sql');
         $grid = $gridLogFactory->getGrid($filters);
 
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-        $presentedGrid = $gridPresenter->present($grid);
-
         $settingsForm = $this->getSettingsFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/index.html.twig', [
@@ -99,11 +97,13 @@ class SqlManagerController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlSettingsForm' => $settingsForm->createView(),
-            'requestSqlGrid' => $presentedGrid,
+            'requestSqlGrid' => $this->presentGrid($grid),
         ]);
     }
 
     /**
+     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
+     *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_sql_requests_index")
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
@@ -174,12 +174,12 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
+        $data = $this->getSqlRequestDataFromRequest($request);
+
+        $sqlRequestForm = $this->getSqlRequestFormBuilder()->getForm($data);
+        $sqlRequestForm->handleRequest($request);
+
         try {
-            $data = $this->getSqlRequestDataFromRequest($request);
-
-            $sqlRequestForm = $this->getSqlRequestFormBuilder()->getForm($data);
-            $sqlRequestForm->handleRequest($request);
-
             $result = $this->getSqlRequestFormHandler()->handle($sqlRequestForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
@@ -198,6 +198,11 @@ class SqlManagerController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $sqlRequestForm->createView(),
             'dbTableNames' => $this->getDatabaseTables(),
+            'multistoreInfoTip' => $this->trans(
+                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Admin.Notifications.Info'
+            ),
+            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
         ]);
     }
 
@@ -218,10 +223,10 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function editAction($sqlRequestId, Request $request)
     {
-        try {
-            $sqlRequestForm = $this->getSqlRequestFormBuilder()->getFormFor($sqlRequestId);
-            $sqlRequestForm->handleRequest($request);
+        $sqlRequestForm = $this->getSqlRequestFormBuilder()->getFormFor($sqlRequestId);
+        $sqlRequestForm->handleRequest($request);
 
+        try {
             $result = $this->getSqlRequestFormHandler()->handleFor($sqlRequestId, $sqlRequestForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
@@ -385,7 +390,8 @@ class SqlManagerController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_sql_requests_index');
         }
 
-        $response = new BinaryFileResponse($exportedFile->getPathname());
+        $stream = new Stream($exportedFile->getPathname());
+        $response = new BinaryFileResponse($stream);
         $response->setCharset($sqlRequestSettings->getFileEncoding());
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $exportedFile->getFilename());
 
@@ -428,7 +434,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return FormHandlerInterface
      */
-    protected function getSettingsFormHandler()
+    protected function getSettingsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.request_sql_settings.form_handler');
     }

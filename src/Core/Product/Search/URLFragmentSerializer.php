@@ -26,8 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.8.0 and will be removed in the next major version.',
+        URLFragmentSerializer::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
  * This class is a serializer for URL fragments.
+ *
+ * @deprecated since version 1.7.8 and will be removed in the next major version.
  */
 class URLFragmentSerializer
 {

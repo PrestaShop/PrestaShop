@@ -23,8 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-export default function(paginationContainer) {
-
+export default function (paginationContainer) {
   const lng = paginationContainer.find('.js-page-link').length;
   const multi = '<li class="page-item js-multi"><span class="page-link">...</span></li>';
   const displayNumber = paginationContainer.data('display-number'); // Number of pages to display after the first
@@ -32,93 +31,91 @@ export default function(paginationContainer) {
 
   checkCurrentPage(current);
 
-  paginationContainer.find('.js-page-link').on('click', function(event) {
-      event.preventDefault();
-      paginationContainer.find('.active').removeClass('active');
-      $(event.currentTarget).parent().addClass('active');
-      current = $(event.currentTarget).parent().data('page-index');
-      checkCurrentPage(current);
+  paginationContainer.find('.js-page-link').on('click', (event) => {
+    event.preventDefault();
+    paginationContainer.find('.active').removeClass('active');
+    $(event.currentTarget).parent().addClass('active');
+    current = $(event.currentTarget).parent().data('page-index');
+    checkCurrentPage(current);
   });
 
-  paginationContainer.find('.js-arrow').on('click', function(event) {
-      current = paginationContainer.find('.page-item.active').data('page-index');
-      event.preventDefault();
-      if($(event.currentTarget).data('direction') === 'prev' && !$(event.currentTarget).parent().next().hasClass('active')) {
-          $(`.page[data-page-index=${current - 1}]`).removeClass('hide');
-          $(`.page[data-page-index=${current}]`).addClass('hide');
-          $(`.page-item[data-page-index=${current - 1}]`).addClass('active');
-          $(`.page-item[data-page-index=${current}]`).removeClass('active');
-          current --;
-      }
-      else if($(event.currentTarget).data('direction') === 'next' && !$(event.currentTarget).parent().prev().hasClass('active')) {
-        $(`.page[data-page-index=${current + 1}]`).removeClass('hide');
-        $(`.page[data-page-index=${current}]`).addClass('hide');
-        $(`.page-item[data-page-index=${current + 1}]`).addClass('active');
-        $(`.page-item[data-page-index=${current}]`).removeClass('active');
-        current ++;
-      }
-      if($(event.currentTarget).data('direction') === 'prev' && current === 1) {
-        return false;
-      }
-      checkCurrentPage(current);
+  paginationContainer.find('.js-arrow').on('click', (event) => {
+    current = paginationContainer.find('.page-item.active').data('page-index');
+    event.preventDefault();
+    const direction = $(event.currentTarget).data('direction');
+
+    if (
+      direction === 'prev'
+      && !$(event.currentTarget).parent().next().hasClass('active')
+    ) {
+      $(`.page[data-page-index=${current - 1}]`).removeClass('hide');
+      $(`.page[data-page-index=${current}]`).addClass('hide');
+      $(`.page-item[data-page-index=${current - 1}]`).addClass('active');
+      $(`.page-item[data-page-index=${current}]`).removeClass('active');
+      current -= 1;
+    } else if (
+      direction === 'next'
+      && !$(event.currentTarget).parent().prev().hasClass('active')
+    ) {
+      $(`.page[data-page-index=${current + 1}]`).removeClass('hide');
+      $(`.page[data-page-index=${current}]`).addClass('hide');
+      $(`.page-item[data-page-index=${current + 1}]`).addClass('active');
+      $(`.page-item[data-page-index=${current}]`).removeClass('active');
+      current += 1;
+    }
+    if ($(event.currentTarget).data('direction') === 'prev' && current === 1) {
+      return false;
+    }
+
+    checkCurrentPage(current);
+
+    return true;
   });
 
-function checkCurrentPage(current) {
-  $('.pagination').each((index, pagination) => {
+  function checkCurrentPage(currentEl) {
+    $('.pagination').each((_index, pagination) => {
+      const pagContainer = $(pagination);
+      const prevDots = pagContainer.find('[data-page-index=1]').next('.js-multi');
+      const nextDots = pagContainer.find(`[data-page-index=${lng}]`).prev('.js-multi');
+      const mid = Math.round(displayNumber);
 
-    var paginationContainer = $(pagination);
-    var prevDots = paginationContainer.find('[data-page-index=1]').next('.js-multi');
-    var nextDots = paginationContainer.find('[data-page-index='+lng+']').prev('.js-multi');
-    var mid = Math.round(displayNumber);
-
-    paginationContainer.find('.js-page-link').each(function(index, item) {
-        if(current >= displayNumber + 1 && index === 0 && prevDots.length === 0) {
+      pagContainer.find('.js-page-link').each((index, item) => {
+        if (currentEl >= displayNumber + 1 && index === 0 && prevDots.length === 0) {
           $(item).parent().after(multi);
         }
-        if(current >= displayNumber + 1 ) {
-          if(index >= current - mid && index <= current + mid) {
+        if (currentEl >= displayNumber + 1) {
+          if (index >= currentEl - mid && index <= currentEl + mid) {
             $(item).show();
-            if(lng - current >= mid && index > current && index !== lng - 1) {
+            if (lng - currentEl >= mid && index > currentEl && index !== lng - 1) {
               $(item).hide();
-            }
-            else if(nextDots.length === 0 && index === lng -1 && lng - current > displayNumber) {
+            } else if (nextDots.length === 0 && index === lng - 1 && lng - currentEl > displayNumber) {
               $(item).parent().before(multi);
             }
-          }
-          else if(index !== 0 && index !== lng-1 && (lng-1 - index) > displayNumber) {
+          } else if (index !== 0 && index !== lng - 1 && (lng - 1 - index) > displayNumber) {
             $(item).hide();
-            if(nextDots.length && lng - displayNumber <= current) {
+            if (nextDots.length && lng - displayNumber <= currentEl) {
               nextDots.remove();
             }
-          }
-          else if(current === lng){
+          } else if (currentEl === lng) {
             nextDots.remove();
-            if(index <= displayNumber && index !==0) {
+            if (index <= displayNumber && index !== 0) {
               $(item).hide();
-            }
-            else {
+            } else {
               $(item).show();
             }
           }
-        }
-        else if(current && index > displayNumber && index !== lng-1 && current < displayNumber) {
+        } else if (currentEl && index > displayNumber && index !== lng - 1 && currentEl < displayNumber) {
           $(item).hide();
-        }
-        else if(index === lng-1 && current === 1 && nextDots.length === 0) {
+        } else if (index === lng - 1 && currentEl === 1 && nextDots.length === 0) {
           $(item).parent().before(multi);
-        }
-        else {
-          if(index > displayNumber && index !== lng-1) {
-            $(item).hide();
-          }
-          else if(index === lng-1 && nextDots.length === 0 && current > 1) {
-            $(item).parent().before(multi);
-          }
-          else {
-            $(item).show();
-            if(index === 0 && prevDots.length !== 0) {
-              prevDots.remove();
-            }
+        } else if (index > displayNumber && index !== lng - 1) {
+          $(item).hide();
+        } else if (index === lng - 1 && nextDots.length === 0 && currentEl > 1) {
+          $(item).parent().before(multi);
+        } else {
+          $(item).show();
+          if (index === 0 && prevDots.length !== 0) {
+            prevDots.remove();
           }
         }
       });

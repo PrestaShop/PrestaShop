@@ -32,12 +32,17 @@
       data-remoteurl="{{ remote_url|raw }}"
       data-limit="{{ limit }}"
     >
-        {{ form_errors(form) }}
-
         <div class="search search-with-icon">
-            <input type="text" id="{{ form.vars.id }}" class="form-control search typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off">
+          {# We want the attributes from the form type to be added to the input so we merge class form attribute to required ones #}
+          {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control search typeahead ' ~ form.vars.id)|trim }) -%}
+          {# We do not want the initial input name because the data is handled via a collection input with name="full_name[data][]" #}
+          {%- set full_name = '' -%}
+          <input type="text" id="{{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" {{ block('widget_attributes') }}>
         </div>
         <small class="form-text text-muted text-right typeahead-hint">
+          {% if help %}
+            {{ help|raw }}
+          {% endif %}
         </small>
         <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-sm-12 product-list">
             {% if collection is defined and collection|length > 0 %}
@@ -113,7 +118,7 @@
                     e.preventDefault();
                     var _this = $(this);
 
-                    modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+                    modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
                         onContinue: function(){
                             _this.closest('li').remove();
                             if(_this.parent().parent().length == 0){
@@ -233,7 +238,7 @@
                 e.preventDefault();
                 var _this = $(this);
 
-                modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+                modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
                     onContinue: function(){
                         _this.closest('li').remove();
                         _this.parent().parent().hide();

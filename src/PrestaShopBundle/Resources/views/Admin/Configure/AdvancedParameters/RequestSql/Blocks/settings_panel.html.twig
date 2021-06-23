@@ -24,6 +24,7 @@
  *#}
 
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
+{% form_theme requestSqlSettingsForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {{ form_start(requestSqlSettingsForm, {'action': path('admin_sql_requests_process_settings') }) }}
   <div class="card">
@@ -33,19 +34,7 @@
     </h3>
     <div class="card-block row">
       <div class="card-text">
-        <div class="form-group row">
-          <label class="form-control-label col-sm-2" for="form_settings_default_file_encoding">
-            {{ 'Select your default file encoding'|trans }}
-          </label>
-          <div class="col-sm">
-            {{ form_errors(requestSqlSettingsForm.settings.default_file_encoding) }}
-            {{ form_widget(requestSqlSettingsForm.settings.default_file_encoding) }}
-          </div>
-        </div>
-
-        {% block request_sql_settings %}
-          {{ form_rest(requestSqlSettingsForm) }}
-        {% endblock %}
+        {{ form_widget(requestSqlSettingsForm) }}
       </div>
     </div>
     <div class="card-footer">

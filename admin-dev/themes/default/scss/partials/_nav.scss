@@ -1,0 +1,614 @@
+.js-mobile-menu {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  float: left;
+  padding-top: 0;
+  margin-right: 0.6rem;
+  margin-left: 0.6rem;
+  font-size: 1.8rem;
+  cursor: pointer;
+
+  @include media-breakpoint-down(md) {
+    display: inline-flex;
+  }
+}
+
+.nav-bar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: 502;
+  width: $size-navbar-width;
+  height: 100%;
+  margin-top: $size-header-height;
+  overflow-y: auto;
+  background: $gray-dark-menu;
+  transition: all 0.5s ease-out;
+
+  .material-icons {
+    font-size: 1.188rem;
+    line-height: inherit;
+    color: #fff;
+  }
+
+  &.mobile-nav {
+    width: 70%;
+    margin-top: $size-header-height + (0.625rem * 2);
+    margin-left: -100%;
+
+    &::before {
+      position: fixed;
+      top: 5rem;
+      left: 75%;
+      display: none;
+      font-family: "Material Icons", sans-serif;
+      font-size: 1.5rem;
+      color: #fff;
+      pointer-events: none;
+      content: "\e5cd";
+
+      @include media-breakpoint-only(md) {
+        left: 50%;
+      }
+    }
+
+    @include media-breakpoint-only(sm) {
+      width: 60%;
+    }
+
+    @include media-breakpoint-only(md) {
+      width: 40%;
+    }
+
+    &.expanded {
+      display: block;
+      margin-left: 0;
+
+      &::before {
+        @include media-breakpoint-down(md) {
+          display: block;
+        }
+      }
+    }
+
+    .onboarding-navbar {
+      display: none;
+    }
+
+    .panel-collapse {
+      padding-left: 0;
+
+      .link-leveltwo .link {
+        padding-left: 1rem;
+      }
+    }
+
+    .employee_avatar {
+      padding-top: 1rem;
+      padding-left: 1.5rem;
+      text-align: center;
+      text-decoration: none;
+
+      @include media-breakpoint-down(md) {
+        display: flex;
+        align-items: center;
+      }
+
+      > .employee_avatar {
+        @include media-breakpoint-down(md) {
+          padding-top: 0;
+          padding-left: 0;
+          margin-right: 1rem;
+        }
+      }
+
+      .material-icons {
+        font-size: 3.75rem;
+        line-height: 3.75rem;
+
+        @include media-breakpoint-down(md) {
+          font-size: 4.6875rem;
+          line-height: 4.6875rem;
+        }
+      }
+
+      span {
+        display: block;
+        margin-bottom: 0.625rem;
+        color: #fff;
+
+        @include media-breakpoint-down(md) {
+          font-size: 1rem;
+          font-weight: 500;
+        }
+      }
+
+      img {
+        width: 3.75rem;
+        height: 3.75rem;
+
+        @include media-breakpoint-down(md) {
+          width: 2.25rem;
+          height: 2.25rem;
+        }
+
+        &.img-thumbnail {
+          border-radius: 36px;
+        }
+      }
+    }
+
+    .shop-list {
+      padding-bottom: 1rem;
+      font-weight: 700;
+      text-align: center;
+
+      a {
+        @include media-breakpoint-down(md) {
+          font-size: 1.09375rem;
+        }
+      }
+    }
+
+    .main-menu {
+      margin-top: 0.625rem;
+
+      & > li:first-child {
+        padding-bottom: 1rem;
+      }
+    }
+
+    .shop-list-title {
+      margin-bottom: 0.9375rem;
+      font-size: 1rem;
+      color: $brand-primary;
+      text-align: center;
+      text-transform: uppercase;
+
+      &::after {
+        margin-left: 0.625rem;
+        font-family: "Material Icons", sans-serif;
+        font-size: 1.25rem;
+        line-height: 1.375rem;
+        vertical-align: bottom;
+        content: "\E313";
+      }
+    }
+
+    .items-list {
+      padding-left: 0;
+
+      a:focus {
+        background-color: transparent;
+      }
+
+      li {
+        background-color: #fff;
+        border-bottom: $gray-light 1px solid;
+
+        &.group a {
+          padding: 0.9375rem 2.5rem;
+          font-weight: 700;
+        }
+
+        &.shop {
+          padding: 0.9375rem 0.9375rem 0.9375rem 2.5rem;
+
+          a {
+            display: inline-block;
+            width: auto;
+
+            &.link-shop {
+              float: right;
+
+              .material-icons {
+                font-size: 1.25rem;
+                color: $gray-medium;
+              }
+            }
+          }
+        }
+      }
+
+      li:first-child a {
+        padding: 0.9375rem 1.25rem;
+        font-size: 0.9375rem;
+        color: $brand-primary;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
+.main-menu {
+  padding: 0 0 13.313rem;
+  margin: 0;
+
+  &.sidebar-closed {
+    .link-levelone {
+      .link > span {
+        display: none;
+
+        &.open {
+          > .submenu {
+            display: none;
+          }
+        }
+      }
+    }
+
+    .category-title > .title {
+      display: none;
+    }
+  }
+
+  .category-title > .title {
+    text-transform: uppercase;
+  }
+
+  .link-levelone {
+    $padding-size: 1.25rem;
+    display: block;
+
+    #header_logout {
+      margin-top: 1rem;
+      color: #f44336;
+
+      i {
+        margin-right: 0.625rem;
+        color: #f44336;
+      }
+    }
+
+    &[data-submenu] {
+      @include media-breakpoint-down(md) {
+        a.link {
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          padding-left: 1.5rem;
+          font-size: 1rem;
+          line-height: inherit;
+
+          .material-icons {
+            font-size: 1.25rem;
+            line-height: 1.4rem;
+
+            &.sub-tabs-arrow {
+              padding-right: 1.2rem;
+            }
+          }
+        }
+      }
+
+      &.has_submenu {
+        @include media-breakpoint-down(md) {
+          .sub-tabs-arrow {
+            visibility: visible;
+          }
+        }
+      }
+    }
+
+    &.link-active {
+      > .link {
+        padding-left: 0.638rem;
+        border-left: 0.25rem solid #25b9d7;
+
+        .material-icons {
+          &:first-child {
+            color: #25b9d7;
+          }
+        }
+      }
+
+      @include media-breakpoint-down(md) {
+        border-right: none;
+      }
+    }
+
+    &:not(#subtab-AdminParentModulesSf) {
+      i.material-icons.mi-extension {
+        color: #6c868e;
+      }
+    }
+
+    > .link {
+      display: flex;
+      align-items: end;
+      height: initial;
+      padding: 0.5rem 0.3125rem 0.5rem 0.938rem;
+      overflow: hidden;
+      font-size: 0.75rem;
+      line-height: 1rem;
+      color: $gray-dark-text;
+      text-decoration: none;
+      text-overflow: initial;
+      word-break: break-word;
+      white-space: initial;
+      @include media-breakpoint-down(md) {
+        font-size: 1rem;
+      }
+
+      span {
+        padding-left: 1rem;
+      }
+
+      .sub-tabs-arrow {
+        margin-left: auto;
+        line-height: inherit;
+        color: #6c868e;
+        vertical-align: middle;
+        visibility: hidden;
+      }
+    }
+
+    &.ul-open,
+    &.link-active,
+    &.-hover {
+      & > .link {
+        color: #fff;
+        background: #202226;
+        transition: background 300ms ease;
+
+        @include media-breakpoint-down(md) {
+          background: $gray-dark-menu;
+        }
+      }
+
+      &.has_submenu {
+        .link {
+          .sub-tabs-arrow {
+            visibility: visible;
+          }
+        }
+      }
+    }
+
+    > .submenu {
+      display: none;
+      padding-left: 2.75rem;
+      white-space: nowrap;
+      list-style: none;
+      background: #202226;
+
+      & > li {
+        @include media-breakpoint-down(md) {
+          a.link {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            color: #bebebe;
+          }
+        }
+
+        &:first-of-type {
+          padding-top: 0.625rem;
+
+          @include media-breakpoint-down(md) {
+            padding-top: 0;
+          }
+        }
+
+        &:last-of-type {
+          padding-bottom: 0.75rem;
+
+          @include media-breakpoint-down(md) {
+            padding-bottom: 0;
+          }
+        }
+      }
+    }
+
+    &.ul-open,
+    &.link-active {
+      .link {
+        background: #202226;
+      }
+    }
+
+    &.open {
+      > .submenu {
+        display: block;
+      }
+    }
+  }
+
+  .link-leveltwo {
+    @extend .link-levelone;
+
+    &.link-active {
+      > .link {
+        padding-left: 0;
+        color: #fff;
+        border-left: none;
+      }
+    }
+
+    > .link {
+      height: initial;
+      padding: 0.3125rem 0.3rem 0.3125rem 0;
+      line-height: 0.9rem;
+
+      @include media-breakpoint-down(md) {
+        padding-top: 1.4rem;
+        padding-bottom: 1.4rem;
+        line-height: 1.6rem;
+      }
+    }
+
+    > .link:hover {
+      color: $gray-dark-text-hover;
+    }
+  }
+}
+
+.category-title {
+  display: block;
+  padding: 0.875rem 0 0.75rem;
+  margin: 1.813rem 0 0 0.938rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-top: 1px solid #bbcdd2;
+
+  @include media-breakpoint-down(md) {
+    padding-bottom: 0.25rem;
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    border-top: none;
+  }
+
+  & > .title {
+    color: #fff;
+    background: $gray-dark-menu;
+  }
+}
+
+.menu-collapse {
+  display: block;
+  height: 0.813rem;
+  padding: 0.688rem 0.938rem 1.188rem 0;
+  font-size: 2rem;
+  line-height: 0.813rem;
+  color: $gray-dark-text;
+  text-align: right;
+  cursor: pointer;
+
+  @include media-breakpoint-down(md) {
+    display: none;
+    padding-bottom: 1rem;
+  }
+
+  .material-icons {
+    color: #bebebe;
+
+    &:last-child {
+      margin-left: -1.313rem;
+    }
+  }
+}
+
+.page-sidebar-closed:not(.mobile) {
+  .content-div,
+  #content {
+    transition: padding 1s ease;
+  }
+
+  .menu-collapse {
+    padding-right: 0.8rem;
+    transform: rotate(180deg);
+  }
+
+  .nav-bar {
+    width: $size-navbar-width-mini;
+    overflow: visible !important;
+
+    &-overflow {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .main-menu {
+      overflow: hidden;
+
+      .category-title > .title,
+      .link-levelone span {
+        display: none;
+      }
+
+      .sub-tabs-arrow {
+        display: none !important;
+      }
+
+      .category-title {
+        padding-bottom: 0;
+        margin-top: 0.8rem;
+      }
+
+      .link-levelone {
+        .link {
+          line-height: initial;
+        }
+
+        &:first-of-type {
+          margin-bottom: 0;
+        }
+
+        &.ul-open {
+          > .link {
+            width: 14.6875rem;
+            transition: all 0s ease 0s;
+
+            > span {
+              display: inline-block;
+              padding-left: 1.563rem;
+            }
+          }
+
+          ul.submenu {
+            position: absolute !important;
+            left: 50px;
+            display: block !important;
+            width: 200px !important;
+            padding-left: 5px;
+          }
+        }
+
+        .link-leveltwo {
+          &:first-of-type {
+            padding-top: 0 !important;
+            margin-top: 0.2rem;
+          }
+
+          &:last-of-type {
+            padding-bottom: 0 !important;
+            margin-bottom: 1rem;
+          }
+
+          .link {
+            padding-left: 1.5rem;
+          }
+        }
+      }
+    }
+
+    @media (max-height: 870px) {			// this two tabs need to be flipped, otherwise
+      // css issue with bottom of the page
+      #subtab-ShopParameters.ul-open,
+      #subtab-AdminAdvancedParameters.ul-open {
+        ul.submenu {
+          display: flex !important;
+          flex-direction: column-reverse;
+          margin-top: 35px;
+          transform: rotate(180deg);
+          transform-origin: top;
+
+          li {
+            transform: rotate(180deg);
+
+            &:last-of-type {
+              margin-bottom: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.mobile-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 501;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  transition: all 0.2s ease-in-out;
+
+  &.expanded {
+    display: block;
+  }
+}

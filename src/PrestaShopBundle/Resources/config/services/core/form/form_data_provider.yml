@@ -138,3 +138,41 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
       - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+
+  prestashop.core.form.identifiable_object.data_provider.order_state_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\OrderStateFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.order_return_state_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\OrderReturnStateFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.product_form_data_provider:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider'
+      arguments:
+          - '@prestashop.core.query_bus'
+          - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_PRODUCT_ACTIVATION_DEFAULT")'
+          - '@=service("prestashop.adapter.data_provider.tax").getIdTaxRulesGroupMostUsed()'
+          - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_HOME_CATEGORY")'
+
+  prestashop.core.form.identifiable_object.data_provider.combination_form_data_provider:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider'
+      arguments:
+          - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.empty_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\EmptyFormDataProvider'
+
+  prestashop.core.form.identifiable_object.data_provider.product_image_form_data_provider:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductImageFormDataProvider'
+      arguments:
+          - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.zone_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ZoneFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.multistore_feature").isActive()'
+      - '@=service("prestashop.adapter.shop.context").getShops(true, true)'

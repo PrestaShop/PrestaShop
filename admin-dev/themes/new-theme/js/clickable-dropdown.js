@@ -29,9 +29,7 @@
  * In order to make a dropdown behave like this, simply add the class "dropdown-clickable" to its parent element.
  */
 (($) => {
-
   $.fn.clickableDropdown = function clickableDropdown() {
-
     $(document).on('click', '.dropdown-clickable .dropdown-menu', (e) => {
       e.stopPropagation();
     });
@@ -40,7 +38,7 @@
   };
 
   // hook up the plugin
-  $(function initClickableDropdown() {
+  $(() => {
     $(document).clickableDropdown();
   });
 })(window.$);

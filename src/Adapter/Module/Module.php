@@ -39,16 +39,18 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Module implements ModuleInterface
 {
-    const ACTION_INSTALL = 'install';
-    const ACTION_UNINSTALL = 'uninstall';
-    const ACTION_ENABLE = 'enable';
-    const ACTION_DISABLE = 'disable';
-    const ACTION_ENABLE_MOBILE = 'enable_mobile';
-    const ACTION_DISABLE_MOBILE = 'disable_mobile';
-    const ACTION_RESET = 'reset';
-    const ACTION_UPGRADE = 'upgrade';
+    public const ACTION_INSTALL = 'install';
+    public const ACTION_UNINSTALL = 'uninstall';
+    public const ACTION_ENABLE = 'enable';
+    public const ACTION_DISABLE = 'disable';
+    public const ACTION_ENABLE_MOBILE = 'enable_mobile';
+    public const ACTION_DISABLE_MOBILE = 'disable_mobile';
+    public const ACTION_RESET = 'reset';
+    public const ACTION_UPGRADE = 'upgrade';
 
-    /** @var LegacyModule Module The instance of the legacy module */
+    /**
+     * @var LegacyModule Module The instance of the legacy module
+     */
     public $instance = null;
 
     /**
@@ -180,7 +182,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @return legacyInstance|void
+     * @return LegacyModule|void
      *
      * @throws \Exception
      */
@@ -207,7 +209,7 @@ class Module implements ModuleInterface
         if ($this->instance === null) {
             // We try to instantiate the legacy class if not done yet
             try {
-                $this->instanciateLegacyModule($this->attributes->get('name'));
+                $this->instanciateLegacyModule();
             } catch (\Exception $e) {
                 $this->disk->set('is_valid', false);
 
@@ -349,7 +351,7 @@ class Module implements ModuleInterface
             return false;
         }
 
-        return $this->instance->reset();
+        return is_callable([$this->instance, 'reset']) ? $this->instance->reset() : true;
     }
 
     /**
@@ -371,7 +373,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @param $attribute
+     * @param string $attribute
      *
      * @return mixed
      */
@@ -381,8 +383,8 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @param $attribute
-     * @param $value
+     * @param string $attribute
+     * @param mixed $value
      */
     public function set($attribute, $value)
     {
@@ -390,7 +392,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return mixed|string
      */
@@ -474,7 +476,7 @@ class Module implements ModuleInterface
      *
      * @param int $moduleId Module id
      *
-     * @return Module instance
+     * @return Module|false
      */
     public function getInstanceById($moduleId)
     {
