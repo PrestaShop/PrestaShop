@@ -166,7 +166,7 @@ export default {
     deleteProductButton: '.delete-product-button',
   },
   categories: {
-    categoriesContainer: '.js-categories-container',
+    categoriesContainer: '#product_categories',
     categoryTree: '.js-categories-tree',
     treeElement: '.category-tree-element',
     treeElementInputs: '.category-tree-inputs',
