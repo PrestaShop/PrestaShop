@@ -40,19 +40,30 @@
   </div>
   <ul class="account-list collapse" id="footer_account_list">
     {if $customer.is_logged}
-        {foreach from=$my_account_urls item=my_account_url}
-            <li>
-              <a href="{$my_account_url.url}" title="{$my_account_url.title}" rel="nofollow">
-                {$my_account_url.title}
-              </a>
-          </li>
-        {/foreach}
+        <li><a href="{$urls.pages.identity}" title="{l s='Information' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Information' d='Shop.Theme.Customeraccount'}</a></li>
+        {if $customer.addresses|count}
+          <li><a href="{$urls.pages.addresses}" title="{l s='Addresses' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Addresses' d='Shop.Theme.Customeraccount'}</a></li>
+        {else}
+          <li><a href="{$urls.pages.address}" title="{l s='Add first address' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Add first address' d='Shop.Theme.Customeraccount'}</a></li>
+        {/if}
+        {if !$configuration.is_catalog}
+          <li><a href="{$urls.pages.history}" title="{l s='Order history and details' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Order history and details' d='Shop.Theme.Customeraccount'}</a></li>
+        {/if}
+        {if !$configuration.is_catalog}
+          <li><a href="{$urls.pages.order_slip}" title="{l s='Credit slips' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Credit slips' d='Shop.Theme.Customeraccount'}</a></li>
+        {/if}
+        {if $configuration.voucher_enabled && !$configuration.is_catalog}
+          <li><a href="{$urls.pages.discount}" title="{l s='Vouchers' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Vouchers' d='Shop.Theme.Customeraccount'}</a></li>
+        {/if}
+        {if $configuration.return_enabled && !$configuration.is_catalog}
+          <li><a href="{$urls.pages.order_follow}" title="{l s='Merchandise returns' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Merchandise returns' d='Shop.Theme.Customeraccount'}</a></li>
+        {/if}
         {hook h='displayMyAccountBlock'}
         <li><a href="{$urls.actions.logout}" title="{l s='Log me out' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Sign out' d='Shop.Theme.Actions'}</a></li>
       {else}
         <li><a href="{$urls.pages.guest_tracking}" title="{l s='Guest Tracking' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Guest Tracking' d='Shop.Theme.Customeraccount'}</a></li>
         <li><a href="{$urls.pages.my_account}" title="{l s='Log in to your customer account' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Sign in' d='Shop.Theme.Actions'}</a></li>
         <li><a href="{$urls.pages.register}" title="{l s='Create an account' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Create an account' d='Shop.Theme.Customeraccount'}</a></li>
-      {/if}    
+      {/if} 
 	</ul>
 </div>
