@@ -44,10 +44,9 @@ class CategoriesType extends TranslatorAwareType
         $builder
             ->add('product_categories', CategoriesCollectionType::class)
             ->add('add_category', QuickAddCategoryType::class, [
-                // todo: hide on page load when handled js side
-                //                'attr' => [
-                //                    'class' => 'd-none',
-                //                ],
+                'attr' => [
+                    'class' => 'd-none',
+                ],
                 // disable validation because this subform will be submitted by ajax and not handled by product form submit
                 'validation_groups' => false,
                 'label' => $this->trans('Create a new category', 'Admin.Catalog.Feature'),
