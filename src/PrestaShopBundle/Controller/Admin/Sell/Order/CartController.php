@@ -51,6 +51,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\PackOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
@@ -593,6 +594,10 @@ class CartController extends FrameworkBundleAdminController
             ],
             ProductCustomizationNotFoundException::class => $this->trans(
                 'Product customization could not be found. Go to Catalog > Products to customize the product.',
+                'Admin.Catalog.Notification'
+            ),
+            PackOutOfStockException::class => $this->trans(
+                'There are not enough products in stock.',
                 'Admin.Catalog.Notification'
             ),
             ProductOutOfStockException::class => $this->trans(
