@@ -23,19 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import TranslatableField from '@js/components/translatable-field.js';
-import TranslatableInput from '@js/components/translatable-input.js';
-import TinyMCEEditor from '@js/components/tinymce-editor.js';
-import TaggableField from '@js/components/taggable-field.js';
-import ChoiceTable from '@js/components/choice-table.js';
-import ChoiceTree from '@js/components/form/choice-tree.js';
-import MultipleChoiceTable from '@js/components/multiple-choice-table.js';
-import GeneratableInput from '@js/components/generatable-input.js';
+import TranslatableField from '@js/components/translatable-field';
+import TranslatableInput from '@js/components/translatable-input';
+import TinyMCEEditor from '@js/components/tinymce-editor';
+import TaggableField from '@js/components/taggable-field';
+import ChoiceTable from '@js/components/choice-table';
+import ChoiceTree from '@js/components/form/choice-tree';
+import MultipleChoiceTable from '@js/components/multiple-choice-table';
+import GeneratableInput from '@js/components/generatable-input';
 import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
 import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
 import TextWithLengthCounter from '@components/form/text-with-length-counter';
 import PreviewOpener from '@components/form/preview-opener';
-import MultistoreConfigField from '@js/components/form/multistore-config-field.js';
+import MultistoreConfigField from '@js/components/form/multistore-config-field';
 import {EventEmitter} from '@components/event-emitter';
 import Router from '@components/router';
 

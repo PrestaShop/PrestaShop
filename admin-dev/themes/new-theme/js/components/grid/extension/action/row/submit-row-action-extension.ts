@@ -25,7 +25,7 @@
 import {Grid} from '@PSTypes/grid';
 import GridMap from '@components/grid/grid-map';
 
-import ConfirmModal from '@components/modal';
+import {ConfirmModal} from '@components/modal';
 
 const {$} = window;
 
@@ -106,7 +106,7 @@ export default class SubmitRowActionExtension {
     const closeButtonLabel = $submitBtn.data('closeButtonLabel');
     const confirmButtonClass = $submitBtn.data('confirmButtonClass');
 
-    const modal = new ConfirmModal(
+    const modal = new (ConfirmModal as any)(
       {
         id: GridMap.confirmModal(grid.getId()),
         confirmTitle,
