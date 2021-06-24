@@ -584,6 +584,12 @@ class CartPresenter implements PresenterInterface
                 $totalCartVoucherReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
             }
 
+            // Avoid display of a voucher if its total is equal to zero tax included
+            if (0 == $totalCartVoucherReduction) {
+                unset($vouchers[$cartVoucher['id_cart_rule']]);
+                continue;
+            }
+
             // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
             if ($freeShippingOnly) {
                 $cartVoucher['reduction_formatted'] = $this->translator->trans(
