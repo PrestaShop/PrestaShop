@@ -242,7 +242,7 @@ class CurrencyData
      */
     public function setPrecision($precision)
     {
-        $this->precision = $precision;
+        $this->precision = (int) $precision;
     }
 
     /**
