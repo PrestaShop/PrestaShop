@@ -302,7 +302,10 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
 
         // If the product already exists in the order, whatever his price, we take the same value
         foreach ($order->getCartProducts() as $cartProduct) {
-            if ((int) $cartProduct['id_product'] === $productId) {
+            if (
+                (int) $cartProduct['id_product'] === $productId
+                && (int) $cartProduct['id_product_attribute'] === $productAttributeId
+            ) {
                 return $withTaxes ? (float) $cartProduct['unit_price_tax_incl'] : (float) $cartProduct['unit_price_tax_excl'];
             }
         }
