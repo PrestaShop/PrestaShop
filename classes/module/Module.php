@@ -2020,7 +2020,7 @@ abstract class ModuleCore implements ModuleInterface
             }
             if (count($sqlResult) === 1) {
                 // if there is only 1 position available, it cannot be updated
-                return false;
+                continue;
             }
 
             foreach ($sqlResult as $positionNumber => $positionSettings) {
