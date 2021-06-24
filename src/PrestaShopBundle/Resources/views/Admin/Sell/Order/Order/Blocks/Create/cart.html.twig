@@ -31,7 +31,7 @@
       <div class="alert-text"></div>
     </div>
     <div class="row">
-      <label class="col-md-6 col-xl-3 text-md-right col-form-label">{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+      <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="product-search">{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
       <div class="col-md-6 col-xl-4">
         <input id="product-search" type="text" class="form-control">
         <small class="form-text">
@@ -58,14 +58,14 @@
           <form id="js-add-product-form">
 
             <div class="row js-product-select-row">
-              <label class="col-md-6 col-xl-3 text-md-right col-form-label">{{ 'Product'|trans({}, 'Admin.Global') }}</label>
+              <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="product-select">{{ 'Product'|trans({}, 'Admin.Global') }}</label>
               <div class="col-md-6 col-xl-4">
                 <select name="product_id" id="product-select" class="form-control custom-select" data-customization-label="{{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}"></select>
               </div>
             </div>
 
             <div class="row mt-3 js-combinations-row d-none">
-              <label class="col-md-6 col-xl-3 text-md-right col-form-label">{{ 'Combination'|trans({}, 'Admin.Global') }}</label>
+              <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="combination-select">{{ 'Combination'|trans({}, 'Admin.Global') }}</label>
               <div class="col-md-6 col-xl-4">
                 <select name="combination_id" id="combination-select" class="form-control custom-select"></select>
               </div>
@@ -77,7 +77,7 @@
             </div>
 
             <div class="row mt-3 js-quantity-row">
-              <label class="col-md-6 col-xl-3 text-md-right col-form-label">{{ 'Quantity'|trans({}, 'Admin.Global') }}</label>
+              <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="quantity-input">{{ 'Quantity'|trans({}, 'Admin.Global') }}</label>
               <div class="col-6 col-xl-3">
                 <input name="product_quantity" id="quantity-input" type="number" min="1" value="1" class="form-control">
                 {% if stockManagementEnabled %}
@@ -127,7 +127,7 @@
           </div>
         </div>
         <div class="row">
-          <label class="col-md-6 col-xl-3 text-md-right col-form-label">{{ 'Currency'|trans({}, 'Admin.Global') }}</label>
+          <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="js-cart-currency-select">{{ 'Currency'|trans({}, 'Admin.Global') }}</label>
           <div class="col-md-6 col-xl-4">
             <select class="form-control custom-select" id="js-cart-currency-select">
               {% for name, id in currencies %}
@@ -137,7 +137,7 @@
           </div>
         </div>
         <div class="row mt-3">
-          <label class="col-md-6 col-xl-3 text-md-right col-form-label">{{ 'Language'|trans({}, 'Admin.Global') }}</label>
+          <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="js-cart-language-select">{{ 'Language'|trans({}, 'Admin.Global') }}</label>
           <div class="col-md-6 col-xl-4">
             <select class="form-control custom-select" id="js-cart-language-select">
               {% for name, id in languages %}
