@@ -50,6 +50,7 @@ use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -103,6 +104,10 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @var OrderDetailUpdater
      */
     private $orderDetailUpdater;
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
 
     /**
      * @param TranslatorInterface $translator
@@ -110,13 +115,15 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param OrderAmountUpdater $orderAmountUpdater
      * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
      * @param OrderDetailUpdater $orderDetailUpdater
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
         ContextStateManager $contextStateManager,
         OrderAmountUpdater $orderAmountUpdater,
         OrderProductQuantityUpdater $orderProductQuantityUpdater,
-        OrderDetailUpdater $orderDetailUpdater
+        OrderDetailUpdater $orderDetailUpdater,
+        ConfigurationInterface $configuration
     ) {
         $this->context = Context::getContext();
         $this->translator = $translator;
@@ -124,6 +131,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $this->orderAmountUpdater = $orderAmountUpdater;
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
         $this->orderDetailUpdater = $orderDetailUpdater;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -441,7 +449,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $freeShippingCartRule = new CartRule();
             $freeShippingCartRule->id_customer = $order->id_customer;
             $freeShippingCartRule->name = [
-                Configuration::get('PS_LANG_DEFAULT') => $this->translator->trans(
+                $this->configuration->get('PS_LANG_DEFAULT') => $this->translator->trans(
                     '[Generated] CartRule for Free Shipping',
                     [],
                     'Admin.Orderscustomers.Notification'
@@ -466,7 +474,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             $order->addCartRule(
                 $freeShippingCartRule->id,
-                $freeShippingCartRule->name[Configuration::get('PS_LANG_DEFAULT')],
+                $freeShippingCartRule->name[$this->configuration->get('PS_LANG_DEFAULT')],
                 $values
             );
         }
@@ -605,7 +613,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         // If we are targeting a specific invoice check that the ID has not been found in the OrderDetail list
         if (!empty($command->getOrderInvoiceId()) && in_array((int) $command->getOrderInvoiceId(), $invoicesContainingProduct)) {
             $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
-            $invoiceNumber = $orderInvoice->getInvoiceNumberFormatted((int) Configuration::get('PS_LANG_DEFAULT'), $order->id_shop);
+            $invoiceNumber = $orderInvoice->getInvoiceNumberFormatted((int) $this->configuration->get('PS_LANG_DEFAULT'), $order->id_shop);
             throw new DuplicateProductInOrderInvoiceException($invoiceNumber, 'You cannot add this product in this invoice as it is already present');
         }
     }
@@ -620,7 +628,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private function shouldQuantityDiscountsBeApplied(AddProductToOrderCommand $command): bool
     {
         // PS_QTY_DISCOUNT_ON_COMBINATION === 1 means quantity discount is based on Combinations, otherwise it's based on Products
-        $qtyDiscountOnProducts = (1 !== (int) Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION'));
+        $qtyDiscountOnProducts = (1 !== (int) $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION'));
 
         /*
          * The rule is :
