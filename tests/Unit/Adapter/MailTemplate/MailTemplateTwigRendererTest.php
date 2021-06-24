@@ -68,7 +68,7 @@ class MailTemplateTwigRendererTest extends TestCase
         $this->expectException(FileNotFoundException::class);
 
         $templatePaths = [
-            MailTemplateInterface::HTML_TYPE => 'path/to/non_existent_template.html.twig',
+            MailTemplateInterface::HTML_TYPE => '@Resources/path/to/non_existent_template.html.twig',
         ];
         $expectedVariables = ['locale' => null, 'url' => 'http://test.com'];
         $expectedLanguage = $this->createLanguageMock();
@@ -97,7 +97,7 @@ class MailTemplateTwigRendererTest extends TestCase
     public function testRenderHtml()
     {
         $templatePaths = [
-            MailTemplateInterface::HTML_TYPE => __DIR__ . '/../../Resources/mails/templates/account.html.twig',
+            MailTemplateInterface::HTML_TYPE => '@Resources/mails/templates/account.html.twig',
         ];
         $expectedTemplate = 'mail_template';
         $expectedVariables = ['locale' => null, 'url' => 'http://test.com', 'templateType' => MailTemplateInterface::HTML_TYPE];
@@ -119,7 +119,7 @@ class MailTemplateTwigRendererTest extends TestCase
     {
         $templatePaths = [
             MailTemplateInterface::HTML_TYPE => '',
-            MailTemplateInterface::TXT_TYPE => __DIR__ . '/../../Resources/mails/templates/account.html.twig',
+            MailTemplateInterface::TXT_TYPE => '@Resources/mails/templates/account.html.twig',
         ];
         $expectedTemplate = 'mail_template';
         $expectedVariables = ['locale' => null, 'url' => 'http://test.com', 'templateType' => MailTemplateInterface::HTML_TYPE];
@@ -140,7 +140,7 @@ class MailTemplateTwigRendererTest extends TestCase
     public function testRenderTxt()
     {
         $templatePaths = [
-            MailTemplateInterface::TXT_TYPE => __DIR__ . '/../../Resources/mails/templates/account.html.twig',
+            MailTemplateInterface::TXT_TYPE => '@Resources/mails/templates/account.html.twig',
         ];
         $expectedTemplate = 'mail_template';
         $expectedVariables = ['locale' => null, 'url' => 'http://test.com', 'templateType' => MailTemplateInterface::TXT_TYPE];
@@ -161,7 +161,7 @@ class MailTemplateTwigRendererTest extends TestCase
     public function testRenderTxtFallback()
     {
         $templatePaths = [
-            MailTemplateInterface::HTML_TYPE => __DIR__ . '/../../Resources/mails/templates/account.html.twig',
+            MailTemplateInterface::HTML_TYPE => '@Resources/mails/templates/account.html.twig',
             MailTemplateInterface::TXT_TYPE => '',
         ];
         $expectedTemplate = 'mail_template';
@@ -183,7 +183,7 @@ class MailTemplateTwigRendererTest extends TestCase
     public function testRenderWithTransformations()
     {
         $templatePaths = [
-            MailTemplateInterface::HTML_TYPE => __DIR__ . '/../../Resources/mails/templates/account.html.twig',
+            MailTemplateInterface::HTML_TYPE => '@Resources/mails/templates/account.html.twig',
         ];
         $generatedTemplate = 'mail_template';
         $transformedTemplate = 'mail_template_transformed_fr';
@@ -267,6 +267,10 @@ class MailTemplateTwigRendererTest extends TestCase
             )
             ->willReturn($generatedTemplate)
         ;
+
+        $engineMock->expects($this->once())
+            ->method('exists')
+            ->willReturn(file_exists(str_replace('@Resources', __DIR__ . '/../../Resources', $expectedPath)));
 
         return $engineMock;
     }

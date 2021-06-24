@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Api;
 
-use Doctrine\Common\Util\Inflector;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Exception\InvalidPaginationParamsException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -368,7 +368,7 @@ abstract class QueryParamsCollection
      */
     protected function appendSqlFilter($value, $column, array $filters)
     {
-        $column = Inflector::tableize($column);
+        $column = Inflector::getInflector()->tableize($column);
 
         if ('attributes' === $column) {
             return $this->appendSqlAttributesFilter($filters, $value);
@@ -462,7 +462,7 @@ abstract class QueryParamsCollection
      */
     protected function appendSqlFilterParams($column, $value, $sqlParams)
     {
-        $column = Inflector::tableize($column);
+        $column = Inflector::getInflector()->tableize($column);
 
         if ('attributes' === $column) {
             return $this->appendSqlAttributesFilterParam($value, $sqlParams);

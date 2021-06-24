@@ -45,10 +45,13 @@ class ApiClient
     private $defaultQueryParameters;
 
     /**
-     * @var \PrestaShop\PrestaShop\Adapter\Tools
+     * @param Client $addonsApiClient
+     * @param string $locale
+     * @param string|false $isoCode
+     * @param null $toolsAdapter
+     * @param string $domain
+     * @param string $shopVersion
      */
-    private $toolsAdapter;
-
     public function __construct(
         Client $addonsApiClient,
         $locale,
@@ -58,7 +61,6 @@ class ApiClient
         $shopVersion
     ) {
         $this->addonsApiClient = $addonsApiClient;
-        $this->toolsAdapter = $toolsAdapter;
 
         list($isoLang) = explode('-', $locale);
 
@@ -69,10 +71,11 @@ class ApiClient
         $this->defaultQueryParameters = $this->queryParameters;
     }
 
+    /**
+     * @Deprecated use Client constructor instead
+     */
     public function setSslVerification($verifySsl)
     {
-        $this->toolsAdapter->refreshCaCertFile();
-        $this->addonsApiClient->setDefaultOption('verify', $verifySsl);
     }
 
     /**
@@ -252,7 +255,7 @@ class ApiClient
     {
         return (string) $this->addonsApiClient
             ->get(
-                null,
+                '',
                 ['query' => $this->queryParameters,
                 ]
             )->getBody();
@@ -262,7 +265,7 @@ class ApiClient
     {
         return (string) $this->addonsApiClient
             ->post(
-                null,
+                '',
                 ['query' => $this->queryParameters,
                 ]
             )->getBody();

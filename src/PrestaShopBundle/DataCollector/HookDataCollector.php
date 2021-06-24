@@ -67,7 +67,6 @@ final class HookDataCollector extends DataCollector
     public function unserialize($data)
     {
         // it seems that php 7.3 has a bug with unserialize: https://bugs.php.net/bug.php?id=77302
-        /* @phpstan-ignore-next-line */
         $this->data = is_array($data) ? $data : @unserialize($data);
     }
 

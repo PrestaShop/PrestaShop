@@ -171,7 +171,17 @@ class ModuleManagerBuilder
         $prestashopAddonsConfig =
             $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
 
-        $clientConfig = $config['csa_guzzle']['clients']['addons_api']['config'];
+        $tools = new Tools();
+        $tools->refreshCaCertFile();
+
+        $clientConfig = $config['eight_points_guzzle']['clients']['addons_api'];
+        $clientConfig['verify'] = _PS_CACHE_CA_CERT_FILE_;
+        if (file_exists($this->getConfigDir() . '/parameters.php')) {
+            $parameters = require $this->getConfigDir() . '/parameters.php';
+            if (array_key_exists('addons.api_client.verify_ssl', $parameters['parameters'])) {
+                $clientConfig['verify'] = $parameters['parameters']['addons.api_client.verify_ssl'];
+            }
+        }
 
         self::$translator = Context::getContext()->getTranslator();
 
@@ -179,18 +189,10 @@ class ModuleManagerBuilder
             new Client($clientConfig),
             self::$translator->getLocale(),
             $this->getCountryIso(),
-            new Tools(),
+            null,
             (new Configuration())->get('_PS_BASE_URL_'),
             \AppKernel::VERSION
         );
-
-        $marketPlaceClient->setSslVerification(_PS_CACHE_CA_CERT_FILE_);
-        if (file_exists($this->getConfigDir() . '/parameters.php')) {
-            $parameters = require $this->getConfigDir() . '/parameters.php';
-            if (array_key_exists('addons.api_client.verify_ssl', $parameters['parameters'])) {
-                $marketPlaceClient->setSslVerification($parameters['parameters']['addons.api_client.verify_ssl']);
-            }
-        }
 
         self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator, new NullDispatcher());
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);

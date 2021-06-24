@@ -55,10 +55,11 @@ global_settings:
      - ps_linklist
   hooks:
     modules_to_hook:
-      displayAfterBodyOpeningTag:
-        - blockreassurance
-      displayNavFullWidth:
-        - blockreassurance
+    # ToDo: reactivate blockreassurance when it will have been updated to work with circuit-breaker v4
+      #displayAfterBodyOpeningTag:
+      #  - blockreassurance
+      #displayNavFullWidth:
+      #  - blockreassurance
       displayNav1:
         - ps_contactinfo
       displayNav2:
@@ -75,15 +76,15 @@ global_settings:
         - ps_banner
         - ps_customtext
       displayFooterBefore:
-        - blockreassurance
+        #- blockreassurance
         - ps_emailsubscription
         - ps_socialfollow
       displayFooter:
         - ps_linklist
         - ps_customeraccountlinks
         - ps_contactinfo
-      displayFooterAfter:
-        - blockreassurance
+      #displayFooterAfter:
+        #- blockreassurance
       displayLeftColumn:
         - ps_categorytree
         - ps_facetedsearch
@@ -91,8 +92,8 @@ global_settings:
         - ps_searchbar
       displayProductAdditionalInfo:
         - ps_sharebuttons
-      displayReassurance:
-        - blockreassurance
+      #displayReassurance:
+      #  - blockreassurance
       displayOrderConfirmation2:
         - ps_featuredproducts
       displayCrossSellingShoppingCart:

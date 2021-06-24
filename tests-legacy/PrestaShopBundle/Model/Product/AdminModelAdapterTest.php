@@ -38,7 +38,6 @@ class AdminModelAdapterTest extends KernelTestCase
     /** @var $adminModelAdapter AdminModelAdapter */
     private $adminModelAdapter;
 
-    private $container;
     protected static $kernel;
 
     /** @var $product Product */
@@ -176,31 +175,31 @@ class AdminModelAdapterTest extends KernelTestCase
     {
         self::$kernel = $this->createKernel();
         self::$kernel->boot();
-        $this->container = self::$kernel->getContainer();
+        self::$container = self::$kernel->getContainer();
 
         \Context::getContext()->shop = new \Shop(1);
         \Context::getContext()->language = new \Language(1);
         \Context::getContext()->currency = new \Currency(1);
         $this->product = $this->fakeProduct();
         $this->adminModelAdapter = new AdminModelAdapter(
-            $this->container->get('prestashop.adapter.legacy.context'),
-            $this->container->get('prestashop.adapter.admin.wrapper.product'),
-            $this->container->get('prestashop.adapter.tools'),
-            $this->container->get('prestashop.adapter.data_provider.product'),
-            $this->container->get('prestashop.adapter.data_provider.supplier'),
-            $this->container->get('prestashop.adapter.data_provider.warehouse'),
-            $this->container->get('prestashop.adapter.data_provider.feature'),
-            $this->container->get('prestashop.adapter.data_provider.pack'),
-            $this->container->get('prestashop.adapter.shop.context'),
-            $this->container->get('prestashop.adapter.data_provider.tax'),
-            $this->container->get('router'),
-            $this->container->get('prestashop.utils.float_parser')
+            self::$container->get('prestashop.adapter.legacy.context'),
+            self::$container->get('prestashop.adapter.admin.wrapper.product'),
+            self::$container->get('prestashop.adapter.tools'),
+            self::$container->get('prestashop.adapter.data_provider.product'),
+            self::$container->get('prestashop.adapter.data_provider.supplier'),
+            self::$container->get('prestashop.adapter.data_provider.warehouse'),
+            self::$container->get('prestashop.adapter.data_provider.feature'),
+            self::$container->get('prestashop.adapter.data_provider.pack'),
+            self::$container->get('prestashop.adapter.shop.context'),
+            self::$container->get('prestashop.adapter.data_provider.tax'),
+            self::$container->get('router'),
+            self::$container->get('prestashop.utils.float_parser')
         );
     }
 
     protected function tearDown()
     {
-        unset($this->container, $this->product, $this->adminModelAdapter);
+        unset($this->product, $this->adminModelAdapter);
         self::$kernel = null;
     }
 
@@ -261,7 +260,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "attribute_quantity" => 300,
             "name" => "Taille - L",
         );
-        $combinationDataProvider = $this->container->get('prestashop.adapter.data_provider.combination');
+        $combinationDataProvider = self::$container->get('prestashop.adapter.data_provider.combination');
         $actualReturn = $combinationDataProvider->completeCombination($this->fakeCombination(), $this->product);
 
         foreach ($expectedStructureReturn as $property => $value) {

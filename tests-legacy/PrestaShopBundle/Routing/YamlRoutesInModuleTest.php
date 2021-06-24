@@ -34,11 +34,6 @@ use Symfony\Component\Routing\Route;
 class YamlRoutesInModuleTest extends KernelTestCase
 {
     /**
-     * @var Container
-     */
-    private $container;
-
-    /**
      * @var Module
      */
     private $module;
@@ -51,13 +46,13 @@ class YamlRoutesInModuleTest extends KernelTestCase
         $kernel = self::createKernel();
         $kernel->boot();
 
-        $this->container = $kernel->getContainer();
+        self::$container = $kernel->getContainer();
 
         HelperModule::addModule('demo');
 
-        $this->module = $this->container->get('prestashop.core.admin.module.repository')->getModule('demo');
+        $this->module = self::$container->get('prestashop.core.admin.module.repository')->getModule('demo');
         $this->module->onInstall();
-        $this->container->get('prestashop.core.cache.clearer.cache_clearer_chain')->clear();
+        self::$container->get('prestashop.core.cache.clearer.cache_clearer_chain')->clear();
     }
 
     /**
@@ -71,7 +66,7 @@ class YamlRoutesInModuleTest extends KernelTestCase
 
     public function testRoutesAreRegistered()
     {
-        $router = $this->container->get('router');
+        $router = self::$container->get('router');
         $route = $router->getRouteCollection()->get('demo_admin_demo');
 
         $this->assertInstanceOf(Route::class, $route);

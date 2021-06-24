@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Twig;
 
-use Doctrine\Common\Util\Inflector;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -256,7 +256,7 @@ class TranslationsExtension extends Twig_Extension
             $isSearchResults = $properties['is_search_results'];
         }
 
-        $breadcrumbParts = explode('_', Inflector::tableize($domain));
+        $breadcrumbParts = explode('_', Inflector::getInflector()->tableize($domain));
 
         return $this->container->get('templating')->render(
             '@PrestaShop/Admin/Translations/include/form-edit-message.html.twig',

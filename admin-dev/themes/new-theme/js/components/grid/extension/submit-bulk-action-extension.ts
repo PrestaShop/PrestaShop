@@ -86,7 +86,7 @@ export default class SubmitBulkActionExtension {
     const closeButtonLabel = $submitBtn.data('closeButtonLabel');
     const confirmButtonClass = $submitBtn.data('confirmButtonClass');
 
-    const modal = new ConfirmModal(
+    const modal = new (ConfirmModal as any)(
       {
         id: GridMap.confirmModal(grid.getId()),
         confirmTitle,

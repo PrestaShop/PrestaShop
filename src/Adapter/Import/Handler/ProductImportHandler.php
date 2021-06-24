@@ -837,7 +837,7 @@ final class ProductImportHandler extends AbstractImportHandler
 
             if ($productExistsByReference) {
                 $sqlPart .= 'p.`reference` = "' . pSQL($product->reference) . '"';
-            } elseif ($productExistsById) {
+            } else {
                 $sqlPart .= 'p.`id_product` = ' . (int) $product->id;
             }
 

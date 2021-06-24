@@ -90,6 +90,20 @@ class DbQueryTest extends TestCase
     }
 
     /**
+     * @param DbQuery $table
+     * @param string|null $alias
+     * @param array $expectedValue
+     *
+     * @dataProvider providerFromWithDbQuery
+     */
+    public function testFromWithDbQuery(DbQuery $table, ?string $alias, array $expectedValue): void
+    {
+        $dbQuery = $this->getDbQueryInstance();
+        $dbQuery->from($table, $alias);
+        $this->assertSame($expectedValue, $dbQuery->getQuery()['from']);
+    }
+
+    /**
      * @param mixed $dbQuery
      * @param mixed $expectedValue
      *
@@ -140,6 +154,26 @@ class DbQueryTest extends TestCase
         ];
     }
 
+    public function providerFromWithDbQuery(): array
+    {
+        return [
+            [
+                (new DbQuery())->select('*')->from('product', 'p'),
+                'alias',
+                [
+                    0 => '(SELECT *' . self::BREAK_LINE . 'FROM `' . _DB_PREFIX_ . 'product` p' . self::BREAK_LINE . ') alias',
+                ],
+            ],
+            [
+                (new DbQuery())->select('*')->from('order'),
+                'alias',
+                [
+                    0 => '(SELECT *' . self::BREAK_LINE . 'FROM `' . _DB_PREFIX_ . 'order`' . self::BREAK_LINE . ') alias',
+                ],
+            ],
+        ];
+    }
+
     public function providerBuild(): array
     {
         $simpleSelectQuery = $this->getDbQueryInstance()
@@ -164,6 +198,16 @@ class DbQueryTest extends TestCase
             ->where('p.reference = "testreference"')
         ;
 
+        $subQuery = new DbQuery();
+        $subQuery->select('*');
+        $subQuery->from('product', 'p');
+        $subQuery->where('p.active = 1');
+
+        $selectWithSubQuery = new DbQuery();
+        $selectWithSubQuery->select('*');
+        $selectWithSubQuery->from($subQuery, 'p');
+        $selectWithSubQuery->where('p.visibility in ("both", "search")');
+
         return [
             [
                 $simpleSelectQuery,
@@ -180,6 +224,10 @@ class DbQueryTest extends TestCase
             [
                 $simpleSelectQueryWithAliasandWhere,
                 'SELECT p.*' . self::BREAK_LINE . 'FROM `' . _DB_PREFIX_ . 'product` p' . self::BREAK_LINE . 'WHERE (p.reference = "testreference")',
+            ],
+            [
+                $selectWithSubQuery,
+                'SELECT *' . self::BREAK_LINE . 'FROM (SELECT *' . self::BREAK_LINE . 'FROM `test_product` p' . self::BREAK_LINE . 'WHERE (p.active = 1)' . self::BREAK_LINE . ') p' . self::BREAK_LINE . 'WHERE (p.visibility in ("both", "search"))',
             ],
         ];
     }
