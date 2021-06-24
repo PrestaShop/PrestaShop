@@ -147,7 +147,7 @@
             "file": "app/config/parameters.yml"
         },
         "symfony": {
-            "require": "~3.4"
+            "require": "~4.4"
         },
         "symfony-app-dir": "app",
         "symfony-assets-install": "relative",
