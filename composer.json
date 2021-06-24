@@ -101,7 +101,7 @@
     "prestashop/statssales": "^2",
     "prestashop/statssearch": "^2",
     "prestashop/statsstock": "^2",
-    "prestashop/translationtools-bundle": "^4.0",
+    "prestashop/translationtools-bundle": "dev-exclude-directories",
     "prestashop/welcome": "^6",
     "sensio/distribution-bundle": "^5.0",
     "sensio/framework-extra-bundle": "^5.1",
@@ -128,11 +128,16 @@
       "type": "vcs",
       "url": "https://github.com/PrestaShop/CsaGuzzleBundle",
       "canonical": false
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/sowbiba/TranslationToolsBundle",
+      "canonical": false
     }
   ],
   "require-dev": {
     "behat/behat": "^3.5",
-    "friendsofphp/php-cs-fixer": "^2.16.1",
+    "friendsofphp/php-cs-fixer": "^2.18",
     "johnkary/phpunit-speedtrap": "^3",
     "mikey179/vfsstream": "^1.6",
     "phake/phake": "@stable",
