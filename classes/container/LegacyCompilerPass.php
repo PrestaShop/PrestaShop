@@ -37,27 +37,32 @@ class LegacyCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $context = Context::getContext();
-
-        $this->buildSyntheticDefinitions([
-            'configuration',
-            'context',
-            'db',
-            'shop',
-            'employee',
+        $this->buildDefinitions([
+            'configuration' => Configuration::class,
+            'context' => [Context::class, 'getContext'],
+            'db' => [Db::class, 'getInstance'],
         ], $container);
 
-        $container->set('context', $context);
-        $container->set('configuration', new Configuration());
-        $container->set('db', Db::getInstance());
-        $container->set('shop', $context->shop);
-        $container->set('employee', $context->employee);
+        $this->buildSyntheticDefinitions(['shop' => Shop::class, 'employee' => Employee::class], $container);
     }
 
-    private function buildSyntheticDefinitions(array $keys, ContainerBuilder $container)
+    private function buildDefinitions(array $keys, ContainerBuilder $container): void
     {
-        foreach ($keys as $key) {
-            $definition = new Definition();
+        foreach ($keys as $key => $class) {
+            if (is_array($class)) {
+                $definition = new Definition($class[0]);
+                $definition->setFactory($class);
+            } else {
+                $definition = new Definition($class);
+            }
+            $container->setDefinition($key, $definition);
+        }
+    }
+
+    private function buildSyntheticDefinitions(array $keys, ContainerBuilder $container): void
+    {
+        foreach ($keys as $key => $class) {
+            $definition = new Definition($class);
             $definition->setSynthetic(true);
             $container->setDefinition($key, $definition);
         }

@@ -134,6 +134,11 @@ class ContainerBuilder
         if (null === $container) {
             $container = $this->compileContainer();
         }
+
+        // synthetic definitions can't be compiled
+        $container->set('shop', $container->get('context')->shop);
+        $container->set('employee', $container->get('context')->employee);
+
         $this->loadModulesAutoloader($container);
 
         return $container;
