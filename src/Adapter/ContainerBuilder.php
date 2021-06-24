@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Context;
+use Db;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\Tools\Setup;
 use Exception;
@@ -134,6 +136,11 @@ class ContainerBuilder
         if (null === $container) {
             $container = $this->compileContainer();
         }
+
+        // synthetic definitions can't be compiled
+        $container->set('shop', $container->get('context')->shop);
+        $container->set('employee', $container->get('context')->employee);
+
         $this->loadModulesAutoloader($container);
 
         return $container;
