@@ -79,6 +79,10 @@
 
       .link-leveltwo .link {
         padding-left: 0.75rem;
+
+        @include media-breakpoint-down(md) {
+          padding-left: 0.35rem;
+        }
       }
     }
 
