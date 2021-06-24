@@ -76,7 +76,6 @@
   right: inherit;
 }
 
-
 /* Footer position on RTL */
 .adminproducts .product-page .product-footer {
   right: 13.13rem;
@@ -126,4 +125,10 @@
     margin-left: .25rem;
     margin-right: 1rem;
   }
+}
+
+/* Checkboxes RTL */
+.md-checkbox [type="checkbox"]:checked + .md-checkbox-control::after, .md-checkbox .indeterminate + .md-checkbox-control::after {
+  border-right-style: none;
+  border-left-style: solid;
 }
