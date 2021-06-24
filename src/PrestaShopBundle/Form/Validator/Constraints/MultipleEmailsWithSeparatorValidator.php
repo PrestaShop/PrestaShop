@@ -76,7 +76,7 @@ class MultipleEmailsWithSeparatorValidator extends ConstraintValidator
         if (!empty($invalidEmails)) {
             $nbInvalidEmails = count($invalidEmails);
             $message = $constraint->message ?? $this->translator->transChoice(
-                'Invalid email: %invalid_emails%.|Invalid emails: %invalid_emails%.',
+                '{1} Invalid email: %invalid_emails%.|]1,Inf[ Invalid emails: %invalid_emails%.',
                 $nbInvalidEmails,
                 ['%invalid_emails%' => implode(',', $invalidEmails)],
                 'Admin.Notifications.Error'
