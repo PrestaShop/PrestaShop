@@ -65,7 +65,9 @@ const textToLinkRewriteCopier = (
   },
 ) => {
   $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
-    $(destinationElementSelector).val(window.str2url($(event.currentTarget).val(), 'UTF-8'));
+    if (window.location.href.indexOf('new') > -1) {
+      $(destinationElementSelector).val(window.str2url($(event.currentTarget).val(), 'UTF-8'));
+    }
   });
 };
 
