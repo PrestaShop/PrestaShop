@@ -1377,8 +1377,6 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Category\QuickAddCategoryType'
         parent: 'form.type.translatable.aware'
         public: true
-        arguments:
-            - "@prestashop.adapter.data_provider.category"
         tags:
             - { name: form.type }
 

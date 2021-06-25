@@ -70,8 +70,15 @@ export default class CategoriesManager {
       type: 'iframe',
       width: '90%',
       height: '90%',
+      helpers: {
+        overlay: {closeClick: false},
+      },
       content: modalContent.html(),
       afterShow: () => {
+        this.initTypeahead(
+          ProductMap.categories.parentCategorySearchInput,
+          (categoryId) => this.onSelectParentCategory(categoryId),
+        );
         const form = $(`form[name='${ProductMap.categories.addCategoryFormName}']`);
         const {fancybox} = parent.$;
 
@@ -100,7 +107,7 @@ export default class CategoriesManager {
     this.radioIdRegexp = new RegExp(regexpString);
 
     this.initTypeaheadData(this.categories, '');
-    this.initTypeahead();
+    this.initTypeahead(ProductCategoryMap.searchInput, (categoryId) => this.selectCategory(categoryId));
     this.initTree();
     this.updateCategoriesTags();
   }
@@ -368,7 +375,7 @@ export default class CategoriesManager {
     });
   }
 
-  initTypeahead() {
+  initTypeahead(searchInputSelector, onSelectCallback) {
     const source = new Bloodhound({
       datumTokenizer: Tokenizers.obj.letters(
         'breadcrumb',
@@ -382,14 +389,14 @@ export default class CategoriesManager {
       display: 'breadcrumb',
       value: 'id',
       onSelect: (selectedItem, e, $searchInput) => {
-        this.selectCategory(selectedItem.id);
-
+        onSelectCallback(selectedItem.id);
+        debugger;
         // This resets the search input or else previous search is cached and can be added again
         $searchInput.typeahead('val', '');
       },
     };
 
-    new AutoCompleteSearch($(ProductCategoryMap.searchInput), dataSetConfig);
+    new AutoCompleteSearch($(searchInputSelector), dataSetConfig);
   }
 
   updateCategoriesTags() {
@@ -527,5 +534,9 @@ export default class CategoriesManager {
 
       eventData.fancybox.close();
     });
+  }
+
+  onSelectParentCategory(categoryId) {
+    document.querySelector(ProductMap.categories.parentCategorySelectInput).value = categoryId;
   }
 }

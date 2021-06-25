@@ -188,6 +188,8 @@ export default {
     reduceAllButton: '#categories-tree-reduce',
     addCategoryBtn: '.add-category-btn',
     addCategoryFormName: 'quick_add_category',
+    parentCategorySearchInput: '#quick_add_category_search_category',
+    parentCategorySelectInput: '#quick_add_category_parent_id',
   },
   modules: {
     previewContainer: '.module-render-container.all-modules',

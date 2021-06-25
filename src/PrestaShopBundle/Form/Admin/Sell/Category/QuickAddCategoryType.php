@@ -34,7 +34,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -42,26 +42,15 @@ use Symfony\Component\Form\FormBuilderInterface;
 class QuickAddCategoryType extends TranslatorAwareType
 {
     /**
-     * @todo: temporary
-     *
-     * @var array
-     */
-    private $categories;
-
-    /**
      * @var CategoryDataProvider
      */
     private $categoryDataProvider;
 
     public function __construct(
         TranslatorInterface $translator,
-        array $locales,
-        //@todo: implement choice provider instead
-        CategoryDataProvider $categoryDataProvider
+        array $locales
     ) {
         parent::__construct($translator, $locales);
-        $this->categoryDataProvider = $categoryDataProvider;
-        $this->formatValidList($categoryDataProvider->getNestedCategories());
     }
 
     /**
@@ -82,14 +71,16 @@ class QuickAddCategoryType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('parent_id', ChoiceType::class, [
-                'choices' => $this->categories,
-                'required' => true,
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
+            //@todo; extract to some CategorySearch component?
+            ->add('search_category', TextType::class, [
                 'label' => $this->trans('Parent of the category', 'Admin.Catalog.Feature'),
+                'required' => false,
+                'attr' => [
+                    'class' => 'autocomplete search ui-autocomplete-input',
+                ],
+            ])
+            ->add('parent_id', HiddenType::class, [
+                'required' => true,
             ])
             ->add('cancel', ButtonType::class, [
                 'label' => $this->trans('Cancel', 'Admin.Actions'),
@@ -104,19 +95,5 @@ class QuickAddCategoryType extends TranslatorAwareType
                 ],
             ])
         ;
-    }
-
-    /**
-     * @todo: temporary. (copied from old form)
-     */
-    private function formatValidList($list)
-    {
-        foreach ($list as $item) {
-            $this->categories[$item['name']] = $item['id_category'];
-
-            if (isset($item['children'])) {
-                $this->formatValidList($item['children']);
-            }
-        }
     }
 }
