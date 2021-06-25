@@ -38,6 +38,7 @@ import PreviewOpener from '@components/form/preview-opener';
 import MultistoreConfigField from '@js/components/form/multistore-config-field';
 import {EventEmitter} from '@components/event-emitter';
 import Router from '@components/router';
+import ColorPicker from '@js/app/utils/colorpicker';
 
 const initPrestashopComponents = () => {
   window.prestashop = {...window.prestashop};
@@ -95,6 +96,7 @@ const initPrestashopComponents = () => {
     MultistoreConfigField,
     PreviewOpener,
     Router,
+    ColorPicker,
   };
 };
 export default initPrestashopComponents;
