@@ -130,11 +130,6 @@ jobs:
             env:
                 SYMFONY_DEPRECATIONS_HELPER: disabled
 
-        -   name: Run phpunit-sf
-            run: composer run-script phpunit-sf --timeout=0
-            env:
-                SYMFONY_DEPRECATIONS_HELPER: disabled
-
         -   name: Run phpunit-controllers
             run: composer run-script phpunit-controllers --timeout=0
             env:
