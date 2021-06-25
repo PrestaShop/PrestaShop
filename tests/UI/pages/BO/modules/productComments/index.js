@@ -45,9 +45,10 @@ class ProductComments extends ModuleConfiguration.constructor {
     if (await this.elementVisible(page, '.list-empty', 3)) {
       return 0;
     }
-
-    const selector = this.reviewsTableRows(table);
-    return page.$$eval(selector, divs => divs.length);
+    else {
+      const selector = this.reviewsTableRows(table);
+      return page.$$eval(selector, divs => divs.length);
+    }
   }
 
   /**
