@@ -24,16 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 define('_PS_IN_TEST_', true);
-if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', __DIR__);
-}
-if (!defined('PS_ADMIN_DIR')) {
-    define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
-}
-define('_PS_ROOT_DIR_', __DIR__ . '/../..');
+define('_PS_ROOT_DIR_', dirname(__DIR__, 2));
 define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests/Resources/modules/');
-
-require_once __DIR__ . '/../../config/config.inc.php';
+require_once dirname(__DIR__, 2) . '/admin-dev/bootstrap.php';
 
 /*
  * Following code makes tests run under phpstorm
@@ -41,5 +34,5 @@ require_once __DIR__ . '/../../config/config.inc.php';
  * @see https://stackoverflow.com/questions/33299149/phpstorm-8-and-phpunit-problems-with-runinseparateprocess
  */
 if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
-    define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../../vendor/autoload.php');
+    define('PHPUNIT_COMPOSER_INSTALL', dirname(__DIR__, 2) . '/vendor/autoload.php');
 }
