@@ -36,6 +36,7 @@ let browserContext;
 let page;
 let foCommentCount;
 let waitingApprovalReviewCount;
+let approvedReviewCount;
 const moduleName = 'Product Comments';
 const moduleTag = 'productcomments';
 
@@ -175,6 +176,14 @@ describe('FO write a review', async () => {
   });
 
   describe('Check if review is in "waiting for approval" table and approve it', async () => {
+    it('should get the waiting review count', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getWaitingReviewCount', baseContext);
+
+      waitingApprovalReviewCount = await productcommentsModulePage.getTableReviewCount(page, 'waiting-approval');
+
+      await expect(waitingApprovalReviewCount).to.be.greaterThan(0);
+    });
+
     it('should check if review is in waiting for approval table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfReviewInWaitingApproval', baseContext);
 
@@ -189,7 +198,9 @@ describe('FO write a review', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'approveReview', baseContext);
 
       await productcommentsModulePage.approveReview(page);
-      // TODO find a way to make an assertion here ...
+      const newReviewCount = await productcommentsModulePage.getTableReviewCount(page, 'waiting-approval');
+
+      await expect(newReviewCount).to.equal(waitingApprovalReviewCount - 1);
     });
   });
 
@@ -294,11 +305,21 @@ describe('FO write a review', async () => {
       await expect(moduleConfigurationPageSubtitle).to.contains(moduleName);
     });
 
+    it('should get the approved review count', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getApprovedReviewCount', baseContext);
+
+      approvedReviewCount = await productcommentsModulePage.getTableReviewCount(page, 'approved');
+
+      await expect(approvedReviewCount).to.be.greaterThan(0);
+    });
+
     it('should delete the review in the "approved review" table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteApprovedReview', baseContext);
 
       await productcommentsModulePage.deleteReview(page, 'approved');
-      // TODO find a way to make an assertion here ...
+      const newReviewCount = await productcommentsModulePage.getTableReviewCount(page, 'approved');
+
+      await expect(newReviewCount).to.equal(approvedReviewCount - 1);
     });
 
     it('should logout from BO', async function () {

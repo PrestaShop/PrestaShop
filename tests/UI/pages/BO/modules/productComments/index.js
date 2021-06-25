@@ -22,6 +22,7 @@ class ProductComments extends ModuleConfiguration.constructor {
     this.reviewsTableRow = (table, row) => `${this.reviewsTableRows(table)}:nth-child(${row})`;
     this.reviewsTableColumn = (table, row, column) => `${this.reviewsTableRow(table, row)}`
       + ` td.product-comment-${column}`;
+    this.reviewsTableEmptyRows = table => `${this.reviewsTableRows(table)} td.list-empty`;
     // Buttons Selectors
     this.deleteReviewButton = (table, row) => `${this.reviewsTableRow(table, row)} .btn-group [title='Delete']`;
     this.toggleDropdownButton = (table, row) => `${this.reviewsTableRow(table, row)} button.dropdown-toggle`;
@@ -42,13 +43,12 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @returns {Promise<number|*>}
    */
   async getTableReviewCount(page, table) {
-    if (await this.elementVisible(page, '.list-empty', 3)) {
+    if (await this.elementVisible(page, this.reviewsTableEmptyRows(table), 3000)) {
       return 0;
     }
-    else {
-      const selector = this.reviewsTableRows(table);
-      return page.$$eval(selector, divs => divs.length);
-    }
+
+    const selector = this.reviewsTableRows(table);
+    return page.$$eval(selector, rows => rows.length);
   }
 
   /**
@@ -102,7 +102,6 @@ class ProductComments extends ModuleConfiguration.constructor {
    */
   async deleteReview(page, table, row = 1) {
     await page.click(this.deleteReviewButton(table, row));
-    await this.waitForVisibleSelector(page, this.confirmReviewDeletionButton);
     await this.clickAndWaitForNavigation(page, this.confirmReviewDeletionButton);
   }
 
