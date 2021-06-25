@@ -84,4 +84,20 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
             $status
         );
     }
+
+    /**
+     * @Given /^search indexation feature is (enabled|disabled)$/
+     *
+     * @Transform(enabled|disabled)
+     *
+     * @param string $status
+     */
+    public function toggleSearchIndexation(string $status): void
+    {
+        $status = PrimitiveUtils::castStringBooleanIntoBoolean($status);
+        Configuration::set(
+            'PS_SEARCH_INDEXATION',
+            $status
+        );
+    }
 }

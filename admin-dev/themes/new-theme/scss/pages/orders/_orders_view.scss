@@ -1,5 +1,5 @@
 // stylelint-disable-next-line
-@import "@scss/pages/partials/_order-navigation";
+@import '@scss/pages/partials/_order-navigation';
 
 #order-view-page {
   #historyTabContent {
@@ -14,6 +14,10 @@
       display: flex;
       align-items: center;
     }
+  }
+
+  .discount-action {
+    margin-bottom: 1rem;
   }
 
   .add-product {
@@ -43,6 +47,7 @@
     #order_payment_id_currency {
       flex: inherit;
       min-width: 75px;
+      height: auto;
     }
   }
 
@@ -56,8 +61,16 @@
     .nav-tabs {
       position: relative;
       z-index: 5;
+      display: flex;
+      flex-wrap: nowrap;
       padding-left: 1px;
       margin-bottom: -2px;
+      overflow: auto;
+      overflow-y: hidden;
+
+      .nav-item {
+        flex-shrink: 0;
+      }
     }
 
     .tab-content {
@@ -325,13 +338,17 @@
   }
 
   #order-view-page {
-    .table:not(.discountList) {
-      display: block;
-    }
-
     #view_order_payments_block {
       .table {
-        overflow: scroll;
+        overflow: auto;
+
+        &:not(.discountList) {
+          display: block;
+
+          &.table-empty {
+            display: table;
+          }
+        }
 
         &-head {
           &-invoice {
@@ -364,7 +381,20 @@
     .right-column .tab-content,
     #orderProductsPanel {
       table {
-        overflow: scroll;
+        display: block;
+        overflow: auto;
+
+        &.table-empty {
+          display: table;
+        }
+      }
+    }
+
+    .order-product-pagination {
+      label {
+        margin-right: 1rem;
+        /* stylelint-disable-next-line */
+        margin-left: 0 !important;
       }
     }
 
@@ -394,7 +424,7 @@
         display: flex;
         flex-wrap: nowrap;
         align-items: flex-end;
-        overflow-y: scroll;
+        overflow: auto;
 
         .nav-item {
           min-width: 165px;
@@ -420,12 +450,6 @@
           max-width: inherit;
           padding-right: 2.5rem;
           text-overflow: ellipsis;
-        }
-      }
-
-      > * {
-        &:not(:last-child) {
-          margin-right: 0;
         }
       }
 
@@ -577,15 +601,60 @@ input#partial_refund_shipping {
   }
 }
 
-@media (max-width: 374px) {
+@media (max-width: 390px) {
   #order-view-page {
+    .right-column .tab-content,
+    #orderProductsPanel {
+      table {
+        &.table-empty {
+          display: block;
+        }
+      }
+    }
+
     .order-actions {
       &-print {
         max-width: 186px;
+
+        button {
+          text-align: left;
+
+          i.material-icons {
+            margin-right: 20px;
+          }
+        }
+      }
+
+      &-invoice,
+      &-delivery {
+        width: 100%;
+        max-width: 286px;
+
+        a {
+          width: 100%;
+          max-width: 286px;
+          margin: auto;
+        }
+      }
+
+      &-invoice {
+        + .order-actions-print {
+          max-width: 286px;
+        }
+      }
+
+      .partial-refund-display {
+        width: 185px;
       }
 
       .select-status {
-        max-width: 150px;
+        max-width: 148px;
+      }
+
+      > * {
+        &:not(:last-child) {
+          margin-right: 0;
+        }
       }
     }
   }

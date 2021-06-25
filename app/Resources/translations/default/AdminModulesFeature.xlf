@@ -590,9 +590,9 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <target>This module is not compatible with the multistore feature because it would not be useful.</target>
         <note>Line: 134</note>
       </trans-unit>
-      <trans-unit id="a608f1d4854481318e94f1c9f57262fc">
-        <source>This module is not compatible with the multistore feature. It means that its configuration applies for all stores.</source>
-        <target>This module is not compatible with the multistore feature. It means that its configuration applies for all stores.</target>
+      <trans-unit id="177915f8877b2d381c7f0c540ab7a17b">
+        <source>This module is not compatible with the multistore feature. It means that its configuration applies to all stores.</source>
+        <target>This module is not compatible with the multistore feature. It means that its configuration applies to all stores.</target>
         <note>Line: 136</note>
       </trans-unit>
     </body>

@@ -16,6 +16,7 @@ class AddCustomer extends BOBasePage {
 
     this.pageTitleCreate = 'Creating a new Customer •';
     this.pageTitleEdit = 'Editing customer';
+    this.updateSuccessfullMessage = 'Update successful';
 
     // Selectors
     this.socialTitleInput = id => `#customer_gender_id_${id}`;

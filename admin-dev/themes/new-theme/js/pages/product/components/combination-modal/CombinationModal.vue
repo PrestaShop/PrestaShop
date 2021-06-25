@@ -25,6 +25,7 @@
 <template>
   <div id="combination-edit-modal">
     <modal
+      class="combination-modal"
       v-if="selectedCombinationId !== null"
       @close="closeModal"
     >
@@ -51,11 +52,11 @@
         <button
           type="button"
           class="btn btn-secondary btn-close"
-          @click.prevent.stop="closeModal"
+          @click.prevent.stop="tryClose"
           :aria-label="$t('modal.close')"
           :disabled="submittingCombinationForm"
         >
-          {{ $t('modal.close') }}
+          {{ $t('modal.cancel') }}
         </button>
 
         <button
@@ -63,7 +64,9 @@
           class="btn btn-outline-secondary"
           @click.prevent.stop="showPrevious"
           :aria-label="$t('modal.previous')"
-          :disabled="previousCombinationId === null || submittingCombinationForm"
+          :disabled="
+            previousCombinationId === null || submittingCombinationForm
+          "
         >
           <i class="material-icons">keyboard_arrow_left</i>
           {{ $t('modal.previous') }}
@@ -83,7 +86,7 @@
           class="btn btn-primary"
           @click.prevent.stop="submitForm"
           :aria-label="$t('modal.save')"
-          :disabled="submittingCombinationForm"
+          :disabled="submittingCombinationForm || !isFormUpdated"
         >
           <span v-if="!submittingCombinationForm">
             {{ $t('modal.save') }}
@@ -96,7 +99,41 @@
           />
         </button>
       </template>
+
+      <template #outside>
+        <history
+          :combinations-list="combinationsHistory"
+          @selectCombination="selectCombination"
+          :selected-combination="selectedCombinationId"
+          :empty-image-url="emptyImageUrl"
+        />
+      </template>
     </modal>
+    <div
+      class="modal-prevent-close"
+      @click.prevent.stop="preventClose"
+    >
+      <modal
+        :modal-title="$t('modal.history.confirmTitle')"
+        :cancel-label="$t('modal.cancel')"
+        :confirm-label="$t('modal.confirm')"
+        :close-label="$t('modal.close')"
+        :confirmation="true"
+        v-if="showConfirm"
+        @close="hideConfirmModal"
+        @confirm="confirmSelection"
+      >
+        <template #body>
+          <p
+            v-html="
+              $t('modal.history.confirmBody', {
+                '%combinationName%': selectedCombinationName,
+              })
+            "
+          />
+        </template>
+      </modal>
+    </div>
   </div>
 </template>
 
@@ -106,6 +143,7 @@
   import ProductEventMap from '@pages/product/product-event-map';
   import Modal from '@vue/components/Modal';
   import Router from '@components/router';
+  import History from './History';
 
   const {$} = window;
   const CombinationEvents = ProductEventMap.combinations;
@@ -114,12 +152,13 @@
 
   export default {
     name: 'CombinationModal',
-    components: {Modal},
+    components: {Modal, History},
     data() {
       return {
         combinationsService: null,
         combinationIds: [],
         selectedCombinationId: null,
+        selectedCombinationName: null,
         previousCombinationId: null,
         nextCombinationId: null,
         editCombinationUrl: '',
@@ -127,6 +166,11 @@
         submittingCombinationForm: false,
         combinationList: null,
         hasSubmittedCombinations: false,
+        combinationsHistory: [],
+        showConfirm: false,
+        temporarySelection: null,
+        isFormUpdated: false,
+        isClosing: false,
       };
     },
     props: {
@@ -138,22 +182,33 @@
         type: Object,
         required: true,
       },
+      emptyImageUrl: {
+        type: String,
+        required: true,
+      },
     },
     mounted() {
       this.combinationList = $(ProductMap.combinations.combinationsContainer);
       this.combinationsService = new CombinationsService(this.productId);
       this.initCombinationIds();
       this.watchEditButtons();
-      this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.initCombinationIds());
+      this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.initCombinationIds(),
+      );
     },
     methods: {
       watchEditButtons() {
-        this.combinationList.on('click', ProductMap.combinations.editCombinationButtons, (event) => {
-          event.stopImmediatePropagation();
-          const $row = $(event.target).closest('tr');
-          this.selectedCombinationId = Number($row.find(ProductMap.combinations.combinationIdInputsSelector).val());
-          this.hasSubmittedCombinations = false;
-        });
+        this.combinationList.on(
+          'click',
+          ProductMap.combinations.editCombinationButtons,
+          (event) => {
+            event.stopImmediatePropagation();
+            const $row = $(event.target).closest('tr');
+            this.selectedCombinationId = Number(
+              $row.find(ProductMap.combinations.combinationIdInputsSelector).val(),
+            );
+            this.hasSubmittedCombinations = false;
+          },
+        );
       },
       async initCombinationIds() {
         this.combinationIds = await this.combinationsService.getCombinationIds();
@@ -164,10 +219,41 @@
       onFrameLoaded() {
         this.loadingCombinationForm = false;
         this.submittingCombinationForm = false;
+        const iframeBody = this.$refs.iframe.contentDocument.body;
         this.applyIframeStyling();
+        this.selectedCombinationName = iframeBody.querySelector(
+          ProductMap.combinations.combinationName,
+        ).innerHTML;
+
+        const iframeInputs = iframeBody.querySelectorAll(
+          ProductMap.combinations.editionFormInputs,
+        );
+
+        iframeInputs.forEach((input) => {
+          input.addEventListener('keyup', () => {
+            this.isFormUpdated = true;
+          });
+
+          input.addEventListener('change', () => {
+            this.isFormUpdated = true;
+          });
+
+          this.$refs.iframe.contentDocument.addEventListener('datepickerChange', () => {
+            this.isFormUpdated = true;
+          });
+        });
       },
       applyIframeStyling() {
         this.$refs.iframe.contentDocument.body.style.overflowX = 'hidden';
+      },
+      tryClose() {
+        if (this.isFormUpdated) {
+          this.isClosing = true;
+
+          this.showConfirmModal();
+        } else {
+          this.closeModal();
+        }
       },
       closeModal() {
         if (this.submittingCombinationForm) {
@@ -182,27 +268,83 @@
 
         // This closes the modal which is conditioned to the presence of this value
         this.selectedCombinationId = null;
+
+        // Reset history on close
+        this.combinationsHistory = [];
       },
-      showPrevious() {
-        if (this.previousCombinationId !== null) {
-          this.selectedCombinationId = this.previousCombinationId;
+      navigateToCombination(combinationId) {
+        if (combinationId !== null) {
+          if (this.isFormUpdated) {
+            this.temporarySelection = combinationId;
+            this.showConfirmModal();
+          } else {
+            this.selectedCombinationId = combinationId;
+          }
         }
       },
+      showPrevious() {
+        this.navigateToCombination(this.previousCombinationId);
+      },
       showNext() {
-        if (this.nextCombinationId !== null) {
-          this.selectedCombinationId = this.nextCombinationId;
+        this.navigateToCombination(this.nextCombinationId);
+      },
+      selectCombination(combination) {
+        this.navigateToCombination(combination.id);
+      },
+      confirmSelection() {
+        if (this.isClosing) {
+          this.closeModal();
+          this.isClosing = false;
+          this.hideConfirmModal();
+        } else {
+          this.selectedCombinationId = this.temporarySelection;
+          this.hideConfirmModal();
         }
       },
       submitForm() {
         this.submittingCombinationForm = true;
         const iframeBody = this.$refs.iframe.contentDocument.body;
-        const editionForm = iframeBody.querySelector(ProductMap.combinations.editionForm);
+        const editionForm = iframeBody.querySelector(
+          ProductMap.combinations.editionForm,
+        );
         editionForm.submit();
         this.hasSubmittedCombinations = true;
+        const selectedCombination = {
+          id: this.selectedCombinationId,
+          title: iframeBody.querySelector(ProductMap.combinations.combinationName)
+            .innerHTML,
+        };
+
+        if (
+          (this.combinationsHistory[0]
+            && this.combinationsHistory[0].id !== selectedCombination.id)
+          || !this.combinationsHistory.length
+        ) {
+          this.combinationsHistory = this.combinationsHistory.filter(
+            (combination) => combination.id !== selectedCombination.id,
+          );
+
+          this.combinationsHistory.unshift(selectedCombination);
+        }
+
+        this.isFormUpdated = false;
+      },
+      showConfirmModal() {
+        this.showConfirm = true;
+      },
+      hideConfirmModal() {
+        this.isClosing = false;
+        this.showConfirm = false;
+      },
+      preventClose(event) {
+        event.stopPropagation();
+        event.preventDefault();
       },
     },
     watch: {
       selectedCombinationId(combinationId) {
+        this.isFormUpdated = false;
+
         if (combinationId === null) {
           this.previousCombinationId = null;
           this.nextCombinationId = null;
@@ -212,10 +354,13 @@
         }
 
         this.loadingCombinationForm = true;
-        this.editCombinationUrl = router.generate('admin_products_combinations_edit_combination', {
-          combinationId,
-          liteDisplaying: 1,
-        });
+        this.editCombinationUrl = router.generate(
+          'admin_products_combinations_edit_combination',
+          {
+            combinationId,
+            liteDisplaying: 1,
+          },
+        );
 
         const selectedIndex = this.combinationIds.indexOf(combinationId);
 
@@ -234,14 +379,20 @@
 </script>
 
 <style lang="scss" type="text/scss">
-@import "~@scss/config/_settings.scss";
+@import '~@scss/config/_settings.scss';
 
-#combination-edit-modal {
+#combination-edit-modal .combination-modal {
+  .modal {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
   .modal-dialog {
-    max-width: 1200px;
+    max-width: 990px;
     width: 90%;
     height: 95%;
-    margin: 0 auto;
+    margin: 0;
 
     .modal-header {
       display: none;
@@ -250,11 +401,13 @@
     .modal-content {
       height: 100%;
       padding: 0;
-      margin: 0;
+      margin: 0 1rem;
+      overflow: hidden;
 
       .modal-body {
-        padding: 0;
+        padding: 0.5rem;
         margin: 0;
+        background: #eaebec;
 
         .combination-loading {
           position: absolute;
@@ -295,6 +448,16 @@
         }
       }
     }
+  }
+
+  .history {
+    max-width: 400px;
+    width: 100%;
+    min-height: calc(100% - 3.5rem);
+    top: 50%;
+    transform: translateY(-50%);
+    height: 95%;
+    margin-right: 1rem;
   }
 }
 </style>

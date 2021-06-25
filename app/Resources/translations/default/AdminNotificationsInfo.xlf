@@ -92,12 +92,30 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f5f44b1ee53a0290d59d54a5f0b95f59">
+        <source>This page is not yet compatible with the multistore feature. To access the page, please [1]disable the multistore feature[/1].</source>
+        <target>This page is not yet compatible with the multistore feature. To access the page, please [1]disable the multistore feature[/1].</target>
+        <note>Line: 295</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">
         <source>Password should be at least %length% characters long.</source>
         <target>Password should be at least %length% characters long.</target>
         <note>Line: 186</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/Preferences/payment_preferences.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="178a5f69a18bd94dc2bbafbd074be1f2">
+        <source>Note that this page is available in a single shop context only. Switch context to work on it.</source>
+        <target>Note that this page is available in a single shop context only. Switch context to work on it.</target>
+        <note>Line: 35</note>
       </trans-unit>
     </body>
   </file>

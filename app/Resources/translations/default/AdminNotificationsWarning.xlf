@@ -137,12 +137,12 @@
       <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
         <source>Warning</source>
         <target>Warning</target>
-        <note>Line: 273</note>
+        <note>Line: 275</note>
       </trans-unit>
       <trans-unit id="80ebdccece38141cd9c0f9b3b623091f">
         <source>Are you sure you want to delete this item?</source>
         <target>Are you sure you want to delete this item?</target>
-        <note>Line: 349</note>
+        <note>Line: 351</note>
       </trans-unit>
     </body>
   </file>

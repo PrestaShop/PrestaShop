@@ -38,9 +38,22 @@ class AdminLegacyLayoutControllerCore extends AdminController
     protected $showContentHeader = true;
     /** @var string */
     protected $headerTabContent = '';
-    /** @var bool */
+    /**
+     * See the $helpLink phpDoc below
+     *
+     * @var bool
+     */
     protected $enableSidebar = false;
-    /** @var string */
+    /**
+     * The Help Link is used for the 'Help' button in the top right of Back Office pages
+     *
+     * If $enableSidebar is true, the 'Help' button will download the content available at $helpLink
+     * and inject it into the sidebar window
+     *
+     * If $enableSidebar is false, the 'Help' button is a link that redirects to $helpLink
+     *
+     * @var string
+     */
     protected $helpLink;
     /** @var bool */
     protected $useRegularH1Structure;

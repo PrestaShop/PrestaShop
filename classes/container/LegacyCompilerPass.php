@@ -25,9 +25,11 @@
  */
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\DependencyInjection\CacheAdapterFactory;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 
 class LegacyCompilerPass implements CompilerPassInterface
 {
@@ -38,35 +40,52 @@ class LegacyCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $context = Context::getContext();
+        $this->buildDefinitions([
+            'configuration' => Configuration::class,
+            'context' => [Context::class, 'getContext'],
+            'db' => [Db::class, 'getInstance'],
+        ], $container);
 
-        $definitions = [
-            'configuration',
-            'context',
-            'db',
-            'shop',
-            'employee',
-        ];
-
-        $cacheFactory = new CacheAdapterFactory();
         $cacheDriver = $container->getParameter('cache.driver');
-        $definitions[] = $cacheDriver;
-        $container->set($cacheDriver, $cacheFactory->getCacheAdapter($cacheDriver));
+        $this->buildCacheDefinition($cacheDriver, $container);
 
-        $this->buildSyntheticDefinitions($definitions, $container);
-
-        $container->set('context', $context);
-        $container->set('configuration', new Configuration());
-        $container->set('db', Db::getInstance());
-        $container->set('shop', $context->shop);
-        $container->set('employee', $context->employee);
+        $this->buildSyntheticDefinitions(['shop' => Shop::class, 'employee' => Employee::class], $container);
     }
 
-    private function buildSyntheticDefinitions(array $keys, ContainerBuilder $container)
+    private function buildDefinitions(array $keys, ContainerBuilder $container): void
     {
-        foreach ($keys as $key) {
-            $definition = new Definition();
-            $definition->setSynthetic(true);
+        foreach ($keys as $key => $class) {
+            if (is_array($class)) {
+                $definition = new Definition($class[0]);
+                $definition->setFactory($class);
+            } else {
+                $definition = new Definition($class);
+            }
+            $definition->setPublic(true);
+            $container->setDefinition($key, $definition);
+        }
+    }
+
+    private function buildCacheDefinition(string $cacheDriver, ContainerBuilder $container): void
+    {
+        $container->setDefinition(CacheAdapterFactory::class, new Definition(CacheAdapterFactory::class));
+        $definition = new Definition(AdapterInterface::class);
+        $definition
+            ->setPublic(true)
+            ->setFactory([new Reference(CacheAdapterFactory::class), 'getCacheAdapter'])
+            ->setArguments([$cacheDriver])
+        ;
+        $container->setDefinition($cacheDriver, $definition);
+    }
+
+    private function buildSyntheticDefinitions(array $keys, ContainerBuilder $container): void
+    {
+        foreach ($keys as $key => $class) {
+            $definition = new Definition($class);
+            $definition
+                ->setSynthetic(true)
+                ->setPublic(true)
+            ;
             $container->setDefinition($key, $definition);
         }
     }

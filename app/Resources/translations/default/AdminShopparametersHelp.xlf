@@ -430,11 +430,6 @@
         <target>After a customer logs in, you can recall and display the content of his/her last shopping cart.</target>
         <note>Line: 52</note>
       </trans-unit>
-      <trans-unit id="7965d9df4693ebc274169475a901bcd5">
-        <source>Send an email with summary of the account information after registration.</source>
-        <target>Send an email with summary of the account information after registration.</target>
-        <note>Line: 62</note>
-      </trans-unit>
       <trans-unit id="59a84d54ad58aa4bea8aeacd11e47ab2">
         <source>Minimum time required between two requests for a password reset.</source>
         <target>Minimum time required between two requests for a password reset.</target>
@@ -455,6 +450,11 @@
         <target>Display or not the partner offers tick box, to receive offers from the store's partners.</target>
         <note>Line: 117</note>
       </trans-unit>
+      <trans-unit id="4c80d371ca1a14e173c5480ee32f1c90">
+        <source>Send an email with a summary of the account information after registration.</source>
+        <target>Send an email with a summary of the account information after registration.</target>
+        <note>Line: 62</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/MaintenanceType.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -462,17 +462,17 @@
       <trans-unit id="122941b469f97a0c0750a62126fba6cd">
         <source>We recommend that you deactivate your store while performing maintenance. Note that it will not disable the webservice.</source>
         <target>We recommend that you deactivate your store while performing maintenance. Note that it will not disable the webservice.</target>
-        <note>Line: 82</note>
+        <note>Line: 80</note>
       </trans-unit>
       <trans-unit id="4db650b0232001140675125d740191be">
         <source>Allow IP addresses to access the store, even in maintenance mode. Use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96).</source>
         <target>Allow IP addresses to access the store, even in maintenance mode. Use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96).</target>
-        <note>Line: 99</note>
+        <note>Line: 97</note>
       </trans-unit>
       <trans-unit id="541fbadd38ba459b4257b5822e9d0518">
         <source>Display a customized message when the store is disabled.</source>
         <target>Display a customized message when the store is disabled.</target>
-        <note>Line: 121</note>
+        <note>Line: 117</note>
       </trans-unit>
     </body>
   </file>

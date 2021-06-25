@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
-use PrestaShopBundle\Form\Admin\Extension\MultistoreDropdownExtension;
+use PrestaShopBundle\Form\Admin\Extension\MultistoreExtension;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Symfony\Component\Form\FormInterface;
@@ -101,7 +101,7 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
 
         // the added multistore checkbox must have the correct `multistore_configuration_key` attribute
         $multistoreFirstFieldCheckboxOptions = $form->get(MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'first_field')->getConfig()->getOptions();
-        $this->assertEquals('TEST_CONFIGURATION_KEY', $multistoreFirstFieldCheckboxOptions['attr']['multistore_configuration_key']);
+        $this->assertEquals('TEST_CONFIGURATION_KEY', $multistoreFirstFieldCheckboxOptions['multistore_configuration_key']);
         $this->assertArrayHasKey('multistore_dropdown', $multistoreFirstFieldCheckboxOptions);
     }
 
@@ -111,7 +111,7 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
     private function getFormToTest(): FormInterface
     {
         $formFactory = Forms::createFormFactoryBuilder()
-            ->addTypeExtension(new MultistoreDropdownExtension())
+            ->addTypeExtension(new MultistoreExtension())
             ->getFormFactory();
 
         $formBuilder = $formFactory->createBuilder();
@@ -123,9 +123,7 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
                 SwitchType::class,
                 [
                     'required' => true,
-                    'attr' => [
-                        'multistore_configuration_key' => 'TEST_CONFIGURATION_KEY',
-                    ],
+                    'multistore_configuration_key' => 'TEST_CONFIGURATION_KEY',
                 ]
             )
             // second field will not have a multistore checkbox (it doesn't have the `multistore_configuration_key` attribute)
