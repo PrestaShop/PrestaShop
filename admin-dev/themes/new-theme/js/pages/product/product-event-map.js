@@ -54,6 +54,5 @@ export default {
   attachments: {
     rowRemoved: 'attachmentsRowRemoved',
     rowAdded: 'attachmentsRowAdded',
-    newAttachmentSubmitted: 'newAttachmentSubmitted',
   },
 };

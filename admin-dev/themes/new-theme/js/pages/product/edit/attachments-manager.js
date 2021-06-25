@@ -46,7 +46,6 @@ export default class AttachmentsManager {
    * @private
    */
   init() {
-    this.onAttachmentSubmit();
     this.initAddAttachmentIframe();
     this.$attachmentsContainer.on('click', ProductMap.attachments.removeAttachmentBtn, (e) => {
       this.removeAttachmentRow(e);
@@ -70,7 +69,7 @@ export default class AttachmentsManager {
         });
 
         form.submit((e) => {
-          this.eventEmitter.emit(ProductEventMap.attachments.newAttachmentSubmitted, {e, fancybox});
+          this.createAttachmentOnSubmit({e, fancybox});
         });
       },
     });
@@ -79,12 +78,12 @@ export default class AttachmentsManager {
   /**
    * @private
    */
-  onAttachmentSubmit() {
-    this.eventEmitter.on(ProductEventMap.attachments.newAttachmentSubmitted, (eventData) => {
-      const submitEvent = eventData.e;
-      submitEvent.preventDefault();
+  createAttachmentOnSubmit(eventData) {
+    const submitEvent = eventData.e;
+    submitEvent.preventDefault();
 
-      createAttachment(submitEvent.currentTarget).then((resp) => {
+    createAttachment(submitEvent.currentTarget)
+      .then((resp) => {
         if (resp.errors) {
           Object.values(resp.errors).forEach((error) => {
             $.growl.error({message: error});
@@ -98,7 +97,6 @@ export default class AttachmentsManager {
           this.addAttachmentRow(response.attachmentInfo);
         });
       });
-    });
   }
 
   /**
