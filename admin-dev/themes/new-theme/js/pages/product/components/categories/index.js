@@ -57,14 +57,14 @@ export default class CategoriesManager {
       ProductMap.categories.addCategoryBtn,
     );
 
-    this.initAddNewCategory();
+    this.initAddNewCategoryModal();
     this.initCategories();
 
     return {};
   }
 
-  initAddNewCategory() {
-    const modalContent = $('#external-add-category-template');
+  initAddNewCategoryModal() {
+    const modalContent = $(ProductMap.categories.addCategoryTemplate);
 
     $(this.addCategoryBtn).fancybox({
       type: 'iframe',
@@ -77,7 +77,7 @@ export default class CategoriesManager {
       afterShow: () => {
         this.initTypeahead(
           ProductMap.categories.parentCategorySearchInput,
-          (categoryId) => this.onSelectParentCategory(categoryId),
+          (categoryId) => this.selectParentCategory(categoryId),
         );
         const form = $(`form[name='${ProductMap.categories.addCategoryFormName}']`);
         const {fancybox} = parent.$;
@@ -390,7 +390,6 @@ export default class CategoriesManager {
       value: 'id',
       onSelect: (selectedItem, e, $searchInput) => {
         onSelectCallback(selectedItem.id);
-        debugger;
         // This resets the search input or else previous search is cached and can be added again
         $searchInput.typeahead('val', '');
       },
@@ -519,6 +518,9 @@ export default class CategoriesManager {
     }
   }
 
+  /**
+   * @param {object} eventData
+   */
   submitNewCategory(eventData) {
     const submitEvent = eventData.e;
     submitEvent.preventDefault();
@@ -533,10 +535,14 @@ export default class CategoriesManager {
       }
 
       eventData.fancybox.close();
+      this.selectCategory(resp.categoryId);
     });
   }
 
-  onSelectParentCategory(categoryId) {
+  /**
+   * @param {int} categoryId
+   */
+  selectParentCategory(categoryId) {
     document.querySelector(ProductMap.categories.parentCategorySelectInput).value = categoryId;
   }
 }

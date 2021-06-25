@@ -187,6 +187,7 @@ export default {
     expandAllButton: '#categories-tree-expand',
     reduceAllButton: '#categories-tree-reduce',
     addCategoryBtn: '.add-category-btn',
+    addCategoryTemplate: '#external-add-category-template',
     addCategoryFormName: 'quick_add_category',
     parentCategorySearchInput: '#quick_add_category_search_category',
     parentCategorySelectInput: '#quick_add_category_parent_id',

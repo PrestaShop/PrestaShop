@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Category;
 
-use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -41,11 +40,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class QuickAddCategoryType extends TranslatorAwareType
 {
-    /**
-     * @var CategoryDataProvider
-     */
-    private $categoryDataProvider;
-
     public function __construct(
         TranslatorInterface $translator,
         array $locales
@@ -76,6 +70,7 @@ class QuickAddCategoryType extends TranslatorAwareType
                 'label' => $this->trans('Parent of the category', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'attr' => [
+                    'placeholder' => $this->trans('Search categories', 'Admin.Catalog.Help'),
                     'class' => 'autocomplete search ui-autocomplete-input',
                 ],
             ])
