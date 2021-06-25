@@ -35,6 +35,7 @@ const baseContext = 'functional_FO_productPage_writeReview';
 let browserContext;
 let page;
 let foCommentCount;
+let waitingApprovalReviewCount;
 const moduleName = 'Product Comments';
 const moduleTag = 'productcomments';
 
