@@ -566,6 +566,7 @@ GitHub contributors:
 - oleacorner
 - Oleg Rumyancev
 - Olivier Bonvalet
+- Olivier Le Corre
 - Olivier Monaco
 - OneDotIT
 - Óscar García
@@ -685,6 +686,7 @@ GitHub contributors:
 - sadlyblue
 - sagaradonis
 - sallemiines
+- Sam
 - Sam Sanchez
 - Samir Shah
 - Samuel
