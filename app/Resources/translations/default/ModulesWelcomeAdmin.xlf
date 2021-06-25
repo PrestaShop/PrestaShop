@@ -305,9 +305,9 @@
         <target>Help the user to create his first product.</target>
         <note>Line: 60</note>
       </trans-unit>
-      <trans-unit id="8b34f6a07880818faff72381a98aa542">
-        <source>Sell your first product quicker than you would have wished with our nice onboarding process.</source>
-        <target>Sell your first product quicker than you would have wished with our nice onboarding process.</target>
+      <trans-unit id="660b1a2162902bb6acd01d09adb6da64">
+        <source>Sell your first product quicker than you would have expected with our nice onboarding process.</source>
+        <target>Sell your first product quicker than you would have expected with our nice onboarding process.</target>
         <note>Line: 66</note>
       </trans-unit>
     </body>
