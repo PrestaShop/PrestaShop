@@ -96,12 +96,13 @@ class AttachmentController extends FrameworkBundleAdminController
 
         $attachmentForm = $attachmentFormBuilder->getForm();
         $attachmentForm->handleRequest($request);
+        $isAjax = $request->query->has('submitFormAjax');
 
         try {
             $handlerResult = $attachmentFormHandler->handle($attachmentForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                if ($request->query->has('submitFormAjax')) {
+                if ($isAjax) {
                     return $this->json(['attachmentId' => $handlerResult->getIdentifiableObjectId()]);
                 }
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
@@ -109,11 +110,16 @@ class AttachmentController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_attachments_index');
             }
 
-            if ($handlerResult->isSubmitted() && !$handlerResult->isValid() && $request->query->has('submitFormAjax')) {
+            if ($isAjax && $handlerResult->isSubmitted() && !$handlerResult->isValid()) {
                 return $this->json(['errors' => $this->getFormErrorsForJS($attachmentForm)]);
             }
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $message = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
+
+            if ($isAjax) {
+                return $this->json(['errors' => [$message]]);
+            }
+            $this->addFlash('error', $message);
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Attachment/add.html.twig', [
