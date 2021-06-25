@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Employees page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Employees extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on employees page
+   */
   constructor() {
     super();
 
@@ -12,6 +21,7 @@ class Employees extends BOBasePage {
     // Header links
     this.addNewEmployeeLink = '#page-header-desc-configuration-add[title=\'Add new employee\']';
     this.profilesTab = '#subtab-AdminProfiles';
+
     // List of employees
     this.employeeGridPanel = '#employee_grid_panel';
     this.employeeGridTitle = `${this.employeeGridPanel} h3.card-header-title`;
@@ -25,27 +35,28 @@ class Employees extends BOBasePage {
     } a[data-toggle='dropdown']`;
     this.employeesListTableDeleteLink = row => `${this.employeesListTableColumnAction(row)} a.grid-delete-row-link`;
     this.employeesListTableEditLink = row => `${this.employeesListTableColumnAction(row)} a.grid-edit-row-link`;
-    this.employeesListColumnValidIcon = row => `${this.employeesListTableColumn(row, 'active')
-    } i.grid-toggler-icon-valid`;
-    this.employeesListColumnNotValidIcon = row => `${this.employeesListTableColumn(row, 'active')
-    } i.grid-toggler-icon-not-valid`;
+
     // Filters
     this.employeeFilterInput = filterBy => `${this.employeesListForm} #employee_${filterBy}`;
     this.filterSearchButton = `${this.employeesListForm} .grid-search-button`;
     this.filterResetButton = `${this.employeesListForm} .grid-reset-button`;
+
     // Bulk Actions
     this.selectAllRowsLabel = `${this.employeesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.employeesListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.employeesListForm} #employee_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.employeesListForm} #employee_grid_bulk_action_disable_selection`;
     this.bulkActionsDeleteButton = `${this.employeesListForm} #employee_grid_bulk_action_delete_selection`;
+
     // Delete modal
     this.confirmDeleteModal = '#employee-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
+
     // Sort Selectors
     this.tableHead = `${this.employeeGridPanel} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
     // Pages selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.employeesListForm} .col-form-label`;
@@ -60,7 +71,7 @@ class Employees extends BOBasePage {
   // Header methods
   /**
    * Go to new Employee page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToAddNewEmployeePage(page) {
@@ -70,7 +81,7 @@ class Employees extends BOBasePage {
   // Tab methods
   /**
    * Go to Profiles page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToProfilesPage(page) {
@@ -80,7 +91,7 @@ class Employees extends BOBasePage {
   // Columns methods
   /**
    * Get number of elements in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -89,7 +100,7 @@ class Employees extends BOBasePage {
 
   /**
    * Reset input filters
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -101,9 +112,9 @@ class Employees extends BOBasePage {
 
   /**
    * Get text from a column from table
-   * @param page
-   * @param row
-   * @param column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column name to get text content
    * @returns {Promise<string>}
    */
   async getTextColumnFromTable(page, row, column) {
@@ -112,8 +123,8 @@ class Employees extends BOBasePage {
 
   /**
    * Go to Edit employee page
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<void>}
    */
   async goToEditEmployeePage(page, row) {
@@ -122,10 +133,10 @@ class Employees extends BOBasePage {
 
   /**
    * Filter list of employees
-   * @param page
-   * @param filterType, input or select to choose method of filter
-   * @param filterBy, column to filter
-   * @param value, value to filter with
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to filter with
    * @returns {Promise<void>}
    */
   async filterEmployees(page, filterType, filterBy, value = '') {
@@ -144,9 +155,9 @@ class Employees extends BOBasePage {
   }
 
   /**
-   * Get Value of column Displayed
-   * @param page
-   * @param row, row in table
+   * Get value of column displayed
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<boolean>}
    */
   async getStatus(page, row) {
@@ -163,9 +174,9 @@ class Employees extends BOBasePage {
 
   /**
    * Quick edit toggle column value
-   * @param page
-   * @param row, row in table
-   * @param valueWanted, Value wanted in column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param valueWanted {boolean} True if we need to enable status, false if not
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
   async setStatus(page, row, valueWanted = true) {
@@ -179,8 +190,8 @@ class Employees extends BOBasePage {
 
   /**
    * Delete employee
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async deleteEmployee(page, row) {
@@ -198,12 +209,13 @@ class Employees extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteEmployees(page);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Confirm delete in modal
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async confirmDeleteEmployees(page) {
@@ -212,8 +224,8 @@ class Employees extends BOBasePage {
 
   /**
    * Enable / disable employees by Bulk Actions
-   * @param page
-   * @param enable
+   * @param page {Page} Browser tab
+   * @param enable {boolean} True if we need to bulk enable status, false if not
    * @returns {Promise<string>}
    */
   async bulkSetStatus(page, enable = true) {
@@ -229,12 +241,13 @@ class Employees extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Delete all employees with Bulk Actions
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async deleteBulkActions(page) {
@@ -255,14 +268,15 @@ class Employees extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteEmployees(page);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   // Sort methods
   /**
    * Get content from all rows
-   * @param page
-   * @param column
+   * @param page {Page} Browser tab
+   * @param column {string} Column to filter
    * @returns {Promise<[]>}
    */
   async getAllRowsColumnContent(page, column) {
@@ -283,9 +297,9 @@ class Employees extends BOBasePage {
 
   /**
    * Sort table
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @returns {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection = 'asc') {
@@ -304,8 +318,8 @@ class Employees extends BOBasePage {
   // Pagination methods
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -316,7 +330,7 @@ class Employees extends BOBasePage {
 
   /**
    * Pagination next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -327,7 +341,7 @@ class Employees extends BOBasePage {
 
   /**
    * Pagination previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
