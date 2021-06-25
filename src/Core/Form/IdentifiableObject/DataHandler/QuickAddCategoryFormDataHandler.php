@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 class QuickAddCategoryFormDataHandler implements FormDataHandlerInterface
 {
@@ -48,10 +49,13 @@ class QuickAddCategoryFormDataHandler implements FormDataHandlerInterface
 
     /**
      * {@inheritDoc}
+     *
+     * @return int
      */
     public function create(array $data)
     {
-        $this->commandBus->handle(
+        /** @var CategoryId $categoryId */
+        $categoryId = $this->commandBus->handle(
             new AddCategoryCommand(
                 $data['name'],
                 $data['name'],
@@ -59,6 +63,8 @@ class QuickAddCategoryFormDataHandler implements FormDataHandlerInterface
                 (int) $data['parent_id']
             )
         );
+
+        return $categoryId->getValue();
     }
 
     /**
