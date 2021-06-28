@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 class EditProductSpecificPriceCommand
@@ -62,9 +65,7 @@ class EditProductSpecificPriceCommand
     private $fromQuantity;
 
     /**
-     * @var int|null
-     *
-     * @todo: introduce ShopGroupIdInterface (refer to example of ManufacturerIdInterface)
+     * @var ShopGroupIdInterface|null
      */
     private $shopGroupId;
 
@@ -222,9 +223,9 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return int|null
+     * @return ShopGroupIdInterface|null
      */
-    public function getShopGroupId(): ?int
+    public function getShopGroupId(): ?ShopGroupIdInterface
     {
         return $this->shopGroupId;
     }
@@ -236,7 +237,7 @@ class EditProductSpecificPriceCommand
      */
     public function setShopGroupId(?int $shopGroupId): EditProductSpecificPriceCommand
     {
-        $this->shopGroupId = $shopGroupId;
+        $this->shopGroupId = $shopGroupId === NoShopGroupId::NO_SHOP_GROUP_ID ? new NoShopGroupId() : new ShopGroupId($shopGroupId);
 
         return $this;
     }

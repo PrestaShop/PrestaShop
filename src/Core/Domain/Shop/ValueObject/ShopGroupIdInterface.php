@@ -23,54 +23,20 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
-
-class ShopGroupId implements ShopGroupIdInterface
+/**
+ * Represents a relation identifier of ShopGroup
+ *
+ * @see ShopGroupId
+ * @see NoShopGroupId
+ */
+interface ShopGroupIdInterface
 {
-    /**
-     * @var int
-     */
-    private $shopGroupId;
-
-    /**
-     * @param int $shopGroupId
-     *
-     * @throws ShopException
-     */
-    public function __construct(int $shopGroupId)
-    {
-        $this->assertIsGreaterThanZero($shopGroupId);
-
-        $this->shopGroupId = $shopGroupId;
-    }
-
     /**
      * @return int
      */
-    public function getValue(): int
-    {
-        return $this->shopGroupId;
-    }
-
-    /**
-     * @param int $shopGroupId
-     *
-     * @throws ShopException
-     */
-    private function assertIsGreaterThanZero(int $shopGroupId): void
-    {
-        if (0 >= $shopGroupId) {
-            throw new ShopException(
-                sprintf(
-                    'Shop id %s is invalid. Shop id must be number that is greater than zero.',
-                    var_export($shopGroupId, true)
-                )
-            );
-        }
-    }
+    public function getValue(): int;
 }
