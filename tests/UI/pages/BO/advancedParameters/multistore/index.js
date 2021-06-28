@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Multistore page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class MultiStoreSettings extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on multistore page
+   */
   constructor() {
     super();
 
@@ -65,7 +74,7 @@ class MultiStoreSettings extends BOBasePage {
   /* Header methods */
   /**
    * Go to new shop group page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToNewShopGroupPage(page) {
@@ -74,7 +83,7 @@ class MultiStoreSettings extends BOBasePage {
 
   /**
    * Go to new shop page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToNewShopPage(page) {
@@ -84,8 +93,8 @@ class MultiStoreSettings extends BOBasePage {
   /* Filter methods */
 
   /**
-   * Get Number of elements
-   * @param page
+   * Get number of elements
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -94,7 +103,7 @@ class MultiStoreSettings extends BOBasePage {
 
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -105,7 +114,7 @@ class MultiStoreSettings extends BOBasePage {
 
   /**
    * Reset and get number of shop groups
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -115,9 +124,9 @@ class MultiStoreSettings extends BOBasePage {
 
   /**
    * Filter shop groups
-   * @param page
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to put on filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterBy, value) {
@@ -127,8 +136,8 @@ class MultiStoreSettings extends BOBasePage {
 
   /**
    * Go to edit shop group page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async gotoEditShopGroupPage(page, row) {
@@ -137,8 +146,8 @@ class MultiStoreSettings extends BOBasePage {
 
   /**
    * Delete shop group from row
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<string>}
    */
   async deleteShopGroup(page, row) {
@@ -158,8 +167,8 @@ class MultiStoreSettings extends BOBasePage {
 
   /**
    * Is action toggle button visible
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<boolean>}
    */
   async isActionToggleButtonVisible(page, row) {
@@ -168,8 +177,8 @@ class MultiStoreSettings extends BOBasePage {
 
   /**
    * Go to shop link
-   * @param page
-   * @param id
+   * @param page {Page} Browser tab
+   * @param id {number} Row on table
    * @returns {Promise<void>}
    */
   async goToShopPage(page, id) {
@@ -178,8 +187,8 @@ class MultiStoreSettings extends BOBasePage {
 
   /**
    * Go to shop url link
-   * @param page
-   * @param id
+   * @param page {Page} Browser tab
+   * @param id {number} Row on table
    * @returns {Promise<void>}
    */
   async goToShopURLPage(page, id = 1) {
@@ -187,10 +196,10 @@ class MultiStoreSettings extends BOBasePage {
   }
 
   /**
-   * get text from a column from table
-   * @param page
-   * @param row
-   * @param column
+   * Get text from a column from table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column name to get text content
    * @returns {Promise<string>}
    */
   async getTextColumn(page, row, column) {
@@ -214,8 +223,8 @@ class MultiStoreSettings extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name to get all text content
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, columnName) {
@@ -233,7 +242,7 @@ class MultiStoreSettings extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -242,8 +251,8 @@ class MultiStoreSettings extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -255,7 +264,7 @@ class MultiStoreSettings extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -266,7 +275,7 @@ class MultiStoreSettings extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -278,9 +287,9 @@ class MultiStoreSettings extends BOBasePage {
   /* Sort methods */
   /**
    * Sort table
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {

@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * DB Backup page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class DbBackup extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on db backup page
+   */
   constructor() {
     super();
 
@@ -51,7 +60,7 @@ class DbBackup extends BOBasePage {
   /* Header methods */
   /**
    * Go to db Backup page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToSqlManagerPage(page) {
@@ -61,7 +70,7 @@ class DbBackup extends BOBasePage {
   /* Form and grid methods */
   /**
    * Get number of backups
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -70,7 +79,7 @@ class DbBackup extends BOBasePage {
 
   /**
    * Create new db backup
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async createDbDbBackup(page) {
@@ -94,8 +103,8 @@ class DbBackup extends BOBasePage {
 
   /**
    * Delete backup
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async deleteBackup(page, row) {
@@ -109,12 +118,13 @@ class DbBackup extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteDbBackups(page);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Confirm delete with in modal
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async confirmDeleteDbBackups(page) {
@@ -123,7 +133,7 @@ class DbBackup extends BOBasePage {
 
   /**
    * Delete with bulk actions
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async deleteWithBulkActions(page) {
@@ -145,13 +155,14 @@ class DbBackup extends BOBasePage {
     ]);
 
     await this.confirmDeleteDbBackups(page);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -160,8 +171,8 @@ class DbBackup extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination limit number to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -175,7 +186,7 @@ class DbBackup extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -186,7 +197,7 @@ class DbBackup extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {

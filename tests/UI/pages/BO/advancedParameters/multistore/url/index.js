@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Shop url page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class ShopURLSettings extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on shop url page
+   */
   constructor() {
     super();
 
@@ -70,7 +79,7 @@ class ShopURLSettings extends BOBasePage {
 
   /**
    * Go to add new url page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToAddNewUrl(page) {
@@ -80,8 +89,8 @@ class ShopURLSettings extends BOBasePage {
   /* Filter methods */
 
   /**
-   * Get Number of elements
-   * @param page
+   * Get number of elements
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -90,7 +99,7 @@ class ShopURLSettings extends BOBasePage {
 
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -101,7 +110,7 @@ class ShopURLSettings extends BOBasePage {
 
   /**
    * Reset and get number of shops
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -111,10 +120,10 @@ class ShopURLSettings extends BOBasePage {
 
   /**
    * Filter table
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
@@ -138,9 +147,9 @@ class ShopURLSettings extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Column name to get text content
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -179,8 +188,8 @@ class ShopURLSettings extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name to get text content
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, columnName) {
@@ -198,7 +207,7 @@ class ShopURLSettings extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -207,8 +216,8 @@ class ShopURLSettings extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -220,7 +229,7 @@ class ShopURLSettings extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -231,7 +240,7 @@ class ShopURLSettings extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -242,8 +251,8 @@ class ShopURLSettings extends BOBasePage {
 
   /**
    * Delete shop URL
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async deleteShopURL(page, row) {
@@ -264,9 +273,9 @@ class ShopURLSettings extends BOBasePage {
   /* Sort methods */
   /**
    * Sort table
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -294,10 +303,10 @@ class ShopURLSettings extends BOBasePage {
 
   // Quick edit methods
   /**
-   * Get Value of column Displayed in table
-   * @param page
-   * @param row, row in table
-   * @param column, column in table
+   * Get value of column displayed in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column to get status value
    * @return {Promise<boolean>}
    */
   async getStatus(page, row, column) {
@@ -306,10 +315,10 @@ class ShopURLSettings extends BOBasePage {
 
   /**
    * Quick edit toggle column value in table
-   * @param page
-   * @param row, row in table
-   * @param column, column in table
-   * @param valueWanted, Value wanted in column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column to set status value
+   * @param valueWanted {boolean} True if we need to enable status, false if not
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async setStatus(page, row, column, valueWanted = true) {
@@ -328,8 +337,8 @@ class ShopURLSettings extends BOBasePage {
 
   // Bulk actions methods
   /**
-   * Select All rows
-   * @param page
+   * Select all rows
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async bulkSelectRows(page) {
@@ -343,8 +352,8 @@ class ShopURLSettings extends BOBasePage {
 
   /**
    * Enable/Disable shop url
-   * @param page
-   * @param wantedStatus
+   * @param page {Page} Browser tab
+   * @param wantedStatus {boolean} True if we need to bulk enable status, false if not
    * @returns {Promise<void>}
    */
   async bulkSetStatus(page, wantedStatus) {
