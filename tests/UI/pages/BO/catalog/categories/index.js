@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Categories page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Categories extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on categories page
+   */
   constructor() {
     super();
 

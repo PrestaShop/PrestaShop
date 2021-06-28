@@ -36,9 +36,9 @@ class AddValue extends BOBasePage {
 
   /**
    * Fill value form and save it
-   * @param page
-   * @param valueData
-   * @param saveAndStay
+   * @param page {Page} Browser tab
+   * @param valueData {valueData} Data to set on add/edit value form
+   * @param saveAndStay {boolean} True if we need to save and stay, false if not
    * @return {Promise<string>}
    */
   async addEditValue(page, valueData, saveAndStay = false) {
