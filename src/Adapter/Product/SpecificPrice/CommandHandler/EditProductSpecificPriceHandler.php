@@ -98,12 +98,12 @@ final class EditProductSpecificPriceHandler implements EditProductSpecificPriceH
         }
 
         if (null !== $command->getShopGroupId()) {
-            $specificPrice->id_shop_group = $command->getShopGroupId();
+            $specificPrice->id_shop_group = $command->getShopGroupId()->getValue();
             $updatableProperties[] = 'id_shop_group';
         }
 
         if (null !== $command->getShopId()) {
-            $specificPrice->id_shop = $command->getShopId();
+            $specificPrice->id_shop = $command->getShopId()->getValue();
             $updatableProperties[] = 'id_shop';
         }
 
