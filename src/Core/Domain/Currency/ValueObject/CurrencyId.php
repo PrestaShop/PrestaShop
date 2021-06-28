@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 /**
  * Class CurrencyId is responsible for providing currency id data.
  */
-class CurrencyId
+class CurrencyId implements CurrencyIdInterface
 {
     /**
      * @var int
@@ -55,7 +55,7 @@ class CurrencyId
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->currencyId;
     }
