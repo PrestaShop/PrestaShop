@@ -33,7 +33,7 @@ const EntitySearchInputMap = ComponentsMap.entitySearchInput;
 
 type RemoveFunction = (item: any) => void;
 type SelectFunction = ($node: JQuery, item: any) => void;
-interface EntitySearchInputOptions extends OptionsObject {
+export interface EntitySearchInputOptions extends OptionsObject {
   prototypeTemplate: string,
   prototypeIndex: string,
   prototypeMapping: OptionsObject,

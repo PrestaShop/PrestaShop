@@ -22,23 +22,6 @@ interface Window {
   ps_round: any;
 }
 
-interface TypeaheadDatasetConfig {
-  display: string | ((text: string) => void);
-  value: string;
-  limit: number;
-  dataLimit: number;
-  onSelect(selectedItem: unknown, event: Event, searchInput: JQuery): boolean;
-  onClose(event: Event, searchInput: JQuery): void;
-  templates?: Record<string, unknown>;
-}
-
-interface TypeaheadConfig {
-  minLength: number;
-  highlight: boolean;
-  cache: boolean;
-  hint: boolean;
-}
-
 /* eslint-disable */
 interface JQuery {
   tableDnD(params: unknown): void;
