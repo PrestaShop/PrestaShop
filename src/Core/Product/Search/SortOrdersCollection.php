@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This class provide the list of default Sort Orders.

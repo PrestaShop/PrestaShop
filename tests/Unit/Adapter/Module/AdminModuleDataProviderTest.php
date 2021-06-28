@@ -36,7 +36,7 @@ use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Psr\Log\LoggerInterface;
 use stdClass;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 class AdminModuleDataProviderTest extends TestCase
 {
@@ -76,7 +76,7 @@ class AdminModuleDataProviderTest extends TestCase
     private $moduleProvider;
 
     /**
-     * @var TranslatorInterface
+     * @var LocaleAwareInterface
      */
     private $translator;
 
@@ -123,7 +123,7 @@ class AdminModuleDataProviderTest extends TestCase
             ),
         ];
 
-        $this->translator = $this->createMock(TranslatorInterface::class);
+        $this->translator = $this->createMock(LocaleAwareInterface::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->addonsDataProvider = $this->createMock(AddonsInterface::class);
         $this->categoriesProvider = $this->createMock(CategoriesProvider::class);

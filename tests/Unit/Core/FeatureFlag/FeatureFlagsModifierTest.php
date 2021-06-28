@@ -34,7 +34,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagsModifier;
 use PrestaShopBundle\Entity\FeatureFlag;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeatureFlagsModifierTest extends TestCase
 {

@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class AbstractImportHandler is an abstract handler for import.

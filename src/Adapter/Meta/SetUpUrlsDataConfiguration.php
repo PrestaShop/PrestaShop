@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Meta;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class SetUpUrlsDataConfiguration is responsible for saving, validating and getting configurations related with urls

@@ -37,7 +37,7 @@ use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Tools;
 
 /**
@@ -128,7 +128,7 @@ class AdminModuleDataProvider implements ModuleInterface
     public $failed = false;
 
     public function __construct(
-        TranslatorInterface $translator,
+        LocaleAwareInterface $translator,
         LoggerInterface $logger,
         AddonsInterface $addonsDataProvider,
         CategoriesProvider $categoriesProvider,

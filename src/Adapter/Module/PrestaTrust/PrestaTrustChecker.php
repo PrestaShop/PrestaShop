@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleZip;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use stdClass;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use ZipArchive;
 
 /**

@@ -32,8 +32,8 @@ use LegacyTests\TestCase\FakeConfiguration;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Yaml\Parser;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ThemeValidatorTest extends TestCase
 {

@@ -32,7 +32,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShopBundle\Entity\FeatureFlag;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This class is in charge of controlling the state modifications of Feature Flags

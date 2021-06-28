@@ -27,7 +27,6 @@ services:
   prestashop.adapter.pdf.credit_slip_pdf_generator:
     class: PrestaShop\PrestaShop\Adapter\PDF\CreditSlipPdfGenerator
     arguments:
-      - '@translator'
       - '%database_prefix%'
       - '@doctrine.dbal.default_connection'
 

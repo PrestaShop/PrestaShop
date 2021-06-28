@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This form class generates the "Optional Features" form in Performance page.

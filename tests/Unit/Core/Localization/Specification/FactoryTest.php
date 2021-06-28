@@ -142,7 +142,7 @@ class FactoryTest extends TestCase
      * Given a boolean to define if we should group digits in a number's integer part
      * Then calling buildPriceSpecification() should return an NumberSpecification
      *
-     * @dataProvider getPriceData
+     * @dataProvider getPriceDataWithPrecisions
      */
     public function testBuildPriceSpecification($data, $expected)
     {
@@ -181,7 +181,7 @@ class FactoryTest extends TestCase
      * Given an integer to specify max fraction digits
      * Then calling buildPriceSpecification() should return an NumberSpecification
      *
-     * @dataProvider getPriceData
+     * @dataProvider getPriceDataWithPrecisions
      */
     public function testBuildPriceSpecificationWithMax($data, $expected)
     {

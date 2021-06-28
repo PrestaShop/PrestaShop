@@ -54,7 +54,7 @@ use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;
 use Product;
 use Shop;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 
 /**

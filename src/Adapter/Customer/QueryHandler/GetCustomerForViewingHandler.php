@@ -66,7 +66,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Product;
 use Referrer;
 use Shop;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 use Validate;
 

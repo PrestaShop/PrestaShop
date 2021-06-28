@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteCustomizedProductFro
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteProductFromOrderException;
 use Psr\Log\LoggerInterface;
 use SpecificPrice;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OrderProductRemover
 {

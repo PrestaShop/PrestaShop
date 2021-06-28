@@ -37,7 +37,7 @@ use CustomerAddressForm;
 use Language;
 use Link;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CheckoutAddressesStepTest extends TestCase
 {

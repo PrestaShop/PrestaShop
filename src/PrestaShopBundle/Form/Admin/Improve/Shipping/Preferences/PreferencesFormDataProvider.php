@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences;
 use PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration;
 use PrestaShop\PrestaShop\Adapter\Carrier\HandlingConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class is responsible of managing the data manipulated using forms

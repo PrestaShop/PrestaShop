@@ -49,7 +49,7 @@ use Product;
 use Search;
 use Shop;
 use ShopGroup;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Duplicates product

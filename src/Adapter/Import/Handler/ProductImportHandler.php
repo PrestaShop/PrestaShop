@@ -54,7 +54,7 @@ use SpecificPrice;
 use StockAvailable;
 use StockManagerFactory;
 use Supplier;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tag;
 use TaxManagerFactory;
 use TaxRulesGroup;

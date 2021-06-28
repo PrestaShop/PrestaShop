@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUp
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShopException;
 use Shop;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 
 /**

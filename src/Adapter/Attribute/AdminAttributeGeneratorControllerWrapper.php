@@ -33,7 +33,7 @@ use Product;
 use SpecificPriceRule;
 use Stock;
 use StockAvailable;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 use Validate;
 

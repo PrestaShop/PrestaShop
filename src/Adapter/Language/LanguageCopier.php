@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfigInterface;
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class LanguageCopier responsible for copying a language into another language.

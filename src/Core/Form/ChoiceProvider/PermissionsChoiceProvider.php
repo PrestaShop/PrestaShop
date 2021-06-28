@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject\Permission;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Provides webservice key permissions choices

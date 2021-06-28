@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\FailedToEnableThemeModuleE
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ModuleManager implements AddonManagerInterface
 {
@@ -79,7 +79,7 @@ class ModuleManager implements AddonManagerInterface
     /**
      * Translator.
      *
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * @var \Symfony\Contracts\Translation\TranslatorInterface
      */
     private $translator;
 

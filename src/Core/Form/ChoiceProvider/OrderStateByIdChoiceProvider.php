@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderStateDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class OrderStateByIdChoiceProvider provides order state choices with ID values.
