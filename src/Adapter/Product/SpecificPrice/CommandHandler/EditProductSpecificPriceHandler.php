@@ -118,7 +118,7 @@ final class EditProductSpecificPriceHandler implements EditProductSpecificPriceH
         }
 
         if (null !== $command->getCountryId()) {
-            $specificPrice->id_country = $command->getCountryId();
+            $specificPrice->id_country = $command->getCountryId()->getValue();
             $updatableProperties[] = 'id_country';
         }
 
