@@ -196,7 +196,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $command = new AddSpecificPriceCommand(
             $productId,
             Reduction::TYPE_AMOUNT,
-            0,
+            '0',
             true,
             $price,
             1

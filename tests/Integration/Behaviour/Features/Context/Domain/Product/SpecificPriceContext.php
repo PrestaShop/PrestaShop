@@ -256,7 +256,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         $addCommand = new AddProductSpecificPriceCommand(
             $productId,
             $dataRows['reduction type'],
-            (float) $dataRows['reduction value'],
+            $dataRows['reduction value'],
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
             (float) $dataRows['price'],
             (int) $dataRows['from quantity']
@@ -305,7 +305,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         $editCommand = new EditProductSpecificPriceCommand($specificPriceId);
 
         if (isset($dataRows['reduction type'], $dataRows['reduction value'])) {
-            $editCommand->setReduction($dataRows['reduction type'], (float) $dataRows['reduction value']);
+            $editCommand->setReduction($dataRows['reduction type'], (string) $dataRows['reduction value']);
         }
 
         if (isset($dataRows['includes tax'])) {

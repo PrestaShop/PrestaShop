@@ -150,14 +150,11 @@ class EditProductSpecificPriceCommand
 
     /**
      * @param string $reductionType
-     * @param float $reductionValue
-     *
-     * @todo: reduction value could also be a numeric string, because it is later converted to DecimalNumber.
-     *      (would require to refacto AddProductSpecificPriceCommand too)
+     * @param string $reductionValue
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setReduction(string $reductionType, float $reductionValue): EditProductSpecificPriceCommand
+    public function setReduction(string $reductionType, string $reductionValue): EditProductSpecificPriceCommand
     {
         $this->reduction = new Reduction($reductionType, $reductionValue);
 

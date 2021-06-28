@@ -114,7 +114,7 @@ class AddProductSpecificPriceCommand
     /**
      * @param int $productId
      * @param string $reductionType
-     * @param float $reductionValue
+     * @param string $reductionValue
      * @param bool $includeTax
      * @param float $price
      * @param int $fromQuantity
@@ -125,8 +125,7 @@ class AddProductSpecificPriceCommand
     public function __construct(
         int $productId,
         string $reductionType,
-        //@todo: require reduction value numeric string instead of float
-        float $reductionValue,
+        string $reductionValue,
         bool $includeTax,
         //@todo: require price numeric string instead of float
         float $price,
