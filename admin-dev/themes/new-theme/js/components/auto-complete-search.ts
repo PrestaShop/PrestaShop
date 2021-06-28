@@ -30,7 +30,7 @@
  */
 
 type DisplayFunction = (item: any) => string;
-interface TypeaheadJQueryDataset extends Twitter.Typeahead.Dataset<any> {
+export interface TypeaheadJQueryDataset extends Twitter.Typeahead.Dataset<any> {
   display: string | DisplayFunction;
   value: string;
   limit: number;
@@ -38,7 +38,7 @@ interface TypeaheadJQueryDataset extends Twitter.Typeahead.Dataset<any> {
   templates: any;
 }
 
-interface TypeaheadJQueryOptions extends Twitter.Typeahead.Options {
+export interface TypeaheadJQueryOptions extends Twitter.Typeahead.Options {
   minLength: number,
   highlight: boolean,
   hint: boolean,
