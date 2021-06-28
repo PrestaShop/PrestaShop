@@ -49,7 +49,7 @@ class CurrencyId implements CurrencyIdInterface
             throw new CurrencyException(sprintf('Invalid Currency id: %s', var_export($currencyId, true)));
         }
 
-        $this->currencyId = $currencyId;
+        $this->currencyId = (int) $currencyId;
     }
 
     /**
