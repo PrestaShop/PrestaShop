@@ -155,6 +155,12 @@ $header-text-color: #4e6167 !default;
         @include transition(all 0.5s);
       }
 
+      .input-group-append {
+        .btn:first-of-type {
+          @include border-radius(0);
+        }
+      }
+
       // behavior when the search form is collapsed
       &.collapsed {
         width: 15.625rem;
