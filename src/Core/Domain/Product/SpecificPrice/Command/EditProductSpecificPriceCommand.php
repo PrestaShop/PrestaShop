@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\SpecificPriceId;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 class EditProductSpecificPriceCommand
