@@ -23,25 +23,19 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
 
 /**
- * Indicates that no combination was specified
+ * Defines contract for currency identification value
+ *
+ * @see CurrencyId
+ * @see NoCurrencyId
  */
-class NoCombinationId implements CombinationIdInterface
+interface CurrencyIdInterface
 {
-    /**
-     * Value when no combination is specified
-     */
-    public const NO_COMBINATION_ID = 0;
-
     /**
      * @return int
      */
-    public function getValue(): int
-    {
-        return self::NO_COMBINATION_ID;
-    }
+    public function getValue(): int;
 }

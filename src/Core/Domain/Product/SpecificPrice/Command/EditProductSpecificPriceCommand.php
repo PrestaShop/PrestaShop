@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
@@ -84,9 +87,7 @@ class EditProductSpecificPriceCommand
     private $combinationId;
 
     /**
-     * @var int|null
-     *
-     * @todo: introduce CurrencyIdInterface (refer to example of ManufacturerIdInterface)
+     * @var CurrencyIdInterface|null
      */
     private $currencyId;
 
@@ -283,9 +284,9 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return int|null
+     * @return CurrencyIdInterface|null
      */
-    public function getCurrencyId(): ?int
+    public function getCurrencyId(): ?CurrencyIdInterface
     {
         return $this->currencyId;
     }
@@ -297,7 +298,7 @@ class EditProductSpecificPriceCommand
      */
     public function setCurrencyId(?int $currencyId): EditProductSpecificPriceCommand
     {
-        $this->currencyId = $currencyId;
+        $this->currencyId = NoCurrencyId::NO_CURRENCY_ID === $currencyId ? new NoCurrencyId() : new CurrencyId($currencyId);
 
         return $this;
     }
