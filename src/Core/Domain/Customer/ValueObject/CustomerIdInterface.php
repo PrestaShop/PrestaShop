@@ -26,43 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
-
 /**
- * Defines Customer ID with it's constraints
+ * Defines contract for customer identification value
+ *
+ * @see CustomerId
+ * @see NoCustomerId
  */
-class CustomerId implements CustomerIdInterface
+interface CustomerIdInterface
 {
-    /**
-     * @var int
-     */
-    private $customerId;
-
-    /**
-     * @param int $customerId
-     */
-    public function __construct($customerId)
-    {
-        $this->assertIntegerIsGreaterThanZero($customerId);
-
-        $this->customerId = (int) $customerId;
-    }
-
     /**
      * @return int
      */
-    public function getValue(): int
-    {
-        return $this->customerId;
-    }
-
-    /**
-     * @param int $customerId
-     */
-    private function assertIntegerIsGreaterThanZero($customerId)
-    {
-        if (!is_int($customerId) || 0 > $customerId) {
-            throw new CustomerException(sprintf('Customer id %s is invalid. Customer id must be number that is greater than zero.', var_export($customerId, true)));
-        }
-    }
+    public function getValue(): int;
 }
