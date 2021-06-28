@@ -26,7 +26,7 @@
  */
 use Symfony\Component\Translation\TranslatorInterface;
 
-class CustomerAddressFormatterCore implements FormFormatterInterface
+class CustomerAddressFormatterCore extends AbstractFormFormatter
 {
     private $country;
     private $translator;
@@ -161,37 +161,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
             }
         }
 
-        return $this->addConstraints(
-                $this->addMaxLength(
-                    $format
-                )
-        );
-    }
-
-    private function addConstraints(array $format)
-    {
-        foreach ($format as $field) {
-            if (!empty($this->definition[$field->getName()]['validate'])) {
-                $field->addConstraint(
-                    $this->definition[$field->getName()]['validate']
-                );
-            }
-        }
-
-        return $format;
-    }
-
-    private function addMaxLength(array $format)
-    {
-        foreach ($format as $field) {
-            if (!empty($this->definition[$field->getName()]['size'])) {
-                $field->setMaxLength(
-                    $this->definition[$field->getName()]['size']
-                );
-            }
-        }
-
-        return $format;
+        return $this->setConstraints($format, $this->definition);
     }
 
     private function getFieldLabel($field)

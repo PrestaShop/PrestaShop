@@ -25,10 +25,17 @@
  */
 use Symfony\Component\Translation\TranslatorInterface;
 
-class CustomerFormatterCore implements FormFormatterInterface
+class CustomerFormatterCore extends AbstractFormFormatter
 {
     private $translator;
     private $language;
+
+    /**
+     * @var array fields_definition customer fields definition
+     *
+     * @see Customer::$definition
+     */
+    private $fields_definition;
 
     private $ask_for_birthdate = true;
     private $ask_for_partner_optin = true;
@@ -43,6 +50,7 @@ class CustomerFormatterCore implements FormFormatterInterface
     ) {
         $this->translator = $translator;
         $this->language = $language;
+        $this->fields_definition = Customer::$definition['fields'];
     }
 
     public function setAskForBirthdate($ask_for_birthdate)
@@ -248,21 +256,6 @@ class CustomerFormatterCore implements FormFormatterInterface
 
         // TODO: TVA etc.?
 
-        return $this->addConstraints($format);
-    }
-
-    private function addConstraints(array $format)
-    {
-        $constraints = Customer::$definition['fields'];
-
-        foreach ($format as $field) {
-            if (!empty($constraints[$field->getName()]['validate'])) {
-                $field->addConstraint(
-                    $constraints[$field->getName()]['validate']
-                );
-            }
-        }
-
-        return $format;
+        return $this->setConstraints($format, $this->fields_definition);
     }
 }

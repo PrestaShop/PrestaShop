@@ -149,26 +149,32 @@ class CustomerFormCore extends AbstractForm
                 'Shop.Notifications.Error'
             ));
         }
-        $this->validateFieldsLengths();
         $this->validateByModules();
 
         return parent::validate();
     }
 
+    /**
+     * @deprecated since 1.7.8.0
+     */
     protected function validateFieldsLengths()
     {
+        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
         $this->validateFieldLength('email', 255, $this->getEmailMaxLengthViolationMessage());
         $this->validateFieldLength('firstname', 255, $this->getFirstNameMaxLengthViolationMessage());
         $this->validateFieldLength('lastname', 255, $this->getLastNameMaxLengthViolationMessage());
     }
 
     /**
+     * @deprecated since 1.7.8.0
+     *
      * @param $fieldName
      * @param $maximumLength
      * @param $violationMessage
      */
     protected function validateFieldLength($fieldName, $maximumLength, $violationMessage)
     {
+        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
         $emailField = $this->getField($fieldName);
         if (strlen($emailField->getValue()) > $maximumLength) {
             $emailField->addError($violationMessage);
@@ -176,10 +182,14 @@ class CustomerFormCore extends AbstractForm
     }
 
     /**
+     * @deprecated since 1.7.8.0
+     *
      * @return mixed
      */
     protected function getEmailMaxLengthViolationMessage()
     {
+        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
+
         return $this->translator->trans(
             'The %1$s field is too long (%2$d chars max).',
             ['email', 255],
@@ -187,8 +197,13 @@ class CustomerFormCore extends AbstractForm
         );
     }
 
+    /**
+     * @deprecated since 1.7.8.0
+     */
     protected function getFirstNameMaxLengthViolationMessage()
     {
+        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
+
         return $this->translator->trans(
             'The %1$s field is too long (%2$d chars max).',
             ['first name', 255],
@@ -196,8 +211,13 @@ class CustomerFormCore extends AbstractForm
         );
     }
 
+    /**
+     * @deprecated since 1.7.8.0
+     */
     protected function getLastNameMaxLengthViolationMessage()
     {
+        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
+
         return $this->translator->trans(
             'The %1$s field is too long (%2$d chars max).',
             ['last name', 255],
