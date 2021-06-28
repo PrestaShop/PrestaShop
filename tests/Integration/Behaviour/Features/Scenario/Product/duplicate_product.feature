@@ -123,6 +123,28 @@ Feature: Duplicate product from Back Office (BO).
       | includes tax    | true   |
       | from quantity   | 1      |
     Then product "product1" should have 1 specific prices
+    And I update product "product1" stock with following information:
+      | minimal_quantity              | 12           |
+      | location                      | dtc          |
+      | low_stock_threshold           | 42           |
+      | low_stock_alert               | true         |
+      | available_now_labels[en-US]   | get it now   |
+      | available_later_labels[en-US] | too late bro |
+      | available_date                | 1969-07-16   |
+    And product "product1" should have following stock information:
+      | minimal_quantity    | 12         |
+      | location            | dtc        |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "product1" localized "available_now_labels" should be:
+      | locale | value      |
+      | en-US  | get it now |
+      | fr-FR  |            |
+    And product "product1" localized "available_later_labels" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
 
   Scenario: I duplicate product
 #todo: add specific prices & priorities, test combinations, packs
@@ -216,8 +238,20 @@ Feature: Duplicate product from Back Office (BO).
     And product copy_of_product1 should have 1 customizable text field
     And product copy_of_product1 should have 0 customizable file fields
     And product "copy_of_product1" should have 1 specific prices
-#@todo: assert stock info
-#@todo: add tests for other type of products Pack, Virtual, Combinations
+    And product "copy_of_product1" should have following stock information:
+      | minimal_quantity    | 12         |
+      | location            | dtc        |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "copy_of_product1" localized "available_now_labels" should be:
+      | locale | value      |
+      | en-US  | get it now |
+      | fr-FR  |            |
+    And product "copy_of_product1" localized "available_later_labels" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
 
   Scenario: I duplicate product with combinations
     When I add product product_with_combinations with following information:
