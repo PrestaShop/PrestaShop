@@ -123,12 +123,12 @@ final class EditProductSpecificPriceHandler implements EditProductSpecificPriceH
         }
 
         if (null !== $command->getGroupId()) {
-            $specificPrice->id_group = $command->getGroupId();
+            $specificPrice->id_group = $command->getGroupId()->getValue();
             $updatableProperties[] = 'id_group';
         }
 
         if (null !== $command->getCustomerId()) {
-            $specificPrice->id_customer = $command->getCustomerId();
+            $specificPrice->id_customer = $command->getCustomerId()->getValue();
             $updatableProperties[] = 'id_customer';
         }
 
