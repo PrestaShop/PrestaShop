@@ -29,6 +29,34 @@ import ConfirmModal from '@components/modal';
 // @ts-ignore-next-line
 import Bloodhound from 'typeahead.js';
 
+type RemoveFunction = (item: any) => void;
+type SelectFunction = ($node: JQuery, item: any) => void;
+interface EntitySearchInputOptions extends OptionsObject {
+  prototypeTemplate: string,
+  prototypeIndex: string,
+  prototypeMapping: OptionsObject,
+
+  allowDelete: boolean,
+  dataLimit: number,
+  remoteUrl: string | undefined,
+
+  removeModalTitle: string | undefined,
+  removeModalMessage: string | undefined,
+  removeModalApply: string | undefined,
+  removeModalCancel: string | undefined,
+
+  searchInputSelector: string,
+  listSelector: string,
+  entityItemSelector: string,
+  entityDeleteSelector: string,
+  removeModalId: string,
+  confirmButtonClass: string,
+  queryWildcard: string,
+
+  onRemovedContent: RemoveFunction | undefined,
+  onSelectedContent: SelectFunction | undefined,
+}
+
 /**
  * This component is used to search and select one or several entities, it uses the AutoSearchComplete
  * component which displays a list of suggestion based on an API returned response. Then when
@@ -48,14 +76,13 @@ export default class EntitySearchInput {
 
   private $selectionContainer: JQuery;
 
-  private options: OptionsObject;
+  private options!: EntitySearchInputOptions;
 
   private entityRemoteSource: Bloodhound;
 
-  private autoSearch?: AutoCompleteSearch;
+  private autoSearch!: AutoCompleteSearch;
 
   constructor($entitySearchInputContainer: JQuery, options: OptionsObject) {
-    this.options = {};
     this.$entitySearchInputContainer = $entitySearchInputContainer;
     this.buildOptions(options);
 
@@ -323,7 +350,7 @@ export default class EntitySearchInput {
    */
   private addSelectedContentToContainer(selectedItem: any): void {
     const newIndex = this.$selectionContainer.children().length;
-    const selectedHtml = this.renderSelected(selectedItem, BigInt(newIndex));
+    const selectedHtml = this.renderSelected(selectedItem, newIndex);
 
     const $selectedNode = $(selectedHtml);
     const $hiddenInput = $('input[type="hidden"]', $selectedNode);
@@ -346,12 +373,12 @@ export default class EntitySearchInput {
    * no need to include the hidden input as it is automatically handled in addSelectedContentToContainer
    *
    * @param {Object} entity
-   * @param {bigint} index
+   * @param {number} index
    *
    * @returns {string}
    */
-  private renderSelected(entity: any, index: bigint): string {
-    let template = this.options.prototypeTemplate.replace(new RegExp(this.options.prototypeIndex, 'g'), index);
+  private renderSelected(entity: any, index: number): string {
+    let template = this.options.prototypeTemplate.replace(new RegExp(this.options.prototypeIndex, 'g'), String(index));
 
     Object.keys(this.options.prototypeMapping).forEach((fieldName) => {
       const fieldValue = entity[fieldName] || '';
