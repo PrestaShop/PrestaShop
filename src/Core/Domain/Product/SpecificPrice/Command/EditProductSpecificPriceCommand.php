@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
@@ -76,9 +79,7 @@ class EditProductSpecificPriceCommand
     private $shopId;
 
     /**
-     * @var int|null
-     *
-     * @todo: introduce CombinationIdInterface (refer to example of ManufacturerIdInterface)
+     * @var CombinationIdInterface|null
      */
     private $combinationId;
 
@@ -262,9 +263,9 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return int|null
+     * @return CombinationIdInterface|null
      */
-    public function getCombinationId(): ?int
+    public function getCombinationId(): ?CombinationIdInterface
     {
         return $this->combinationId;
     }
@@ -276,7 +277,7 @@ class EditProductSpecificPriceCommand
      */
     public function setCombinationId(?int $combinationId): EditProductSpecificPriceCommand
     {
-        $this->combinationId = $combinationId;
+        $this->combinationId = NoCombinationId::NO_COMBINATION_ID === $combinationId ? new NoCombinationId() : new CombinationId($combinationId);
 
         return $this;
     }
