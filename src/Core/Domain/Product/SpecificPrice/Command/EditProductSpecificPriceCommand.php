@@ -31,15 +31,16 @@ use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 class EditProductSpecificPriceCommand
 {
     /**
-     * //@todo: replace with Product/SpecificPriceId
-     *
      * @var SpecificPriceId
      */
     private $specificPriceId;
@@ -70,9 +71,7 @@ class EditProductSpecificPriceCommand
     private $shopGroupId;
 
     /**
-     * @var int|null
-     *
-     * @todo: introduce ShopIdInterface (refer to example of ManufacturerIdInterface)
+     * @var ShopIdInterface|null
      */
     private $shopId;
 
@@ -237,15 +236,15 @@ class EditProductSpecificPriceCommand
      */
     public function setShopGroupId(?int $shopGroupId): EditProductSpecificPriceCommand
     {
-        $this->shopGroupId = $shopGroupId === NoShopGroupId::NO_SHOP_GROUP_ID ? new NoShopGroupId() : new ShopGroupId($shopGroupId);
+        $this->shopGroupId = NoShopGroupId::NO_SHOP_GROUP_ID === $shopGroupId ? new NoShopGroupId() : new ShopGroupId($shopGroupId);
 
         return $this;
     }
 
     /**
-     * @return int|null
+     * @return ShopIdInterface|null
      */
-    public function getShopId(): ?int
+    public function getShopId(): ?ShopIdInterface
     {
         return $this->shopId;
     }
@@ -257,7 +256,7 @@ class EditProductSpecificPriceCommand
      */
     public function setShopId(?int $shopId): EditProductSpecificPriceCommand
     {
-        $this->shopId = $shopId;
+        $this->shopId = NoShopId::NO_SHOP_ID === $shopId ? new NoShopId() : new ShopId($shopId);
 
         return $this;
     }
