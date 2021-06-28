@@ -23,56 +23,22 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-
-/**
- *  Holds product combination identification data
- */
-class CombinationId implements CombinationIdInterface
+class NoCombinationId implements CombinationIdInterface
 {
     /**
-     * Indicates that no combination is provided/selected
-     *
-     * @deprecated since 1.7.9.0 and will be removed in next major version.
-     * @see NoCombinationId instead
+     * Indicates that no combination was specified
      */
-    public const NO_COMBINATION = 0;
-
-    /**
-     * @var int
-     */
-    private $combinationId;
-
-    /**
-     * @param int $combinationId
-     */
-    public function __construct(int $combinationId)
-    {
-        $this->assertValueIsPositive($combinationId);
-        $this->combinationId = $combinationId;
-    }
+    public const NO_COMBINATION_ID = 0;
 
     /**
      * @return int
      */
     public function getValue(): int
     {
-        return $this->combinationId;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @throws ProductConstraintException
-     */
-    private function assertValueIsPositive(int $value)
-    {
-        if (0 >= $value) {
-            throw new CombinationConstraintException(sprintf('Combination id must be positive integer. "%s" given', $value), CombinationConstraintException::INVALID_ID);
-        }
+        return self::NO_COMBINATION_ID;
     }
 }

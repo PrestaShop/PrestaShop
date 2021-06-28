@@ -108,7 +108,7 @@ final class EditProductSpecificPriceHandler implements EditProductSpecificPriceH
         }
 
         if (null !== $command->getCombinationId()) {
-            $specificPrice->id_product_attribute = $command->getCombinationId();
+            $specificPrice->id_product_attribute = $command->getCombinationId()->getValue();
             $updatableProperties[] = 'id_product_attribute';
         }
 
