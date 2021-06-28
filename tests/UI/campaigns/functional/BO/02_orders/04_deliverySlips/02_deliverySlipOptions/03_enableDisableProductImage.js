@@ -117,7 +117,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
         });
 
         it('should sign in with default customer', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `sighInFO${index}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `signInFO${index}`, baseContext);
 
           await foLoginPage.customerLogin(page, DefaultCustomer);
           const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
@@ -171,7 +171,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
         });
 
         it('should sign out from FO', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `sighOutFO${index}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `signOutFO${index}`, baseContext);
 
           await orderConfirmationPage.logout(page);
 
