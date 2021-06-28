@@ -27,7 +27,7 @@
   <h3 class="card-header">{{ 'Customer'|trans({}, 'Admin.Global') }}</h3>
   <div class="card-body">
     <div class="row js-search-customer-row mb-4">
-      <label class="col-md-3 text-md-right col-form-label">
+      <label class="col-md-3 text-md-right col-form-label" for="customer-search-input">
         {{ 'Search for a customer'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </label>
       <div class="col-md-4 mb-2">
@@ -62,7 +62,6 @@
     </div>
 
     <div class="row js-customer-search-results"></div>
-
     <div class="d-none" id="customer-checkout-history">
         <ul class="nav nav-pills" role="tablist">
           <li class="nav-item">

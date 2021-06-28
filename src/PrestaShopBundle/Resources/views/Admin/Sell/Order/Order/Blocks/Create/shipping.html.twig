@@ -30,7 +30,7 @@
 
     <form class="js-shipping-form d-none">
       <div class="form-group row">
-        <label class="col-md-6 col-xl-3 text-md-right col-form-label">
+        <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="delivery-option-select">
           {{ 'Delivery option'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </label>
         <div class="col-md-6 col-xl-4">
@@ -38,15 +38,15 @@
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-md-6 col-xl-3 text-md-right col-form-label">
+        <span class="col-md-6 col-xl-3 text-md-right col-form-label">
           {{ 'Shipping price (Tax incl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </label>
+        </span>
         <div class="col-md-6 col-xl-4">
           <span class="js-total-shipping-tax-inc font-weight-bold"></span>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-md-6 col-xl-3 text-md-right col-form-label">
+        <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="free-shipping_0">
           {{ 'Free shipping'|trans({}, 'Admin.Shipping.Feature') }}
         </label>
         <div class="col-md-6 col-xl-4">
@@ -60,7 +60,7 @@
         </div>
       </div>
       <div class="form-group row {% if not recycledPackagingEnabled %}d-none{% endif %}">
-        <label class="col-md-6 col-xl-3 text-md-right col-form-label">
+        <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="recycled-packaging_0">
           {{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </label>
         <div class="col-md-6 col-xl-4">
@@ -74,7 +74,7 @@
         </div>
       </div>
       <div class="form-group row {% if not giftSettingsEnabled %}d-none{% endif %}">
-        <label class="col-md-6 col-xl-3 text-md-right col-form-label">
+        <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="is-gift_0">
           {{ 'Gift'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </label>
         <div class="col-md-6 col-xl-4">
@@ -89,7 +89,7 @@
 
       </div>
       <div class="form-group row type-text {% if not giftSettingsEnabled %}d-none{% endif %}">
-        <label class="col-md-6 col-xl-3 text-md-right col-form-label">
+        <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="cart_gift_message">
           {{ 'Gift message'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </label>
         <div class="col-md-6 col-xl-4">
