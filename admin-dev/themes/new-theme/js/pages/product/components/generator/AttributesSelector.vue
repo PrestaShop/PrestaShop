@@ -125,6 +125,7 @@
   import PerfectScrollbar from 'perfect-scrollbar';
   import Bloodhound from 'typeahead.js';
   import AutoCompleteSearch from '@components/auto-complete-search';
+  import Tokenizers from '@components/bloodhound/tokenizers';
 
   const {$} = window;
 
@@ -171,19 +172,18 @@
       initDataSetConfig() {
         const searchItems = this.getSearchableAttributes();
         this.searchSource = new Bloodhound({
-          datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
+          datumTokenizer: Tokenizers.obj.letters(
             'name',
             'value',
-            'color',
             'group_name',
           ),
-          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          queryTokenizer: Bloodhound.tokenizers.nonword,
           local: searchItems,
         });
 
-        const dataSetConfig = {
+        this.dataSetConfig = {
           source: this.searchSource,
-          display: 'name',
+          display: (item) => `${item.group_name}: ${item.name}`,
           value: 'name',
           minLength: 1,
           onSelect: (attribute, e, $searchInput) => {
@@ -196,17 +196,7 @@
             // This resets the search input or else previous search is cached and can be added again
             $searchInput.typeahead('val', '');
           },
-          onClose(event, $searchInput) {
-            $searchInput.typeahead('val', '');
-            return true;
-          },
         };
-
-        dataSetConfig.templates = {
-          suggestion: (item) => `<div class="px-2">${item.group_name}: ${item.name}</div>`,
-        };
-
-        this.dataSetConfig = dataSetConfig;
       },
       /**
        * @returns {Array}

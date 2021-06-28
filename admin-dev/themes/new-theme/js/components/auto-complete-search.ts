@@ -60,6 +60,23 @@ export default class AutoCompleteSearch {
       minLength: 2,
       highlight: true,
       hint: false,
+      /* eslint-disable @typescript-eslint/no-unused-vars */
+      onSelect(
+        selectedItem: unknown,
+        event: JQueryEventObject,
+        searchInput: JQuery
+      ) {
+        searchInput.typeahead('val', selectedItem[this.dataSetConfig.value]);
+        return true;
+      },
+      /* eslint-disable-next-line no-unused-vars */
+      onClose(
+        event: Event,
+        searchInput: JQuery
+      ) {
+        searchInput.typeahead('val', '');
+        return true;
+      },
       ...inputConfig,
     };
 
@@ -70,17 +87,6 @@ export default class AutoCompleteSearch {
       value: 'id', // Which field of the object from the list is used for value (can be a string or a callback)
       limit: 20, // Limit the number of displayed suggestion
       dataLimit: 0, // How many elements can be selected max
-      /* eslint-disable @typescript-eslint/no-unused-vars */
-      onSelect(
-        selectedItem: unknown,
-        event: JQueryEventObject,
-        searchInput: JQuery,
-      ) {
-        return true;
-      },
-      /* eslint-enable */
-      /* eslint-disable-next-line */
-      onClose(event: Event, searchInput: JQuery) {},
       ...inputConfig,
     };
 
