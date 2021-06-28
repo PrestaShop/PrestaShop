@@ -24,7 +24,6 @@
  */
 
 import AutoCompleteSearch from '@components/auto-complete-search';
-// @ts-ignore-next-line
 import Bloodhound from 'typeahead.js';
 
 /**
@@ -93,7 +92,7 @@ export default class EntitySearchInput {
    *
    * @param values {array}
    */
-  setValue(values: JQuery): void {
+  setValue(values: array): void {
     this.clearSelectedItems();
     if (!values || values.length <= 0) {
       return;
@@ -123,10 +122,7 @@ export default class EntitySearchInput {
           return `<div class="search-suggestion">${entityImage}${entity.name}</div>`;
         },
       },
-      onClose: (event: JQueryEventObject) => {
-        this.onSelectionClose(event);
-      },
-      /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+      /* eslint-disable-next-line no-unused-vars */
       onSelect: (selectedItem: OptionsObject, event: JQueryEventObject) => {
         // When limit is one we cannot select additional elements so we replace them instead
         if (this.options.dataLimit === 1) {
@@ -176,15 +172,6 @@ export default class EntitySearchInput {
         },
       },
     });
-  }
-
-  /**
-   * When an item is selected we empty the input search, since the selected data is stored in hidden inputs anyway
-   *
-   * @param event
-   */
-  onSelectionClose(event: JQueryEventObject): void {
-    $(event.target).val('');
   }
 
   /**

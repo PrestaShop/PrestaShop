@@ -69,8 +69,6 @@ const initMultistoreDropdown = () => {
 
       return true;
     },
-    /* eslint-disable-next-line */
-    onClose(event: Event) {},
   };
 
   new AutoCompleteSearch($searchInput, dataSetConfig);
