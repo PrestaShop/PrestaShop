@@ -163,6 +163,9 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
 
     public function overrideContent($content)
     {
+        array_walk($this->content, function (&$item) {
+            $item = array_filter($item);
+        });
         $content = json_encode($this->content, JSON_UNESCAPED_UNICODE);
 
         return (false !== $content) ? $content : '';
