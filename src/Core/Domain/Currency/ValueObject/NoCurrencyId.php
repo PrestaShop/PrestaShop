@@ -25,23 +25,23 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
 
 /**
- * Indicates that no combination was specified
+ * Indicates that no currency was specified
  */
-class NoCombinationId implements CombinationIdInterface
+class NoCurrencyId implements CurrencyIdInterface
 {
     /**
-     * Value when no combination is specified
+     * Value when no currency is specified
      */
-    public const NO_COMBINATION_ID = 0;
+    public const NO_CURRENCY_ID = 0;
 
     /**
-     * @return int
+     * {@inheritDoc}
      */
     public function getValue(): int
     {
-        return self::NO_COMBINATION_ID;
+        return self::NO_CURRENCY_ID;
     }
 }
