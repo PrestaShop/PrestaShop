@@ -26,41 +26,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Extension;
+namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
-use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Adapter\CoreException;
+use PrestaShopException;
+use Search;
 
-class MultistoreDropdownExtension extends AbstractTypeExtension
+/**
+ * Updates product indexation
+ */
+class ProductIndexationUpdater
 {
     /**
-     * {@inheritdoc}
+     * @param int $productId
      */
-    public function getExtendedType(): string
+    public function updateIndexation(int $productId): void
     {
-        return FormType::class;
-    }
-
-    /**
-     * @param FormView $view
-     * @param FormInterface $form
-     * @param array $options
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options): void
-    {
-        parent::buildView($view, $form, $options);
-        $view->vars = array_replace($view->vars, ['multistore_dropdown' => $options['multistore_dropdown']]);
-    }
-
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        parent::configureOptions($resolver);
-        $resolver->setDefaults(['multistore_dropdown' => false]);
+        try {
+            Search::indexation(false, $productId);
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'An error occured while trying to update indexation data for product %d.',
+                    $productId
+                ),
+                0,
+                $e
+            );
+        }
     }
 }

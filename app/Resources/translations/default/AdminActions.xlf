@@ -251,7 +251,7 @@
       <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
         <source>Search</source>
         <target>Search</target>
-        <note>Line: 398</note>
+        <note>Line: 405</note>
       </trans-unit>
     </body>
   </file>
@@ -1105,7 +1105,7 @@
       <trans-unit id="ed75712b0eb1913c28a3872731ffd48d">
         <source>Duplicate</source>
         <target>Duplicate</target>
-        <note>Line: 140</note>
+        <note>Line: 148</note>
       </trans-unit>
     </body>
   </file>
@@ -1171,6 +1171,11 @@
         <source>Clear filter|Clear %filtersNb% filters</source>
         <target>Clear filter|Clear %filtersNb% filters</target>
         <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="d94b42030b9785fd754d5c1754961269">
+        <source>Discard</source>
+        <target>Discard</target>
+        <note>Line: 48</note>
       </trans-unit>
     </body>
   </file>

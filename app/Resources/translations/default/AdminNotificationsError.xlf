@@ -890,6 +890,15 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_linklist/src/Form/Type/LinkBlockType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="48d87ac90e3cfaac58c02f30259fbfec">
+        <source>You have to select at least one shop to associate this item with</source>
+        <target>You have to select at least one shop to associate this item with</target>
+        <note>Line: 188</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Adapter/Email/EmailLogEraser.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ddd4e7f16c2032d59cb4fb4b86576bc5">
@@ -1331,7 +1340,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="d3ee9a41133f8fc3c83c91d09053f249">
         <source>The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.</source>
         <target>The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.</target>
-        <note>Line: 711</note>
+        <note>Line: 712</note>
       </trans-unit>
     </body>
   </file>
@@ -1438,17 +1447,17 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="95be38fc18a46111194e2cba0649504a">
         <source>Product price is invalid</source>
         <target>Product price is invalid</target>
-        <note>Line: 234</note>
+        <note>Line: 241</note>
       </trans-unit>
       <trans-unit id="cc360e6a888c0d7ff56efeff9e7dab9f">
         <source>You cannot associate the same feature value more than once.</source>
         <target>You cannot associate the same feature value more than once.</target>
-        <note>Line: 239</note>
+        <note>Line: 246</note>
       </trans-unit>
       <trans-unit id="1348633590e241b276cdbb7ceaeb8295">
         <source>The selected value belongs to another feature.</source>
         <target>The selected value belongs to another feature.</target>
-        <note>Line: 243</note>
+        <note>Line: 250</note>
       </trans-unit>
     </body>
   </file>
@@ -1869,7 +1878,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="8a39591ca58ab61e97f1f4c3b7d06266">
         <source>The file is too large. Maximum size allowed is: [1] MB. The file you are trying to upload is [2] MB.</source>
         <target>The file is too large. Maximum size allowed is: [1] MB. The file you are trying to upload is [2] MB.</target>
-        <note>Line: 343</note>
+        <note>Line: 345</note>
       </trans-unit>
     </body>
   </file>

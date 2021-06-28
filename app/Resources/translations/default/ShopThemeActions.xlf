@@ -73,7 +73,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="94966d90747b97d1f0f206c98a8b1ac3">
         <source>Send</source>
         <target>Send</target>
-        <note>Line: 130</note>
+        <note>Line: 131</note>
       </trans-unit>
       <trans-unit id="cbe55e77ffa67d13322eb1ce7d22f1ba">
         <source>Choose file</source>
@@ -156,12 +156,12 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="498f79c4c5bbde77f1bceb6c86fd0f6d">
         <source>Show</source>
         <target>Show</target>
-        <note>Line: 154</note>
+        <note>Line: 158</note>
       </trans-unit>
       <trans-unit id="62a5e490880a92eef74f167d9dc6dca0">
         <source>Hide</source>
         <target>Hide</target>
-        <note>Line: 152</note>
+        <note>Line: 156</note>
       </trans-unit>
     </body>
   </file>
@@ -262,7 +262,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="e0626222614bdee31951d84c64e5e9ff">
         <source>Select</source>
         <target>Select</target>
-        <note>Line: 34</note>
+        <note>Line: 35</note>
       </trans-unit>
     </body>
   </file>

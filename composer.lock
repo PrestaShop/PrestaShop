@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cabbea95d33718f21b519244fbc1b6ae",
+    "content-hash": "ec13ca5bb57ea87dc3407a24edbe29b1",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -5918,16 +5918,16 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "v4.0.0",
+            "version": "v5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "3072601605c569e7aa3565a6d57e7bae56428b00"
+                "reference": "0c8d6fab12c997b34a6e353cae1962f28f7bec09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/3072601605c569e7aa3565a6d57e7bae56428b00",
-                "reference": "3072601605c569e7aa3565a6d57e7bae56428b00",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/0c8d6fab12c997b34a6e353cae1962f28f7bec09",
+                "reference": "0c8d6fab12c997b34a6e353cae1962f28f7bec09",
                 "shasum": ""
             },
             "require": {
@@ -5959,9 +5959,9 @@
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_linklist/tree/v4.0.0"
+                "source": "https://github.com/PrestaShop/ps_linklist/tree/v5.0.1"
             },
-            "time": "2021-02-11T15:55:29+00:00"
+            "time": "2021-06-23T12:58:10+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
@@ -6926,16 +6926,16 @@
         },
         {
             "name": "prestashop/welcome",
-            "version": "v6.0.5",
+            "version": "v6.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/welcome.git",
-                "reference": "0113fcb5650a632e5acca6f359b40a5627575351"
+                "reference": "e50132ac6468ac692e3814f5d36605e1537ba9c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/0113fcb5650a632e5acca6f359b40a5627575351",
-                "reference": "0113fcb5650a632e5acca6f359b40a5627575351",
+                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/e50132ac6468ac692e3814f5d36605e1537ba9c6",
+                "reference": "e50132ac6468ac692e3814f5d36605e1537ba9c6",
                 "shasum": ""
             },
             "require": {

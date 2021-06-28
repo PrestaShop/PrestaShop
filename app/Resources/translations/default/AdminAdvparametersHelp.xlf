@@ -749,7 +749,7 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="b5c5b3a0a7208392aaf2c4d23a81879c">
         <source>This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.</source>
         <target>This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.</target>
-        <note>Line: 67</note>
+        <note>Line: 72</note>
       </trans-unit>
     </body>
   </file>

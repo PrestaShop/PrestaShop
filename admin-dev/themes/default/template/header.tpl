@@ -115,7 +115,7 @@
       <i class="material-icons js-mobile-menu">menu</i>
 
       {* Logo *}
-      <a id="header_logo" href="{$default_tab_link|escape:'html':'UTF-8'}" aria-label="{l|escape s='PrestaShop Logo' d='Admin.Navigation.Header'}"></a>
+      <a id="header_logo" href="{$default_tab_link|escape:'html':'UTF-8'}" aria-label="{l|escape s='PrestaShop logo' d='Admin.Navigation.Header'}"></a>
       <span id="shop_version">{$ps_version}</span>
 
       {* Quick access *}
@@ -129,7 +129,7 @@
           <ul class="dropdown-menu">
             {if !empty($quick_access)}
               {foreach $quick_access as $quick}
-                <li {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
+                <li class="quick-row-link{if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access} active{/if}">
                   <a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window}target="_blank"{/if}>
                     {$quick.name}
                   </a>
@@ -139,7 +139,7 @@
             <li class="divider"></li>
             {if isset($matchQuickLink)}
               <li>
-                <a href="javascript:void(0);" class="ajax-quick-link" data-method="remove"
+                <a id="quick-remove-link" href="javascript:void(0);" class="ajax-quick-link" data-method="remove"
                   data-quicklink-id="{$matchQuickLink}">
                   <i class="material-icons">remove_circle</i>
                   {l|escape s='Remove from QuickAccess' d='Admin.Navigation.Header'}
@@ -147,14 +147,14 @@
               </li>
             {else}
               <li>
-                <a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
+                <a id="quick-add-link" href="javascript:void(0);" class="ajax-quick-link" data-method="add">
                   <i class="material-icons">add_circle</i>
                   {l|escape s='Add current page to QuickAccess' d='Admin.Navigation.Header'}
                 </a>
               </li>
             {/if}
             <li>
-              <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
+              <a id="quick-manage-link" href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
                 <i class="material-icons">settings</i>
                 {l|escape s='Manage quick accesses' d='Admin.Navigation.Header'}
               </a>

@@ -64,5 +64,6 @@
     <product_supplier id_product="Hummingbird_notebook" id_product_attribute="product_attribute_94" id_supplier="Accessories_Supplier" product_supplier_price_te="5.490000" id_currency="USD" product_supplier_reference="demo_10_94" />
     <product_supplier id_product="Hummingbird_notebook" id_product_attribute="product_attribute_95" id_supplier="Accessories_Supplier" product_supplier_price_te="5.490000" id_currency="USD" product_supplier_reference="demo_10_95" />
     <product_supplier id_product="Hummingbird_notebook" id_product_attribute="product_attribute_96" id_supplier="Accessories_Supplier" product_supplier_price_te="5.490000" id_currency="USD" product_supplier_reference="demo_10_96" />
+    <product_supplier id_product="Pack_Mug_Framed_poster" id_product_attribute="0" id_supplier="Accessories_Supplier" product_supplier_price_te="0" id_currency="USD" product_supplier_reference="" />
   </entities>
 </entity_product_supplier>

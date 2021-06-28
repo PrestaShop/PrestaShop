@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-class EmailThemes extends BOBasePage {
+/**
+ * Email theme page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
+class EmailTheme extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on email theme page
+   */
   constructor() {
     super();
 
@@ -24,8 +33,8 @@ class EmailThemes extends BOBasePage {
 
   /**
    * Choose default email theme and save configuration
-   * @param page
-   * @param emailTheme
+   * @param page {Page} Browser tab
+   * @param emailTheme {string} Value of email theme to select
    * @return {Promise<string>}
    */
   async selectDefaultEmailTheme(page, emailTheme) {
@@ -38,8 +47,8 @@ class EmailThemes extends BOBasePage {
   /* Email themes grid methods */
   /**
    * Preview email theme
-   * @param page
-   * @param name
+   * @param page {Page} Browser tab
+   * @param name {string} Value of theme to choose
    * @return {Promise<void>}
    */
   async previewEmailTheme(page, name) {
@@ -64,4 +73,4 @@ class EmailThemes extends BOBasePage {
   }
 }
 
-module.exports = new EmailThemes();
+module.exports = new EmailTheme();

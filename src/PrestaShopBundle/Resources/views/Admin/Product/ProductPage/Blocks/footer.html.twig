@@ -106,7 +106,15 @@
       >
         {{ 'Add new product'|trans({}, 'Admin.Catalog.Feature')|raw }}
       </button>
-      {% if isProductPageV2Enabled == true %}
+      {% if isProductPageV2Enabled == true and isCreationMode is same as(true) %}
+        <a
+          class="btn btn-outline-primary ml-3"
+          href="{{ path('admin_products_v2_create') }}"
+        >
+          {{ 'New product on experimental page'|trans({}, 'Admin.Catalog.Feature')|raw }}
+        </a>
+      {% endif %}
+      {% if isProductPageV2Enabled == true and isCreationMode is same as(false) %}
         <a
           class="btn btn-outline-primary ml-3"
           href="{{ path('admin_products_v2_edit', {'productId': productId}) }}"

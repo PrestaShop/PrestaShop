@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add image type page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddImageType extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add image type page
+   */
   constructor() {
     super();
 
@@ -27,8 +36,8 @@ class AddImageType extends BOBasePage {
 
   /**
    * Fill image type form in create or edit page and save
-   * @param page
-   * @param imageTypeData
+   * @param page {Page} Browser tab
+   * @param imageTypeData {imageTypeData} Data to set on new/edit image type form
    * @return {Promise<string>}
    */
   async createEditImageType(page, imageTypeData) {

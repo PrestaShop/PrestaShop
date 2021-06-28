@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add page page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddPage extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add page page
+   */
   constructor() {
     super();
 
@@ -26,8 +35,8 @@ class AddPage extends BOBasePage {
 
   /**
    * Fill form for add/edit page category
-   * @param page
-   * @param pageData
+   * @param page {Page} Browser tab
+   * @param pageData {pageData} Data to set on new/edit page form
    * @return {Promise<void>}
    */
   async createEditPage(page, pageData) {
@@ -49,8 +58,8 @@ class AddPage extends BOBasePage {
 
   /**
    * Preview page in new tab
-   * @param page
-   * @return page opened
+   * @param page {Page} Browser tab
+   * @returns {Promise<Page>}
    */
   async previewPage(page) {
     return this.openLinkWithTargetBlank(page, this.saveAndPreviewPageButton);
@@ -58,7 +67,7 @@ class AddPage extends BOBasePage {
 
   /**
    * Cancel page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async cancelPage(page) {

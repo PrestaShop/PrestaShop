@@ -149,9 +149,9 @@
         <target>Orders</target>
         <note>Line: 291</note>
       </trans-unit>
-      <trans-unit id="db2fb69d784db346e242339e1b41616c">
-        <source>PrestaShop Logo</source>
-        <target>PrestaShop Logo</target>
+      <trans-unit id="10df6a640ea9625829122dfb5842795e">
+        <source>PrestaShop logo</source>
+        <target>PrestaShop logo</target>
         <note>Line: 118</note>
       </trans-unit>
     </body>

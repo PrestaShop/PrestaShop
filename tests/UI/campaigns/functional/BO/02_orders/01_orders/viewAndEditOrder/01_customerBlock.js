@@ -6,8 +6,15 @@ const helper = require('@utils/helpers');
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
+const ordersPage = require('@pages/BO/orders');
+const viewOrderPage = require('@pages/BO/orders/view');
+const customersPage = require('@pages/BO/customers');
+const addressesPage = require('@pages/BO/customers/addresses');
+const viewCustomerPage = require('@pages/BO/customers/view');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foCreateAccountPage = require('@pages/FO/myAccount/add');
@@ -18,11 +25,6 @@ const foProductPage = require('@pages/FO/product');
 const foCartPage = require('@pages/FO/cart');
 const foCheckoutPage = require('@pages/FO/checkout');
 const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-const ordersPage = require('@pages/BO/orders');
-const viewOrderPage = require('@pages/BO/orders/view');
-const customersPage = require('@pages/BO/customers');
-const addressesPage = require('@pages/BO/customers/addresses');
-const viewCustomerPage = require('@pages/BO/customers/view');
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
@@ -63,7 +65,7 @@ Check customer block content
 Check that private note is closed by default
 Check that the other customer doesn't have the private note
 */
-describe('Check and edit customer block in view order page', async () => {
+describe('BO - Orders - view and edit order : Check and edit customer block', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -126,7 +128,7 @@ describe('Check and edit customer block in view order page', async () => {
       await expect(pageHeaderTitle).to.equal(foAddressesPage.addressPageTitle);
     });
 
-    it('should create new address', async function () {
+    it('should create the first address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
 
       const textResult = await foAddAddressesPage.setAddress(page, firstAddressData);
@@ -152,8 +154,8 @@ describe('Check and edit customer block in view order page', async () => {
 
   // 1 - create order
   describe(`Create order by '${customerData.firstName} ${customerData.lastName}' in FO`, async () => {
-    it('should create an order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
+    it('should add product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       // Go to home page
       await foLoginPage.goToHomePage(page);
@@ -164,16 +166,31 @@ describe('Check and edit customer block in view order page', async () => {
       // Add the created product to the cart
       await foProductPage.addProductToTheCart(page);
 
+      const notificationsNumber = await foCartPage.getCartNotificationsNumber(page);
+      await expect(notificationsNumber).to.be.equal(1);
+    });
+
+    it('should go to delivery step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
+
       // Proceed to checkout the shopping cart
       await foCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await foCheckoutPage.goToDeliveryStep(page);
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+    });
+
+    it('should go to payment step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await foCheckoutPage.goToPaymentStep(page);
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+    });
+
+    it('should choose payment method and confirm the order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Payment step - Choose payment step
       await foCheckoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
@@ -190,7 +207,7 @@ describe('Check and edit customer block in view order page', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to Orders page', async function () {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -249,7 +266,7 @@ describe('Check and edit customer block in view order page', async () => {
       await expect(customerID).to.be.above(0);
     });
 
-    it('should go to Addresses page', async function () {
+    it('should go to \'Customers > Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -546,7 +563,7 @@ describe('Check and edit customer block in view order page', async () => {
 
   // 4 - Delete the created customer
   describe(`Delete the created customer '${customerData.firstName} ${customerData.lastName}'`, async () => {
-    it('should go customers page', async function () {
+    it('should go \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
       await dashboardPage.goToSubMenu(

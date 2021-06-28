@@ -5145,6 +5145,7 @@ XXX Code for transations where no currency is involved
 		<currencyCodes type="BTN" numeric="64"/>
 		<currencyCodes type="BWP" numeric="72"/>
 		<currencyCodes type="BYR" numeric="974"/>
+		<currencyCodes type="BYN" numeric="933"/>
 		<currencyCodes type="BZD" numeric="84"/>
 		<currencyCodes type="CAD" numeric="124"/>
 		<currencyCodes type="CDF" numeric="976"/>

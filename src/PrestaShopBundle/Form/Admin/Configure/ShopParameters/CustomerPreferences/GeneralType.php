@@ -59,7 +59,7 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'Send an email with summary of the account information after registration.',
+                    'Send an email with a summary of the account information after registration.',
                     'Admin.Shopparameters.Help'
                 ),
             ])

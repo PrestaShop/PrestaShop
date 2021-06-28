@@ -77,7 +77,7 @@
       </a>
     </li>
 
-    <li id="options-tab-nav" class="nav-item{% if not isSEOTabValid %} has-error{% endif %}">
+    <li id="seo-tab-nav" class="nav-item{% if not isSEOTabValid %} has-error{% endif %}">
       <a href="#seo-tab" role="tab" data-toggle="tab" class="nav-link">
         {{ 'SEO'|trans({}, 'Admin.Catalog.Feature') }}
       </a>
@@ -88,6 +88,14 @@
         {{ 'Options'|trans({}, 'Admin.Global') }}
       </a>
     </li>
+
+    {% if hooksarraycontent(extraModulesHooks) is not empty %}
+      <li id="modules-tab-nav" class="nav-item">
+        <a href="#modules-tab" role="tab" data-toggle="tab" class="nav-link">
+          {{ 'Modules'|trans({}, 'Admin.Catalog.Feature') }}
+        </a>
+      </li>
+    {% endif %}
   </ul>
 
   <div class="arrow d-xl-none js-arrow right-arrow visible float-right">

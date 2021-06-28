@@ -43,7 +43,7 @@ class Statuses extends BOBasePage {
     this.tableBodyColumns = (tableName, row) => `${this.tableBodyRow(tableName, row)} td`;
 
     // Columns selectors
-    this.tableColumn = (tableName, row, column) => `${this.tableBodyColumns(tableName, row)}:nth-child(${column})`;
+    this.tableColumn = (tableName, row, column) => `${this.tableBodyColumns(tableName, row)}.column-${column}`;
 
     // Row actions selectors
     this.tableColumnActions = (tableName, row) => `${this.tableBodyColumns(tableName, row)}
@@ -64,7 +64,7 @@ class Statuses extends BOBasePage {
     this.deleteModalButtonYes = '#popup_ok';
 
     // Growl message
-    this.growlMessageDiv = '.growl-message';
+    this.growlMessageBlock = '.growl-message';
 
     // Pagination selectors
     this.paginationActiveLabel = tableName => `${this.gridForm(tableName)} ul.pagination.pull-right li.active a`;
@@ -184,11 +184,8 @@ class Statuses extends BOBasePage {
    * @param columnID {number} Id of column in table
    * @return {Promise<string>}
    */
-  async getTextColumn(page, tableName, row, columnName, columnID) {
-    if (columnName === 'send_email' || columnName === 'delivery' || columnName === 'invoice') {
-      return this.getAttributeContent(page, `${this.tableColumn(tableName, row, columnID)} a`, 'title');
-    }
-    return this.getTextContent(page, this.tableColumn(tableName, row, columnID));
+  getTextColumn(page, tableName, row, columnName) {
+    return this.getTextContent(page, this.tableColumn(tableName, row, columnName));
   }
 
   /**
@@ -279,15 +276,14 @@ class Statuses extends BOBasePage {
    * @param page {Page} Browser tab
    * @param tableName {string} Table name to get all rows column content
    * @param columnName {string} Column name of the value to return
-   * @param columnID {number} Column id of the table
    * @return {Promise<[]>}
    */
-  async getAllRowsColumnContent(page, tableName, columnName, columnID) {
+  async getAllRowsColumnContent(page, tableName, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page, tableName);
     const allRowsContentTable = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextColumn(page, tableName, i, columnName, columnID);
+      const rowContent = await this.getTextColumn(page, tableName, i, columnName);
       await allRowsContentTable.push(rowContent);
     }
 
@@ -347,42 +343,37 @@ class Statuses extends BOBasePage {
    * Get Value of column Displayed
    * @param page {Page} Browser tab
    * @param row {number} Row on table
-   * @param columnID {number} Column id to get status
+   * @param columnName {string} Column name to get status
    * @returns {Promise<boolean>}
    */
-  async getStatus(page, row, columnID) {
-    return this.elementVisible(page, this.tableColumnValidIcon(row, columnID), 100);
+  getStatus(page, row, columnName) {
+    return this.elementVisible(page, this.tableColumnValidIcon(row, columnName), 100);
   }
 
   /**
    * Quick edit toggle column value
    * @param page {Page} Browser tab
    * @param row {number} Row on table
-   * @param columnID {number} column id in table
+   * @param columnName {string} column name on table
    * @param valueWanted {boolean} True if we need to enable status
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
-  async setStatus(page, row, columnID, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.tableColumn('order', row, columnID), 2000);
+  async setStatus(page, row, columnName, valueWanted = true) {
+    const columnSelector = this.tableColumn('order', row, columnName);
 
-    if (await this.getStatus(page, row, columnID) !== valueWanted) {
-      await page.click(this.tableColumn('order', row, columnID));
+    await this.waitForVisibleSelector(page, columnSelector, 2000);
+
+    if (await this.getStatus(page, row, columnName) !== valueWanted) {
+      await page.click(columnSelector);
       await this.waitForVisibleSelector(
         page,
-        (valueWanted ? this.tableColumnValidIcon(row, columnID) : this.tableColumnNotValidIcon(row, columnID)),
+        (valueWanted ? this.tableColumnValidIcon(row, columnName) : this.tableColumnNotValidIcon(row, columnName)),
       );
+
       return true;
     }
-    return false;
-  }
 
-  /**
-   * Get growl message content
-   * @param page {Page} Browser tab
-   * @return {Promise<string>}
-   */
-  getGrowlMessageContent(page) {
-    return this.getTextContent(page, this.growlMessageDiv);
+    return false;
   }
 }
 

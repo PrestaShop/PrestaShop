@@ -61,8 +61,11 @@ const initMultistoreDropdown = () => {
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     onSelect(selectedItem: any, event: Event) {
       const contextUrlLetter = typeof selectedItem.groupName !== 'undefined' ? 's' : 'g';
-      const setContextUrl = `${window.location.href}&setShopContext=${contextUrlLetter}-${selectedItem.id}`;
-      window.location.href = setContextUrl;
+      window.location.href = ComponentsMap.multistoreHeader.setContextUrl(
+        window.location.href,
+        contextUrlLetter,
+        selectedItem.id,
+      );
 
       return true;
     },
