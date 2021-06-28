@@ -130,7 +130,7 @@ class AddSpecificPriceCommand
     /**
      * @param int $productId
      * @param string $reductionType
-     * @param float $reductionValue
+     * @param string $reductionValue
      * @param bool $includeTax
      * @param float $price
      * @param int $fromQuantity
@@ -140,7 +140,7 @@ class AddSpecificPriceCommand
     public function __construct(
         int $productId,
         string $reductionType,
-        float $reductionValue,
+        string $reductionValue,
         bool $includeTax,
         float $price,
         int $fromQuantity
