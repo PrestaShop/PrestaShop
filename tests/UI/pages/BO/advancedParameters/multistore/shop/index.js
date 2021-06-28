@@ -262,7 +262,7 @@ class ShopSettings extends BOBasePage {
    * Sort table
    * @param page {Page} Browser tab
    * @param sortBy {string} Column to sort with
-   * @param sortDirection {string} {string} Sort direction asc or desc
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {

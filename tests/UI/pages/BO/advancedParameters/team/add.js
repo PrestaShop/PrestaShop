@@ -71,7 +71,7 @@ class AddEmployee extends BOBasePage {
   }
 
   /**
-   * Cancel the page
+   * Cancel the creation or the update and return to the listing page
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
