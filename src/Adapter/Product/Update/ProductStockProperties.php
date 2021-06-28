@@ -31,6 +31,9 @@ use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 
+/**
+ * @todo: should be moved to PrestaShop\PrestaShop\Adapter\Product\Stock\Update
+ */
 class ProductStockProperties
 {
     /**
