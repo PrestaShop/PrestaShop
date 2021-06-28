@@ -26,6 +26,7 @@
 import AutoCompleteSearch from '@components/auto-complete-search';
 import EntitySearchInputMap from '@components/./entity-search-input-map';
 import ConfirmModal from '@components/modal';
+// @ts-ignore-next-line
 import Bloodhound from 'typeahead.js';
 
 /**
@@ -41,17 +42,17 @@ import Bloodhound from 'typeahead.js';
  * either override it in a theme or create your own entity type if you need to customize the behaviour.
  */
 export default class EntitySearchInput {
-  $entitySearchInputContainer: JQuery;
+  private $entitySearchInputContainer: JQuery;
 
-  $entitySearchInput: JQuery;
+  private $entitySearchInput: JQuery;
 
-  $selectionContainer: JQuery;
+  private $selectionContainer: JQuery;
 
-  options: OptionsObject;
+  private options: OptionsObject;
 
-  entityRemoteSource: any;
+  private entityRemoteSource: Bloodhound;
 
-  autoSearch: any;
+  private autoSearch?: AutoCompleteSearch;
 
   constructor($entitySearchInputContainer: JQuery, options: OptionsObject) {
     this.options = {};
@@ -64,36 +65,37 @@ export default class EntitySearchInput {
     this.buildRemoteSource();
     this.buildAutoCompleteSearch();
     this.buildActions();
-
-    return {
-      setValues: (values) => this.setValues(values),
-      getOption: (optionName) => this.options[optionName],
-      setOption: (optionName, value) => this.setOption(optionName, value),
-    };
   }
 
   /**
    * Force selected values, the input is an array of object that must match the format from
    * the API if you want the selected entities to be correctly displayed.
    *
-   * @param values {array}
+   * @param values {Array<any>}
    */
-  setValues(values: array): void {
+  setValues(values: any[]): void {
     this.clearSelectedItems();
     if (!values || values.length <= 0) {
       return;
     }
 
-    values.each((index: number, value: any) => {
+    values.forEach((index: number, value: any) => {
       this.appendSelectedItem(value);
     });
   }
 
   /**
-   * @param {string} optionName
-   * @param {*} value
+   * @param optionName
    */
-  setOption(optionName: string, value: any) {
+  getOption(optionName: string): any {
+    return this.options[optionName];
+  }
+
+  /**
+   * @param {string} optionName
+   * @param {unknown} value
+   */
+  setOption(optionName: string, value: unknown): void {
     this.options[optionName] = value;
 
     // Apply special options to components when needed
@@ -105,7 +107,7 @@ export default class EntitySearchInput {
   /**
    * @param {Object} options
    */
-  buildOptions(options: OptionsObject) {
+  private buildOptions(options: OptionsObject): void {
     const inputOptions = options || {};
     const defaultOptions: OptionsObject = {
       prototypeTemplate: undefined,
@@ -154,7 +156,7 @@ export default class EntitySearchInput {
    * @param {Object} inputOptions
    * @param {*|undefined} defaultOption
    */
-  initOption(optionName: string, inputOptions: OptionsObject, defaultOption: any = undefined) {
+  private initOption(optionName: string, inputOptions: OptionsObject, defaultOption: any = undefined): void {
     if (Object.prototype.hasOwnProperty.call(inputOptions, optionName)) {
       this.options[optionName] = inputOptions[optionName];
     } else if (typeof this.$entitySearchInputContainer.data(optionName) !== 'undefined') {
@@ -164,7 +166,7 @@ export default class EntitySearchInput {
     }
   }
 
-  buildActions() {
+  private buildActions(): void {
     // Always check for click even if it is useless when allowDelete options is false, it can be changed dynamically
     $(this.$selectionContainer).on('click', this.options.entityDeleteSelector, (event) => {
       if (!this.options.allowDelete) {
@@ -172,14 +174,15 @@ export default class EntitySearchInput {
       }
 
       const $entity = $(event.target).closest(this.options.entityItemSelector);
-      const modal = new ConfirmModal(
+
+      const modal = new (ConfirmModal as any)(
         {
           id: this.options.removeModalId,
           confirmTitle: this.options.removeModalTitle,
-          confirmMessage: this.options.removeModalMessage,
-          confirmButtonLabel: this.options.removeModalApply,
           closeButtonLabel: this.options.removeModalCancel,
+          confirmButtonLabel: this.options.removeModalApply,
           confirmButtonClass: this.options.confirmButtonClass,
+          confirmMessage: this.options.removeModalMessage,
           closable: true,
         },
         () => {
@@ -204,7 +207,7 @@ export default class EntitySearchInput {
   /**
    * Build the AutoCompleteSearch component
    */
-  buildAutoCompleteSearch(): void {
+  private buildAutoCompleteSearch(): void {
     const autoSearchConfig = {
       source: this.entityRemoteSource,
       dataLimit: this.options.dataLimit,
@@ -220,8 +223,7 @@ export default class EntitySearchInput {
           return `<div class="search-suggestion">${entityImage}${entity.name}</div>`;
         },
       },
-      /* eslint-disable-next-line no-unused-vars */
-      onSelect: (selectedItem: any, event: JQueryEventObject) => {
+      onSelect: (selectedItem: any) => {
         // When limit is one we cannot select additional elements so we replace them instead
         if (this.options.dataLimit === 1) {
           return this.replaceSelectedItem(selectedItem);
@@ -246,7 +248,7 @@ export default class EntitySearchInput {
    *
    * @returns {Bloodhound}
    */
-  buildRemoteSource(): void {
+  private buildRemoteSource(): void {
     const sourceConfig = {
       mappingValue: this.options.mappingValue,
       remoteUrl: this.options.remoteUrl,
@@ -275,7 +277,7 @@ export default class EntitySearchInput {
   /**
    * Removes selected items.
    */
-  clearSelectedItems(): void {
+  private clearSelectedItems(): void {
     this.$selectionContainer.empty();
   }
 
@@ -286,7 +288,7 @@ export default class EntitySearchInput {
    * @param selectedItem {Object}
    * @returns {boolean}
    */
-  replaceSelectedItem(selectedItem: any): boolean {
+  private replaceSelectedItem(selectedItem: any): boolean {
     this.clearSelectedItems();
     this.addSelectedContentToContainer(selectedItem);
 
@@ -300,7 +302,7 @@ export default class EntitySearchInput {
    * @param selectedItem {Object}
    * @returns {boolean}
    */
-  appendSelectedItem(selectedItem: any): boolean {
+  private appendSelectedItem(selectedItem: any): boolean {
     // If collection length is up to limit, return
     const $entityItems = $(this.options.entityItemSelector, this.$selectionContainer);
 
@@ -319,9 +321,9 @@ export default class EntitySearchInput {
    *
    * @param selectedItem {Object}
    */
-  addSelectedContentToContainer(selectedItem: any) {
+  private addSelectedContentToContainer(selectedItem: any): void {
     const newIndex = this.$selectionContainer.children().length;
-    const selectedHtml = this.renderSelected(selectedItem, newIndex);
+    const selectedHtml = this.renderSelected(selectedItem, BigInt(newIndex));
 
     const $selectedNode = $(selectedHtml);
     const $hiddenInput = $('input[type="hidden"]', $selectedNode);
@@ -344,11 +346,11 @@ export default class EntitySearchInput {
    * no need to include the hidden input as it is automatically handled in addSelectedContentToContainer
    *
    * @param {Object} entity
-   * @param {int} index
+   * @param {bigint} index
    *
    * @returns {string}
    */
-  renderSelected(entity: any, index: int): string {
+  private renderSelected(entity: any, index: bigint): string {
     let template = this.options.prototypeTemplate.replace(new RegExp(this.options.prototypeIndex, 'g'), index);
 
     Object.keys(this.options.prototypeMapping).forEach((fieldName) => {

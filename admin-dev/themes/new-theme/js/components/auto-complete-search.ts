@@ -29,26 +29,35 @@
  * functions which are, of course, overridable.
  */
 
+type DisplayFunction = (item: any) => string;
 interface TypeaheadJQueryDataset extends Twitter.Typeahead.Dataset<any> {
-  dataLimit: number;
+  display: string | DisplayFunction;
   value: string;
-  onSelect: (
-    selectedItem: unknown,
-    event: JQueryEventObject,
-    searchInput: JQuery
-  ) => boolean;
-  onClose: (event: Event, searchInput: JQuery) => void;
+  limit: number;
+  dataLimit: number;
   templates: any;
 }
 
+interface TypeaheadJQueryOptions extends Twitter.Typeahead.Options {
+  minLength: number,
+  highlight: boolean,
+  hint: boolean,
+  onSelect: (
+    selectedItem: any,
+    event: JQueryEventObject,
+    searchInput: JQuery
+  ) => boolean;
+  onClose: (event: JQueryEventObject, searchInput: JQuery) => void;
+}
+
 export default class AutoCompleteSearch {
-  $searchInput: JQuery;
+  private $searchInput: JQuery;
 
-  searchInputId: string;
+  private searchInputId: string;
 
-  config: Twitter.Typeahead.Options;
+  private config: TypeaheadJQueryOptions;
 
-  dataSetConfig: TypeaheadJQueryDataset;
+  private dataSetConfig: TypeaheadJQueryDataset;
 
   constructor($searchInput: JQuery, config: Record<string, unknown>) {
     this.$searchInput = $searchInput;
@@ -60,28 +69,18 @@ export default class AutoCompleteSearch {
       minLength: 2,
       highlight: true,
       hint: false,
-<<<<<<< HEAD:admin-dev/themes/new-theme/js/components/auto-complete-search.ts
-      /* eslint-disable @typescript-eslint/no-unused-vars */
-      onSelect(
-        selectedItem: unknown,
+      onSelect: (
+        selectedItem: any,
         event: JQueryEventObject,
-        searchInput: JQuery
-      ) {
+        searchInput: JQuery,
+      ): boolean => {
         searchInput.typeahead('val', selectedItem[this.dataSetConfig.value]);
         return true;
       },
-      /* eslint-disable-next-line no-unused-vars */
       onClose(
         event: Event,
-        searchInput: JQuery
+        searchInput: JQuery,
       ) {
-=======
-      onSelect(selectedItem, event, searchInput) {
-        searchInput.typeahead('val', selectedItem[this.dataSetConfig.value]);
-        return true;
-      },
-      onClose(event, searchInput) {
->>>>>>> ddef618d36 (Small refacto of options building in entity search, introduce som selector mapping, fix lint in autocomplete):admin-dev/themes/new-theme/js/components/auto-complete-search.js
         searchInput.typeahead('val', '');
         return true;
       },
@@ -107,7 +106,7 @@ export default class AutoCompleteSearch {
         let displaySuggestion: Record<string, string> | string = item;
 
         if (typeof this.dataSetConfig.display === 'function') {
-          this.dataSetConfig.display((item as unknown) as string);
+          this.dataSetConfig.display(item);
         } else if (
           Object.prototype.hasOwnProperty.call(
             item,
@@ -142,15 +141,15 @@ export default class AutoCompleteSearch {
   /**
    * Build the typeahead component based on provided configuration.
    */
-  buildTypeahead(): void {
+  private buildTypeahead(): void {
     /* eslint-disable */
     this.$searchInput
       .typeahead(this.config, this.dataSetConfig)
       .bind('typeahead:select', (e: any, selectedItem: any) =>
-        this.dataSetConfig.onSelect(selectedItem, e, this.$searchInput)
+        this.config.onSelect(selectedItem, e, this.$searchInput)
       )
       .bind('typeahead:close', (e: any) => {
-        this.dataSetConfig.onClose(e, this.$searchInput);
+        this.config.onClose(e, this.$searchInput);
       });
     /* eslint-enable */
   }
