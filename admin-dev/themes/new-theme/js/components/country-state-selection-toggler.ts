@@ -106,7 +106,7 @@ export default class CountryStateSelectionToggler {
   toggle(): void {
     this.$stateSelectionBlock.toggleClass(
       'd-none',
-      !this.$countryStateSelector.find('option').length,
+      this.$countryStateSelector.find('option').length === 0,
     );
   }
 }
