@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotAddStockAvailableException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotDuplicateStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
@@ -86,23 +85,6 @@ class StockAvailableRepository extends AbstractObjectModelRepository
     {
         $this->stockAvailableValidator->validate($stockAvailable);
         $this->updateObjectModel($stockAvailable, CannotUpdateStockAvailableException::class);
-    }
-
-    /**
-     * @param StockAvailable $stockAvailable
-     *
-     * @return StockAvailable
-     */
-    public function duplicate(StockAvailable $stockAvailable, ProductId $productId, ?CombinationId $combinationId = null): StockAvailable
-    {
-        $newStockAvailable = clone $stockAvailable;
-        unset($newStockAvailable->id);
-        $newStockAvailable->id_product = $productId->getValue();
-        $newStockAvailable->id_product_attribute = $combinationId ? $combinationId->getValue() : CombinationId::NO_COMBINATION;
-
-        $this->addObjectModel($newStockAvailable, CannotDuplicateStockAvailableException::class);
-
-        return $newStockAvailable;
     }
 
     /**

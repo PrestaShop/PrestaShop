@@ -34,8 +34,6 @@ use Image;
 use Language;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
@@ -64,11 +62,6 @@ class ProductDuplicator
     private $productRepository;
 
     /**
-     * @var StockAvailableRepository
-     */
-    private $stockAvailableRepository;
-
-    /**
      * @var HookDispatcherInterface
      */
     private $hookDispatcher;
@@ -95,7 +88,6 @@ class ProductDuplicator
 
     /**
      * @param ProductRepository $productRepository
-     * @param StockAvailableRepository $stockAvailableRepository
      * @param HookDispatcherInterface $hookDispatcher
      * @param bool $isSearchIndexationOn
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
@@ -104,7 +96,6 @@ class ProductDuplicator
      */
     public function __construct(
         ProductRepository $productRepository,
-        StockAvailableRepository $stockAvailableRepository,
         HookDispatcherInterface $hookDispatcher,
         bool $isSearchIndexationOn,
         MultistoreContextCheckerInterface $multistoreContextChecker,
@@ -117,7 +108,6 @@ class ProductDuplicator
         $this->multistoreContextChecker = $multistoreContextChecker;
         $this->translator = $translator;
         $this->stringModifier = $stringModifier;
-        $this->stockAvailableRepository = $stockAvailableRepository;
     }
 
     /**
@@ -142,7 +132,6 @@ class ProductDuplicator
         $newProductId = (int) $newProduct->id;
 
         $this->duplicateRelations($oldProductId, $newProductId);
-        $this->duplicateStock($product, $newProduct);
 
         if ($product->hasAttributes()) {
             $this->updateDefaultAttribute($newProductId, $oldProductId);
@@ -590,19 +579,6 @@ class ProductDuplicator
             [$oldProductId, $newProductId],
             CannotDuplicateProductException::FAILED_DUPLICATE_ATTACHMENT_ASSOCIATION
         );
-    }
-
-    /**
-     * @param Product $oldProduct
-     */
-    private function duplicateStock(Product $oldProduct, Product $newProduct): void
-    {
-        $oldProductId = new ProductId((int) $oldProduct->id);
-        $newProductId = new ProductId((int) $newProduct->id);
-        $productStockAvailable = $this->stockAvailableRepository->getForProduct($oldProductId);
-
-        //@todo: combinational stockAvailables must be done in Product::duplicateAttributes (we need to know old and new combinationId)
-        $this->stockAvailableRepository->duplicate($productStockAvailable, $newProductId);
     }
 
     /**

@@ -788,7 +788,6 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
-            - '@prestashop.adapter.product.stock.repository.stock_available_repository'
             - '@prestashop.core.hook.dispatcher'
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_SEARCH_INDEXATION')"
             - '@prestashop.adapter.shop.context'
