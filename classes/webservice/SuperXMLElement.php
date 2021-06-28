@@ -24,9 +24,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-interface WebserviceOutputInterface
+class SuperXMLElement extends \SimpleXMLElement
 {
-    public function getContentType();
+    public function addChildCData(string $name, ?string $value = null): SuperXMLElement
+    {
+        $new = $this->addChild($name);
+        if ($value !== null) {
+            $base = dom_import_simplexml($new);
+            $docOwner = $base->ownerDocument;
+            $base->appendChild($docOwner->createCDATASection($value));
+        }
 
-    public function renderNode($apiNode);
+        return $new;
+    }
 }
