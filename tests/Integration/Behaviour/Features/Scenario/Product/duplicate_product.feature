@@ -111,6 +111,28 @@ Feature: Duplicate product from Back Office (BO).
     And product product1 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product2    |
+    And I update product "product1" stock with following information:
+      | minimal_quantity              | 12           |
+      | location                      | dtc          |
+      | low_stock_threshold           | 42           |
+      | low_stock_alert               | true         |
+      | available_now_labels[en-US]   | get it now   |
+      | available_later_labels[en-US] | too late bro |
+      | available_date                | 1969-07-16   |
+    And product "product1" should have following stock information:
+      | minimal_quantity    | 12         |
+      | location            | dtc        |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "product1" localized "available_now_labels" should be:
+      | locale | value      |
+      | en-US  | get it now |
+      | fr-FR  |            |
+    And product "product1" localized "available_later_labels" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
 
   Scenario: I duplicate product
 #todo: add specific prices & priorities, test combinations, packs
@@ -198,5 +220,19 @@ Feature: Duplicate product from Back Office (BO).
     And product copy_of_product1 should have identical customization fields to product1
     And product copy_of_product1 should have 1 customizable text field
     And product copy_of_product1 should have 0 customizable file fields
-#@todo: assert stock info
+    And product "copy_of_product1" should have following stock information:
+      | minimal_quantity    | 12         |
+      | location            | dtc        |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "copy_of_product1" localized "available_now_labels" should be:
+      | locale | value      |
+      | en-US  | get it now |
+      | fr-FR  |            |
+    And product "copy_of_product1" localized "available_later_labels" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
+
 #@todo: add tests for other type of products Pack, Virtual, Combinations
