@@ -39,6 +39,11 @@ const findAllUnwantedChars = /(?:(?!^-\d+))([^\d]+)/g;
 export const transform = (value) => {
   let val = value;
   const unwantedChars = val.match(findAllUnwantedChars);
+
+  if (unwantedChars === null) {
+    return val;
+  }
+
   if (unwantedChars.length > 1) {
     const unique = [...new Set(unwantedChars)];
     if (unique.length === 1) {
@@ -68,5 +73,6 @@ export default (selector) => {
     (event) => {
       clearNumberInputValue(event, selector);
     },
+    true,
   );
 };
