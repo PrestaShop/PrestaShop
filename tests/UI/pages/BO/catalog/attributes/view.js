@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * View attribute page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class ViewAttribute extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on view attribute page
+   */
   constructor() {
     super();
 
@@ -79,7 +88,7 @@ class ViewAttribute extends BOBasePage {
 
   /**
    * Go to add new value page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewValuePage(page) {
@@ -89,7 +98,7 @@ class ViewAttribute extends BOBasePage {
   /* Filter methods */
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -100,8 +109,8 @@ class ViewAttribute extends BOBasePage {
   }
 
   /**
-   * Get Number of attribute values
-   * @param page
+   * Get number of attribute values
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -110,7 +119,7 @@ class ViewAttribute extends BOBasePage {
 
   /**
    * Reset and get number of attribute values
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -120,9 +129,9 @@ class ViewAttribute extends BOBasePage {
 
   /**
    * Filter table
-   * @param page
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to put on filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterBy, value) {
@@ -133,9 +142,9 @@ class ViewAttribute extends BOBasePage {
   /* Column methods */
   /**
    * Get text column from table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Column to get text value
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -169,8 +178,8 @@ class ViewAttribute extends BOBasePage {
 
   /**
    * Go to edit value page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async goToEditValuePage(page, row) {
@@ -179,8 +188,8 @@ class ViewAttribute extends BOBasePage {
 
   /**
    * Delete value
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<string>}
    */
   async deleteValue(page, row) {
@@ -200,7 +209,7 @@ class ViewAttribute extends BOBasePage {
 
   /**
    * Go back to list of attributes
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    * @constructor
    */
@@ -210,9 +219,9 @@ class ViewAttribute extends BOBasePage {
 
   /**
    * Change value position
-   * @param page
-   * @param actualPosition
-   * @param newPosition
+   * @param page {Page} Browser tab
+   * @param actualPosition {number} Value of actual position
+   * @param newPosition {value} Value of new position
    * @return {Promise<string>}
    */
   async changePosition(page, actualPosition, newPosition) {
@@ -228,7 +237,7 @@ class ViewAttribute extends BOBasePage {
   /* Bulk actions methods */
   /**
    * Bulk delete attributes
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async bulkDeleteValues(page) {
@@ -261,7 +270,7 @@ class ViewAttribute extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -270,8 +279,8 @@ class ViewAttribute extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -283,7 +292,7 @@ class ViewAttribute extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -294,7 +303,7 @@ class ViewAttribute extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -306,9 +315,9 @@ class ViewAttribute extends BOBasePage {
   /* Sort functions */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -341,8 +350,8 @@ class ViewAttribute extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name to get all rows content
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, columnName) {

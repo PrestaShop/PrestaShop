@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add catalog price rule page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddCatalogPriceRule extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add price rule page
+   */
   constructor() {
     super();
 
@@ -26,8 +35,8 @@ class AddCatalogPriceRule extends BOBasePage {
   /* Methods */
   /**
    * Create/edit price rule
-   * @param page
-   * @param priceRuleData
+   * @param page {Page} Browser tab
+   * @param priceRuleData {priceRuleData} Data to set on new/edit catalog price rule form
    * @returns {Promise<string>}
    */
   async setCatalogPriceRule(page, priceRuleData) {
@@ -46,6 +55,7 @@ class AddCatalogPriceRule extends BOBasePage {
     await this.selectByVisibleText(page, this.reductionTaxSelect, priceRuleData.reductionTax);
     await this.setValue(page, this.reductionInput, priceRuleData.reduction.toString());
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getAlertSuccessBlockContent(page);
   }
 }

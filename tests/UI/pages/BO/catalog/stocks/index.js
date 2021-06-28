@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * stocks page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Stocks extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add currency page
+   */
   constructor() {
     super();
 
@@ -19,6 +28,7 @@ class Stocks extends BOBasePage {
     this.searchForm = 'form.search-form';
     this.searchInput = `${this.searchForm} input.input`;
     this.searchButton = `${this.searchForm} button.search-button`;
+
     // tags
     this.searchTagsList = 'form.search-form div.tags-wrapper span.tag';
     this.searchTagsListCloseSpan = `${this.searchTagsList} i`;
@@ -27,7 +37,6 @@ class Stocks extends BOBasePage {
     this.selectAllCheckbox = '#bulk-action + i';
     this.bulkEditQuantityInput = 'div.bulk-qty input';
     this.applyNewQuantityButton = 'button.update-qty';
-
     this.productList = 'table.table';
     this.productRows = `${this.productList} tbody tr`;
     this.productRow = row => `${this.productRows}:nth-child(${row})`;
@@ -37,6 +46,7 @@ class Stocks extends BOBasePage {
     this.productRowPhysicalColumn = row => `${this.productRow(row)} td:nth-child(5)`;
     this.productRowReservedColumn = row => `${this.productRow(row)} td:nth-child(6)`;
     this.productRowAvailableColumn = row => `${this.productRow(row)} td:nth-child(7)`;
+
     // Quantity column
     this.productRowQuantityColumn = row => `${this.productRow(row)} td.qty-spinner`;
     this.productRowQuantityColumnInput = row => `${this.productRowQuantityColumn(row)} div.edit-qty input`;
@@ -51,6 +61,7 @@ class Stocks extends BOBasePage {
     this.filterStatusEnabledLabel = '#enable + label';
     this.filterStatusDisabledLabel = '#disable + label';
     this.filterStatusAllLabel = '#all + label';
+
     // Filter category
     this.filterCategoryDiv = `${this.filtersContainerDiv} div.filter-categories`;
     this.filterCategoryExpandButton = `${this.filterCategoryDiv} button:nth-child(1)`;
@@ -70,7 +81,7 @@ class Stocks extends BOBasePage {
 
   /**
    * Change Tab to Movements in Stock Page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToSubTabMovements(page) {
@@ -80,7 +91,7 @@ class Stocks extends BOBasePage {
 
   /**
    * Get the total number of products
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getTotalNumberOfProducts(page) {
@@ -105,7 +116,7 @@ class Stocks extends BOBasePage {
 
   /**
    * Get the number of lines in the main table
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfProductsFromList(page) {
@@ -116,7 +127,7 @@ class Stocks extends BOBasePage {
 
   /**
    * Get number of products pages stocks page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getProductsPagesLength(page) {
@@ -125,8 +136,8 @@ class Stocks extends BOBasePage {
 
   /**
    * Paginate to a product page
-   * @param page
-   * @param pageNumber
+   * @param page {Page} Browser tab
+   * @param pageNumber {number} Value of page to go
    * @return {Promise<void>}
    */
   async paginateTo(page, pageNumber = 1) {
@@ -139,7 +150,7 @@ class Stocks extends BOBasePage {
 
   /**
    * Remove all filter tags in the basic search input
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetFilter(page) {
@@ -156,8 +167,8 @@ class Stocks extends BOBasePage {
 
   /**
    * Filter by a word
-   * @param page
-   * @param value
+   * @param page {Page} Browser tab
+   * @param value {string} Value to st on filter input
    * @returns {Promise<void>}
    */
   async simpleFilter(page, value) {
@@ -170,10 +181,10 @@ class Stocks extends BOBasePage {
   }
 
   /**
-   * get text from column in table
-   * @param page
-   * @param row
-   * @param column, only 3 column are implemented : name, reference, supplier
+   * Get text from column in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column to get text value
    * @return {Promise<integer|string>}
    */
   async getTextColumnFromTableStocks(page, row, column) {
@@ -197,8 +208,8 @@ class Stocks extends BOBasePage {
 
   /**
    * Get stocks quantities for a product
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<{reserved: (integer), available: (integer), physical: (integer)}>}
    */
   async getStockQuantityForProduct(page, row) {
@@ -211,46 +222,53 @@ class Stocks extends BOBasePage {
 
   /**
    * Update Stock value by setting input value
-   * @param page
-   * @param row, row in table
-   * @param value, value to add/subtract from quantity
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param quantity {number} Value to add/subtract from quantity
    * @returns {Promise<string>}
    */
-  async updateRowQuantityWithInput(page, row, value) {
-    await this.setValue(page, this.productRowQuantityColumnInput(row), value.toString());
+  async updateRowQuantityWithInput(page, row, quantity) {
+    await this.setValue(page, this.productRowQuantityColumnInput(row), quantity);
+
     // Wait for check button before click
     await this.waitForSelectorAndClick(page, this.productRowQuantityUpdateButton(row));
+
     // Wait for alert-Box after update quantity and close alert-Box
     await this.waitForVisibleSelector(page, this.alertBoxTextSpan);
     const textContent = await this.getTextContent(page, this.alertBoxTextSpan);
     await page.click(this.alertBoxButtonClose);
+
     return textContent;
   }
 
   /**
-   * Bulk Edit quantity by setting input value
-   * @param page
-   * @param value
+   * Bulk edit quantity by setting input value
+   * @param page {Page} Browser tab
+   * @param quantity {number} Value of quantity to set on input
    * @returns {Promise<string>}
    */
-  async bulkEditQuantityWithInput(page, value) {
+  async bulkEditQuantityWithInput(page, quantity) {
     // Select All products
     await page.$eval(this.selectAllCheckbox, el => el.click());
+
     // Set value in input
-    await this.setValue(page, this.bulkEditQuantityInput, value.toString());
+    await this.setValue(page, this.bulkEditQuantityInput, quantity);
+
     // Wait for check button before click
     await page.click(this.applyNewQuantityButton);
+
     // Wait for alert-Box after update quantity and close alert-Box
     await this.waitForVisibleSelector(page, this.alertBoxTextSpan);
     const textContent = await this.getTextContent(page, this.alertBoxTextSpan);
     await page.click(this.alertBoxButtonClose);
+
     return textContent;
   }
 
   /**
    * Filter stocks by product's status
-   * @param page
-   * @param status
+   * @param page {Page} Browser tab
+   * @param status {string} Value of status to set on filter
    * @return {Promise<void>}
    */
   async filterByStatus(page, status) {
@@ -272,8 +290,8 @@ class Stocks extends BOBasePage {
 
   /**
    * Filter stocks by product's category
-   * @param page
-   * @param category
+   * @param page {Page} Browser tab
+   * @param category {string} Category name to set on filter input
    * @return {Promise<void>}
    */
   async filterByCategory(page, category) {
@@ -287,8 +305,8 @@ class Stocks extends BOBasePage {
 
   /**
    * Open / close advanced filter
-   * @param page
-   * @param toOpen
+   * @param page {Page} Browser tab
+   * @param toOpen {boolean} True if we need to open advanced filter, false if not
    * @return {Promise<void>}
    */
   async openCloseAdvancedFilter(page, toOpen = true) {

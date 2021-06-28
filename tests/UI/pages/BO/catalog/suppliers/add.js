@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add supplier page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddSupplier extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add supplier page
+   */
   constructor() {
     super();
 
@@ -29,6 +38,7 @@ class AddSupplier extends BOBasePage {
     this.metaDescriptionTextarea = id => `#supplier_meta_description_${id}`;
     this.metaKeywordsInput = id => `#supplier_meta_keyword_${id}-tokenfield`;
     this.statusToggleInput = toggle => `#supplier_is_enabled_${toggle}`;
+
     // Selectors for Meta keywords
     this.taggableFieldDiv = lang => `div.input-group div.js-locale-${lang}`;
     this.deleteKeywordLink = lang => `${this.taggableFieldDiv(lang)} a.close`;
@@ -41,13 +51,14 @@ class AddSupplier extends BOBasePage {
 
   /**
    * Create or edit Supplier
-   * @param page
-   * @param supplierData
+   * @param page {Page} Browser tab
+   * @param supplierData {supplierData} Data to set on new/edit supplier form
    * @return {Promise<void>}
    */
   async createEditSupplier(page, supplierData) {
     // Fill Name
     await this.setValue(page, this.nameInput, supplierData.name);
+
     // Fill Address information
     await this.setValue(page, this.homePhoneInput, supplierData.homePhone);
     await this.setValue(page, this.mobilePhoneInput, supplierData.mobilePhone);
@@ -65,6 +76,7 @@ class AddSupplier extends BOBasePage {
     await this.setValueOnTinymceInput(page, this.descriptionIFrame(1), supplierData.description);
     await this.setValue(page, this.metaTitleInput(1), supplierData.metaTitle);
     await this.setValue(page, this.metaDescriptionTextarea(1), supplierData.metaDescription);
+
     // delete Keywords and other new ones
     await this.deleteKeywords(page, 'en');
     await this.addKeywords(page, supplierData.metaKeywords, 1);
@@ -74,6 +86,7 @@ class AddSupplier extends BOBasePage {
     await this.setValueOnTinymceInput(page, this.descriptionIFrame(2), supplierData.descriptionFr);
     await this.setValue(page, this.metaTitleInput(2), supplierData.metaTitleFr);
     await this.setValue(page, this.metaDescriptionTextarea(2), supplierData.metaDescriptionFr);
+
     // delete Keywords and other new ones
     await this.deleteKeywords(page, 'fr');
     await this.addKeywords(page, supplierData.metaKeywords, 2);
@@ -88,8 +101,8 @@ class AddSupplier extends BOBasePage {
 
   /**
    * Delete all keywords
-   * @param page
-   * @param lang, to specify which input to empty
+   * @param page {Page} Browser tab
+   * @param lang {string} To specify which input to empty
    * @return {Promise<void>}
    */
   async deleteKeywords(page, lang = 'en') {
@@ -104,9 +117,9 @@ class AddSupplier extends BOBasePage {
 
   /**
    * Add keywords
-   * @param page
-   * @param keywords, array of keywords
-   * @param idLang, to choose which lang (1 for en, 2 for fr)
+   * @param page {Page} Browser tab
+   * @param keywords {array} Array of keywords
+   * @param idLang {number} To choose which lang (1 for en, 2 for fr)
    * @return {Promise<void>}
    */
   async addKeywords(page, keywords, idLang = 1) {
@@ -119,9 +132,9 @@ class AddSupplier extends BOBasePage {
   }
 
   /**
-   * change language for description and meta selectors
-   * @param page
-   * @param lang
+   * Change language for description and meta selectors
+   * @param page {Page} Browser tab
+   * @param lang {string} To choose which language ('en' or 'fr')
    * @return {Promise<void>}
    */
   async changeLanguageForSelectors(page, lang = 'en') {
@@ -130,6 +143,7 @@ class AddSupplier extends BOBasePage {
       page.click(this.descriptionLangNavItemLink(lang)),
       this.waitForVisibleSelector(page, `${this.descriptionLangNavItemLink(lang)}.active`),
     ]);
+
     // Change language for meta selectors
     await Promise.all([
       page.click(this.metaTitleLangButton),
