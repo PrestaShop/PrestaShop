@@ -113,6 +113,7 @@ Feature: Duplicate product from Back Office (BO).
       | redirect_target | product2    |
     And I update product "product1" stock with following information:
       | minimal_quantity              | 12           |
+      | quantity                      | 10           |
       | location                      | dtc          |
       | low_stock_threshold           | 42           |
       | low_stock_alert               | true         |
@@ -121,6 +122,7 @@ Feature: Duplicate product from Back Office (BO).
       | available_date                | 1969-07-16   |
     And product "product1" should have following stock information:
       | minimal_quantity    | 12         |
+      | quantity            | 10         |
       | location            | dtc        |
       | low_stock_threshold | 42         |
       | low_stock_alert     | true       |
@@ -222,7 +224,8 @@ Feature: Duplicate product from Back Office (BO).
     And product copy_of_product1 should have 0 customizable file fields
     And product "copy_of_product1" should have following stock information:
       | minimal_quantity    | 12         |
-      | location            | dtc        |
+      | quantity            | 0          |
+      | location            |            |
       | low_stock_threshold | 42         |
       | low_stock_alert     | true       |
       | available_date      | 1969-07-16 |
