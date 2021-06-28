@@ -62,8 +62,8 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
     {
         $specificPrice = $this->specificPriceRepository->get($query->getSpecificPriceId());
 
-        $dateFrom = DateTimeUtil::NULL_VALUE !== $specificPrice->from ? new DateTime($specificPrice->from) : null;
-        $dateTo = DateTimeUtil::NULL_VALUE !== $specificPrice->to ? new DateTime($specificPrice->to) : null;
+        $dateFrom = DateTimeUtil::NULL_DATETIME !== $specificPrice->from ? new DateTime($specificPrice->from) : null;
+        $dateTo = DateTimeUtil::NULL_DATETIME !== $specificPrice->to ? new DateTime($specificPrice->to) : null;
 
         return new SpecificPriceForEditing(
             (int) $specificPrice->id,

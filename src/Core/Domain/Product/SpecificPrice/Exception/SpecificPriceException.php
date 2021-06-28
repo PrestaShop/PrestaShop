@@ -23,25 +23,15 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotSetSpecificPricePrioritiesException as CannotSetProductSpecificPricePrioritiesException;
-
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
-        CannotSetSpecificPricePrioritiesException::class
-    ),
-    E_USER_DEPRECATED
-);
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
 /**
- * @deprecated since 1.7.9.0 and will be removed in the next major version.
- * @see CannotSetProductSpecificPricePrioritiesException
+ * Base exception for SpecificPrice subdomain
  */
-class CannotSetSpecificPricePrioritiesException extends SpecificPriceException
+class SpecificPriceException extends ProductException
 {
 }

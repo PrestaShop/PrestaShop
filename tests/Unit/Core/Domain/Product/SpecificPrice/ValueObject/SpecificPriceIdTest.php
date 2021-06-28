@@ -23,23 +23,53 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler;
+namespace Tests\Unit\Core\Domain\Product\SpecificPrice\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
+use Generator;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 
-/**
- * Interface for handling AddProductSpecificPriceCommand command
- */
-interface AddProductSpecificPriceHandlerInterface
+class SpecificPriceIdTest extends TestCase
 {
     /**
-     * @param AddProductSpecificPriceCommand $command
+     * @dataProvider getValidValues
      *
-     * @return SpecificPriceId
+     * @param int $value
      */
-    public function handle(AddProductSpecificPriceCommand $command): SpecificPriceId;
+    public function testItIsSuccessfullyConstructed(int $value): void
+    {
+        $specificPriceId = new SpecificPriceId($value);
+
+        Assert::assertSame($value, $specificPriceId->getValue());
+    }
+
+    /**
+     * @dataProvider getInvalidValues
+     *
+     * @param int $value
+     */
+    public function testItThrowsExceptionWhenInvalidValueIsProvided(int $value): void
+    {
+        $this->expectException(SpecificPriceConstraintException::class);
+
+        new SpecificPriceId($value);
+    }
+
+    public function getValidValues(): Generator
+    {
+        yield [1];
+        yield [10];
+        yield [5000000001];
+    }
+
+    public function getInvalidValues(): Generator
+    {
+        yield [0];
+        yield [-1];
+        yield [-999];
+    }
 }

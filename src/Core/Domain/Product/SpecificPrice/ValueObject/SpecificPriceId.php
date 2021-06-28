@@ -23,24 +23,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId as ProductSpecificPriceId;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
-        SpecificPriceId::class
-    ),
-    E_USER_DEPRECATED
-);
-
-/**
- * @deprecated since 1.7.9.0 and will be removed in the next major version.
- * @see ProductSpecificPriceId
- */
 class SpecificPriceId
 {
     /**
@@ -76,7 +64,7 @@ class SpecificPriceId
      */
     private function assertIsGreaterThanZero(int $value): void
     {
-        if (!is_int($value) || 0 >= $value) {
+        if (0 >= $value) {
             throw new SpecificPriceConstraintException(sprintf('Invalid specific price id "%s".', $value), SpecificPriceConstraintException::INVALID_ID);
         }
     }
