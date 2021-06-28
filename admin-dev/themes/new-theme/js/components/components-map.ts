@@ -59,4 +59,10 @@ export default {
     select: '.translation-field',
     specificLocale: (selectedLocale: string): string => `.nav-item a[data-locale="${selectedLocale}"]`,
   },
+  entitySearchInput: {
+    searchInputSelector: '.entity-search-input',
+    listSelector: '.entities-list',
+    entityItemSelector: 'li.entity-item',
+    entityDeleteSelector: '.entity-item-delete',
+  },
 };

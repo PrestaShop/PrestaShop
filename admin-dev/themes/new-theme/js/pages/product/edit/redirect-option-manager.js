@@ -24,7 +24,7 @@
  */
 
 import EntitySearchInput from '@components/entity-search-input';
-import EntitySearchInputMap from '@components/./entity-search-input-map';
+import ComponentsMap from '@components/components-map';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 
@@ -47,7 +47,7 @@ export default class RedirectOptionManager {
     this.eventEmitter = eventEmitter;
     this.$redirectTypeInput = $(ProductMap.seo.redirectOption.typeInput);
     this.$redirectTargetInput = $(ProductMap.seo.redirectOption.targetInput);
-    this.$searchInput = $(EntitySearchInputMap.searchInputSelector, this.$redirectTargetRow);
+    this.$searchInput = $(ComponentsMap.entitySearchInput.searchInputSelector, this.$redirectTargetRow);
     this.$redirectTargetRow = this.$redirectTargetInput.closest(ProductMap.seo.redirectOption.groupSelector);
     this.$redirectTargetLabel = $(ProductMap.seo.redirectOption.labelSelector, this.$redirectTargetRow).first();
     this.$redirectTargetHint = $(ProductMap.seo.redirectOption.helpSelector, this.$redirectTargetRow);
