@@ -34,7 +34,7 @@ Release Notes for PrestaShop 1.7
   - Improvement:
     - #25121: Update translations catalogue with Welcome module wordings (by @sowbiba)
     - #25039: Disable product V2 page when multistore is used (by @matthieu-rolland)
-    - #24025: Add SubmittableInput successful and error states (by @NeOMakinG)
+    - #24025: Add SubmittableInput successfull and error states (by @NeOMakinG)
     - #24713: Fix missing scrollbar on multistore dropdowns (by @micka-fdz)
     - #24811: Fix invalid html attribute on multistore fields (by @matthieu-rolland)
     - #24469: Multistore header on product pages (by @matthieu-rolland)
@@ -76,6 +76,7 @@ Release Notes for PrestaShop 1.7
   - Improvement:
     - #23480: Improve accessibility of classic theme forms by adding for and ids (by @NeOMakinG)
   - Bug fix:
+    - #25101: Fix RTL issues on material icons on FO (by @NeOMakinG)
     - #24323: Update classic webpack and fix watch issue by adding webpack-cli locally (by @NeOMakinG)
     - #24600: FO - Validate field values when creating customer account (by @sowbiba)
     - #24852: Fix 404 layout for wrong category (by @atomiix)
@@ -84,6 +85,8 @@ Release Notes for PrestaShop 1.7
     - #24680: Fix unclosed div in product-list.tpl (by @kpodemski)
 - Core:
   - Improvement:
+    - #25141: Upgrade ps_linklist to 5.0.3 (by @sowbiba)
+    - #25131: Bump module ps_linklist to 5.0.2 (by @sowbiba)
     - #25120: Update Welcome module to 6.0.6 (by @sowbiba)
     - #25102: Update ps_linklist module to v5.0.1 (by @sowbiba)
     - #24957: Bump modules Welcome to 6.0.5 & ProductComments to 4.2.2 (by @Progi1984)
@@ -107,6 +110,11 @@ Release Notes for PrestaShop 1.7
     - #24902: Wording corrections before RC (by @jolelievre)
 - Tests:
   - Refactoring:
+    - #24995: Functional tests - Add Js doc for catalog pages (by @nesrineabdmouleh)
+    - #25104: Functional tests - Refacto 'Orders > Delivery slips' tests (by @nesrineabdmouleh)
+    - #25128: Functional tests - Add js doc for 'Advanced parameters' pages (by @nesrineabdmouleh)
+    - #25108: Functional tests - Refacto 'Orders > Shopping carts' tests (by @nesrineabdmouleh)
+    - #25126: Fix currency precision regression test (by @boubkerbribri)
     - #25088: Functional tests - Add some refacto to Orders>Invoices tests (by @nesrineabdmouleh)
     - #25047: Fix nightly tests for 21-06-2021 (by @boubkerbribri)
     - #25057: Fix menu check on regression test (by @boubkerbribri)
