@@ -24,10 +24,12 @@
  */
 
 import AutoCompleteSearch from '@components/auto-complete-search';
-import EntitySearchInputMap from '@components/./entity-search-input-map';
+import ComponentsMap from '@components/components-map';
 import ConfirmModal from '@components/modal';
 // @ts-ignore-next-line
 import Bloodhound from 'typeahead.js';
+
+const EntitySearchInputMap = ComponentsMap.entitySearchInput;
 
 type RemoveFunction = (item: any) => void;
 type SelectFunction = ($node: JQuery, item: any) => void;
