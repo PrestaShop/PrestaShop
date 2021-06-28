@@ -23,46 +23,46 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Group\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
+use PrestaShop\PrestaShop\Core\Domain\Group\Exception\GroupConstraintException;
 
 /**
- * Defines Customer ID with it's constraints
+ * Holds group identification value
  */
-class CustomerId implements CustomerIdInterface
+class GroupId implements GroupIdInterface
 {
     /**
      * @var int
      */
-    private $customerId;
+    private $value;
 
     /**
-     * @param int $customerId
+     * @param int $groupId
      */
-    public function __construct($customerId)
+    public function __construct(int $groupId)
     {
-        $this->assertIntegerIsGreaterThanZero($customerId);
-
-        $this->customerId = (int) $customerId;
+        $this->assertValueIsPositive($groupId);
+        $this->value = $groupId;
     }
 
     /**
-     * @return int
+     * {@inheritDoc}
      */
     public function getValue(): int
     {
-        return $this->customerId;
+        return $this->value;
     }
 
     /**
-     * @param int $customerId
+     * @param int $value
      */
-    private function assertIntegerIsGreaterThanZero($customerId)
+    private function assertValueIsPositive(int $value)
     {
-        if (!is_int($customerId) || 0 > $customerId) {
-            throw new CustomerException(sprintf('Customer id %s is invalid. Customer id must be number that is greater than zero.', var_export($customerId, true)));
+        if (0 >= $value) {
+            throw new GroupConstraintException(sprintf('Group id must be positive integer. "%s" given', $value), GroupConstraintException::INVALID_ID);
         }
     }
 }

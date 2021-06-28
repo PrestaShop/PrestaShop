@@ -35,6 +35,12 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\NoCountryId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\GroupIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\NoGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
@@ -100,16 +106,12 @@ class EditProductSpecificPriceCommand
     private $countryId;
 
     /**
-     * @var int|null
-     *
-     * @todo: introduce GroupIdInterface (refer to example of ManufacturerIdInterface). GroupId VO doesnt exist yet
+     * @var GroupIdInterface|null
      */
     private $groupId;
 
     /**
-     * @var int|null
-     *
-     * @todo: introduce CustomerIdInterface (refer to example of ManufacturerIdInterface)
+     * @var CustomerIdInterface|null
      */
     private $customerId;
 
@@ -253,11 +255,11 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @param int|null $shopId
+     * @param int $shopId
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setShopId(?int $shopId): EditProductSpecificPriceCommand
+    public function setShopId(int $shopId): EditProductSpecificPriceCommand
     {
         $this->shopId = NoShopId::NO_SHOP_ID === $shopId ? new NoShopId() : new ShopId($shopId);
 
@@ -273,11 +275,11 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @param int|null $combinationId
+     * @param int $combinationId
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setCombinationId(?int $combinationId): EditProductSpecificPriceCommand
+    public function setCombinationId(int $combinationId): EditProductSpecificPriceCommand
     {
         $this->combinationId = NoCombinationId::NO_COMBINATION_ID === $combinationId ? new NoCombinationId() : new CombinationId($combinationId);
 
@@ -293,11 +295,11 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @param int|null $currencyId
+     * @param int $currencyId
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setCurrencyId(?int $currencyId): EditProductSpecificPriceCommand
+    public function setCurrencyId(int $currencyId): EditProductSpecificPriceCommand
     {
         $this->currencyId = NoCurrencyId::NO_CURRENCY_ID === $currencyId ? new NoCurrencyId() : new CurrencyId($currencyId);
 
@@ -313,11 +315,11 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @param int|null $countryId
+     * @param int $countryId
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setCountryId(?int $countryId): EditProductSpecificPriceCommand
+    public function setCountryId(int $countryId): EditProductSpecificPriceCommand
     {
         $this->countryId = NoCountryId::NO_COUNTRY_ID === $countryId ? new NoCountryId() : new CountryId($countryId);
 
@@ -325,41 +327,41 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return int|null
+     * @return GroupIdInterface|null
      */
-    public function getGroupId(): ?int
+    public function getGroupId(): ?GroupIdInterface
     {
         return $this->groupId;
     }
 
     /**
-     * @param int|null $groupId
+     * @param int $groupId
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setGroupId(?int $groupId): EditProductSpecificPriceCommand
+    public function setGroupId(int $groupId): EditProductSpecificPriceCommand
     {
-        $this->groupId = $groupId;
+        $this->groupId = NoGroupId::NO_GROUP_ID === $groupId ? new NoGroupId() : new GroupId($groupId);
 
         return $this;
     }
 
     /**
-     * @return int|null
+     * @return CustomerIdInterface|null
      */
-    public function getCustomerId(): ?int
+    public function getCustomerId(): ?CustomerIdInterface
     {
         return $this->customerId;
     }
 
     /**
-     * @param int|null $customerId
+     * @param int $customerId
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setCustomerId(?int $customerId): EditProductSpecificPriceCommand
+    public function setCustomerId(int $customerId): EditProductSpecificPriceCommand
     {
-        $this->customerId = $customerId;
+        $this->customerId = NoCustomerId::NO_CUSTOMER_ID === $customerId ? new NoCustomerId() : new CustomerId($customerId);
 
         return $this;
     }
