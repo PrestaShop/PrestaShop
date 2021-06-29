@@ -71,7 +71,7 @@ class TaxRulesTaxManagerCoreTest extends UnitTestCase
 
         // Then
         $this->assertEquals(TaxCalculator::COMBINE_METHOD, $tax_calculator->computation_method);
-        $this->assertInternalType('array', $tax_calculator->taxes);
+        $this->assertIsArray($tax_calculator->taxes);
 
         foreach ($tax_calculator->taxes as $key => $tax) {
             $this->assertTrue($tax instanceof Tax);

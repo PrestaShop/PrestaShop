@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
 
 class PaginationTest extends Testcase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->pagination = new Pagination();
     }

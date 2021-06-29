@@ -39,7 +39,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
 
     public $moduleNames;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -47,7 +47,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
         TestingModule::addModule('pscsx32412');
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -61,7 +61,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
         ];
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         Module::getInstanceByName('pscsx3241')->uninstall();
         Module::getInstanceByName('pscsx32412')->uninstall();

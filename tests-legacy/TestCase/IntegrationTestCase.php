@@ -37,20 +37,20 @@ class IntegrationTestCase extends TestCase
      */
     protected $contextMocker;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->contextMocker = new ContextMocker();
         $this->contextMocker->mockContext();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         $this->contextMocker->resetContext();
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         Database::restoreTestDB();
         require_once __DIR__ . '/../../config/config.inc.php';

@@ -104,9 +104,11 @@ class Container
 
         if ($classConstructor) {
             foreach ($classConstructor->getParameters() as $param) {
-                $paramClass = $param->getClass();
+                $paramClass = $param->getType() && !$param->getType()->isBuiltin()
+                    ? $param->getType()->getName()
+                    : null;
                 if ($paramClass) {
-                    $args[] = $this->doMake($param->getClass()->getName(), $alreadySeen);
+                    $args[] = $this->doMake($param->getType()->getName(), $alreadySeen);
                 } elseif ($param->isDefaultValueAvailable()) {
                     $args[] = $param->getDefaultValue();
                 } else {

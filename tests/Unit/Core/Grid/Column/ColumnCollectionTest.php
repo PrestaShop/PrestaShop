@@ -188,7 +188,7 @@ class ColumnCollectionTest extends TestCase
 
         $columnsArray = $columns->toArray();
 
-        $this->assertInternalType('array', $columnsArray);
+        $this->assertIsArray($columnsArray);
         $this->assertCount(3, $columnsArray);
     }
 

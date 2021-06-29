@@ -100,7 +100,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
         return $this->database;
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->oldContext = Context::getContext();
         $this->container = new Container();
@@ -206,7 +206,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
         return $this->sfKernel;
     }
 
-    protected function teardown()
+    protected function tearDown(): void
     {
         Cache::deleteTestingInstance();
         Db::deleteTestingInstance();

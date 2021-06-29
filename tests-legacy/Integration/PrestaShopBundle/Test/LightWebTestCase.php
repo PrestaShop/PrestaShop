@@ -66,7 +66,7 @@ class LightWebTestCase extends TestCase
      */
     protected $translator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->client = self::createClient();

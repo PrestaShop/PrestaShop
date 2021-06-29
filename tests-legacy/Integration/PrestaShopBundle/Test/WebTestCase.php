@@ -34,7 +34,7 @@ use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
  */
 class WebTestCase extends LightWebTestCase
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         Database::restoreTestDB();
     }

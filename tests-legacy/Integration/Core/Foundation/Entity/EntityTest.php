@@ -37,14 +37,14 @@ class EntityTest extends IntegrationTestCase
      */
     protected $contextMocker;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->contextMocker = new ContextMocker();
         $this->contextMocker->mockContext();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         $this->contextMocker->resetContext();

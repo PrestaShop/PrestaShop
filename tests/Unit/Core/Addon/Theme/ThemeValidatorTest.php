@@ -41,7 +41,7 @@ class ThemeValidatorTest extends TestCase
 
     private $validator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
 
@@ -53,7 +53,7 @@ class ThemeValidatorTest extends TestCase
         ));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->validator = null;
     }

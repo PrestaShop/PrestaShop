@@ -121,7 +121,7 @@ class SortOrderTest extends TestCase
         $opt = new SortOrder($data['entity'], $data['field'], $data['direction']);
 
         $encoded = $opt->toString();
-        $this->assertInternalType('string', $encoded);
+        $this->assertIsString($encoded);
 
         $unserialized = SortOrder::newFromString($encoded);
 

@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DeliveryControllerTest extends WebTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->enableDemoMode();
@@ -72,7 +72,7 @@ class DeliveryControllerTest extends WebTestCase
             Response::HTTP_OK,
             $response->getStatusCode()
         );
-        $this->assertContains('This value is not valid.', $response->getContent());
+        $this->assertStringContainsString('This value is not valid.', $response->getContent());
     }
 
     public function testSlipActionWithValidData()
@@ -126,7 +126,7 @@ class DeliveryControllerTest extends WebTestCase
             'error',
             self::$kernel->getContainer()->get('session')->getFlashBag()->all()
         );
-        $this->assertContains('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
+        $this->assertStringContainsString('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
     }
 
     public function testPdfActionWithEmptyData()
@@ -153,6 +153,6 @@ class DeliveryControllerTest extends WebTestCase
             'error',
             self::$kernel->getContainer()->get('session')->getFlashBag()->all()
         );
-        $this->assertContains('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
+        $this->assertStringContainsString('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
     }
 }

@@ -34,7 +34,7 @@ use LegacyTests\Integration\PrestaShopBundle\Test\WebTestCase;
  */
 class ModuleControllerTest extends WebTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->enableDemoMode();

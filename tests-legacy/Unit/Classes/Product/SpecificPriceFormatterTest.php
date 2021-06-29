@@ -44,13 +44,13 @@ class SpecificPriceFormatterTest extends SymfonyIntegrationTestCase
      */
     protected $contextMocker;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         self::installTestedLanguagePacks();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         global $kernel;
         unset($kernel);

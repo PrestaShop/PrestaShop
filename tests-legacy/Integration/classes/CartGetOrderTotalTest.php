@@ -61,7 +61,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         'PS_TAX'                      => null,
     );
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -377,7 +377,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     /**
      * Provide sensible defaults for tests that don't specify them.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -399,7 +399,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         Configuration::set('PS_ATCP_SHIPWRAP', false);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         foreach ($this->previousConfig as $key => $value) {
             Configuration::set($key, $value);

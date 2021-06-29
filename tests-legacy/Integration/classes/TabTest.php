@@ -36,7 +36,7 @@ class TabTest extends IntegrationTestCase
     /**
      * @inheritDoc
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::removeTestTabs();
@@ -45,7 +45,7 @@ class TabTest extends IntegrationTestCase
     /**
      * @inheritDoc
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
         self::removeTestTabs();

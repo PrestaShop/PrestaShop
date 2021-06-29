@@ -37,7 +37,7 @@ class AdminTabsControllerTest extends UnitTestCase
 {
     private $controller;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -131,7 +131,8 @@ class AdminTabsControllerTest extends UnitTestCase
         parent::setupDatabaseMock($dbMock);
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void
+    {
         Tools::resetRequest();
     }
 }
