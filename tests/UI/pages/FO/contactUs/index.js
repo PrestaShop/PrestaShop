@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Contact us page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class ContactUs extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on contact us page
+   */
   constructor() {
     super();
 
