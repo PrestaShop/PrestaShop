@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\EditProductSpecificPriceHandlerInterface;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use SpecificPrice;
 
 /**
@@ -130,6 +131,14 @@ final class EditProductSpecificPriceHandler implements EditProductSpecificPriceH
         if (null !== $command->getCustomerId()) {
             $specificPrice->id_customer = $command->getCustomerId()->getValue();
             $updatableProperties[] = 'id_customer';
+        }
+
+        if (null !== $command->getDateTimeFrom()) {
+            $specificPrice->from = $command->getDateTimeFrom()->format(DateTime::DEFAULT_DATETIME_FORMAT);
+        }
+
+        if (null !== $command->getDateTimeTo()) {
+            $specificPrice->to = $command->getDateTimeTo()->format(DateTime::DEFAULT_DATETIME_FORMAT);
         }
 
         return $updatableProperties;
