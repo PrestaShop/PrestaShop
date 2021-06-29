@@ -27,7 +27,7 @@ class Product extends BOBasePage {
     this.dropdownMenuPreviewLink = row => `${this.dropdownMenu(row)} a.product-edit:not([onclick])`;
     this.dropdownMenuDuplicateLink = row => `${this.dropdownMenu(row)} a.product-edit[onclick*='duplicate']`;
     this.productRowEditLink = row => `${this.productRow}:nth-of-type(${row}) a.tooltip-link.product-edit`;
-    this.selectAllBulkCheckboxLabel = '#catalog-actions div.md-checkbox label';
+    this.selectAllBulkCheckboxLabel = `${this.productListForm} .column-filters .md-checkbox label`;
     this.productBulkMenuButton = '#product_bulk_menu:not([disabled])';
     this.productBulkMenuButtonState = state => `${this.productBulkMenuButton}[aria-expanded='${state}']`;
     this.productBulkDropdownMenu = 'div.bulk-catalog div.dropdown-menu.show';
