@@ -112,14 +112,11 @@ class ProductDuplicator
 
     /**
      * @param ProductId $productId
+     * @param bool $duplicateImages
      *
      * @return ProductId new product id
-     *
-     * @throws CannotDuplicateProductException
-     * @throws CannotUpdateProductException
-     * @throws CoreException
      */
-    public function duplicate(ProductId $productId): ProductId
+    public function duplicate(ProductId $productId, bool $duplicateImages): ProductId
     {
         //@todo: add database transaction. After/if PR #21740 gets merged
         $product = $this->productRepository->get($productId);
@@ -131,7 +128,7 @@ class ProductDuplicator
         $newProduct = $this->duplicateProduct($product);
         $newProductId = (int) $newProduct->id;
 
-        $this->duplicateRelations($oldProductId, $newProductId);
+        $this->duplicateRelations($oldProductId, $newProductId, $duplicateImages);
 
         if ($product->hasAttributes()) {
             $this->updateDefaultAttribute($newProductId, $oldProductId);
@@ -271,11 +268,11 @@ class ProductDuplicator
      *
      * @param int $oldProductId
      * @param int $newProductId
-     *
+     * @param bool $duplicateImages
      * @throws CannotDuplicateProductException
      * @throws CoreException
      */
-    private function duplicateRelations(int $oldProductId, int $newProductId): void
+    private function duplicateRelations(int $oldProductId, int $newProductId, bool $duplicateImages): void
     {
         $this->duplicateCategories($oldProductId, $newProductId);
         $this->duplicateSuppliers($oldProductId, $newProductId);
@@ -290,7 +287,9 @@ class ProductDuplicator
         $this->duplicateTags($oldProductId, $newProductId);
         $this->duplicateTaxes($oldProductId, $newProductId);
         $this->duplicateDownloads($oldProductId, $newProductId);
-        $this->duplicateImages($oldProductId, $newProductId, $combinationImages);
+        if ($duplicateImages) {
+            $this->duplicateImages($oldProductId, $newProductId, $combinationImages);
+        }
         $this->duplicateCarriers($oldProductId, $newProductId);
         $this->duplicateAttachmentAssociation($oldProductId, $newProductId);
     }

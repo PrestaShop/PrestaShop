@@ -42,7 +42,9 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
     public function duplicate(string $productReference, string $newProductReference): void
     {
         $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
-            $this->getSharedStorage()->get($productReference)
+            $this->getSharedStorage()->get($productReference),
+            //@todo: hardcoded value. Modify if this POC pr is accepted.
+            true
         ));
 
         $this->getSharedStorage()->set($newProductReference, $newProductId->getValue());
