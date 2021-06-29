@@ -207,6 +207,20 @@ class CommonPage {
   }
 
   /**
+   * Delete text from input
+   * @param page {Page} Browser tab
+   * @param selector {string} String to locate the element for the deletion
+   * @returns {Promise<void>}
+   */
+  async deleteTextFromInput(page, selector) {
+    await this.waitForSelectorAndClick(page, selector);
+    await page.click(selector, {clickCount: 3});
+    // Delete text from input before typing
+    await page.waitForTimeout(100);
+    await page.press(selector, 'Delete');
+  }
+
+  /**
    * To accept or dismiss a javascript dialog
    * @param page {Page} Browser tab
    * @param accept {boolean} True to accept the dialog, false to dismiss

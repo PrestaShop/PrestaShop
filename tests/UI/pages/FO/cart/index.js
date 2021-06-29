@@ -8,7 +8,7 @@ class Cart extends FOBasePage {
     this.pageTitle = 'Cart';
 
     // Selectors for cart page
-    this.cartGridBlock = 'div.cart-grid';
+    // Shopping cart block selectors
     this.productItem = number => `#main li:nth-of-type(${number})`;
     this.productName = number => `${this.productItem(number)} div.product-line-info a`;
     this.productRegularPrice = number => `${this.productItem(number)} span.regular-price`;
@@ -20,15 +20,25 @@ class Cart extends FOBasePage {
     this.productColor = number => `${this.productItem(number)} div.product-line-info.color span.value`;
     this.productImage = number => `${this.productItem(number)} span.product-image img`;
     this.deleteIcon = number => `${this.productItem(number)} .remove-from-cart`;
-    this.proceedToCheckoutButton = '#main div.checkout a';
-    this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
+
+    // Cart summary block selectors
+    this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
     this.subtotalDiscountValueSpan = '#cart-subtotal-discount span.value';
     this.cartTotalATI = '.cart-summary-totals span.value';
-    this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
-    this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
+    this.blockPromoDiv = '.block-promo';
+    this.cartSummaryLine = line => `${this.blockPromoDiv} li:nth-child(${line}).cart-summary-line`;
+    this.cartRuleName = line => `${this.cartSummaryLine(line)} span.label`;
+    this.discountValue = line => `${this.cartSummaryLine(line)} div span`;
+
     this.promoCodeLink = '#main div.block-promo a[href=\'#promo-code\']';
     this.promoInput = '#promo-code input.promo-input';
     this.addPromoCodeButton = '#promo-code button.btn-primary';
+    this.promoCodeRemoveIcon = line => `${this.cartSummaryLine(line)} a[data-link-action='remove-voucher']`;
+
+    this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
+
+    this.proceedToCheckoutButton = '#main div.checkout a';
+    this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
   }
 
   /**
@@ -145,12 +155,35 @@ class Cart extends FOBasePage {
    * Set promo code
    * @param page {Page} Browser tab
    * @param code {string} The promo code
+   * @param clickOnPromoCodeLink {boolean} True if we need to click on promo code link
    * @returns {Promise<void>}
    */
-  async addPromoCode(page, code) {
-    await page.click(this.promoCodeLink);
+  async addPromoCode(page, code, clickOnPromoCodeLink = true) {
+    if (clickOnPromoCodeLink) {
+      await page.click(this.promoCodeLink);
+    }
     await this.setValue(page, this.promoInput, code);
     await page.click(this.addPromoCodeButton);
+  }
+
+  /**
+   * Get cart rule name
+   * @param page {Page} Browser tab
+   * @param line {number} Cart summary line
+   * @returns {Promise<number>}
+   */
+  getCartRuleName(page, line = 1) {
+    return this.getTextContent(page, this.cartRuleName(line), 2000);
+  }
+
+  /**
+   * Get discount value
+   * @param page {Page} Browser tab
+   * @param line {number} Cart summary line
+   * @returns {Promise<number>}
+   */
+  getDiscountValue(page, line = 1) {
+    return this.getPriceFromText(page, this.discountValue(line), 2000);
   }
 }
 

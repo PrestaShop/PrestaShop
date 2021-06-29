@@ -5,7 +5,8 @@ module.exports = class CartRule {
     // Information
     this.name = cartRuleToCreate.name || faker.commerce.department();
     this.description = faker.lorem.sentence();
-    this.code = cartRuleToCreate.code;
+    this.code = cartRuleToCreate.code || null;
+    this.generateCode = cartRuleToCreate.generateCode || false;
     this.highlight = cartRuleToCreate.highlight === undefined ? false : cartRuleToCreate.highlight;
     this.partialUse = cartRuleToCreate.partialUse === undefined ? true : cartRuleToCreate.partialUse;
     this.priority = cartRuleToCreate.priority || 1;
