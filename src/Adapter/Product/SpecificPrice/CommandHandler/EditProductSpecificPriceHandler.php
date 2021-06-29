@@ -36,7 +36,7 @@ use SpecificPrice;
 /**
  * Handles @see EditProductSpecificPriceCommand using legacy object model
  */
-final class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandlerInterface
+class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandlerInterface
 {
     /**
      * @var SpecificPriceRepository
