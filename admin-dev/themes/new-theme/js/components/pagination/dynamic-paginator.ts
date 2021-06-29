@@ -105,8 +105,8 @@ export default class DynamicPaginator {
     this.$paginationContainer = $(containerSelector);
     this.paginationService = paginationService;
     this.renderer = renderer;
-    this.selectorsMap = {};
-    this.setSelectorsMap(selectorsMap);
+    this.selectorsMap = selectorsMap;
+    this.setSelectorsMap();
     this.pagesCount = 0;
     this.init();
     this.currentPage = 1;
@@ -272,12 +272,13 @@ export default class DynamicPaginator {
   }
 
   /**
-   *
    * @param page
    *
    * @returns {Number}
+   *
+   * @private
    */
-  getValidPageNumber(page: number): number {
+  private getValidPageNumber(page: number): number {
     if (page > this.pagesCount) {
       return this.pagesCount;
     }
@@ -290,15 +291,14 @@ export default class DynamicPaginator {
   }
 
   /**
-   * @param {Object} selectorsMap
+   * @private
    */
-  setSelectorsMap(selectorsMap: Record<string, string>): void {
-    if (selectorsMap) {
-      this.selectorsMap = selectorsMap;
-
+  private setSelectorsMap(): void {
+    if (Object.keys(this.selectorsMap).length !== 0) {
       return;
     }
 
+    // if selectorsMap is empty we set default selectors
     this.selectorsMap = {
       jumpToPageInput: 'input[name="paginator-jump-page"]',
       firstPageBtn: 'button.page-link.first',
