@@ -535,7 +535,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                         if (!is_numeric($shop)) {
                             $category->addShop(Shop::getIdByName($shop));
                         } else {
-                            $category->addShop($shop);
+                            $category->addShop((int) $shop);
                         }
                     }
                 }
