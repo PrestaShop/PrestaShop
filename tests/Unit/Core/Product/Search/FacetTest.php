@@ -43,7 +43,7 @@ class FacetTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->facet = new Facet();
     }
@@ -51,7 +51,7 @@ class FacetTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->facet = null;
     }
@@ -61,13 +61,13 @@ class FacetTest extends TestCase
         $this->assertInstanceOf(Facet::class, $this->facet);
 
         // Facet public integrity of data types.
-        $this->assertInternalType('string', $this->facet->getLabel());
-        $this->assertInternalType('string', $this->facet->getWidgetType());
-        $this->assertInternalType('string', $this->facet->getType());
-        $this->assertInternalType('bool', $this->facet->isDisplayed());
-        $this->assertInternalType('bool', $this->facet->isMultipleSelectionAllowed());
-        $this->assertInternalType('array', $this->facet->getFilters());
-        $this->assertInternalType('array', $this->facet->toArray());
+        $this->assertIsString($this->facet->getLabel());
+        $this->assertIsString($this->facet->getWidgetType());
+        $this->assertIsString($this->facet->getType());
+        $this->assertIsBool($this->facet->isDisplayed());
+        $this->assertIsBool($this->facet->isMultipleSelectionAllowed());
+        $this->assertIsArray($this->facet->getFilters());
+        $this->assertIsArray($this->facet->toArray());
 
         // Facet public integrity of default Facet data
         $this->assertEmpty($this->facet->getLabel());

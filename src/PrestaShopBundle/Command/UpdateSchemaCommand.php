@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Command;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
+use PDO;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -218,7 +219,9 @@ class UpdateSchemaCommand extends Command
                 throw ($e);
             }
         }
-        $conn->commit();
+        if (!$conn->getWrappedConnection() instanceof PDO || $conn->getWrappedConnection()->inTransaction()) {
+            $conn->commit();
+        }
 
         $pluralization = (1 > $sqls) ? 'query was' : 'queries were';
         $output->writeln(sprintf('Database schema updated successfully! "<info>%s</info>" %s executed', $sqls, $pluralization));

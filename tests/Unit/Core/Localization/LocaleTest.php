@@ -52,7 +52,7 @@ class LocaleTest extends TestCase
      *
      * For more formatting cases, @see FormatterTest
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         $numberSpecification = new NumberSpecification(

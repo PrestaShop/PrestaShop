@@ -114,7 +114,7 @@ class DeliveryControllerTest extends WebTestCase
             Response::HTTP_OK,
             $response->getStatusCode()
         );
-        $this->assertContains('This value is not valid.', $response->getContent());
+        $this->assertStringContainsString('This value is not valid.', $response->getContent());
     }
 
     public function testSlipActionWithValidData(): void
@@ -168,7 +168,7 @@ class DeliveryControllerTest extends WebTestCase
             'error',
             $this->session->getFlashBag()->all()
         );
-        $this->assertContains('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
+        $this->assertStringContainsString('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
     }
 
     public function testPdfActionWithEmptyData(): void
@@ -195,6 +195,6 @@ class DeliveryControllerTest extends WebTestCase
             'error',
             $this->session->getFlashBag()->all()
         );
-        $this->assertContains('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
+        $this->assertStringContainsString('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
     }
 }
