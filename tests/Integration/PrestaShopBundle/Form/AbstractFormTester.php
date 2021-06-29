@@ -38,7 +38,7 @@ use Symfony\Component\Form\FormInterface;
  */
 abstract class AbstractFormTester extends KernelTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         self::bootKernel();
     }

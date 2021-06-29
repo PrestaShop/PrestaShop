@@ -503,7 +503,7 @@ class Reader implements ReaderInterface
                 $currencyData->setIsoCode($currencyCode);
 
                 // check if currency is still active in one territory
-                $currencyDates = $this->supplementalXml->supplementalData->xpath('//region/currency[@iso4217="' . $currencyCode . '"]');
+                $currencyDates = $this->supplementalXml->currencyData->xpath('//region/currency[@iso4217="' . $currencyCode . '"]');
                 if (!empty($currencyDates) && $this->isCurrencyActiveSomewhere($currencyDates, $currencyActiveDateThreshold)) {
                     $currencyData->setActive(true);
                 } else {
@@ -534,7 +534,7 @@ class Reader implements ReaderInterface
                 $currencyData->setDisplayNames($displayNames);
 
                 // Supplemental (fraction digits and numeric iso code)
-                $codesMapping = $this->supplementalXml->supplementalData->xpath(
+                $codesMapping = $this->supplementalXml->xpath(
                     '//codeMappings/currencyCodes[@type="' . $currencyCode . '"]'
                 );
 
@@ -548,12 +548,12 @@ class Reader implements ReaderInterface
                     $currencyData->setNumericIsoCode($numericIsoCode);
                 }
 
-                $fractionsData = $this->supplementalXml->supplementalData->xpath(
+                $fractionsData = $this->supplementalXml->xpath(
                     '//currencyData/fractions/info[@iso4217="' . $currencyCode . '"]'
                 );
 
                 if (empty($fractionsData)) {
-                    $fractionsData = $this->supplementalXml->supplementalData->xpath(
+                    $fractionsData = $this->supplementalXml->xpath(
                         '//currencyData/fractions/info[@iso4217="DEFAULT"]'
                     );
                 }

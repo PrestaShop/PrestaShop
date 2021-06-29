@@ -39,7 +39,7 @@ class SecurityAnnotationLinterTest extends KernelTestCase
      */
     private $securityAnnotationLinter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         self::bootKernel();
 
@@ -69,7 +69,7 @@ class SecurityAnnotationLinterTest extends KernelTestCase
         $this->securityAnnotationLinter->lint('route_name', $route);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         self::$kernel->shutdown();
     }
