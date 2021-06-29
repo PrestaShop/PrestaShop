@@ -30,6 +30,7 @@
  */
 
 type DisplayFunction = (item: any) => string;
+
 export interface TypeaheadJQueryDataset extends Twitter.Typeahead.Dataset<any> {
   display: string | DisplayFunction;
   value: string;
