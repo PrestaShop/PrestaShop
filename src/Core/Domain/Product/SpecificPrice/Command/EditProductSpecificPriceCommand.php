@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
-use DateTime;
+use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryIdInterface;
@@ -116,16 +116,12 @@ class EditProductSpecificPriceCommand
     private $customerId;
 
     /**
-     * @todo: its impossible to reset $from to NULL (database doesnt support null and the 0000-00-00 is actually invalid)
-     *      for that we could have some "DateRange" Value object which would contain ranges OR some "no-range" value.
-     *      Also this would require BC break - making datetime column nullable in specific_price table.
-     *
-     * @var DateTime|null
+     * @var DateTimeInterface|null
      */
     private $dateTimeFrom;
 
     /**
-     * @var DateTime|null
+     * @var DateTimeInterface|null
      */
     private $dateTimeTo;
 
@@ -367,19 +363,19 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
-    public function getDateTimeFrom(): ?DateTime
+    public function getDateTimeFrom(): ?DateTimeInterface
     {
         return $this->dateTimeFrom;
     }
 
     /**
-     * @param DateTime|null $dateTimeFrom
+     * @param DateTimeInterface|null $dateTimeFrom
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setDateTimeFrom(?DateTime $dateTimeFrom): EditProductSpecificPriceCommand
+    public function setDateTimeFrom(?DateTimeInterface $dateTimeFrom): EditProductSpecificPriceCommand
     {
         $this->dateTimeFrom = $dateTimeFrom;
 
@@ -387,19 +383,19 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
-    public function getDateTimeTo(): ?DateTime
+    public function getDateTimeTo(): ?DateTimeInterface
     {
         return $this->dateTimeTo;
     }
 
     /**
-     * @param DateTime|null $dateTimeTo
+     * @param DateTimeInterface|null $dateTimeTo
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setDateTimeTo(?DateTime $dateTimeTo): EditProductSpecificPriceCommand
+    public function setDateTimeTo(?DateTimeInterface $dateTimeTo): EditProductSpecificPriceCommand
     {
         $this->dateTimeTo = $dateTimeTo;
 
