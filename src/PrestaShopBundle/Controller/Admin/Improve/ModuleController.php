@@ -230,7 +230,7 @@ class ModuleController extends ModuleAbstractController
 
         // Save history for this module
         $moduleHistory = $this->getDoctrine()
-            ->getRepository('PrestaShopBundle:ModuleHistory')
+            ->getRepository(ModuleHistory::class)
             ->findOneBy(
                 [
                     'idEmployee' => $currentEmployeeId,
@@ -632,9 +632,7 @@ class ModuleController extends ModuleAbstractController
             ];
         } catch (Exception $e) {
             try {
-                if (isset($moduleName)) {
-                    $moduleManager->disable($moduleName);
-                }
+                $moduleManager->disable($moduleName);
             } catch (Exception $subE) {
             }
 

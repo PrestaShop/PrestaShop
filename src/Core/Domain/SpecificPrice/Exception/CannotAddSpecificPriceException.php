@@ -28,8 +28,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotAddSpecificPriceException as CannotAddProductSpecificPriceException;
+
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.8.0 and will be removed in the next major version.',
+        CannotAddSpecificPriceException::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * Exception thrown when SpecificPrice could not be created
+ * @deprecated since 1.7.8.0 and will be removed in the next major version.
+ * @see CannotAddProductSpecificPriceException
  */
 class CannotAddSpecificPriceException extends SpecificPriceException
 {

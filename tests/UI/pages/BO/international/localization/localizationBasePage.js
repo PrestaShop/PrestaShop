@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Localization base page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 module.exports = class LocalizationBasePage extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on localization page
+   */
   constructor() {
     super();
 
@@ -13,7 +22,7 @@ module.exports = class LocalizationBasePage extends BOBasePage {
   /* Header Methods */
   /**
    * Go to languages page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToSubTabLanguages(page) {
@@ -22,7 +31,7 @@ module.exports = class LocalizationBasePage extends BOBasePage {
 
   /**
    * Go to currencies page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToSubTabCurrencies(page) {

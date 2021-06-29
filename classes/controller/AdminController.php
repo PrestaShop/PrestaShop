@@ -250,6 +250,9 @@ class AdminControllerCore extends Controller
     /** @var bool */
     private $allowAnonymous = false;
 
+    /** @var string */
+    public $override_folder;
+
     /** @var int DELETE access level */
     const LEVEL_DELETE = 4;
 
@@ -1866,7 +1869,7 @@ class AdminControllerCore extends Controller
         }
         $this->context->smarty->assign('meta_title', $this->meta_title);
 
-        $template_dirs = $this->context->smarty->getTemplateDir();
+        $template_dirs = $this->context->smarty->getTemplateDir() ?: [];
 
         // Check if header/footer have been overridden
         $dir = $this->context->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . trim($this->override_folder, '\\/') . DIRECTORY_SEPARATOR;
@@ -3142,7 +3145,7 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * Get the current objects' list form the database.
+     * Get the current objects' list from the database.
      *
      * @param int $id_lang Language used for display
      * @param string|null $order_by ORDER BY clause

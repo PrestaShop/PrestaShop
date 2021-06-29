@@ -1,14 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-function requireFileIfItExists(string $filepath) : bool {
-    if (file_exists($filepath)) {
-        require_once $filepath;
-        return true;
-    }
-    return false;
-}
-
 define('_PS_ROOT_DIR_', __DIR__. '/../../../');
 
 // Add module composer autoloader
@@ -18,13 +10,19 @@ require_once _PS_ROOT_DIR_ . 'vendor/autoload.php';
 define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_ . '/admin-dev/');
 define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 
-requireFileIfItExists(_PS_ROOT_DIR_ . '/tools/smarty/Smarty.class.php');
 require_once _PS_ROOT_DIR_ . '/config/defines.inc.php';
 require_once _PS_ROOT_DIR_ . '/config/autoload.php';
 require_once _PS_ROOT_DIR_ . '/config/bootstrap.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/exception.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/session.php';
 require_once _PS_ROOT_DIR_ . '/var/SymfonyRequirements.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Profiler.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Controller.php';
+include_once _PS_TOOL_DIR_ . 'profiling/ObjectModel.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Db.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Hook.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Module.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Tools.php';
 
 // Make sure loader php-parser is coming from php stan composer
 
@@ -75,6 +73,9 @@ $constantsToDefine = [
     '_PARENT_THEME_NAME_' => 'string',
     '__PS_BASE_URI__' => 'string',
     '_PS_API_URL_' => 'string',
+    '_PS_CACHE_ENABLED_' => 'int',
+    '_PS_CACHING_SYSTEM_' => 'string',
+    '_PS_CREATION_DATE_' => 'string',
     '_PS_INSTALL_PATH_' => 'string',
     '_PS_INSTALL_DATA_PATH_' => 'string',
     '_PS_INSTALL_LANGS_PATH_' => 'string',
@@ -138,7 +139,8 @@ if (!defined('_PS_VERSION_')) {
         '/install/install_version.php',
     ];
     foreach ($legacyInstallationFileDefiningConstant as $file) {
-        if (requireFileIfItExists(_PS_ROOT_DIR_ . $file)) {
+        if (file_exists(_PS_ROOT_DIR_ . $file)) {
+            require_once _PS_ROOT_DIR_ . $file;
             define('_PS_VERSION_', _PS_INSTALL_VERSION_);
             break;
         }

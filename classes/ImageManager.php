@@ -63,7 +63,7 @@ class ImageManagerCore
             return '';
         }
 
-        if (file_exists(_PS_TMP_IMG_DIR_ . $cacheImage) && $regenerate) {
+        if ($regenerate && file_exists(_PS_TMP_IMG_DIR_ . $cacheImage)) {
             @unlink(_PS_TMP_IMG_DIR_ . $cacheImage);
         }
 
@@ -272,8 +272,8 @@ class ImageManagerCore
 
         $destImage = imagecreatetruecolor($destinationWidth, $destinationHeight);
 
-        // If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
-        if ($fileType == 'png' && $type == IMAGETYPE_PNG) {
+        // If the output is PNG, fill with transparency. Else fill with white background.
+        if ($fileType == 'png') {
             imagealphablending($destImage, false);
             imagesavealpha($destImage, true);
             $transparent = imagecolorallocatealpha($destImage, 255, 255, 255, 127);

@@ -59,7 +59,7 @@ class GeneralType extends TranslatorAwareType
     ) {
         parent::__construct($translator, $locales);
 
-        $this->isDebug = $isDebug === null ? (defined(_PS_MODE_DEV_) ? _PS_MODE_DEV_ : true) : $isDebug;
+        $this->isDebug = $isDebug === null ? (defined('_PS_MODE_DEV_') ? _PS_MODE_DEV_ : true) : $isDebug;
     }
 
     /**

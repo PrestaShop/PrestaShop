@@ -37,7 +37,6 @@ use Symfony\Component\Yaml\Yaml;
  */
 class ThemeExtractorTest extends KernelTestCase
 {
-    private $container;
     private $filesystem;
     private $themeExtractor;
 
@@ -56,11 +55,10 @@ class ThemeExtractorTest extends KernelTestCase
     {
         self::bootKernel();
 
-        $this->container = self::$kernel->getContainer();
         $this->filesystem = new Filesystem();
-        $this->themeExtractor = $this->container->get('prestashop.translation.theme_extractor');
+        $this->themeExtractor = self::$container->get('prestashop.translation.theme_extractor');
 
-        $themeProvider = $this->container->get('prestashop.translation.theme_provider');
+        $themeProvider = self::$container->get('prestashop.translation.theme_provider');
         $this->themeExtractor->setThemeProvider($themeProvider);
     }
 

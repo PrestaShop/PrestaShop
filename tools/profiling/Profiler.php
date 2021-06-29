@@ -35,6 +35,7 @@ class Profiler
 
     /** @var array */
     protected $profiler = [];
+
     /** @var array */
     protected $globalVarSize = [];
 

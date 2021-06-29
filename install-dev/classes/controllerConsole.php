@@ -162,7 +162,7 @@ abstract class InstallControllerConsole
                     echo(is_string($error) ? $error : print_r($error, true)).PHP_EOL;
                 }
             }
-            die;
+            exit(1);
         }
     }
 

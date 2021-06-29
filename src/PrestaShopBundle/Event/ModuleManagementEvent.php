@@ -32,6 +32,7 @@ use Symfony\Component\EventDispatcher\Event;
 class ModuleManagementEvent extends Event
 {
     public const INSTALL = 'module.install';
+    public const POST_INSTALL = 'module.post.install';
     public const UNINSTALL = 'module.uninstall';
     public const DISABLE = 'module.disable';
     public const ENABLE = 'module.enable';

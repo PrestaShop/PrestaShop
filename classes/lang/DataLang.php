@@ -24,8 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use Doctrine\Common\Inflector\Inflector;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Translation\TranslatorInterface;
 
 /**
@@ -138,6 +138,6 @@ class DataLangCore
     {
         $shortClassName = substr(strrchr('\\' . get_class($this), '\\'), 1);
 
-        return Inflector::tableize($shortClassName);
+        return Inflector::getInflector()->tableize($shortClassName);
     }
 }

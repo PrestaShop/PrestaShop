@@ -114,7 +114,7 @@ class FolderThemeCatalogTest extends TestCase
         $layout = $coreLayouts[0];
         $this->assertInstanceOf(LayoutInterface::class, $layout);
         $coreFolder = implode(DIRECTORY_SEPARATOR, [
-            realpath($this->tempDir),
+            '@MailThemes',
             'classic',
             MailTemplateInterface::CORE_CATEGORY,
         ]);

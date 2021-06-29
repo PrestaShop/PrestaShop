@@ -200,7 +200,7 @@ class ProductSupplierCore extends ObjectModel
      * For a given product, retrieves its suppliers.
      *
      * @param int $idProduct
-     * @param int $groupBySupplier
+     * @param bool $groupBySupplier
      *
      * @return PrestaShopCollection Collection of ProductSupplier
      */

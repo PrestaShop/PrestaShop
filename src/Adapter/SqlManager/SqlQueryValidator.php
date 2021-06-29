@@ -75,7 +75,7 @@ class SqlQueryValidator
     /**
      * Get request sql errors.
      *
-     * @param array $sqlErrors
+     * @param array<string, string|array<string>> $sqlErrors
      *
      * @return array
      */

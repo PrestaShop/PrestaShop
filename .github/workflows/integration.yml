@@ -6,7 +6,7 @@ jobs:
         runs-on: ubuntu-18.04
         strategy:
             matrix:
-                php: ['7.1', '7.2', '7.3', '7.4']
+                php: ['7.2', '7.3', '7.4']
             fail-fast: false
         steps:
             -   name: Setup PHP
@@ -51,7 +51,7 @@ jobs:
                         ${{ runner.os }}-composer-
 
             -   name: Composer Install
-                run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+                run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
             -   name: Build assets
                 run: make assets

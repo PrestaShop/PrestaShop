@@ -459,6 +459,11 @@ abstract class ModuleCore implements ModuleInterface
         return true;
     }
 
+    public function postInstall(): bool
+    {
+        return true;
+    }
+
     public function checkCompliancy()
     {
         if (version_compare(_PS_VERSION_, $this->ps_versions_compliancy['min'], '<') || version_compare(_PS_VERSION_, $this->ps_versions_compliancy['max'], '>')) {
@@ -1133,7 +1138,7 @@ abstract class ModuleCore implements ModuleInterface
                 }
 
                 $file = _PS_MODULE_DIR_ . static::$classInModule[$current_class] . '/' . Context::getContext()->language->iso_code . '.php';
-                if (Tools::file_exists_cache($file) && include_once ($file)) {
+                if (Tools::file_exists_cache($file) && include_once($file)) {
                     $_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
                 }
             } else {
@@ -1263,7 +1268,7 @@ abstract class ModuleCore implements ModuleInterface
         // Find translations
         global $_MODULES;
         $file = _PS_MODULE_DIR_ . $module . '/' . Context::getContext()->language->iso_code . '.php';
-        if (Tools::file_exists_cache($file) && include_once ($file)) {
+        if (Tools::file_exists_cache($file) && include_once($file)) {
             if (isset($_MODULE) && is_array($_MODULE)) {
                 $_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
             }
@@ -1362,7 +1367,7 @@ abstract class ModuleCore implements ModuleInterface
                 // If no errors in Xml, no need instand and no need new config.xml file, we load only translations
                 if (!count($module_errors) && (int) $xml_module->need_instance == 0) {
                     $file = _PS_MODULE_DIR_ . $module . '/' . Context::getContext()->language->iso_code . '.php';
-                    if (Tools::file_exists_cache($file) && include_once ($file)) {
+                    if (Tools::file_exists_cache($file) && include_once($file)) {
                         if (isset($_MODULE) && is_array($_MODULE)) {
                             $_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
                         }
@@ -1744,9 +1749,9 @@ abstract class ModuleCore implements ModuleInterface
 
         $context = Context::getContext();
 
-        // If the xml file exist, isn't empty, isn't too old
-        // and if the theme hadn't change
-        // we use the file, otherwise we regenerate it
+        // Check whether the xml file exist, is not empty, is not too old
+        // and if the theme has not changed
+        // If conditions are not met, refresh file
         if (!(
             file_exists(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST)
             && filesize(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST) > 0
@@ -1775,7 +1780,7 @@ abstract class ModuleCore implements ModuleInterface
         if (stripos($trusted_modules_list_content, $module_name) !== false) {
             // If the module is not a partner, then return 1 (which means the module is "trusted")
             if (stripos($default_country_modules_list_content, '<name><![CDATA[' . $module_name . ']]></name>') !== false) {
-                // The module is a parter. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
+                // The module is a partner. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
                 return 1;
             }
             // The module seems to be trusted, but it does not seem to be dedicated to this country
@@ -1784,8 +1789,8 @@ abstract class ModuleCore implements ModuleInterface
             // If the module is already in the untrusted list, then return 0 (untrusted)
             return 0;
         } else {
-            // If the module isn't in one of the xml files
-            // It might have been uploaded recenlty so we check
+            // If the module is not registered in xml files
+            // It might have been uploaded recently so we check
             // Addons API and clear XML files to be regenerated next time
             static::deleteTrustedXmlCache();
 
@@ -2521,7 +2526,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Get realpath of a template of current module (check if template is overriden too).
+     * Get realpath of a template of current module (check if template is overridden too).
      *
      * @since 1.5.0
      *

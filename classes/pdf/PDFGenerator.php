@@ -90,6 +90,7 @@ class PDFGeneratorCore extends TCPDF
         'zh' => 'cid0cs',
         'tw' => 'cid0cs',
         'th' => 'freeserif',
+        'hy' => 'freeserif',
     ];
 
     /**

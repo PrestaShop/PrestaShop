@@ -28,8 +28,16 @@ namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
+        DeleteSpecificPriceByCartProductHandlerInterface::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * Interface for handling DeleteSpecificPriceByCartProduct command
+ * @deprecated since 1.7.9.0 and will be removed in the next major version.
  */
 interface DeleteSpecificPriceByCartProductHandlerInterface
 {

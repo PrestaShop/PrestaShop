@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Twig;
 
-use Doctrine\Common\Util\Inflector;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -108,7 +108,8 @@ class TranslationsExtension extends Twig_Extension
         $hasMessages = $this->hasMessages($subtree);
 
         if ($hasMessages) {
-            $camelizedDomain = reset(array_keys($subtree['__messages']));
+            $keysSubTreeMessages = array_keys($subtree['__messages']);
+            $camelizedDomain = reset($keysSubTreeMessages);
             $messages = $subtree['__messages'][$camelizedDomain];
 
             foreach ($messages as $translationKey => $translation) {
@@ -165,7 +166,8 @@ class TranslationsExtension extends Twig_Extension
         $messagesSubtree = $this->hasMessages($tree);
 
         if ($messagesSubtree) {
-            $camelizedDomain = reset(array_keys($tree['__messages']));
+            $keysSubTreeMessages = array_keys($tree['__messages']);
+            $camelizedDomain = reset($keysSubTreeMessages);
             $messagesTree = $tree['__messages'][$camelizedDomain];
 
             $formIndex = 0;
@@ -254,7 +256,7 @@ class TranslationsExtension extends Twig_Extension
             $isSearchResults = $properties['is_search_results'];
         }
 
-        $breadcrumbParts = explode('_', Inflector::tableize($domain));
+        $breadcrumbParts = explode('_', Inflector::getInflector()->tableize($domain));
 
         return $this->container->get('templating')->render(
             '@PrestaShop/Admin/Translations/include/form-edit-message.html.twig',

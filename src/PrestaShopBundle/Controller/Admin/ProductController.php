@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
+use PrestaShopBundle\Entity\Attribute;
 use PrestaShopBundle\Entity\Repository\AttributeRepository;
 use PrestaShopBundle\Exception\UpdateProductException;
 use PrestaShopBundle\Form\Admin\Product\ProductCategories;
@@ -630,7 +631,7 @@ class ProductController extends FrameworkBundleAdminController
         $doctrine = $this->getDoctrine()->getManager();
         $language = empty($languages[0]) ? ['id_lang' => 1, 'id_shop' => 1] : $languages[0];
         /** @var AttributeRepository $attributeRepository */
-        $attributeRepository = $doctrine->getRepository('PrestaShopBundle:Attribute');
+        $attributeRepository = $doctrine->getRepository(Attribute::class);
         $attributeGroups = $attributeRepository->findByLangAndShop((int) $language['id_lang'], (int) $language['id_shop']);
 
         $drawerModules = (new HookFinder())->setHookName('displayProductPageDrawer')

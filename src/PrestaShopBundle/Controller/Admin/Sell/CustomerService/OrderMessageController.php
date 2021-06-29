@@ -160,7 +160,7 @@ class OrderMessageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        if (!isset($form) || !isset($orderMessageName)) {
+        if (!isset($form)) {
             return $this->redirectToRoute('admin_order_messages_index');
         }
 

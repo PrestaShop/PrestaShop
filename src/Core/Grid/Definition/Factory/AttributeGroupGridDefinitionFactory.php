@@ -48,10 +48,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
-    public const GRID_ID = 'attribute_group';
-
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
+
+    public const GRID_ID = 'attribute_group';
 
     /**
      * {@inheritdoc}

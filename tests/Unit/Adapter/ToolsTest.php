@@ -28,8 +28,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter;
 
+use Composer\CaBundle\CaBundle;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Tools;
+use Tools as LegacyTools;
 
 class ToolsTest extends TestCase
 {
@@ -57,5 +59,29 @@ class ToolsTest extends TestCase
         yield ['10', '0.0000000', 6, '10.000000'];
         yield ['0.0000000', '10', 6, '10.000000'];
         yield ['0.0', '0.00000002', 2, '0.00'];
+    }
+
+    /**
+     * Test for refreshCaCertFile : delete de Ca Cert file, refresh and test if the file is created
+     */
+    public function testRefreshCaCertFile(): void
+    {
+        @unlink(_PS_CACHE_CA_CERT_FILE_);
+        (new Tools())->refreshCaCertFile();
+
+        // get original cacert.pem content and check it against cached version: _PS_CACHE_CA_CERT_FILE_
+        $stream_context = @stream_context_create(
+            [
+                'http' => ['timeout' => 3],
+                'ssl' => [
+                    'cafile' => CaBundle::getBundledCaBundlePath(),
+                ],
+            ]
+        );
+        $original = @file_get_contents(LegacyTools::CACERT_LOCATION, false, $stream_context);
+        if (empty($original)) {
+            $original = @file_get_contents(CaBundle::getBundledCaBundlePath());
+        }
+        self::assertEquals($original, file_get_contents(_PS_CACHE_CA_CERT_FILE_));
     }
 }

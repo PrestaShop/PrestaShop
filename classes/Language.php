@@ -323,8 +323,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * @param string $iso_from
      * @param string $theme_from
-     * @param bool $iso_to
-     * @param bool $theme_to
+     * @param string|bool $iso_to
+     * @param string|bool $theme_to
      * @param bool $select
      * @param bool $check
      * @param bool $modules
@@ -688,7 +688,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @see loadLanguages()
      *
      * @param bool $active Select only active languages
-     * @param int|false $id_shop Shop ID
+     * @param int|bool $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
      * @return array<int|array> Language information

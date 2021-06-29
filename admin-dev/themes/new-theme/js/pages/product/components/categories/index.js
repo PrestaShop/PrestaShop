@@ -197,8 +197,10 @@ export default class CategoriesManager {
 
     // Add category name as a text between the checkbox and the radio
     const checkboxInput = categoryNode.querySelector(ProductCategoryMap.checkboxInput);
+    const nameelem = document.createTextNode(category.name);
+    const elem = category.active ? nameelem : document.createElement('i').appendChild(nameelem).parentNode;
     checkboxInput.parentNode.insertBefore(
-      document.createTextNode(category.name),
+      elem,
       checkboxInput,
     );
 
