@@ -116,7 +116,7 @@ class AddProductSpecificPriceCommand
      * @param string $reductionType
      * @param string $reductionValue
      * @param bool $includeTax
-     * @param float $price
+     * @param string $price
      * @param int $fromQuantity
      *
      * @throws DomainConstraintException
@@ -127,14 +127,13 @@ class AddProductSpecificPriceCommand
         string $reductionType,
         string $reductionValue,
         bool $includeTax,
-        //@todo: require price numeric string instead of float
-        float $price,
+        string $price,
         int $fromQuantity
     ) {
         $this->productId = new ProductId($productId);
         $this->reduction = new Reduction($reductionType, $reductionValue);
         $this->includesTax = $includeTax;
-        $this->price = new DecimalNumber((string) $price);
+        $this->price = new DecimalNumber($price);
         $this->fromQuantity = $fromQuantity;
     }
 
