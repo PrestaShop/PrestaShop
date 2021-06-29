@@ -86,7 +86,7 @@ class ProductShipping extends CommonAbstractType
 
         $carriers = $carrierDataProvider->getCarriers(
             $this->locales[0]['id_lang'],
-            false,
+            true,
             false,
             false,
             null,
