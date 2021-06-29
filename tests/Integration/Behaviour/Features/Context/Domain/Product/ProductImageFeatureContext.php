@@ -235,6 +235,47 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then product ":productReference" should have :expectedCount images
+     *
+     * @param string $productReference
+     * @param int $expectedCount
+     */
+    public function assertImageCount(string $productReference, int $expectedCount): void
+    {
+        $productImages = $this->getProductImages($productReference);
+
+        Assert::assertEquals($expectedCount, count($productImages), 'Unexpected images count');
+    }
+
+    /**
+     * @Then product ":productReference" images should have following legends:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function assertImageLegends(string $productReference, TableNode $tableNode): void
+    {
+        $dataRows = $this->localizeByColumns($tableNode);
+        $productImages = $this->getProductImages($productReference);
+
+        Assert::assertEquals(
+            count($productImages),
+            count($dataRows),
+            'Expected and actual image legends count does not match'
+        );
+
+        foreach ($dataRows as $key => $dataRow) {
+            $actualImage = $productImages[$key];
+
+            Assert::assertEquals(
+                $dataRow['legend'],
+                $actualImage->getLocalizedLegends(),
+                'Unexpected image legend'
+            );
+        }
+    }
+
+    /**
      * @param int $imageId
      *
      * @return string

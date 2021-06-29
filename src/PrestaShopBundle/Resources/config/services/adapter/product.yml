@@ -421,9 +421,6 @@ services:
       - '@prestashop.adapter.product.repository.product_repository'
       - '@prestashop.adapter.product.image.repository.product_image_repository'
       - '@prestashop.adapter.product.image.product_image_url_factory'
-=======
-    _defaults:
-        public: true
 
     prestashop.adapter.admin.data_provider.product:
         class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
@@ -804,4 +801,3 @@ services:
 
     prestashop.adapter.product.update.product_indexation_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater
->>>>>>>  add POC for testing, but its unclear if stocks need to be duplciated or not

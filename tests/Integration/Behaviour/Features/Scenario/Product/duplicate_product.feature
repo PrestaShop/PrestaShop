@@ -160,10 +160,16 @@ Feature: Duplicate product from Back Office (BO).
     And image "image1" should have same file as "app_icon.png"
     And I add new image "image2" named "logo.jpg" to product "product1"
     And image "image2" should have same file as "logo.jpg"
+    And I update image "image1" with following information:
+      | legend[en-US] | image1 en |
+      | legend[fr-FR] | image1 fr |
+    And I update image "image2" with following information:
+      | legend[en-US] | image2 en |
+      | legend[fr-FR] | image2 fr |
     And product "product1" should have following images:
       | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
-      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
-      | image2          | false    |               |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image1          | true     | image1 en     | image1 fr     | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    | image2 en     | image2 fr     | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
 
   Scenario: I duplicate product
 #todo: add specific prices & priorities, test combinations, packs
@@ -303,4 +309,11 @@ Feature: Duplicate product from Back Office (BO).
     Then product "product_with_combinations" should have 2 specific prices
     When I duplicate product product_with_combinations to a copy_of_product_with_combinations
     Then product "copy_of_product_with_combinations" should have 2 specific prices
+#    no a way to check if the images are actually the ones we expect,
+#    because references are attached to id, so at least we can count them and check if legends match
+    And product "copy_of_product1" should have 2 images
+    And product "copy_of_product1" images should have following legends:
+      | legend[en-US] | legend[fr-FR] |
+      | image1 en     | image1 fr     |
+      | image2 en     | image2 fr     |
     # TODO: all sorts of other checks
