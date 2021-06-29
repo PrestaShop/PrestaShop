@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+/* eslint max-classes-per-file: ["error", 42] */
+
 const {$} = window;
 
 export interface ModalType {
@@ -40,9 +42,8 @@ export interface ModalType {
 }
 
 export interface ConfirmModalType {
-  modal: ModalType;
-  $modal: JQuery;
   show: () => void;
+  hide: () => void;
 }
 
 export interface ModalParams {
@@ -52,8 +53,108 @@ export interface ModalParams {
   closeButtonLabel?: string;
   confirmButtonLabel?: string;
   confirmButtonClass?: string;
-  customButtons?: Array<HTMLButtonElement>;
+  customButtons?: Array<HTMLButtonElement | HTMLAnchorElement>;
   closable?: boolean;
+}
+
+/**
+ * This class us used as a base class and handles the building of the modal DOM elements
+ * however it is not usable as is because it doesn't even have a show method so it is more
+ * to be considered and "abstract" class that is used by other children implementations.
+ *
+ * @param {ModalParams} params
+ *
+ */
+export class Modal {
+  protected modal: ModalType;
+
+  constructor({
+    id = 'confirm-modal',
+    confirmTitle,
+    confirmMessage = '',
+    closeButtonLabel = 'Close',
+    confirmButtonLabel = 'Accept',
+    confirmButtonClass = 'btn-primary',
+    customButtons = [],
+  }: ModalParams) {
+    this.modal = <ModalType>{};
+
+    // Main modal element
+    this.modal.container = document.createElement('div');
+    this.modal.container.classList.add('modal', 'fade');
+    this.modal.container.id = id;
+
+    // Modal dialog element
+    this.modal.dialog = document.createElement('div');
+    this.modal.dialog.classList.add('modal-dialog');
+
+    // Modal content element
+    this.modal.content = document.createElement('div');
+    this.modal.content.classList.add('modal-content');
+
+    // Modal header element
+    this.modal.header = document.createElement('div');
+    this.modal.header.classList.add('modal-header');
+
+    // Modal title element
+    if (confirmTitle) {
+      this.modal.title = document.createElement('h4');
+      this.modal.title.classList.add('modal-title');
+      this.modal.title.innerHTML = confirmTitle;
+    }
+
+    // Modal close button icon
+    this.modal.closeIcon = document.createElement('button');
+    this.modal.closeIcon.classList.add('close');
+    this.modal.closeIcon.setAttribute('type', 'button');
+    this.modal.closeIcon.dataset.dismiss = 'modal';
+    this.modal.closeIcon.innerHTML = '×';
+
+    // Modal body element
+    this.modal.body = document.createElement('div');
+    this.modal.body.classList.add('modal-body', 'text-left', 'font-weight-normal');
+
+    // Modal message element
+    this.modal.message = document.createElement('p');
+    this.modal.message.classList.add('confirm-message');
+    this.modal.message.innerHTML = confirmMessage;
+
+    // Modal footer element
+    this.modal.footer = document.createElement('div');
+    this.modal.footer.classList.add('modal-footer');
+
+    // Modal close button element
+    this.modal.closeButton = document.createElement('button');
+    this.modal.closeButton.setAttribute('type', 'button');
+    this.modal.closeButton.classList.add('btn', 'btn-outline-secondary', 'btn-lg');
+    this.modal.closeButton.dataset.dismiss = 'modal';
+    this.modal.closeButton.innerHTML = closeButtonLabel;
+
+    // Modal confirm button element
+    this.modal.confirmButton = document.createElement('button');
+    this.modal.confirmButton.setAttribute('type', 'button');
+    this.modal.confirmButton.classList.add(
+      'btn',
+      confirmButtonClass || 'btn-primary',
+      'btn-lg',
+      'btn-confirm-submit',
+    );
+    this.modal.confirmButton.dataset.dismiss = 'modal';
+    this.modal.confirmButton.innerHTML = confirmButtonLabel;
+
+    // Constructing the modal
+    if (confirmTitle) {
+      this.modal.header.append(this.modal.title, this.modal.closeIcon);
+    } else {
+      this.modal.header.appendChild(this.modal.closeIcon);
+    }
+
+    this.modal.body.appendChild(this.modal.message);
+    this.modal.footer.append(this.modal.closeButton, ...customButtons, this.modal.confirmButton);
+    this.modal.content.append(this.modal.header, this.modal.body, this.modal.footer);
+    this.modal.dialog.appendChild(this.modal.content);
+    this.modal.container.appendChild(this.modal.dialog);
+  }
 }
 
 /**
@@ -71,140 +172,52 @@ export interface ModalParams {
  * @param {Function} cancelCallback
  *
  */
-export function ConfirmModal(
-  this: ConfirmModalType,
-  params: ModalParams,
-  confirmCallback: (event: Event) => void,
-  cancelCallback = () => true,
-): void {
-  // Construct the modal
-  const {id, closable} = params;
-  this.modal = <ModalType>Modal(params);
+export class ConfirmModal extends Modal implements ConfirmModalType {
+  protected $modal: JQuery;
 
-  // jQuery modal object
-  this.$modal = $(this.modal.container);
+  constructor(
+    params: ModalParams,
+    confirmCallback: (event: Event) => void,
+    cancelCallback = () => true,
+  ) {
+    // Construct the modal
+    super(params);
 
-  this.show = () => {
-    this.$modal.modal();
-  };
+    const {id, closable} = params;
 
-  this.modal.confirmButton.addEventListener('click', confirmCallback);
+    // jQuery modal object
+    this.$modal = $(this.modal.container);
 
-  this.$modal.modal({
-    backdrop: closable ? true : 'static',
-    keyboard: closable !== undefined ? closable : true,
-    show: false,
-  });
+    this.modal.confirmButton.addEventListener('click', confirmCallback);
 
-  this.$modal.on('hidden.bs.modal', () => {
-    const modal = document.querySelector(`#${id}`);
+    this.$modal.modal({
+      backdrop: closable ? true : 'static',
+      keyboard: closable !== undefined ? closable : true,
+      show: false,
+    });
 
-    if (modal) {
-      modal.remove();
-    }
+    this.$modal.on('hidden.bs.modal', () => {
+      const modal = document.querySelector(`#${id}`);
 
-    if (cancelCallback) {
-      cancelCallback();
-    }
-  });
+      if (modal) {
+        modal.remove();
+      }
 
-  document.body.appendChild(this.modal.container);
-}
+      if (cancelCallback) {
+        cancelCallback();
+      }
+    });
 
-/**
- * Modal component to improve lisibility by constructing the modal outside the main function
- *
- * @param {Object} params
- *
- */
-export function Modal({
-  id = 'confirm-modal',
-  confirmTitle,
-  confirmMessage = '',
-  closeButtonLabel = 'Close',
-  confirmButtonLabel = 'Accept',
-  confirmButtonClass = 'btn-primary',
-  customButtons = [],
-}: ModalParams): ModalType {
-  const modal = <ModalType>{};
-
-  // Main modal element
-  modal.container = document.createElement('div');
-  modal.container.classList.add('modal', 'fade');
-  modal.container.id = id;
-
-  // Modal dialog element
-  modal.dialog = document.createElement('div');
-  modal.dialog.classList.add('modal-dialog');
-
-  // Modal content element
-  modal.content = document.createElement('div');
-  modal.content.classList.add('modal-content');
-
-  // Modal header element
-  modal.header = document.createElement('div');
-  modal.header.classList.add('modal-header');
-
-  // Modal title element
-  if (confirmTitle) {
-    modal.title = document.createElement('h4');
-    modal.title.classList.add('modal-title');
-    modal.title.innerHTML = confirmTitle;
+    document.body.appendChild(this.modal.container);
   }
 
-  // Modal close button icon
-  modal.closeIcon = document.createElement('button');
-  modal.closeIcon.classList.add('close');
-  modal.closeIcon.setAttribute('type', 'button');
-  modal.closeIcon.dataset.dismiss = 'modal';
-  modal.closeIcon.innerHTML = '×';
-
-  // Modal body element
-  modal.body = document.createElement('div');
-  modal.body.classList.add('modal-body', 'text-left', 'font-weight-normal');
-
-  // Modal message element
-  modal.message = document.createElement('p');
-  modal.message.classList.add('confirm-message');
-  modal.message.innerHTML = confirmMessage;
-
-  // Modal footer element
-  modal.footer = document.createElement('div');
-  modal.footer.classList.add('modal-footer');
-
-  // Modal close button element
-  modal.closeButton = document.createElement('button');
-  modal.closeButton.setAttribute('type', 'button');
-  modal.closeButton.classList.add('btn', 'btn-outline-secondary', 'btn-lg');
-  modal.closeButton.dataset.dismiss = 'modal';
-  modal.closeButton.innerHTML = closeButtonLabel;
-
-  // Modal confirm button element
-  modal.confirmButton = document.createElement('button');
-  modal.confirmButton.setAttribute('type', 'button');
-  modal.confirmButton.classList.add(
-    'btn',
-    confirmButtonClass,
-    'btn-lg',
-    'btn-confirm-submit',
-  );
-  modal.confirmButton.dataset.dismiss = 'modal';
-  modal.confirmButton.innerHTML = confirmButtonLabel;
-
-  // Constructing the modal
-  if (confirmTitle) {
-    modal.header.append(modal.title, modal.closeIcon);
-  } else {
-    modal.header.appendChild(modal.closeIcon);
+  show(): void {
+    this.$modal.modal('show');
   }
 
-  modal.body.appendChild(modal.message);
-  modal.footer.append(modal.closeButton, ...customButtons, modal.confirmButton);
-  modal.content.append(modal.header, modal.body, modal.footer);
-  modal.dialog.appendChild(modal.content);
-  modal.container.appendChild(modal.dialog);
-
-  return modal;
+  hide(): void {
+    this.$modal.modal('hide');
+  }
 }
 
 export default ConfirmModal;
