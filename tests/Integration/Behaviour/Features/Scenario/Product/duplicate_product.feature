@@ -3,6 +3,7 @@
 @restore-languages-after-feature
 @duplicate-product
 @reset-downloads-after-feature
+@reset-img-after-feature
 @clear-cache-after-feature
 Feature: Duplicate product from Back Office (BO).
   As an employee I want to be able to duplicate product
@@ -24,6 +25,14 @@ Feature: Duplicate product from Back Office (BO).
     And attribute "Red" named "Red" in en language exists
     And attribute "Blue" named "Blue" in en language exists
     Given I add product "product1" with following information:
+    And following image types should be applicable to products:
+      | reference     | name           | width | height |
+      | cartDefault   | cart_default   | 125   | 125    |
+      | homeDefault   | home_default   | 250   | 250    |
+      | largeDefault  | large_default  | 800   | 800    |
+      | mediumDefault | medium_default | 452   | 452    |
+      | smallDefault  | small_default  | 98    | 98     |
+    And I add product "product1" with following information:
       | name[en-US] | smart sunglasses   |
       | name[fr-FR] | lunettes de soleil |
       | type        | standard           |
@@ -147,6 +156,14 @@ Feature: Duplicate product from Back Office (BO).
       | locale | value        |
       | en-US  | too late bro |
       | fr-FR  |              |
+    And I add new image "image1" named "app_icon.png" to product "product1"
+    And image "image1" should have same file as "app_icon.png"
+    And I add new image "image2" named "logo.jpg" to product "product1"
+    And image "image2" should have same file as "logo.jpg"
+    And product "product1" should have following images:
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    |               |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
 
   Scenario: I duplicate product
 #todo: add specific prices & priorities, test combinations, packs
@@ -255,6 +272,10 @@ Feature: Duplicate product from Back Office (BO).
       | locale | value        |
       | en-US  | too late bro |
       | fr-FR  |              |
+    And product "copy_of_product1" should have following images:
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    |               |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
 
   Scenario: I duplicate product with combinations
     When I add product product_with_combinations with following information:
