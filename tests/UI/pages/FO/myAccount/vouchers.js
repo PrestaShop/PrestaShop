@@ -2,7 +2,7 @@ require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
 /**
- * Discount page, contains functions that can be used on the page
+ * Vouchers page, contains functions that can be used on the page
  * @class
  * @extends FOBasePage
  */
