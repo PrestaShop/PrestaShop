@@ -105,8 +105,14 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('c.id_category, c.id_parent, c.active, cl.name, cl.description, cs.position');
-        $qb->addSelect('COUNT(cp.`id_product`) AS `products_count`');
+        $qb->select('COUNT(cp.`id_product`) AS `products_count`, c.id_category, c.id_parent, c.active, cl.name, cl.description, cs.position');
+        $qb->leftJoin(
+            'c',
+            $this->dbPrefix . 'category_product',
+            'cp',
+            'c.`id_category` = cp.`id_category`'
+        );
+        $qb->groupBy('c.`id_category`');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -157,13 +163,6 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             $this->multistoreContextChecker->isSingleShopContext() ?
                 'c.id_category = cs.id_category AND cs.id_shop = :context_shop_id' :
                 'c.id_category = cs.id_category AND cs.id_shop = c.id_shop_default'
-        );
-
-        $qb->innerJoin(
-            'c',
-            $this->dbPrefix . 'category_product',
-            'cp',
-            'c.`id_category` = cp.`id_category`'
         );
 
         foreach ($filters as $filterName => $filterValue) {
@@ -233,8 +232,6 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         if ($this->multistoreFeature->isUsed() && $this->multistoreContextChecker->isSingleShopContext()) {
             $qb->andWhere('cs.id_shop = :context_shop_id');
         }
-
-        $qb->groupBy('cp.`id_category`');
 
         return $qb;
     }
