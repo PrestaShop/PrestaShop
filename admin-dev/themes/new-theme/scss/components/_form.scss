@@ -63,9 +63,6 @@
         text-align: right;
       }
 
-      @include media-breakpoint-down("sm") {
-        padding-left: 0;
-      }
     }
 
     &.type-hidden {
@@ -84,9 +81,9 @@
   }
 
   // make ps-switch align with label
-  .ps-switch:not(.ps-switch-lg) {
+  span.ps-switch:not(.ps-switch-lg) {
     @include media-breakpoint-up("sm") {
-      margin-top: 5px;
+      margin-top: 7px;
     }
   }
 
