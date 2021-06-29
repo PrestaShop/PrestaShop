@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Login page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Login extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on login page
+   */
   constructor() {
     super();
 
