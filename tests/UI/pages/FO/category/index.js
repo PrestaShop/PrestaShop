@@ -4,7 +4,7 @@ const FOBasePage = require('@pages/FO/FObasePage');
 /**
  * Category page, contains functions that can be used on the page
  * @class
- * @extends BOBasePage
+ * @extends FOBasePage
  */
 class Category extends FOBasePage {
   /**

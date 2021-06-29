@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Identity page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class AccountIdentity extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on identity page
+   */
   constructor() {
     super();
 
@@ -62,7 +71,6 @@ class AccountIdentity extends FOBasePage {
    * Unsubscribe from the newsletter from customer edit information page
    * @param page {object} Browser tab
    * @param password {string} String for the password
-   *
    * @returns {Promise<string>}
    */
   async unsubscribeNewsletter(page, password) {

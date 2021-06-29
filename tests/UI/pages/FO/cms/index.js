@@ -5,7 +5,7 @@ const FOBasePage = require('@pages/FO/FObasePage');
 /**
  * CMS page, contains functions that can be used on the page
  * @class
- * @extends BOBasePage
+ * @extends FOBasePage
  */
 class CMS extends FOBasePage {
   /**
