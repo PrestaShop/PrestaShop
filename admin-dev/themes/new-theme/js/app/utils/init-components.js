@@ -39,6 +39,7 @@ import MultistoreConfigField from '@js/components/form/multistore-config-field';
 import {EventEmitter} from '@components/event-emitter';
 import Grid from '@components/grid/grid';
 import Router from '@components/router';
+import ColorPicker from '@js/app/utils/colorpicker';
 
 // Grid extensions
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
@@ -137,6 +138,7 @@ const initPrestashopComponents = () => {
     Grid,
     GridExtensions,
     Router,
+    ColorPicker,
   };
 };
 export default initPrestashopComponents;
