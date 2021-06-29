@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject;
 /**
  * Represents relation value when shop is not specified
  */
-class NoShopId implements ShopGroupIdInterface
+class NoShopId implements ShopIdInterface
 {
     /**
      * Value when shop is not specified
