@@ -211,7 +211,7 @@ export default class CurrencyForm {
     const confirmButtonLabel = this.translations['modal.restore.apply'];
     const closeButtonLabel = this.translations['modal.restore.cancel'];
 
-    const modal = new (ConfirmModal as any)(
+    const modal = new ConfirmModal(
       {
         id: 'currency_restore_default_settings',
         confirmTitle,
