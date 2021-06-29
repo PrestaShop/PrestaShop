@@ -459,7 +459,14 @@ abstract class ModuleCore implements ModuleInterface
         return true;
     }
 
-    public function postInstall(): bool
+    /**
+     * Important: Do not type this method for compatibility reason.
+     * If your module aims to be compatible for older PHP versions, it will
+     * not be possible if we add strict typing as PHP 5.6 (for example) cannot strict type with bool.
+     *
+     * @return bool
+     */
+    public function postInstall()
     {
         return true;
     }
