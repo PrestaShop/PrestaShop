@@ -30,6 +30,8 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
@@ -44,6 +46,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPri
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -342,13 +346,27 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             $editCommand->setCustomerId($this->getNullableIdForEdit($dataRows, 'customer'));
         }
         if (isset($dataRows['from'])) {
-            $editCommand->setDateTimeFrom(new DateTime($dataRows['from']));
+            $editCommand->setDateTimeFrom($this->getDateTime($dataRows['from']));
         }
         if (isset($dataRows['to'])) {
-            $editCommand->setDateTimeTo(new DateTime($dataRows['to']));
+            $editCommand->setDateTimeTo($this->getDateTime($dataRows['to']));
         }
 
         return $editCommand;
+    }
+
+    /**
+     * @param string $input
+     *
+     * @return DateTimeInterface
+     */
+    private function getDateTime(string $input): DateTimeInterface
+    {
+        if ($input === DateTimeUtil::NULL_DATETIME) {
+            return new NullDateTime();
+        }
+
+        return new DateTimeImmutable($input);
     }
 
     /**
