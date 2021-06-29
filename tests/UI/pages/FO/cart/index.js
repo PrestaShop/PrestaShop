@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Cart page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Cart extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on cart page
+   */
   constructor() {
     super();
 
