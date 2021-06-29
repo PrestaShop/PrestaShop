@@ -97,6 +97,6 @@ class TranslationsFactoryTest extends TestCase
         $this->factory->addProvider($this->providerMock);
 
         $expected = $this->factory->createTranslationsArray($this->providerMock->getIdentifier());
-        self::assertIsArray($expected);
+        $this->assertIsArray($expected);
     }
 }

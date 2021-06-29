@@ -54,7 +54,7 @@ class ProductPresenterTest extends TestCase
      */
     private $product;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -100,7 +100,7 @@ class ProductPresenterTest extends TestCase
 
         $priceFormatter = $this->createMock(PriceFormatter::class);
         $priceFormatter->method('convertAmount')->withAnyParameters()->willReturnArgument(0);
-        $priceFormatter->method('format')->withAnyParameters()->willReturnCallback(function (?string $price) {
+        $priceFormatter->method('format')->withAnyParameters()->willReturnCallback(function (?float $price) {
             return '#' . $price;
         });
 

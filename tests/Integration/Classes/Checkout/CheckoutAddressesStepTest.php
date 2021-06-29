@@ -76,50 +76,52 @@ class CheckoutAddressesStepTest extends TestCase
     public function testIfCustomerHasNoAddressesThenDeliveryAddressFormIsOpen(): void
     {
         $this->session->method('getCustomerAddressesCount')->willReturn(0);
-        $this->assertArraySubset(
-            [
-                'show_delivery_address_form' => true,
-            ],
-            $this->step->handleRequest([])->getTemplateParameters()
+        $array = $this->step->handleRequest([])->getTemplateParameters();
+        $this->assertArrayHasKey(
+            'show_delivery_address_form',
+            $array
         );
+        $this->assertEquals(true, $array['show_delivery_address_form']);
     }
 
     public function testIfCustomerHasOneAddressThenDeliveryAddressFormIsNotOpen(): void
     {
         $this->session->method('getCustomerAddressesCount')->willReturn(1);
-        $this->assertArraySubset(
-            [
-                'show_delivery_address_form' => false,
-            ],
-            $this->step->handleRequest([])->getTemplateParameters()
+        $array = $this->step->handleRequest([])->getTemplateParameters();
+        $this->assertArrayHasKey(
+            'show_delivery_address_form',
+            $array
         );
+        $this->assertEquals(false, $array['show_delivery_address_form']);
     }
 
     public function testIfCustomerHasOneAddressAndWantsDifferentInvoiceThenInvoiceOpen(): void
     {
         $this->session->method('getCustomerAddressesCount')->willReturn(1);
-        $this->assertArraySubset(
-            [
-                'show_invoice_address_form' => true,
-            ],
-            $this->step->handleRequest([
-                'use_same_address' => false,
-            ])->getTemplateParameters()
+        $array = $this->step->handleRequest(['use_same_address' => false])->getTemplateParameters();
+        $this->assertArrayHasKey(
+            'show_invoice_address_form',
+            $array
         );
+        $this->assertEquals(false, $array['show_delivery_address_form']);
     }
 
     public function testWhenCustomerHasOneDeliveryAddressAndEditsItThenIsOpen(): void
     {
         $this->session->method('getCustomerAddressesCount')->willReturn(1);
-        $this->assertArraySubset(
-            [
-                'show_delivery_address_form' => true,
-                'form_has_continue_button' => true,
-            ],
-            $this->step->handleRequest([
-                'editAddress' => 'delivery',
-                'id_address' => null,
-            ])->getTemplateParameters()
-        );
+
+        $subset = [
+            'show_delivery_address_form' => true,
+            'form_has_continue_button' => true,
+        ];
+        $array = $this->step->handleRequest([
+            'editAddress' => 'delivery',
+            'id_address' => null,
+        ])->getTemplateParameters();
+
+        foreach ($subset as $key => $value) {
+            $this->assertArrayHasKey($key, $array);
+            $this->assertEquals($value, $array[$key]);
+        }
     }
 }

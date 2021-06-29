@@ -43,7 +43,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
 {
     private $previousErrorReportingLevel;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         self::bootKernel();
@@ -52,7 +52,13 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
 
     public function testLoadLegacyCommandWithoutContextFails()
     {
-        $this->expectException(TypeError::class, 'Not enough arguments (missing: "theme, locale").');
+        if (version_compare(phpversion(), '8.0', '>=')) {
+            $this->expectWarning();
+            $this->expectWarningMessage('Attempt to read property "precision" on null');
+        } else {
+            $this->expectException(TypeError::class);
+            $this->expectExceptionMessageMatches('/Argument 1 passed to PrestaShop\\\PrestaShop\\\Core\\\Localization\\\CLDR\\\ComputingPrecision::getPrecision\(\) must be of the type int(:?eger)?, null given/');
+        }
 
         $application = new Application(static::$kernel);
         $application->add(new class() extends Command {
@@ -103,7 +109,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
         $this->assertEquals(0, $commandTester->getStatusCode());
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         self::$kernel->shutdown();
         error_reporting($this->previousErrorReportingLevel);

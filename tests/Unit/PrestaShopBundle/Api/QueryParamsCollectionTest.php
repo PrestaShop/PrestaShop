@@ -45,7 +45,7 @@ class QueryParamsCollectionTest extends TestCase
      */
     private $queryParams;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->queryParams = new QueryStockParamsCollection();
     }
@@ -129,7 +129,7 @@ class QueryParamsCollectionTest extends TestCase
 
         $expectedSqlClauses[2] = [QueryParamsCollection::SQL_CLAUSE_WHERE => ''];
 
-        $this->assertInternalType('array', $sqlParts);
+        $this->assertIsArray($sqlParts);
 
         $this->assertEquals($expectedSqlClauses, $sqlParts);
     }
@@ -169,7 +169,7 @@ class QueryParamsCollectionTest extends TestCase
         $expectedSqlClauses[1]['product_id'] = 1;
         $expectedSqlClauses[2] = [QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {product_id} = :product_id'];
 
-        $this->assertInternalType('array', $sqlParts);
+        $this->assertIsArray($sqlParts);
 
         $this->assertEquals($expectedSqlClauses, $sqlParts);
     }
