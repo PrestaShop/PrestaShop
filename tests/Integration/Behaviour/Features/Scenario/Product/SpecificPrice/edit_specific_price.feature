@@ -177,4 +177,15 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | from quantity         | 1                   |
       | from                  | 2021-01-01 10:00:00 |
       | to                    | 2021-01-01 11:00:00 |
-# @todo: it is impossible to reset date ranges to 0000-00-00. Need to discuss it. See reminder in EditProductSpecificPriceCommand
+    When I edit specific price "price1" with following details:
+      | from | 0000-00-00 00:00:00 |
+      | to   | 0000-00-00 00:00:00 |
+    Then specific price price1 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
