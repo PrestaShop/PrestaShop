@@ -59,7 +59,7 @@ class GroupId implements GroupIdInterface
     /**
      * @param int $value
      */
-    private function assertValueIsPositive(int $value)
+    private function assertValueIsPositive(int $value): void
     {
         if (0 >= $value) {
             throw new GroupConstraintException(sprintf('Group id must be positive integer. "%s" given', $value), GroupConstraintException::INVALID_ID);
