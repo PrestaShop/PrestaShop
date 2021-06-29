@@ -262,7 +262,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             $dataRows['reduction type'],
             $dataRows['reduction value'],
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
-            (float) $dataRows['price'],
+            $dataRows['price'],
             (int) $dataRows['from quantity']
         );
 
