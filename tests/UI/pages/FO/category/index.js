@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Category page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Category extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on category page
+   */
   constructor() {
     super();
 
@@ -18,7 +27,7 @@ class Category extends FOBasePage {
   /* Methods */
   /**
    * Check if user is in category page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
   async isCategoryPage(page) {
