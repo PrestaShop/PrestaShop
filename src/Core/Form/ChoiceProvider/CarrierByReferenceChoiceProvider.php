@@ -64,7 +64,7 @@ final class CarrierByReferenceChoiceProvider implements FormChoiceProviderInterf
 
         $carriers = $this->carrierDataProvider->getCarriers(
             $this->langId,
-            false,
+            true,
             false,
             false,
             null,
