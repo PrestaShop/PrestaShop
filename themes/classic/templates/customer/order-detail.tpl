@@ -148,7 +148,7 @@
   {$HOOK_DISPLAYORDERDETAIL nofilter}
 
   {block name='order_detail'}
-    {if $order.details.is_returnable && $is_virtual == false}
+    {if $order.details.is_returnable && $isVirtual == false}
       {include file='customer/_partials/order-detail-return.tpl'}
     {else}
       {include file='customer/_partials/order-detail-no-return.tpl'}
