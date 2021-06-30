@@ -39,13 +39,13 @@ admin_products_combinations_edit_combination:
     requirements:
         combinationId: \d+
 
-admin_products_combinations_remove_combination:
-    path: /combinations/{combinationId}/remove
+admin_products_combinations_delete_combination:
+    path: /combinations/{combinationId}/delete
     methods: [DELETE]
     options:
         expose: true
     defaults:
-        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::removeAction
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/CombinationController:deleteAction
         _legacy_controller: AdminProducts
     requirements:
         combinationId: \d+
