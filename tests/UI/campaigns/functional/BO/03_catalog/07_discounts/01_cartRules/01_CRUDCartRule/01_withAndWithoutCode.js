@@ -13,14 +13,12 @@ const addCartRulePage = require('@pages/BO/catalog/discounts/add');
 
 // Import FO pages
 const foHomePage = require('@pages/FO/home');
-const foLoginPage = require('@pages/FO/login');
 const foProductPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
 const ProductData = require('@data/FO/product');
-const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
 
 // import test context
@@ -51,7 +49,7 @@ const cartRuleWithCode = new CartRuleFaker(
   },
 );
 
-describe('BO - Catalog - Cart rules : Create cart rule with/without code', async () => {
+describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
