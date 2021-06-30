@@ -74,8 +74,6 @@ class CombinationDeleter
     }
 
     /**
-     * @todo: rename -> deleteCombination()
-     *
      * @param CombinationId $combinationId
      *
      * @throws CoreException
@@ -83,7 +81,7 @@ class CombinationDeleter
      * @throws CombinationNotFoundException
      * @throws ProductConstraintException
      */
-    public function removeCombination(CombinationId $combinationId): void
+    public function deleteCombination(CombinationId $combinationId): void
     {
         $combination = $this->combinationRepository->get($combinationId);
         $this->combinationRepository->delete($combinationId);
@@ -104,7 +102,7 @@ class CombinationDeleter
         $failedIds = [];
         foreach ($combinationIds as $combinationId) {
             try {
-                $this->removeCombination($combinationId);
+                $this->deleteCombination($combinationId);
             } catch (CannotDeleteCombinationException $e) {
                 $failedIds[] = $combinationId->getValue();
             }
@@ -118,15 +116,13 @@ class CombinationDeleter
     }
 
     /**
-     * @todo: rename -> deleteAllProductCombinations()
-     *
      * @param ProductId $productId
      *
      * @throws InvalidProductTypeException
      * @throws CannotDeleteCombinationException
      * @throws CoreException
      */
-    public function removeAllProductCombinations(ProductId $productId): void
+    public function deleteAllProductCombinations(ProductId $productId): void
     {
         $product = $this->productRepository->get($productId);
         if ($product->product_type !== ProductType::TYPE_COMBINATIONS) {

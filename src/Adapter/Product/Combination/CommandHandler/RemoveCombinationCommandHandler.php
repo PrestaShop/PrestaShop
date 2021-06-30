@@ -57,6 +57,6 @@ class RemoveCombinationCommandHandler implements RemoveCombinationCommandHandler
      */
     public function handle(RemoveCombinationCommand $command): void
     {
-        $this->combinationDeleter->removeCombination($command->getCombinationId());
+        $this->combinationDeleter->deleteCombination($command->getCombinationId());
     }
 }
