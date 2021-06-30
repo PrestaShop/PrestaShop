@@ -66,7 +66,7 @@ class HookDispatcherTest extends TestCase
      *
      * @param string $eventName
      */
-    public function testItCallsHookDispatcherWithCaseInsensitiveEventNames($eventName)
+    public function testItCallsHookDispatcherWithCaseInsensitiveEventNames(string $eventName): void
     {
         $lowerCasedEventName = strtolower($eventName);
 

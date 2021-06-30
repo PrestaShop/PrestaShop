@@ -90,6 +90,7 @@ class CategoryViewDataProvider
 
         $categoriesWithoutParentCount = count(Category::getCategoriesWithoutParent());
         $categoriesTree = $category->getParentsCategories();
+        $categoryName = $category->name[$this->contextLangId] ?? null;
 
         if (empty($categoriesTree)
             && ($category->id != (int) $this->configuration->get('PS_ROOT_CATEGORY') || Tools::isSubmit('id_category'))
@@ -97,7 +98,7 @@ class CategoryViewDataProvider
             && !$this->multishopFeature->isUsed()
             && $categoriesWithoutParentCount > 1
         ) {
-            $categoriesTree = [['name' => $category->name[$this->contextLangId]]];
+            $categoriesTree = [['name' => $categoryName]];
         }
 
         $categoriesTree = array_reverse($categoriesTree);
@@ -107,7 +108,7 @@ class CategoryViewDataProvider
             'id' => $category->id,
             'id_parent' => $category->id_parent,
             'is_home_category' => $this->configuration->get('PS_HOME_CATEGORY') == $category->id,
-            'name' => $category->name[$this->contextLangId],
+            'name' => $categoryName,
         ];
     }
 }

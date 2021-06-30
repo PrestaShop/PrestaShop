@@ -217,15 +217,10 @@
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml"
         ],
-        "phpunit-sf": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/sf-tests.xml"
-        ],
         "test-all": [
             "@composer phpunit-admin",
             "@composer phpunit-legacy",
             "@composer unit-tests",
-            "@composer phpunit-sf",
             "@composer integration-tests",
             "@composer phpunit-controllers",
             "@composer integration-behaviour-tests"
