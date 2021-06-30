@@ -31,8 +31,8 @@ const productData = new ProductFaker(
   {
     type: 'Standard product',
     combinations: {
-      Color: ['White'],
-      Size: ['S'],
+      color: ['White'],
+      size: ['S'],
     },
     quantity: 0,
   },
@@ -124,14 +124,14 @@ describe('Display unavailable product attributes on the product page', async () 
 
       const sizeIsVisible = await productPage.isUnavailableProductSizeDisplayed(
         page,
-        productData.combinations.Size[0],
+        productData.combinations.size[0],
       );
 
       await expect(sizeIsVisible).to.be.equal(test.args.enable);
 
       const colorIsVisible = await productPage.isUnavailableProductColorDisplayed(
         page,
-        productData.combinations.Color[0],
+        productData.combinations.color[0],
       );
 
       await expect(colorIsVisible).to.be.equal(test.args.enable);
