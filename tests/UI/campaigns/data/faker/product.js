@@ -15,10 +15,10 @@ class ProductData {
     /** @type {string} Name of the product */
     this.name = (productToCreate.name || faker.commerce.productName()).toUpperCase();
 
-    /** @type {string} Cover image path for the product */
+    /** @type {?string} Cover image path for the product */
     this.coverImage = productToCreate.coverImage || null;
 
-    /** @type {string} Thumb image path for the product */
+    /** @type {?string} Thumb image path for the product */
     this.thumbImage = productToCreate.thumbImage || null;
 
     /** @type {string} Type of the product */
