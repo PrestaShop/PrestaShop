@@ -26,7 +26,11 @@
 {% form_theme attachmentForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block attachment_form %}
-  {{ form_start(attachmentForm) }}
+  {% set formAttributes = {} %}
+  {% if attachmentId is defined %}
+    {% set formAttributes = {'data-attachment-id': attachmentId} %}
+  {% endif %}
+  {{ form_start(attachmentForm, {'attr': formAttributes}) }}
     <div class="card">
       <h3 class="card-header">
         <i class="material-icons">person</i>
