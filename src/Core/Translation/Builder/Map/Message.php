@@ -52,6 +52,11 @@ class Message
      */
     private $userTranslation;
 
+    /**
+     * @var array
+     */
+    private $metadata;
+
     public function __construct(string $defaultTranslation)
     {
         $this->defaultTranslation = $defaultTranslation;
@@ -72,6 +77,18 @@ class Message
     public function setUserTranslation(string $userTranslation): self
     {
         $this->userTranslation = $userTranslation;
+
+        return $this;
+    }
+
+    public function getMetadata(): array
+    {
+        return $this->metadata;
+    }
+
+    public function setMetadata(array $metadata): self
+    {
+        $this->metadata = $metadata;
 
         return $this;
     }
