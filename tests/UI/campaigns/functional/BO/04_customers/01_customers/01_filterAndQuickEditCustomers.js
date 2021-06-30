@@ -25,20 +25,12 @@ let browserContext;
 let page;
 let numberOfCustomers = 0;
 
-// Today date
+// Get today date format (yyy-mm-dd)
 const today = new Date();
-
-// Current day
-const day = (`0${today.getDate()}`).slice(-2);
-
-// Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-
-// Current year
-const year = today.getFullYear();
-
-// Date today format (yyy-mm-dd)
-const dateToday = `${year}-${month}-${day}`;
+const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
+const dd = (`0${today.getDate()}`).slice(-2); // Current day
+const yyyy = today.getFullYear(); // Current year
+const dateToday = `${yyyy}-${mm}-${dd}`;
 
 // Filter and quick edit customers
 describe('BO - Customers : Filter and quick edit customers', async () => {

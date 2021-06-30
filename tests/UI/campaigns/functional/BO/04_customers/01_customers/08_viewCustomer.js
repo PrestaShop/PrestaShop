@@ -6,7 +6,7 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const customersPage = require('@pages/BO/customers');
 const addCustomerPage = require('@pages/BO/customers/add');
@@ -14,6 +14,8 @@ const viewCustomerPage = require('@pages/BO/customers/view');
 const addAddressPage = require('@pages/BO/customers/addresses/add');
 const viewOrderPage = require('@pages/BO/orders/view');
 const viewCartPage = require('@pages/BO/orders/shoppingCarts/view');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
@@ -32,7 +34,6 @@ const AddressFaker = require('@data/faker/address');
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_customers_viewCustomer';
-
 
 let browserContext;
 let page;
@@ -64,7 +65,7 @@ const yyyyEditBirth = editCustomerData.yearOfBirth;
 const editCustomerBirthDate = `${mmEditBirth}/${ddEditBirth}/${yyyyEditBirth}`;
 
 // View customer
-describe('View information about customer', async () => {
+describe('BO - Customers : View information about customer', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -102,7 +103,7 @@ describe('View information about customer', async () => {
   });
 
   // 1 : Create customer
-  describe('Create Customer in BO', async () => {
+  describe('Create customer in BO', async () => {
     it('should go to add new customer page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCustomerPage', baseContext);
 
@@ -123,8 +124,8 @@ describe('View information about customer', async () => {
   });
 
   // 2 : View customer
-  describe('View customer created', async () => {
-    it('should filter list by email', async function () {
+  describe('View customer and check information', async () => {
+    it(`should filter list by email '${createCustomerData.email}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCreatedCustomer', baseContext);
 
       await customersPage.resetFilter(page);
@@ -192,14 +193,21 @@ describe('View information about customer', async () => {
 
   // 3 : Create order
   describe('Create order in FO', async () => {
-    it('should go to FO and add the first product to the cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
+    it('should go to FO page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
       // Click on view my shop
       page = await viewCustomerPage.viewMyShop(page);
 
-      // Change language
+      // Change FO language
       await foHomePage.changeLanguage(page, 'en');
+
+      const isHomePage = await foHomePage.isHomePage(page);
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
+
+    it('should add product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       // Go to the first product page
       await foHomePage.goToProductPage(page, 1);
@@ -207,8 +215,16 @@ describe('View information about customer', async () => {
       // Add the product to the cart
       await productPage.addProductToTheCart(page);
 
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      await expect(notificationsNumber).to.be.equal(1);
+    });
+
+    it('should proceed to checkout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
+
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
+
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       await expect(isCheckoutPage).to.be.true;
     });
@@ -261,8 +277,8 @@ describe('View information about customer', async () => {
   });
 
   // 4 : View customer after creating the order
-  describe('View customer after creating the order', async () => {
-    it('should go to customers page', async function () {
+  describe('View customer and check information', async () => {
+    it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewCustomersPage', baseContext);
 
       await viewCustomerPage.goToSubMenu(
@@ -275,17 +291,12 @@ describe('View information about customer', async () => {
       await expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
-    it('should filter list by email', async function () {
+    it(`should filter list by email '${createCustomerData.email}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCustomer', baseContext);
 
       await customersPage.resetFilter(page);
 
-      await customersPage.filterCustomers(
-        page,
-        'input',
-        'email',
-        createCustomerData.email,
-      );
+      await customersPage.filterCustomers(page, 'input', 'email', createCustomerData.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
       await expect(textEmail).to.contains(createCustomerData.email);
@@ -418,8 +429,9 @@ describe('View information about customer', async () => {
       expect(result).to.contains(viewCustomerPage.successfulUpdateMessage);
     });
   });
+
   // 5 : Edit customer then check customer information page
-  describe('Edit customer created then view it', async () => {
+  describe('Edit customer then view it and check information', async () => {
     it('should go to edit customer page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditCustomerPage', baseContext);
 
@@ -468,7 +480,7 @@ describe('View information about customer', async () => {
   });
 
   // 6 : Edit order then check customer information page
-  describe('Edit order then view customer', async () => {
+  describe('Edit order then view customer and check information', async () => {
     it('should go to view order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewOrderPage', baseContext);
 
@@ -484,7 +496,7 @@ describe('View information about customer', async () => {
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
-    it('should go to customers page', async function () {
+    it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageAfterEditOrder', baseContext);
 
       await viewOrderPage.goToSubMenu(
@@ -497,17 +509,12 @@ describe('View information about customer', async () => {
       await expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
-    it('should filter list by email', async function () {
+    it(`should filter list by email '${editCustomerData.email}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCustomerAfterEditOrder', baseContext);
 
       await customersPage.resetFilter(page);
 
-      await customersPage.filterCustomers(
-        page,
-        'input',
-        'email',
-        editCustomerData.email,
-      );
+      await customersPage.filterCustomers(page, 'input', 'email', editCustomerData.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
       await expect(textEmail).to.contains(editCustomerData.email);
@@ -550,7 +557,7 @@ describe('View information about customer', async () => {
   });
 
   // 7 : Edit address then check customer information page
-  describe('Edit address then view customer', async () => {
+  describe('Edit address then view customer and check address', async () => {
     it('should go to edit address page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditAddressPage', baseContext);
 
@@ -578,7 +585,8 @@ describe('View information about customer', async () => {
       expect(customerAddress).to.contains(createAddressData.phone);
     });
   });
-  // 8 : View carts page
+
+  // 8 : View cart page
   describe('View cart page', async () => {
     it('should go to view cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewCartPage', baseContext);
@@ -591,7 +599,7 @@ describe('View information about customer', async () => {
 
   // 9 : Delete customer from BO
   describe('Delete Customer', async () => {
-    it('should go to customers page', async function () {
+    it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToDelete', baseContext);
 
       await viewCartPage.goToSubMenu(
@@ -604,17 +612,12 @@ describe('View information about customer', async () => {
       await expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
-    it('should filter list by email', async function () {
+    it(`should filter list by email '${editCustomerData.email}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       await customersPage.resetFilter(page);
 
-      await customersPage.filterCustomers(
-        page,
-        'input',
-        'email',
-        editCustomerData.email,
-      );
+      await customersPage.filterCustomers(page, 'input', 'email', editCustomerData.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
       await expect(textEmail).to.contains(editCustomerData.email);
@@ -628,6 +631,13 @@ describe('View information about customer', async () => {
 
       const numberOfCustomersAfterDelete = await customersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilter2', baseContext);
+
+      numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCustomers).to.be.above(0);
     });
   });
 });
