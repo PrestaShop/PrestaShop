@@ -74,13 +74,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
   import PSTags from '@app/widgets/ps-tags';
   import PSTreeItem from '@app/widgets/ps-tree/ps-tree-item';
   import PSTree from '@app/widgets/ps-tree/ps-tree';
   import {EventBus} from '@app/utils/event-bus';
 
-  export default {
+  export default Vue.extend({
     props: {
       placeholder: {
         type: String,
@@ -94,6 +95,7 @@
       label: {
         type: String,
         required: true,
+        default: '',
       },
       list: {
         type: Array,
@@ -101,13 +103,13 @@
       },
     },
     computed: {
-      isOverview() {
+      isOverview(): boolean {
         return this.$route.name === 'overview';
       },
-      hasPlaceholder() {
+      hasPlaceholder(): boolean {
         return !this.tags.length;
       },
-      PSTreeTranslations() {
+      PSTreeTranslations(): Record<string, any> {
         return {
           expand: this.trans('tree_expand'),
           reduce: this.trans('tree_reduce'),
@@ -115,9 +117,9 @@
       },
     },
     methods: {
-      getItems() {
-        const matchList = [];
-        this.list.filter((data) => {
+      getItems(): Array<any> {
+        const matchList: Array<any> = [];
+        this.list.filter((data: any) => {
           const label = data[this.label].toLowerCase();
           data.visible = false;
           if (label.match(this.currentVal)) {
@@ -137,7 +139,7 @@
         }
         return this.list;
       },
-      onCheck(obj) {
+      onCheck(obj: any): void {
         const itemLabel = obj.item[this.label];
         const filterType = this.hasChildren ? 'category' : 'supplier';
 
@@ -157,10 +159,10 @@
           this.$emit('active', [], filterType);
         }
       },
-      onTyping(val) {
+      onTyping(val: string): void {
         this.currentVal = val.toLowerCase();
       },
-      onTagChanged(tag) {
+      onTagChanged(tag: any): void {
         let checkedTag = tag;
 
         if (this.tags.indexOf(this.currentVal) !== -1) {
@@ -173,7 +175,7 @@
         EventBus.$emit('toggleCheckbox', checkedTag);
         this.currentVal = '';
       },
-      filterList(tags) {
+      filterList(tags: Array<any>): Array<number> {
         const idList = [];
         const {categoryList} = this.$store.state;
         const list = this.hasChildren ? categoryList : this.list;
@@ -192,8 +194,8 @@
     data() {
       return {
         currentVal: '',
-        match: null,
-        tags: [],
+        match: null as null | Array<any>,
+        tags: [] as Array<any>,
         splice: true,
         hasChildren: false,
       };
@@ -203,5 +205,5 @@
       PSTree,
       PSTreeItem,
     },
-  };
+  });
 </script>

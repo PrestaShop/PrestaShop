@@ -9,13 +9,23 @@ declare module 'vue/types/vue' {
   }
 }
 
+declare module "*.vue" {
+   import Vue from "vue";
+   export default Vue;
+}
+
 declare module '@vue/runtime-core' {
+  // declare your own store states
+  interface State {
+    yolo: any;
+  }
+
   interface CombinedVueInstance {
     trans: (text: string) => string;
   }
 
   // provide typings for `this.$store`
   interface ComponentCustomProperties {
-    $store: Store<any>
+    $store: Store<State>
   }
 }

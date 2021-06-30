@@ -37,7 +37,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
   import Breadcrumb from './breadcrumb';
   import Tabs from './tabs';
 
@@ -49,7 +50,7 @@
       .find('.toolbar-icons');
   }
 
-  export default {
+  export default Vue.extend({
     components: {
       Breadcrumb,
       Tabs,
@@ -65,5 +66,5 @@
       });
       $(document).trigger(event);
     },
-  };
+  });
 </script>
