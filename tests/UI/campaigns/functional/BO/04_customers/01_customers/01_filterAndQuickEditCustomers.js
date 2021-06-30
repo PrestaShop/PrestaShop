@@ -2,29 +2,45 @@ require('module-alias/register');
 
 const {expect} = require('chai');
 
-// Import utils
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
 
-// Import data
-const {DefaultCustomer} = require('@data/demo/customer');
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const customersPage = require('@pages/BO/customers');
+
+// Import data
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_customers_filterAndQuickEditCustomers';
 
-
 let browserContext;
 let page;
 let numberOfCustomers = 0;
 
-// Filter And Quick Edit Customers
-describe('Filter And Quick Edit Customers', async () => {
+// Today date
+const today = new Date();
+
+// Current day
+const day = (`0${today.getDate()}`).slice(-2);
+
+// Current month
+const month = (`0${today.getMonth() + 1}`).slice(-2);
+
+// Current year
+const year = today.getFullYear();
+
+// Date today format (yyy-mm-dd)
+const dateToday = `${year}-${month}-${day}`;
+
+// Filter and quick edit customers
+describe('BO - Customers : Filter and quick edit customers', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -39,7 +55,7 @@ describe('Filter And Quick Edit Customers', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to Customers page', async function () {
+  it('should go to \'Customers > Customers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -48,11 +64,13 @@ describe('Filter And Quick Edit Customers', async () => {
       dashboardPage.customersLink,
     );
 
+    await customersPage.closeSfToolBar(page);
+
     const pageTitle = await customersPage.getPageTitle(page);
     await expect(pageTitle).to.contains(customersPage.pageTitle);
   });
 
-  it('should reset all filters and get Number of customers in BO', async function () {
+  it('should reset all filters and get number of customers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
     numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
@@ -199,11 +217,33 @@ describe('Filter And Quick Edit Customers', async () => {
         await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
       });
     });
+
+    it('should filter by registration \'Date from\' and \'Date to\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
+
+      // Filter orders
+      await customersPage.filterCustomersByRegistration(page, dateToday, dateToday);
+
+      // Get number of elements
+      const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
+
+      for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
+        const textColumn = await customersPage.getTextColumn(page, 'date_add', i);
+        await expect(textColumn).to.contains(dateToday);
+      }
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+
+      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
+    });
   });
 
   // 2 : Editing customers from grid table
-  describe('Quick Edit Customers', async () => {
-    it('should filter by Email \'pub@prestashop.com\'', async function () {
+  describe('Quick edit customers', async () => {
+    it(`should filter by Email '${DefaultCustomer.email}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
       await customersPage.filterCustomers(

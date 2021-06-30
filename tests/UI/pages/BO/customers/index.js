@@ -153,6 +153,20 @@ class Customers extends BOBasePage {
   }
 
   /**
+   * Filter orders by date from and date to
+   * @param page {Page} Browser tab
+   * @param dateFrom {string} Date from to filter with
+   * @param dateTo {string} Date to to filter with
+   * @returns {Promise<void>}
+   */
+  async filterCustomersByRegistration(page, dateFrom, dateTo) {
+    await page.type(this.customerFilterColumnInput('date_add_from'), dateFrom);
+    await page.type(this.customerFilterColumnInput('date_add_to'), dateTo);
+    // click on search
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+  }
+
+  /**
    * Get Value of columns Enabled, Newsletter or Partner Offers
    * @param page {Page} Browser tab
    * @param row {number} Row on table
