@@ -23,6 +23,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
@@ -582,6 +584,21 @@ class HookCore extends ObjectModel
             }
             if (!isset($module_instance->id) || !is_numeric($module_instance->id)) {
                 return false;
+            }
+
+            // check that hook listener is implemented by the module
+            if (!Hook::isHookCallableOn($module_instance, $hook_name) && !($module_instance instanceof WidgetInterface)) {
+                $missingHookListenerErrorMsg = sprintf(
+                    'Hook with the name %s has been registered by %s, but the corresponding method %s has not been defined in the Module class.',
+                    $hook_name,
+                    get_class($module_instance),
+                    sprintf('hook%s', ucfirst($hook_name))
+                );
+                if (_PS_MODE_DEV_) {
+                    throw new PrestaShopException($missingHookListenerErrorMsg);
+                }
+                $logger = new LegacyLogger();
+                $logger->warning($missingHookListenerErrorMsg);
             }
 
             Hook::exec(
