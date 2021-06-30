@@ -25,7 +25,7 @@ const CustomerFaker = require('@data/faker/customer');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customers_customers_CRUDCustomerInBO';
+const baseContext = 'functional_BO_customers_customers_CRUDCustomer';
 
 let browserContext;
 let page;
