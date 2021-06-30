@@ -2020,7 +2020,11 @@ class ProductCore extends ObjectModel
     */
     public function deleteFeatures()
     {
-        $all_shops = Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL ? true : false;
+        $isMultiShopActive = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
+        $all_shops = true;
+        if ($isMultiShopActive) {
+            $all_shops = Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL ? true : false;
+        }
 
         // List products features
         $features = Db::getInstance()->executeS('
