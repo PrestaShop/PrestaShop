@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\BulkDel
 /**
  * Deletes multiple combinations using legacy object model
  */
-final class BulkDeleteCombinationHandler implements BulkDeleteCombinationHandlerInterface
+class BulkDeleteCombinationHandler implements BulkDeleteCombinationHandlerInterface
 {
     /**
      * @var CombinationRemover
