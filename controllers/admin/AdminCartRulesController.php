@@ -528,8 +528,11 @@ class AdminCartRulesControllerCore extends AdminController
 
     public function populateCategories(&$flatCategories, $currentCategoryTree, $currentPath = '')
     {
-        $separator = ' > ';
         if ($currentCategoryTree) {
+            return;
+        }
+        
+        $separator = ' > ';
             foreach ($currentCategoryTree as $categoryArray) {
                 $fullName = ($currentPath ? $currentPath . $separator : '') . $categoryArray['name'];
                 $flatCategories[] = ['id' => $categoryArray['id_category'], 'name' => $fullName];
