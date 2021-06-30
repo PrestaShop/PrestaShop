@@ -29,21 +29,6 @@ const router = new Router();
 const {$} = window;
 
 /**
- * @param {HTMLElement} form
- *
- * @returns {Promise<*|jQuery>}
- */
-export const createAttachment = async (form) => $.ajax({
-  type: 'POST',
-  url: router.generate('admin_attachments_create', {
-    submitFormAjax: true,
-  }),
-  data: new FormData(form),
-  processData: false,
-  contentType: false,
-});
-
-/**
  * @param attachmentId
  *
  * @returns {Promise<*|jQuery>}
@@ -53,6 +38,5 @@ export const getAttachmentInfo = async (attachmentId) => $.get(
 );
 
 export default {
-  createAttachment,
   getAttachmentInfo,
 };
