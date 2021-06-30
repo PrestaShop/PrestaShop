@@ -3,6 +3,7 @@
 @clear-cache-before-feature
 @product-combination
 @remove-combination
+#  todo: rename -> remove to delete everywhere?
 Feature: Remove attribute combinations for product in Back Office (BO)
   As an employee
   I need to be able to remove product attribute combinations from BO

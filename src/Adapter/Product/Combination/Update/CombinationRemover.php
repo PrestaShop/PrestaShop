@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -40,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
+// @todo: does this need to be renamed too?
 class CombinationRemover
 {
     /**
@@ -73,6 +75,8 @@ class CombinationRemover
     }
 
     /**
+     * @todo: rename -> deleteCombination()
+     *
      * @param CombinationId $combinationId
      *
      * @throws CoreException
@@ -94,6 +98,29 @@ class CombinationRemover
     }
 
     /**
+     * @param CombinationId[] $combinationIds
+     */
+    public function bulkDeleteCombinations(array $combinationIds): void
+    {
+        $failedIds = [];
+        foreach ($combinationIds as $combinationId) {
+            try {
+                $this->removeCombination($combinationId);
+            } catch (CannotDeleteCombinationException $e) {
+                $failedIds[] = $combinationId->getValue();
+            }
+        }
+
+        if (empty($failedIds)) {
+            return;
+        }
+
+        throw new CannotBulkDeleteCombinationException($failedIds, 'Failed to delete combinations');
+    }
+
+    /**
+     * @todo: rename -> deleteAllProductCombinations()
+     *
      * @param ProductId $productId
      *
      * @throws InvalidProductTypeException

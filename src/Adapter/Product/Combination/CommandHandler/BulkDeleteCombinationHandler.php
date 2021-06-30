@@ -23,20 +23,38 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationRemover;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\BulkDeleteCombinationHandlerInterface;
 
 /**
- * Defines contract to handle @see RemoveCombinationCommand
- *
- * todo: rename -> DeleteCombinationHandlerInterface
+ * Deletes multiple combinations using legacy object model
  */
-interface RemoveCombinationCommandHandlerInterface
+final class BulkDeleteCombinationHandler implements BulkDeleteCombinationHandlerInterface
 {
     /**
-     * @param RemoveCombinationCommand $command
+     * @var CombinationRemover
      */
-    public function handle(RemoveCombinationCommand $command): void;
+    private $combinationRemover;
+
+    /**
+     * @param CombinationRemover $combinationRemover
+     */
+    public function __construct(
+        CombinationRemover $combinationRemover
+    ) {
+        $this->combinationRemover = $combinationRemover;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function handle(BulkDeleteCombinationCommand $command): void
+    {
+        $this->combinationRemover->bulkDeleteCombinations($command->getCombinationIds());
+    }
 }
