@@ -79,7 +79,7 @@ describe('BO - Customers : Enable/Disable/Delete customer by bulk actions', asyn
         await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
       });
 
-      it(`should create customer n°${index + 1} and check result`, async function () {
+      it(`should create customer n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCustomer${index + 1}`, baseContext);
 
         const textResult = await addCustomerPage.createEditCustomer(page, test.args.customerToCreate);
@@ -92,7 +92,7 @@ describe('BO - Customers : Enable/Disable/Delete customer by bulk actions', asyn
   });
 
   // 2 : Enable/Disable customers by bulk actions
-  describe('Enable/Disable customers by Bulk Actions', async () => {
+  describe('Enable/Disable customers by bulk actions', async () => {
     it('should filter list by firstName', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkEdit', baseContext);
 
@@ -128,7 +128,7 @@ describe('BO - Customers : Enable/Disable/Delete customer by bulk actions', asyn
   });
 
   // 3 : Delete Customers created with bulk actions
-  describe('Delete customers by Bulk Actions', async () => {
+  describe('Delete customers by bulk actions', async () => {
     it('should filter list by firstName', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
@@ -138,7 +138,7 @@ describe('BO - Customers : Enable/Disable/Delete customer by bulk actions', asyn
       await expect(textResult).to.contains('todelete');
     });
 
-    it('should delete customers with Bulk Actions and check result', async function () {
+    it('should delete customers by bulk actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCustomers', baseContext);
 
       const deleteTextResult = await customersPage.deleteCustomersBulkActions(page);

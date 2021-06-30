@@ -82,7 +82,7 @@ describe('BO - Customers : Pagination and sort customers table', async () => {
           await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
         });
 
-        it('should create customer and check result', async function () {
+        it('should create customer', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `createCustomer${index}`, baseContext);
 
           const textResult = await addCustomerPage.createEditCustomer(page, createCustomerData);
