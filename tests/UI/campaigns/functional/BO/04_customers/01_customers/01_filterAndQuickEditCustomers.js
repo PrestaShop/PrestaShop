@@ -1,5 +1,6 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Helpers to open and close browser
