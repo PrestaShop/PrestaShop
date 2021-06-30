@@ -92,8 +92,8 @@ services:
         arguments:
             - '@prestashop.adapter.product.combination.repository.combination_repository'
 
-    prestashop.adapter.product.combination.update.combination_remover:
-        class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationRemover
+    prestashop.adapter.product.combination.update.combination_deleter:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.combination.repository.combination_repository'
@@ -171,7 +171,7 @@ services:
     prestashop.adapter.product.combination.command_handler.remove_combination_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\RemoveCombinationCommandHandler
         arguments:
-            - '@prestashop.adapter.product.combination.update.combination_remover'
+            - '@prestashop.adapter.product.combination.update.combination_deleter'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand
@@ -179,7 +179,7 @@ services:
     prestashop.adapter.product.combination.command_handler.bulk_delete_combination_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\BulkDeleteCombinationHandler
         arguments:
-            - '@prestashop.adapter.product.combination.update.combination_remover'
+            - '@prestashop.adapter.product.combination.update.combination_deleter'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand
