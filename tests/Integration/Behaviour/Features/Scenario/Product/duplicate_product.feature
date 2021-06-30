@@ -311,7 +311,7 @@ Feature: Duplicate product from Back Office (BO).
     Then product "copy_of_product_with_combinations" should have 2 specific prices
 #    no a way to check if the images are actually the ones we expect,
 #    because references are attached to id, so at least we can count them and check if legends match
-    And product "copy_of_product1" should have 2 images
+    And product "copy_of_product1" should have 2 images in total
     And product "copy_of_product1" images should have following legends:
       | legend[en-US] | legend[fr-FR] |
       | image1 en     | image1 fr     |

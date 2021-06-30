@@ -235,7 +235,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product ":productReference" should have :expectedCount images
+     * @Then product ":productReference" should have :expectedCount images in total
      *
      * @param string $productReference
      * @param int $expectedCount
