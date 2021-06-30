@@ -225,6 +225,71 @@ class RedirectionTargetTransformerTest extends TestCase
 
         yield [
             [
+                'unknown' => 'product',
+                'target' => [
+                    51 => 42,
+                ],
+            ],
+            [
+                'unknown' => 'product',
+                'target' => 42,
+            ],
+        ];
+
+        yield [
+            [
+                'unknown' => 'product',
+                'target' => [
+                    'index' => 42,
+                ],
+            ],
+            [
+                'unknown' => 'product',
+                'target' => 42,
+            ],
+        ];
+
+        yield [
+            [
+                'unknown' => 'product',
+                'target' => [
+                    51 => 42,
+                    64 => 43,
+                ],
+            ],
+            [
+                'unknown' => 'product',
+                'target' => 42,
+            ],
+        ];
+
+        yield [
+            [
+                'unknown' => 'product',
+                'target' => [42, 67],
+            ],
+            [
+                'unknown' => 'product',
+                'target' => 42,
+            ],
+        ];
+
+        yield [
+            [
+                'unknown' => 'product',
+                'target' => [
+                    'index' => 42,
+                    'another_index' => 54,
+                ],
+            ],
+            [
+                'unknown' => 'product',
+                'target' => 42,
+            ],
+        ];
+
+        yield [
+            [
                 'type' => 'now_found',
             ],
             [

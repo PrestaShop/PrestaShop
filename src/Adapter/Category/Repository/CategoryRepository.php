@@ -95,7 +95,7 @@ class CategoryRepository extends AbstractObjectModelRepository
         $qb
             ->select('cl.name, c.nleft, c.nright')
             ->from($this->dbPrefix . 'category', 'c')
-            ->leftJoin('c', $this->dbPrefix . 'category_lang', 'cl', 'c.id_category = cl.id_category')
+            ->innerJoin('c', $this->dbPrefix . 'category_lang', 'cl', 'c.id_category = cl.id_category')
             ->andWhere('c.id_category = :categoryId')
             ->andWhere('cl.id_lang = :languageId')
             ->setParameter('categoryId', $categoryId->getValue())
@@ -114,7 +114,7 @@ class CategoryRepository extends AbstractObjectModelRepository
         $qb
             ->select('c.id_category, cl.name')
             ->from($this->dbPrefix . 'category', 'c')
-            ->leftJoin('c', $this->dbPrefix . 'category_lang', 'cl', 'c.id_category = cl.id_category')
+            ->innerJoin('c', $this->dbPrefix . 'category_lang', 'cl', 'c.id_category = cl.id_category')
             ->andWhere('c.nleft < :left AND c.nright > :right')
             ->andWhere('cl.id_lang = :languageId')
             ->andWhere('c.level_depth >= 1')

@@ -57,6 +57,11 @@ class ProductPreviewRepository
      */
     private $productImagePathFactory;
 
+    /**
+     * @param ProductRepository $productRepository
+     * @param ProductImageRepository $productImageRepository
+     * @param ProductImagePathFactory $productImagePathFactory
+     */
     public function __construct(
         ProductRepository $productRepository,
         ProductImageRepository $productImageRepository,

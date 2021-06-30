@@ -59,7 +59,7 @@ class RedirectionTargetTransformer implements DataTransformerInterface
         // EntitySearchInputType contains a collection of hidden inputs, for redirection only one target is selected
         // and we just want to retrieve the first (and only) selected ID
         if (!empty($redirectionData['target'])) {
-            $redirectionData['target'] = $redirectionData['target'][0];
+            $redirectionData['target'] = reset($redirectionData['target']);
         }
 
         return $redirectionData;
