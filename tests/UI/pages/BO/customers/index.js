@@ -153,7 +153,7 @@ class Customers extends BOBasePage {
   }
 
   /**
-   * Filter orders by date from and date to
+   * Filter customer by registration date from and date to
    * @param page {Page} Browser tab
    * @param dateFrom {string} Date from to filter with
    * @param dateTo {string} Date to to filter with
