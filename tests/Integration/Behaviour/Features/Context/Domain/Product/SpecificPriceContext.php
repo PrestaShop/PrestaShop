@@ -311,19 +311,15 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         if (isset($dataRows['reduction type'], $dataRows['reduction value'])) {
             $editCommand->setReduction($dataRows['reduction type'], (string) $dataRows['reduction value']);
         }
-
         if (isset($dataRows['includes tax'])) {
             $editCommand->setIncludesTax(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']));
         }
-
         if (isset($dataRows['price'])) {
             $editCommand->setPrice($dataRows['price']);
         }
-
         if (isset($dataRows['from quantity'])) {
             $editCommand->setFromQuantity((int) $dataRows['from quantity']);
         }
-
         if (isset($dataRows['combination'])) {
             $editCommand->setCombinationId($this->getStoredId($dataRows, 'combination'));
         }
