@@ -26,7 +26,8 @@
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import Router from '@components/router';
-import {createAttachment, getAttachmentInfo} from '@pages/product/services/attachments-service';
+import {getAttachmentInfo} from '@pages/product/services/attachments-service';
+import {IframeModal} from '@components/modal';
 
 const {$} = window;
 
@@ -56,47 +57,33 @@ export default class AttachmentsManager {
    * @private
    */
   initAddAttachmentIframe() {
-    this.$attachmentsContainer.find(ProductMap.attachments.addAttachmentBtn).fancybox({
-      type: 'iframe',
-      width: '90%',
-      height: '90%',
-      afterLoad: () => {
-        const form = $('.fancybox-iframe').contents().find('form');
-        const {fancybox} = parent.$;
+    this.$attachmentsContainer.on('click', ProductMap.attachments.addAttachmentBtn, (event) => {
+      event.preventDefault();
 
-        form.on('click', '.cancel-btn', () => {
-          fancybox.close();
-        });
+      const iframeModal = new IframeModal({
+        id: 'modal-create-product-attachment',
+        modalTitle: 'Create attachment',
+        iframeUrl: $(event.target).prop('href'),
+        closable: true,
+        dialogStyle: {
+          maxHeight: '450px',
+        },
+        onLoaded: (iframe) => {
+          const iframeForm = iframe.contentWindow.document.querySelector('form[name="attachment"]');
 
-        form.submit((e) => {
-          this.createAttachmentOnSubmit({e, fancybox});
-        });
+          // The data attribute attachmentId is only accessible once the attachment has been created and the edit form
+          // is returned
+          if (iframeForm && iframeForm.dataset && iframeForm.dataset.attachmentId) {
+            getAttachmentInfo(iframeForm.dataset.attachmentId).then((response) => {
+              this.addAttachmentRow(response.attachmentInfo);
+            });
+            iframeModal.hide();
+          }
+        },
       },
+      );
+      iframeModal.show();
     });
-  }
-
-  /**
-   * @private
-   */
-  createAttachmentOnSubmit(eventData) {
-    const submitEvent = eventData.e;
-    submitEvent.preventDefault();
-
-    createAttachment(submitEvent.currentTarget)
-      .then((resp) => {
-        if (resp.errors) {
-          Object.values(resp.errors).forEach((error) => {
-            $.growl.error({message: error});
-          });
-
-          return;
-        }
-        eventData.fancybox.close();
-
-        getAttachmentInfo(resp.attachmentId).then((response) => {
-          this.addAttachmentRow(response.attachmentInfo);
-        });
-      });
   }
 
   /**

@@ -96,29 +96,26 @@ class AttachmentController extends FrameworkBundleAdminController
 
         $attachmentForm = $attachmentFormBuilder->getForm();
         $attachmentForm->handleRequest($request);
-        $isAjax = $request->query->has('submitFormAjax');
 
         try {
             $handlerResult = $attachmentFormHandler->handle($attachmentForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                if ($isAjax) {
-                    return $this->json(['attachmentId' => $handlerResult->getIdentifiableObjectId()]);
-                }
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                if ($request->get('saveAndStay') !== null) {
+                    // Keep the initial query parameters (to keep liteDisplay or saveAndStay for example)
+                    $parameters = array_merge([
+                        'attachmentId' => $handlerResult->getIdentifiableObjectId(),
+                    ], $request->query->all());
+
+                    return $this->redirectToRoute('admin_attachments_edit', $parameters);
+                }
 
                 return $this->redirectToRoute('admin_attachments_index');
             }
-
-            if ($isAjax && $handlerResult->isSubmitted() && !$handlerResult->isValid()) {
-                return $this->json(['errors' => $this->getFormErrorsForJS($attachmentForm)]);
-            }
         } catch (Exception $e) {
             $message = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
-
-            if ($isAjax) {
-                return $this->json(['errors' => [$message]]);
-            }
             $this->addFlash('error', $message);
         }
 
