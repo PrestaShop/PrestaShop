@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\RemoveC
 
 /**
  * Handles @see RemoveCombinationCommand using adapter udpater service
+ *
+ * todo: rename -> DeleteCombinationHandler
  */
 final class RemoveCombinationCommandHandler implements RemoveCombinationCommandHandlerInterface
 {
