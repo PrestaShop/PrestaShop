@@ -87,6 +87,10 @@ class RedirectTargetProvider
         string $redirectType,
         int $redirectTargetId
     ): ?ProductRedirectTarget {
+        if (empty($redirectTargetId)) {
+            return null;
+        }
+
         switch ($redirectType) {
             case RedirectType::TYPE_PRODUCT_TEMPORARY:
             case RedirectType::TYPE_PRODUCT_PERMANENT:
