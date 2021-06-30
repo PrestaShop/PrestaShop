@@ -26,17 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand;
 
 /**
- * Defines contract to handle @see RemoveCombinationCommand
- *
- * todo: rename -> DeleteCombinationHandlerInterface
+ * Defines contract to handle @see BulkDeleteCombinationCommand
  */
-interface RemoveCombinationCommandHandlerInterface
+interface BulkDeleteCombinationHandlerInterface
 {
     /**
-     * @param RemoveCombinationCommand $command
+     * @param BulkDeleteCombinationCommand $command
      */
-    public function handle(RemoveCombinationCommand $command): void;
+    public function handle(BulkDeleteCombinationCommand $command): void;
 }
