@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
+/**
+ * Deletes multiple combinations
+ */
 class BulkDeleteCombinationCommand
 {
     /**
