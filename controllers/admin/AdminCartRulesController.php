@@ -505,16 +505,12 @@ class AdminCartRulesControllerCore extends AdminController
                 break;
             case 'categories':
                 $categories = ['selected' => [], 'unselected' => []];
-                $results = Db::getInstance()->executeS('
-				SELECT DISTINCT name, c.id_category as id
-				FROM ' . _DB_PREFIX_ . 'category c
-				LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
-					ON (c.`id_category` = cl.`id_category`
-					AND cl.`id_lang` = ' . (int) Context::getContext()->language->id . Shop::addSqlRestrictionOnLang('cl') . ')
-				' . Shop::addSqlAssociation('category', 'c') . '
-				WHERE id_lang = ' . (int) Context::getContext()->language->id . '
-				ORDER BY name');
-                foreach ($results as $row) {
+                $flatCategories = [];
+                $categoryTree = Category::getNestedCategories(Category::getRootCategory()->id, (int) Context::getContext()->language->id, false);
+
+                $this->populateCategories($flatCategories, $categoryTree);
+
+                foreach ($flatCategories as $row) {
                     $categories[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
                 }
                 Context::getContext()->smarty->assign('product_rule_itemlist', $categories);
@@ -528,6 +524,20 @@ class AdminCartRulesControllerCore extends AdminController
         }
 
         return $this->createTemplate('product_rule.tpl')->fetch();
+    }
+
+    public function populateCategories(&$flatCategories, $currentCategoryTree, $currentPath = '') {
+        $separator = ' > ';
+        if ($currentCategoryTree) {
+            foreach($currentCategoryTree as $categoryArray) {
+                $fullName = ($currentPath?$currentPath.$separator:''). $categoryArray['name'];
+                $flatCategories[] = ['id' => $categoryArray['id_category'], 'name' => $fullName];
+                // reccursive call for childrens
+                if (!empty($categoryArray['children'])) {
+                    $this->populateCategories($flatCategories, $categoryArray['children'], $fullName);
+                }
+            }
+        }
     }
 
     public function ajaxProcess()
