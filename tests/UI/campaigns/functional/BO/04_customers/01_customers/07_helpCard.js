@@ -1,9 +1,12 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
-// Import utils
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -15,12 +18,11 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_customers_helpCard';
 
-
 let browserContext;
 let page;
 
 // Check that help card is in english in customers page
-describe('Customers help card', async () => {
+describe('BO - Customers : Help card in customers page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -35,7 +37,7 @@ describe('Customers help card', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to Customers page', async function () {
+  it('should go to \'Customers > Customers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -43,6 +45,8 @@ describe('Customers help card', async () => {
       dashboardPage.customersParentLink,
       dashboardPage.customersLink,
     );
+
+    await customersPage.closeSfToolBar(page);
 
     const pageTitle = await customersPage.getPageTitle(page);
     await expect(pageTitle).to.contains(customersPage.pageTitle);
