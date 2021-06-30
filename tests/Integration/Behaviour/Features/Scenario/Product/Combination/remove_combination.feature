@@ -39,9 +39,9 @@ Feature: Remove attribute combinations for product in Back Office (BO)
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product product1 default combination should be "product1SWhite"
     And product "product1" should have the following list of attribute groups:
-      | name[en-US] | public_name[en-US] | is_color_group | group_type | position | reference  |
-      | Size        | Size               | false          | select     | 0        | Size       |
-      | Color       | Color              | true           | color      | 1        | Color      |
+      | name[en-US] | public_name[en-US] | is_color_group | group_type | position | reference |
+      | Size        | Size               | false          | select     | 0        | Size      |
+      | Color       | Color              | true           | color      | 1        | Color     |
     And product "product1" should have the following list of attributes in attribute group "Size":
       | name[en-US] | color | position | reference |
       | S           |       | 0        | S         |
@@ -100,20 +100,22 @@ Feature: Remove attribute combinations for product in Back Office (BO)
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product product1 default combination should be "product1SWhite"
-    When I remove following combinations from product "product1":
+    When I remove following combinations:
+      | id reference   |
       | product1SWhite |
       | product1SBlack |
       | product1SBlue  |
     Then product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | true      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | true       |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product product1 default combination should be "product1MWhite"
-    When I remove following combinations from product "product1":
+    When I remove following combinations:
+      | id reference   |
       | product1MWhite |
-      | product1MBlue |
+      | product1MBlue  |
     Then product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | true      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | true       |
     And product product1 default combination should be "product1MBlack"
