@@ -185,6 +185,17 @@ class Cart extends FOBasePage {
   getDiscountValue(page, line = 1) {
     return this.getPriceFromText(page, this.discountValue(line), 2000);
   }
+
+  /**
+   * Remove voucher
+   * @param page {Page} Browser tab
+   * @param line {number} Cart summary line
+   * @returns {Promise<void>}
+   */
+  async removeVoucher(page, line = 1) {
+    await this.waitForSelectorAndClick(page, this.promoCodeRemoveIcon(line));
+    await this.waitForHiddenSelector(page, this.promoCodeRemoveIcon(line));
+  }
 }
 
 module.exports = new Cart();
