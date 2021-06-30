@@ -3,8 +3,9 @@ require('module-alias/register');
 // Import expect from chai
 const {expect} = require('chai');
 
-// Helpers to open and close browser
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -15,9 +16,6 @@ const customersPage = require('@pages/BO/customers');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_customers_filterAndQuickEditCustomers';
 
@@ -250,7 +248,7 @@ describe('BO - Customers : Filter and quick edit customers', async () => {
       await expect(numberOfCustomersAfterFilter).to.be.at.above(0);
     });
 
-    const tests = [
+    [
       {
         args: {
           testIdentifier: 'disableStatus', action: 'disable', column: 'active', value: false,
@@ -281,10 +279,8 @@ describe('BO - Customers : Filter and quick edit customers', async () => {
           testIdentifier: 'disablePartnerOffers', action: 'disable partner offers', column: 'optin', value: false,
         },
       },
-    ];
-
-    tests.forEach((test) => {
-      it(`should ${test.args.action} for first customer`, async function () {
+    ].forEach((test) => {
+      it(`should ${test.args.action} '${test.args.column}' column for customer`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
         const isActionPerformed = await customersPage.updateToggleColumnValue(
@@ -302,6 +298,13 @@ describe('BO - Customers : Filter and quick edit customers', async () => {
         const customerStatus = await customersPage.getToggleColumnValue(page, 1, test.args.column);
         await expect(customerStatus).to.be.equal(test.args.value);
       });
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterQuickEdit', baseContext);
+
+      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCustomersAfterReset).to.be.equal(numberOfCustomers);
     });
   });
 });

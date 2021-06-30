@@ -3,8 +3,9 @@ require('module-alias/register');
 // Import expect from chai
 const {expect} = require('chai');
 
-// Helpers to open and close browser
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -16,9 +17,6 @@ const addCustomerPage = require('@pages/BO/customers/add');
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_customers_customersBulkActions';
 
@@ -69,12 +67,10 @@ describe('BO - Customers : Enable/Disable/Delete customer by bulk actions', asyn
 
   // 1 : Create 2 customers In BO
   describe('Create 2 customers in BO', async () => {
-    const tests = [
+    [
       {args: {customerToCreate: firstCustomerData}},
       {args: {customerToCreate: secondCustomerData}},
-    ];
-
-    tests.forEach((test, index) => {
+    ].forEach((test, index) => {
       it('should go to add new customer page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCustomerPage${index + 1}`, baseContext);
 
@@ -100,23 +96,16 @@ describe('BO - Customers : Enable/Disable/Delete customer by bulk actions', asyn
     it('should filter list by firstName', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkEdit', baseContext);
 
-      await customersPage.filterCustomers(
-        page,
-        'input',
-        'firstname',
-        'todelete',
-      );
+      await customersPage.filterCustomers(page, 'input', 'firstname', 'todelete');
 
       const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'firstname');
       await expect(textResult).to.contains('todelete');
     });
 
-    const tests = [
+    [
       {args: {action: 'disable', enabledValue: false}},
       {args: {action: 'enable', enabledValue: true}},
-    ];
-
-    tests.forEach((test) => {
+    ].forEach((test) => {
       it(`should ${test.args.action} customers by bulk actions and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Customers`, baseContext);
 
@@ -143,12 +132,7 @@ describe('BO - Customers : Enable/Disable/Delete customer by bulk actions', asyn
     it('should filter list by firstName', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await customersPage.filterCustomers(
-        page,
-        'input',
-        'firstname',
-        'todelete',
-      );
+      await customersPage.filterCustomers(page, 'input', 'firstname', 'todelete');
 
       const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'firstname');
       await expect(textResult).to.contains('todelete');

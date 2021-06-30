@@ -3,8 +3,9 @@ require('module-alias/register');
 // Import expect from chai
 const {expect} = require('chai');
 
-// Helpers to open and close browser
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -16,9 +17,6 @@ const addCustomerPage = require('@pages/BO/customers/add');
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_customers_paginationAndSortCustomers';
 

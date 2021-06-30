@@ -261,7 +261,7 @@ describe('BO - Customers : CRUD customer in BO', async () => {
     });
   });
 
-  // 4 : View updated customer and check data
+  // 6 : View updated customer and check data
   describe('View updated customer', async () => {
     it(`should filter list by email '${editCustomerData.email}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewUpdatedCustomer', baseContext);
@@ -297,7 +297,7 @@ describe('BO - Customers : CRUD customer in BO', async () => {
     });
   });
 
-  // 5 : Delete Customer from BO
+  // 7 : Delete Customer from BO
   describe('Delete customer', async () => {
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToDelete', baseContext);
@@ -336,6 +336,13 @@ describe('BO - Customers : CRUD customer in BO', async () => {
 
       const numberOfCustomersAfterDelete = await customersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
+
+      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
   });
 });
