@@ -1,12 +1,12 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
-
 // Import utils
 const helper = require('@utils/helpers');
 
-// Importing pages
-// BO pages
+// Import expect from chai
+const {expect} = require('chai');
+
+// Import pages
 const loginPage = require('@pages/BO/login/index');
 const dashboardPage = require('@pages/BO/dashboard');
 
@@ -24,7 +24,7 @@ let page;
 
 const employeeData = new EmployeeFaker({password: '123456789'});
 
-describe('Login in BO', async () => {
+describe('BO - Login : Login in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
