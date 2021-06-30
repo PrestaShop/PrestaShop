@@ -29,10 +29,7 @@
     'data-prototype-template': form_row(prototype),
     'data-prototype-index': prototype.vars.name|e('html_attr'),
     'data-prototype-mapping': prototype_mapping|json_encode,
-    'data-remove-modal-title': remove_modal_title|e('html_attr'),
-    'data-remove-modal-message': remove_modal_message|e('html_attr'),
-    'data-remove-modal-apply': remove_modal_apply|e('html_attr'),
-    'data-remove-modal-cancel': remove_modal_cancel|e('html_attr'),
+    'data-remove-modal': remove_modal|json_encode,
     'data-remote-url': remote_url,
     'data-data-limit': limit,
     'data-allow-delete': form.vars.allow_delete ? 1 : 0

@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Form\Admin\Type;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -101,10 +102,7 @@ class EntitySearchInputType extends CollectionType
             ],
 
             // Remove modal wording
-            'remove_modal_title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
-            'remove_modal_message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
-            'remove_modal_apply' => $this->trans('Delete', 'Admin.Actions'),
-            'remove_modal_cancel' => $this->trans('Cancel', 'Admin.Actions'),
+            'remove_modal' => null,
         ]);
 
         $resolver->setAllowedTypes('search_attr', ['array']);
@@ -117,10 +115,12 @@ class EntitySearchInputType extends CollectionType
 
         $resolver->setAllowedTypes('prototype_mapping', ['array']);
 
-        $resolver->setAllowedTypes('remove_modal_title', ['string']);
-        $resolver->setAllowedTypes('remove_modal_message', ['string']);
-        $resolver->setAllowedTypes('remove_modal_apply', ['string']);
-        $resolver->setAllowedTypes('remove_modal_cancel', ['string']);
+        $resolver->setAllowedTypes('remove_modal', ['array', 'null']);
+        $resolver->setNormalizer('remove_modal', function (Options $options, $value) {
+            $resolver = $this->getRemoveModalResolver();
+
+            return $resolver->resolve($value ?? []);
+        });
     }
 
     /**
@@ -129,6 +129,12 @@ class EntitySearchInputType extends CollectionType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
+
+        // Reformat parameter name for javascript (PHP and JS don't have same naming conventions)
+        $removeModal = $options['remove_modal'];
+        $removeModal['buttonClass'] = $removeModal['button_class'];
+        unset($removeModal['button_class']);
+
         $view->vars = array_replace($view->vars, [
             'remote_url' => $options['remote_url'],
             'limit' => $options['limit'],
@@ -136,10 +142,7 @@ class EntitySearchInputType extends CollectionType
             'list_attr' => $options['list_attr'],
             'placeholder' => $options['placeholder'],
             'prototype_mapping' => $options['prototype_mapping'],
-            'remove_modal_title' => $options['remove_modal_title'],
-            'remove_modal_message' => $options['remove_modal_message'],
-            'remove_modal_apply' => $options['remove_modal_apply'],
-            'remove_modal_cancel' => $options['remove_modal_cancel'],
+            'remove_modal' => $removeModal,
         ]);
     }
 
@@ -163,5 +166,32 @@ class EntitySearchInputType extends CollectionType
     protected function trans(string $key, string $domain, array $parameters = []): string
     {
         return $this->translator->trans($key, $parameters, $domain);
+    }
+
+    /**
+     * @return OptionsResolver
+     */
+    private function getRemoveModalResolver(): OptionsResolver
+    {
+        $externalLinkResolver = new OptionsResolver();
+        $externalLinkResolver
+            ->setRequired(['title', 'message', 'apply', 'cancel', 'button_class'])
+            ->setDefaults([
+                'id' => 'modal-confirm-remove-entity',
+                'title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
+                'message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
+                'apply' => $this->trans('Delete', 'Admin.Actions'),
+                'cancel' => $this->trans('Cancel', 'Admin.Actions'),
+                'button_class' => 'btn-danger',
+            ])
+            ->setAllowedTypes('id', 'string')
+            ->setAllowedTypes('title', 'string')
+            ->setAllowedTypes('message', 'string')
+            ->setAllowedTypes('apply', 'string')
+            ->setAllowedTypes('cancel', 'string')
+            ->setAllowedTypes('button_class', 'string')
+        ;
+
+        return $externalLinkResolver;
     }
 }

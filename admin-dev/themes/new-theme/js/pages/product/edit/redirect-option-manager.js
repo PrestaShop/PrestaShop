@@ -121,6 +121,9 @@ export default class RedirectOptionManager {
       onRemovedContent: () => {
         this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
       },
+      onSelectedContent: () => {
+        this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
+      },
     });
   }
 

@@ -40,30 +40,32 @@ export interface EntitySearchInputOptions extends OptionsObject {
 
   allowDelete: boolean,
   dataLimit: number,
-  remoteUrl: string | undefined,
+  remoteUrl: string,
 
-  removeModalTitle: string | undefined,
-  removeModalMessage: string | undefined,
-  removeModalApply: string | undefined,
-  removeModalCancel: string | undefined,
+  removeModal: ModalOptions,
 
   searchInputSelector: string,
   listSelector: string,
   entityItemSelector: string,
   entityDeleteSelector: string,
-  removeModalId: string,
-  confirmButtonClass: string,
   queryWildcard: string,
 
   onRemovedContent: RemoveFunction | undefined,
   onSelectedContent: SelectFunction | undefined,
 }
+export interface ModalOptions extends OptionsObject {
+  id: string;
+  title: string;
+  message: string;
+  apply: string;
+  cancel: string;
+  buttonClass: string;
+}
 
 /**
  * This component is used to search and select one or several entities, it uses the AutoSearchComplete
  * component which displays a list of suggestion based on an API returned response. Then when
- * an element is selected it is added to the selection container and hidden inputs are created to
- * send an array of entity IDs in the form request.
+ * an element is selected it is added to the selection container relying on the prototype template provided.
  *
  * This component is used with EntitySearchInputType forms, and is tightly linked to the content of this
  * twig file src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/entity_search_input.html.twig
@@ -86,6 +88,7 @@ export default class EntitySearchInput {
 
   constructor($entitySearchInputContainer: JQuery, options: OptionsObject) {
     this.$entitySearchInputContainer = $entitySearchInputContainer;
+    this.options = <EntitySearchInputOptions>{};
     this.buildOptions(options);
 
     this.$entitySearchInput = $(this.options.searchInputSelector, this.$entitySearchInputContainer);
@@ -151,10 +154,14 @@ export default class EntitySearchInput {
       dataLimit: 0,
       remoteUrl: undefined,
 
-      removeModalTitle: undefined,
-      removeModalMessage: undefined,
-      removeModalApply: undefined,
-      removeModalCancel: undefined,
+      removeModal: {
+        id: 'modal-confirm-remove-entity',
+        title: 'Delete item',
+        message: 'Are you sure you want to delete this item?',
+        apply: 'Delete',
+        cancel: 'Cancel',
+        buttonClass: 'btn-danger',
+      },
 
       // Most of the previous config are configurable via the EntitySearchInputForm options, the following ones are only
       // overridable via js config (as long as you use the default template)
@@ -162,8 +169,6 @@ export default class EntitySearchInput {
       listSelector: EntitySearchInputMap.listSelector,
       entityItemSelector: EntitySearchInputMap.entityItemSelector,
       entityDeleteSelector: EntitySearchInputMap.entityDeleteSelector,
-      removeModalId: 'modal-confirm-remove-entity',
-      confirmButtonClass: 'btn-danger',
       queryWildcard: '__QUERY__',
 
       // These are configurable callbacks
@@ -206,20 +211,16 @@ export default class EntitySearchInput {
 
       const modal = new (ConfirmModal as any)(
         {
-          id: this.options.removeModalId,
-          confirmTitle: this.options.removeModalTitle,
-          closeButtonLabel: this.options.removeModalCancel,
-          confirmButtonLabel: this.options.removeModalApply,
-          confirmButtonClass: this.options.confirmButtonClass,
-          confirmMessage: this.options.removeModalMessage,
+          id: this.options.removeModal.id,
+          confirmTitle: this.options.removeModal.title,
+          confirmMessage: this.options.removeModal.message,
+          closeButtonLabel: this.options.removeModal.cancel,
+          confirmButtonLabel: this.options.removeModal.apply,
+          confirmButtonClass: this.options.removeModal.buttonClass,
           closable: true,
         },
         () => {
-          const $hiddenInput = $('input[type="hidden"]', $entity);
           $entity.remove();
-          $hiddenInput.trigger('change');
-          this.$selectionContainer.trigger('change');
-
           if (typeof this.options.onRemovedContent !== 'undefined') {
             this.options.onRemovedContent($entity);
           }
@@ -345,25 +346,20 @@ export default class EntitySearchInput {
   }
 
   /**
-   * Add the selected content to the selection container, the HTML is generated based on the render function
-   * then a hidden input is automatically added inside it, and finally the rendered selection is added to the list.
+   * Add the selected content to the selection container, the HTML is generated based on the render that relies on the
+   * prototype template and mapping, and finally the rendered selection is added to the list.
    *
-   * @param selectedItem {Object}
+   * @param {Object} selectedItem
    */
   private addSelectedContentToContainer(selectedItem: any): void {
     const newIndex = this.$selectionContainer.children().length;
     const selectedHtml = this.renderSelected(selectedItem, newIndex);
 
     const $selectedNode = $(selectedHtml);
-    const $hiddenInput = $('input[type="hidden"]', $selectedNode);
-
     const $entityDelete = $(this.options.entityDeleteSelector, $selectedNode);
     $entityDelete.toggle(!!this.options.allowDelete);
 
     this.$selectionContainer.append($selectedNode);
-
-    // Trigger the change so that listeners detect the form data has been modified
-    $hiddenInput.trigger('change');
 
     if (typeof this.options.onSelectedContent !== 'undefined') {
       this.options.onSelectedContent($selectedNode, selectedItem);
@@ -371,8 +367,9 @@ export default class EntitySearchInput {
   }
 
   /**
-   * Render the selected element, this will be appended in the selection list (ul),
-   * no need to include the hidden input as it is automatically handled in addSelectedContentToContainer
+   * Render the selected element, this will be appended in the selection list (ul), prototypeTemplate is used as the
+   * base the we rely on prototypeMapping to replace every placeholders in the template by their mapping value in the
+   * provided entity.
    *
    * @param {Object} entity
    * @param {number} index
