@@ -64,7 +64,6 @@ $(() => {
   customerGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
   customerGrid.addExtension(new AsyncToggleColumnExtension());
 
-
   const customerDiscountsGrid = new Grid('customer_discount');
   customerDiscountsGrid.addExtension(new SubmitRowActionExtension());
   customerDiscountsGrid.addExtension(new LinkRowActionExtension());
