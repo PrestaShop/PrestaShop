@@ -10,19 +10,48 @@ const currencies = ['All currencies', 'Euro'];
 const reductionType = ['Amount', 'Percentage'];
 const reductionTax = ['Tax excluded', 'Tax included'];
 
-module.exports = class Category {
+/**
+ * Create new catalog price rule to use on creation catalog price rule form on BO
+ * @class
+ */
+class CatalogPriceRuleData {
+  /**
+   * Constructor for class CatalogPriceRuleData
+   * @param priceRuleToCreate {Object} Could be used to force the value of some members
+   */
   constructor(priceRuleToCreate = {}) {
+    /** @member {string} Name of the price rule */
     this.name = priceRuleToCreate.name || faker.commerce.department();
+
+    /** @member {string} Currency of the price rule */
     this.currency = priceRuleToCreate.currency || faker.random.arrayElement(currencies);
+
+    /** @member {string} Country that could use the cart rule */
     this.country = priceRuleToCreate.country || faker.random.arrayElement(countriesNames);
+
+    /** @member {string} Customer group that could use the price rule */
     this.group = priceRuleToCreate.group || faker.random.arrayElement(groupAccessNames);
+
+    /** @member {string} Minimum quantity to apply price rule */
     this.fromQuantity = priceRuleToCreate.fromQuantity === undefined
       ? faker.random.number({min: 1, max: 9})
       : priceRuleToCreate.fromQuantity;
+
+    /** @member {string} Starting date to apply the price rule  */
     this.fromDate = priceRuleToCreate.fromDate || '';
+
+    /** @member {string} Ending date to apply price rule */
     this.toDate = priceRuleToCreate.toDate || '';
+
+    /** @member {string} Reduction type of the price rule */
     this.reductionType = priceRuleToCreate.reductionType || faker.random.arrayElement(reductionType);
+
+    /** @member {string} Reduction tax for the price rule */
     this.reductionTax = priceRuleToCreate.reductionTax || faker.random.arrayElement(reductionTax);
+
+    /** @member {number} Reduction value of the price rule */
     this.reduction = priceRuleToCreate.reduction || faker.random.number({min: 20, max: 30});
   }
-};
+}
+
+module.exports = CatalogPriceRuleData;
