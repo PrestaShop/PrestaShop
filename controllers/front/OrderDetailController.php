@@ -189,6 +189,7 @@ class OrderDetailControllerCore extends FrontController
 
                 $this->context->smarty->assign([
                     'order' => $this->order_to_display,
+                    'is_virtual' => $order->isVirtual(),
                     'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $order]),
                 ]);
             } else {
