@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationRemover;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\RemoveCombinationCommandHandlerInterface;
 
@@ -40,16 +40,16 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\RemoveC
 class RemoveCombinationCommandHandler implements RemoveCombinationCommandHandlerInterface
 {
     /**
-     * @var CombinationRemover
+     * @var CombinationDeleter
      */
-    private $combinationRemover;
+    private $combinationDeleter;
 
     /**
-     * @param CombinationRemover $combinationRemover
+     * @param CombinationDeleter $combinationDeleter
      */
-    public function __construct(CombinationRemover $combinationRemover)
+    public function __construct(CombinationDeleter $combinationDeleter)
     {
-        $this->combinationRemover = $combinationRemover;
+        $this->combinationDeleter = $combinationDeleter;
     }
 
     /**
@@ -57,6 +57,6 @@ class RemoveCombinationCommandHandler implements RemoveCombinationCommandHandler
      */
     public function handle(RemoveCombinationCommand $command): void
     {
-        $this->combinationRemover->removeCombination($command->getCombinationId());
+        $this->combinationDeleter->removeCombination($command->getCombinationId());
     }
 }

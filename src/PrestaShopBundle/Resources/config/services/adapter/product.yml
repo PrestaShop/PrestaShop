@@ -249,7 +249,7 @@ services:
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.pack.update.product_pack_updater'
-            - '@prestashop.adapter.product.combination.update.combination_remover'
+            - '@prestashop.adapter.product.combination.update.combination_deleter'
             - '@prestashop.adapter.product.virtual_product.update.virtual_product_updater'
 
     prestashop.adapter.product.command_handler.delete_product_handler:

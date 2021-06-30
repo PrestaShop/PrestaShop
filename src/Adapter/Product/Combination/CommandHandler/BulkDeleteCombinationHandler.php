@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationRemover;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\BulkDeleteCombinationHandlerInterface;
 
@@ -37,17 +37,17 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\BulkDel
 class BulkDeleteCombinationHandler implements BulkDeleteCombinationHandlerInterface
 {
     /**
-     * @var CombinationRemover
+     * @var CombinationDeleter
      */
-    private $combinationRemover;
+    private $combinationDeleter;
 
     /**
-     * @param CombinationRemover $combinationRemover
+     * @param CombinationDeleter $combinationDeleter
      */
     public function __construct(
-        CombinationRemover $combinationRemover
+        CombinationDeleter $combinationDeleter
     ) {
-        $this->combinationRemover = $combinationRemover;
+        $this->combinationDeleter = $combinationDeleter;
     }
 
     /**
@@ -55,6 +55,6 @@ class BulkDeleteCombinationHandler implements BulkDeleteCombinationHandlerInterf
      */
     public function handle(BulkDeleteCombinationCommand $command): void
     {
-        $this->combinationRemover->bulkDeleteCombinations($command->getCombinationIds());
+        $this->combinationDeleter->bulkDeleteCombinations($command->getCombinationIds());
     }
 }
