@@ -68,6 +68,7 @@ class ProductAttachmentsType extends TranslatorAwareType
                     'class' => 'btn-outline-secondary add-attachment',
                     'href' => $this->urlGenerator->generate('admin_attachments_create', [
                         'liteDisplaying' => true,
+                        'saveAndStay' => true,
                     ]),
                 ],
             ])
