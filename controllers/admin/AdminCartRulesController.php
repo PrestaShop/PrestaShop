@@ -531,7 +531,7 @@ class AdminCartRulesControllerCore extends AdminController
         if (!$currentCategoryTree) {
             return;
         }
-        
+
         $separator = ' > ';
         foreach ($currentCategoryTree as $categoryArray) {
             $fullName = ($currentPath ? $currentPath . $separator : '') . $categoryArray['name'];
