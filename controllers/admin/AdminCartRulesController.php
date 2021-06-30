@@ -526,20 +526,19 @@ class AdminCartRulesControllerCore extends AdminController
         return $this->createTemplate('product_rule.tpl')->fetch();
     }
 
-    public function populateCategories(&$flatCategories, $currentCategoryTree, $currentPath = '')
+    public function populateCategories(&$flatCategories, $currentCategoryTree, $currentPath = ''): void
     {
-        if ($currentCategoryTree) {
+        if (!$currentCategoryTree) {
             return;
         }
         
         $separator = ' > ';
-            foreach ($currentCategoryTree as $categoryArray) {
-                $fullName = ($currentPath ? $currentPath . $separator : '') . $categoryArray['name'];
-                $flatCategories[] = ['id' => $categoryArray['id_category'], 'name' => $fullName];
-                // reccursive call for childrens
-                if (!empty($categoryArray['children'])) {
-                    $this->populateCategories($flatCategories, $categoryArray['children'], $fullName);
-                }
+        foreach ($currentCategoryTree as $categoryArray) {
+            $fullName = ($currentPath ? $currentPath . $separator : '') . $categoryArray['name'];
+            $flatCategories[] = ['id' => $categoryArray['id_category'], 'name' => $fullName];
+            // recursive call for childrens
+            if (!empty($categoryArray['children'])) {
+                $this->populateCategories($flatCategories, $categoryArray['children'], $fullName);
             }
         }
     }
