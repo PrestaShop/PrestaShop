@@ -94,7 +94,7 @@ class ProductTypeUpdater
             $this->productPackUpdater->setPackProducts(new PackId($productId->getValue()), []);
         }
         if ($product->product_type === ProductType::TYPE_COMBINATIONS && $productType->getValue() !== ProductType::TYPE_COMBINATIONS) {
-            $this->combinationDeleter->removeAllProductCombinations($productId);
+            $this->combinationDeleter->deleteAllProductCombinations($productId);
         }
         if ($product->product_type === ProductType::TYPE_VIRTUAL && $productType->getValue() !== ProductType::TYPE_VIRTUAL) {
             $this->virtualProductUpdater->deleteFileForProduct($productId);
