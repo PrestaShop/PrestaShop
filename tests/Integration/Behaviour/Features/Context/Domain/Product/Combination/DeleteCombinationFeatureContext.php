@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinat
 class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
 {
     /**
-     * @When I remove combination :combinationReference
+     * @When I delete combination :combinationReference
      *
      * @param string $combinationReference
      */
@@ -46,7 +46,7 @@ class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
-     * @When I remove following combinations:
+     * @When I delete following combinations:
      *
      * @param TableNode $tableNode
      */
