@@ -17,19 +17,19 @@ class StateData {
    * @param stateToCreate {Object} Could be used to force the value of some members
    */
   constructor(stateToCreate = {}) {
-    /** @member {string} Name of the state */
+    /** @type {string} Name of the state */
     this.name = stateToCreate.name || `test ${faker.address.state()}`;
 
-    /** @member {string} Iso code of the state */
+    /** @type {string} Iso code of the state */
     this.isoCode = stateToCreate.isoCode || faker.random.arrayElement(statesIsoCodes);
 
-    /** @member {string} Country of the state */
+    /** @type {string} Country of the state */
     this.country = stateToCreate.country || faker.random.arrayElement(countriesWithState);
 
-    /** @member {string} Zone of the state */
+    /** @type {string} Zone of the state */
     this.zone = stateToCreate.zone || faker.random.arrayElement(zones);
 
-    /** @member {boolean} Status of the state */
+    /** @type {boolean} Status of the state */
     this.active = stateToCreate.active === undefined ? false : stateToCreate.active;
   }
 }
