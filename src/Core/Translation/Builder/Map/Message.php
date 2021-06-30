@@ -55,7 +55,7 @@ class Message
     /**
      * @var array
      */
-    private $metadata;
+    private $metadata = [];
 
     public function __construct(string $defaultTranslation)
     {
