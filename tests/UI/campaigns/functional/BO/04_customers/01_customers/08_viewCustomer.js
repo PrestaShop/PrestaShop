@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import export from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import BO pages
@@ -29,9 +33,6 @@ const {Products} = require('@data/demo/products');
 const {Languages} = require('@data/demo/languages');
 const {Statuses} = require('@data/demo/orderStatuses');
 const AddressFaker = require('@data/faker/address');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_customers_viewCustomer';
 
