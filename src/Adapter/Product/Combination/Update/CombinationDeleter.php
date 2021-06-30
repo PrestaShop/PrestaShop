@@ -41,8 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
-// @todo: does this need to be renamed too?
-class CombinationRemover
+class CombinationDeleter
 {
     /**
      * @var ProductRepository
