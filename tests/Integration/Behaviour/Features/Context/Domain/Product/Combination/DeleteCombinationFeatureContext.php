@@ -29,7 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand;
 
 class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
 {
@@ -40,7 +40,7 @@ class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
      */
     public function deleteCombination(string $combinationReference): void
     {
-        $this->getCommandBus()->handle(new RemoveCombinationCommand(
+        $this->getCommandBus()->handle(new DeleteCombinationCommand(
             (int) $this->getSharedStorage()->get($combinationReference)
         ));
     }

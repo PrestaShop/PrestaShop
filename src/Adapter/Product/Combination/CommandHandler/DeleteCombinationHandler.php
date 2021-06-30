@@ -26,27 +26,35 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
+namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\DeleteCombinationHandlerInterface;
 
-class RemoveCombinationCommand
+/**
+ * Handles @see DeleteCombinationCommand using adapter udpater service
+ */
+class DeleteCombinationHandler implements DeleteCombinationHandlerInterface
 {
     /**
-     * @var CombinationId
+     * @var CombinationDeleter
      */
-    private $combinationId;
+    private $combinationDeleter;
 
-    public function __construct(int $combinationId)
+    /**
+     * @param CombinationDeleter $combinationDeleter
+     */
+    public function __construct(CombinationDeleter $combinationDeleter)
     {
-        $this->combinationId = new CombinationId($combinationId);
+        $this->combinationDeleter = $combinationDeleter;
     }
 
     /**
-     * @return CombinationId
+     * {@inheritDoc}
      */
-    public function getCombinationId(): CombinationId
+    public function handle(DeleteCombinationCommand $command): void
     {
-        return $this->combinationId;
+        $this->combinationDeleter->deleteCombination($command->getCombinationId());
     }
 }

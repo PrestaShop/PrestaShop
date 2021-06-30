@@ -24,19 +24,29 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
-/**
- * Defines contract to handle @see RemoveCombinationCommand
- *
- * todo: rename -> DeleteCombinationHandlerInterface
- */
-interface RemoveCombinationCommandHandlerInterface
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+
+class DeleteCombinationCommand
 {
     /**
-     * @param RemoveCombinationCommand $command
+     * @var CombinationId
      */
-    public function handle(RemoveCombinationCommand $command): void;
+    private $combinationId;
+
+    public function __construct(int $combinationId)
+    {
+        $this->combinationId = new CombinationId($combinationId);
+    }
+
+    /**
+     * @return CombinationId
+     */
+    public function getCombinationId(): CombinationId
+    {
+        return $this->combinationId;
+    }
 }

@@ -34,8 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResu
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
@@ -198,6 +198,7 @@ class CombinationController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @todo: rename to deleteAction
      *
      * @param int $combinationId
      *
@@ -206,7 +207,7 @@ class CombinationController extends FrameworkBundleAdminController
     public function removeAction(int $combinationId): JsonResponse
     {
         try {
-            $this->getCommandBus()->handle(new RemoveCombinationCommand($combinationId));
+            $this->getCommandBus()->handle(new DeleteCombinationCommand($combinationId));
         } catch (Exception $e) {
             return $this->json([
                 'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
