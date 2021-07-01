@@ -2339,26 +2339,7 @@ class AdminControllerCore extends Controller
             'check_url_fopen' => (ini_get('allow_url_fopen') ? 'ok' : 'ko'),
             'check_openssl' => (extension_loaded('openssl') ? 'ok' : 'ko'),
             'add_permission' => 1,
-            'addons_register_link' => 'https://addons.prestashop.com/' . $this->context->language->iso_code . '/login?'
-                . 'email=' . urlencode($this->context->employee->email)
-                . '&firstname=' . urlencode($this->context->employee->firstname)
-                . '&lastname=' . urlencode($this->context->employee->lastname)
-                . '&website=' . urlencode($this->context->shop->getBaseURL())
-                . '&utm_source=back-office&utm_medium=connect-to-addons'
-                . '&utm_campaign=back-office-' . Tools::strtoupper($this->context->language->iso_code)
-                . '&utm_content=' . (defined('_PS_HOST_MODE_') ? 'cloud' : 'download') . '#createnow',
-            'addons_forgot_password_link' => '//addons.prestashop.com/' . $this->context->language->iso_code . '/forgot-your-password',
         ]);
-
-        $this->modals[] = [
-            'modal_id' => 'modal_addons_connect',
-            'modal_class' => 'modal-md',
-            'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="https://addons.prestashop.com/'
-            . '?utm_source=back-office&utm_medium=modules'
-            . '&utm_campaign=back-office-' . Tools::strtoupper($this->context->language->iso_code)
-            . '&utm_content=' . (defined('_PS_HOST_MODE_') ? 'cloud' : 'download') . '">PrestaShop Addons</a>',
-            'modal_content' => $this->context->smarty->fetch('controllers/modules/login_addons.tpl'),
-        ];
     }
 
     /**
