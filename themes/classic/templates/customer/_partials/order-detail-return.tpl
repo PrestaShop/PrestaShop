@@ -61,6 +61,9 @@
               {if $product.product_reference}
                 {l s='Reference' d='Shop.Theme.Catalog'}: {$product.product_reference}<br/>
               {/if}
+              {if $product.is_virtual}
+                  {l s='Virtual products can\'t be returned.' d='Shop.Theme.Customeraccount'}<br/>
+              {/if}
               {if $product.customizations}
                 {foreach from=$product.customizations item="customization"}
                   <div class="customization">
