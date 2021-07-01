@@ -4,7 +4,22 @@
 }
 
 .header-top {
-  .search-widget {
+  &-right {
+    @include media-breakpoint-down(md) {
+      padding-right: 0;
+    }
+
+    @include media-breakpoint-down(xs) {
+      width: 100%;
+      padding-right: 15px;
+    }
+  }
+
+  .search-widgets {
+    @include media-breakpoint-down(md) {
+      width: 100%;
+    }
+
     form {
       input[type="text"] {
         width: 100%;
