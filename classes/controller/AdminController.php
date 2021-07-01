@@ -1525,7 +1525,7 @@ class AdminControllerCore extends Controller
                 // Check if field value on type select is valid
                 if (isset($values['type']) && $values['type'] == 'select' && isset($values['identifier']) && !empty($values['list'])) {
                     if (false === in_array(Tools::getValue($field), array_column($values['list'], $values['identifier']))) {
-                        $this->errors[] = $this->trans('The %s field is invalid.', [$values['title']], 'Admin.Notifications.Error');
+                        $this->errors[] = $this->trans('The option selected in the %s field is invalid.', [$values['title']], 'Admin.Notifications.Error');
                     }
                 }
 
