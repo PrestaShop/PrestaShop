@@ -9,3 +9,4 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 ;
 INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
   (NULL, 'actionValidateOrderAfter', 'New Order', 'This hook is called after validating an order by core', '1');
+ALTER TABLE `PREFIX_carrier` DROP COLUMN `id_tax_rules_group`;
