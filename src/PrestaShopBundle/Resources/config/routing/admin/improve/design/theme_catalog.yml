@@ -1,7 +1,0 @@
-admin_theme_catalog:
-    path: /
-    methods: [GET]
-    defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Design\ThemeCatalog:index'
-        _legacy_controller: AdminThemesCatalog
-        _legacy_link: AdminThemesCatalog
