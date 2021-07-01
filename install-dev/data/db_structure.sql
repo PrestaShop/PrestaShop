@@ -95,7 +95,7 @@ CREATE TABLE `PREFIX_attribute_impact` (
 CREATE TABLE `PREFIX_carrier` (
   `id_carrier` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_reference` int(10) unsigned NOT NULL,
-  `id_tax_rules_group` int(10) unsigned DEFAULT '0',
+  `id_tax_rules_group` int(10) unsigned DEFAULT '0', /* Deprecated. Use PREFIX_carrier_tax_rules_group_shop.id_tax_rules_group instead. */
   `name` varchar(64) NOT NULL,
   `url` varchar(255) DEFAULT NULL,
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
