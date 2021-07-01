@@ -90,37 +90,6 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
             ];
         }
 
-        return array_merge($toolbarButtons, $this->getAddonsConnectToolbar());
-    }
-
-    /**
-     * Create a button in the header for the marketplace account (login or logout).
-     *
-     * @return array
-     */
-    protected function getAddonsConnectToolbar()
-    {
-        $addonsProvider = $this->get('prestashop.core.admin.data_provider.addons_interface');
-        if ($addonsProvider->isAddonsAuthenticated()) {
-            $addonsEmail = $addonsProvider->getAddonsEmail();
-
-            return [
-                'addons_logout' => [
-                    'href' => '#',
-                    'desc' => $addonsEmail['username_addons'],
-                    'icon' => 'exit_to_app',
-                    'help' => $this->trans('Synchronized with Addons marketplace!', 'Admin.Modules.Notification'),
-                ],
-            ];
-        }
-
-        return [
-            'addons_connect' => [
-                'href' => '#',
-                'desc' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
-                'icon' => 'vpn_key',
-                'help' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
-            ],
-        ];
+        return $toolbarButtons;
     }
 }
