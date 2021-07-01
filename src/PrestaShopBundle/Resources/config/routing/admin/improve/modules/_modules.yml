@@ -10,32 +10,6 @@ admin_module_cart:
     requirements:
         moduleId: \d+
 
-admin_module_catalog:
-    path:     /catalog
-    methods:  [GET]
-    defaults:
-        _controller: PrestaShopBundle\Controller\Admin\Improve\ModuleController::catalogAction
-        _legacy_controller: AdminModulesCatalog
-        _legacy_link: AdminModulesCatalog
-
-admin_module_catalog_refresh:
-    path:     /catalog/refresh/{category}/{keyword}
-    methods:  [GET]
-    defaults:
-        category:
-        keyword:
-        _controller: PrestaShopBundle\Controller\Admin\Improve\ModuleController::refreshCatalogAction
-        _legacy_controller: AdminModulesCatalog
-        _legacy_link: AdminModulesCatalog:refresh
-
-admin_module_catalog_post:
-    path:     /catalog/recommended
-    methods:  [GET]
-    defaults:
-        _controller: PrestaShopBundle\Controller\Admin\Improve\ModuleController::getPreferredModulesAction
-        _legacy_controller: AdminModulesCatalog
-        _legacy_link: AdminModulesCatalog:recommended
-
 admin_module_manage:
     path:     /manage/{category}/{keyword}
     methods:  [GET]
@@ -112,11 +86,3 @@ admin_module_updates:
         _controller: PrestaShopBundle\Controller\Admin\Improve\Modules\UpdatesController::indexAction
         _legacy_controller: AdminModulesUpdates
         _legacy_link: AdminModulesUpdates
-
-admin_module_addons_store:
-    path:     /addons-store
-    methods:  [GET]
-    defaults:
-        _controller: 'PrestaShopBundle\Controller\Admin\Improve\Modules\AddonsStoreController::indexAction'
-        _legacy_controller: AdminAddonsCatalog
-        _legacy_link: AdminAddonsCatalog

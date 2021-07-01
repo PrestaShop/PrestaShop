@@ -53,7 +53,6 @@ class AdminModuleController {
     this.currentRefCategory = null;
     this.currentRefStatus = null;
     this.currentSorting = null;
-    this.baseAddonsUrl = 'https://addons.prestashop.com/';
     this.pstaggerInput = null;
     this.lastBulkAction = null;
     this.isUploadStarted = false;
@@ -66,8 +65,6 @@ class AdminModuleController {
      * @type {Array}
      */
     this.modulesList = [];
-    this.addonsCardGrid = null;
-    this.addonsCardList = null;
 
     this.moduleShortList = '.module-short-list';
     // See more & See less selector
@@ -80,14 +77,11 @@ class AdminModuleController {
     this.categorySelectorLabelSelector = '.module-category-selector-label';
     this.categorySelector = '.module-category-selector';
     this.categoryItemSelector = '.module-category-menu';
-    this.addonsLoginButtonSelector = '#addons_login_btn';
     this.categoryResetBtnSelector = '.module-category-reset';
     this.moduleInstallBtnSelector = 'input.module-install-btn';
     this.moduleSortingDropdownSelector = '.module-sorting-author select';
     this.categoryGridSelector = '#modules-categories-grid';
     this.categoryGridItemSelector = '.module-category-item';
-    this.addonItemGridSelector = '.module-addons-item-grid';
-    this.addonItemListSelector = '.module-addons-item-list';
 
     // Upgrade All selectors
     this.upgradeAllSource = '.module_action_menu_upgrade_all';
@@ -121,16 +115,10 @@ class AdminModuleController {
     this.statusItemSelector = '.module-status-menu';
     this.statusResetBtnSelector = '.module-status-reset';
 
-    // Selectors for Module Import and Addons connect
-    this.addonsConnectModalBtnSelector = '#page-header-desc-configuration-addons_connect';
-    this.addonsLogoutModalBtnSelector = '#page-header-desc-configuration-addons_logout';
-    this.addonsImportModalBtnSelector = '#page-header-desc-configuration-add_module';
+    // Selectors for Module Import
     this.dropZoneModalSelector = '#module-modal-import';
     this.dropZoneModalFooterSelector = '#module-modal-import .modal-footer';
     this.dropZoneImportZoneSelector = '#importDropzone';
-    this.addonsConnectModalSelector = '#module-modal-addons-connect';
-    this.addonsLogoutModalSelector = '#module-modal-addons-logout';
-    this.addonsConnectForm = '#addons-connect-form';
     this.moduleImportModalCloseBtn = '#module-modal-import-closing-cross';
     this.moduleImportStartSelector = '.module-import-start';
     this.moduleImportProcessingSelector = '.module-import-processing';
@@ -152,8 +140,6 @@ class AdminModuleController {
     this.initCategorySelect();
     this.initCategoriesGrid();
     this.initActionButtons();
-    this.initAddonsSearch();
-    this.initAddonsConnect();
     this.initAddModuleAction();
     this.initDropzone();
     this.initPageChangeProtection();
@@ -348,8 +334,6 @@ class AdminModuleController {
       });
     });
 
-    self.addonsCardGrid = $(this.addonItemGridSelector);
-    self.addonsCardList = $(this.addonItemListSelector);
     self.updateModuleVisibility();
     $('body').trigger('moduleCatalogLoaded');
   }
@@ -522,10 +506,6 @@ class AdminModuleController {
 
     self.updateModuleContainerDisplay();
 
-    if (self.currentTagsList.length) {
-      $('.modules-list').append(this.currentDisplay === self.DISPLAY_GRID ? this.addonsCardGrid : this.addonsCardList);
-    }
-
     self.updateTotalResults();
   }
 
@@ -568,51 +548,6 @@ class AdminModuleController {
     return htmlGenerated;
   }
 
-  initAddonsConnect() {
-    const self = this;
-
-    // Make addons connect modal ready to be clicked
-    if ($(self.addonsConnectModalBtnSelector).attr('href') === '#') {
-      $(self.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
-      $(self.addonsConnectModalBtnSelector).attr('data-target', self.addonsConnectModalSelector);
-    }
-
-    if ($(self.addonsLogoutModalBtnSelector).attr('href') === '#') {
-      $(self.addonsLogoutModalBtnSelector).attr('data-toggle', 'modal');
-      $(self.addonsLogoutModalBtnSelector).attr('data-target', self.addonsLogoutModalSelector);
-    }
-
-    $('body').on('submit', self.addonsConnectForm, function initializeBodySubmit(event) {
-      event.preventDefault();
-      event.stopPropagation();
-
-      $.ajax({
-        method: 'POST',
-        url: $(this).attr('action'),
-        dataType: 'json',
-        data: $(this).serialize(),
-        beforeSend: () => {
-          $(self.addonsLoginButtonSelector).show();
-          $('button.btn[type="submit"]', self.addonsConnectForm).hide();
-        },
-      }).done((response) => {
-        if (response.success === 1) {
-          window.location.reload();
-        } else {
-          $.growl.error({message: response.message});
-          $(self.addonsLoginButtonSelector).hide();
-          $('button.btn[type="submit"]', self.addonsConnectForm).fadeIn();
-        }
-      });
-    });
-  }
-
-  initAddModuleAction() {
-    const self = this;
-    const addModuleButton = $(self.addonsImportModalBtnSelector);
-    addModuleButton.attr('data-toggle', 'modal');
-    addModuleButton.attr('data-target', self.dropZoneModalSelector);
-  }
 
   initDropzone() {
     const self = this;
@@ -700,7 +635,6 @@ class AdminModuleController {
       acceptedFiles: '.zip, .tar',
       // The name that will be used to transfer the file
       paramName: 'file_uploaded',
-      maxFilesize: 50, // can't be greater than 50Mb because it's an addons limitation
       uploadMultiple: false,
       addRemoveLinks: true,
       dictDefaultMessage: '',
@@ -872,19 +806,6 @@ class AdminModuleController {
       if (destinationTabs[destinationKey].length !== 0) {
         destinationTabs[destinationKey].find('.notification-counter').text(badge[destinationKey]);
       }
-    });
-  }
-
-  initAddonsSearch() {
-    const self = this;
-    $('body').on('click', `${self.addonItemGridSelector}, ${self.addonItemListSelector}`, () => {
-      let searchQuery = '';
-
-      if (self.currentTagsList.length) {
-        searchQuery = encodeURIComponent(self.currentTagsList.join(' '));
-      }
-
-      window.open(`${self.baseAddonsUrl}search.php?search_query=${searchQuery}`, '_blank');
     });
   }
 
@@ -1189,12 +1110,6 @@ class AdminModuleController {
       closingCross: true,
       context: self,
     });
-
-    $('body').on('click', '.module-addons-search-link', (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      window.open($(this).attr('href'), '_blank');
-    });
   }
 
   /**
@@ -1279,13 +1194,6 @@ class AdminModuleController {
       const selectorToToggle =
         self.currentDisplay === self.DISPLAY_LIST ? this.addonItemListSelector : this.addonItemGridSelector;
       $(selectorToToggle).toggle(modulesCount !== this.modulesList.length / 2);
-
-      if (modulesCount === 0) {
-        $('.module-addons-search-link').attr(
-          'href',
-          `${this.baseAddonsUrl}search.php?search_query=${encodeURIComponent(this.currentTagsList.join(' '))}`,
-        );
-      }
     }
   }
 
