@@ -58,7 +58,6 @@ class InvoicesController extends FrameworkBundleAdminController
 
         return [
             'layoutTitle' => $this->trans('Invoices', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'generateByDateForm' => $byDateForm->createView(),

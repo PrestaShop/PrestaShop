@@ -131,7 +131,6 @@ class PositionsController extends FrameworkBundleAdminController
             ],
             'selectedModule' => $this->selectedModule,
             'layoutTitle' => $this->trans('Positions', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => false,
             'requireBulkActions' => false,
             'requireFilterStatus' => false,
             'showContentHeader' => true,
