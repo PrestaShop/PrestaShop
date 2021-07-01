@@ -64,7 +64,6 @@ class LogsController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/LogsPage/index.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Logs', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,

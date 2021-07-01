@@ -66,7 +66,6 @@ class LocalizationController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Improve/International/Localization/index.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Localization', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'configurationForm' => $configurationForm->createView(),
