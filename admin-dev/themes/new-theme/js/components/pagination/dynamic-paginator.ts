@@ -116,34 +116,6 @@ export default class DynamicPaginator {
   }
 
   /**
-   * Initiates the pagination component
-   *
-   * @private
-   */
-  private init(): void {
-    this.$paginationContainer.on('click', this.selectorsMap.pageLink, (e) => {
-      this.paginate(Number($(e.currentTarget).data('page')));
-    });
-    this.$paginationContainer
-      .find(this.selectorsMap.jumpToPageInput)
-      .keypress((e) => {
-        if (e.which === 13) {
-          e.preventDefault();
-          const input = <HTMLInputElement>e.currentTarget;
-          const page = this.getValidPageNumber(Number(input.value));
-          this.paginate(page);
-        }
-      });
-    this.$paginationContainer.on(
-      'change',
-      this.selectorsMap.limitSelect,
-      () => {
-        this.paginate(1);
-      },
-    );
-  }
-
-  /**
    * @param {Number} page
    */
   async paginate(page: number): Promise<void> {
@@ -179,12 +151,42 @@ export default class DynamicPaginator {
   }
 
   /**
+   * Initiates the pagination component
+   *
+   * @private
+   */
+  private init(): void {
+    this.$paginationContainer.on('click', this.selectorsMap.pageLink, (e) => {
+      this.paginate(Number($(e.currentTarget).data('page')));
+    });
+    this.$paginationContainer
+      .find(this.selectorsMap.jumpToPageInput)
+      .keypress((e) => {
+        if (e.which === 13) {
+          e.preventDefault();
+          const input = <HTMLInputElement>e.currentTarget;
+          const page = this.getValidPageNumber(Number(input.value));
+          this.paginate(page);
+        }
+      });
+    this.$paginationContainer.on(
+      'change',
+      this.selectorsMap.limitSelect,
+      () => {
+        this.paginate(1);
+      },
+    );
+  }
+
+  /**
    * @param page
    * @param limit
    *
    * @returns {Number}
+   *
+   * @private
    */
-  calculateOffset(page: number, limit: number): number {
+  private calculateOffset(page: number, limit: number): number {
     return (page - 1) * limit;
   }
 
@@ -193,7 +195,7 @@ export default class DynamicPaginator {
    *
    * @private
    */
-  refreshButtonsData(page: number): void {
+  private refreshButtonsData(page: number): void {
     this.$paginationContainer
       .find(this.selectorsMap.nextPageBtn)
       .data('page', page + 1);
@@ -208,8 +210,10 @@ export default class DynamicPaginator {
   /**
    * @param {Number} page
    * @param {Number} total
+   *
+   * @private
    */
-  refreshInfoLabel(page: number, total: number): void {
+  private refreshInfoLabel(page: number, total: number): void {
     const infoLabel = this.$paginationContainer.find(
       this.selectorsMap.paginationInfoLabel,
     );
@@ -272,12 +276,13 @@ export default class DynamicPaginator {
   }
 
   /**
-   *
    * @param page
    *
    * @returns {Number}
+   *
+   * @private
    */
-  getValidPageNumber(page: number): number {
+  private getValidPageNumber(page: number): number {
     if (page > this.pagesCount) {
       return this.pagesCount;
     }
@@ -291,14 +296,10 @@ export default class DynamicPaginator {
 
   /**
    * @param {Object} selectorsMap
+   *
+   * @private
    */
-  setSelectorsMap(selectorsMap: Record<string, string>): void {
-    if (selectorsMap) {
-      this.selectorsMap = selectorsMap;
-
-      return;
-    }
-
+  private setSelectorsMap(selectorsMap: Record<string, string>): void {
     this.selectorsMap = {
       jumpToPageInput: 'input[name="paginator-jump-page"]',
       firstPageBtn: 'button.page-link.first',
@@ -312,6 +313,8 @@ export default class DynamicPaginator {
       pageLink: 'button.page-link',
       limitSelect: '#paginator-limit',
       paginationInfoLabel: '#pagination-info',
+      //override with custom selectors if any provided
+      ...selectorsMap,
     };
   }
 }
