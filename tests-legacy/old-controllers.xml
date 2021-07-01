@@ -6,7 +6,6 @@
   convertNoticesToExceptions  = "true"
   convertWarningsToExceptions = "true"
   processIsolation            = "true"
-  stopOnFailure               = "false"
   bootstrap                   =" bootstrap-controllers.php"
 >
   <php>

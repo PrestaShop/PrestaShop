@@ -1,10 +1,12 @@
 <phpunit bootstrap="bootstrap.php"
-         stopOnFailure="true"
          backupGlobals="true"
 >
   <php>
     <server name="KERNEL_CLASS" value="AppKernel" />
   </php>
+    <listeners>
+        <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
+    </listeners>
     <testsuites>
         <testsuite name="Unit">
             <directory>.</directory>
