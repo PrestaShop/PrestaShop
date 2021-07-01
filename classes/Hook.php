@@ -432,7 +432,7 @@ class HookCore extends ObjectModel
                     return static::coreCallHook($module, $methodName, $hookArgs);
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $environment = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Environment');
             if ($environment->isDebug()) {
                 throw new CoreException($e->getMessage(), $e->getCode(), $e);
@@ -1016,7 +1016,7 @@ class HookCore extends ObjectModel
 
         try {
             return $module->renderWidget($hook_name, $params);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $environment = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Environment');
             if ($environment->isDebug()) {
                 throw new CoreException($e->getMessage(), $e->getCode(), $e);
