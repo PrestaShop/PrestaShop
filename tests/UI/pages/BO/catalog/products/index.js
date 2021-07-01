@@ -476,16 +476,24 @@ class Product extends BOBasePage {
   }
 
   /**
+   * Select all products
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async selectAllProducts(page) {
+    await Promise.all([
+      this.waitForVisibleSelector(page, this.productBulkMenuButton),
+      page.$eval(this.selectAllBulkCheckboxLabel, el => el.click()),
+    ]);
+  }
+
+  /**
    * Delete All products with Bulk Actions
    * @param page
    * @returns {Promise<string>}
    */
   async deleteAllProductsWithBulkActions(page) {
-    // Then delete first product and only product shown
-    await Promise.all([
-      this.waitForVisibleSelector(page, this.productBulkMenuButton),
-      page.click(this.selectAllBulkCheckboxLabel),
-    ]);
+    await this.selectAllProducts(page);
 
     await Promise.all([
       this.waitForVisibleSelector(page, this.productBulkMenuButtonState('true')),
@@ -508,10 +516,7 @@ class Product extends BOBasePage {
    * @return {Promise<string>}
    */
   async bulkSetStatus(page, status) {
-    await Promise.all([
-      this.waitForVisibleSelector(page, this.productBulkMenuButton),
-      page.click(this.selectAllBulkCheckboxLabel),
-    ]);
+    await this.selectAllProducts(page);
 
     await Promise.all([
       this.waitForVisibleSelector(page, this.productBulkMenuButtonState('true')),
