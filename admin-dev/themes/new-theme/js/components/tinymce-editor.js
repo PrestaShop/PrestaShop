@@ -251,7 +251,9 @@ class TinyMCEEditor {
   }
 
   /**
-   * Updates the characters counter
+   * Updates the characters counter. This counter is used for front but if you don't want to encounter Validation
+   * problems you should be in sync with the TinyMceMaxLengthValidator PHP class. Both codes must behave the same
+   * way.
    *
    * @param id
    */
