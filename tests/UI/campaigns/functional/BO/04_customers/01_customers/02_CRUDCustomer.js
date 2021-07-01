@@ -96,7 +96,7 @@ describe('BO - Customers : CRUD customer in BO', async () => {
   // 2 : Check sign in in FO
   describe('Check sign in in FO by new customer', async () => {
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO1', baseContext);
 
       // View shop
       page = await customersPage.viewMyShop(page);
@@ -129,7 +129,7 @@ describe('BO - Customers : CRUD customer in BO', async () => {
     });
 
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
       // Go back to BO
       page = await foHomePage.closePage(browserContext, page, 0);
@@ -228,7 +228,7 @@ describe('BO - Customers : CRUD customer in BO', async () => {
   // 5 : Check sign in in FO (customer can't sign in in FO)
   describe('Check sign in in FO by disabled customer', async () => {
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO2', baseContext);
 
       // View shop
       page = await customersPage.viewMyShop(page);
@@ -251,7 +251,7 @@ describe('BO - Customers : CRUD customer in BO', async () => {
     });
 
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
       // Go back to BO
       page = await foHomePage.closePage(browserContext, page, 0);
