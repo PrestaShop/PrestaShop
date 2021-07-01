@@ -44,15 +44,12 @@
       {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/sent_emails.html.twig' %}
       {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/last_connections.html.twig' %}
       {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/groups.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/addresses.html.twig' %}
     </div>
   </div>
 
   <div class="row">
     {{ renderhook('displayAdminCustomers', {'id_customer': customerInformation.customerId.value}) }}
-
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/addresses.html.twig' %}
-    </div>
   </div>
 {% endblock %}
 
