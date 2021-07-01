@@ -68,7 +68,8 @@
         </label>
 
         <div class="col-sm form-control-value">
-          <p>{{ editableOrderReturn.question }}</p>
+{#          Raw needed to display values like < properly. Should be safe because OrderReturn object model has isCleanHtml validation#}
+          <p>{{ editableOrderReturn.question|raw }}</p>
         </div>
       </div>
 
