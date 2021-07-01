@@ -53,6 +53,7 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
             "\n",
             "\r",
             "\n\r",
+            "\r\n",
         ];
         $str = str_replace($replaceArray, [''], strip_tags($value));
         $length = iconv_strlen($str);

@@ -43,15 +43,16 @@ class TinyMceMaxLengthValidatorTest extends TestCase
      *
      * @param string $content
      * @param bool $isValid
+     * @param int|null $maxLength
      */
-    public function testValidate(string $content, bool $isValid): void
+    public function testValidate(string $content, bool $isValid, ?int $maxLength = null): void
     {
         $validator = new TinyMceMaxLengthValidator($this->getTranslator());
         $context = $this->getContext($isValid);
         $validator->initialize($context);
 
         $constraint = new TinyMceMaxLength([
-            'max' => static::MAX_LENGTH,
+            'max' => $maxLength ?? static::MAX_LENGTH,
         ]);
         $validator->validate($content, $constraint);
     }
@@ -81,6 +82,82 @@ class TinyMceMaxLengthValidatorTest extends TestCase
         yield [
             '<p>Invalid text that is a too long even without HTML</p>',
             false,
+        ];
+
+        yield [
+            '<p>White Ceramic Mug. 325ml</p>
+<p>White Ceramic Mug. 325ml</p>',
+            false,
+        ];
+
+        yield [
+            '<p>White Hot Ceramic Mug</p>
+<p>White Hot Ceramic Mug</p>',
+            true,
+        ];
+
+        yield [
+            '<p>White Hot Ceramic Mug</p>
+<p></p>
+<p>White Hot Ceramic Mug</p>
+<p></p>',
+            true,
+        ];
+
+        yield [
+            'White Hot Ceramic Mug
+
+White Hot Ceramic Mug',
+            true,
+        ];
+
+        yield [
+            '<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>',
+            true,
+            800,
         ];
     }
 
