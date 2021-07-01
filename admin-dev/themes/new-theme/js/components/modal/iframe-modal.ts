@@ -98,6 +98,11 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
   }
 }
 
+/**
+ * This modal opens an url inside a modal, it then can handle two specific callbacks
+ * - onLoaded: called when the iframe has juste been refreshed
+ * - onUnload: called when the iframe is about to refresh (so it is unloaded)
+ */
 export class IframeModal implements IframeModalType {
   modal: IframeModalContainerType;
 

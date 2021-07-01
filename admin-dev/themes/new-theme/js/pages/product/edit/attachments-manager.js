@@ -27,7 +27,7 @@ import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import Router from '@components/router';
 import {getAttachmentInfo} from '@pages/product/services/attachments-service';
-import {IframeModal} from '@components/modal';
+import {FormIframeModal} from '@components/modal/form-iframe-modal';
 
 const {$} = window;
 
@@ -60,28 +60,24 @@ export default class AttachmentsManager {
     this.$attachmentsContainer.on('click', ProductMap.attachments.addAttachmentBtn, (event) => {
       event.preventDefault();
 
-      const iframeModal = new IframeModal({
+      const iframeModal = new FormIframeModal({
         id: 'modal-create-product-attachment',
         modalTitle: 'Create attachment',
-        iframeUrl: $(event.target).prop('href'),
+        formSelector: 'form[name="attachment"]',
+        formUrl: $(event.target).prop('href'),
         closable: true,
         dialogStyle: {
           maxHeight: '450px',
         },
-        onLoaded: (iframe) => {
-          const iframeForm = iframe.contentWindow.document.querySelector('form[name="attachment"]');
-
-          // The data attribute attachmentId is only accessible once the attachment has been created and the edit form
-          // is returned
-          if (iframeForm && iframeForm.dataset && iframeForm.dataset.attachmentId) {
-            getAttachmentInfo(iframeForm.dataset.attachmentId).then((response) => {
+        onFormLoaded: (form, formData, dataAttributes) => {
+          if (dataAttributes && dataAttributes.attachmentId) {
+            getAttachmentInfo(dataAttributes.attachmentId).then((response) => {
               this.addAttachmentRow(response.attachmentInfo);
             });
             iframeModal.hide();
           }
         },
-      },
-      );
+      });
       iframeModal.show();
     });
   }
