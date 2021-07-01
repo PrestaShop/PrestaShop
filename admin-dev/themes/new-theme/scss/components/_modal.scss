@@ -27,8 +27,8 @@
 .modal-iframe {
   .modal-dialog {
     width: 90%;
-    height: 95%;
     max-width: 1200px;
+    height: 95%;
     margin: 0 auto;
 
     .modal-content {
@@ -41,12 +41,12 @@
 
         .modal-iframe-loader {
           position: absolute;
-          width: 100%;
-          height: 100%;
+          z-index: 1;
           display: flex;
           align-items: center;
           justify-content: center;
-          z-index: 1;
+          width: 100%;
+          height: 100%;
           background: rgba(255, 255, 255, 0.8);
         }
 

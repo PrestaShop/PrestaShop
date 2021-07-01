@@ -27,7 +27,7 @@
 
 import {
   ModalContainerType, ModalContainer, ModalType, ModalParams,
-} from '@components/modal-container';
+} from '@components/modal/modal-container';
 
 const {$} = window;
 

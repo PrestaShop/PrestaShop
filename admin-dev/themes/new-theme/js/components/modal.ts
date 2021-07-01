@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {ConfirmModal} from '@components/confirm-modal';
-import {IframeModal} from '@components/iframe-modal';
+import {ConfirmModal} from '@components/modal/confirm-modal';
+import {IframeModal} from '@components/modal/iframe-modal';
 
 export {
   ConfirmModal,
