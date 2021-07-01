@@ -85,7 +85,7 @@
           this.isEnabled = false;
           this.value = 0;
         }
-        return Math.round(this.value);
+        return Math.round(<number> this.value);
       },
       onChange(val: number): void {
         this.value = val;
@@ -112,10 +112,10 @@
         this.isActive = true;
       },
       focusOut(event: Event): void {
-        const value = parseInt(this.value, 10);
+        const value = Math.round(<number> this.value);
 
         if (
-          !$(event.target).hasClass('ps-number')
+          !$(<HTMLElement>event.target).hasClass('ps-number')
           && (Number.isNaN(value) || value === 0)
         ) {
           this.isActive = false;
@@ -127,7 +127,7 @@
 
         if (
           parseInt(this.product.qty, 10) !== 0
-          && !Number.isNaN(parseInt(this.value, 10))
+          && !Number.isNaN(Math.round(<number> this.value))
         ) {
           this.$store.dispatch('updateQtyByProductId', {
             url: postUrl,
@@ -153,7 +153,7 @@
         value: null as null | number,
         isActive: false,
         isEnabled: false,
-      }
+      };
     },
   });
 </script>

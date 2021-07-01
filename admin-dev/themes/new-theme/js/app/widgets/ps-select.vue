@@ -76,8 +76,8 @@
     },
     data() {
       return {
-        selected: 'default'
-      }
+        selected: 'default',
+      };
     },
   });
 </script>

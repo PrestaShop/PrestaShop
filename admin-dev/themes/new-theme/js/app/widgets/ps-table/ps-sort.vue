@@ -65,7 +65,7 @@
     data() {
       return {
         sortDirection: 'asc',
-      }
+      };
     },
     computed: {
       isCurrent(): boolean {

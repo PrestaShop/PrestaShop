@@ -46,6 +46,7 @@
 
 <script lang="ts">
   import Vue from 'vue';
+
   const ALERT_TYPE_INFO = 'ALERT_TYPE_INFO';
   const ALERT_TYPE_WARNING = 'ALERT_TYPE_WARNING';
   const ALERT_TYPE_DANGER = 'ALERT_TYPE_DANGER';

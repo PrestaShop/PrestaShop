@@ -53,10 +53,10 @@
       },
     },
     mounted() {
-      $(this.$refs.datepicker).datetimepicker({
+      $(<HTMLInputElement> this.$refs.datepicker).datetimepicker({
         format: 'YYYY-MM-DD',
         showClear: true,
-      }).on('dp.change', (infos) => {
+      }).on('dp.change', (infos: Record<string, any>) => {
         infos.dateType = this.type;
         this.$emit(
           infos.date ? 'dpChange' : 'reset',

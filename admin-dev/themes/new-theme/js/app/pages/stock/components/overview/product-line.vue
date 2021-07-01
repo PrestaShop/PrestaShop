@@ -197,7 +197,7 @@
         const ref = this.id;
 
         if (this.$refs[ref]) {
-          (<VCheckboxDatas>this.$refs[ref]).checked = checked;
+          (<VCheckboxDatas> this.$refs[ref]).checked = checked;
         }
       });
       $('[data-toggle="pstooltip"]').pstooltip();

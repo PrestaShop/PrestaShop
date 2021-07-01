@@ -122,7 +122,7 @@
     },
     computed: {
       id(): number {
-        return this.model.id;
+        return this.model.id.toString();
       },
       isFolder(): boolean {
         return this.model.children && this.model.children.length;

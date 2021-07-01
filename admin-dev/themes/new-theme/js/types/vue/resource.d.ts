@@ -6,14 +6,11 @@ declare module 'vue/types/vue' {
   }
   interface Vue {
     resource: any;
+    trans: (text: string) => string;
   }
 }
 
 declare module '@vue/runtime-core' {
-  interface CombinedVueInstance {
-    trans: (text: string) => string;
-  }
-
   // provide typings for `this.$store`
   interface ComponentCustomProperties {
     $store: Store<any>

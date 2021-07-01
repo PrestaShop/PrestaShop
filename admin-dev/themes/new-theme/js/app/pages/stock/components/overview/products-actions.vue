@@ -139,7 +139,7 @@
       return {
         isFocused: false,
         danger: false,
-      }
+      };
     },
     components: {
       PSNumber,

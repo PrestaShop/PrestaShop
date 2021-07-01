@@ -118,7 +118,7 @@
     },
     methods: {
       getItems(): Array<any> {
-        const matchList: Array<any> = [];
+        const matchList: Record<string, any> = [];
         this.list.filter((data: any) => {
           const label = data[this.label].toLowerCase();
           data.visible = false;
@@ -176,11 +176,11 @@
         this.currentVal = '';
       },
       filterList(tags: Array<any>): Array<number> {
-        const idList = [];
+        const idList: Array<number> = [];
         const {categoryList} = this.$store.state;
         const list = this.hasChildren ? categoryList : this.list;
 
-        list.map((data) => {
+        list.map((data: Record<string, any>) => {
           const isInIdList = idList.indexOf(Number(data[this.itemId])) === -1;
 
           if (tags.indexOf(data[this.label]) !== -1 && isInIdList) {
@@ -194,7 +194,7 @@
     data() {
       return {
         currentVal: '',
-        match: null as null | Array<any>,
+        match: null as null | Record<string, any>,
         tags: [] as Array<any>,
         splice: true,
         hasChildren: false,

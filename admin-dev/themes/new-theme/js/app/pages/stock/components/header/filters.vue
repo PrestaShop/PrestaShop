@@ -239,7 +239,7 @@
         id_employee: [] as Array<any>,
         date_add: [] as Array<any>,
         active: null,
-      }
+      };
     },
   });
 </script>

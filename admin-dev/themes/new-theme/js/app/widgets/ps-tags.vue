@@ -82,7 +82,7 @@
     },
     methods: {
       onKeyUp() {
-        this.$emit('typing', (<VTagsInput>this.$refs.tags).value);
+        this.$emit('typing', (<VTagsInput> this.$refs.tags).value);
       },
       add(tag: string): void {
         if (tag) {
@@ -105,7 +105,7 @@
         }
       },
       focus(): void {
-        (<HTMLInputElement>this.$refs.tags).focus();
+        (<HTMLInputElement> this.$refs.tags).focus();
       },
     },
     data: () => ({tag: ''}),

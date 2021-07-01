@@ -93,7 +93,7 @@
     },
     methods: {
       onClick(): void {
-        const refPsTags = this.$refs.psTags as VTags; 
+        const refPsTags = this.$refs.psTags as VTags;
         const {tag} = refPsTags;
         refPsTags.add(tag);
       },
@@ -127,7 +127,7 @@
         showAlert: false,
         alertType: 'ALERT_TYPE_DANGER',
         duration: false,
-      }
+      };
     },
   });
 </script>

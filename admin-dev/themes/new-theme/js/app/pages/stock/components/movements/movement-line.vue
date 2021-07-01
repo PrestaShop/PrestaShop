@@ -94,7 +94,7 @@
       isPositive(): boolean {
         return this.product.sign > 0;
       },
-      orderLink(): string | null{
+      orderLink(): string | null {
         return this.product.order_link !== 'N/A' ? this.product.order_link : null;
       },
     },

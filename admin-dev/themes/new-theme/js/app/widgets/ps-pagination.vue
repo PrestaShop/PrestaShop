@@ -167,7 +167,7 @@
       return {
         multiPagesToDisplay: 2,
         multiPagesActivationLimit: 5,
-      }
+      };
     },
   });
 </script>

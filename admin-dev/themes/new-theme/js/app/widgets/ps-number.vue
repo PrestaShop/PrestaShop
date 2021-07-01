@@ -60,8 +60,8 @@
   export default Vue.extend({
     props: {
       value: {
-        type: String,
-        default: '0',
+        type: Number,
+        default: 0,
       },
       danger: {
         type: Boolean,
@@ -87,11 +87,12 @@
         this.$emit('blur', $event);
       },
       increment(): void {
-        const value = parseInt(this.value === '' ? '0' : <string>this.value, 10);
+        const value = Math.round(this.value);
+
         this.$emit('change', Number.isNaN(value) ? 0 : value + 1);
       },
       decrement(): void {
-        const value = parseInt(this.value, 10);
+        const value = Math.round(this.value);
         this.$emit('change', Number.isNaN(value) ? -1 : value - 1);
       },
     },
