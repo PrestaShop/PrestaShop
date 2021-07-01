@@ -14,7 +14,6 @@ const AdminModuleController = function () {
   this.currentRefCategory = null;
   this.currentRefStatus = null;
   this.currentSorting = null;
-  this.baseAddonsUrl = 'https://addons.prestashop.com/';
   this.pstaggerInput = null;
   this.lastBulkAction = null;
   this.isUploadStarted = false;
@@ -25,8 +24,6 @@ const AdminModuleController = function () {
    * @type {Array}
    */
   this.modulesList = [];
-  this.addonsCardGrid = null;
-  this.addonsCardList = null;
 
   // Selectors into vars to make it easier to change them while keeping same code logic
   this.moduleItemGridSelector = '.module-item-grid';
@@ -34,14 +31,11 @@ const AdminModuleController = function () {
   this.categorySelectorLabelSelector = '.module-category-selector-label';
   this.categorySelector = '.module-category-selector';
   this.categoryItemSelector = '.module-category-menu';
-  this.addonsLoginButtonSelector = '#addons_login_btn';
   this.categoryResetBtnSelector = '.module-category-reset';
   this.moduleInstallBtnSelector = 'input.module-install-btn';
   this.moduleSortingDropdownSelector = '.module-sorting-author select';
   this.categoryGridSelector = '#modules-categories-grid';
   this.categoryGridItemSelector = '.module-category-item';
-  this.addonItemGridSelector = '.module-addons-item-grid';
-  this.addonItemListSelector = '.module-addons-item-list';
 
   // Upgrade All selectors
   this.upgradeAllSource = '.module_action_menu_upgrade_all';
@@ -70,16 +64,10 @@ const AdminModuleController = function () {
   this.statusItemSelector = '.module-status-menu';
   this.statusResetBtnSelector = '.module-status-reset';
 
-  // Selectors for Module Import and Addons connect
-  this.addonsConnectModalBtnSelector = '#page-header-desc-configuration-addons_connect';
-  this.addonsLogoutModalBtnSelector = '#page-header-desc-configuration-addons_logout';
-  this.addonsImportModalBtnSelector = '#page-header-desc-configuration-add_module';
+  // Selectors for Module Import
   this.dropZoneModalSelector = '#module-modal-import';
   this.dropZoneModalFooterSelector = '#module-modal-import .modal-footer';
   this.dropZoneImportZoneSelector = '#importDropzone';
-  this.addonsConnectModalSelector = '#module-modal-addons-connect';
-  this.addonsLogoutModalSelector = '#module-modal-addons-logout';
-  this.addonsConnectForm = '#addons-connect-form';
   this.moduleImportModalCloseBtn = '#module-modal-import-closing-cross';
   this.moduleImportStartSelector = '.module-import-start';
   this.moduleImportProcessingSelector = '.module-import-processing';
@@ -106,8 +94,6 @@ const AdminModuleController = function () {
     this.initCategorySelect();
     this.initCategoriesGrid();
     this.initActionButtons();
-    this.initAddonsSearch();
-    this.initAddonsConnect();
     this.initAddModuleAction();
     this.initDropzone();
     this.initPageChangeProtection();
@@ -165,71 +151,13 @@ const AdminModuleController = function () {
   this.initPlaceholderMechanism = function () {
     const self = this;
 
-    if ($(this.placeholderGlobalSelector).length) {
-      this.ajaxLoadPage();
-    }
-
     // Retry loading mechanism
     $('body').on('click', this.placeholderFailureRetryBtnSelector, () => {
       $(self.placeholderFailureGlobalSelector).fadeOut();
       $(self.placeholderGlobalSelector).fadeIn();
-      self.ajaxLoadPage();
     });
   };
 
-  this.ajaxLoadPage = function () {
-    const self = this;
-
-    $.ajax({
-      method: 'GET',
-      url: moduleURLs.catalogRefresh,
-    }).done((response) => {
-      if (response.status === true) {
-        if (typeof response.domElements === 'undefined') response.domElements = null;
-        if (typeof response.msg === 'undefined') response.msg = null;
-
-        const stylesheet = document.styleSheets[0];
-        const stylesheetRule = '{display: none}';
-        const moduleGlobalSelector = '.modules-list';
-        const moduleSortingSelector = '.module-sorting-menu';
-        const requiredSelectorCombination = `${moduleGlobalSelector}, ${moduleSortingSelector}`;
-
-        if (stylesheet.insertRule) {
-          stylesheet.insertRule(
-            requiredSelectorCombination
-            + stylesheetRule, stylesheet.cssRules.length,
-          );
-        } else if (stylesheet.addRule) {
-          stylesheet.addRule(
-            requiredSelectorCombination,
-            stylesheetRule,
-            -1,
-          );
-        }
-
-        $(self.placeholderGlobalSelector).fadeOut(800, () => {
-          $.each(response.domElements, (index, element) => {
-            $(element.selector).append(element.content);
-          });
-          $(moduleGlobalSelector).fadeIn(800).css('display', 'flex');
-          $(moduleSortingSelector).fadeIn(800);
-          $('[data-toggle="popover"]').popover();
-          self.initCurrentDisplay();
-          self.fetchModulesList();
-        });
-      } else {
-        $(self.placeholderGlobalSelector).fadeOut(800, () => {
-          $(self.placeholderFailureMsgSelector).text(response.msg);
-          $(self.placeholderFailureGlobalSelector).fadeIn(800);
-        });
-      }
-    }).fail((response) => {
-      $(self.placeholderGlobalSelector).fadeOut(800, () => {
-        $(self.placeholderFailureMsgSelector).text(response.statusText);
-        $(self.placeholderFailureGlobalSelector).fadeIn(800);
-      });
-    });
-  };
 
   this.fetchModulesList = function () {
     const self = this;
@@ -260,8 +188,6 @@ const AdminModuleController = function () {
         $this.remove();
       });
     });
-    self.addonsCardGrid = $(this.addonItemGridSelector);
-    self.addonsCardList = $(this.addonItemListSelector);
     this.updateModuleVisibility();
     $('body').trigger('moduleCatalogLoaded');
   };
@@ -319,13 +245,6 @@ const AdminModuleController = function () {
         if (isVisible) {
           currentModule.container.append(currentModule.domObject);
         }
-      }
-    }
-    if (this.currentTagsList.length) {
-      if (this.currentDisplay === 'grid') {
-        $('.modules-list').append(this.addonsCardGrid);
-      } else {
-        $('.modules-list').append(this.addonsCardList);
       }
     }
 
@@ -393,52 +312,6 @@ const AdminModuleController = function () {
     });
 
     return htmlGenerated;
-  };
-
-  this.initAddonsConnect = function () {
-    const self = this;
-
-    // Make addons connect modal ready to be clicked
-    if ($(this.addonsConnectModalBtnSelector).attr('href') === '#') {
-      $(this.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
-      $(this.addonsConnectModalBtnSelector).attr('data-target', this.addonsConnectModalSelector);
-    }
-    if ($(this.addonsLogoutModalBtnSelector).attr('href') === '#') {
-      $(this.addonsLogoutModalBtnSelector).attr('data-toggle', 'modal');
-      $(this.addonsLogoutModalBtnSelector).attr('data-target', this.addonsLogoutModalSelector);
-    }
-    $('body').on('submit', this.addonsConnectForm, function (event) {
-      event.preventDefault();
-      event.stopPropagation();
-
-      $.ajax({
-        method: 'POST',
-        url: $(this).attr('action'),
-        dataType: 'json',
-        data: $(this).serialize(),
-        beforeSend() {
-          $(self.addonsLoginButtonSelector).show();
-          $("button.btn[type='submit']", self.addonsConnectForm).hide();
-        },
-      }).done((response) => {
-        const responseCode = response.success;
-        const responseMsg = response.message;
-
-        if (responseCode === 1) {
-          location.reload();
-        } else {
-          $.growl.error({message: responseMsg});
-          $(self.addonsLoginButtonSelector).hide();
-          $("button.btn[type='submit']", self.addonsConnectForm).fadeIn();
-        }
-      });
-    });
-  };
-
-  this.initAddModuleAction = function () {
-    const addModuleButton = $(this.addonsImportModalBtnSelector);
-    addModuleButton.attr('data-toggle', 'modal');
-    addModuleButton.attr('data-target', this.dropZoneModalSelector);
   };
 
   this.initDropzone = function () {
@@ -520,7 +393,6 @@ const AdminModuleController = function () {
       acceptedFiles: '.zip, .tar',
       // The name that will be used to transfer the file
       paramName: 'file_uploaded',
-      maxFilesize: 50, // can't be greater than 50Mb because it's an addons limitation
       uploadMultiple: false,
       addRemoveLinks: true,
       dictDefaultMessage: '',
@@ -687,18 +559,6 @@ const AdminModuleController = function () {
     }
   };
 
-  this.initAddonsSearch = function () {
-    const self = this;
-    $('body').on('click', `${this.addonItemGridSelector}, ${this.addonItemListSelector}`, () => {
-      let searchQuery = '';
-
-      if (self.currentTagsList.length) {
-        searchQuery = encodeURIComponent(self.currentTagsList.join(' '));
-      }
-      const hrefUrl = `${self.baseAddonsUrl}search.php?search_query=${searchQuery}`;
-      window.open(hrefUrl, '_blank');
-    });
-  };
 
   this.initCategoriesGrid = function () {
     // eslint-disable-next-line
@@ -889,17 +749,6 @@ const AdminModuleController = function () {
         $('.module-search-result-wording'),
         modulesCount,
       );
-
-      $(this.addonItemGridSelector).toggle(modulesCount !== (this.modulesList.length / 2));
-      $(this.addonItemListSelector).toggle(modulesCount !== (this.modulesList.length / 2));
-      if (modulesCount === 0) {
-        $('.module-addons-search-link').attr(
-          'href',
-          `${this.baseAddonsUrl
-          }search.php?search_query=${
-            encodeURIComponent(this.currentTagsList.join(' '))}`,
-        );
-      }
     }
 
     function updateText(element, value) {
@@ -923,13 +772,6 @@ const AdminModuleController = function () {
       inputPlaceholder: translate_javascripts['Search - placeholder'],
       closingCross: true,
       context: self,
-    });
-
-    $('body').on('click', '.module-addons-search-link', function (event) {
-      event.preventDefault();
-      event.stopPropagation();
-      const href = $(this).attr('href');
-      window.open(href, '_blank');
     });
   };
 

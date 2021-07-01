@@ -60,33 +60,6 @@ class ModuleController extends ModuleAbstractController
     public const MAX_MODULES_DISPLAYED = 6;
 
     /**
-     * @AdminSecurity("is_granted('read', 'ADMINMODULESSF_')")
-     *
-     * @return Response
-     */
-    public function catalogAction()
-    {
-        return $this->render(
-            '@PrestaShop/Admin/Module/catalog.html.twig',
-            [
-                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $this->trans('Modules catalog', 'Admin.Navigation.Menu'),
-                'requireAddonsSearch' => true,
-                'requireBulkActions' => false,
-                'showContentHeader' => true,
-                'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink('AdminModules'),
-                'requireFilterStatus' => false,
-                'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
-                'errorMessage' => $this->trans(
-                    'You do not have permission to add this.',
-                    'Admin.Notifications.Error'
-                ),
-            ]
-        );
-    }
-
-    /**
      * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
      *
      * @AdminSecurity("is_granted('read', 'ADMINMODULESSF_')")
@@ -142,67 +115,6 @@ class ModuleController extends ModuleAbstractController
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
                 'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
             ]
-        );
-    }
-
-    /**
-     * @AdminSecurity("is_granted('read', 'ADMINMODULESSF_')")
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function getPreferredModulesAction(Request $request)
-    {
-        $tabModulesList = $request->get('tab_modules_list');
-
-        if ($tabModulesList) {
-            $tabModulesList = explode(',', $tabModulesList);
-        }
-        $modulesListUnsorted = $this->getModulesByInstallation(
-            $tabModulesList
-        );
-
-        $installed = $uninstalled = [];
-
-        if (!empty($tabModulesList)) {
-            foreach ($tabModulesList as $key => $value) {
-                foreach ($modulesListUnsorted['installed'] as $moduleInstalled) {
-                    if ($moduleInstalled['attributes']['name'] == $value) {
-                        $installed[] = $moduleInstalled;
-
-                        continue 2;
-                    }
-                }
-
-                foreach ($modulesListUnsorted['not_installed'] as $moduleNotInstalled) {
-                    if ($moduleNotInstalled['attributes']['name'] == $value) {
-                        $uninstalled[] = $moduleNotInstalled;
-
-                        continue 2;
-                    }
-                }
-            }
-        }
-
-        $moduleListSorted = [
-            'installed' => $installed,
-            'notInstalled' => $uninstalled,
-        ];
-
-        $twigParams = [
-            'currentIndex' => '',
-            'modulesList' => $moduleListSorted,
-            'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
-        ];
-
-        if ($request->request->has('admin_list_from_source')) {
-            $twigParams['adminListFromSource'] = $request->request->get('admin_list_from_source');
-        }
-
-        return $this->render(
-            '@PrestaShop/Admin/Module/tab-modules-list.html.twig',
-            $twigParams
         );
     }
 
@@ -290,61 +202,6 @@ class ModuleController extends ModuleAbstractController
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
             ]
         );
-    }
-
-    /**
-     * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function refreshCatalogAction(Request $request)
-    {
-        $deniedAccess = $this->checkPermissions(
-            [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-                PageVoter::LEVEL_UPDATE,
-            ]
-        );
-        if (null !== $deniedAccess) {
-            return $deniedAccess;
-        }
-
-        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
-        $responseArray = [];
-
-        $filters = new AddonListFilter();
-        $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
-            ->setStatus(~AddonListFilterStatus::INSTALLED);
-
-        try {
-            $modulesFromRepository = AddonsCollection::createFrom($moduleRepository->getFilteredList($filters));
-            $modulesProvider->generateAddonsUrls($modulesFromRepository);
-
-            $modules = $modulesFromRepository->toArray();
-            shuffle($modules);
-            $categories = $this->getCategories($modulesProvider, $modules);
-
-            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categories);
-            $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse(
-                $categories,
-                $modules
-            );
-            $responseArray['status'] = true;
-        } catch (Exception $e) {
-            $responseArray['msg'] = $this->trans(
-                'Cannot get catalog data, please try again later. Reason: %error_details%',
-                'Admin.Modules.Notification',
-                ['%error_details%' => print_r($e->getMessage(), true)]
-            );
-            $responseArray['status'] = false;
-        }
-
-        return new JsonResponse($responseArray);
     }
 
     /**
