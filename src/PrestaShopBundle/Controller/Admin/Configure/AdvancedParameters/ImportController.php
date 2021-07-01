@@ -321,7 +321,6 @@ class ImportController extends FrameworkBundleAdminController
         return [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->get('translator')->trans('Import', [], 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,

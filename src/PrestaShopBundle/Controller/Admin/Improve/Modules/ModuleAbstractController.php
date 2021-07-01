@@ -57,7 +57,6 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
             'layoutTitle' => $this->trans('Module notifications', 'Admin.Modules.Feature'),
             'help_link' => $this->generateSidebarLink('AdminModules'),
             'modules' => $modules->{$type},
-            'requireAddonsSearch' => false,
             'requireBulkActions' => false,
             'requireFilterStatus' => false,
             'level' => $this->authorizationLevel($this::CONTROLLER_NAME),

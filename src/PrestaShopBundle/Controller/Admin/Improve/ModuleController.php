@@ -107,7 +107,6 @@ class ModuleController extends ModuleAbstractController
                 'layoutTitle' => $this->trans('Module manager', 'Admin.Modules.Feature'),
                 'categories' => $categories['categories'],
                 'topMenuData' => $this->getTopMenuData($categories),
-                'requireAddonsSearch' => false,
                 'requireBulkActions' => true,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminModules'),
@@ -611,7 +610,6 @@ class ModuleController extends ModuleAbstractController
             '@PrestaShop/Admin/Module/catalog-refresh.html.twig',
             [
                 'categories' => $categories['categories'],
-                'requireAddonsSearch' => true,
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
                 'errorMessage' => $errorMessage,
             ]
