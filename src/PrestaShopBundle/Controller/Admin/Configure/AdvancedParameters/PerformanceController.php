@@ -70,7 +70,6 @@ class PerformanceController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/performance.html.twig', [
             'layoutHeaderToolbarBtn' => $toolbarButtons,
             'layoutTitle' => $this->trans('Performance', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,

@@ -65,7 +65,6 @@ class ContactsController extends FrameworkBundleAdminController
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
                 'layoutTitle' => $this->trans('Contacts', 'Admin.Navigation.Menu'),
-                'requireAddonsSearch' => true,
                 'layoutHeaderToolbarBtn' => [
                     'add' => [
                         'desc' => $this->trans('Add new contact', 'Admin.Shopparameters.Feature'),
