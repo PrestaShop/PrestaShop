@@ -57,7 +57,7 @@ describe('Enable guest checkout', async () => {
     {args: {action: 'enable', exist: true, pwdRequired: false}},
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it(`should ${test.args.action} guest checkout`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}GuestCheckout`, baseContext);
 
@@ -79,12 +79,7 @@ describe('Enable guest checkout', async () => {
     });
 
     it('should verify the guest checkout', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkGuestCheckout${homePage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkGuestCheckout${index}`, baseContext);
 
       // Go to the first product page
       await homePage.goToProductPage(page, 1);

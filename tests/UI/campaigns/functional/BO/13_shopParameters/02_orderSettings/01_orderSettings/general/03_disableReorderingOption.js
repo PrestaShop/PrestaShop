@@ -61,7 +61,7 @@ describe('Enable reordering option', async () => {
     {args: {action: 'disable', status: false, reorderOption: true}},
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it(`should ${test.args.action} reordering option`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}GuestCheckout`, baseContext);
 
@@ -83,12 +83,7 @@ describe('Enable reordering option', async () => {
     });
 
     it('should verify the reordering option', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkReorderingOption${homePage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkReorderingOption${index}`, baseContext);
 
       // Login FO
       await homePage.goToLoginPage(page);

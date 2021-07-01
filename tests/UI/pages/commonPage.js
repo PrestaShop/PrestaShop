@@ -390,15 +390,6 @@ class CommonPage {
   }
 
   /**
-   * Uppercase the first character of the word
-   * @param word {string} String of the word
-   * @returns {string}
-   */
-  uppercaseFirstCharacter(word) {
-    return `${word[0].toUpperCase()}${word.slice(1)}`;
-  }
-
-  /**
    * Upload file in input type=file selector
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the file input
