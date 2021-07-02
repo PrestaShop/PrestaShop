@@ -205,10 +205,6 @@
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml"
         ],
-        "phpunit-controllers": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/old-controllers.xml"
-        ],
         "phpunit-endpoints": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-endpoints.xml"
@@ -222,7 +218,6 @@
             "@composer phpunit-legacy",
             "@composer unit-tests",
             "@composer integration-tests",
-            "@composer phpunit-controllers",
             "@composer integration-behaviour-tests"
         ],
         "unit-tests": [
