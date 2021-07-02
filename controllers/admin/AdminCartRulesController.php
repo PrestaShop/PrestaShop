@@ -526,7 +526,7 @@ class AdminCartRulesControllerCore extends AdminController
         return $this->createTemplate('product_rule.tpl')->fetch();
     }
 
-    public function populateCategories(&$flatCategories, $currentCategoryTree, $currentPath = ''): void
+    public function populateCategories(array &$flatCategories, array $currentCategoryTree, string $currentPath = ''): void
     {
         if (!$currentCategoryTree) {
             return;
