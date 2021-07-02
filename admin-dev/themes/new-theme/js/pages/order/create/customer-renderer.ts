@@ -70,7 +70,7 @@ export default class CustomerRenderer {
           customerResult.birthday !== '0000-00-00'
             ? customerResult.birthday
             : ' ',
-        company: customerResult.company
+        company: customerResult.company,
       };
 
       this.renderFoundCustomer(customer);
