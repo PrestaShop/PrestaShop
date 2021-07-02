@@ -36,6 +36,7 @@ import CountryDniRequiredToggler from '@components/country-dni-required-toggler'
 import TextWithLengthCounter from '@components/form/text-with-length-counter';
 import PreviewOpener from '@components/form/preview-opener';
 import MultistoreConfigField from '@js/components/form/multistore-config-field';
+import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
 import {EventEmitter} from '@components/event-emitter';
 import Grid from '@components/grid/grid';
 import Router from '@components/router';
@@ -139,6 +140,7 @@ const initPrestashopComponents = () => {
     Grid,
     GridExtensions,
     Router,
+    TextWithRecommendedLengthCounter,
     ColorPicker,
     DeltaQuantityInput,
   };
