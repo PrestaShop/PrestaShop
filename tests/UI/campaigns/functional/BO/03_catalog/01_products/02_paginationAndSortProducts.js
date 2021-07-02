@@ -30,7 +30,7 @@ Sort products table
 Paginate between pages
 Delete products with bulk actions
  */
-describe('BO - Products : Pagination and sort Products table', async () => {
+describe('BO - Catalog - Products : Pagination and sort Products table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
