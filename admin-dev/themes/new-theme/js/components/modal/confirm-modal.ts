@@ -57,8 +57,6 @@ export type InputConfirmModalParams = Partial<ConfirmModalParams>;
  *
  * This container is built on the basic ModalContainer and adds some confirm/cancel buttons along with a message
  * in the body, it is mostly used as a Rich confirm dialog box.
- *
- * @param {InputConfirmModalParams} inputParams
  */
 class ConfirmModalContainer extends ModalContainer implements ConfirmModalContainerType {
   footer!: HTMLElement;
@@ -67,20 +65,9 @@ class ConfirmModalContainer extends ModalContainer implements ConfirmModalContai
 
   confirmButton!: HTMLButtonElement;
 
-  constructor(inputParams: InputConfirmModalParams) {
-    const params: ConfirmModalParams = {
-      id: 'confirm-modal',
-      confirmMessage: 'Are you sure?',
-      closeButtonLabel: 'Close',
-      confirmButtonLabel: 'Accept',
-      confirmButtonClass: 'btn-primary',
-      customButtons: [],
-      closable: false,
-      modalTitle: inputParams.confirmTitle,
-      dialogStyle: {},
-      ...inputParams,
-    };
-
+  /* This constructor is important to force the input type but ESLint is not happy about it*/
+  /* eslint-disable no-useless-constructor */
+  constructor(params: ConfirmModalParams) {
     super(params);
   }
 
@@ -133,10 +120,23 @@ export class ConfirmModal implements ConfirmModalType {
   protected $modal: JQuery;
 
   constructor(
-    params: InputConfirmModalParams,
+    inputParams: InputConfirmModalParams,
     confirmCallback: (event: Event) => void,
     cancelCallback = () => true,
   ) {
+    const params: ConfirmModalParams = {
+      id: 'confirm-modal',
+      confirmMessage: 'Are you sure?',
+      closeButtonLabel: 'Close',
+      confirmButtonLabel: 'Accept',
+      confirmButtonClass: 'btn-primary',
+      customButtons: [],
+      closable: false,
+      modalTitle: inputParams.confirmTitle,
+      dialogStyle: {},
+      ...inputParams,
+    };
+
     // Construct the modal
     this.modal = new ConfirmModalContainer(params);
 
