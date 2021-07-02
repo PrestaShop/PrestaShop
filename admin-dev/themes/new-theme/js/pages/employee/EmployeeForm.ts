@@ -44,6 +44,7 @@ export default class EmployeeForm {
     this.shopChoiceTreeSelector = employeeFormMap.shopChoiceTree;
     this.shopChoiceTree = new ChoiceTree(this.shopChoiceTreeSelector);
     this.employeeProfileSelector = employeeFormMap.profileSelect;
+    this.multistoreAlert = employeeFormMap.multistoreAlert;
     this.tabsDropdownSelector = employeeFormMap.defaultPageSelect;
 
     this.shopChoiceTree.enableAutoCheckChildren();
@@ -142,12 +143,11 @@ export default class EmployeeForm {
   private toggleShopTree(): void {
     const $employeeProfileDropdown = $(this.employeeProfileSelector);
     const superAdminProfileId = $employeeProfileDropdown.data('admin-profile');
+    const isSuperAdminProfile = parseInt($employeeProfileDropdown.val()) === superAdminProfileId;
     $(this.shopChoiceTreeSelector)
       .closest('.form-group')
-      .toggleClass(
-        'd-none',
-        parseInt($employeeProfileDropdown.val()) === superAdminProfileId,
-      );
+      .toggleClass('d-none', isSuperAdminProfile);
+    $(this.multistoreAlert).toggleClass('d-none', !isSuperAdminProfile);
   }
 
   /**
