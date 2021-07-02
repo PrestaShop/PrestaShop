@@ -67,9 +67,6 @@ export default class AttachmentsManager {
         formSelector: 'form[name="attachment"]',
         formUrl: $(event.target).prop('href'),
         closable: true,
-        dialogStyle: {
-          maxHeight: '450px',
-        },
         onFormLoaded: (form, formData, dataAttributes) => {
           if (dataAttributes && dataAttributes.attachmentId) {
             const successMessage = this.$addAttachmentBtn.data('successCreateMessage');
