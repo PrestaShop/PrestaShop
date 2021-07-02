@@ -240,7 +240,7 @@ describe('BO - Catalog - Products : Pagination and sort Products table', async (
   // 4 : Delete the created products
   describe('Delete the created products', async () => {
     it('should filter by product name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByName', baseContext);
 
       // Filter by name
       await productsPage.filterProducts(page, 'name', 'todelete');
