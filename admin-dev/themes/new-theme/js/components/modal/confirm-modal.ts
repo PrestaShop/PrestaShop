@@ -61,8 +61,6 @@ export type InputConfirmModalParams = Partial<ConfirmModalParams>;
  * @param {InputConfirmModalParams} inputParams
  */
 class ConfirmModalContainer extends ModalContainer implements ConfirmModalContainerType {
-  message!: HTMLElement;
-
   footer!: HTMLElement;
 
   closeButton!: HTMLElement;
@@ -90,7 +88,6 @@ class ConfirmModalContainer extends ModalContainer implements ConfirmModalContai
     super.buildModalContainer(params);
 
     // Modal message element
-    this.message = document.createElement('p');
     this.message.classList.add('confirm-message');
     this.message.innerHTML = params.confirmMessage;
 
@@ -118,7 +115,6 @@ class ConfirmModalContainer extends ModalContainer implements ConfirmModalContai
     this.confirmButton.innerHTML = params.confirmButtonLabel;
 
     // Appending element to the modal
-    this.body.appendChild(this.message);
     this.footer.append(this.closeButton, ...params.customButtons, this.confirmButton);
     this.content.append(this.footer);
   }
@@ -170,6 +166,10 @@ export class ConfirmModal implements ConfirmModalType {
     });
 
     document.body.appendChild(this.modal.container);
+  }
+
+  displayMessage(message: string): void {
+    this.modal.message.innerHTML = message;
   }
 
   show(): void {
