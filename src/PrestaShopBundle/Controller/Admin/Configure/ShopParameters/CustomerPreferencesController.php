@@ -65,7 +65,7 @@ class CustomerPreferencesController extends FrameworkBundleAdminController
      * Process the Customer Preferences configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted('update, request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.", redirectRoute="admin_customer_preferences"
      * )
      * @DemoRestricted(redirectRoute="admin_customer_preferences")
