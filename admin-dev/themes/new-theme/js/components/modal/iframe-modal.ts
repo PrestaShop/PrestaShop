@@ -38,6 +38,7 @@ export interface IframeModalContainerType extends ModalContainerType {
 }
 export interface IframeModalType extends ModalType {
   modal: IframeModalContainerType;
+  displayMessage: (message: string, hideIframe?: boolean) => void;
 }
 export type IframeCallbackFunction = (iframe:HTMLIFrameElement, event: Event) => void;
 export type IframeModalParams = ModalParams & {
@@ -80,6 +81,9 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
   buildModalContainer(params: IframeModalParams): void {
     super.buildModalContainer(params);
     this.container.classList.add('modal-iframe');
+
+    // Message is hidden by default
+    this.message.classList.add('d-none');
 
     this.iframe = document.createElement('iframe');
     this.iframe.frameBorder = '0';
@@ -154,12 +158,15 @@ export class IframeModal implements IframeModalType {
     document.body.appendChild(this.modal.container);
   }
 
-  private showLoading(): void {
-    this.modal.loader.classList.remove('d-none');
-  }
+  displayMessage(message: string, hideIframe: boolean = true): void {
+    this.modal.message.innerHTML = message;
+    this.modal.message.classList.remove('d-none');
 
-  private hideLoading(): void {
-    this.modal.loader.classList.add('d-none');
+    if (hideIframe) {
+      this.hideIframe();
+    }
+
+    this.hideLoading();
   }
 
   show(): void {
@@ -168,6 +175,18 @@ export class IframeModal implements IframeModalType {
 
   hide(): void {
     this.$modal.modal('hide');
+  }
+
+  private hideIframe(): void {
+    this.modal.iframe.classList.add('d-none');
+  }
+
+  private showLoading(): void {
+    this.modal.loader.classList.remove('d-none');
+  }
+
+  private hideLoading(): void {
+    this.modal.loader.classList.add('d-none');
   }
 }
 
