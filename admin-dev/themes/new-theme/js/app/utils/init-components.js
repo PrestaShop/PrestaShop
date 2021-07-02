@@ -38,6 +38,7 @@ import PreviewOpener from '@components/form/preview-opener';
 import MultistoreConfigField from '@js/components/form/multistore-config-field';
 import {EventEmitter} from '@components/event-emitter';
 import Grid from '@components/grid/grid';
+import ChangePasswordControl from '../../components/form/change-password-control';
 import Router from '@components/router';
 import ColorPicker from '@js/app/utils/colorpicker';
 
@@ -140,6 +141,7 @@ const initPrestashopComponents = () => {
     GridExtensions,
     Router,
     ColorPicker,
+    ChangePasswordControl,
     DeltaQuantityInput,
   };
 };

@@ -23,9 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ChoiceTree from '../../components/form/choice-tree';
 import AddonsConnector from '../../components/addons-connector';
-import ChangePasswordControl from '../../components/form/change-password-control';
 import employeeFormMap from './employee-form-map';
 
 /**
@@ -42,7 +40,7 @@ export default class EmployeeForm {
 
   constructor() {
     this.shopChoiceTreeSelector = employeeFormMap.shopChoiceTree;
-    this.shopChoiceTree = new ChoiceTree(this.shopChoiceTreeSelector);
+    this.shopChoiceTree = new window.prestashop.component.ChoiceTree(this.shopChoiceTreeSelector);
     this.employeeProfileSelector = employeeFormMap.profileSelect;
     this.multistoreAlert = employeeFormMap.multistoreAlert;
     this.tabsDropdownSelector = employeeFormMap.defaultPageSelect;
@@ -54,7 +52,7 @@ export default class EmployeeForm {
       employeeFormMap.addonsLoginButton,
     );
 
-    new ChangePasswordControl(
+    new window.prestashop.component.ChangePasswordControl(
       employeeFormMap.changePasswordInputsBlock,
       employeeFormMap.showChangePasswordBlockButton,
       employeeFormMap.hideChangePasswordBlockButton,
