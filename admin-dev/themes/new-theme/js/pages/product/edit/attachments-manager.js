@@ -36,6 +36,7 @@ export default class AttachmentsManager {
     this.$attachmentsContainer = $(ProductMap.attachments.attachmentsContainer);
     this.$attachmentsCollection = $(ProductMap.attachments.attachmentsCollection);
     this.$attachmentsTableBody = $(ProductMap.attachments.attachmentsTableBody);
+    this.$addAttachmentBtn = $(ProductMap.attachments.addAttachmentBtn, this.$attachmentsContainer);
     this.prototypeTemplate = this.$attachmentsCollection.data('prototype');
     this.prototypeName = this.$attachmentsCollection.data('prototypeName');
     this.eventEmitter = window.prestashop.instance.eventEmitter;
@@ -57,7 +58,7 @@ export default class AttachmentsManager {
    * @private
    */
   initAddAttachmentIframe() {
-    this.$attachmentsContainer.on('click', ProductMap.attachments.addAttachmentBtn, (event) => {
+    this.$addAttachmentBtn.on('click', (event) => {
       event.preventDefault();
 
       const iframeModal = new FormIframeModal({
@@ -71,10 +72,17 @@ export default class AttachmentsManager {
         },
         onFormLoaded: (form, formData, dataAttributes) => {
           if (dataAttributes && dataAttributes.attachmentId) {
+            const successMessage = this.$addAttachmentBtn.data('successCreateMessage');
+            iframeModal.displayMessage(`<div class="alert alert-success d-print-none m-2" role="alert">
+              <div class="alert-text">
+                <p>${successMessage}</p>
+              </div>
+            </div>`);
+
             getAttachmentInfo(dataAttributes.attachmentId).then((response) => {
               this.addAttachmentRow(response.attachmentInfo);
+              setTimeout(() => { iframeModal.hide(); }, 2000);
             });
-            iframeModal.hide();
           }
         },
       });

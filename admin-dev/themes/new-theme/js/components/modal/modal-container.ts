@@ -27,15 +27,17 @@ export interface ModalContainerType {
   container: HTMLElement;
   dialog: HTMLElement;
   content: HTMLElement;
+  body: HTMLElement;
+  message: HTMLElement;
   header: HTMLElement;
   title?: HTMLElement;
   closeIcon: HTMLButtonElement;
-  body: HTMLElement;
 }
 export interface ModalType {
   modal: ModalContainerType;
   show: () => void;
   hide: () => void;
+  displayMessage: (message: string) => void;
 }
 export type CssProps = Record<string, string>;
 export type ModalParams = {
@@ -62,6 +64,8 @@ export class ModalContainer implements ModalContainerType {
   dialog!: HTMLElement;
 
   content!: HTMLElement;
+
+  message!: HTMLElement;
 
   header!: HTMLElement;
 
@@ -101,6 +105,10 @@ export class ModalContainer implements ModalContainerType {
     this.content = document.createElement('div');
     this.content.classList.add('modal-content');
 
+    // Modal message element
+    this.message = document.createElement('p');
+    this.message.classList.add('modal-message');
+
     // Modal header element
     this.header = document.createElement('div');
     this.header.classList.add('modal-header');
@@ -129,6 +137,7 @@ export class ModalContainer implements ModalContainerType {
     }
     this.header.appendChild(this.closeIcon);
     this.content.append(this.header, this.body);
+    this.body.appendChild(this.message);
     this.dialog.appendChild(this.content);
     this.container.appendChild(this.dialog);
   }

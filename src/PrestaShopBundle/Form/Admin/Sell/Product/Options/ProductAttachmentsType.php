@@ -65,6 +65,16 @@ class ProductAttachmentsType extends TranslatorAwareType
                 'icon' => 'add_circle',
                 'type' => 'link',
                 'attr' => [
+                    'data-success-create-message' => sprintf('%s %s',
+                        $this->trans(
+                            'Attachment was successfully created and added to the selection.',
+                            'Admin.Catalog.Feature'
+                        ),
+                        $this->trans(
+                            'This window is gonna close automatically.',
+                            'Admin.Glocal'
+                        )
+                    ),
                     'class' => 'btn-outline-secondary add-attachment',
                     'href' => $this->urlGenerator->generate('admin_attachments_create', [
                         'liteDisplaying' => true,
