@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -13,9 +17,6 @@ const {Products} = require('@data/demo/products');
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_products_duplicateProductFromList';
 
@@ -32,7 +33,7 @@ Filter by name of the duplicated product
 Delete the duplicated product
 */
 
-describe('Duplicate product from list', async () => {
+describe('BO - Catalog - Products : Duplicate product from list', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -48,7 +49,7 @@ describe('Duplicate product from list', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to products page', async function () {
+  it('should go to \'Catalog > Products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
