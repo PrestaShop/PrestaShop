@@ -32,6 +32,7 @@ use OrderReturn;
 use OrderReturnState;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\MissingOrderReturnRequiredFieldsException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
@@ -87,8 +88,7 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
         }
 
         if ($orderReturnState->id !== $orderReturnStateId->getValue()) {
-            throw new OrderReturnOrderStateConstraintException(
-                $orderReturnStateId,
+            throw new OrderReturnConstraintException(
                 sprintf('Merchandise return state with id "%d" was not found.', $orderReturnStateId->getValue())
             );
         }
