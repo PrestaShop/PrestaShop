@@ -41,6 +41,7 @@ import Grid from '@components/grid/grid';
 import ChangePasswordControl from '../../components/form/change-password-control';
 import Router from '@components/router';
 import ColorPicker from '@js/app/utils/colorpicker';
+import ChangePasswordControl from '../../components/form/change-password-control';
 
 // Grid extensions
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
