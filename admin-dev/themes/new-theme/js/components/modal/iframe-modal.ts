@@ -46,6 +46,7 @@ export type IframeModalParams = ModalParams & {
   onLoaded?: IframeCallbackFunction,
   onUnload?: IframeCallbackFunction,
   iframeUrl: string;
+  autoSize: boolean;
 }
 export type InputIframeModalParams = Partial<IframeModalParams> & {
   iframeUrl: string; // iframeUrl is mandatory in input
@@ -68,13 +69,9 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
 
   spinner!: HTMLElement;
 
-  constructor(inputParams: InputIframeModalParams) {
-    const params: IframeModalParams = {
-      id: 'iframe-modal',
-      closable: false,
-      ...inputParams,
-    };
-
+  /* This constructor is important to force the input type but ESLint is not happy about it*/
+  /* eslint-disable no-useless-constructor */
+  constructor(params: IframeModalParams) {
     super(params);
   }
 
@@ -112,10 +109,20 @@ export class IframeModal implements IframeModalType {
 
   protected $modal: JQuery;
 
+  protected autoSize: boolean;
+
   constructor(
-    params: InputIframeModalParams,
+    inputParams: InputIframeModalParams,
   ) {
-    // Construct the modal
+    const params: IframeModalParams = {
+      id: 'iframe-modal',
+      closable: false,
+      autoSize: true,
+      ...inputParams,
+    };
+
+    // Construct the container
+    this.autoSize = params.autoSize;
     this.modal = new IframeModalContainer(params);
 
     const {id, closable} = params;
@@ -135,6 +142,9 @@ export class IframeModal implements IframeModalType {
           }
           this.showLoading();
         });
+
+        // Auto resize the iframe container
+        this.autoResize();
       }
     });
 
@@ -166,6 +176,7 @@ export class IframeModal implements IframeModalType {
       this.hideIframe();
     }
 
+    this.autoResize();
     this.hideLoading();
   }
 
@@ -187,6 +198,34 @@ export class IframeModal implements IframeModalType {
 
   private hideLoading(): void {
     this.modal.loader.classList.add('d-none');
+  }
+
+  private autoResize(): void {
+    if (this.autoSize) {
+      const iframeScrollHeight = this.modal.iframe.contentWindow ? this.modal.iframe.contentWindow.document.body.scrollHeight : 0;
+      const contentHeight = this.getOuterHeight(this.modal.header)
+        + this.getOuterHeight(this.modal.message)
+        + iframeScrollHeight;
+
+      // Avoid applying height of 0 (on first load for example)
+      if (contentHeight) {
+        this.modal.dialog.style.height = `${contentHeight}px`;
+      }
+    }
+  }
+
+  private getOuterHeight(element: HTMLElement): number {
+    // If the element height is 0 it is likely empty or hidden, then no need to compute the margin
+    if (!element.offsetHeight) {
+      return 0;
+    }
+
+    let height = element.offsetHeight;
+    const style: CSSStyleDeclaration = getComputedStyle(element);
+
+    height += parseInt(style.marginTop, 10) + parseInt(style.marginBottom, 10);
+
+    return height;
   }
 }
 
