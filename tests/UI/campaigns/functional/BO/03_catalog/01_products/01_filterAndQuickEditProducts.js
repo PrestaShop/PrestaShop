@@ -26,7 +26,7 @@ let numberOfProducts = 0;
 let filterValue = '';
 
 // Filter Products
-describe('Catalog - Products : Filter and quick edit the Products table', async () => {
+describe('Catalog - Products : Filter and quick edit Products table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
