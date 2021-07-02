@@ -262,7 +262,7 @@ final class EmployeeType extends TranslatorAwareType
                 'choices' => $this->tabChoices,
                 'label' => $this->trans('Default page', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('This page will be displayed just after login.', 'Admin.Advparameters.Help'),
-                'row_attr' => [
+                'attr' => [
                     'data-minimumResultsForSearch' => '7',
                     'data-toggle' => '2',
                 ],

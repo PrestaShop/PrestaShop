@@ -146,7 +146,7 @@ export default class EmployeeForm {
       .closest('.form-group')
       .toggleClass(
         'd-none',
-        $employeeProfileDropdown.val() === superAdminProfileId,
+        parseInt($employeeProfileDropdown.val()) === superAdminProfileId,
       );
   }
 
