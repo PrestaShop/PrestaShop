@@ -25,7 +25,7 @@ let page;
 let numberOfProducts = 0;
 let filterValue = '';
 
-// Filter Products
+// Filter and quick edit Products
 describe('Catalog - Products : Filter and quick edit Products table', async () => {
   // before and after functions
   before(async function () {
