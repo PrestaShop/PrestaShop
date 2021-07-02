@@ -191,10 +191,6 @@ class AbstractEditCategoryCommand
      */
     public function setIsActive(bool $isActive): self
     {
-        if (!is_bool($isActive)) {
-            throw new CategoryConstraintException('Invalid Category status supplied', CategoryConstraintException::INVALID_STATUS);
-        }
-
         $this->isActive = $isActive;
 
         return $this;
