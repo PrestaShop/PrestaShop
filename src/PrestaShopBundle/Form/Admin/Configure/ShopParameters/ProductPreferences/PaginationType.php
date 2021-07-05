@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -50,6 +51,7 @@ class PaginationType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_PRODUCTS_PER_PAGE',
             ])
             ->add('default_order_by', ChoiceType::class, [
                 'label' => $this->trans(
@@ -72,6 +74,7 @@ class PaginationType extends TranslatorAwareType
                 ],
                 'required' => false,
                 'placeholder' => false,
+                'multistore_configuration_key' => 'PS_PRODUCTS_ORDER_BY',
             ])
             ->add('default_order_way', ChoiceType::class, [
                 'label' => $this->trans(
@@ -85,6 +88,7 @@ class PaginationType extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => false,
                 'placeholder' => false,
+                'multistore_configuration_key' => 'PS_PRODUCTS_ORDER_WAY',
             ]);
     }
 
@@ -104,5 +108,15 @@ class PaginationType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'product_preferences_pagination_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }
