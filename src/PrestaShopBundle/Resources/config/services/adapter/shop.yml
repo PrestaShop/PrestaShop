@@ -63,3 +63,6 @@ services:
 
   prestashop.adapter.shop.repository.shop_group_repository:
       class: 'PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository'
+
+  prestashop.adapter.shop.repository.shop_repository:
+      class: 'PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'

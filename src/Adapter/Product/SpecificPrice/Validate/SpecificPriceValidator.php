@@ -31,9 +31,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate;
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use SpecificPrice;
@@ -49,12 +52,20 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
     private $shopGroupRepository;
 
     /**
+     * @var ShopRepository
+     */
+    private $shopRepository;
+
+    /**
      * @param ShopGroupRepository $shopGroupRepository
+     * @param ShopRepository $shopRepository
      */
     public function __construct(
-        ShopGroupRepository $shopGroupRepository
+        ShopGroupRepository $shopGroupRepository,
+        ShopRepository $shopRepository
     ) {
         $this->shopGroupRepository = $shopGroupRepository;
+        $this->shopRepository = $shopRepository;
     }
 
     /**
@@ -84,6 +95,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         $this->validateSpecificPriceProperty($specificPrice, 'id_shop', SpecificPriceConstraintException::INVALID_RELATION_ID);
         $this->validateSpecificPriceProperty($specificPrice, 'id_shop_group', SpecificPriceConstraintException::INVALID_RELATION_ID);
         $this->validateSpecificPriceProperty($specificPrice, 'id_specific_price_rule', SpecificPriceConstraintException::INVALID_RELATION_ID);
+        $this->assertRelatedEntitiesExist($specificPrice);
     }
 
     /**
@@ -132,8 +144,12 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         if ($shopGroupId !== NoShopGroupId::NO_SHOP_GROUP_ID) {
             $this->shopGroupRepository->assertShopGroupExists(new ShopGroupId($shopGroupId));
         }
+
+        $shopId = (int) $specificPrice->id_shop;
+        if ($shopId !== NoShopId::NO_SHOP_ID) {
+            $this->shopRepository->assertShopExists(new ShopId($shopId));
+        }
         //@todo:
-        //  shop
         //  combination
         //  currency
         //  country
