@@ -41,6 +41,7 @@ class ToolsCore
     const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
     const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
     public const CACHE_LIFETIME_SECONDS = 604800;
+    public const DEFAULT_CONNECTION_TIMEOUT = 5;
 
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
@@ -2123,9 +2124,13 @@ class ToolsCore
             Tools::refreshCACertFile();
             $curl = curl_init();
 
+            // Connection timeout is part of the whole timeout, so it must be proportional or increasing the global
+            // timeout might have no result, we keep a minimum default value though
+            $connectionTimeout = $curl_timeout > 2 * static::DEFAULT_CONNECTION_TIMEOUT ? $curl_timeout / 2 : static::DEFAULT_CONNECTION_TIMEOUT;
+
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $connectionTimeout);
             curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
             curl_setopt($curl, CURLOPT_CAINFO, _PS_CACHE_CA_CERT_FILE_);
