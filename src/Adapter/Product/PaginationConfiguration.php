@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
