@@ -26,42 +26,50 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class StockConfiguration is responsible for saving & loading products stock configuration.
  */
-class StockConfiguration implements DataConfigurationInterface
+class StockConfiguration extends AbstractMultistoreConfiguration
 {
     /**
-     * @var Configuration
+     * @var array<int, string>
      */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = [
+        'allow_ordering_oos',
+        'stock_management',
+        'in_stock_label',
+        'oos_allowed_backorders',
+        'oos_denied_backorders',
+        'delivery_time',
+        'oos_delivery_time',
+        'pack_stock_management',
+        'oos_show_label_listing_pages',
+        'display_last_quantities',
+        'display_unavailable_attributes',
+    ];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'allow_ordering_oos' => $this->configuration->getBoolean('PS_ORDER_OUT_OF_STOCK'),
-            'stock_management' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
-            'in_stock_label' => $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS'),
-            'oos_allowed_backorders' => $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOA'),
-            'oos_denied_backorders' => $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOD'),
-            'delivery_time' => (array) $this->configuration->get('PS_LABEL_DELIVERY_TIME_AVAILABLE'),
-            'oos_delivery_time' => (array) $this->configuration->get('PS_LABEL_DELIVERY_TIME_OOSBOA'),
-            'pack_stock_management' => $this->configuration->get('PS_PACK_STOCK_TYPE'),
-            'oos_show_label_listing_pages' => $this->configuration->getBoolean('PS_SHOW_LABEL_OOS_LISTING_PAGES'),
-            'display_last_quantities' => $this->configuration->get('PS_LAST_QTIES'),
-            'display_unavailable_attributes' => $this->configuration->getBoolean('PS_DISP_UNAVAILABLE_ATTR'),
+            'allow_ordering_oos' => (bool) $this->configuration->get('PS_ORDER_OUT_OF_STOCK', false, $shopConstraint),
+            'stock_management' => (bool) $this->configuration->get('PS_STOCK_MANAGEMENT', false, $shopConstraint),
+            'in_stock_label' => $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS', null, $shopConstraint),
+            'oos_allowed_backorders' => $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOA', null, $shopConstraint),
+            'oos_denied_backorders' => $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOD', null, $shopConstraint),
+            'delivery_time' => $this->configuration->get('PS_LABEL_DELIVERY_TIME_AVAILABLE', null, $shopConstraint),
+            'oos_delivery_time' => $this->configuration->get('PS_LABEL_DELIVERY_TIME_OOSBOA', null, $shopConstraint),
+            'pack_stock_management' => (int) $this->configuration->get('PS_PACK_STOCK_TYPE', 0, $shopConstraint),
+            'oos_show_label_listing_pages' => (bool) $this->configuration->get('PS_SHOW_LABEL_OOS_LISTING_PAGES', false, $shopConstraint),
+            'display_last_quantities' => (int) $this->configuration->get('PS_LAST_QTIES', 0, $shopConstraint),
+            'display_unavailable_attributes' => (bool) $this->configuration->get('PS_DISP_UNAVAILABLE_ATTR', false, $shopConstraint),
         ];
     }
 
@@ -73,44 +81,43 @@ class StockConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_ORDER_OUT_OF_STOCK', (int) $config['allow_ordering_oos']);
-            $this->configuration->set('PS_STOCK_MANAGEMENT', (int) $config['stock_management']);
-            $this->configuration->set('PS_LABEL_IN_STOCK_PRODUCTS', $config['in_stock_label']);
-            $this->configuration->set('PS_LABEL_OOS_PRODUCTS_BOA', $config['oos_allowed_backorders']);
-            $this->configuration->set('PS_LABEL_OOS_PRODUCTS_BOD', $config['oos_denied_backorders']);
-            $this->configuration->set('PS_LABEL_DELIVERY_TIME_AVAILABLE', $config['delivery_time']);
-            $this->configuration->set('PS_LABEL_DELIVERY_TIME_OOSBOA', $config['oos_delivery_time']);
-            $this->configuration->set('PS_PACK_STOCK_TYPE', $config['pack_stock_management']);
-            $this->configuration->set('PS_SHOW_LABEL_OOS_LISTING_PAGES', $config['oos_show_label_listing_pages']);
-            $this->configuration->set('PS_LAST_QTIES', (int) $config['display_last_quantities']);
-            $this->configuration->set('PS_DISP_UNAVAILABLE_ATTR', (int) $config['display_unavailable_attributes']);
+            $shopConstraint = $this->getShopConstraint();
+
+            $this->updateConfigurationValue('PS_ORDER_OUT_OF_STOCK', 'allow_ordering_oos', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_STOCK_MANAGEMENT', 'stock_management', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LABEL_IN_STOCK_PRODUCTS', 'in_stock_label', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LABEL_OOS_PRODUCTS_BOA', 'oos_allowed_backorders', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LABEL_OOS_PRODUCTS_BOD', 'oos_denied_backorders', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LABEL_DELIVERY_TIME_AVAILABLE', 'delivery_time', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LABEL_DELIVERY_TIME_OOSBOA', 'oos_delivery_time', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_PACK_STOCK_TYPE', 'pack_stock_management', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_SHOW_LABEL_OOS_LISTING_PAGES', 'oos_show_label_listing_pages', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LAST_QTIES', 'display_last_quantities', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_DISP_UNAVAILABLE_ATTR', 'display_unavailable_attributes', $config, $shopConstraint);
         }
 
         return $errors;
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired([
-            'allow_ordering_oos',
-            'stock_management',
-            'in_stock_label',
-            'delivery_time',
-            'oos_allowed_backorders',
-            'oos_delivery_time',
-            'oos_denied_backorders',
-            'pack_stock_management',
-            'oos_show_label_listing_pages',
-            'display_last_quantities',
-            'display_unavailable_attributes',
-        ]);
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('allow_ordering_oos', 'bool')
+            ->setAllowedTypes('stock_management', 'bool')
+            ->setAllowedTypes('in_stock_label', 'string')
+            ->setAllowedTypes('oos_allowed_backorders', 'string')
+            ->setAllowedTypes('oos_denied_backorders', 'string')
+            ->setAllowedTypes('delivery_time', 'string')
+            ->setAllowedTypes('oos_delivery_time', 'string')
+            ->setAllowedTypes('pack_stock_management', 'int')
+            ->setAllowedTypes('oos_show_label_listing_pages', 'bool')
+            ->setAllowedTypes('display_last_quantities', 'int')
+            ->setAllowedTypes('display_unavailable_attributes', 'bool');
 
-        $resolver->resolve($configuration);
-
-        return true;
+        return $resolver;
     }
 }

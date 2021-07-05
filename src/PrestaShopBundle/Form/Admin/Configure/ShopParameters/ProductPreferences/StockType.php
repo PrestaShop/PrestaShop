@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -54,6 +55,7 @@ class StockType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_STOCK_MANAGEMENT',
             ])
             ->add('pack_stock_management', ChoiceType::class, [
                 'label' => $this->trans(
@@ -72,6 +74,7 @@ class StockType extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Catalog.Feature',
                 'required' => false,
                 'placeholder' => false,
+                'multistore_configuration_key' => 'PS_PACK_STOCK_TYPE',
             ])
             ->add('display_unavailable_attributes', SwitchType::class, [
                 'label' => $this->trans(
@@ -83,6 +86,7 @@ class StockType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_DISP_UNAVAILABLE_ATTR',
             ])
             ->add('display_last_quantities', IntegerType::class, [
                 'label' => $this->trans(
@@ -94,6 +98,7 @@ class StockType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_LAST_QTIES',
             ])
             ->add('allow_ordering_oos', SwitchType::class, [
                 'label' => $this->trans(
@@ -111,6 +116,7 @@ class StockType extends TranslatorAwareType
                     ]
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_ORDER_OUT_OF_STOCK',
             ])
             ->add('in_stock_label', TranslatableType::class, [
                 'label' => $this->trans(
@@ -125,6 +131,7 @@ class StockType extends TranslatorAwareType
                     ],
                 ],
                 'required' => false,
+                'multistore_configuration_key' => 'PS_LABEL_IN_STOCK_PRODUCTS',
             ])
             ->add('oos_allowed_backorders', TranslatableType::class, [
                 'label' => $this->trans(
@@ -139,6 +146,7 @@ class StockType extends TranslatorAwareType
                     ],
                 ],
                 'required' => false,
+                'multistore_configuration_key' => 'PS_LABEL_OOS_PRODUCTS_BOA',
             ])
             ->add('oos_denied_backorders', TranslatableType::class, [
                 'label' => $this->trans(
@@ -153,6 +161,7 @@ class StockType extends TranslatorAwareType
                     ],
                 ],
                 'required' => false,
+                'multistore_configuration_key' => 'PS_LABEL_OOS_PRODUCTS_BOD',
             ])
             ->add('delivery_time', TranslatableType::class, [
                 'label' => $this->trans(
@@ -174,6 +183,7 @@ class StockType extends TranslatorAwareType
                     ],
                 ],
                 'required' => false,
+                'multistore_configuration_key' => 'PS_LABEL_DELIVERY_TIME_AVAILABLE',
             ])
             ->add('oos_delivery_time', TranslatableType::class, [
                 'label' => $this->trans(
@@ -195,6 +205,7 @@ class StockType extends TranslatorAwareType
                     ],
                 ],
                 'required' => false,
+                'multistore_configuration_key' => 'PS_LABEL_DELIVERY_TIME_OOSBOA',
             ])
             ->add('oos_show_label_listing_pages', SwitchType::class, [
                 'label' => $this->trans(
@@ -206,6 +217,7 @@ class StockType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_SHOW_LABEL_OOS_LISTING_PAGES',
             ]);
     }
 
@@ -225,5 +237,15 @@ class StockType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'product_preferences_stock_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }
