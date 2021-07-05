@@ -32,6 +32,7 @@ use DateTime;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use SpecificPrice;
 
 /**
@@ -91,6 +92,10 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
     private function assertDateRangeIsNotInverse(SpecificPrice $specificPrice)
     {
         if (empty($specificPrice->from) || empty($specificPrice->to)) {
+            return;
+        }
+
+        if (DateTimeUtil::NULL_DATETIME === $specificPrice->from || DateTimeUtil::NULL_DATETIME === $specificPrice->to) {
             return;
         }
 
