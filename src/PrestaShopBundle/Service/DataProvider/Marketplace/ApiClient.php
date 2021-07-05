@@ -143,25 +143,6 @@ class ApiClient
         return isset($responseArray->modules) ? $responseArray->modules : [];
     }
 
-    /**
-     * Prepare and call API for PrestaTrust integrity and property module details.
-     *
-     * @param string $hash Hash of module files
-     * @param string $sc_address Smart contract (Module licence)
-     *
-     * @return object List of checks made and their results
-     */
-    public function getPrestaTrustCheck($hash, $sc_address)
-    {
-        $this->queryParameters['module_hash'] = $hash;
-        $this->queryParameters['sc_address'] = $sc_address;
-
-        $response = $this->setMethod('trust')
-            ->getResponse();
-
-        return json_decode($response);
-    }
-
     public function getServices()
     {
         $response = $this->setMethod('listing')

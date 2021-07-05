@@ -451,8 +451,6 @@ const AdminModuleController = function () {
             $(that.moduleImportSuccessConfigureBtnSelector).show();
           }
           $(that.moduleImportSuccessSelector).fadeIn();
-        } else if (typeof result.confirmation_subject !== 'undefined') {
-          that.displayPrestaTrustStep(result);
         } else {
           $(that.moduleImportFailureMsgDetailsSelector).html(result.msg);
           $(that.moduleImportFailureSelector).fadeIn();
@@ -473,38 +471,6 @@ const AdminModuleController = function () {
       });
     };
 
-    /**
-     * If PrestaTrust needs to be confirmed, we ask for the confirmation modal content and we display it in the
-     * currently displayed one. We also generate the ajax call to trigger once we confirm we want to install
-     * the module.
-     *
-     * @param Previous server response result
-     */
-    this.displayPrestaTrustStep = function (result) {
-      const that = this;
-      const modal = module_card_controller.replacePrestaTrustPlaceholders(result);
-      const moduleName = result.module.attributes.name;
-      $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
-      $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
-      $(this.dropZoneModalFooterSelector).find('.pstrust-install').off('click').on('click', () => {
-        $(that.moduleImportConfirmSelector).hide();
-        $(that.dropZoneModalFooterSelector).html('');
-        that.animateStartUpload();
-
-        // Install ajax call
-        $.post(result.module.attributes.urls.install, {'actionParams[confirmPrestaTrust]': '1'})
-          .done((data) => {
-            that.displayOnUploadDone(data[moduleName]);
-          })
-          .fail((data) => {
-            that.displayOnUploadError(data[moduleName]);
-          })
-          .always(() => {
-            that.isUploadStarted = false;
-          });
-      });
-    };
-  };
 
   this.getBulkCheckboxesSelector = function () {
     return this.currentDisplay === 'grid'

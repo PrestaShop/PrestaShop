@@ -48,7 +48,6 @@ class PrestaShopExtension extends Extension
         $loader->load('services.yml');
 
         $container->setParameter('prestashop.addons.categories', $config['addons']['categories']);
-        $container->setParameter('prestashop.addons.prestatrust.enabled', $config['addons']['prestatrust']['enabled']);
 
         $hasVerifySslParameter = $container->hasParameter('addons.api_client.verify_ssl');
 

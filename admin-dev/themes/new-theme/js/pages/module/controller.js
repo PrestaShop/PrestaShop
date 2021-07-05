@@ -702,8 +702,6 @@ class AdminModuleController {
           $(self.moduleImportSuccessConfigureBtnSelector).show();
         }
         $(self.moduleImportSuccessSelector).fadeIn();
-      } else if (typeof result.confirmation_subject !== 'undefined') {
-        self.displayPrestaTrustStep(result);
       } else {
         $(self.moduleImportFailureMsgDetailsSelector).html(result.msg);
         $(self.moduleImportFailureSelector).fadeIn();
@@ -723,50 +721,6 @@ class AdminModuleController {
       $(self.moduleImportFailureMsgDetailsSelector).html(message);
       $(self.moduleImportFailureSelector).fadeIn();
     });
-  }
-
-  /**
-   * If PrestaTrust needs to be confirmed, we ask for the confirmation
-   * modal content and we display it in the currently displayed one.
-   * We also generate the ajax call to trigger once we confirm we want to install
-   * the module.
-   *
-   * @param Previous server response result
-   */
-  displayPrestaTrustStep(result) {
-    const self = this;
-    const modal = self.moduleCardController.replacePrestaTrustPlaceholders(result);
-    const moduleName = result.module.attributes.name;
-
-    $(this.moduleImportConfirmSelector)
-      .html(modal.find('.modal-body').html())
-      .fadeIn();
-    $(this.dropZoneModalFooterSelector)
-      .html(modal.find('.modal-footer').html())
-      .fadeIn();
-
-    $(this.dropZoneModalFooterSelector)
-      .find('.pstrust-install')
-      .off('click')
-      .on('click', () => {
-        $(self.moduleImportConfirmSelector).hide();
-        $(self.dropZoneModalFooterSelector).html('');
-        self.animateStartUpload();
-
-        // Install ajax call
-        $.post(result.module.attributes.urls.install, {
-          'actionParams[confirmPrestaTrust]': '1',
-        })
-          .done((data) => {
-            self.displayOnUploadDone(data[moduleName]);
-          })
-          .fail((data) => {
-            self.displayOnUploadError(data[moduleName]);
-          })
-          .always(() => {
-            self.isUploadStarted = false;
-          });
-      });
   }
 
   getBulkCheckboxesSelector() {
