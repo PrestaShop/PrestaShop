@@ -430,7 +430,7 @@ class OrderCore extends ObjectModel
         $this->total_paid_tax_excl -= $product_price_tax_excl + $shipping_diff_tax_excl;
         $this->total_paid_real -= $product_price_tax_incl + $shipping_diff_tax_incl;
 
-        $fields = [
+        $fieldsFloatType = [
             'total_shipping',
             'total_shipping_tax_excl',
             'total_shipping_tax_incl',
@@ -443,14 +443,11 @@ class OrderCore extends ObjectModel
         ];
 
         /* Prevent from floating precision issues */
-        foreach ($fields as $field) {
+        foreach ($fieldsFloatType as $field) {
             if ($this->{$field} < 0) {
                 $this->{$field} = 0;
             }
-        }
 
-        /* Prevent from floating precision issues */
-        foreach ($fields as $field) {
             $this->{$field} = number_format($this->{$field}, Context::getContext()->getComputingPrecision(), '.', '');
         }
 
