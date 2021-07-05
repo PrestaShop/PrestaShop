@@ -1003,11 +1003,19 @@ class Install extends AbstractInstall
         $modules = [];
 
         foreach ($addons_modules as $addons_module) {
-            if (file_put_contents(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip', Tools::addonsRequest('module', ['id_module' => $addons_module['id_module']]))) {
-                if (Tools::ZipExtract(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip', _PS_MODULE_DIR_)) {
-                    $modules[] = (string) $addons_module['name']; //if the module has been unziped we add the name in the modules list to install
-                    unlink(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip');
-                }
+            $moduleZipDestination = _PS_MODULE_DIR_ . $addons_module['name'] . '.zip';
+            $downloadResult = file_put_contents(
+                $moduleZipDestination,
+                Tools::addonsRequest('module', ['id_module' => $addons_module['id_module']], 20)
+            );
+
+            if ($downloadResult === false) {
+                continue;
+            }
+
+            if (Tools::ZipExtract($moduleZipDestination, _PS_MODULE_DIR_)) {
+                $modules[] = (string) $addons_module['name']; //if the module has been unziped we add the name in the modules list to install
+                unlink($moduleZipDestination);
             }
         }
 

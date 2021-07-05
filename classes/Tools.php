@@ -3830,7 +3830,7 @@ exit;
 
     protected static $is_addons_up = true;
 
-    public static function addonsRequest($request, $params = [])
+    public static function addonsRequest($request, $params = [], $timeout = 5)
     {
         if (!self::$is_addons_up) {
             return false;
@@ -3923,7 +3923,7 @@ exit;
                 'method' => 'POST',
                 'content' => $post_data,
                 'header' => 'Content-type: application/x-www-form-urlencoded',
-                'timeout' => 5,
+                'timeout' => $timeout,
             ],
         ]);
 
