@@ -18,6 +18,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Product\PageConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.shop.context'
+            - '@prestashop.adapter.multistore_feature'
 
     prestashop.adapter.product_stock.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Product\StockConfiguration'

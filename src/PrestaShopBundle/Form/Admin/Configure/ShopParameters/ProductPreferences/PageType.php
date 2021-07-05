@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -45,10 +46,18 @@ class PageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('display_quantities', SwitchType::class)
-            ->add('display_last_quantities', IntegerType::class)
-            ->add('display_unavailable_attributes', SwitchType::class)
-            ->add('allow_add_variant_to_cart_from_listing', SwitchType::class)
+            ->add('display_quantities', SwitchType::class, [
+                'multistore_configuration_key' => 'PS_DISPLAY_QTIES',
+            ])
+            ->add('display_last_quantities', IntegerType::class, [
+                'multistore_configuration_key' => 'PS_LAST_QTIES',
+            ])
+            ->add('display_unavailable_attributes', SwitchType::class, [
+                'multistore_configuration_key' => 'PS_DISP_UNAVAILABLE_ATTR',
+            ])
+            ->add('allow_add_variant_to_cart_from_listing', SwitchType::class, [
+                'multistore_configuration_key' => 'PS_ATTRIBUTE_CATEGORY_DISPLAY',
+            ])
             ->add('attribute_anchor_separator', ChoiceType::class, [
                 'choices' => [
                     '-' => '-',
@@ -56,8 +65,11 @@ class PageType extends AbstractType
                 ],
                 'required' => true,
                 'choice_translation_domain' => 'Admin.Global',
+                'multistore_configuration_key' => 'PS_ATTRIBUTE_ANCHOR_SEPARATOR',
             ])
-            ->add('display_discount_price', SwitchType::class);
+            ->add('display_discount_price', SwitchType::class, [
+                'multistore_configuration_key' => 'PS_DISPLAY_DISCOUNT_PRICE',
+            ]);
     }
 
     /**
@@ -76,5 +88,15 @@ class PageType extends AbstractType
     public function getBlockPrefix()
     {
         return 'product_preferences_page_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }
