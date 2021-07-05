@@ -30,10 +30,13 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate;
 
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\NoCountryId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -73,21 +76,29 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
     private $currencyRepository;
 
     /**
+     * @var CountryRepository
+     */
+    private $countryRepository;
+
+    /**
      * @param ShopGroupRepository $shopGroupRepository
      * @param ShopRepository $shopRepository
      * @param CombinationRepository $combinationRepository
      * @param CurrencyRepository $currencyRepository
+     * @param CountryRepository $countryRepository
      */
     public function __construct(
         ShopGroupRepository $shopGroupRepository,
         ShopRepository $shopRepository,
         CombinationRepository $combinationRepository,
-        CurrencyRepository $currencyRepository
+        CurrencyRepository $currencyRepository,
+        CountryRepository $countryRepository
     ) {
         $this->shopGroupRepository = $shopGroupRepository;
         $this->shopRepository = $shopRepository;
         $this->combinationRepository = $combinationRepository;
         $this->currencyRepository = $currencyRepository;
+        $this->countryRepository = $countryRepository;
     }
 
     /**
@@ -181,8 +192,12 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         if ($currencyId !== NoCurrencyId::NO_CURRENCY_ID) {
             $this->currencyRepository->assertCurrencyExists(new CurrencyId($currencyId));
         }
+
+        $countryId = (int) $specificPrice->id_country;
+        if ($countryId !== NoCountryId::NO_COUNTRY_ID) {
+            $this->countryRepository->assertCountryExists(new CountryId($countryId));
+        }
         //@todo:
-        //  country
         //  group
         //  customer
     }
