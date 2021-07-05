@@ -93,7 +93,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
             $currency->save();
         }
         $this->currencies[$currencyName] = $currency;
-        SharedStorage::getStorage()->set($currencyName, $currency);
+        SharedStorage::getStorage()->set($currencyName, (int) $currency->id);
     }
 
     /**
@@ -145,9 +145,9 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $cartRuleName
+     * @param string $currencyName
      */
-    public function checkCurrencyWithNameExists($currencyName)
+    public function checkCurrencyWithNameExists(string $currencyName)
     {
         $this->checkFixtureExists($this->currencies, 'Currency', $currencyName);
     }
