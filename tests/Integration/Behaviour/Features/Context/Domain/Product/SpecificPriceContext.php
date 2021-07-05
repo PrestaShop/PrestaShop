@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use DomainException;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
@@ -126,7 +127,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         $command = $this->createEditSpecificPriceCommand($specificPriceId, $tableNode);
         try {
             $this->getCommandBus()->handle($command);
-        } catch (SpecificPriceConstraintException $e) {
+        } catch (DomainException $e) {
             $this->setLastException($e);
         }
     }
@@ -152,6 +153,8 @@ class SpecificPriceContext extends AbstractProductFeatureContext
      *
      * @param string $specificPriceReference
      * @param SpecificPriceForEditing $expectedSpecificPrice
+     *
+     * @see transformSpecificPrice for TablenNode to SpecificPrice transformation
      */
     public function assertProductSpecificPrice(string $specificPriceReference, SpecificPriceForEditing $expectedSpecificPrice): void
     {
