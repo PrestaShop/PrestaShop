@@ -1,27 +1,29 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const categoriesPage = require('@pages/BO/catalog/categories');
 const addCategoryPage = require('@pages/BO/catalog/categories/add');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 const siteMapPage = require('@pages/FO/siteMap');
 
 // Import data
 const CategoryFaker = require('@data/faker/category');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_catalog_categories_CRUDCategoriesInBO';
-
 
 let browserContext;
 let page;
@@ -31,9 +33,8 @@ const createCategoryData = new CategoryFaker();
 const createSubCategoryData = new CategoryFaker({name: 'subCategoryToCreate'});
 const editCategoryData = new CategoryFaker({displayed: false, name: `update${createCategoryData.name}`});
 
-
 // Create, Read, Update and Delete Category
-describe('Create, Read, Update and Delete Category', async () => {
+describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -62,7 +63,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to "Catalog>Categories" page', async function () {
+  it('should go to \'Catalog > Categories\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -85,7 +86,7 @@ describe('Create, Read, Update and Delete Category', async () => {
   });
 
   // 1 : Create category and subcategory then go to FO to check the existence of the new categories
-  describe('Create Category and subcategory in BO and check it in FO', async () => {
+  describe('Create Category and subcategory in BO then check it in FO', async () => {
     describe('Create Category and check it in FO', async () => {
       it('should go to add new category page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToNewCategoryPage', baseContext);
@@ -137,6 +138,9 @@ describe('Create, Read, Update and Delete Category', async () => {
         // Change FO language
         await foHomePage.changeLanguage(page, 'en');
 
+        const isHomePage = await foHomePage.isHomePage(page);
+        await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+
         // Go to sitemap page
         await foHomePage.goToFooterLink(page, 'Sitemap');
         const pageTitle = await siteMapPage.getPageTitle(page);
@@ -145,9 +149,16 @@ describe('Create, Read, Update and Delete Category', async () => {
         // Check category name
         const categoryName = await siteMapPage.getCategoryName(page, categoryID);
         await expect(categoryName).to.contains(createCategoryData.name);
+      });
 
-        // Go back to BO
+      it('should go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
+
+        // Close tab and init other page objects with new current tab
         page = await siteMapPage.closePage(browserContext, page, 0);
+
+        const pageTitle = await categoriesPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(categoriesPage.pageTitle);
       });
     });
 
@@ -210,16 +221,23 @@ describe('Create, Read, Update and Delete Category', async () => {
         // Check category
         const categoryName = await siteMapPage.getCategoryName(page, categoryID);
         await expect(categoryName).to.contains(createSubCategoryData.name);
+      });
 
-        // Go back to BO
-        page = await foHomePage.closePage(browserContext, page, 0);
+      it('should go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo2', baseContext);
+
+        // Close tab and init other page objects with new current tab
+        page = await siteMapPage.closePage(browserContext, page, 0);
+
+        const pageTitle = await categoriesPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(createCategoryData.name);
       });
     });
   });
 
   // 2 : View Category and check the subcategories related
-  describe('View Category Created', async () => {
-    it('should go to "Catalog>Categories" page', async function () {
+  describe('View Category', async () => {
+    it('should go to \'Catalog > Categories\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPageToViewCreatedCategory', baseContext);
 
       await categoriesPage.goToSubMenu(
@@ -232,7 +250,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       await expect(pageTitle).to.contains(categoriesPage.pageTitle);
     });
 
-    it('should filter list by name', async function () {
+    it(`should filter list by Name '${createCategoryData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCreatedCategory', baseContext);
 
       await categoriesPage.resetFilter(page);
@@ -274,8 +292,8 @@ describe('Create, Read, Update and Delete Category', async () => {
   });
 
   // 3 : Update category and check that category isn't displayed in FO (displayed = false)
-  describe('Update Category created', async () => {
-    it('should go to "Catalog>Categories" page', async function () {
+  describe('Update Category', async () => {
+    it('should go to \'Catalog > Categories\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPageToUpdate', baseContext);
 
       await categoriesPage.goToSubMenu(
@@ -288,7 +306,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       await expect(pageTitle).to.contains(categoriesPage.pageTitle);
     });
 
-    it('should filter list by name', async function () {
+    it(`should filter list by Name '${createCategoryData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       await categoriesPage.resetFilter(page);
@@ -357,15 +375,22 @@ describe('Create, Read, Update and Delete Category', async () => {
       // Check category name
       const categoryName = await siteMapPage.isVisibleCategory(page, categoryID);
       await expect(categoryName).to.be.false;
+    });
 
-      // Go back to BO
-      page = await foHomePage.closePage(browserContext, page, 0);
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo3', baseContext);
+
+      // Close tab and init other page objects with new current tab
+      page = await siteMapPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await categoriesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(categoriesPage.pageTitle);
     });
   });
 
   // 4 : Delete Category from BO
   describe('Delete Category', async () => {
-    it('should go to "Catalog>Categories" page', async function () {
+    it('should go to \'Catalog > Categories\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPageToDelete', baseContext);
 
       await categoriesPage.goToSubMenu(
@@ -378,7 +403,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       await expect(pageTitle).to.contains(categoriesPage.pageTitle);
     });
 
-    it('should filter list by name', async function () {
+    it(`should filter list by Name '${editCategoryData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       await categoriesPage.resetFilter(page);
