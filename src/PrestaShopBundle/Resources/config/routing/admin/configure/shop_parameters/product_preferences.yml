@@ -8,7 +8,7 @@ admin_product_preferences:
 
 admin_product_preferences_general_save:
   path: /general
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\ProductPreferencesController::processGeneralFormAction'
     _legacy_controller: AdminPPreferences
@@ -16,7 +16,7 @@ admin_product_preferences_general_save:
 
 admin_product_preferences_pagination_save:
   path: /pagination
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\ProductPreferencesController::processPaginationFormAction'
     _legacy_controller: AdminPPreferences
@@ -24,7 +24,7 @@ admin_product_preferences_pagination_save:
 
 admin_product_preferences_page_save:
   path: /page
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\ProductPreferencesController::processPageFormAction'
     _legacy_controller: AdminPPreferences
@@ -32,7 +32,7 @@ admin_product_preferences_page_save:
 
 admin_product_preferences_stock_save:
   path: /stock
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\ProductPreferencesController::processStockFormAction'
     _legacy_controller: AdminPPreferences

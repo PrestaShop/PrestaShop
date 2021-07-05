@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreference
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricePriorityType;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -74,6 +75,7 @@ class GeneralType extends TranslatorAwareType
                         'Admin.Shopparameters.Help'
                     ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_CATALOG_MODE',
             ])
             ->add('catalog_mode_with_prices', SwitchType::class, [
                 'label' => $this->trans('Show prices', 'Admin.Shopparameters.Feature'),
@@ -95,6 +97,7 @@ class GeneralType extends TranslatorAwareType
                     'class' => 'catalog-mode-option',
                 ],
                 'required' => false,
+                'multistore_configuration_key' => 'PS_CATALOG_MODE_WITH_PRICES',
             ])
             ->add('new_days_number', IntegerType::class, [
                 'label' => $this->trans(
@@ -102,6 +105,7 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_NB_DAYS_NEW_PRODUCT',
             ])
             ->add('short_description_limit', IntegerType::class, [
                 'label' => $this->trans(
@@ -110,6 +114,7 @@ class GeneralType extends TranslatorAwareType
                 ),
                 'required' => false,
                 'unit' => $this->trans('characters', 'Admin.Shopparameters.Help'),
+                'multistore_configuration_key' => 'PS_PRODUCT_SHORT_DESC_LIMIT',
             ])
             ->add('quantity_discount', ChoiceType::class, [
                 'label' => $this->trans(
@@ -127,6 +132,7 @@ class GeneralType extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Global',
                 'placeholder' => false,
                 'required' => false,
+                'multistore_configuration_key' => 'PS_QTY_DISCOUNT_ON_COMBINATION',
             ])
             ->add('force_friendly_url', SwitchType::class, [
                 'label' => $this->trans(
@@ -138,6 +144,7 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_FORCE_FRIENDLY_PRODUCT',
             ])
             ->add('default_status', SwitchType::class, [
                 'label' => $this->trans(
@@ -149,6 +156,7 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_PRODUCT_ACTIVATION_DEFAULT',
             ])
             ->add('specific_price_priorities', SpecificPricePriorityType::class, [
                 'label' => $this->trans(
@@ -160,6 +168,7 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_SPECIFIC_PRICE_PRIORITIES',
             ])
         ;
     }
@@ -180,5 +189,15 @@ class GeneralType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'product_preferences_general_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }
