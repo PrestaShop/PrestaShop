@@ -30,9 +30,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate;
 
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
+use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
@@ -65,18 +68,26 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
     private $combinationRepository;
 
     /**
+     * @var CurrencyRepository
+     */
+    private $currencyRepository;
+
+    /**
      * @param ShopGroupRepository $shopGroupRepository
      * @param ShopRepository $shopRepository
      * @param CombinationRepository $combinationRepository
+     * @param CurrencyRepository $currencyRepository
      */
     public function __construct(
         ShopGroupRepository $shopGroupRepository,
         ShopRepository $shopRepository,
-        CombinationRepository $combinationRepository
+        CombinationRepository $combinationRepository,
+        CurrencyRepository $currencyRepository
     ) {
         $this->shopGroupRepository = $shopGroupRepository;
         $this->shopRepository = $shopRepository;
         $this->combinationRepository = $combinationRepository;
+        $this->currencyRepository = $currencyRepository;
     }
 
     /**
@@ -165,8 +176,12 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         if ($combinationId !== NoCombinationId::NO_COMBINATION_ID) {
             $this->combinationRepository->assertCombinationExists(new CombinationId($combinationId));
         }
+
+        $currencyId = (int) $specificPrice->id_currency;
+        if ($currencyId !== NoCurrencyId::NO_CURRENCY_ID) {
+            $this->currencyRepository->assertCurrencyExists(new CurrencyId($currencyId));
+        }
         //@todo:
-        //  currency
         //  country
         //  group
         //  customer
