@@ -8,6 +8,7 @@ Feature: Update product options from Back Office (BO)
 
   Background:
     Given shop group "default" with name "Default" exists
+    Given shop "testShop" with name "test_shop" exists
 
   Scenario: I add a specific price with amount reduction to product
     Given I add product "product1" with following information:
@@ -133,32 +134,32 @@ Feature: Update product options from Back Office (BO)
       | type        | standard      |
     Then product "product1" should have 0 specific prices
     When I add a specific price price1 to product product1 with following details:
-      | reduction type  | amount  |
-      | reduction value | 12.56   |
-      | includes tax    | true    |
-      | price           | 45.78   |
-      | from quantity   | 1       |
-      | from            |         |
-      | to              |         |
-      | shop group      | default |
-      | shop            | 51      |
-      | currency        | 69      |
-      | country         | 21      |
-      | group           | 33      |
-      | customer        | 99      |
+      | reduction type  | amount   |
+      | reduction value | 12.56    |
+      | includes tax    | true     |
+      | price           | 45.78    |
+      | from quantity   | 1        |
+      | from            |          |
+      | to              |          |
+      | shop group      | default  |
+      | shop            | testShop |
+      | currency        | 69       |
+      | country         | 21       |
+      | group           | 33       |
+      | customer        | 99       |
     Then product "product1" should have 1 specific prices
     And specific price price1 should have following details:
-      | specific price detail | value   |
-      | reduction type        | amount  |
-      | reduction value       | 12.56   |
-      | includes tax          | true    |
-      | price                 | 45.78   |
-      | from quantity         | 1       |
-      | from                  |         |
-      | to                    |         |
-      | shop group            | default |
-      | shop                  | 51      |
-      | currency              | 69      |
-      | country               | 21      |
-      | group                 | 33      |
-      | customer              | 99      |
+      | specific price detail | value    |
+      | reduction type        | amount   |
+      | reduction value       | 12.56    |
+      | includes tax          | true     |
+      | price                 | 45.78    |
+      | from quantity         | 1        |
+      | from                  |          |
+      | to                    |          |
+      | shop group            | default  |
+      | shop                  | testShop |
+      | currency              | 69       |
+      | country               | 21       |
+      | group                 | 33       |
+      | customer              | 99       |

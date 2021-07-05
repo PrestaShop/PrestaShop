@@ -72,7 +72,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
             throw new RuntimeException(sprintf('Shop with name "%s" does not exist', $shopName));
         }
 
-        SharedStorage::getStorage()->set($reference, new Shop($shopId));
+        SharedStorage::getStorage()->set($reference, $shopId);
     }
 
     /**
