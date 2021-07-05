@@ -116,3 +116,13 @@ type VCheckbox = Vue & {
 type VCheckboxDatas = Vue & { 
   checked: boolean;
 };
+
+type VTransModal = Vue & { 
+  showModal: () => void;
+  $once: any;
+};
+
+type VPrincipal = Vue & { 
+  saveTranslations: () => void;
+  edited: () => boolean;
+};
