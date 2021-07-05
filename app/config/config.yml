@@ -115,8 +115,6 @@ eight_points_guzzle:
 
 prestashop:
     addons:
-        prestatrust:
-            enabled: true
         api_client:
             ttl: 7200 # 2h
             # verify_ssl: ~ # Bundle CA by default, declaring "addons.api_client.verify_ssl" parameter overrides its usage
