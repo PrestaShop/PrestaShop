@@ -1,10 +1,14 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -13,13 +17,10 @@ const categoriesPage = require('@pages/BO/catalog/categories');
 const addCategoryPage = require('@pages/BO/catalog/categories/add');
 const monitoringPage = require('@pages/BO/catalog/monitoring');
 
+// Import data
 const CategoryFaker = require('@data/faker/category');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_catalog_monitoring_deleteEmptyCategory';
-
 
 let browserContext;
 let page;
@@ -29,13 +30,12 @@ let numberOfEmptyCategories = 0;
 
 const createCategoryData = new CategoryFaker();
 
-
 /*
 Create new category
 Check existence of new category in monitoring page
 Delete category and check deletion in categories page
  */
-describe('Create empty category and delete it from monitoring page', async () => {
+describe('BO - Catalog - Monitoring : Create empty category and delete it from monitoring page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -56,7 +56,7 @@ describe('Create empty category and delete it from monitoring page', async () =>
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to catalog > categories page', async function () {
+  it('should go to \'Catalog > Categories\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -99,7 +99,7 @@ describe('Create empty category and delete it from monitoring page', async () =>
   });
 
   describe('Check created category in monitoring page', async () => {
-    it('should go to catalog > monitoring page', async function () {
+    it('should go to \'Catalog > Monitoring\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPage', baseContext);
 
       await categoriesPage.goToSubMenu(
@@ -115,7 +115,7 @@ describe('Create empty category and delete it from monitoring page', async () =>
       await expect(numberOfEmptyCategories).to.be.at.least(1);
     });
 
-    it('should filter categories grid and existence of new category', async function () {
+    it(`should filter categories by Name ${createCategoryData.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCategory', baseContext);
 
       await monitoringPage.filterTable(
@@ -139,7 +139,7 @@ describe('Create empty category and delete it from monitoring page', async () =>
   });
 
   describe('Delete category from monitoring page', async () => {
-    it('should filter categories grid', async function () {
+    it(`should filter categories by Name ${createCategoryData.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterEmptyCategoriesGridToDelete', baseContext);
 
       await monitoringPage.filterTable(
