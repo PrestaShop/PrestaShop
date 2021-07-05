@@ -1,10 +1,14 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -13,10 +17,8 @@ const categoriesPage = require('@pages/BO/catalog/categories');
 const addCategoryPage = require('@pages/BO/catalog/categories/add');
 const monitoringPage = require('@pages/BO/catalog/monitoring');
 
+// Import data
 const CategoryFaker = require('@data/faker/category');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_emptyCategories';
 
@@ -31,7 +33,7 @@ Create 11 new categories
 Sort list of empty categories
 Pagination next and previous
  */
-describe('Sort and pagination list of empty categories', async () => {
+describe('BO - Catalog - Monitoring : Sort and pagination list of empty categories', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -72,8 +74,8 @@ describe('Sort and pagination list of empty categories', async () => {
   const creationTests = new Array(11).fill(0, 0, 11);
   describe('Create 11 categories in BO', async () => {
     creationTests.forEach((test, index) => {
-      const createCategoryData = new CategoryFaker({name: `todelete${index}`});
-      before(() => files.generateImage(`todelete${index}.jpg`));
+      const createCategoryData = new CategoryFaker({name: `todelete${index + 1}`});
+      before(() => files.generateImage(`todelete${index + 1}.jpg`));
 
       it('should go to add new category page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCategoryPage${index}`, baseContext);
@@ -84,7 +86,7 @@ describe('Sort and pagination list of empty categories', async () => {
         await expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
       });
 
-      it(`should create category n°${index + 1} and check the number of categories`, async function () {
+      it(`should create category n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCategory${index}`, baseContext);
 
         const textResult = await addCategoryPage.createEditCategory(page, createCategoryData);
@@ -94,7 +96,7 @@ describe('Sort and pagination list of empty categories', async () => {
         await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1 + index);
       });
 
-      after(() => files.deleteFile(`todelete${index}.jpg`));
+      after(() => files.deleteFile(`todelete${index + 1}.jpg`));
     });
   });
 
@@ -207,17 +209,17 @@ describe('Sort and pagination list of empty categories', async () => {
   describe('Delete the created categories from monitoring page', async () => {
     const deletionTests = new Array(11).fill(0, 0, 11);
     deletionTests.forEach((test, index) => {
-      it('should filter list of empty categories', async function () {
+      it(`should filter list of empty categories by Name 'todelete${index}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
 
-        await monitoringPage.filterTable(page, tableName, 'input', 'name', `todelete${index}`);
+        await monitoringPage.filterTable(page, tableName, 'input', 'name', `todelete${index+ 1}`);
 
         const textColumn = await monitoringPage.getTextColumnFromTable(page, tableName, 1, 'name');
-        await expect(textColumn).to.contains(`todelete${index}`);
+        await expect(textColumn).to.contains(`todelete${index + 1}`);
       });
 
       it(`should delete category n°${index + 1}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `deleteCategory${index}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `deleteCategory${index + 1}`, baseContext);
 
         const textResult = await monitoringPage.deleteCategoryInGrid(page, tableName, 1, 1);
         await expect(textResult).to.equal(monitoringPage.successfulDeleteMessage);
