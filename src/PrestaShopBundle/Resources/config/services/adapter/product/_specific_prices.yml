@@ -62,6 +62,7 @@ services:
             - '@prestashop.adapter.product.combination.repository.combination_repository'
             - '@prestashop.adapter.currency.repository.currency_repository'
             - '@prestashop.adapter.country.repository.country_repository'
+            - '@prestashop.adapter.group.repository.group_repository'
 
     prestashop.adapter.product.specific_price.repository.specific_price_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository
