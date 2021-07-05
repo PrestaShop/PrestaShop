@@ -34,4 +34,10 @@ $(() => {
   new TranslatableInput();
   new StockManagementOptionHandler();
   new CatalogModeOptionHandler(pageMap);
+  
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );
 });
