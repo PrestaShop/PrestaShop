@@ -32,7 +32,7 @@ admin_product_preferences_page_save:
 
 admin_product_preferences_stock_save:
     path: /stock
-    methods: [POST]
+    methods: [PATCH, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\ProductPreferences:processStockForm'
         _legacy_controller: AdminPPreferences

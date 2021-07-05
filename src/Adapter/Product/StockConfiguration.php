@@ -27,24 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class StockConfiguration is responsible for saving & loading products stock configuration.
  */
-class StockConfiguration implements DataConfigurationInterface
+class StockConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -71,15 +61,17 @@ class StockConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_ORDER_OUT_OF_STOCK', (int) $config['allow_ordering_oos']);
-            $this->configuration->set('PS_STOCK_MANAGEMENT', (int) $config['stock_management']);
-            $this->configuration->set('PS_LABEL_IN_STOCK_PRODUCTS', $config['in_stock_label']);
-            $this->configuration->set('PS_LABEL_OOS_PRODUCTS_BOA', $config['oos_allowed_backorders']);
-            $this->configuration->set('PS_LABEL_OOS_PRODUCTS_BOD', $config['oos_denied_backorders']);
-            $this->configuration->set('PS_LABEL_DELIVERY_TIME_AVAILABLE', $config['delivery_time']);
-            $this->configuration->set('PS_LABEL_DELIVERY_TIME_OOSBOA', $config['oos_delivery_time']);
-            $this->configuration->set('PS_PACK_STOCK_TYPE', $config['pack_stock_management']);
-            $this->configuration->set('PS_SHOW_LABEL_OOS_LISTING_PAGES', $config['oos_show_label_listing_pages']);
+            $shopConstraint = $this->getShopConstraint();
+
+            $this->updateConfigurationValue('PS_ORDER_OUT_OF_STOCK', 'allow_ordering_oos', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_STOCK_MANAGEMENT', 'stock_management', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LABEL_IN_STOCK_PRODUCTS', 'in_stock_label', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LABEL_OOS_PRODUCTS_BOA', 'oos_allowed_backorders', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LABEL_OOS_PRODUCTS_BOD', 'oos_denied_backorders', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LABEL_DELIVERY_TIME_AVAILABLE', 'delivery_time', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LABEL_DELIVERY_TIME_OOSBOA', 'oos_delivery_time', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_PACK_STOCK_TYPE', 'pack_stock_management', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_SHOW_LABEL_OOS_LISTING_PAGES', 'oos_show_label_listing_pages', $config, $shopConstraint);
         }
 
         return $errors;
