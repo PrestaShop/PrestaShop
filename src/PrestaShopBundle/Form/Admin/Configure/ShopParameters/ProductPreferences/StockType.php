@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -46,8 +47,12 @@ class StockType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('allow_ordering_oos', SwitchType::class)
-            ->add('stock_management', SwitchType::class)
+            ->add('allow_ordering_oos', SwitchType::class, [
+                'multistore_configuration_key' => 'PS_ORDER_OUT_OF_STOCK',
+            ])
+            ->add('stock_management', SwitchType::class, [
+                'multistore_configuration_key' => 'PS_STOCK_MANAGEMENT',
+            ])
             ->add('in_stock_label', TranslatableType::class, [
                 'type' => TextType::class,
                 'only_enabled_locales' => false,
@@ -56,6 +61,7 @@ class StockType extends TranslatorAwareType
                         'placeholder' => $this->trans('In stock', 'Admin.Shopparameters.Help'),
                     ],
                 ],
+                'multistore_configuration_key' => 'PS_LABEL_IN_STOCK_PRODUCTS',
             ])
             ->add('oos_allowed_backorders', TranslatableType::class, [
                 'type' => TextType::class,
@@ -65,6 +71,7 @@ class StockType extends TranslatorAwareType
                         'placeholder' => $this->trans('On backorder', 'Admin.Shopparameters.Help'),
                     ],
                 ],
+                'multistore_configuration_key' => 'PS_LABEL_OOS_PRODUCTS_BOA',
             ])
             ->add('oos_denied_backorders', TranslatableType::class, [
                 'type' => TextType::class,
@@ -74,6 +81,7 @@ class StockType extends TranslatorAwareType
                         'placeholder' => $this->trans('Out of stock', 'Admin.Shopparameters.Help'),
                     ],
                 ],
+                'multistore_configuration_key' => 'PS_LABEL_OOS_PRODUCTS_BOD',
             ])
             ->add('delivery_time', TranslatableType::class, [
                 'type' => TextType::class,
@@ -83,6 +91,7 @@ class StockType extends TranslatorAwareType
                         'placeholder' => $this->trans('Delivered within 3-4 days', 'Admin.Shopparameters.Help'),
                     ],
                 ],
+                'multistore_configuration_key' => 'PS_LABEL_DELIVERY_TIME_AVAILABLE',
             ])
             ->add('oos_delivery_time', TranslatableType::class, [
                 'type' => TextType::class,
@@ -92,6 +101,7 @@ class StockType extends TranslatorAwareType
                         'placeholder' => $this->trans('Delivered within 5-7 days', 'Admin.Shopparameters.Help'),
                     ],
                 ],
+                'multistore_configuration_key' => 'PS_LABEL_DELIVERY_TIME_OOSBOA',
             ])
             ->add('pack_stock_management', ChoiceType::class, [
                 'choices' => [
@@ -99,6 +109,7 @@ class StockType extends TranslatorAwareType
                     'Decrement products in pack only.' => 1,
                     'Decrement both.' => 2,
                 ],
+                'multistore_configuration_key' => 'PS_PACK_STOCK_TYPE',
             ])
             ->add('oos_show_label_listing_pages', SwitchType::class, [
                 'label' => $this->trans(
@@ -109,6 +120,7 @@ class StockType extends TranslatorAwareType
                     'Note that the label will be displayed only if backorders are denied.',
                     'Admin.Shopparameters.Help'
                 ),
+                'multistore_configuration_key' => 'PS_SHOW_LABEL_OOS_LISTING_PAGES',
             ]);
     }
 
@@ -128,5 +140,15 @@ class StockType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'product_preferences_stock_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }
