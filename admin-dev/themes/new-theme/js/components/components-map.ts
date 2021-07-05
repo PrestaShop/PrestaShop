@@ -52,7 +52,6 @@ export default {
     moduleItem: (techName: string): string => `.module-item[data-tech-name='${techName}']`,
   },
   confirmModal: (modalId: string): string => `#${modalId}`,
-  modalPrestaTrust: '#modal-prestatrust',
   translatableField: {
     toggleTab: '.translationsLocales.nav .nav-item a[data-toggle="tab"]',
     nav: '.translationsLocales.nav',
