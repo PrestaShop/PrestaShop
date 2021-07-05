@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
@@ -41,9 +43,9 @@ class CustomerId implements CustomerIdInterface
     /**
      * @param int $customerId
      */
-    public function __construct($customerId)
+    public function __construct(int $customerId)
     {
-        $this->assertIntegerIsGreaterThanZero($customerId);
+        $this->assertIsGreaterThanZero($customerId);
 
         $this->customerId = (int) $customerId;
     }
@@ -59,9 +61,9 @@ class CustomerId implements CustomerIdInterface
     /**
      * @param int $customerId
      */
-    private function assertIntegerIsGreaterThanZero($customerId)
+    private function assertIsGreaterThanZero(int $customerId)
     {
-        if (!is_int($customerId) || 0 > $customerId) {
+        if (0 > $customerId) {
             throw new CustomerException(sprintf('Customer id %s is invalid. Customer id must be number that is greater than zero.', var_export($customerId, true)));
         }
     }
