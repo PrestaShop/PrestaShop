@@ -242,8 +242,5 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         if ($customerId !== NoCustomerId::NO_CUSTOMER_ID) {
             $this->customerRepository->assertCustomerExists(new CustomerId($customerId));
         }
-
-        //@todo:
-        //  cart
     }
 }
