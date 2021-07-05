@@ -10,6 +10,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
     Given shop group "default" with name "Default" exists
     And shop "testShop" with name "test_shop" exists
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
+    And country "UnitedStates" with iso code "US" exists
 
   Scenario: I edit specific price reduction
     Given I add product "product1" with following information:
@@ -116,27 +117,27 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | group                 |        |
       | customer              |        |
     When I edit specific price "price1" with following details:
-      | shop group | default  |
-      | shop       | testShop |
-      | currency   | usd      |
-      | country    | 21       |
-      | group      | 33       |
-      | customer   | 99       |
+      | shop group | default      |
+      | shop       | testShop     |
+      | currency   | usd          |
+      | country    | UnitedStates |
+      | group      | 33           |
+      | customer   | 99           |
     Then specific price price1 should have following details:
-      | specific price detail | value    |
-      | reduction type        | amount   |
-      | reduction value       | 12.56    |
-      | includes tax          | true     |
-      | price                 | 45.78    |
-      | from quantity         | 1        |
-      | from                  |          |
-      | to                    |          |
-      | shop group            | default  |
-      | shop                  | testShop |
-      | currency              | usd      |
-      | country               | 21       |
-      | group                 | 33       |
-      | customer              | 99       |
+      | specific price detail | value        |
+      | reduction type        | amount       |
+      | reduction value       | 12.56        |
+      | includes tax          | true         |
+      | price                 | 45.78        |
+      | from quantity         | 1            |
+      | from                  |              |
+      | to                    |              |
+      | shop group            | default      |
+      | shop                  | testShop     |
+      | currency              | usd          |
+      | country               | UnitedStates |
+      | group                 | 33           |
+      | customer              | 99           |
     When I edit specific price "price1" with following details:
       | shop group |  |
       | shop       |  |
