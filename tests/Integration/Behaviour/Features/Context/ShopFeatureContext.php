@@ -96,7 +96,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
             throw new RuntimeException(sprintf('Could not create shop group: %s', Db::getInstance()->getMsgError()));
         }
 
-        SharedStorage::getStorage()->set($reference, $shopGroup);
+        SharedStorage::getStorage()->set($reference, (int) $shopGroup->id);
     }
 
     /**
