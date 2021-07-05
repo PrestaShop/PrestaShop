@@ -16,7 +16,7 @@ admin_product_preferences_general_save:
 
 admin_product_preferences_pagination_save:
     path: /pagination
-    methods: [POST]
+    methods: [PATCH, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\ProductPreferences:processPaginationForm'
         _legacy_controller: AdminPPreferences

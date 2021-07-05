@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -44,7 +45,9 @@ class PaginationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('products_per_page', IntegerType::class)
+            ->add('products_per_page', IntegerType::class, [
+                'multistore_configuration_key' => 'PS_PRODUCTS_PER_PAGE',
+            ])
             ->add('default_order_by', ChoiceType::class, [
                 'choices' => [
                     'Product name' => 0,
@@ -57,6 +60,7 @@ class PaginationType extends AbstractType
                     'Product reference' => 7,
                 ],
                 'required' => true,
+                'multistore_configuration_key' => 'PS_PRODUCTS_ORDER_BY',
             ])
             ->add('default_order_way', ChoiceType::class, [
                 'choices' => [
@@ -65,6 +69,7 @@ class PaginationType extends AbstractType
                 ],
                 'required' => true,
                 'choice_translation_domain' => 'Admin.Global',
+                'multistore_configuration_key' => 'PS_PRODUCTS_ORDER_WAY',
             ]);
     }
 
@@ -84,5 +89,15 @@ class PaginationType extends AbstractType
     public function getBlockPrefix()
     {
         return 'product_preferences_pagination_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }
