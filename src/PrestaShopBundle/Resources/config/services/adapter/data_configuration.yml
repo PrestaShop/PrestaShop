@@ -6,6 +6,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Product\GeneralConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.shop.context'
+            - '@prestashop.adapter.multistore_feature'
 
     prestashop.adapter.product_pagination.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Product\PaginationConfiguration'
