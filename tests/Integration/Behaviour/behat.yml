@@ -109,7 +109,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\CommonDomainFeatureContext
         order_return:
             paths:
-                - %paths.base%/Features/Scenario/OrderReturn
+                - "%paths.base%/Features/Scenario/OrderReturn"
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
