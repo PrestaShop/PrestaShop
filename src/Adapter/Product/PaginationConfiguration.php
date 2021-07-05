@@ -26,25 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class PaginationConfiguration is responsible for saving & loading pagination configuration for products.
  */
-class PaginationConfiguration implements DataConfigurationInterface
+class PaginationConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -65,9 +55,11 @@ class PaginationConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_PRODUCTS_PER_PAGE', (int) $config['products_per_page']);
-            $this->configuration->set('PS_PRODUCTS_ORDER_BY', (int) $config['default_order_by']);
-            $this->configuration->set('PS_PRODUCTS_ORDER_WAY', (int) $config['default_order_way']);
+            $shopConstraint = $this->getShopConstraint();
+
+            $this->updateConfigurationValue('PS_PRODUCTS_PER_PAGE', 'products_per_page', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_PRODUCTS_ORDER_BY', 'default_order_by', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_PRODUCTS_ORDER_WAY', 'default_order_way', $config, $shopConstraint);
         }
 
         return $errors;
