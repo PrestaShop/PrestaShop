@@ -11,6 +11,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
     And shop "testShop" with name "test_shop" exists
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And country "UnitedStates" with iso code "US" exists
+    And group "visitor" named "Visitor" exists
 
   Scenario: I edit specific price reduction
     Given I add product "product1" with following information:
@@ -121,7 +122,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | shop       | testShop     |
       | currency   | usd          |
       | country    | UnitedStates |
-      | group      | 33           |
+      | group      | visitor      |
       | customer   | 99           |
     Then specific price price1 should have following details:
       | specific price detail | value        |
@@ -136,7 +137,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | shop                  | testShop     |
       | currency              | usd          |
       | country               | UnitedStates |
-      | group                 | 33           |
+      | group                 | visitor      |
       | customer              | 99           |
     When I edit specific price "price1" with following details:
       | shop group |  |
