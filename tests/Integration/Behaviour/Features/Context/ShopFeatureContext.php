@@ -76,6 +76,23 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given shop group :reference with name :shopName exists
+     *
+     * @param string $reference
+     * @param string $shopGroupName
+     */
+    public function shopGroupWithNameExists(string $reference, string $shopGroupName): void
+    {
+        $shopGroupId = (int) ShopGroup::getIdByName($shopGroupName);
+
+        if (!$shopGroupId) {
+            throw new RuntimeException(sprintf('Shop group with name "%s" does not exist', $shopGroupId));
+        }
+
+        SharedStorage::getStorage()->set($reference, $shopGroupId);
+    }
+
+    /**
      * @Given /^I add a shop group "(.+)" with name "(.+?)"(?: and color "(.+)")?$/
      *
      * @param string $reference

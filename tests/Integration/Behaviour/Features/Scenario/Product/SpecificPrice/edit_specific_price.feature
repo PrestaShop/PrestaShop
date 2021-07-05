@@ -6,6 +6,9 @@
 Feature: Edit existing Specific Price from Back Office (BO).
   As an employee I want to be able to edit existing specific price for a product
 
+  Background:
+    Given shop group "default" with name "Default" exists
+
   Scenario: I edit specific price reduction
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
@@ -111,27 +114,27 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | group                 |        |
       | customer              |        |
     When I edit specific price "price1" with following details:
-      | shop group | 42 |
-      | shop       | 51 |
-      | currency   | 69 |
-      | country    | 21 |
-      | group      | 33 |
-      | customer   | 99 |
+      | shop group | default |
+      | shop       | 51      |
+      | currency   | 69      |
+      | country    | 21      |
+      | group      | 33      |
+      | customer   | 99      |
     Then specific price price1 should have following details:
-      | specific price detail | value  |
-      | reduction type        | amount |
-      | reduction value       | 12.56  |
-      | includes tax          | true   |
-      | price                 | 45.78  |
-      | from quantity         | 1      |
-      | from                  |        |
-      | to                    |        |
-      | shop group            | 42     |
-      | shop                  | 51     |
-      | currency              | 69     |
-      | country               | 21     |
-      | group                 | 33     |
-      | customer              | 99     |
+      | specific price detail | value   |
+      | reduction type        | amount  |
+      | reduction value       | 12.56   |
+      | includes tax          | true    |
+      | price                 | 45.78   |
+      | from quantity         | 1       |
+      | from                  |         |
+      | to                    |         |
+      | shop group            | default |
+      | shop                  | 51      |
+      | currency              | 69      |
+      | country               | 21      |
+      | group                 | 33      |
+      | customer              | 99      |
     When I edit specific price "price1" with following details:
       | shop group |  |
       | shop       |  |
