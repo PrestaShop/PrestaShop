@@ -27,24 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class PageConfiguration is responsible for saving & loading product page configuration.
  */
-class PageConfiguration implements DataConfigurationInterface
+class PageConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -68,12 +58,14 @@ class PageConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_DISPLAY_QTIES', (int) $config['display_quantities']);
-            $this->configuration->set('PS_LAST_QTIES', (int) $config['display_last_quantities']);
-            $this->configuration->set('PS_DISP_UNAVAILABLE_ATTR', (int) $config['display_unavailable_attributes']);
-            $this->configuration->set('PS_ATTRIBUTE_CATEGORY_DISPLAY', (int) $config['allow_add_variant_to_cart_from_listing']);
-            $this->configuration->set('PS_ATTRIBUTE_ANCHOR_SEPARATOR', $config['attribute_anchor_separator']);
-            $this->configuration->set('PS_DISPLAY_DISCOUNT_PRICE', (int) $config['display_discount_price']);
+            $shopConstraint = $this->getShopConstraint();
+
+            $this->updateConfigurationValue('PS_DISPLAY_QTIES', 'display_quantities', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LAST_QTIES', 'display_last_quantities', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_DISP_UNAVAILABLE_ATTR', 'display_unavailable_attributes', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_ATTRIBUTE_CATEGORY_DISPLAY', 'allow_add_variant_to_cart_from_listing', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_ATTRIBUTE_ANCHOR_SEPARATOR', 'attribute_anchor_separator', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_DISPLAY_DISCOUNT_PRICE', 'display_discount_price', $config, $shopConstraint);
         }
 
         return $errors;
