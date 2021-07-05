@@ -27,24 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This class loads and saves general configuration for product.
  */
-class GeneralConfiguration implements DataConfigurationInterface
+class GeneralConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -69,14 +59,17 @@ class GeneralConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($config)) {
-            $catalogMode = (int) $config['catalog_mode'];
-            $this->configuration->set('PS_CATALOG_MODE', $catalogMode);
-            $this->configuration->set('PS_CATALOG_MODE_WITH_PRICES', $catalogMode ? (int) $config['catalog_mode_with_prices'] : 0);
-            $this->configuration->set('PS_NB_DAYS_NEW_PRODUCT', (int) $config['new_days_number']);
-            $this->configuration->set('PS_PRODUCT_SHORT_DESC_LIMIT', (int) $config['short_description_limit']);
-            $this->configuration->set('PS_QTY_DISCOUNT_ON_COMBINATION', (int) $config['quantity_discount']);
-            $this->configuration->set('PS_FORCE_FRIENDLY_PRODUCT', (int) $config['force_friendly_url']);
-            $this->configuration->set('PS_PRODUCT_ACTIVATION_DEFAULT', (int) $config['default_status']);
+            $shopConstraint = $this->getShopConstraint();
+
+            $config['catalog_mode_with_prices'] = $config['catalog_mode'] ? $config['catalog_mode_with_prices'] : 0;
+
+            $this->updateConfigurationValue('PS_CATALOG_MODE', 'catalog_mode', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_CATALOG_MODE_WITH_PRICES', 'catalog_mode_with_prices', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_NB_DAYS_NEW_PRODUCT', 'new_days_number', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_PRODUCT_SHORT_DESC_LIMIT', 'short_description_limit', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_QTY_DISCOUNT_ON_COMBINATION', 'quantity_discount', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_FORCE_FRIENDLY_PRODUCT', 'force_friendly_url', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_PRODUCT_ACTIVATION_DEFAULT', 'default_status', $config, $shopConstraint);
         }
 
         return $errors;

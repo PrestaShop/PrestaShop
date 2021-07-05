@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -46,14 +47,20 @@ class GeneralType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('catalog_mode', SwitchType::class)
-            ->add('catalog_mode_with_prices', SwitchType::class)
+            ->add('catalog_mode', SwitchType::class, [
+                'multistore_configuration_key' => 'PS_CATALOG_MODE',
+            ])
+            ->add('catalog_mode_with_prices', SwitchType::class, [
+                'multistore_configuration_key' => 'PS_CATALOG_MODE_WITH_PRICES',
+            ])
             ->add('new_days_number', IntegerType::class, [
                 'required' => false,
+                'multistore_configuration_key' => 'PS_NB_DAYS_NEW_PRODUCT',
             ])
             ->add('short_description_limit', TextWithUnitType::class, [
                 'required' => false,
                 'unit' => $this->trans('characters', 'Admin.Shopparameters.Help'),
+                'multistore_configuration_key' => 'PS_PRODUCT_SHORT_DESC_LIMIT',
             ])
             ->add('quantity_discount', ChoiceType::class, [
                 'choices' => [
@@ -62,9 +69,14 @@ class GeneralType extends TranslatorAwareType
                 ],
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
+                'multistore_configuration_key' => 'PS_QTY_DISCOUNT_ON_COMBINATION',
             ])
-            ->add('force_friendly_url', SwitchType::class)
-            ->add('default_status', SwitchType::class);
+            ->add('force_friendly_url', SwitchType::class, [
+                'multistore_configuration_key' => 'PS_FORCE_FRIENDLY_PRODUCT',
+            ])
+            ->add('default_status', SwitchType::class, [
+                'multistore_configuration_key' => 'PS_PRODUCT_ACTIVATION_DEFAULT',
+            ]);
     }
 
     /**
@@ -83,5 +95,15 @@ class GeneralType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'product_preferences_general_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

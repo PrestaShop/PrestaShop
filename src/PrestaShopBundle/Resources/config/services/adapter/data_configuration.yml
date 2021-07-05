@@ -6,21 +6,29 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Product\GeneralConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.product_pagination.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Product\PaginationConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.product_page.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Product\PageConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.product_stock.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Product\StockConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.customer.customer_configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerConfiguration'
