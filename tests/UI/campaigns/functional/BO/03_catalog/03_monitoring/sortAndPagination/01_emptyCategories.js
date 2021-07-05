@@ -212,7 +212,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of empty categori
       it(`should filter list of empty categories by Name 'todelete${index}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
 
-        await monitoringPage.filterTable(page, tableName, 'input', 'name', `todelete${index+ 1}`);
+        await monitoringPage.filterTable(page, tableName, 'input', 'name', `todelete${index + 1}`);
 
         const textColumn = await monitoringPage.getTextColumnFromTable(page, tableName, 1, 'name');
         await expect(textColumn).to.contains(`todelete${index + 1}`);
