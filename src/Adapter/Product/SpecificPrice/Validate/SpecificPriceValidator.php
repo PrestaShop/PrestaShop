@@ -32,6 +32,7 @@ use DateTime;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
+use PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository;
 use PrestaShop\PrestaShop\Adapter\Group\Repository\GroupRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
@@ -40,6 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\NoCountryId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\NoGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -89,12 +92,18 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
     private $groupRepository;
 
     /**
+     * @var CustomerRepository
+     */
+    private $customerRepository;
+
+    /**
      * @param ShopGroupRepository $shopGroupRepository
      * @param ShopRepository $shopRepository
      * @param CombinationRepository $combinationRepository
      * @param CurrencyRepository $currencyRepository
      * @param CountryRepository $countryRepository
      * @param GroupRepository $groupRepository
+     * @param CustomerRepository $customerRepository
      */
     public function __construct(
         ShopGroupRepository $shopGroupRepository,
@@ -102,7 +111,8 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         CombinationRepository $combinationRepository,
         CurrencyRepository $currencyRepository,
         CountryRepository $countryRepository,
-        GroupRepository $groupRepository
+        GroupRepository $groupRepository,
+        CustomerRepository $customerRepository
     ) {
         $this->shopGroupRepository = $shopGroupRepository;
         $this->shopRepository = $shopRepository;
@@ -110,6 +120,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         $this->currencyRepository = $currencyRepository;
         $this->countryRepository = $countryRepository;
         $this->groupRepository = $groupRepository;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -213,7 +224,14 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         if ($groupId !== NoGroupId::NO_GROUP_ID) {
             $this->groupRepository->assertGroupExists(new GroupId($groupId));
         }
+
+        $customerId = (int) $specificPrice->id_customer;
+        if ($customerId !== NoCustomerId::NO_CUSTOMER_ID) {
+            $this->customerRepository->assertCustomerExists(new CustomerId($customerId));
+        }
+
         //@todo:
-        //  customer
+        //  product
+        //  cart
     }
 }
