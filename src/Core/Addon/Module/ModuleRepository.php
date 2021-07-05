@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
-use PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
@@ -90,11 +89,6 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $modulePath;
 
     /**
-     * @var PrestaTrustChecker|null
-     */
-    private $prestaTrustChecker = null;
-
-    /**
      * Key of the cache content.
      *
      * @var string
@@ -149,20 +143,6 @@ class ModuleRepository implements ModuleRepositoryInterface
         if ($this->cacheProvider && $this->cacheProvider->contains($this->cacheFilePath)) {
             $this->cache = $this->cacheProvider->fetch($this->cacheFilePath);
         }
-    }
-
-    /**
-     * Setter for the optional PrestaTrust checker.
-     *
-     * @param PrestaTrustChecker $checker
-     *
-     * @return $this
-     */
-    public function setPrestaTrustChecker(PrestaTrustChecker $checker)
-    {
-        $this->prestaTrustChecker = $checker;
-
-        return $this;
     }
 
     public function __destruct()
@@ -509,9 +489,6 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         $module = new Module($attributes, $disk, $database);
         $this->loadedModules->save($name, $module);
-        if ($this->prestaTrustChecker) {
-            $this->prestaTrustChecker->loadDetailsIntoModule($module);
-        }
 
         return $module;
     }
