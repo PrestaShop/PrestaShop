@@ -60,3 +60,6 @@ services:
       arguments:
           - "@=service('prestashop.adapter.legacy.context').getContext().link"
           - 'img/c'
+
+  prestashop.adapter.shop.repository.shop_group_repository:
+      class: 'PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository'

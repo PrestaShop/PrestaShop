@@ -56,6 +56,8 @@ services:
 
     prestashop.adapter.product.specific_price.validate.specific_price_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator
+        arguments:
+            - '@prestashop.adapter.shop.repository.shop_group_repository'
 
     prestashop.adapter.product.specific_price.repository.specific_price_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository
