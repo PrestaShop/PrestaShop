@@ -30,7 +30,10 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate;
 
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use SpecificPrice;
@@ -40,6 +43,20 @@ use SpecificPrice;
  */
 class SpecificPriceValidator extends AbstractObjectModelValidator
 {
+    /**
+     * @var ShopGroupRepository
+     */
+    private $shopGroupRepository;
+
+    /**
+     * @param ShopGroupRepository $shopGroupRepository
+     */
+    public function __construct(
+        ShopGroupRepository $shopGroupRepository
+    ) {
+        $this->shopGroupRepository = $shopGroupRepository;
+    }
+
     /**
      * @param SpecificPrice $specificPrice
      *
@@ -104,5 +121,23 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         if ($from->diff($to)->invert) {
             throw new SpecificPriceConstraintException('The date time for specific price cannot be inverse', SpecificPriceConstraintException::INVALID_DATE_RANGE);
         }
+    }
+
+    /**
+     * @param SpecificPrice $specificPrice
+     */
+    private function assertRelatedEntitiesExist(SpecificPrice $specificPrice): void
+    {
+        $shopGroupId = (int) $specificPrice->id_shop_group;
+        if ($shopGroupId !== NoShopGroupId::NO_SHOP_GROUP_ID) {
+            $this->shopGroupRepository->assertShopGroupExists(new ShopGroupId($shopGroupId));
+        }
+        //@todo:
+        //  shop
+        //  combination
+        //  currency
+        //  country
+        //  group
+        //  customer
     }
 }
