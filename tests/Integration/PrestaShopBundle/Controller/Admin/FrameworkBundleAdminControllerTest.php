@@ -213,13 +213,10 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
     {
         $this->logIn();
 
+        $uri = $this->router->generate($route);
+
         $this->client->catchExceptions(false);
-        $this->client->request(
-            'GET',
-            $this->router->generate(
-                $route
-            )
-        );
+        $this->client->request('GET', $uri);
 
         $response = $this->client->getResponse();
 

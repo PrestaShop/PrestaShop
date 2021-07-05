@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace LegacyTests\Unit\Classes;
+namespace Tests\Integration\Classes;
 
 use PHPUnit\Framework\TestCase;
 use SQLUtils;

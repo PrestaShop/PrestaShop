@@ -26,7 +26,7 @@
 
 namespace Tests\TestCase;
 
-use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 use LegacyTests\Unit\ContextMocker;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -68,7 +68,7 @@ class SymfonyIntegrationTestCase extends WebTestCase
 
     public static function setUpBeforeClass()
     {
-        Database::restoreTestDB();
+        DatabaseCreator::restoreTestDB();
         require_once __DIR__ . '/../../config/config.inc.php';
     }
 }
