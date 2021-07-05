@@ -8,7 +8,8 @@ Feature: Edit existing Specific Price from Back Office (BO).
 
   Background:
     Given shop group "default" with name "Default" exists
-    Given shop "testShop" with name "test_shop" exists
+    And shop "testShop" with name "test_shop" exists
+    And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
 
   Scenario: I edit specific price reduction
     Given I add product "product1" with following information:
@@ -117,7 +118,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
     When I edit specific price "price1" with following details:
       | shop group | default  |
       | shop       | testShop |
-      | currency   | 69       |
+      | currency   | usd      |
       | country    | 21       |
       | group      | 33       |
       | customer   | 99       |
@@ -132,7 +133,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | to                    |          |
       | shop group            | default  |
       | shop                  | testShop |
-      | currency              | 69       |
+      | currency              | usd      |
       | country               | 21       |
       | group                 | 33       |
       | customer              | 99       |

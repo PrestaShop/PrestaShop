@@ -8,7 +8,8 @@ Feature: Update product options from Back Office (BO)
 
   Background:
     Given shop group "default" with name "Default" exists
-    Given shop "testShop" with name "test_shop" exists
+    And shop "testShop" with name "test_shop" exists
+    And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
 
   Scenario: I add a specific price with amount reduction to product
     Given I add product "product1" with following information:
@@ -143,7 +144,7 @@ Feature: Update product options from Back Office (BO)
       | to              |          |
       | shop group      | default  |
       | shop            | testShop |
-      | currency        | 69       |
+      | currency        | usd      |
       | country         | 21       |
       | group           | 33       |
       | customer        | 99       |
@@ -159,7 +160,7 @@ Feature: Update product options from Back Office (BO)
       | to                    |          |
       | shop group            | default  |
       | shop                  | testShop |
-      | currency              | 69       |
+      | currency              | usd      |
       | country               | 21       |
       | group                 | 33       |
       | customer              | 99       |
