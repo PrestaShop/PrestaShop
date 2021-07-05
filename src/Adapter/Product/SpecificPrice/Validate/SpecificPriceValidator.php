@@ -30,8 +30,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate;
 
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
@@ -57,15 +60,23 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
     private $shopRepository;
 
     /**
+     * @var CombinationRepository
+     */
+    private $combinationRepository;
+
+    /**
      * @param ShopGroupRepository $shopGroupRepository
      * @param ShopRepository $shopRepository
+     * @param CombinationRepository $combinationRepository
      */
     public function __construct(
         ShopGroupRepository $shopGroupRepository,
-        ShopRepository $shopRepository
+        ShopRepository $shopRepository,
+        CombinationRepository $combinationRepository
     ) {
         $this->shopGroupRepository = $shopGroupRepository;
         $this->shopRepository = $shopRepository;
+        $this->combinationRepository = $combinationRepository;
     }
 
     /**
@@ -149,8 +160,12 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         if ($shopId !== NoShopId::NO_SHOP_ID) {
             $this->shopRepository->assertShopExists(new ShopId($shopId));
         }
+
+        $combinationId = (int) $specificPrice->id_product_attribute;
+        if ($combinationId !== NoCombinationId::NO_COMBINATION_ID) {
+            $this->combinationRepository->assertCombinationExists(new CombinationId($combinationId));
+        }
         //@todo:
-        //  combination
         //  currency
         //  country
         //  group
