@@ -124,8 +124,11 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     {
         $specificPriceId = $this->getSharedStorage()->get($specificPriceReference);
         $command = $this->createEditSpecificPriceCommand($specificPriceId, $tableNode);
-
-        $this->getCommandBus()->handle($command);
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (SpecificPriceConstraintException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -236,6 +239,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             'price' => SpecificPriceConstraintException::INVALID_PRICE,
             'from' => SpecificPriceConstraintException::INVALID_FROM_DATETIME,
             'to' => SpecificPriceConstraintException::INVALID_TO_DATETIME,
+            'date range' => SpecificPriceConstraintException::INVALID_DATE_RANGE,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {

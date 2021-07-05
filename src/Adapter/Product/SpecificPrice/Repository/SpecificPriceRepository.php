@@ -118,6 +118,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
      */
     public function partialUpdate(SpecificPrice $specificPrice, array $updatableProperties): void
     {
+        $this->specificPriceValidator->validate($specificPrice);
         $this->partiallyUpdateObjectModel(
             $specificPrice,
             $updatableProperties,

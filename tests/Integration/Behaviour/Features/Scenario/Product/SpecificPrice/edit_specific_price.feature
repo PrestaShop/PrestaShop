@@ -155,7 +155,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | group                 |        |
       | customer              |        |
 
-  Scenario: I edit specific price relations
+  Scenario: I edit specific price dates
     Given specific price price1 should have following details:
       | specific price detail | value  |
       | reduction type        | amount |
@@ -189,3 +189,40 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
+    When I edit specific price "price1" with following details:
+      | from | 2021-01-01 10:00:00 |
+      | to   | 0000-00-00 00:00:00 |
+    Then specific price price1 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 2021-01-01 10:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+    When I edit specific price "price1" with following details:
+      | from | 0000-00-00 00:00:00 |
+      | to   | 2021-01-01 10:00:00 |
+    Then specific price price1 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 2021-01-01 10:00:00 |
+    When I edit specific price "price1" with following details:
+      | from                  | 2021-01-01 10:00:00 |
+      | to                    | 2020-01-01 10:00:00 |
+    Then I should get error that specific price "date range" is invalid
+    Then specific price price1 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 2021-01-01 10:00:00 |
