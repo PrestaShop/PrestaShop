@@ -1006,7 +1006,7 @@ class Install extends AbstractInstall
             $moduleZipDestination = _PS_MODULE_DIR_ . $addons_module['name'] . '.zip';
             $downloadResult = file_put_contents(
                 $moduleZipDestination,
-                Tools::addonsRequest('module', ['id_module' => $addons_module['id_module']], 20)
+                Tools::addonsRequest('module', ['id_module' => $addons_module['id_module']], 20, 20)
             );
 
             if ($downloadResult === false) {

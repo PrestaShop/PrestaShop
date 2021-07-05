@@ -3830,7 +3830,7 @@ exit;
 
     protected static $is_addons_up = true;
 
-    public static function addonsRequest($request, $params = [], $timeout = 5)
+    public static function addonsRequest($request, $params = [], $timeout = 5, $curlTimeout = 5)
     {
         if (!self::$is_addons_up) {
             return false;
@@ -3927,7 +3927,7 @@ exit;
             ],
         ]);
 
-        if ($content = Tools::file_get_contents('https://' . $end_point, false, $context)) {
+        if ($content = Tools::file_get_contents('https://' . $end_point, false, $context, $curlTimeout)) {
             return $content;
         }
 
