@@ -54,6 +54,16 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 final class EmployeeType extends TranslatorAwareType
 {
+    public const AVAILABLE_IMAGE_FORMATS = [
+        'gif',
+        'jpg',
+        'jpeg',
+        'jpe',
+        'png'
+    ];
+
+    public const AVAILABLE_IMAGE_FORMATS_STRING_FOR_TRANSLATION = 'gif, jpg, jpeg, jpe, png';
+
     /**
      * @var array
      */
@@ -153,7 +163,7 @@ final class EmployeeType extends TranslatorAwareType
                 'label' => $this->trans('Avatar', 'Admin.Global'),
                 'required' => false,
                 'attr' => [
-                    'accept' => 'gif,jpg,jpeg,jpe,png',
+                    'accept' => static::AVAILABLE_IMAGE_FORMATS,
                 ],
             ])
             ->add('has_enabled_gravatar', SwitchType::class, [

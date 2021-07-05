@@ -41,6 +41,16 @@ use Symfony\Component\Validator\Constraints\Length;
  */
 class ProfileType extends TranslatorAwareType
 {
+    public const AVAILABLE_IMAGE_FORMATS = [
+        'gif',
+        'jpg',
+        'jpeg',
+        'jpe',
+        'png'
+    ];
+
+    public const AVAILABLE_IMAGE_FORMATS_STRING_FOR_TRANSLATION = 'gif, jpg, jpeg, jpe, png';
+
     /**
      * {@inheritdoc}
      */
@@ -73,7 +83,7 @@ class ProfileType extends TranslatorAwareType
                 'label' => $this->trans('Avatar', 'Admin.Global'),
                 'required' => false,
                 'attr' => [
-                    'accept' => 'gif,jpg,jpeg,jpe,png',
+                    'accept' => implode(',', static::AVAILABLE_IMAGE_FORMATS),
                 ],
             ])
         ;

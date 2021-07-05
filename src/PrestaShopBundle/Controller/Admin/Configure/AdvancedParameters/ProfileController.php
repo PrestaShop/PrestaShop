@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProfileFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Profile\ProfileType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -295,8 +296,9 @@ class ProfileController extends FrameworkBundleAdminController
                     [$iniConfig->getUploadMaxSizeInBytes()]
                 ),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
-                    'Image format not recognized, allowed formats are: .gif, .jpg, .png',
-                    'Admin.Notifications.Error'
+                    'Image format not recognized, allowed formats are: %s',
+                    'Admin.Notifications.Error',
+                    [ProfileType::AVAILABLE_IMAGE_FORMATS_STRING_FOR_TRANSLATION]
                 ),
             ],
             ProfileConstraintException::class => [

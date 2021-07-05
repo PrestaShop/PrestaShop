@@ -50,6 +50,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -496,8 +497,9 @@ class EmployeeController extends FrameworkBundleAdminController
                     [$iniConfig->getUploadMaxSizeInBytes()]
                 ),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
-                    'Image format not recognized, allowed formats are: .gif, .jpg, .png',
-                    'Admin.Notifications.Error'
+                    'Image format not recognized, allowed formats are: %s',
+                    'Admin.Notifications.Error',
+                    [EmployeeType::AVAILABLE_IMAGE_FORMATS_STRING_FOR_TRANSLATION]
                 ),
             ],
             AdminEmployeeException::class => [
