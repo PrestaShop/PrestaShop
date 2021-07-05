@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace LegacyTests\Integration\classes;
+namespace Tests\Integration\Classes;
 
 use Configuration;
 use PHPUnit\Framework\TestCase;

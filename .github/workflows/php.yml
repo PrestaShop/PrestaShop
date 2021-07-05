@@ -120,16 +120,6 @@ jobs:
         -   name: Install PrestaShop
             run: php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db_server=127.0.0.1 --db_password=password --db_name=prestashop --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
 
-        -   name: Run phpunit-legacy
-            run: composer run-script phpunit-legacy --timeout=0
-            env:
-                SYMFONY_DEPRECATIONS_HELPER: disabled
-
-        -   name: Run phpunit-admin
-            run: composer run-script phpunit-admin --timeout=0
-            env:
-                SYMFONY_DEPRECATIONS_HELPER: disabled
-
         -   name: Run phpunit-endpoints
             run: composer run-script phpunit-endpoints --timeout=0
             env:

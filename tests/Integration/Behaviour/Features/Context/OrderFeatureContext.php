@@ -30,12 +30,12 @@ use AppKernel;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Exception;
-use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCarrier;
 use OrderCartRule;
 use PHPUnit\Framework\Assert as Assert;
 use RuntimeException;
+use Tests\Integration\Utility\PaymentModuleFake;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 {

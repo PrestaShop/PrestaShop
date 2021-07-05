@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace LegacyTests\Unit\Core\Payment;
+namespace Tests\Unit\Core\Payment;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;

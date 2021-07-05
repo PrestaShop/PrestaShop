@@ -40,8 +40,10 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleSelfConfiguratorTest extends TestCase
 {
+    /**
+     * @var ModuleSelfConfigurator
+     */
     public $moduleSelfConfigurator;
-
     /**
      * @var ConfigurationMock
      */
@@ -54,33 +56,34 @@ class ModuleSelfConfiguratorTest extends TestCase
      * @var ModuleRepository
      */
     private $moduleRepository;
-
+    /**
+     * @var string
+     */
     public $defaultDir;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->configuration = new ConfigurationMock();
         $this->connection = new ConnectionMock([], new Driver());
         $this->mockModuleRepository();
 
-        $this->defaultDir = __DIR__ . '/../../../Resources/module-self-config-files';
+        $this->defaultDir = dirname(__DIR__, 3) . '/Resources/module-self-config-files';
+
         parent::setUp();
     }
 
     private function getModuleSelfConfigurator(
-        $moduleRepository = null,
-        $configuration = null,
-        $connection = null,
-        $filesystem = null
+        ModuleRepository $moduleRepository = null,
+        Configuration $configuration = null,
+        Connection $connection = null,
+        Filesystem $filesystem = null
     ): ModuleSelfConfigurator {
-        $moduleSelfConfigurator = new ModuleSelfConfigurator(
+        return new ModuleSelfConfigurator(
             $moduleRepository ?: $this->moduleRepository,
             $configuration ?: $this->configuration,
             $connection ?: $this->connection,
             $filesystem ?: new Filesystem()
         );
-
-        return $moduleSelfConfigurator;
     }
 
     public function testSuccessfulConfiguration(): void
@@ -208,8 +211,8 @@ class ModuleSelfConfiguratorTest extends TestCase
         // Then clean
         $filesystem = new Filesystem();
         $filesystem->remove([
-            __DIR__ . '/../../../Resources/modules/ganalytics/ganalytics_copy.php',
-            __DIR__ . '/../../../Resources/modules/ganalytics/avatar.jpg',
+            dirname(__DIR__, 3) . '/Resources/modules/ganalytics/ganalytics_copy.php',
+            dirname(__DIR__, 3) . '/Resources/modules/ganalytics/avatar.jpg',
         ]);
     }
 

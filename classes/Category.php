@@ -872,8 +872,8 @@ class CategoryCore extends ObjectModel
 		ON (c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . ')
 		' . Shop::addSqlAssociation('category', 'c') . '
 		WHERE cl.`id_lang` = ' . (int) $idLang . '
-        AND c.`nleft` >= ' . (int) $rootTreeInfo['nleft'] . '
-        AND c.`nright` <= ' . (int) $rootTreeInfo['nright'] . '
+        AND c.`nleft` >= ' . (int) ($rootTreeInfo['nleft'] ?? 0) . '
+        AND c.`nright` <= ' . (int) ($rootTreeInfo['nright'] ?? 0) . '
 		GROUP BY c.id_category
 		ORDER BY c.`id_category`, category_shop.`position`');
     }
