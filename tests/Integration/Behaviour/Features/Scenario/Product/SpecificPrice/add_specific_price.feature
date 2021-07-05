@@ -11,6 +11,7 @@ Feature: Update product options from Back Office (BO)
     And shop "testShop" with name "test_shop" exists
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And country "UnitedStates" with iso code "US" exists
+    And group "visitor" named "Visitor" exists
 
   Scenario: I add a specific price with amount reduction to product
     Given I add product "product1" with following information:
@@ -147,7 +148,7 @@ Feature: Update product options from Back Office (BO)
       | shop            | testShop     |
       | currency        | usd          |
       | country         | UnitedStates |
-      | group           | 33           |
+      | group           | visitor      |
       | customer        | 99           |
     Then product "product1" should have 1 specific prices
     And specific price price1 should have following details:
@@ -163,5 +164,5 @@ Feature: Update product options from Back Office (BO)
       | shop                  | testShop     |
       | currency              | usd          |
       | country               | UnitedStates |
-      | group                 | 33           |
+      | group                 | visitor      |
       | customer              | 99           |

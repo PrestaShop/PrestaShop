@@ -293,6 +293,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\FeatureValueFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\GroupFeatureContext
         shop:
             paths:
                 - "%paths.base%/Features/Scenario/Shop"
