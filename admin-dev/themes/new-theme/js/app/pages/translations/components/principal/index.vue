@@ -85,9 +85,9 @@
             </div>
 
             <TranslationInput
-              v-for="(translation, key) in translationsCatalog"
+              v-for="(translation, key, index) in translationsCatalog"
               :key="key"
-              :id="key"
+              :id="index"
               :translated="translation"
               :label="translation.default"
               :extra-info="getDomain(translation.tree_domain)"

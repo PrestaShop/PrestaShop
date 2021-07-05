@@ -22,13 +22,13 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
+import Vue, {PluginObject} from 'vue';
 import Vuex from 'vuex';
 import _ from 'lodash';
 import * as actions from './actions';
 import mutations from './mutations';
 
-Vue.use(Vuex);
+Vue.use(<PluginObject<any>><unknown>Vuex);
 
 // root state object.
 
@@ -59,30 +59,32 @@ const state = {
 
 // getters are functions
 const getters = {
-  totalPages(rootState) {
+  totalPages(rootState: Record<string, any>) {
     return rootState.totalPages;
   },
-  pageIndex(rootState) {
+  pageIndex(rootState: Record<string, any>) {
     return rootState.pageIndex;
   },
-  currentDomain(rootState) {
+  currentDomain(rootState: Record<string, any>) {
     return rootState.currentDomain;
   },
-  translations(rootState) {
+  translations(rootState: Record<string, any>) {
     return rootState.translations;
   },
-  catalog(rootState) {
+  catalog(rootState: Record<string, any>) {
     return rootState.catalog;
   },
-  domainsTree() {
-    function convert(domains) {
-      domains.forEach((domain) => {
+  domainsTree(): Array<Record<string, any>> {
+    function convert(domains: Array<Record<string, any>>): Array<Record<string, any>> {
+      domains.forEach((domain: Record<string, any>) => {
+        /* eslint-disable */
         domain.children = _.values(domain.children);
         domain.extraLabel = domain.total_missing_translations;
         domain.dataValue = domain.domain_catalog_link;
         domain.warning = Boolean(domain.total_missing_translations);
         domain.disable = !domain.total_translations;
         domain.id = domain.full_name;
+        /* eslint-enable */
         convert(domain.children);
       });
       return domains;
@@ -90,10 +92,10 @@ const getters = {
 
     return convert(state.domainsTree);
   },
-  isReady(rootState) {
+  isReady(rootState: Record<string, any>): boolean {
     return rootState.isReady;
   },
-  searchTags(rootState) {
+  searchTags(rootState: Record<string, any>): Record<string, any> {
     return rootState.searchTags;
   },
 };
