@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -12,13 +16,10 @@ const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const monitoringPage = require('@pages/BO/catalog/monitoring');
 
+// Import data
 const ProductFaker = require('@data/faker/product');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_productsWithoutDescription';
-
 
 let browserContext;
 let page;
@@ -31,7 +32,7 @@ Create 3 new products without description
 Sort list of products without description in monitoring page
 Pagination next and previous
  */
-describe('Sort and pagination list of products without description', async () => {
+describe('BO - Catalog - Monitoring : Sort and pagination list of products without description', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -177,7 +178,7 @@ describe('Sort and pagination list of products without description', async () =>
 
   // 3 : Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 10 per page', async function () {
+    it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
       const paginationNumber = await monitoringPage.selectPaginationLimit(page, tableName, '10');
@@ -198,7 +199,7 @@ describe('Sort and pagination list of products without description', async () =>
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
-    it('should change the item number to 20 per page', async function () {
+    it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await monitoringPage.selectPaginationLimit(page, tableName, '20');
