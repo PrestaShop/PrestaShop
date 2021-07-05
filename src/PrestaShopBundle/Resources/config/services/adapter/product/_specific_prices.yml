@@ -59,6 +59,7 @@ services:
         arguments:
             - '@prestashop.adapter.shop.repository.shop_group_repository'
             - '@prestashop.adapter.shop.repository.shop_repository'
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
 
     prestashop.adapter.product.specific_price.repository.specific_price_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository
