@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
 use PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository;
 use PrestaShop\PrestaShop\Adapter\Group\Repository\GroupRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
@@ -48,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\NoGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
@@ -97,6 +99,11 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
     private $customerRepository;
 
     /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
      * @param ShopGroupRepository $shopGroupRepository
      * @param ShopRepository $shopRepository
      * @param CombinationRepository $combinationRepository
@@ -104,6 +111,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
      * @param CountryRepository $countryRepository
      * @param GroupRepository $groupRepository
      * @param CustomerRepository $customerRepository
+     * @param ProductRepository $productRepository
      */
     public function __construct(
         ShopGroupRepository $shopGroupRepository,
@@ -112,7 +120,8 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         CurrencyRepository $currencyRepository,
         CountryRepository $countryRepository,
         GroupRepository $groupRepository,
-        CustomerRepository $customerRepository
+        CustomerRepository $customerRepository,
+        ProductRepository $productRepository
     ) {
         $this->shopGroupRepository = $shopGroupRepository;
         $this->shopRepository = $shopRepository;
@@ -121,6 +130,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         $this->countryRepository = $countryRepository;
         $this->groupRepository = $groupRepository;
         $this->customerRepository = $customerRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -195,6 +205,9 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
      */
     private function assertRelatedEntitiesExist(SpecificPrice $specificPrice): void
     {
+        $productId = (int) $specificPrice->id_product;
+        $this->productRepository->assertProductExists(new ProductId($productId));
+
         $shopGroupId = (int) $specificPrice->id_shop_group;
         if ($shopGroupId !== NoShopGroupId::NO_SHOP_GROUP_ID) {
             $this->shopGroupRepository->assertShopGroupExists(new ShopGroupId($shopGroupId));
@@ -231,7 +244,6 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         }
 
         //@todo:
-        //  product
         //  cart
     }
 }
