@@ -46,18 +46,20 @@ class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
-     * @When I delete following combinations:
+     * @When I delete following combinations of product :productReference:
      *
+     * @param string $productRefeence
      * @param TableNode $tableNode
      */
-    public function bulkDeleteCombinations(TableNode $tableNode): void
+    public function bulkDeleteCombinations(string $productRefeence, TableNode $tableNode): void
     {
+        $productId = $this->getSharedStorage()->get($productRefeence);
         $combinationIds = [];
         foreach ($tableNode->getColumnsHash() as $column) {
             $combinationIdReference = $column['id reference'];
             $combinationIds[] = $this->getSharedStorage()->get($combinationIdReference);
         }
 
-        $this->getCommandBus()->handle(new BulkDeleteCombinationCommand($combinationIds));
+        $this->getCommandBus()->handle(new BulkDeleteCombinationCommand($productId, $combinationIds));
     }
 }

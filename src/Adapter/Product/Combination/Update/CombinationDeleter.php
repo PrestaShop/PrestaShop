@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -87,32 +86,21 @@ class CombinationDeleter
         $this->combinationRepository->delete($combinationId);
         if ($combination->default_on) {
             $productId = new ProductId((int) $combination->id_product);
-            $defaultCombination = $this->combinationRepository->findDefaultCombination($productId);
-            if (null !== $defaultCombination) {
-                $this->defaultCombinationUpdater->setDefaultCombination(new CombinationId((int) $defaultCombination->id));
-            }
+            $this->updateDefaultCombination($productId);
         }
     }
 
     /**
+     * @param ProductId $productId
      * @param CombinationId[] $combinationIds
      */
-    public function bulkDeleteCombinations(array $combinationIds): void
+    public function bulkDeleteProductCombinations(ProductId $productId, array $combinationIds): void
     {
-        $failedIds = [];
-        foreach ($combinationIds as $combinationId) {
-            try {
-                $this->deleteCombination($combinationId);
-            } catch (CannotDeleteCombinationException $e) {
-                $failedIds[] = $combinationId->getValue();
-            }
+        try {
+            $this->combinationRepository->bulkDelete($combinationIds);
+        } finally {
+            $this->updateDefaultCombination($productId);
         }
-
-        if (empty($failedIds)) {
-            return;
-        }
-
-        throw new CannotBulkDeleteCombinationException($failedIds, 'Failed to delete combinations');
     }
 
     /**
@@ -130,5 +118,16 @@ class CombinationDeleter
         }
 
         $this->combinationRepository->deleteByProductId($productId);
+    }
+
+    /**
+     * @param ProductId $productId
+     */
+    private function updateDefaultCombination(ProductId $productId): void
+    {
+        $defaultCombination = $this->combinationRepository->findDefaultCombination($productId);
+        if (null !== $defaultCombination) {
+            $this->defaultCombinationUpdater->setDefaultCombination(new CombinationId((int) $defaultCombination->id));
+        }
     }
 }

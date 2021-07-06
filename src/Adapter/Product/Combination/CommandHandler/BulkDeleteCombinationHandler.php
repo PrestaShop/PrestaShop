@@ -55,6 +55,9 @@ class BulkDeleteCombinationHandler implements BulkDeleteCombinationHandlerInterf
      */
     public function handle(BulkDeleteCombinationCommand $command): void
     {
-        $this->combinationDeleter->bulkDeleteCombinations($command->getCombinationIds());
+        $this->combinationDeleter->bulkDeleteProductCombinations(
+            $command->getProductId(),
+            $command->getCombinationIds()
+        );
     }
 }
