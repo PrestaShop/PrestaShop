@@ -237,10 +237,6 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb->setParameter('id_lang', $this->contextLanguageId);
 
         foreach ($filterValues as $filterName => $filter) {
-            if (!in_array($filterName, $availableFilters, true)) {
-                continue;
-            }
-
             if ('active' === $filterName) {
                 $qb->andWhere('ps.`active` = :active');
                 $qb->setParameter('active', $filter);
