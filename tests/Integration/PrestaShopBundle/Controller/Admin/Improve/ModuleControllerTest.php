@@ -125,14 +125,15 @@ class ModuleControllerTest extends WebTestCase
         $this->assertEquals('This functionality has been disabled.', $decodedContent['msg']);
     }
 
-    public function testRecommendedModules(): void
+    /**
+     * @return string
+     */
+    protected function getExpectedErrorMessage()
     {
-        $recommendedModuleRoute = $this->router->generate('admin_module_catalog_post', [
-            'tab_modules_list' => 'fianetsceau,trustedshops,trustedshopsintegration,ebadgeletitbuy,protectedshops,ebadgeletitbuy,emailverify,allinone_rewards,allexport,apiway,zendesk',
-        ]);
-        $this->client->request('GET', $recommendedModuleRoute);
-
-        $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        return $this->translator->trans(
+            'This functionality has been disabled.',
+            array(),
+            'Admin.Notifications.Error'
+        );
     }
 }
