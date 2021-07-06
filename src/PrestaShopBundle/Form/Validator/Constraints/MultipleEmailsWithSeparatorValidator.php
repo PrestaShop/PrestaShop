@@ -74,13 +74,7 @@ class MultipleEmailsWithSeparatorValidator extends ConstraintValidator
         }
 
         if (!empty($invalidEmails)) {
-            $nbInvalidEmails = count($invalidEmails);
-            $message = $constraint->message ?? $this->translator->transChoice(
-                '{1} Invalid email: %invalid_emails%.|]1,Inf[ Invalid emails: %invalid_emails%.',
-                $nbInvalidEmails,
-                ['%invalid_emails%' => implode(',', $invalidEmails)],
-                'Admin.Notifications.Error'
-            );
+            $message = $constraint->message ?? $this->getInvalidMailsMessage($invalidEmails);
 
             $this->context->buildViolation($message)
                 ->setParameter('{{ value }}', $this->formatValue($value))
@@ -88,5 +82,22 @@ class MultipleEmailsWithSeparatorValidator extends ConstraintValidator
                 ->addViolation()
             ;
         }
+    }
+
+    protected function getInvalidMailsMessage(array $invalidEmails): string
+    {
+        if (count($invalidEmails) > 1) {
+            return $this->translator->trans(
+                'Invalid emails : %invalid_emails%.',
+                ['%invalid_emails%' => implode(',', $invalidEmails)],
+                'Admin.Global.Notification'
+            );
+        }
+
+        return $this->translator->trans(
+            'Invalid email : %invalid_email%.',
+            ['%invalid_email%' => implode(',', $invalidEmails)],
+            'Admin.Global.Notification'
+        );
     }
 }
