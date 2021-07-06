@@ -1,6 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags add-specific-price
 @reset-database-before-feature
-@add-specific-prices
+@add-specific-price
 @specific-prices
 Feature: Update product options from Back Office (BO)
   As a BO user
@@ -12,6 +12,7 @@ Feature: Update product options from Back Office (BO)
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And country "UnitedStates" with iso code "US" exists
     And group "visitor" named "Visitor" exists
+    And there is customer "testCustomer" with email "pub@prestashop.com"
 
   Scenario: I add a specific price with amount reduction to product
     Given I add product "product1" with following information:
@@ -149,7 +150,7 @@ Feature: Update product options from Back Office (BO)
       | currency        | usd          |
       | country         | UnitedStates |
       | group           | visitor      |
-      | customer        | 99           |
+      | customer        | testCustomer |
     Then product "product1" should have 1 specific prices
     And specific price price1 should have following details:
       | specific price detail | value        |
@@ -165,4 +166,4 @@ Feature: Update product options from Back Office (BO)
       | currency              | usd          |
       | country               | UnitedStates |
       | group                 | visitor      |
-      | customer              | 99           |
+      | customer              | testCustomer |
