@@ -259,36 +259,6 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
         $this->assertInstanceOf(LegacyUrlConverter::class, $converter);
     }
 
-    public function testLegacyWithRoute()
-    {
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, ['route' => 'admin_module_catalog_post']);
-        $this->assertSameUrl('/improve/modules/catalog/recommended', $routeUrl, ['route']);
-    }
-
-    public function testDifferentLinkArguments()
-    {
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog');
-        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
-
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true);
-        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
-
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', false);
-        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
-
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, []);
-        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
-
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, null);
-        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
-
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, [], []);
-        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
-
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, [], null);
-        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
-    }
-
     /**
      * Looping manually uses MUCH less memory than dataProvider
      */
