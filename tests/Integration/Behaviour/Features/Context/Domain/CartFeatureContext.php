@@ -101,7 +101,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         Context::getContext()->currency = $currency;
-        SharedStorage::getStorage()->set($currencyIsoCode, $currency);
+        SharedStorage::getStorage()->set($currencyIsoCode, (int) $currency->id);
     }
 
     /**
@@ -137,9 +137,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateCartCurrency(string $cartReference, string $currencyReference)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($currencyReference);
-
+        $currency = $this->getCurrency($currencyReference);
         $cartId = SharedStorage::getStorage()->get($cartReference);
 
         $this->getCommandBus()->handle(
@@ -1137,13 +1135,23 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assignCustomerToCart(string $customerReference, string $cartReference)
     {
-        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
-        $customerId = (int) SharedStorage::getStorage()->get($customerReference);
+        $cartId = (int)SharedStorage::getStorage()->get($cartReference);
+        $customerId = (int)SharedStorage::getStorage()->get($customerReference);
 
         $cart = new Cart($cartId);
         $cart->id_guest = null;
         $cart->id_customer = $customerId;
         $cart->save();
         Context::getContext()->cart = $cart;
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return Currency
+     */
+    private function getCurrency(string $reference): Currency
+    {
+        return new Currency(SharedStorage::getStorage()->get($reference));
     }
 }
