@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
@@ -326,16 +327,14 @@ class ProductController extends FrameworkBundleAdminController
     {
         // @todo: all the constraint error messages are missing for now (see ProductConstraintException)
         return [
-            CannotDeleteProductException::class => [
-                CannotDeleteProductException::FAILED_DELETE => $this->trans(
-                    'An error occurred while deleting the object.',
-                    'Admin.Notifications.Error'
-                ),
-                CannotDeleteProductException::FAILED_BULK_DELETE => $this->trans(
+            CannotDeleteProductException::class => $this->trans(
+                'An error occurred while deleting the object.',
+                'Admin.Notifications.Error'
+            ),
+            CannotBulkDeleteProductException::class => $this->trans(
                     'An error occurred while deleting this selection.',
                     'Admin.Notifications.Error'
-                ),
-            ],
+            ),
             ProductConstraintException::class => [
                 ProductConstraintException::INVALID_PRICE => $this->trans(
                     'Product price is invalid',
