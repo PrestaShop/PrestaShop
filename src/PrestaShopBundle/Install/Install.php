@@ -977,7 +977,6 @@ class Install extends AbstractInstall
             'socialsharing',
             'ps_metrics',
             'ps_facebook',
-            'gamification',
             'ps_account',
             'ps_checkout'
         ];
