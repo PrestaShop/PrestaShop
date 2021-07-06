@@ -437,7 +437,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $data['gift_product_attribute_id'] ?? null
         );
 
-        $currency = SharedStorage::getStorage()->get($data['minimum_amount_currency']);
+        $currencyId = SharedStorage::getStorage()->get($data['minimum_amount_currency']);
 
         $command = new AddCartRuleCommand(
             [$defaultLanguageId => $data['name_in_default_language']],
@@ -451,7 +451,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $data['quantity_per_user'],
             $cartRuleAction,
             $data['minimum_amount'],
-            (int) $currency->id,
+            $currencyId,
             $data['minimum_amount_tax_included'],
             $data['minimum_amount_shipping_included']
         );

@@ -100,7 +100,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         Context::getContext()->currency = $currency;
-        SharedStorage::getStorage()->set($currencyIsoCode, $currency);
+        SharedStorage::getStorage()->set($currencyIsoCode, (int) $currency->id);
     }
 
     /**
@@ -136,9 +136,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateCartCurrency(string $cartReference, string $currencyReference)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($currencyReference);
-
+        $currency = $this->getCurrency($currencyReference);
         $cartId = SharedStorage::getStorage()->get($cartReference);
 
         $this->getCommandBus()->handle(
@@ -1102,5 +1100,15 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         if ($cartTotal !== $expectedTotal) {
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $cartTotal));
         }
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return Currency
+     */
+    private function getCurrency(string $reference): Currency
+    {
+        return new Currency(SharedStorage::getStorage()->get($reference));
     }
 }

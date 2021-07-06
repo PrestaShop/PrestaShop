@@ -52,10 +52,10 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      */
     public function loadSingleShopContext(string $shopReference): void
     {
-        /** @var Shop $shop */
-        $shop = SharedStorage::getStorage()->get($shopReference);
-
-        Shop::setContext(Shop::CONTEXT_SHOP, $shop->id);
+        Shop::setContext(
+            Shop::CONTEXT_SHOP,
+            SharedStorage::getStorage()->get($shopReference)
+        );
     }
 
     /**
@@ -66,9 +66,9 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      */
     public function shopWithNameExists(string $reference, string $shopName): void
     {
-        $shopId = Shop::getIdByName($shopName);
+        (int) $shopId = Shop::getIdByName($shopName);
 
-        if (false === $shopId) {
+        if (!$shopId) {
             throw new RuntimeException(sprintf('Shop with name "%s" does not exist', $shopName));
         }
 
@@ -161,7 +161,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         }
         $shop->setTheme();
 
-        SharedStorage::getStorage()->set($reference, $shop);
+        SharedStorage::getStorage()->set($reference, (int) $shop->id);
     }
 
     /**
@@ -258,9 +258,8 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      */
     public function addShopUrl(string $shopReference): void
     {
-        $shop = SharedStorage::getStorage()->get($shopReference);
         $shopUrl = new ShopUrl();
-        $shopUrl->id_shop = $shop->id;
+        $shopUrl->id_shop = SharedStorage::getStorage()->get($shopReference);
         $shopUrl->active = true;
         $shopUrl->main = true;
         $shopUrl->domain = 'localhost';
