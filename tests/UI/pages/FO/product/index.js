@@ -390,7 +390,7 @@ class Product extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async addProductReview(page, productReviewData) {
-    if (await this.getNumberOfComment(page) !== 0) {
+    if (await this.getNumberOfComments(page) !== 0) {
       await page.click(this.notEmptyReviewAddReviewButton);
     } else {
       await page.click(this.emptyReviewAddReviewButton);
@@ -401,8 +401,7 @@ class Product extends FOBasePage {
     await page.click(this.reviewRating(productReviewData.reviewRating));
     await page.click(this.reviewSubmitButton);
     await page.click(this.closeReviewSentConfirmationModalButton);
-    await page.waitForTimeout(2000);
-    return await this.getAttributeContent(page, this.reviewSentConfirmationModal, 'style') === 'display: none;';
+    return this.elementNotVisible(page, this.reviewSentConfirmationModal, 3000);
   }
 
   /**
@@ -410,7 +409,7 @@ class Product extends FOBasePage {
    * @param page {Page} The browser tab
    * @returns {Promise<number>}
    */
-  getNumberOfComment(page) {
+  getNumberOfComments(page) {
     return this.getNumberFromText(page, this.commentCount);
   }
 

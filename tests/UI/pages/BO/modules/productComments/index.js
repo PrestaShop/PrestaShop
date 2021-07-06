@@ -37,7 +37,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   /* Methods */
 
   /**
-   * Get the review count by table
+   * Get the review count for a table
    * @param page {Page} Browser tab
    * @param table {String} The review table (3 options available: 'waiting-approval', 'reported', 'approved')
    * @returns {Promise<number|*>}
@@ -46,9 +46,35 @@ class ProductComments extends ModuleConfiguration.constructor {
     if (await this.elementVisible(page, this.reviewsTableEmptyRows(table), 3000)) {
       return 0;
     }
-
     const selector = this.reviewsTableRows(table);
     return page.$$eval(selector, rows => rows.length);
+  }
+
+  /**
+   * Get the review count for the 'waiting approval' table
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  getWaitingApprovalReviewCount(page) {
+    return this.getTableReviewCount(page, 'waiting-approval');
+  }
+
+  /**
+   * Get the review count for the 'reported review' table
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  getReportedReviewCount(page) {
+    return this.getTableReviewCount(page, 'reported');
+  }
+
+  /**
+   * Get the review count for the 'approved review' table
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  getApprovedReviewCount(page) {
+    return this.getTableReviewCount(page, 'approved');
   }
 
   /**
@@ -83,14 +109,40 @@ class ProductComments extends ModuleConfiguration.constructor {
   }
 
   /**
+   * Get all the content for a review in 'waiting approval' table
+   * @param page {Page} Browser tab
+   * @returns {Promise<{Object}>}
+   */
+  getReviewDataFromWaitingApprovalTable(page) {
+    return this.getReviewDataFromTable(page, 'waiting-approval');
+  }
+
+  /**
+   * Get all the content for a review in 'reported review' table
+   * @param page {Page} Browser tab
+   * @returns {Promise<{Object}>}
+   */
+  getReviewDataFromReportedReviewTable(page) {
+    return this.getReviewDataFromTable(page, 'reported');
+  }
+
+  /**
+   * Get all the content for a review in 'approved review' table
+   * @param page {Page} Browser tab
+   * @returns {Promise<{Object}>}
+   */
+  getReviewDataFromApprovedReviewTable(page) {
+    return this.getReviewDataFromTable(page, 'approved');
+  }
+
+  /**
   * Approve a review in the "waiting for approval table"
   * @param page {Page} Browser tab
-  * @param table {String} The reviews table (the table is set by default)
   * @param row {Number} The review row
   * @returns {Promise<void>}
   */
-  async approveReview(page, table = 'waiting-approval', row = 1) {
-    await page.click(this.approveWaitingReviewButton(table, row));
+  async approveReview(page, row = 1) {
+    await this.clickAndWaitForNavigation(page, this.approveWaitingReviewButton('waiting-approval', row));
   }
 
   /**
@@ -125,6 +177,16 @@ class ProductComments extends ModuleConfiguration.constructor {
    */
   async deleteReportedReview(page, row = 1) {
     await this.deleteReview(page, 'reported', row);
+  }
+
+  /**
+   * Delete a review in the "approved review" table
+   * @param page {Page} Browser tab
+   * @param row {Number} The review row
+   * @returns {Promise<void>}
+   */
+  async deleteApprovedReview(page, row = 1) {
+    await this.deleteReview(page, 'approved', row);
   }
 
   /**

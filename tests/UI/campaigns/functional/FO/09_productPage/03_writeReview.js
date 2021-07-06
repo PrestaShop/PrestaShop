@@ -57,7 +57,7 @@ Check if the review is visible and if the content is correct
 Go back to BO and delete approved review
 Go to FO and check if review is deleted
  */
-describe('FO write a review', async () => {
+describe('FO - product page : Write a review', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -117,7 +117,7 @@ describe('FO write a review', async () => {
     it('should get and save the actual comment count', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getFoCommentCount', baseContext);
 
-      foCommentCount = await productPage.getNumberOfComment(page);
+      foCommentCount = await productPage.getNumberOfComments(page);
       await expect(foCommentCount).to.be.at.least(0);
     });
 
@@ -137,7 +137,7 @@ describe('FO write a review', async () => {
     });
   });
 
-  describe('Go to BO and go to "product comments" module configuration page', async () => {
+  describe('Go to BO and go to \'product comments\' module configuration page', async () => {
     it('should login in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginToBO', baseContext);
       await loginCommon.loginBO(this, page);
@@ -165,7 +165,7 @@ describe('FO write a review', async () => {
       await expect(isModuleVisible).to.be.true;
     });
 
-    it('should go to "product comments" module configuration page', async function () {
+    it('should go to \'product comments\' module configuration page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleConfigurationPage', baseContext);
 
       await moduleManagerPage.goToConfigurationPage(page, moduleName);
@@ -175,7 +175,7 @@ describe('FO write a review', async () => {
     });
   });
 
-  describe('Check if review is in "waiting for approval" table and approve it', async () => {
+  describe('Check if review is in \'waiting for approval\' table and approve it', async () => {
     it('should get the waiting review count', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getWaitingReviewCount', baseContext);
 
@@ -184,10 +184,10 @@ describe('FO write a review', async () => {
       await expect(waitingApprovalReviewCount).to.be.greaterThan(0);
     });
 
-    it('should check if review is in waiting for approval table', async function () {
+    it('should check if review is in \'waiting for approval\' table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfReviewInWaitingApproval', baseContext);
 
-      const tableData = await productcommentsModulePage.getReviewDataFromTable(page, 'waiting-approval');
+      const tableData = await productcommentsModulePage.getReviewDataFromWaitingApprovalTable(page);
 
       await expect(tableData.title).to.contains(productReviewData.reviewTitle);
       await expect(tableData.content).to.contains(productReviewData.reviewContent);
@@ -208,7 +208,7 @@ describe('FO write a review', async () => {
     it('should check if review is in "approved review" table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfReviewIsApproved', baseContext);
 
-      const approvedReviewData = await productcommentsModulePage.getReviewDataFromTable(page, 'approved');
+      const approvedReviewData = await productcommentsModulePage.getReviewDataFromApprovedReviewTable(page);
 
       await expect(approvedReviewData.title).to.contains(productReviewData.reviewTitle);
       await expect(approvedReviewData.content).to.contains(productReviewData.reviewContent);
@@ -242,7 +242,7 @@ describe('FO write a review', async () => {
     it('should get, check and save the comment count', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getCommentCountAfterApprove', baseContext);
 
-      const actualCommentCount = await productPage.getNumberOfComment(page);
+      const actualCommentCount = await productPage.getNumberOfComments(page);
       await expect(actualCommentCount).to.equal(foCommentCount + 1);
     });
 
@@ -296,7 +296,7 @@ describe('FO write a review', async () => {
       await expect(isModuleVisible).to.be.true;
     });
 
-    it('should go to "product comments" module configuration page', async function () {
+    it('should go to \'product comments\' module configuration page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleConfigPage', baseContext);
 
       await moduleManagerPage.goToConfigurationPage(page, moduleName);
@@ -308,7 +308,7 @@ describe('FO write a review', async () => {
     it('should get the approved review count', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getApprovedReviewCount', baseContext);
 
-      approvedReviewCount = await productcommentsModulePage.getTableReviewCount(page, 'approved');
+      approvedReviewCount = await productcommentsModulePage.getApprovedReviewCount(page);
 
       await expect(approvedReviewCount).to.be.greaterThan(0);
     });
@@ -316,8 +316,8 @@ describe('FO write a review', async () => {
     it('should delete the review in the "approved review" table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteApprovedReview', baseContext);
 
-      await productcommentsModulePage.deleteReview(page, 'approved');
-      const newReviewCount = await productcommentsModulePage.getTableReviewCount(page, 'approved');
+      await productcommentsModulePage.deleteApprovedReview(page);
+      const newReviewCount = await productcommentsModulePage.getApprovedReviewCount(page);
 
       await expect(newReviewCount).to.equal(approvedReviewCount - 1);
     });
@@ -349,7 +349,7 @@ describe('FO write a review', async () => {
     it('should check if review block is empty', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfReviewBlockIsEmpty', baseContext);
 
-      const actualCommentCount = await productPage.getNumberOfComment(page);
+      const actualCommentCount = await productPage.getNumberOfComments(page);
       await expect(actualCommentCount).to.equal(foCommentCount);
     });
   });
