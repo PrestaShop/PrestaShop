@@ -31,7 +31,7 @@ let numberOfAttributes = 0;
 Go to Attributes & Features page
 Filter attributes table by ID, Name and Position
  */
-describe('Filter attributes by id, name and position', async () => {
+describe('BO - Catalog - Attributes & Features : Filter attributes table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
