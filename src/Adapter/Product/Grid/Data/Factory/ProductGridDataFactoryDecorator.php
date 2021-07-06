@@ -29,7 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory;
 
 use Currency;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
@@ -37,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Decorates original grid data and returns modified prices for grid display as well as calculated price with taxes.
@@ -69,6 +75,19 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
     private $productImageProvider;
 
     /**
+     * @var TaxComputer
+     */
+    private $taxComputer;
+    /**
+     * @var \PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository
+     */
+    private $productRepository;
+    /**
+     * @var int
+     */
+    private $countryId;
+
+    /**
      * @param GridDataFactoryInterface $productGridDataFactory
      * @param Repository $localeRepository
      * @param string $contextLocale
@@ -82,7 +101,10 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         string $contextLocale,
         int $defaultCurrencyId,
         ProductDataProvider $productDataProvider,
-        ImageProviderInterface $productImageProvider
+        ImageProviderInterface $productImageProvider,
+        TaxComputer $taxComputer,
+        ProductRepository $productRepository,
+        int $countryId
     ) {
         $this->productGridDataFactory = $productGridDataFactory;
 
@@ -93,6 +115,9 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         $this->defaultCurrencyId = $defaultCurrencyId;
         $this->productDataProvider = $productDataProvider;
         $this->productImageProvider = $productImageProvider;
+        $this->taxComputer = $taxComputer;
+        $this->productRepository = $productRepository;
+        $this->countryId = $countryId;
     }
 
     /**
@@ -123,8 +148,9 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
     private function applyModification(array $products): array
     {
         $currency = new Currency($this->defaultCurrencyId);
-
         foreach ($products as $i => $product) {
+            $productObject = $this->productRepository->get(new ProductId((int) $product['id_product']));
+
             $products[$i]['price_tax_excluded'] = $this->locale->formatPrice(
                 $products[$i]['price_tax_excluded'],
                 $currency->iso_code
@@ -132,7 +158,11 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
 
             /* @todo Should be replaced by another more recent service */
             $products[$i]['price_tax_included'] = $this->locale->formatPrice(
-                $this->productDataProvider->getPriceWithTax((int) $product['id_product']),
+                $this->taxComputer->computePriceWithTaxes(
+                    new DecimalNumber($product['price_tax_excluded']),
+                    new TaxRulesGroupId((int) $productObject->getIdTaxRulesGroup()),
+                    new CountryId($this->countryId)
+                ),
                 $currency->iso_code
             );
 
