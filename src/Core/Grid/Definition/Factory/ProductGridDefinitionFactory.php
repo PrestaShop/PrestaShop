@@ -123,7 +123,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Name', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'name',
-                        'route' => 'admin_product_form',
+                        'route' => 'admin_products_v2_edit',
                         'route_param_name' => 'id',
                         'route_param_field' => 'id_product',
                     ])
@@ -147,7 +147,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'price_tax_excluded',
-                        'route' => 'admin_product_form',
+                        'route' => 'admin_products_v2_edit',
                         'route_param_name' => 'id',
                         'route_param_field' => 'id_product',
                         'fragment' => 'tab-pricing-tab',
@@ -183,7 +183,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')
                     ->setOptions([
-                        'route' => 'admin_product_form',
+                        'route' => 'admin_products_v2_edit',
                         'route_param_name' => 'id',
                         'route_param_field' => 'id_product',
                     ])
@@ -212,7 +212,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Quantity', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'quantity',
-                        'route' => 'admin_product_form',
+                        'route' => 'admin_products_v2_edit',
                         'route_param_name' => 'id',
                         'route_param_field' => 'id_product',
                         'fragment' => 'tab-stock-tab',
