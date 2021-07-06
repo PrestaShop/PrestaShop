@@ -27,7 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Module as LegacyModule;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -46,10 +48,16 @@ class ModuleDataUpdater
      */
     private $adminModuleDataProvider;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(AddonsInterface $addonsDataProvider, AdminModuleDataProvider $adminModuleDataProvider)
     {
         $this->addonsDataProvider = $addonsDataProvider;
         $this->adminModuleDataProvider = $adminModuleDataProvider;
+        $this->logger = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\LegacyLogger');
     }
 
     /**
@@ -61,6 +69,7 @@ class ModuleDataUpdater
     {
         // Note : Data caching should be handled by the addons data provider
         // Check if the module can be downloaded from addons
+        $this->logger->info('Get module from addons ' . $name);
         foreach ($this->adminModuleDataProvider->getCatalogModules(['name' => $name]) as $catalog_module) {
             if ($catalog_module->name == $name && in_array($catalog_module->origin, ['native', 'native_all', 'must-have', 'customer'])) {
                 return $this->addonsDataProvider->downloadModule($catalog_module->id);

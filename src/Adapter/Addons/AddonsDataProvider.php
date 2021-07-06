@@ -29,8 +29,10 @@ namespace PrestaShop\PrestaShop\Adapter\Addons;
 use Exception;
 use PhpEncryption;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -61,6 +63,11 @@ class AddonsDataProvider implements AddonsInterface
     private $encryption;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var string the cache directory location
      */
     public $cacheDir;
@@ -70,6 +77,7 @@ class AddonsDataProvider implements AddonsInterface
         $this->marketplaceClient = $apiClient;
         $this->zipManager = $zipManager;
         $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
+        $this->logger = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\LegacyLogger');
     }
 
     /**
@@ -81,6 +89,7 @@ class AddonsDataProvider implements AddonsInterface
      */
     public function downloadModule($module_id)
     {
+        $this->logger->info('Addons provider download module ' . $module_id);
         $params = [
             'id_module' => $module_id,
             'format' => 'json',
