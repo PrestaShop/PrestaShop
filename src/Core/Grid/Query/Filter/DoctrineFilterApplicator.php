@@ -88,7 +88,7 @@ final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterfac
                     break;
                 case SqlFilters::MIN_MAX:
                     $minFieldSqlCondition = sprintf('%s >= :%s_min', $sqlField, $filterName);
-                    $maxFieldSqlCondition = sprintf('%s >= :%s_max', $sqlField, $filterName);
+                    $maxFieldSqlCondition = sprintf('%s <= :%s_max', $sqlField, $filterName);
 
                     switch ($this->computeMinMaxCase($value)) {
                         case self::CASE_BOTH_FIELDS_EXIST:
