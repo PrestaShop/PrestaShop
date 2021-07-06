@@ -59,7 +59,7 @@ describe('Enable partner offer', async () => {
 
   tests.forEach((test, index) => {
     it(`should ${test.args.action} partner offer`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}PartnerOffer`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `partnerOffer${index}`, baseContext);
 
       const result = await customerSettingsPage.setOptionStatus(
         page,

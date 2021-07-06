@@ -101,7 +101,7 @@ describe('Enable/Disable force update friendly URL', async () => {
     it(`should ${test.args.action} force update friendly URL`, async function () {
       await testContext.addContextItem(this,
         'testIdentifier',
-        `${test.args.action}ForceUpdateFriendlyURL`,
+        `forceUpdateFriendlyURL${index}`,
         baseContext,
       );
 
