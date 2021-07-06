@@ -194,8 +194,8 @@ class Install extends CommonPage {
       this.waitForVisibleSelector(page, this.installModulesStep, 360000),
       this.waitForVisibleSelector(page, this.installModulesAddons, 720000),
       this.waitForVisibleSelector(page, this.installThemeStep, 720000),
-      this.waitForVisibleSelector(page, this.installFixturesStep, 360000),
-      this.waitForVisibleSelector(page, this.installationFinishedStepPageTitle, 360000),
+      this.waitForVisibleSelector(page, this.installFixturesStep, 720000),
+      this.waitForVisibleSelector(page, this.installationFinishedStepPageTitle, 720000),
     ]);
 
     return true;
