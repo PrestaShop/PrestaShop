@@ -115,7 +115,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param OrderAmountUpdater $orderAmountUpdater
      * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
      * @param OrderDetailUpdater $orderDetailUpdater
-     * @param ConfigurationInterface $configuration
+     * @param ConfigurationInterface|null $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -123,7 +123,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         OrderAmountUpdater $orderAmountUpdater,
         OrderProductQuantityUpdater $orderProductQuantityUpdater,
         OrderDetailUpdater $orderDetailUpdater,
-        ConfigurationInterface $configuration
+        ?ConfigurationInterface $configuration = null
     ) {
         $this->context = Context::getContext();
         $this->translator = $translator;
@@ -445,11 +445,15 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         // Create Cart rule in order to make free shipping
         if ($isFreeShipping) {
+            $lang = (null !== $this->configuration)
+                ? $this->configuration->get('PS_LANG_DEFAULT')
+                : Configuration::get('PS_LANG_DEFAULT');
+
             // @todo: use private method to create cart rule
             $freeShippingCartRule = new CartRule();
             $freeShippingCartRule->id_customer = $order->id_customer;
             $freeShippingCartRule->name = [
-                $this->configuration->get('PS_LANG_DEFAULT') => $this->translator->trans(
+                $lang => $this->translator->trans(
                     '[Generated] CartRule for Free Shipping',
                     [],
                     'Admin.Orderscustomers.Notification'
@@ -474,7 +478,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             $order->addCartRule(
                 $freeShippingCartRule->id,
-                $freeShippingCartRule->name[$this->configuration->get('PS_LANG_DEFAULT')],
+                $freeShippingCartRule->name[$lang],
                 $values
             );
         }
@@ -613,7 +617,10 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         // If we are targeting a specific invoice check that the ID has not been found in the OrderDetail list
         if (!empty($command->getOrderInvoiceId()) && in_array((int) $command->getOrderInvoiceId(), $invoicesContainingProduct)) {
             $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
-            $invoiceNumber = $orderInvoice->getInvoiceNumberFormatted((int) $this->configuration->get('PS_LANG_DEFAULT'), $order->id_shop);
+            $lang = (null !== $this->configuration)
+                ? $this->configuration->get('PS_LANG_DEFAULT')
+                : Configuration::get('PS_LANG_DEFAULT');
+            $invoiceNumber = $orderInvoice->getInvoiceNumberFormatted((int) $lang, $order->id_shop);
             throw new DuplicateProductInOrderInvoiceException($invoiceNumber, 'You cannot add this product in this invoice as it is already present');
         }
     }
@@ -628,7 +635,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private function shouldQuantityDiscountsBeApplied(AddProductToOrderCommand $command): bool
     {
         // PS_QTY_DISCOUNT_ON_COMBINATION === 1 means quantity discount is based on Combinations, otherwise it's based on Products
-        $qtyDiscountOnProducts = (1 !== (int) $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION'));
+        $qtyDiscountOnProducts = (null !== $this->configuration)
+            ? (int) $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION')
+            : 1;
 
         /*
          * The rule is :
@@ -636,6 +645,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
          * and the item added to the order is a combination
          * we don't apply the specific prices based on the quantity
          */
-        return !($qtyDiscountOnProducts && (null !== $command->getCombinationId()));
+        return !((1 !== $qtyDiscountOnProducts) && (null !== $command->getCombinationId()));
     }
 }
