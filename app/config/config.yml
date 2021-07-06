@@ -99,7 +99,7 @@ csa_guzzle:
             config: # you can specify the options as in http://docs.guzzlephp.org/en/latest/quickstart.html#creating-a-client
                 base_url: "https://api-addons.prestashop.com"
                 defaults:
-                    timeout: "5.0"
+                    timeout: "30"
                 headers:
                     Accept: "application/json"
 
