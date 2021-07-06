@@ -177,7 +177,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of empty categori
   // 3 : Pagination
   describe('Pagination next and previous', async () => {
     it('should change the items number to 10 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
       const paginationNumber = await monitoringPage.selectPaginationLimit(page, tableName, '10');
       expect(paginationNumber).to.contains('(page 1 / 2)');
@@ -198,7 +198,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of empty categori
     });
 
     it('should change the items number to 20 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await monitoringPage.selectPaginationLimit(page, tableName, '20');
       expect(paginationNumber).to.contains('(page 1 / 1)');
@@ -209,7 +209,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of empty categori
   describe('Delete the created categories from monitoring page', async () => {
     const deletionTests = new Array(11).fill(0, 0, 11);
     deletionTests.forEach((test, index) => {
-      it(`should filter list of empty categories by Name 'todelete${index}'`, async function () {
+      it('should filter list of empty categories', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
 
         await monitoringPage.filterTable(page, tableName, 'input', 'name', `todelete${index + 1}`);

@@ -177,7 +177,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
   // 3 : Pagination
   describe('Pagination next and previous', async () => {
     it('should change the items number to 10 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
       const paginationNumber = await monitoringPage.selectPaginationLimit(page, tableName, '10');
       expect(paginationNumber).to.contains('(page 1 / 2)');
@@ -198,7 +198,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
     });
 
     it('should change the items number to 20 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await monitoringPage.selectPaginationLimit(page, tableName, '20');
       expect(paginationNumber).to.contains('(page 1 / 1)');
