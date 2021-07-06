@@ -163,34 +163,4 @@ class ProductDataProvider
             'base_image_url' => _THEME_PROD_DIR_ . $imageData->getImgPath(),
         ];
     }
-
-    /**
-     * @todo Should be replaced by another more recent service
-     *
-     * Gets price with tax.
-     *
-     * @param int $productId
-     *
-     * @return float
-     */
-    public function getPriceWithTax(int $productId): float
-    {
-        return Product::getPriceStatic(
-            $productId,
-            true,
-            null,
-            (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
-            null,
-            false,
-            true,
-            1,
-            true,
-            null,
-            null,
-            null,
-            $nothing,
-            true,
-            true
-        );
-    }
 }
