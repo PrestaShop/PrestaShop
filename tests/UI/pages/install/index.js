@@ -192,9 +192,11 @@ class Install extends CommonPage {
       this.waitForVisibleSelector(page, this.populateDatabaseStep, 180000),
       this.waitForVisibleSelector(page, this.configureShopStep, 240000),
       this.waitForVisibleSelector(page, this.installModulesStep, 360000),
-      this.waitForVisibleSelector(page, this.installModulesAddons, 720000),
-      this.waitForVisibleSelector(page, this.installThemeStep, 360000),
-      this.waitForVisibleSelector(page, this.installFixturesStep, 360000),
+      this.waitForVisibleSelector(page, this.installModulesAddons, 360000),
+      // This one is to give more time to install addons modules
+      this.waitForVisibleSelector(page, this.installThemeStep, 720000),
+      // This one is longer to give more time to install theme and its dependencies
+      this.waitForVisibleSelector(page, this.installFixturesStep, 720000),
       this.waitForVisibleSelector(page, this.installationFinishedStepPageTitle, 360000),
     ]);
 
