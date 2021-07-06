@@ -1,10 +1,14 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -16,11 +20,7 @@ const brandsPage = require('@pages/BO/catalog/brands');
 const suppliersPage = require('@pages/BO/catalog/suppliers');
 const addSupplierPage = require('@pages/BO/catalog/suppliers/add');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_suppliers_paginationAndSortSuppliers';
-
 
 let browserContext;
 let page;
@@ -32,7 +32,7 @@ Paginate between pages
 Sort suppliers table
 Delete suppliers with bulk actions
  */
-describe('Pagination and sort suppliers', async () => {
+describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -48,7 +48,7 @@ describe('Pagination and sort suppliers', async () => {
   });
 
   // Go to brands page
-  it('should go to brands page', async function () {
+  it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -63,7 +63,7 @@ describe('Pagination and sort suppliers', async () => {
   });
 
   // Go to suppliers page
-  it('should go to suppliers page and get number of suppliers', async function () {
+  it('should go to Suppliers page and get number of suppliers', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSuppliersPage', baseContext);
 
     await brandsPage.goToSubTabSuppliers(page);
@@ -73,11 +73,10 @@ describe('Pagination and sort suppliers', async () => {
   });
 
   // 1 : Create 11 new suppliers
-  const creationTests = new Array(11).fill(0, 0, 11);
-  creationTests.forEach((test, index) => {
-    describe(`Create supplier n°${index + 1} in BO`, async () => {
+  describe('Create 11 suppliers in BO', async () => {
+    const creationTests = new Array(11).fill(0, 0, 11);
+    creationTests.forEach((test, index) => {
       const createSupplierData = new SupplierFaker({name: `todelete${index}`});
-
       before(() => files.generateImage(createSupplierData.logo));
 
       it('should go to add new supplier page', async function () {
@@ -88,7 +87,7 @@ describe('Pagination and sort suppliers', async () => {
         await expect(pageTitle).to.contains(addSupplierPage.pageTitle);
       });
 
-      it('should create supplier and check result', async function () {
+      it(`should create supplier  n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createSupplier${index}`, baseContext);
 
         const result = await addSupplierPage.createEditSupplier(page, createSupplierData);
@@ -104,8 +103,8 @@ describe('Pagination and sort suppliers', async () => {
 
   // 2 : Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 10 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+    it('should change the items number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
       const paginationNumber = await suppliersPage.selectPaginationLimit(page, '10');
       expect(paginationNumber).to.contains('(page 1 / 2)');
@@ -125,8 +124,8 @@ describe('Pagination and sort suppliers', async () => {
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
-    it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+    it('should change the items number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await suppliersPage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.contains('(page 1 / 1)');
@@ -198,7 +197,7 @@ describe('Pagination and sort suppliers', async () => {
       await expect(textColumn).to.contains('todelete');
     });
 
-    it('should delete suppliers with Bulk Actions and check Result', async function () {
+    it('should delete suppliers with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
 
       const deleteTextResult = await suppliersPage.deleteWithBulkActions(page);
