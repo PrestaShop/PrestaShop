@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Install;
 
 use AppKernel;
+use FileLogger;
 use InstallSession;
 use Language as LanguageLegacy;
 use PhpEncryption;
@@ -40,7 +41,6 @@ use PrestaShop\PrestaShop\Adapter\Entity\Country;
 use PrestaShop\PrestaShop\Adapter\Entity\Currency;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\Employee;
-use PrestaShop\PrestaShop\Adapter\Entity\FileLogger;
 use PrestaShop\PrestaShop\Adapter\Entity\Group;
 use PrestaShop\PrestaShop\Adapter\Entity\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Entity\ImageType;
@@ -59,6 +59,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
 use PrestashopInstallerException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;
 
 class Install extends AbstractInstall
@@ -99,16 +100,6 @@ class Install extends AbstractInstall
 
     public function setError($errors)
     {
-        static $logger = null;
-
-        if (null === $logger) {
-            $logger = new FileLogger();
-            $logger->setFilename(
-                _PS_ROOT_DIR_ . '/var/logs/' . _PS_ENV_ . '_' . @date('Ymd') . '_installation.log'
-            );
-            $this->logger = $logger;
-        }
-
         if (!is_array($errors)) {
             $errors = [$errors];
         }
@@ -116,7 +107,7 @@ class Install extends AbstractInstall
         parent::setError($errors);
 
         foreach ($errors as $error) {
-            $this->logger->logError($error);
+            $this->getLogger()->logError($error);
         }
     }
 
@@ -1003,14 +994,14 @@ class Install extends AbstractInstall
         $modules = [];
 
         foreach ($addons_modules as $addons_module) {
-            $this->logger->logInfo('Download module archive for install ' . $addons_module['name']);
+            $this->getLogger()->logInfo('Download module archive for install ' . $addons_module['name']);
             $moduleArchiveContent = Tools::addonsRequest('module', ['id_module' => $addons_module['id_module']]);
             if (empty($moduleArchiveContent)) {
                 continue;
             }
 
             if (file_put_contents(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip', $moduleArchiveContent)) {
-                $this->logger->logInfo('Extract module archive for install ' . $addons_module['name']);
+                $this->getLogger()->logInfo('Extract module archive for install ' . $addons_module['name']);
                 if (Tools::ZipExtract(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip', _PS_MODULE_DIR_)) {
                     $modules[] = (string) $addons_module['name']; //if the module has been unziped we add the name in the modules list to install
                     unlink(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip');
@@ -1177,5 +1168,17 @@ class Install extends AbstractInstall
         }
 
         return true;
+    }
+
+    protected function getLogger(): FileLogger
+    {
+        if (null === $this->logger) {
+            $this->logger = new FileLogger();
+            $this->logger->setFilename(
+                _PS_ROOT_DIR_ . '/var/logs/' . _PS_ENV_ . '_' . @date('Ymd') . '_installation.log'
+            );
+        }
+
+        return $this->logger;
     }
 }
