@@ -93,13 +93,13 @@ class LogsConfiguration implements DataConfigurationInterface
                     $errors[] = $this->translator->trans(
                         'Invalid emails: %invalid_emails%.',
                         ['%invalid_emails%' => implode(',', $invalidEmails)],
-                        'Notifications.Error'
+                        'Admin.Notifications.Error'
                     );
                 } else {
                     $errors[] = $this->translator->trans(
                         'Invalid email: %invalid_email%.',
                         ['%invalid_email%' => implode(',', $invalidEmails)],
-                        'Notifications.Error'
+                        'Admin.Notifications.Error'
                     );
                 }
             }
