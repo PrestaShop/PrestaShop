@@ -97,7 +97,7 @@ class MultipleEmailsWithSeparatorValidator extends ConstraintValidator
         return $this->translator->trans(
             'Invalid email : %invalid_email%.',
             ['%invalid_email%' => implode(',', $invalidEmails)],
-            'Admin.Global.Notification'
+            'Admin.Notifications.Error'
         );
     }
 }
