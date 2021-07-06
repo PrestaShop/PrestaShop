@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use Configuration;
 use Context;
 use Image;
 use Product;

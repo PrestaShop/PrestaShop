@@ -142,13 +142,6 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filterValues): QueryBuilder
     {
-        $availableFilters = [
-            'name',
-            'reference',
-            'category',
-            'active',
-        ];
-
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'product', 'p')
