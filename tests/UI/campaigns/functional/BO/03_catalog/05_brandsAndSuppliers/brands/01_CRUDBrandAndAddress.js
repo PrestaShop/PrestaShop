@@ -1,10 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -38,7 +41,7 @@ const createBrandAddressData = new BrandAddressFaker({brandName: createBrandData
 const editBrandAddressData = new BrandAddressFaker({brandName: editBrandData.name});
 
 // CRUD Brand And Address
-describe('Create, Update and Delete Brand and Address', async () => {
+describe('BO - Catalog - Brands and suppliers : CRUD Brand and Address', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
