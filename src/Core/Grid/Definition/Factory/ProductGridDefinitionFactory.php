@@ -159,7 +159,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'field' => 'price_tax_included',
                         'sortable' => false,
-                        'route' => 'admin_product_form',
+                        'route' => 'admin_products_v2_edit',
                         'route_param_name' => 'id',
                         'route_param_field' => 'id_product',
                         'fragment' => 'tab-step2',

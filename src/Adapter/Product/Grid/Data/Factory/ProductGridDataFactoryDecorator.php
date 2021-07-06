@@ -156,7 +156,6 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
                 $currency->iso_code
             );
 
-            /* @todo Should be replaced by another more recent service */
             $products[$i]['price_tax_included'] = $this->locale->formatPrice(
                 $this->taxComputer->computePriceWithTaxes(
                     new DecimalNumber($product['price_tax_excluded']),
