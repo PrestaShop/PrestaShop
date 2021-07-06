@@ -99,7 +99,7 @@ Feature: Remove attribute combinations for product in Back Office (BO)
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product product1 default combination should be "product1SWhite"
-    When I delete following combinations:
+    When I delete following combinations of product product1:
       | id reference   |
       | product1SWhite |
       | product1SBlack |
@@ -110,7 +110,7 @@ Feature: Remove attribute combinations for product in Back Office (BO)
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product product1 default combination should be "product1MWhite"
-    When I delete following combinations:
+    When I delete following combinations of product product1:
       | id reference   |
       | product1MWhite |
       | product1MBlue  |
