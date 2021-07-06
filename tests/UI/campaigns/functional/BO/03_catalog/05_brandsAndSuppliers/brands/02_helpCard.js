@@ -21,7 +21,7 @@ const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_helperCard'
 let browserContext;
 let page;
 
-describe('BO - Catalog - Brands and suppliers : Help card on brands page', async () => {
+describe('BO - Catalog - Brands & suppliers : Help card on brands page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

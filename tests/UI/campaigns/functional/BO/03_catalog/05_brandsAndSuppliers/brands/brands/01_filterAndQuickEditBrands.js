@@ -1,9 +1,12 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -23,8 +26,8 @@ let page;
 let numberOfBrands = 0;
 const tableName = 'manufacturer';
 
-// Filter And Quick Edit brands
-describe('Filter and Quick Edit Brands', async () => {
+// Filter and quick edit brands
+describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

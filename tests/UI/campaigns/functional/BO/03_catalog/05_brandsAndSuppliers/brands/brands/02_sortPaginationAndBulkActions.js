@@ -1,20 +1,23 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
-const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
-const files = require('@utils/files');
 
-// Importing pages
+// Import utils
+const helper = require('@utils/helpers');
+const files = require('@utils/files');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
+
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const brandsPage = require('@pages/BO/catalog/brands');
 const addBrandPage = require('@pages/BO/catalog/brands/add');
 
-// Importing data
+// Import data
 const BrandFaker = require('@data/faker/brand');
-
-// Test context imports
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_brands_sortPaginationAndBulkActions';
 
@@ -29,7 +32,7 @@ Paginate between pages
 Sort brands table
 Enable/Disable/Delete brands with bulk actions
  */
-describe('Sort, Pagination and Bulk Actions Brands table', async () => {
+describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions Brands table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -97,8 +100,8 @@ describe('Sort, Pagination and Bulk Actions Brands table', async () => {
 
   // 2 : Pagination of brands table
   describe('Pagination next and previous of Brands table', async () => {
-    it('should change the item number to 10 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'brandsChangeItemNumberTo10', baseContext);
+    it('should change the items number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'brandsChangeItemsNumberTo10', baseContext);
 
       const paginationNumber = await brandsPage.selectPaginationLimit(page, tableName, '10');
       expect(paginationNumber).to.contains('(page 1 / 2)');
@@ -118,8 +121,8 @@ describe('Sort, Pagination and Bulk Actions Brands table', async () => {
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
-    it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'brandsChangeItemNumberTo50', baseContext);
+    it('should change the items number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'brandsChangeItemsNumberTo50', baseContext);
 
       const paginationNumber = await brandsPage.selectPaginationLimit(page, tableName, '50');
       expect(paginationNumber).to.contains('(page 1 / 1)');
@@ -222,7 +225,7 @@ describe('Sort, Pagination and Bulk Actions Brands table', async () => {
       await expect(textColumn).to.contains('todelete');
     });
 
-    it('should delete with Bulk Actions and check Result', async function () {
+    it('should delete with bulk actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteBrands', baseContext);
 
       const deleteTextResult = await brandsPage.deleteWithBulkActions(page, tableName);
