@@ -23,16 +23,14 @@ const baseContext = 'functional_BO_shopParameters_catalog_attributesAndFeatures_
 // Import expect from chai
 const {expect} = require('chai');
 
-
 // Browser and tab
 let browserContext;
 let page;
 
-
 let numberOfFeaturesValues = 0;
 
-
-describe('Filter feature values by id and name', async () => {
+// Filter feature values by id and name
+describe('BO - Catalog - Attributes & Features : Filter feature values table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -47,7 +45,7 @@ describe('Filter feature values by id and name', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to attributes page', async function () {
+  it('should go to \'Catalog > Attributes & Features\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -62,7 +60,7 @@ describe('Filter feature values by id and name', async () => {
     await expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
-  it('should go to features page', async function () {
+  it('should go to Features page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFeaturesPage', baseContext);
 
     await attributesPage.goToFeaturesPage(page);
@@ -74,18 +72,9 @@ describe('Filter feature values by id and name', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterFeatures', baseContext);
 
     await featuresPage.resetFilter(page);
-    await featuresPage.filterTable(
-      page,
-      'b!name',
-      Features.composition.name,
-    );
+    await featuresPage.filterTable(page, 'b!name', Features.composition.name);
 
-    const textColumn = await featuresPage.getTextColumn(
-      page,
-      1,
-      'b!name',
-    );
-
+    const textColumn = await featuresPage.getTextColumn(page, 1, 'b!name');
     await expect(textColumn).to.contains(Features.composition.name);
   });
 
@@ -138,12 +127,7 @@ describe('Filter feature values by id and name', async () => {
         const numberOfFeaturesValuesAfterFilter = await viewFeaturePage.getNumberOfElementInGrid(page);
         await expect(numberOfFeaturesValuesAfterFilter).to.be.at.most(numberOfFeaturesValues);
 
-        const textColumn = await viewFeaturePage.getTextColumn(
-          page,
-          1,
-          test.args.filterBy,
-        );
-
+        const textColumn = await viewFeaturePage.getTextColumn(page, 1, test.args.filterBy);
         await expect(textColumn).to.contains(test.args.filterValue);
       });
 
