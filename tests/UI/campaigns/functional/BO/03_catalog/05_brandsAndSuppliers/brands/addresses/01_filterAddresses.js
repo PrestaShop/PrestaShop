@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -13,9 +17,6 @@ const {demoAddresses} = require('@data/demo/brands');
 const dashboardPage = require('@pages/BO/dashboard');
 const brandsPage = require('@pages/BO/catalog/brands');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_addresses_filterAddresses';
 
 let browserContext;
@@ -23,8 +24,8 @@ let page;
 let numberOfAddresses = 0;
 const tableName = 'manufacturer_address';
 
-// Filter And Quick Edit Addresses
-describe('Filter and Quick Edit Addresses', async () => {
+// Filter and quick edit Addresses
+describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
