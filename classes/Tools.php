@@ -3856,7 +3856,7 @@ exit;
         $post_data = http_build_query($post_query_data);
 
         $end_point = 'api.addons.prestashop.com';
-
+        $timeout = 5;
         switch ($request) {
             case 'native':
                 $post_data .= '&method=listing&action=native';
@@ -3905,6 +3905,7 @@ exit;
                 if (isset($params['username_addons'], $params['password_addons'])) {
                     $post_data .= '&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
                 }
+                $timeout = 20;
 
                 break;
             case 'hosted_module':
@@ -3912,6 +3913,7 @@ exit;
                     . '&password=' . urlencode($params['password_addons'])
                     . '&shop_url=' . urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
                     . '&mail=' . urlencode(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
+                $timeout = 20;
 
                 break;
             case 'install-modules':
@@ -3928,11 +3930,11 @@ exit;
                 'method' => 'POST',
                 'content' => $post_data,
                 'header' => 'Content-type: application/x-www-form-urlencoded',
-                'timeout' => 5,
+                'timeout' => $timeout,
             ],
         ]);
 
-        if ($content = Tools::file_get_contents('https://' . $end_point, false, $context)) {
+        if ($content = Tools::file_get_contents('https://' . $end_point, false, $context, $timeout)) {
             return $content;
         }
 
