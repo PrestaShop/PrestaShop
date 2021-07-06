@@ -83,6 +83,9 @@ services:
             - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
             - '@prestashop.adapter.data_provider.product'
             - '@prestashop.adapter.product.image_thumbnail_provider'
+            - '@prestashop.adapter.tax.tax_computer'
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
 
     prestashop.adapter.product.command_handler.get_product_for_editing_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler
