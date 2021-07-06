@@ -26,11 +26,13 @@
 
 namespace PrestaShopBundle\Service\DataProvider\Marketplace;
 
-use Tools;
 use GuzzleHttp\Client;
+use Tools;
 
 class ApiClient
 {
+    public const DEFAULT_ADDONS_TIMEOUT = 10;
+
     private $addonsApiClient;
     private $queryParameters = [
         'format' => 'json',
@@ -58,7 +60,10 @@ class ApiClient
         $this->setIsoLang($isoLang)
             ->setIsoCode($isoCode)
             ->setVersion($shopVersion)
-            ->setShopUrl($domain);
+            ->setShopUrl($domain)
+            ->setConnectionTimeout(Tools::DEFAULT_CONNECTION_TIMEOUT)
+            ->setTimeout(static::DEFAULT_ADDONS_TIMEOUT)
+        ;
         $this->defaultQueryParameters = $this->queryParameters;
     }
 
@@ -199,7 +204,6 @@ class ApiClient
     {
         return $this->setMethod('module')
             ->setModuleId($moduleId)
-            ->setConnectionTimeout(Tools::DEFAULT_CONNECTION_TIMEOUT)
             ->setTimeout(Tools::MODULE_DOWNLOAD_TIMEOUT)
             ->getPostResponse();
     }

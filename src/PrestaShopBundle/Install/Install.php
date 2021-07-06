@@ -59,7 +59,6 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
 use PrestashopInstallerException;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;
 
 class Install extends AbstractInstall
