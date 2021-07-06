@@ -50,8 +50,6 @@ class RepositoryTest extends KernelTestCase
      */
     protected $localeRepository;
 
-    protected static $hasData = false;
-
     protected function setUp()
     {
         parent::setUp();
@@ -61,45 +59,6 @@ class RepositoryTest extends KernelTestCase
         // Global var for SymfonyContainer
         global $kernel;
         $kernel = self::$kernel;
-
-        if (!self::$hasData) {
-            // Clear Cache
-            /** @var FilesystemAdapter $cacheAdapter */
-            $cacheAdapter = self::$kernel->getContainer()->get(self::SERVICE_CLDR_CACHE_ADAPTER);
-            $cacheAdapter->clear();
-            // Install Tested Language Packs
-            $countries = [
-                'us',
-                'jp',
-                'gb',
-                'de',
-                'fr',
-                'in',
-                'es',
-                'ca',
-                'cn',
-                'au',
-                'br',
-                'mx',
-                'ru',
-                'it',
-                'pl',
-                'bg',
-                'az',
-            ];
-            $cacheDir = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR;
-
-            foreach ($countries as $country) {
-                $localizationWarmer = new LocalizationWarmer(_PS_VERSION_, $country);
-                $xmlContent = $localizationWarmer->warmUp($cacheDir);
-
-                $localizationPack = new LocalizationPack();
-                $localizationPack->loadLocalisationPack($xmlContent, [], true);
-                $localizationPack->loadLocalisationPack($xmlContent, ['languages'], true);
-            }
-
-            self::$hasData = true;
-        }
 
         $this->localeRepository = self::$kernel->getContainer()->get(self::SERVICE_LOCALE_REPOSITORY);
     }
@@ -119,12 +78,31 @@ class RepositoryTest extends KernelTestCase
      */
     public function testItShouldFormatNumbers(string $localeCode, float $rawNumber, string $formattedNumber): void
     {
+        $this->setupLocalisationPack($localeCode);
+
         $locale = $this->localeRepository->getLocale($localeCode);
 
         $this->assertSame(
             $formattedNumber,
             $locale->formatNumber($rawNumber)
         );
+    }
+
+    private function setupLocalisationPack(string $localeCode): void
+    {
+        // Clear Cache
+        /** @var FilesystemAdapter $cacheAdapter */
+        $cacheAdapter = self::$kernel->getContainer()->get(self::SERVICE_CLDR_CACHE_ADAPTER);
+        $cacheAdapter->clear();
+
+        $cacheDir = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR;
+
+        $localizationWarmer = new LocalizationWarmer(_PS_VERSION_, strtolower(substr($localeCode, 3, 2)));
+        $xmlContent = $localizationWarmer->warmUp($cacheDir);
+
+        $localizationPack = new LocalizationPack();
+        $localizationPack->loadLocalisationPack($xmlContent, [], true);
+        $localizationPack->loadLocalisationPack($xmlContent, ['languages'], true);
     }
 
     public function provideLocalizedNumbers(): array
