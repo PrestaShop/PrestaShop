@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Deletes multiple combinations
@@ -35,17 +36,33 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 class BulkDeleteCombinationCommand
 {
     /**
+     * @var ProductId
+     */
+    private $productId;
+
+    /**
      * @var CombinationId[]
      */
     private $combinationIds;
 
     /**
+     * @param int $productId
      * @param int[] $combinationIds
      */
     public function __construct(
+        int $productId,
         array $combinationIds
     ) {
+        $this->productId = new ProductId($productId);
         $this->setCombinationIds($combinationIds);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
     }
 
     /**
