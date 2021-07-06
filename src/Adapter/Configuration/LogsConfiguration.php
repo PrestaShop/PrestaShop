@@ -88,13 +88,22 @@ class LogsConfiguration implements DataConfigurationInterface
 
             if (!empty($invalidEmails)) {
                 $nbInvalidEmails = count($invalidEmails);
-                $errors[] = $this->translator->transChoice(
-                    '{1}Invalid email: %invalid_emails%.|Invalid emails: %invalid_emails%.',
-                    $nbInvalidEmails,
-                    ['%invalid_emails%' => implode(',', $invalidEmails)],
-                    'Admin.Notifications.Error'
-                );
+
+                if ($nbInvalidEmails > 1) {
+                    $errors[] = $this->translator->trans(
+                        'Invalid emails: %invalid_emails%.',
+                        ['%invalid_emails%' => implode(',', $invalidEmails)],
+                        'Notifications.Error'
+                    );
+                } else {
+                    $errors[] = $this->translator->trans(
+                        'Invalid email: %invalid_email%.',
+                        ['%invalid_email%' => implode(',', $invalidEmails)],
+                        'Notifications.Error'
+                    );
+                }
             }
+
             if ($errors) {
                 return $errors;
             }
