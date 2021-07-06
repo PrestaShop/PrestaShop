@@ -37,9 +37,9 @@ class DeleteCombinationCommand
      */
     private $combinationId;
 
-    // @todo: refactor. This command should accept product Id as our usecase is to delete product combination.
-    //    This way in CombinationDeleter->deleteCombination we will not need to fetch combination each time to check related product
-    //    and will be able to update default attribute after the whole process (will be more efficient in bulk deletions)
+    /**
+     * @param int $combinationId
+     */
     public function __construct(int $combinationId)
     {
         $this->combinationId = new CombinationId($combinationId);
