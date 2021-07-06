@@ -975,6 +975,11 @@ class Install extends AbstractInstall
             'producttooltip',
             'sendtoafriend',
             'socialsharing',
+            'ps_metrics',
+            'ps_facebook',
+            'gamification',
+            'ps_account',
+            'ps_checkout'
         ];
 
         $addons_modules = [];
