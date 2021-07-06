@@ -11,7 +11,7 @@
   ); // transition when collapsing the nav menu
 
   .mobile & {
-    top: $size-header-height + ($header-mobile-padding-y * 2);
+    top: $size-header-height + ($header-mobile-padding-y / 2);
   }
 
   @include media-breakpoint-down(md) {
