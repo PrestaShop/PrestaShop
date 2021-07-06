@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Service\DataProvider\Marketplace;
 
+use Tools;
 use GuzzleHttp\Client;
 
 class ApiClient
@@ -198,8 +199,8 @@ class ApiClient
     {
         return $this->setMethod('module')
             ->setModuleId($moduleId)
-            ->setConnectionTimeout(5)
-            ->setTimeout(20)
+            ->setConnectionTimeout(Tools::DEFAULT_CONNECTION_TIMEOUT)
+            ->setTimeout(Tools::MODULE_DOWNLOAD_TIMEOUT)
             ->getPostResponse();
     }
 

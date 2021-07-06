@@ -42,6 +42,7 @@ class ToolsCore
     const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
     public const CACHE_LIFETIME_SECONDS = 604800;
     public const DEFAULT_CONNECTION_TIMEOUT = 5;
+    public const MODULE_DOWNLOAD_TIMEOUT = 35;
 
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
@@ -3905,7 +3906,7 @@ exit;
                 if (isset($params['username_addons'], $params['password_addons'])) {
                     $post_data .= '&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
                 }
-                $timeout = 20;
+                $timeout = static::MODULE_DOWNLOAD_TIMEOUT;
 
                 break;
             case 'hosted_module':
