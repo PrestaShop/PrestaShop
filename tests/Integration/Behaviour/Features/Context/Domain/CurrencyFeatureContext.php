@@ -63,8 +63,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         $defaultLangId = Configuration::get('PS_LANG_DEFAULT');
 
         $data = $this->localizeByRows($node);
-        /** @var \Shop $shop */
-        $shop = SharedStorage::getStorage()->get($data['shop_association']);
+        $shopId = SharedStorage::getStorage()->get($data['shop_association']);
 
         if ($data['is_unofficial']) {
             $command = new AddUnofficialCurrencyCommand(
@@ -96,15 +95,13 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             $command->setLocalizedTransformations($data['transformations']);
         }
 
-        $command->setShopIds([
-            (int) $shop->id,
-        ]);
+        $command->setShopIds([$shopId]);
 
         try {
             /** @var CurrencyId $currencyId */
             $currencyId = $this->getCommandBus()->handle($command);
 
-            SharedStorage::getStorage()->set($reference, new Currency($currencyId->getValue()));
+            SharedStorage::getStorage()->set($reference, $currencyId->getValue());
         } catch (CoreException $e) {
             $this->setLastException($e);
         }
@@ -118,8 +115,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         $defaultLangId = Configuration::get('PS_LANG_DEFAULT');
 
         $data = $this->localizeByRows($node);
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
+        $currency = $this->getCurrency($reference);
 
         if (!empty($data['is_unofficial'])) {
             $command = new EditUnofficialCurrencyCommand((int) $currency->id);
@@ -161,7 +157,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getCommandBus()->handle($command);
 
-            SharedStorage::getStorage()->set($reference, new Currency($currency->id));
+            SharedStorage::getStorage()->set($reference, (int) $currency->id);
         } catch (CoreException $e) {
             $this->setLastException($e);
         }
@@ -172,8 +168,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     public function disableCurrency($reference)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
+        $currency = $this->getCurrency($reference);
 
         try {
             $this->getCommandBus()->handle(new ToggleCurrencyStatusCommand((int) $currency->id));
@@ -187,8 +182,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     public function deleteCurrency($reference)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
+        $currency = $this->getCurrency($reference);
 
         try {
             $this->getCommandBus()->handle(new DeleteCurrencyCommand((int) $currency->id));
@@ -284,5 +278,15 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsNotFound()
     {
         $this->assertLastErrorIs(CurrencyNotFoundException::class);
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return Currency
+     */
+    private function getCurrency(string $reference): Currency
+    {
+        return new Currency($this->getSharedStorage()->get($reference));
     }
 }

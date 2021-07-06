@@ -49,7 +49,7 @@ class WebserviceKeyFeatureContext extends AbstractDomainFeatureContext
 
         $data['is_enabled'] = (bool) $data['is_enabled'];
         $data['shop_association'] = [
-            SharedStorage::getStorage()->get($data['shop_association'])->id,
+            SharedStorage::getStorage()->get($data['shop_association']),
         ];
 
         SharedStorage::getStorage()->set(sprintf('%s_properties', $reference), $data);
