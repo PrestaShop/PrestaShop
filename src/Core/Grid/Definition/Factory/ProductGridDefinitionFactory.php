@@ -124,7 +124,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'field' => 'name',
                         'route' => 'admin_products_v2_edit',
-                        'route_param_name' => 'id',
+                        'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                     ])
             )
@@ -148,7 +148,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'field' => 'price_tax_excluded',
                         'route' => 'admin_products_v2_edit',
-                        'route_param_name' => 'id',
+                        'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'fragment' => 'tab-pricing-tab',
                     ])
@@ -160,7 +160,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'price_tax_included',
                         'sortable' => false,
                         'route' => 'admin_products_v2_edit',
-                        'route_param_name' => 'id',
+                        'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'fragment' => 'tab-pricing-tab',
                     ])
@@ -184,7 +184,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setIcon('edit')
                     ->setOptions([
                         'route' => 'admin_products_v2_edit',
-                        'route_param_name' => 'id',
+                        'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                     ])
                     )
@@ -213,7 +213,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'field' => 'quantity',
                         'route' => 'admin_products_v2_edit',
-                        'route_param_name' => 'id',
+                        'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'fragment' => 'tab-stock-tab',
                     ])
