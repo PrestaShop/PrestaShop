@@ -9,7 +9,7 @@ const ModuleConfiguration = require('@pages/BO/modules/moduleConfiguration');
 class ProductComments extends ModuleConfiguration.constructor {
   /**
    * @constructs
-   * Setting up titles and selectors to use on ps email subscription page
+   * Setting selectors to use on product comments module configuration  page
    */
   constructor() {
     super();
@@ -53,7 +53,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   /**
    * Get the review count for the 'waiting approval' table
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<number|*>}
    */
   getWaitingApprovalReviewCount(page) {
     return this.getTableReviewCount(page, 'waiting-approval');
@@ -62,7 +62,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   /**
    * Get the review count for the 'reported review' table
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<number|*>}
    */
   getReportedReviewCount(page) {
     return this.getTableReviewCount(page, 'reported');
@@ -71,7 +71,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   /**
    * Get the review count for the 'approved review' table
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<number|*>}
    */
   getApprovedReviewCount(page) {
     return this.getTableReviewCount(page, 'approved');
