@@ -150,7 +150,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route' => 'admin_product_form',
                         'route_param_name' => 'id',
                         'route_param_field' => 'id_product',
-                        'fragment' => 'tab-step2',
+                        'fragment' => 'tab-pricing-tab',
                     ])
             )
             ->add(
@@ -162,7 +162,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route' => 'admin_products_v2_edit',
                         'route_param_name' => 'id',
                         'route_param_field' => 'id_product',
-                        'fragment' => 'tab-step2',
+                        'fragment' => 'tab-pricing-tab',
                     ])
             )
             ->add(
@@ -215,7 +215,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route' => 'admin_product_form',
                         'route_param_name' => 'id',
                         'route_param_field' => 'id_product',
-                        'fragment' => 'tab-step3',
+                        'fragment' => 'tab-stock-tab',
                     ])
             );
         }
