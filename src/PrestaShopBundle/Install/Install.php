@@ -977,8 +977,8 @@ class Install extends AbstractInstall
             'socialsharing',
             'ps_metrics',
             'ps_facebook',
-            'ps_account',
-            'ps_checkout'
+            'gamification',
+            'ps_account'
         ];
 
         $addons_modules = [];
