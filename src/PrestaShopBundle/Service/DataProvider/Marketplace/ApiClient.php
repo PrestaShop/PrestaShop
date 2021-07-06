@@ -198,6 +198,8 @@ class ApiClient
     {
         return $this->setMethod('module')
             ->setModuleId($moduleId)
+            ->setConnectionTimeout(5)
+            ->setTimeout(20)
             ->getPostResponse();
     }
 
@@ -336,6 +338,20 @@ class ApiClient
     public function setPassword($password)
     {
         $this->queryParameters['password'] = $password;
+
+        return $this;
+    }
+
+    public function setTimeout(int $timeout): self
+    {
+        $this->queryParameters['timeout'] = $timeout;
+
+        return $this;
+    }
+
+    public function setConnectionTimeout(int $timeout): self
+    {
+        $this->queryParameters['connect_timeout'] = $timeout;
 
         return $this;
     }
