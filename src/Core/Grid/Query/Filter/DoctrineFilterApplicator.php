@@ -87,22 +87,22 @@ final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterfac
 
                     break;
                 case SqlFilters::MIN_MAX:
-                    $minFieldSqlCondition = "$sqlField >= :{$filterName}_min";
-                    $maxFieldSqlCondition = "$sqlField <= :{$filterName}_max";
+                    $minFieldSqlCondition = sprintf('%s >= :%s_min', $sqlField, $filterName);
+                    $maxFieldSqlCondition = sprintf('%s >= :%s_max', $sqlField, $filterName);
 
                     switch ($this->computeMinMaxCase($value)) {
                         case self::CASE_BOTH_FIELDS_EXIST:
-                            $qb->andWhere("$minFieldSqlCondition AND $maxFieldSqlCondition");
-                            $qb->setParameter("{$filterName}_min", $value['min_field']);
-                            $qb->setParameter("{$filterName}_max", $value['max_field']);
+                            $qb->andWhere(sprintf('%s AND %s', $minFieldSqlCondition, $maxFieldSqlCondition));
+                            $qb->setParameter(sprintf('%s_min', $filterName), $value['min_field']);
+                            $qb->setParameter(sprintf('%s_max', $filterName), $value['max_field']);
                             break;
                         case self::CASE_ONLY_MIN_FIELD_EXISTS:
                             $qb->andWhere($minFieldSqlCondition);
-                            $qb->setParameter("{$filterName}_min", $value['min_field']);
+                            $qb->setParameter(sprintf('%s_min', $filterName), $value['min_field']);
                             break;
                         case self::CASE_ONLY_MAX_FIELD_EXISTS:
                             $qb->andWhere($maxFieldSqlCondition);
-                            $qb->setParameter("{$filterName}_max", $value['max_field']);
+                            $qb->setParameter(sprintf('%s_max', $filterName), $value['max_field']);
                             break;
                     }
                     break;
