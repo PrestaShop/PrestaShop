@@ -100,7 +100,6 @@ module.exports = {
     product: './scss/pages/product/product_page.scss',
     product_catalog: './scss/pages/product/products_catalog.scss',
     product_edit: './js/pages/product/edit',
-    combination_edit: './js/pages/product/combination/edit',
     product_index: './js/pages/product/index',
     product_page: './js/product-page/index',
     product_preferences: './js/pages/product-preferences',
