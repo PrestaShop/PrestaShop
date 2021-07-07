@@ -918,7 +918,7 @@ class Install extends AbstractInstall
                 'statssearch',
                 'statsstock',
                 'statsvisits',
-                'welcome',
+                'welcome'
             ];
         }
 
@@ -975,6 +975,7 @@ class Install extends AbstractInstall
             'producttooltip',
             'sendtoafriend',
             'socialsharing',
+            'ps_metrics',
         ];
 
         $addons_modules = [];
