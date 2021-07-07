@@ -1,18 +1,16 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
 
-// Common tests login BO
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 const addCartRulePage = require('@pages/BO/catalog/discounts/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_discounts_cartRules_filterQuickEditAndBulkActionsCartRules';
 

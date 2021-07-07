@@ -6,6 +6,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -17,9 +18,6 @@ const FileFaker = require('@data/faker/file');
 const dashboardPage = require('@pages/BO/dashboard');
 const filesPage = require('@pages/BO/catalog/files');
 const addFilePage = require('@pages/BO/catalog/files/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_files_CRUDFile';
 

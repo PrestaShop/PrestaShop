@@ -5,6 +5,9 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import BO pages
@@ -20,9 +23,6 @@ const homePage = require('@pages/FO/home');
 // Import data
 const PriceRuleFaker = require('@data/faker/catalogPriceRule');
 const {Products} = require('@data/demo/products');
-
-// import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_discounts_catalogPriceRules_CRUDCatalogPriceRule';
 

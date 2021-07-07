@@ -1,9 +1,13 @@
 require('module-alias/register');
+
 // Using chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -13,9 +17,6 @@ const addCartRulePage = require('@pages/BO/catalog/discounts/add');
 
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
-
-// import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_discounts_cartRules_sortAndPaginationCartRule';
 

@@ -5,6 +5,9 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -15,9 +18,6 @@ const stocksPage = require('@pages/BO/catalog/stocks');
 
 // Import data
 const ProductFaker = require('@data/faker/product');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_stocks_filterStocksByStatus';
 
