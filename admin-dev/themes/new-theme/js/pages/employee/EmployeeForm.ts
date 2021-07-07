@@ -25,6 +25,7 @@
 
 import AddonsConnector from '../../components/addons-connector';
 import employeeFormMap from './employee-form-map';
+import ChoiceTree from "@components/form/choice-tree";
 
 /**
  * Class responsible for javascript actions in employee add/edit page.
@@ -37,6 +38,8 @@ export default class EmployeeForm {
   employeeProfileSelector: string;
 
   tabsDropdownSelector: string;
+
+  multistoreAlert: string;
 
   constructor() {
     this.shopChoiceTreeSelector = employeeFormMap.shopChoiceTree;
@@ -141,7 +144,7 @@ export default class EmployeeForm {
   private toggleShopTree(): void {
     const $employeeProfileDropdown = $(this.employeeProfileSelector);
     const superAdminProfileId = $employeeProfileDropdown.data('admin-profile');
-    const isSuperAdminProfile = parseInt($employeeProfileDropdown.val(), 10) === superAdminProfileId;
+    const isSuperAdminProfile = parseInt(<string>$employeeProfileDropdown.val(), 10) === superAdminProfileId;
     $(this.shopChoiceTreeSelector)
       .closest('.form-group')
       .toggleClass('d-none', isSuperAdminProfile);
