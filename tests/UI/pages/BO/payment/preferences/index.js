@@ -15,15 +15,18 @@ class Preferences extends BOBasePage {
     super();
 
     this.pageTitle = 'Preferences •';
+    this.successfulUpdateMessage = 'Update successful';
 
     // Selectors for currency restrictions
     this.euroCurrencyRestrictionsCheckbox = paymentModule => `#form_currency_restrictions_${paymentModule}_0`;
     this.currencyRestrictionsSaveButton = '#form-currency-restrictions-save-button';
     // Selectors for group restrictions
     this.paymentModuleCheckbox = (paymentModule, groupID) => `#form_group_restrictions_${paymentModule}_${groupID}`;
+    this.groupRestrictionsSaveButton = '#form-group-restrictions-save-button';
+    // Selectors for countries restriction
     this.countryRestrictionsCheckbox = (paymentModule, countryID) => '#form_country_restrictions_'
       + `${paymentModule}_${countryID}`;
-    this.groupRestrictionsSaveButton = '#form-group-restrictions-save-button';
+    this.countryRestrictionsSaveButton = '#form-country-restrictions-save-button';
     // Selectors fot carrier restriction
     this.carrierRestrictionsCheckbox = (paymentModule, carrierID) => '#form_carrier_restrictions_'
       + `${paymentModule}_${carrierID}`;
@@ -86,10 +89,6 @@ class Preferences extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setCountryRestriction(page, countryID, paymentModule, valueWanted) {
-    await this.waitForAttachedSelector(
-      page,
-      `${this.countryRestrictionsCheckbox(paymentModule, countryID)} + i`,
-    );
     const isCheckboxSelected = await this.isCheckboxSelected(
       page,
       this.countryRestrictionsCheckbox(paymentModule, countryID),
@@ -98,7 +97,8 @@ class Preferences extends BOBasePage {
     if (valueWanted !== isCheckboxSelected) {
       await page.$eval(`${this.countryRestrictionsCheckbox(paymentModule, countryID)} + i`, el => el.click());
     }
-    await page.click(this.currencyRestrictionsSaveButton);
+
+    await this.clickAndWaitForNavigation(page, this.countryRestrictionsSaveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
