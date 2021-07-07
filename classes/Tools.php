@@ -3914,7 +3914,7 @@ exit;
                     . '&password=' . urlencode($params['password_addons'])
                     . '&shop_url=' . urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
                     . '&mail=' . urlencode(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
-                $timeout = 20;
+                $timeout = static::MODULE_DOWNLOAD_TIMEOUT;
 
                 break;
             case 'install-modules':
