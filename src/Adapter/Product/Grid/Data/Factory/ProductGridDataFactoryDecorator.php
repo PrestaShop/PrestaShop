@@ -156,7 +156,7 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
             );
 
             $products[$i]['price_tax_included'] = $this->locale->formatPrice(
-                $this->taxComputer->computePriceWithTaxes(
+                (string) $this->taxComputer->computePriceWithTaxes(
                     new DecimalNumber($product['price_tax_excluded']),
                     new TaxRulesGroupId((int) $productObject->getIdTaxRulesGroup()),
                     new CountryId($this->countryId)
