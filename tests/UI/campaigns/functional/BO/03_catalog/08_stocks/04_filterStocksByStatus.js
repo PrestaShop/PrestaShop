@@ -1,5 +1,6 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
@@ -20,7 +21,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_stocks_filterStocksByStatus';
 
-
 let browserContext;
 let page;
 
@@ -33,7 +33,7 @@ Create new disabled product
 Filter stocks page by status and check existence of product
 Delete product
  */
-describe('Filter stocks by status', async () => {
+describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -48,7 +48,7 @@ describe('Filter stocks by status', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to Products page', async function () {
+  it('should go to \'Catalog > Products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToCreate', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -71,18 +71,16 @@ describe('Filter stocks by status', async () => {
     await expect(numberOfProducts).to.be.above(0);
   });
 
-  describe('Create new product', async () => {
-    it('should create Product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+  it('should create disabled Product', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
-      await productsPage.goToAddProductPage(page);
-      const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
-      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
-    });
+    await productsPage.goToAddProductPage(page);
+    const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
+    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 
   describe('Check the disabled product in stocks page', async () => {
-    it('should go to stocks page', async function () {
+    it('should go to \'Catalog > Stocks\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
       await addProductPage.goToSubMenu(
@@ -106,7 +104,7 @@ describe('Filter stocks by status', async () => {
   });
 
   describe('Delete product', async () => {
-    it('should go to products page', async function () {
+    it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDelete', baseContext);
 
       await stocksPage.goToSubMenu(

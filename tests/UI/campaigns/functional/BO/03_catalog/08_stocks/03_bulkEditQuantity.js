@@ -1,5 +1,6 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
@@ -18,7 +19,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_stocks_bulkEditQuantity';
 
-
 let browserContext;
 let page;
 
@@ -29,7 +29,7 @@ const stocks = {};
 Filter by Products demo_8
 Add and subtract quantity for all products in list and check result
  */
-describe('Bulk Edit Quantity', async () => {
+describe('BO - Catalog - Stocks : Bulk edit quantity', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -44,7 +44,7 @@ describe('Bulk Edit Quantity', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to "Catalog>Stocks" page', async function () {
+  it('should go to \'Catalog > Stocks\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
     await dashboardPage.goToSubMenu(

@@ -20,7 +20,7 @@ let browserContext;
 let page;
 
 // Check help card language in stocks page
-describe('Help card in stocks page', async () => {
+describe('BO - Catalog - Stocks : Help card in stocks page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
