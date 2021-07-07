@@ -32,6 +32,8 @@ use Cookie;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration;
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 
 class PreferencesConfigurationTest extends TestCase
 {
@@ -45,6 +47,16 @@ class PreferencesConfigurationTest extends TestCase
      */
     private $mockConfiguration;
 
+    /**
+     * @var ShopContext
+     */
+    private $mockShopConfiguration;
+
+    /**
+     * @var FeatureInterface
+     */
+    private $mockMultistoreFeature;
+
     protected function setUp()
     {
         $this->mockConfiguration = $this->getMockBuilder(Configuration::class)
@@ -52,7 +64,10 @@ class PreferencesConfigurationTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->object = new PreferencesConfiguration($this->mockConfiguration);
+        $this->mockShopConfiguration = $this->getMockShopConfiguration();
+        $this->mockMultistoreFeature = $this->getMockMultistoreFeature();
+
+        $this->object = new PreferencesConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
     }
 
     public function testGetConfiguration()
@@ -209,5 +224,23 @@ class PreferencesConfigurationTest extends TestCase
                 ]
             )
         );
+    }
+
+    /**
+     * @return ShopContext
+     */
+    private function getMockShopConfiguration(): ShopContext
+    {
+        return $this->getMockBuilder(ShopContext::class)
+            ->setMethods(['getContextShopGroup', 'getContextShopID', 'isAllShopContext'])
+            ->getMock();
+    }
+
+    /**
+     * @return FeatureInterface
+     */
+    private function getMockMultistoreFeature(): FeatureInterface
+    {
+        return $this->getMockForAbstractClass(FeatureInterface::class);
     }
 }
