@@ -81,7 +81,6 @@ Essential links about PrestaShop:
 * Developer blog: https://build.prestashop.com/
 * Get community support: https://www.prestashop.com/forums/
 * Get paid support: https://www.prestashop.com/en/support
-* Find modules and themes: https://addons.prestashop.com/
 * Contribute with code: https://github.com/PrestaShop/PrestaShop
 * Contribute with translation: https://crowdin.net/project/prestashop-official
 

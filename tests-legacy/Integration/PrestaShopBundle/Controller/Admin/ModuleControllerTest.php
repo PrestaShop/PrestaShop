@@ -79,20 +79,6 @@ class ModuleControllerTest extends WebTestCase
         $this->assertEquals($this->getExpectedErrorMessage(), $decodedContent['msg']);
     }
 
-    public function testRecommendedModules()
-    {
-        $oldContext = Context::getContext();
-        Context::setInstanceForTesting(self::$kernel->getContainer()->get('prestashop.adapter.legacy.context')->getContext());
-        $recommendedModuleRoute = $this->router->generate('admin_module_catalog_post', array(
-            'tab_modules_list' => 'fianetsceau,trustedshops,trustedshopsintegration,ebadgeletitbuy,protectedshops,ebadgeletitbuy,emailverify,allinone_rewards,allexport,apiway,zendesk',
-        ));
-        $this->client->request('GET', $recommendedModuleRoute);
-
-        $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        Context::setInstanceForTesting($oldContext);
-    }
-
     /**
      * @return string
      */

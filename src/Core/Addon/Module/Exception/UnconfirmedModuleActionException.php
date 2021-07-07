@@ -76,7 +76,7 @@ class UnconfirmedModuleActionException extends CoreException
     }
 
     /**
-     * Subject getter (PrestaTrust...).
+     * Subject getter..
      *
      * @return string
      */

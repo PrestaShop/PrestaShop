@@ -25,10 +25,6 @@
 {% extends '@PrestaShop/Admin/Module/common.html.twig' %}
 
 {% block content %}
-  {# Addons connect modal #}
-  {% include '@PrestaShop/Admin/Module/Includes/modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
-  {# PrestaTrust modal #}
-  {% include '@PrestaShop/Admin/Module/Includes/modal_confirm_prestatrust.html.twig' %}
   {# Contains toolbar-nav for module page #}
   {% include '@PrestaShop/Admin/Module/Includes/modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
   {# Actual Page Content #}
