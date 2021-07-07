@@ -98,7 +98,7 @@ script:
     fi
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
-        bash tests/check_sanity.sh;
+        travis_wait 20 bash tests/check_sanity.sh;
     fi
 
 after_script:
