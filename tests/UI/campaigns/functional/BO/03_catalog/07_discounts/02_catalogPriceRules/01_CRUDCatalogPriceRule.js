@@ -1,4 +1,5 @@
 require('module-alias/register');
+
 // Using chai
 const {expect} = require('chai');
 
@@ -6,11 +7,13 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 const catalogPriceRulesPage = require('@pages/BO/catalog/discounts/catalogPriceRules');
 const addCatalogPriceRulePage = require('@pages/BO/catalog/discounts/catalogPriceRules/add');
+
+// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 
@@ -62,7 +65,7 @@ Update catalog price rules
 Check the updated rule in FO
 Delete catalog price rules
 */
-describe('CRUD catalog price rules', async () => {
+describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -114,14 +117,28 @@ describe('CRUD catalog price rules', async () => {
 
   // 2 - Check catalog price rule in FO
   describe('Check catalog price rule in FO', async () => {
-    it('should check the discount', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkNewCatalogPriceRule', baseContext);
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop_1', baseContext);
 
+      // View my shop and init pages
       page = await addCatalogPriceRulePage.viewMyShop(page);
 
       await homePage.changeLanguage(page, 'en');
-      // Go to first product page
+      const isHomePage = await homePage.isHomePage(page);
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
+
+    it('should go to the first product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage_1', baseContext);
+
       await homePage.goToProductPage(page, 1);
+
+      const pageTitle = await productPage.getPageTitle(page);
+      await expect(pageTitle.toUpperCase()).to.contains(Products.firstProductData.name);
+    });
+
+    it('should check the discount', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage_1', baseContext);
 
       // Check quantity for discount value
       const quantityDiscountValue = await productPage.getQuantityDiscountValue(page);
@@ -177,14 +194,28 @@ describe('CRUD catalog price rules', async () => {
 
   // 4 - Check updated catalog price rule in FO
   describe('Check updated catalog price rule in FO', async () => {
-    it('should check the discount', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCatalogPriceRule', baseContext);
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop_2', baseContext);
 
+      // View my shop and init pages
       page = await addCatalogPriceRulePage.viewMyShop(page);
 
       await homePage.changeLanguage(page, 'en');
-      // Go to first product page
+      const isHomePage = await homePage.isHomePage(page);
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
+
+    it('should go to the first product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage_2', baseContext);
+
       await homePage.goToProductPage(page, 1);
+
+      const pageTitle = await productPage.getPageTitle(page);
+      await expect(pageTitle.toUpperCase()).to.contains(Products.firstProductData.name);
+    });
+
+    it('should check the discount', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCatalogPriceRule', baseContext);
 
       // Check quantity for discount value
       const quantityDiscountValue = await productPage.getQuantityDiscountValue(page);
