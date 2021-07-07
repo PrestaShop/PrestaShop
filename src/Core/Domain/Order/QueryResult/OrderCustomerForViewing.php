@@ -91,6 +91,16 @@ class OrderCustomerForViewing
     private $siret;
 
     /**
+     * @var int
+     */
+    private $idDefaultGroup;
+
+    /**
+     * @var string
+     */
+    private $defaultGroupName;
+
+    /**
      * @param int $id
      * @param string $firstName
      * @param string $lastName
@@ -103,6 +113,8 @@ class OrderCustomerForViewing
      * @param bool $isGuest
      * @param string $ape
      * @param string $siret
+     * @param int $idDefaultGroup
+     * @param string $defaultGroupName
      */
     public function __construct(
         int $id,
@@ -116,7 +128,9 @@ class OrderCustomerForViewing
         ?string $privateNote,
         bool $isGuest,
         string $ape = '',
-        string $siret = ''
+        string $siret = '',
+        int $idDefaultGroup,
+        string $defaultGroupName
     ) {
         $this->id = $id;
         $this->firstName = $firstName;
@@ -130,6 +144,8 @@ class OrderCustomerForViewing
         $this->isGuest = $isGuest;
         $this->ape = $ape;
         $this->siret = $siret;
+        $this->idDefaultGroup = $idDefaultGroup;
+        $this->defaultGroupName = $defaultGroupName;
     }
 
     /**
@@ -226,5 +242,21 @@ class OrderCustomerForViewing
     public function getSiret(): string
     {
         return $this->siret;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdDefaultGroup(): int
+    {
+        return $this->idDefaultGroup;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultGroupName(): string
+    {
+        return $this->defaultGroupName;
     }
 }

@@ -46,6 +46,8 @@
           </h2>
           {%  if orderForViewing.customer.isGuest %}
             <strong class="text-muted">Guest</strong>
+          {% else %}
+            <strong class="text-muted">{{ orderForViewing.customer.defaultGroupName }} (#{{ orderForViewing.customer.idDefaultGroup }})</strong>
           {% endif %}
         </div>
         <div id="viewFullDetails" class="col-xxl-5 text-xxl-right">
