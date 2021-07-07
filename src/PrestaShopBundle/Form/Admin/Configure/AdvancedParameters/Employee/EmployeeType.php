@@ -59,7 +59,7 @@ final class EmployeeType extends TranslatorAwareType
         'jpg',
         'jpeg',
         'jpe',
-        'png'
+        'png',
     ];
 
     public const AVAILABLE_IMAGE_FORMATS_STRING_FOR_TRANSLATION = 'gif, jpg, jpeg, jpe, png';
