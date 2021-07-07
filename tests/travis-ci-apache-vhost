@@ -14,7 +14,7 @@
         AddHandler php5-fcgi .php
         Action php5-fcgi /php5-fcgi
         Alias /php5-fcgi /usr/lib/cgi-bin/php5-fcgi
-        FastCgiExternalServer /usr/lib/cgi-bin/php5-fcgi -host 127.0.0.1:9000 -pass-header Authorization
+        FastCgiExternalServer /usr/lib/cgi-bin/php5-fcgi -host 127.0.0.1:9000 -idle-timeout 60 -pass-header Authorization
 
         <Directory /usr/lib/cgi-bin>
             Require all granted
