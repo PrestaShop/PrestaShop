@@ -118,9 +118,9 @@ Feature: Duplicate product from Back Office (BO).
     And product "copy_of_product1" should be disabled
     And product "copy_of_product1" type should be standard
     And product "copy_of_product1" localized "name" should be:
-      | locale | value                      |
-      | en-US  | copy of smart sunglasses   |
-      | fr-FR  | copy of lunettes de soleil |
+      | locale | value                       |
+      | en-US  | copy of smart sunglasses    |
+      | fr-FR  | copie de lunettes de soleil |
     And product "copy_of_product1" localized "description" should be:
       | locale | value           |
       | en-US  | nice sunglasses |
