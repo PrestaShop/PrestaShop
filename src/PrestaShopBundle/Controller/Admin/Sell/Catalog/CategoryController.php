@@ -54,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -164,6 +165,15 @@ class CategoryController extends FrameworkBundleAdminController
 
         $parentId = (int) $request->query->get('id_parent', $this->configuration->getInt('PS_HOME_CATEGORY'));
 
+        /*
+         * Parent category can be root category only if you specifically click to add root category.
+         * In all other cases it should be at least home category(Or one of it's children).
+         */
+        $configRootCategory = $this->configuration->getInt('PS_ROOT_CATEGORY');
+        if ($parentId === $configRootCategory) {
+            $parentId = $this->configuration->getInt('PS_HOME_CATEGORY');
+        }
+
         $categoryForm = $categoryFormBuilder->getForm(['id_parent' => $parentId]);
         $categoryForm->handleRequest($request);
 
@@ -186,6 +196,8 @@ class CategoryController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/create.html.twig',
             [
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'enableSidebar' => true,
                 'allowMenuThumbnailsUpload' => true,
                 'categoryForm' => $categoryForm->createView(),
                 'defaultGroups' => $defaultGroups,
@@ -235,6 +247,8 @@ class CategoryController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/create_root.html.twig',
             [
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'enableSidebar' => true,
                 'allowMenuThumbnailsUpload' => true,
                 'rootCategoryForm' => $rootCategoryForm->createView(),
                 'defaultGroups' => $defaultGroups,
@@ -279,6 +293,7 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryFormOptions = [
             'id_category' => (int) $categoryId,
             'subcategories' => $editableCategory->getSubCategories(),
+            'disable_menu_thumbnails_upload' => !$editableCategory->canContainMoreMenuThumbnails(),
         ];
 
         try {
@@ -309,6 +324,8 @@ class CategoryController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig',
             [
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'enableSidebar' => true,
                 'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
                 'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
                 'contextLangId' => $this->getContextLangId(),
@@ -352,9 +369,12 @@ class CategoryController extends FrameworkBundleAdminController
 
         $rootCategoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
         $rootCategoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
+        $categoryFormOptions = [
+            'disable_menu_thumbnails_upload' => !$editableCategory->canContainMoreMenuThumbnails(),
+        ];
 
         try {
-            $rootCategoryForm = $rootCategoryFormBuilder->getFormFor((int) $categoryId);
+            $rootCategoryForm = $rootCategoryFormBuilder->getFormFor((int) $categoryId, [], $categoryFormOptions);
         } catch (Exception $exception) {
             $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
 
@@ -381,6 +401,8 @@ class CategoryController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/edit_root.html.twig',
             [
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'enableSidebar' => true,
                 'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
                 'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
                 'contextLangId' => $this->getContextLangId(),
@@ -840,6 +862,8 @@ class CategoryController extends FrameworkBundleAdminController
      */
     private function getErrorMessages()
     {
+        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
+
         return [
             CannotDeleteImageException::class => $this->trans('Unable to delete associated images.', 'Admin.Notifications.Error'),
             CategoryNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
@@ -876,6 +900,16 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->trans('An error occurred while uploading the image:', 'Admin.Catalog.Notification'),
                 $this->trans('You cannot upload more files', 'Admin.Notifications.Error')
             ),
+            UploadedImageConstraintException::class => [
+                UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
+                    'Max file size allowed is "%d" bytes.', 'Admin.Notifications.Error',
+                    [$iniConfig->getUploadMaxSizeInBytes()]
+                ),
+                UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
+                    'Image format not recognized, allowed formats are: .gif, .jpg, .png',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 

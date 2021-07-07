@@ -59,6 +59,7 @@ class CategoryType extends AbstractCategoryType
         $builder
             ->add('id_parent', CategoryChoiceTreeType::class, [
                 'disabled_values' => $disabledCategories,
+                'label' => $this->trans('Parent category', 'Admin.Catalog.Feature'),
             ])
         ;
     }
@@ -68,6 +69,7 @@ class CategoryType extends AbstractCategoryType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
         $resolver
             ->setDefaults([
                 'id_category' => null,

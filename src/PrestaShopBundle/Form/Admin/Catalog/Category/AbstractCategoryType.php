@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
@@ -37,11 +38,12 @@ use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithRecommendedLengthType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -52,6 +54,8 @@ use Symfony\Component\Validator\Constraints\Regex;
  */
 abstract class AbstractCategoryType extends TranslatorAwareType
 {
+    public const MAX_TITLE_LENGTH = 128;
+
     /**
      * @var array
      */
@@ -68,24 +72,40 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     private $configuration;
 
     /**
+     * @var Router
+     */
+    private $router;
+
+    /**
+     * @var CommandBusInterface
+     */
+    private $queryBus;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
      * @param FeatureInterface $multistoreFeature
      * @param ConfigurationInterface $configuration
+     * @param Router $router
+     * @param CommandBusInterface $queryBus
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $customerGroupChoices,
         FeatureInterface $multistoreFeature,
-        ConfigurationInterface $configuration
+        ConfigurationInterface $configuration,
+        Router $router,
+        CommandBusInterface $queryBus
     ) {
         parent::__construct($translator, $locales);
 
         $this->customerGroupChoices = $customerGroupChoices;
         $this->multistoreFeature = $multistoreFeature;
         $this->configuration = $configuration;
+        $this->router = $router;
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -93,25 +113,45 @@ abstract class AbstractCategoryType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $disableMenuThumbnailsUpload = false;
+        if (isset($options['id_category'])) {
+            $disableMenuThumbnailsUpload = $options['disable_menu_thumbnails_upload'];
+        }
+        $genericCharactersHint = $this->trans('Invalid characters:', 'Admin.Global') . ' <>;=#{}';
+
         $builder
             ->add('name', TranslatableType::class, [
+                'label' => $this->trans('Name', 'Admin.Global'),
+                'help' => $genericCharactersHint,
                 'type' => TextType::class,
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
                 'options' => [
+                    'attr' => [
+                        'maxlength' => static::MAX_TITLE_LENGTH,
+                    ],
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>;=#{}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                         ]),
+                        new Length([
+                            'max' => static::MAX_TITLE_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters.',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => static::MAX_TITLE_LENGTH,
+                                ]
+                            ),
+                        ]),
                     ],
                 ],
             ])
-            ->add('description', TranslateType::class, [
+            ->add('description', TranslatableType::class, [
+                'label' => $this->trans('Description', 'Admin.Global'),
                 'type' => FormattedTextareaType::class,
-                'locales' => $this->locales,
-                'hideTabs' => false,
                 'required' => false,
                 'options' => [
                     'constraints' => [
@@ -122,19 +162,37 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
             ])
             ->add('active', SwitchType::class, [
+                'label' => $this->trans('Enabled', 'Admin.Global'),
+                'help' => $this->trans(
+                        'If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.',
+                        'Admin.Catalog.Help',
+                        [
+                            '[1]' => '<a href="' . $this->router->generate('admin_module_manage') . '" target="_blank" rel="noopener noreferrer nofollow">',
+                            '[/1]' => '</a>',
+                        ]
+                    ),
                 'required' => false,
             ])
             ->add('cover_image', FileType::class, [
+                'label' => $this->trans('Category cover image', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.', 'Admin.Catalog.Help'),
                 'required' => false,
             ])
             ->add('thumbnail_image', FileType::class, [
+                'label' => $this->trans('Category thumbnail', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('Displays a small image in the parent category\'s page, if the theme allows it.', 'Admin.Catalog.Help'),
                 'required' => false,
             ])
             ->add('menu_thumbnail_images', FileType::class, [
+                'label' => $this->trans('Menu thumbnails', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.', 'Admin.Catalog.Help'),
                 'multiple' => true,
                 'required' => false,
+                'disabled' => $disableMenuThumbnailsUpload,
             ])
             ->add('meta_title', TranslatableType::class, [
+                'label' => $this->trans('Meta title', 'Admin.Global'),
+                'help' => $genericCharactersHint,
                 'type' => TextWithRecommendedLengthType::class,
                 'required' => false,
                 'options' => [
@@ -165,6 +223,8 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
+                'label' => $this->trans('Meta description', 'Admin.Global'),
+                'help' => $genericCharactersHint,
                 'required' => false,
                 'type' => TextWithRecommendedLengthType::class,
                 'options' => [
@@ -198,6 +258,9 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
             ])
             ->add('meta_keyword', TranslatableType::class, [
+                'label' => $this->trans('Meta keywords', 'Admin.Global'),
+                'help' => $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', 'Admin.Shopparameters.Help')
+                    . '<br>' . $genericCharactersHint,
                 'required' => false,
                 'options' => [
                     'constraints' => [
@@ -205,8 +268,19 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                         ]),
+                        new Length([
+                            'max' => SeoSettings::MAX_KEYWORDS_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters.',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => SeoSettings::MAX_KEYWORDS_LENGTH,
+                                ]
+                            ),
+                        ]),
                     ],
                     'attr' => [
+                        'maxlength' => SeoSettings::MAX_KEYWORDS_LENGTH,
                         'class' => 'js-taggable-field',
                         'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
                     ],
@@ -214,20 +288,37 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
             ])
             ->add('link_rewrite', TranslatableType::class, [
+                'label' => $this->trans('Friendly URL', 'Admin.Global'),
+                'help' => $this->trans('Unless the \'Accented URL\' option is enabled (in Shop parameters > Traffic & SEO), only letters, numbers, underscores (_), and hyphens (-) are allowed.', 'Admin.Catalog.Help'),
                 'type' => TextType::class,
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
                 'options' => [
+                    'attr' => [
+                        'maxlength' => static::MAX_TITLE_LENGTH,
+                    ],
                     'constraints' => [
                         new Regex([
                             'pattern' => (bool) $this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL') ? '/^[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+$/u' : '/^[^<>={}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                         ]),
+                        new Length([
+                            'max' => static::MAX_TITLE_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters.',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => static::MAX_TITLE_LENGTH,
+                                ]
+                            ),
+                        ]),
                     ],
                 ],
             ])
             ->add('group_association', MaterialChoiceTableType::class, [
+                'label' => $this->trans('Group access', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('Mark all of the customer groups which you would like to have access to this category.', 'Admin.Catalog.Help'),
                 'choices' => $this->customerGroupChoices,
                 'required' => true,
                 'constraints' => [
@@ -238,7 +329,21 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ]);
 
         if ($this->multistoreFeature->isUsed()) {
-            $builder->add('shop_association', ShopChoiceTreeType::class);
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->trans('Shop association', 'Admin.Global'),
+            ]);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                'disable_menu_thumbnails_upload' => null,
+            ])
+            ->setAllowedTypes('disable_menu_thumbnails_upload', ['bool', 'null']);
     }
 }

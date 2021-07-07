@@ -39,7 +39,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Class CategoryMenuThumbnailUploader.
  */
-final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
+final class CategoryMenuThumbnailUploader extends AbstractImageUploader implements ImageUploaderInterface
 {
     /**
      * @var CacheClearer
@@ -61,6 +61,7 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
      */
     public function upload($categoryId, UploadedFile $uploadedImage)
     {
+        $this->checkImageIsAllowedForUpload($uploadedImage);
         //Get total of image already present in directory
         $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);
         $usedKeys = [];

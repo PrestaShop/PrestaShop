@@ -26,95 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractAddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractEditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Creates/updates category from data submitted in category form
  */
-final class CategoryFormDataHandler implements FormDataHandlerInterface
+class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
 {
-    /**
-     * @var CommandBusInterface
-     */
-    private $commandBus;
-
-    /**
-     * @var ImageUploaderInterface
-     */
-    private $categoryCoverUploader;
-
-    /**
-     * @var ImageUploaderInterface
-     */
-    private $categoryThumbnailUploader;
-
-    /**
-     * @var ImageUploaderInterface
-     */
-    private $categoryMenuThumbnailUploader;
-
-    /**
-     * @param CommandBusInterface $commandBus
-     * @param ImageUploaderInterface $categoryCoverUploader
-     * @param ImageUploaderInterface $categoryThumbnailUploader
-     * @param ImageUploaderInterface $categoryMenuThumbnailUploader
-     */
-    public function __construct(
-        CommandBusInterface $commandBus,
-        ImageUploaderInterface $categoryCoverUploader,
-        ImageUploaderInterface $categoryThumbnailUploader,
-        ImageUploaderInterface $categoryMenuThumbnailUploader
-    ) {
-        $this->commandBus = $commandBus;
-        $this->categoryCoverUploader = $categoryCoverUploader;
-        $this->categoryThumbnailUploader = $categoryThumbnailUploader;
-        $this->categoryMenuThumbnailUploader = $categoryMenuThumbnailUploader;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function create(array $data)
-    {
-        $command = $this->createAddCategoryCommand($data);
-
-        /** @var CategoryId $categoryId */
-        $categoryId = $this->commandBus->handle($command);
-
-        $this->uploadImages(
-            $categoryId,
-            $data['cover_image'],
-            $data['thumbnail_image'],
-            $data['menu_thumbnail_images']
-        );
-
-        return $categoryId->getValue();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function update($categoryId, array $data)
-    {
-        $command = $this->createEditCategoryCommand($categoryId, $data);
-
-        $this->commandBus->handle($command);
-
-        $categoryId = new CategoryId((int) $categoryId);
-
-        $this->uploadImages(
-            $categoryId,
-            $data['cover_image'],
-            $data['thumbnail_image'],
-            $data['menu_thumbnail_images']
-        );
-    }
-
     /**
      * Creates add category command from form data
      *
@@ -122,7 +43,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
      *
      * @return AddCategoryCommand
      */
-    private function createAddCategoryCommand(array $data)
+    protected function createAddCategoryCommand(array $data): AbstractAddCategoryCommand
     {
         $command = new AddCategoryCommand(
             $data['name'],
@@ -152,7 +73,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
      *
      * @return EditCategoryCommand
      */
-    private function createEditCategoryCommand($categoryId, array $data)
+    protected function createEditCategoryCommand(int $categoryId, array $data): AbstractEditCategoryCommand
     {
         $command = new EditCategoryCommand($categoryId);
         $command->setIsActive($data['active']);
@@ -170,32 +91,5 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         }
 
         return $command;
-    }
-
-    /**
-     * @param CategoryId $categoryId
-     * @param UploadedFile $coverImage
-     * @param UploadedFile $thumbnailImage
-     * @param UploadedFile[] $menuThumbnailImages
-     */
-    private function uploadImages(
-        CategoryId $categoryId,
-        UploadedFile $coverImage = null,
-        UploadedFile $thumbnailImage = null,
-        array $menuThumbnailImages = []
-    ) {
-        if (null !== $coverImage) {
-            $this->categoryCoverUploader->upload($categoryId->getValue(), $coverImage);
-        }
-
-        if (null !== $thumbnailImage) {
-            $this->categoryThumbnailUploader->upload($categoryId->getValue(), $thumbnailImage);
-        }
-
-        if (!empty($menuThumbnailImages)) {
-            foreach ($menuThumbnailImages as $menuThumbnail) {
-                $this->categoryMenuThumbnailUploader->upload($categoryId->getValue(), $menuThumbnail);
-            }
-        }
     }
 }
