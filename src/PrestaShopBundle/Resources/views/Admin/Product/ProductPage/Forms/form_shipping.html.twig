@@ -143,14 +143,6 @@
 </div>
 
 <div class="col-md-12">
-  <div class="alert alert-warning" role="alert">
-    <p class="alert-text">
-        {{ 'If no carrier is selected then all the carriers will be available for customers orders.'|trans({}, 'Admin.Catalog.Notification')|raw }}
-    </p>
-  </div>
-</div>
-
-<div class="col-md-12">
   <div id="warehouse_combination_collection" class="col-md-12 form-group" data-url="{{ path('admin_warehouse_refresh_product_warehouse_combination_form') }}">
     {% if asm_globally_activated and isNotVirtual and isChecked %}
       {{ include('@PrestaShop/Admin:Product/ProductPage/Forms/form_warehouse_combination.html.twig', { 'warehouses': warehouses, 'form': form }) }}
