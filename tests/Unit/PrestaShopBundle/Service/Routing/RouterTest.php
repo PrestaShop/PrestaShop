@@ -41,10 +41,10 @@ class RouterTest extends TestCase
 
         $url = 'my-shop.com/product?delete=1#routing-in-prestashop';
         $route = Router::generateTokenizedUrl($url, 'token');
-        static::assertEquals('my-shop.com/product&delete=1?_token=token#routing-in-prestashop', $route);
+        static::assertEquals('my-shop.com/product?delete=1?_token=token#routing-in-prestashop', $route);
 
         $url = 'localhost/shopp/product?delete=1&confirm=1#routing-in-prestashop/tokens?route';
         $route = Router::generateTokenizedUrl($url, 'token');
-        static::assertEquals('localhost/shopp/product&delete=1&confirm=1?_token=token#routing-in-prestashop/tokens?route', $route);
+        static::assertEquals('localhost/shopp/product?delete=1&confirm=1?_token=token#routing-in-prestashop/tokens?route', $route);
     }
 }
