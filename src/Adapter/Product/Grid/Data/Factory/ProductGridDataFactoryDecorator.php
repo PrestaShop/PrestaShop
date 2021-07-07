@@ -42,7 +42,6 @@ use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
 
@@ -166,9 +165,9 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
             );
             $products[$i]['image'] = '';
             if ($product['id_image']) {
-                $products[$i]['image'] = $this->productImagePathFactory->getPathByType(new ImageId((int) $product['id_image']), ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT );
+                $products[$i]['image'] = $this->productImagePathFactory->getPathByType(new ImageId((int) $product['id_image']), ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
             }
-            /** @todo when new image type for grid is imported, this needs to be changed to use that */
+            /* @todo when new image type for grid is imported, this needs to be changed to use that */
         }
 
         return $products;
