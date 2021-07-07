@@ -23,10 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ChoiceTree from '../../components/form/choice-tree';
 import AddonsConnector from '../../components/addons-connector';
-import ChangePasswordControl from '../../components/form/change-password-control';
 import employeeFormMap from './employee-form-map';
+import ChoiceTree from "@components/form/choice-tree";
 
 /**
  * Class responsible for javascript actions in employee add/edit page.
@@ -40,10 +39,13 @@ export default class EmployeeForm {
 
   tabsDropdownSelector: string;
 
+  multistoreAlert: string;
+
   constructor() {
     this.shopChoiceTreeSelector = employeeFormMap.shopChoiceTree;
-    this.shopChoiceTree = new ChoiceTree(this.shopChoiceTreeSelector);
+    this.shopChoiceTree = new window.prestashop.component.ChoiceTree(this.shopChoiceTreeSelector);
     this.employeeProfileSelector = employeeFormMap.profileSelect;
+    this.multistoreAlert = employeeFormMap.multistoreAlert;
     this.tabsDropdownSelector = employeeFormMap.defaultPageSelect;
 
     this.shopChoiceTree.enableAutoCheckChildren();
@@ -53,7 +55,7 @@ export default class EmployeeForm {
       employeeFormMap.addonsLoginButton,
     );
 
-    new ChangePasswordControl(
+    new window.prestashop.component.ChangePasswordControl(
       employeeFormMap.changePasswordInputsBlock,
       employeeFormMap.showChangePasswordBlockButton,
       employeeFormMap.hideChangePasswordBlockButton,
@@ -142,12 +144,11 @@ export default class EmployeeForm {
   private toggleShopTree(): void {
     const $employeeProfileDropdown = $(this.employeeProfileSelector);
     const superAdminProfileId = $employeeProfileDropdown.data('admin-profile');
+    const isSuperAdminProfile = parseInt(<string>$employeeProfileDropdown.val(), 10) === superAdminProfileId;
     $(this.shopChoiceTreeSelector)
       .closest('.form-group')
-      .toggleClass(
-        'd-none',
-        $employeeProfileDropdown.val() === superAdminProfileId,
-      );
+      .toggleClass('d-none', isSuperAdminProfile);
+    $(this.multistoreAlert).toggleClass('d-none', !isSuperAdminProfile);
   }
 
   /**

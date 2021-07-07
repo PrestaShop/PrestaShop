@@ -42,12 +42,15 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdExcept
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -298,6 +301,7 @@ class EmployeeController extends FrameworkBundleAdminController
             'employeeForm' => $employeeForm->createView(),
             'showAddonsConnectButton' => false,
             'enableSidebar' => true,
+            'passwordMinLength' => Password::MIN_LENGTH,
         ];
 
         return $this->render(
@@ -383,6 +387,7 @@ class EmployeeController extends FrameworkBundleAdminController
         }
 
         $templateVars = [
+            'passwordMinLength' => Password::MIN_LENGTH,
             'employeeForm' => $employeeForm->createView(),
             'isRestrictedAccess' => $isRestrictedAccess,
             'showAddonsConnectButton' => $canAccessAddonsConnect,
@@ -477,6 +482,8 @@ class EmployeeController extends FrameworkBundleAdminController
      */
     protected function getErrorMessages(Exception $e)
     {
+        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
+
         return [
             InvalidEmployeeIdException::class => $this->trans(
                 'The object cannot be loaded (the identifier is missing or invalid)',
@@ -486,6 +493,17 @@ class EmployeeController extends FrameworkBundleAdminController
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
             ),
+            UploadedImageConstraintException::class => [
+                UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
+                    'Max file size allowed is "%d" bytes.', 'Admin.Notifications.Error',
+                    [$iniConfig->getUploadMaxSizeInBytes()]
+                ),
+                UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
+                    'Image format not recognized, allowed formats are: %s',
+                    'Admin.Notifications.Error',
+                    [EmployeeType::AVAILABLE_IMAGE_FORMATS_STRING_FOR_TRANSLATION]
+                ),
+            ],
             AdminEmployeeException::class => [
                 AdminEmployeeException::CANNOT_CHANGE_LAST_ADMIN => $this->trans(
                     'You cannot disable or delete the administrator account.',

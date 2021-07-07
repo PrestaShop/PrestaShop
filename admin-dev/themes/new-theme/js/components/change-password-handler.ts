@@ -109,7 +109,7 @@ export default class ChangePasswordHandler {
       case $.passy.strength.LOW:
         return {
           message: this.$feedbackContainer.find('.strength-low').text(),
-          elementClass: 'text-danger',
+          elementClass: 'text-warning',
         };
 
       case $.passy.strength.MEDIUM:

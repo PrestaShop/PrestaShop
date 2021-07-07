@@ -32,6 +32,7 @@ export default {
   defaultPageSelect: '#employee_default_page',
   addonsConnectForm: '#addons-connect-form',
   addonsLoginButton: '#addons_login_btn',
+  multistoreAlert: '#multistore-alert',
 
   // selectors related to "change password" form control
   changePasswordInputsBlock: '.js-change-password-block',

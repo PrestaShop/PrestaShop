@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
+{% form_theme employeeOptionsForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+
 {% block employee_options_form %}
   {{ form_start(employeeOptionsForm, {'action': path('admin_employees_save_options') }) }}
   <div class="card">
@@ -34,16 +36,12 @@
       <div class="card-text">
         <div class="form-group row">
           <label for="{{ employeeOptionsForm.password_change_time.vars.id }}" class="form-control-label">
-            {{ 'Password regeneration'|trans({}, 'Admin.Advparameters.Feature') }}
+            {{ form_label(employeeOptionsForm.password_change_time) }}
           </label>
 
           <div class="col-sm">
             {{ form_errors(employeeOptionsForm.password_change_time) }}
             {{ form_widget(employeeOptionsForm.password_change_time) }}
-            <small class="form-text">
-              {{ 'Security: Minimum time to wait between two password changes.'|trans({}, 'Admin.Advparameters.Feature') }}
-            </small>
-
             {% if not canOptionsBeChanged %}
             <div class="alert alert-warning mt-2 mb-0" role="alert">
               <p class="alert-text">
@@ -56,16 +54,12 @@
 
         <div class="form-group row">
           <label for="{{ employeeOptionsForm.allow_employee_specific_language.vars.id }}" class="form-control-label">
-            {{ 'Memorize the language used in Admin panel forms'|trans({}, 'Admin.Advparameters.Feature') }}
+            {{ form_label(employeeOptionsForm.allow_employee_specific_language) }}
           </label>
 
           <div class="col-sm">
             {{ form_errors(employeeOptionsForm.allow_employee_specific_language) }}
             {{ form_widget(employeeOptionsForm.allow_employee_specific_language) }}
-            <small class="form-text">
-              {{ 'Allow employees to select a specific language for the Admin panel form.'|trans({}, 'Admin.Advparameters.Feature') }}
-            </small>
-
             {% if not canOptionsBeChanged %}
             <div class="alert alert-warning mt-2 mb-0" role="alert">
               <p class="alert-text">
@@ -75,10 +69,7 @@
             {% endif %}
           </div>
         </div>
-
-        {% block employee_options_form_rest %}
-          {{ form_rest(employeeOptionsForm) }}
-        {% endblock %}
+        {{ form_rest(employeeOptionsForm) }}
       </div>
     </div>
     <div class="card-footer">

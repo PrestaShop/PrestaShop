@@ -40,6 +40,7 @@ import {EventEmitter} from '@components/event-emitter';
 import Grid from '@components/grid/grid';
 import Router from '@components/router';
 import ColorPicker from '@js/app/utils/colorpicker';
+import ChangePasswordControl from '@js/components/form/change-password-control';
 
 // Grid extensions
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
@@ -139,6 +140,7 @@ const initPrestashopComponents = () => {
     GridExtensions,
     Router,
     ColorPicker,
+    ChangePasswordControl,
   };
 };
 export default initPrestashopComponents;

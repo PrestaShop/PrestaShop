@@ -30,27 +30,26 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Profile\ProfileSettings;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * Builds form for Profile
  */
-class ProfileType extends AbstractType
+class ProfileType extends TranslatorAwareType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    public const AVAILABLE_IMAGE_FORMATS = [
+        'gif',
+        'jpg',
+        'jpeg',
+        'jpe',
+        'png',
+    ];
 
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
+    public const AVAILABLE_IMAGE_FORMATS_STRING_FOR_TRANSLATION = 'gif, jpg, jpeg, jpe, png';
 
     /**
      * {@inheritdoc}
@@ -60,6 +59,7 @@ class ProfileType extends AbstractType
         $builder
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
+                'label' => $this->trans('Name', 'Admin.Global'),
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
@@ -70,19 +70,20 @@ class ProfileType extends AbstractType
                         ]),
                         new Length([
                             'max' => ProfileSettings::NAME_MAX_LENGTH,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => ProfileSettings::NAME_MAX_LENGTH],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => ProfileSettings::NAME_MAX_LENGTH]
                             ),
                         ]),
                     ],
                 ],
             ])
             ->add('avatarUrl', FileType::class, [
+                'label' => $this->trans('Avatar', 'Admin.Global'),
                 'required' => false,
                 'attr' => [
-                    'accept' => 'gif,jpg,jpeg,jpe,png',
+                    'accept' => implode(',', static::AVAILABLE_IMAGE_FORMATS),
                 ],
             ])
         ;

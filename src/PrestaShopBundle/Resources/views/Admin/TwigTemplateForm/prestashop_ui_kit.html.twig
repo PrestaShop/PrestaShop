@@ -79,7 +79,7 @@
       {% set disabledField = true %}
     {% endif %}
 
-    <div class="{{ block('form_row_class') }}{{ block('widget_type_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{% if (attr.visible is defined and not attr.visible) %} d-none{% endif %}">
+    <div {{ block('form_row_attr') }}{% if (attr.visible is defined and not attr.visible) %} style="display: none;"{% endif %}>
       {% if attribute(form.parent, multistoreCheckboxName) is defined %}
         {{ form_errors(attribute(form.parent, multistoreCheckboxName)) }}
         {{ form_widget(attribute(form.parent, multistoreCheckboxName)) }}
@@ -110,6 +110,28 @@
   col-sm input-container
 {%- endblock form_group_class %}
 
-{% block form_row_class -%}
-  form-group row{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}
-{%- endblock form_row_class %}
+{% block form_row_attr -%}
+  {% set classes = 'form-group row' %}
+  {% if (not compound or force_error|default(false)) and not valid %}
+    {% set classes = classes ~ ' has-error' %}
+  {% endif %}
+
+  {% if row_attr.class is defined %}
+    {% set classes = classes ~ ' ' ~ row_attr.class  %}
+  {% endif %}
+
+  {% set row_attr = row_attr|merge({'class': classes}) %}
+
+  {% for key, rowAttr in row_attr %} {{ key }}="{{ rowAttr }}" {% endfor %}
+{%- endblock form_row_attr %}
+
+{%- block repeated_row -%}
+  {{- block('form_rows') -}}
+  {{ block('form_help') }}
+{%- endblock repeated_row -%}
+
+{%- block password_widget -%}
+  {%- set type = type|default('password') -%}
+  {{ block('form_widget_simple') }}
+  {{ block('form_help') }}
+{%- endblock password_widget -%}

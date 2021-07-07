@@ -37,8 +37,10 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Profile\ProfileSettings;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProfileFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Profile\ProfileType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -285,7 +287,20 @@ class ProfileController extends FrameworkBundleAdminController
      */
     protected function getErrorMessages()
     {
+        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
+
         return [
+            UploadedImageConstraintException::class => [
+                UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
+                    'Max file size allowed is "%d" bytes.', 'Admin.Notifications.Error',
+                    [$iniConfig->getUploadMaxSizeInBytes()]
+                ),
+                UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
+                    'Image format not recognized, allowed formats are: %s',
+                    'Admin.Notifications.Error',
+                    [ProfileType::AVAILABLE_IMAGE_FORMATS_STRING_FOR_TRANSLATION]
+                ),
+            ],
             ProfileConstraintException::class => [
                 ProfileConstraintException::INVALID_NAME => $this->trans(
                     'This field cannot be longer than %limit% characters (incl. HTML tags)',
