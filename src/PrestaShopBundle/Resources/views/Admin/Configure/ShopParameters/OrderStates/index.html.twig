@@ -42,6 +42,8 @@
 
 {% block content %}
 
+  {% if displayAllShopsContextForced %}{{ ps.infotip(multistoreForcedContextInfoTip, true) }}{% endif %}
+  
   {% block order_states_listing %}
     <div class="row">
       <div class="col-12">
