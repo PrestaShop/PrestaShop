@@ -21,7 +21,7 @@ const addFilePage = require('@pages/BO/catalog/files/add');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_advancedParams_team_profiles_filterPaginationAndSortFiles';
+const baseContext = 'functional_BO_advancedParams_team_profiles_filterSortPaginationAndBulkActionsFile';
 
 let browserContext;
 let page;
@@ -67,7 +67,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions file'
   });
 
   // 1: Create 11 files
-  describe('Create file in BO', async () => {
+  describe('Create 11 files in BO', async () => {
     const creationTests = new Array(11).fill(0, 0, 11);
     creationTests.forEach((test, index) => {
       const createFileData = new FileFaker({name: `todelete${index}`});
@@ -95,7 +95,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions file'
     });
   });
   // 2 : Filter files table
-  describe('Filter files in BO', async () => {
+  describe('Filter files table', async () => {
     const filterTests = [
       {
         args: {
@@ -172,7 +172,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions file'
   });
 
   // 4 : Sort files table
-  describe('Sort files', async () => {
+  describe('Sort files table', async () => {
     const sortTests = [
       {
         args: {
