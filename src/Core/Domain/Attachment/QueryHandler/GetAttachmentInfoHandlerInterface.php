@@ -26,27 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformationList;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
-
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
-        GetAttachmentsForListingHandlerInterface::class
-    ),
-    E_USER_DEPRECATED
-);
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
 
 /**
- * @deprecated since 1.7.9.0 and will be removed in the next major version.
- * Defines contract to handle @see GetAttachmentInformationList query
+ * Defines contract to handle @see GetAttachmentInfo query
  */
-interface GetAttachmentsForListingHandlerInterface
+interface GetAttachmentInfoHandlerInterface
 {
     /**
-     * @param GetAttachmentInformationList $query
+     * @param GetAttachmentInfo $query
      *
-     * @return AttachmentInformation[]
+     * @return AttachmentInfo
      */
-    public function handle(GetAttachmentInformationList $query): array;
+    public function handle(GetAttachmentInfo $query): AttachmentInfo;
 }

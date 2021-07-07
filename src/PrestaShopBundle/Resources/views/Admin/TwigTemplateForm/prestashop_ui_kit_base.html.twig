@@ -1192,3 +1192,10 @@
     </p>
   </div>
 {% endblock %}
+
+{% block preview_widget %}
+  <div class="{{ form.vars.name }}">
+    {{ block('simple_widget') }}
+    <span class="preview">{% if form.vars.value %}{{ form.vars.value }}{% endif %}</span>
+  </div>
+{% endblock %}

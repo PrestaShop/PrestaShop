@@ -23,63 +23,79 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
-        AssociateProductAttachmentCommand::class
-    ),
-    E_USER_DEPRECATED
-);
-
-/**
- * Associates product with attachment
- *
- * @deprecated since 1.7.9.0 and will be removed in next major version.
- * @see SetAssociatedProductAttachmentsCommand
- */
-class AssociateProductAttachmentCommand
+class AttachmentInfo
 {
     /**
-     * @var ProductId
-     */
-    private $productId;
-
-    /**
-     * @var AttachmentId
+     * @var int
      */
     private $attachmentId;
 
     /**
-     * @param int $productId
+     * @var array<int, string>
+     */
+    private $localizedNames;
+
+    /**
+     * @var string
+     */
+    private $filename;
+
+    /**
+     * @var string
+     */
+    private $mimeType;
+
+    /**
      * @param int $attachmentId
+     * @param array $localizedNames
+     * @param string $filename
+     * @param string $mimeType
      */
-    public function __construct(int $productId, int $attachmentId)
-    {
-        $this->productId = new ProductId($productId);
-        $this->attachmentId = new AttachmentId($attachmentId);
+    public function __construct(
+        int $attachmentId,
+        array $localizedNames,
+        string $filename,
+        string $mimeType
+    ) {
+        $this->attachmentId = $attachmentId;
+        $this->localizedNames = $localizedNames;
+        $this->filename = $filename;
+        $this->mimeType = $mimeType;
     }
 
     /**
-     * @return ProductId
+     * @return int
      */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @return AttachmentId
-     */
-    public function getAttachmentId(): AttachmentId
+    public function getAttachmentId(): int
     {
         return $this->attachmentId;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilename(): string
+    {
+        return $this->filename;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMimeType(): string
+    {
+        return $this->mimeType;
     }
 }

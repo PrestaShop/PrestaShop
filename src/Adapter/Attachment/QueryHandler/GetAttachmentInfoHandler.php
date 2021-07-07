@@ -23,46 +23,43 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
+namespace PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
-        GetAttachmentInformationList::class
-    ),
-    E_USER_DEPRECATED
-);
+use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentInfoHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
 
 /**
- * @deprecated since 1.7.9.0 and will be removed in the next major version.
- *
- * Query providing attachments information
+ * Handles @see GetAttachmentInfo query using legacy object model
  */
-class GetAttachmentInformationList
+final class GetAttachmentInfoHandler implements GetAttachmentInfoHandlerInterface
 {
     /**
-     * @var LanguageId
+     * @var AttachmentRepository
      */
-    private $languageId;
+    private $attachmentRepository;
 
-    /**
-     * @param int $languageId
-     */
-    public function __construct(int $languageId)
-    {
-        $this->languageId = new LanguageId($languageId);
+    public function __construct(
+        AttachmentRepository $attachmentRepository
+    ) {
+        $this->attachmentRepository = $attachmentRepository;
     }
 
     /**
-     * @return LanguageId
+     * {@inheritdoc}
      */
-    public function getLanguageId(): LanguageId
+    public function handle(GetAttachmentInfo $query): AttachmentInfo
     {
-        return $this->languageId;
+        $attachment = $this->attachmentRepository->get($query->getAttachmentId());
+
+        return new AttachmentInfo(
+            (int) $attachment->id,
+            $attachment->name,
+            $attachment->file_name,
+            $attachment->mime
+        );
     }
 }

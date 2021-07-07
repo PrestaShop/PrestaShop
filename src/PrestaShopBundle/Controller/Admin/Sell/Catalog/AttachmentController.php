@@ -40,12 +40,15 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentExcep
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptyFileException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInfo;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -92,7 +95,6 @@ class AttachmentController extends FrameworkBundleAdminController
         );
 
         $attachmentForm = $attachmentFormBuilder->getForm();
-
         $attachmentForm->handleRequest($request);
 
         try {
@@ -101,10 +103,20 @@ class AttachmentController extends FrameworkBundleAdminController
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
+                if ($request->get('saveAndStay') !== null) {
+                    // Keep the initial query parameters (to keep liteDisplay or saveAndStay for example)
+                    $parameters = array_merge([
+                        'attachmentId' => $handlerResult->getIdentifiableObjectId(),
+                    ], $request->query->all());
+
+                    return $this->redirectToRoute('admin_attachments_edit', $parameters);
+                }
+
                 return $this->redirectToRoute('admin_attachments_index');
             }
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $message = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
+            $this->addFlash('error', $message);
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Attachment/add.html.twig', [
@@ -250,6 +262,37 @@ class AttachmentController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_attachments_index');
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")
+     *
+     * @param int $attachmentId
+     *
+     * @return JsonResponse
+     */
+    public function getAttachmentInfoAction(int $attachmentId): JsonResponse
+    {
+        $attachmentInfo = $this->getQueryBus()->handle(new GetAttachmentInfo($attachmentId));
+
+        return $this->json(['attachmentInfo' => $this->presentAttachmentInfo($attachmentInfo)]);
+    }
+
+    /**
+     * @param AttachmentInfo $productAttachmentInfo
+     *
+     * @return array<string, mixed>
+     */
+    private function presentAttachmentInfo(AttachmentInfo $productAttachmentInfo): array
+    {
+        $localizedNames = $productAttachmentInfo->getLocalizedNames();
+
+        return [
+            'id' => $productAttachmentInfo->getAttachmentId(),
+            'name' => $localizedNames[$this->getContextLangId()] ?? reset($localizedNames),
+            'filename' => $productAttachmentInfo->getFilename(),
+            'mimeType' => $productAttachmentInfo->getMimeType(),
+        ];
     }
 
     /**

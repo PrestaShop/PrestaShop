@@ -23,30 +23,19 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler;
+namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformationList;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
-        GetAttachmentsForListingHandlerInterface::class
-    ),
-    E_USER_DEPRECATED
-);
-
-/**
- * @deprecated since 1.7.9.0 and will be removed in the next major version.
- * Defines contract to handle @see GetAttachmentInformationList query
- */
-interface GetAttachmentsForListingHandlerInterface
+class PreviewType extends HiddenType
 {
     /**
-     * @param GetAttachmentInformationList $query
-     *
-     * @return AttachmentInformation[]
+     * {@inheritdoc}
      */
-    public function handle(GetAttachmentInformationList $query): array;
+    public function getBlockPrefix(): string
+    {
+        return 'preview';
+    }
 }

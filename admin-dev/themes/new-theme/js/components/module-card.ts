@@ -224,7 +224,7 @@ export default class ModuleCard {
         maintenanceLink.setAttribute('href', window.moduleURLs.maintenancePage);
         maintenanceLink.innerHTML = window.moduleTranslations.moduleModalUpdateMaintenance;
 
-        const updateConfirmModal = new (ConfirmModal as any)(
+        const updateConfirmModal = new ConfirmModal(
           {
             id: 'confirm-module-update-modal',
             confirmTitle:

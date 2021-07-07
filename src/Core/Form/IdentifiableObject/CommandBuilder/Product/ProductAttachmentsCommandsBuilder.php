@@ -23,46 +23,34 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
-        GetAttachmentInformationList::class
-    ),
-    E_USER_DEPRECATED
-);
-
-/**
- * @deprecated since 1.7.9.0 and will be removed in the next major version.
- *
- * Query providing attachments information
- */
-class GetAttachmentInformationList
+class ProductAttachmentsCommandsBuilder implements ProductCommandsBuilderInterface
 {
-    /**
-     * @var LanguageId
-     */
-    private $languageId;
-
-    /**
-     * @param int $languageId
-     */
-    public function __construct(int $languageId)
+    public function buildCommands(ProductId $productId, array $formData): array
     {
-        $this->languageId = new LanguageId($languageId);
-    }
+        if (!isset($formData['options']['attachments']['attached_files'])) {
+            return [];
+        }
 
-    /**
-     * @return LanguageId
-     */
-    public function getLanguageId(): LanguageId
-    {
-        return $this->languageId;
+        $attachedFiles = $formData['options']['attachments']['attached_files'];
+
+        if (empty($attachedFiles)) {
+            return [new RemoveAllAssociatedProductAttachmentsCommand($productId->getValue())];
+        }
+
+        $attachmentIds = [];
+
+        foreach ($attachedFiles as $attachedFile) {
+            $attachmentIds[] = (int) $attachedFile['attachment_id'];
+        }
+
+        return [new SetAssociatedProductAttachmentsCommand($productId->getValue(), $attachmentIds)];
     }
 }

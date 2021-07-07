@@ -23,30 +23,32 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformationList;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
-        GetAttachmentsForListingHandlerInterface::class
-    ),
-    E_USER_DEPRECATED
-);
-
-/**
- * @deprecated since 1.7.9.0 and will be removed in the next major version.
- * Defines contract to handle @see GetAttachmentInformationList query
- */
-interface GetAttachmentsForListingHandlerInterface
+class GetAttachmentInfo
 {
     /**
-     * @param GetAttachmentInformationList $query
-     *
-     * @return AttachmentInformation[]
+     * @var AttachmentId
      */
-    public function handle(GetAttachmentInformationList $query): array;
+    private $attachmentId;
+
+    /**
+     * @param int $attachmentId
+     */
+    public function __construct(int $attachmentId)
+    {
+        $this->attachmentId = new AttachmentId($attachmentId);
+    }
+
+    /**
+     * @return AttachmentId
+     */
+    public function getAttachmentId(): AttachmentId
+    {
+        return $this->attachmentId;
+    }
 }

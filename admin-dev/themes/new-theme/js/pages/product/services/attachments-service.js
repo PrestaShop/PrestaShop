@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,29 +23,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler;
+import Router from '@components/router';
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformationList;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
-
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
-        GetAttachmentsForListingHandlerInterface::class
-    ),
-    E_USER_DEPRECATED
-);
+const router = new Router();
+const {$} = window;
 
 /**
- * @deprecated since 1.7.9.0 and will be removed in the next major version.
- * Defines contract to handle @see GetAttachmentInformationList query
+ * @param attachmentId
+ *
+ * @returns {Promise<*|jQuery>}
  */
-interface GetAttachmentsForListingHandlerInterface
-{
-    /**
-     * @param GetAttachmentInformationList $query
-     *
-     * @return AttachmentInformation[]
-     */
-    public function handle(GetAttachmentInformationList $query): array;
-}
+export const getAttachmentInfo = async (attachmentId) => $.get(
+  router.generate('admin_attachments_attachment_info', {attachmentId}),
+);
+
+export default {
+  getAttachmentInfo,
+};

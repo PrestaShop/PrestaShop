@@ -26,6 +26,7 @@
 import NavbarHandler from '@components/navbar-handler';
 import ProductMap from '@pages/product/product-map';
 
+import AttachmentsManager from '@pages/product/edit/attachments-manager';
 import CategoriesManager from '@pages/product/components/categories';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
 import CustomizationsManager from '@pages/product/edit/customizations-manager';
@@ -97,6 +98,7 @@ $(() => {
 
   new FeatureValuesManager(eventEmitter);
   new CustomizationsManager();
+  new AttachmentsManager();
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
     new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true);

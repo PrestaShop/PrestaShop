@@ -24,6 +24,7 @@
  */
 
 const combinationListId = '#combination_list';
+const attachmentsBlockId = '#product_options_attachments';
 
 export default {
   productForm: 'form[name=product]',
@@ -193,5 +194,21 @@ export default {
     contentContainer: '.module-contents',
     moduleContents: '.module-contents .module-render-container',
     moduleContent: (moduleId) => `.module-contents .module-render-container.${moduleId}`,
+  },
+  attachments: {
+    attachmentsContainer: attachmentsBlockId,
+    attachmentsCollection: '.attachments-collection',
+    attachmentsTableBody: '.attachments-collection tbody',
+    addAttachmentBtn: '.add-attachment',
+    removeAttachmentBtn: '.remove-attachment',
+    attachedFileRow: '.attached_file_row',
+    attachmentIdInputs: '.attachment-id-input',
+    emptyState: '#attachments-empty-state',
+    tableRow: {
+      attachmentIdInput: (rowIndex) => `${attachmentsBlockId}_attached_files_${rowIndex}_attachment_id`,
+      attachmentNamePreview: '.name .preview',
+      attachmentFilenamePreview: '.filename .preview',
+      attachmentTypePreview: '.mime_type .preview',
+    },
   },
 };
