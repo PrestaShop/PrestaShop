@@ -31,8 +31,6 @@ use Tools;
 
 class ApiClient
 {
-    public const DEFAULT_ADDONS_TIMEOUT = 10;
-
     private $addonsApiClient;
     private $queryParameters = [
         'format' => 'json',
@@ -62,7 +60,7 @@ class ApiClient
             ->setVersion($shopVersion)
             ->setShopUrl($domain)
             ->setConnectionTimeout(Tools::DEFAULT_CONNECTION_TIMEOUT)
-            ->setTimeout(static::DEFAULT_ADDONS_TIMEOUT)
+            ->setTimeout(Tools::DEFAULT_ADDONS_TIMEOUT)
         ;
         $this->defaultQueryParameters = $this->queryParameters;
     }

@@ -41,8 +41,10 @@ class ToolsCore
     const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
     const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
     public const CACHE_LIFETIME_SECONDS = 604800;
+
     public const DEFAULT_CONNECTION_TIMEOUT = 5;
-    public const MODULE_DOWNLOAD_TIMEOUT = 35;
+    public const DEFAULT_ADDONS_TIMEOUT = 30;
+    public const MODULE_DOWNLOAD_TIMEOUT = 60;
 
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
@@ -3857,7 +3859,7 @@ exit;
         $post_data = http_build_query($post_query_data);
 
         $end_point = 'api.addons.prestashop.com';
-        $timeout = 5;
+        $timeout = static::DEFAULT_ADDONS_TIMEOUT;
         switch ($request) {
             case 'native':
                 $post_data .= '&method=listing&action=native';
