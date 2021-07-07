@@ -27,14 +27,14 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Delivery;
 
 use DateTime;
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * This form class generates the "Pdf" form in Delivery slips page.
  */
-class SlipPdfType extends CommonAbstractType
+class SlipPdfType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -47,20 +47,22 @@ class SlipPdfType extends CommonAbstractType
                 'date_from',
                 DatePickerType::class,
                 [
-                    'required' => false,
                     'attr' => ['placeholder' => 'YYYY-MM-DD'],
                     'data' => $now,
                     'empty_data' => $now,
+                    'label' => $this->trans('From', 'Admin.Global'),
+                    'help' => $this->trans('Format: 2011-12-31 (inclusive).', 'Admin.Orderscustomers.Help'),
                 ]
             )
             ->add(
                 'date_to',
                 DatePickerType::class,
                 [
-                    'required' => false,
                     'attr' => ['placeholder' => 'YYYY-MM-DD'],
                     'data' => $now,
                     'empty_data' => $now,
+                    'label' => $this->trans('To', 'Admin.Global'),
+                    'help' => $this->trans('Format: 2011-12-31 (inclusive).', 'Admin.Orderscustomers.Help'),
                 ]
             );
     }
