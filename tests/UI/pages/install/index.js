@@ -195,9 +195,9 @@ class Install extends CommonPage {
       this.waitForVisibleSelector(page, this.installModulesAddons, 360000),
       // Starting this we need to give more time to install addons modules
       // Those timeouts are not individual and do not stack, so all of them must be increased
-      this.waitForVisibleSelector(page, this.installThemeStep, 720000),
-      this.waitForVisibleSelector(page, this.installFixturesStep, 720000),
-      this.waitForVisibleSelector(page, this.installationFinishedStepPageTitle, 720000),
+      this.waitForVisibleSelector(page, this.installThemeStep, 1080000),
+      this.waitForVisibleSelector(page, this.installFixturesStep, 1080000),
+      this.waitForVisibleSelector(page, this.installationFinishedStepPageTitle, 1080000),
     ]);
 
     return true;
