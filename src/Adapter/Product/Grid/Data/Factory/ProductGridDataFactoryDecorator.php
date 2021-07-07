@@ -30,10 +30,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory;
 
 use Currency;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
@@ -70,11 +72,6 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
     private $productDataProvider;
 
     /**
-     * @var ImageProviderInterface
-     */
-    private $productImageProvider;
-
-    /**
      * @var TaxComputer
      */
     private $taxComputer;
@@ -86,6 +83,10 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
      * @var int
      */
     private $countryId;
+    /**
+     * @var ProductImagePathFactory
+     */
+    private $productImagePathFactory;
 
     /**
      * @param GridDataFactoryInterface $productGridDataFactory
@@ -93,7 +94,6 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
      * @param string $contextLocale
      * @param int $defaultCurrencyId
      * @param ProductDataProvider $productDataProvider
-     * @param ImageProviderInterface $productImageProvider
      */
     public function __construct(
         GridDataFactoryInterface $productGridDataFactory,
@@ -101,10 +101,10 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         string $contextLocale,
         int $defaultCurrencyId,
         ProductDataProvider $productDataProvider,
-        ImageProviderInterface $productImageProvider,
         TaxComputer $taxComputer,
         ProductRepository $productRepository,
-        int $countryId
+        int $countryId,
+        ProductImagePathFactory $productImagePathFactory
     ) {
         $this->productGridDataFactory = $productGridDataFactory;
 
@@ -114,10 +114,10 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
 
         $this->defaultCurrencyId = $defaultCurrencyId;
         $this->productDataProvider = $productDataProvider;
-        $this->productImageProvider = $productImageProvider;
         $this->taxComputer = $taxComputer;
         $this->productRepository = $productRepository;
         $this->countryId = $countryId;
+        $this->productImagePathFactory = $productImagePathFactory;
     }
 
     /**
@@ -165,7 +165,8 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
                 $currency->iso_code
             );
 
-            $products[$i]['image'] = $this->productImageProvider->getPath($product['id_image']);
+            /** @todo when new image type for grid is imported, this needs to be changed to use that */
+            $products[$i]['image'] = $this->productImagePathFactory->getPathByType(new ImageId((int) $product['id_image']), ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT );
         }
 
         return $products;
