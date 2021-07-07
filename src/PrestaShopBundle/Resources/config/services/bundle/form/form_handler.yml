@@ -351,41 +351,41 @@ services:
       - 'PrestaShopBundle\Form\Admin\Improve\International\Localization\AdvancedConfigurationType'
       - 'LocalizationPageAdvanced'
 
-    prestashop.admin.payment_carrier_restrictions.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
-        arguments:
-            - '@form.factory'
-            - '@prestashop.core.hook.dispatcher'
-            - '@prestashop.admin.payment_preferences.form_data_provider'
-            - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCarrierRestrictionsType'
-            - 'PaymentPreferences'
+  prestashop.admin.payment_carrier_restrictions.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.admin.payment_preferences.form_data_provider'
+      - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCarrierRestrictionsType'
+      - 'PaymentPreferences'
 
-    prestashop.admin.payment_country_restrictions.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
-        arguments:
-            - '@form.factory'
-            - '@prestashop.core.hook.dispatcher'
-            - '@prestashop.admin.payment_preferences.form_data_provider'
-            - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCountryRestrictionsType'
-            - 'PaymentPreferences'
+  prestashop.admin.payment_country_restrictions.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.admin.payment_preferences.form_data_provider'
+      - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCountryRestrictionsType'
+      - 'PaymentPreferences'
 
-    prestashop.admin.payment_currency_restrictions.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
-        arguments:
-            - '@form.factory'
-            - '@prestashop.core.hook.dispatcher'
-            - '@prestashop.admin.payment_preferences.form_data_provider'
-            - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCurrencyRestrictionsType'
-            - 'PaymentPreferences'
+  prestashop.admin.payment_currency_restrictions.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.admin.payment_preferences.form_data_provider'
+      - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCurrencyRestrictionsType'
+      - 'PaymentPreferences'
 
-    prestashop.admin.payment_group_restrictions.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
-        arguments:
-            - '@form.factory'
-            - '@prestashop.core.hook.dispatcher'
-            - '@prestashop.admin.payment_preferences.form_data_provider'
-            - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleGroupRestrictionsType'
-            - 'PaymentPreferences'
+  prestashop.admin.payment_group_restrictions.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.admin.payment_preferences.form_data_provider'
+      - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleGroupRestrictionsType'
+      - 'PaymentPreferences'
   prestashop.admin.payment_preferences.form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\Handler'
     arguments:
