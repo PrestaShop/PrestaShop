@@ -99,6 +99,12 @@
             'label': 'Order status'|trans({}, 'Admin.Orderscustomers.Feature'),
           }) }}
 
+          {{ form_row(summaryForm.cart_id, {'attr': {'class': 'js-place-order-cart-id'}}) }}
+
+          {% block cart_summary_form_rest %}
+            {{ form_rest(summaryForm) }}
+          {% endblock %}
+
           <div class="form-group row mt-4">
             <div class="col-sm offset-sm-4">
               <button class="btn btn-primary" type="submit" id="create-order-button">
@@ -128,8 +134,6 @@
                   {{ renderhook('displayAdminOrderCreateExtraButtons') }}
                 </div>
               </div>
-
-              {{ form_row(summaryForm.cart_id, {'attr': {'class': 'js-place-order-cart-id'}}) }}
             </div>
           </div>
         </div>
