@@ -13,13 +13,12 @@ const filesPage = require('@pages/BO/catalog/files');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_files_helperCard';
-
+const baseContext = 'functional_BO_catalog_files_helpCard';
 
 let browserContext;
 let page;
 
-describe('Helper card on files page', async () => {
+describe('Bo - Catalog - Files : Help card on files page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -34,7 +33,7 @@ describe('Helper card on files page', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to files page', async function () {
+  it('should go to \'Catalog > Files\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFilesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
