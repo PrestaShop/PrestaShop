@@ -164,9 +164,11 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
                 ),
                 $currency->iso_code
             );
-
+            $products[$i]['image'] = '';
+            if ($product['id_image']) {
+                $products[$i]['image'] = $this->productImagePathFactory->getPathByType(new ImageId((int) $product['id_image']), ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT );
+            }
             /** @todo when new image type for grid is imported, this needs to be changed to use that */
-            $products[$i]['image'] = $this->productImagePathFactory->getPathByType(new ImageId((int) $product['id_image']), ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT );
         }
 
         return $products;
