@@ -10,7 +10,7 @@ admin_payment_carrier_restrictions_save:
     path: /carrier-restrictions
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Payment\PaymentPreferences:processPaymentCarrierRestrictionsForm'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\Payment\PaymentPreferencesController::processPaymentCarrierRestrictionsFormAction'
         _legacy_controller: AdminPaymentPreferences
         _legacy_link: AdminPaymentPreferences:update
 
@@ -18,7 +18,7 @@ admin_payment_country_restrictions_save:
     path: /country-restrictions
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Payment\PaymentPreferences:processPaymentCountryRestrictionsForm'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\Payment\PaymentPreferencesController::processPaymentCountryRestrictionsFormAction'
         _legacy_controller: AdminPaymentPreferences
         _legacy_link: AdminPaymentPreferences:update
 
@@ -26,7 +26,7 @@ admin_payment_currency_restrictions_save:
     path: /currency-restrictions
     methods: [ POST ]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Payment\PaymentPreferences:processPaymentCurrencyRestrictionsForm'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\Payment\PaymentPreferencesController::processPaymentCurrencyRestrictionsFormAction'
         _legacy_controller: AdminPaymentPreferences
         _legacy_link: AdminPaymentPreferences:update
 
@@ -34,6 +34,6 @@ admin_payment_group_restrictions_save:
     path: /group-restrictions
     methods: [ POST ]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Payment\PaymentPreferences:processPaymentGroupRestrictionsForm'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\Payment\PaymentPreferencesController::processPaymentGroupRestrictionsFormAction'
         _legacy_controller: AdminPaymentPreferences
         _legacy_link: AdminPaymentPreferences:update
