@@ -111,7 +111,7 @@ final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterfac
     }
 
     /**
-     * @param array<string, int> $value
+     * @param array<string, int|null> $value
      *
      * @return int
      */
