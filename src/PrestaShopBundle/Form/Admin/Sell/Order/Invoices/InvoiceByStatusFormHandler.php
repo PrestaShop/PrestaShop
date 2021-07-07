@@ -31,6 +31,9 @@ use PrestaShop\PrestaShop\Core\Form\Handler;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
+use PrestaShopBundle\Form\Exception\DataProviderException;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use Symfony\Component\Form\FormFactoryInterface;
 
 /**
@@ -92,16 +95,21 @@ final class InvoiceByStatusFormHandler extends Handler
         }
 
         if (empty($invoiceCollection)) {
-            $errors[] = [
-                'key' => 'No invoice has been found for this status.',
-                'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
+            $errorCollection = new InvalidConfigurationDataErrorCollection();
+
+            $errorCollection->add(
+                new InvalidConfigurationDataError(
+                    InvalidConfigurationDataError::ERROR_NO_INVOICES_FOUND_FOR_STATUS,
+                    GenerateByStatusType::FIELD_ORDER_STATES
+                )
+            );
+
+            throw new DataProviderException('No invoices found', 0, null, $errorCollection);
         } else {
             // Generate PDF out of found invoices
             $this->pdfGenerator->generatePDF($invoiceCollection);
         }
 
-        return $errors;
+        return [];
     }
 }

@@ -27,7 +27,11 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShopBundle\Form\Exception\DataProviderException;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 
 /**
  * Class is responsible of managing the data manipulated using invoice options form
@@ -70,9 +74,7 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        if ($errors = $this->validate($data)) {
-            return $errors;
-        }
+        $this->validate($data);
 
         return $this->invoiceOptionsConfiguration->updateConfiguration($data);
     }
@@ -82,21 +84,63 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
      *
      * @param array $data
      *
-     * @return array Array of errors if any
+     * @return void
+     *
+     * @throws TypeException|DataProviderException
      */
-    private function validate(array $data)
+    private function validate(array $data): void
     {
-        $errors = [];
-        $invoiceNumber = $data['invoice_number'];
-
-        if ($invoiceNumber > 0 && $invoiceNumber <= $this->nextInvoiceNumber) {
-            $errors[] = [
-                'key' => 'Invalid invoice number.',
-                'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
+        $errorCollection = new InvalidConfigurationDataErrorCollection();
+        if (isset($data[InvoiceOptionsType::FIELD_INVOICE_NUMBER])) {
+            $invoiceNumber = $data[InvoiceOptionsType::FIELD_INVOICE_NUMBER];
+            if ($invoiceNumber !== 0 && $invoiceNumber <= $this->nextInvoiceNumber) {
+                $errorCollection->add(
+                    new InvalidConfigurationDataError(
+                        InvalidConfigurationDataError::ERROR_INCORRECT_INVOICE_NUMBER,
+                        InvoiceOptionsType::FIELD_INVOICE_NUMBER
+                    )
+                );
+            }
         }
 
-        return $errors;
+        if (isset($data[InvoiceOptionsType::FIELD_INVOICE_PREFIX]) && is_array($data[InvoiceOptionsType::FIELD_INVOICE_PREFIX])) {
+            $this->validateContainsNoTags($data[InvoiceOptionsType::FIELD_INVOICE_PREFIX], InvoiceOptionsType::FIELD_INVOICE_PREFIX, $errorCollection);
+        }
+
+        if (isset($data[InvoiceOptionsType::FIELD_LEGAL_FREE_TEXT]) && is_array($data[InvoiceOptionsType::FIELD_LEGAL_FREE_TEXT])) {
+            $this->validateContainsNoTags($data[InvoiceOptionsType::FIELD_LEGAL_FREE_TEXT], InvoiceOptionsType::FIELD_LEGAL_FREE_TEXT, $errorCollection);
+        }
+
+        if (isset($data[InvoiceOptionsType::FIELD_FOOTER_TEXT]) && is_array($data[InvoiceOptionsType::FIELD_FOOTER_TEXT])) {
+            $this->validateContainsNoTags($data[InvoiceOptionsType::FIELD_FOOTER_TEXT], InvoiceOptionsType::FIELD_FOOTER_TEXT, $errorCollection);
+        }
+
+        if (!$errorCollection->isEmpty()) {
+            throw new DataProviderException('Invalid invoice options form data', 0, null, $errorCollection);
+        }
+    }
+
+    /**
+     * If any of values of multilang field contain html tags and if they do add error.
+     *
+     * @param array $data
+     * @param string $key
+     * @param InvalidConfigurationDataErrorCollection $errorCollection
+     *
+     * @throws TypeException
+     */
+    private function validateContainsNoTags(array $data, string $key, InvalidConfigurationDataErrorCollection $errorCollection): void
+    {
+        foreach ($data as $languageId => $value) {
+            if ($value !== null && $value !== strip_tags($value)) {
+                $errorCollection->add(
+                    new InvalidConfigurationDataError(
+                        InvalidConfigurationDataError::ERROR_CONTAINS_HTML_TAGS,
+                        $key,
+                        $languageId
+                    )
+                );
+            }
+        }
     }
 }
