@@ -198,13 +198,12 @@ class CombinationController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     * @todo: rename to deleteAction
      *
      * @param int $combinationId
      *
      * @return JsonResponse
      */
-    public function removeAction(int $combinationId): JsonResponse
+    public function deleteAction(int $combinationId): JsonResponse
     {
         try {
             $this->getCommandBus()->handle(new DeleteCombinationCommand($combinationId));
