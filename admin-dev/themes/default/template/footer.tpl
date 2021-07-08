@@ -26,8 +26,8 @@
 	</div>
 </div>
 {if $display_footer}
-<div id="footer" class="bootstrap hide">
-	<div class="col-sm-3">
+<div id="footer" class="bootstrap">
+	<div class="col-sm-12">
 		{hook h="displayBackOfficeFooter"}
 	</div>
 </div>
