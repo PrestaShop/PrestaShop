@@ -1108,20 +1108,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     private function checkOrderDetailProductDetailsWithReference(string $orderDetailPosition, string $orderReference, string $productName, TableNode $table, ?string $combinationName = null)
     {
         $productOrderDetails = $this->getOrderDetailsFromOrder($productName, $orderReference, $combinationName);
-        $orderDetailsIndexes = [
-            'first' => 0,
-            'second' => 1,
-            'third' => 2,
-            'fourth' => 3,
-        ];
 
-        if (!isset($orderDetailsIndexes[$orderDetailPosition])) {
-            throw new RuntimeException(sprintf('Cannot interpret this orderDetail position %s', $orderDetailPosition));
-        }
-        $orderDetailIndex = $orderDetailsIndexes[$orderDetailPosition];
-        Assert::assertGreaterThanOrEqual($orderDetailIndex + 1, count($productOrderDetails));
+        $orderDetailIndex = PrimitiveUtils::castStringIntegerIntoInteger($orderDetailPosition);
+        Assert::assertGreaterThanOrEqual($orderDetailIndex, count($productOrderDetails));
 
-        $productOrderDetail = $productOrderDetails[$orderDetailIndex];
+        $productOrderDetail = $productOrderDetails[$orderDetailIndex - 1];
         $expectedDetails = $table->getRowsHash();
         foreach ($expectedDetails as $detailName => $expectedDetailValue) {
             Assert::assertEquals(
