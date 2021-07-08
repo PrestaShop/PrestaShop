@@ -627,15 +627,19 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      */
     private function shouldQuantityDiscountsBeApplied(AddProductToOrderCommand $command): bool
     {
-        // PS_QTY_DISCOUNT_ON_COMBINATION === 1 means quantity discount is based on Combinations, otherwise it's based on Products
-        $qtyDiscountOnProducts = (1 !== (int) $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION'));
-
         /*
          * The rule is :
          * If the qtyDiscount is based on Products
          * and the item added to the order is a combination
          * we don't apply the specific prices based on the quantity
          */
-        return !($qtyDiscountOnProducts && (null !== $command->getCombinationId()));
+
+        // If the item is not a combination, wo need to go further
+        if (null === $command->getCombinationId()) {
+            return false;
+        }
+
+        // PS_QTY_DISCOUNT_ON_COMBINATION === 1 means quantity discount is based on Combinations, otherwise it's based on Products
+        return (1 === (int) $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION'));
     }
 }
