@@ -1690,17 +1690,14 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         $themesDir = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'themes';
 
-        $processor = new RtlStylesheetProcessor(
+        return new RtlStylesheetProcessor(
             $adminDir,
             $themesDir,
             [
-                _PS_MODULE_DIR_ . 'gamification',
                 _PS_MODULE_DIR_ . 'welcome',
                 _PS_MODULE_DIR_ . 'cronjobs',
             ]
         );
-
-        return $processor;
     }
 
     /**
