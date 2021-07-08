@@ -58,7 +58,7 @@
                 {l s='Reference' d='Shop.Theme.Catalog'}: {$product.product_reference}<br/>
               {/if}
               {if isset($product.download_link)}
-              <a href="{$product.download_link}">{l s='Download' d='Shop.Theme.Actions'}</a><br/>
+                <a href="{$product.download_link}">{l s='Download' d='Shop.Theme.Actions'}</a><br/>
               {/if}
               {if $product.customizations}
                 {foreach from=$product.customizations item="customization"}
