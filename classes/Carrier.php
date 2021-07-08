@@ -997,7 +997,9 @@ class CarrierCore extends ObjectModel
     /**
      * Copy old carrier informations when update carrier.
      *
-     * @param int $oldId Old id carrier (copy from that id)
+     * @param int $old_id Old id carrier (copy from that id)
+     *
+     * @throws PrestaShopException Incorrect identifier for carrier
      */
     public function copyCarrierData($old_id)
     {

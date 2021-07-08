@@ -1006,6 +1006,12 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 $imaged = imagepng($dest_image, $new_path, (int) $quality);
 
                 break;
+
+            case 'webp':
+                $quality = (Configuration::get('PS_WEBP_QUALITY') === false ? 80 : Configuration::get('PS_WEBP_QUALITY'));
+                $imaged = imagewebp($dest_image, $new_path, (int) $quality);
+
+                break;
             case 'jpeg':
             default:
                 $quality = (Configuration::get('PS_JPEG_QUALITY') === false ? 90 : Configuration::get('PS_JPEG_QUALITY'));
