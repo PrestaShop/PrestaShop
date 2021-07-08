@@ -508,11 +508,26 @@ class OrderController extends FrameworkBundleAdminController
         }
         sort($paginationNumOptions);
 
+        $metatitle = sprintf(
+            '%s %s %s',
+            $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
+            $this->configuration->get('PS_NAVIGATION_PIPE', '>'),
+            $this->trans(
+                'Order %reference% from %firstname% %lastname%',
+                'Admin.Orderscustomers.Feature',
+                [
+                    '%reference%' => $orderForViewing->getReference(),
+                    '%firstname%' => $orderForViewing->getCustomer()->getFirstName(),
+                    '%lastname%' => $orderForViewing->getCustomer()->getLastName(),
+                ]
+            )
+        );
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'enableSidebar' => true,
             'orderCurrency' => $orderCurrency,
-            'meta_title' => $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
+            'meta_title' => $metatitle,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'orderForViewing' => $orderForViewing,
             'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
