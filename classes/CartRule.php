@@ -1276,7 +1276,10 @@ class CartRuleCore extends ObjectModel
                             if ($use_tax) {
                                 $infos = Product::getTaxesInformations($product, $context);
                                 $tax_rate = $infos['rate'] / 100;
+                                // As the price is tax excluded but ecotax included, we need to substract the ecotax before getting the price tax included
+                                $price -= $product['ecotax'];
                                 $price *= (1 + $tax_rate);
+                                $price += $product['ecotax'];
                             }
 
                             $selected_products_reduction += $price * $product['cart_quantity'];

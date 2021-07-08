@@ -15,7 +15,7 @@ Feature: Check cart to order data copy
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
-    Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
     Given there is a customer named "customer1" whose email is "fake@prestashop.com"
     Given address "address1" is associated to customer "customer1"
@@ -51,7 +51,7 @@ Feature: Check cart to order data copy
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
-    Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
     Given there is a customer named "customer1" whose email is "fake@prestashop.com"
     Given address "address1" is associated to customer "customer1"
@@ -89,7 +89,7 @@ Feature: Check cart to order data copy
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
-    Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
     Given product "product2" belongs to tax group "taxrule1"
     Given product "product3" belongs to tax group "taxrule1"
@@ -131,7 +131,7 @@ Feature: Check cart to order data copy
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
-    Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
     Given product "product2" belongs to tax group "taxrule1"
     Given product "product3" belongs to tax group "taxrule1"
@@ -171,7 +171,7 @@ Feature: Check cart to order data copy
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
-    Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
     Given there is a customer named "customer1" whose email is "fake@prestashop.com"
     Given address "address1" is associated to customer "customer1"
@@ -208,7 +208,7 @@ Feature: Check cart to order data copy
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
-    Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
     Given product "product4" belongs to tax group "taxrule1"
     Given there is a customer named "customer1" whose email is "fake@prestashop.com"
@@ -245,7 +245,7 @@ Feature: Check cart to order data copy
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
-    Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
     Given product "product4" belongs to tax group "taxrule1"
     Given there is a customer named "customer1" whose email is "fake@prestashop.com"
