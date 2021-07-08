@@ -138,7 +138,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
     });
 
     it('should check the discount', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage_1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDiscount_1', baseContext);
 
       // Check quantity for discount value
       const quantityDiscountValue = await productPage.getQuantityDiscountValue(page);
