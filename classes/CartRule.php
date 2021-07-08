@@ -668,20 +668,21 @@ class CartRuleCore extends ObjectModel
 			AND ocr.`id_cart_rule` = ' . (int) $this->id . '
 			AND ' . (int) Configuration::get('PS_OS_ERROR') . ' != o.`current_state`
 			');
-            // also count cart rules that are linked to a cart that is not attached to an order yet
+
             if ($alreadyInCart) {
-                $quantityUsedWithoutOrder = Db::getInstance()->getValue('
+                // sometimes a cart rule is already in a cart, but the cart is not yet attached to an order (when logging
+                // in for example), these cart rules are not taken into account buy the query above:
+                // so we count cart rules that are already linked to the current cart but not attached to an order yet.
+                $quantityUsed += (int) Db::getInstance()->getValue('
                     select count(*)
                     from ps_cart_cart_rule ccr
                     LEFT JOIN ps_cart c on c.id_cart = ccr.id_cart
-                    where c.id_customer = ' . $cart->id_customer . '
+                    where c.id_customer = ' . $cart->id_customer . ' AND c.id_cart = ' . $cart->id . '
                     AND NOT EXISTS (SELECT null FROM ps_orders o where o.id_cart = ccr.id_cart)'
                 );
-                $quantityUsed += $quantityUsedWithoutOrder;
-            }
-            // When checking the cart rules present in that cart the request result is accurate
-            // When we check if using the cart rule one more time is valid then we increment this value
-            if (!$alreadyInCart) {
+            } else {
+                // When checking the cart rules present in that cart the request result is accurate
+                // When we check if using the cart rule one more time is valid then we increment this value
                 ++$quantityUsed;
             }
             if ($quantityUsed > $this->quantity_per_user) {
