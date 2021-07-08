@@ -115,7 +115,6 @@ CREATE TABLE `PREFIX_carrier` (
   `grade` int(10) DEFAULT '0',
   PRIMARY KEY (`id_carrier`),
   KEY `deleted` (`deleted`, `active`),
-  KEY `id_tax_rules_group` (`id_tax_rules_group`),
   KEY `reference` (
     `id_reference`, `deleted`, `active`
   )
