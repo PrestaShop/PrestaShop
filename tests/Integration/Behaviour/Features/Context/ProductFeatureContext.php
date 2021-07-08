@@ -60,11 +60,6 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @var SpecificPrice[][]
      */
-    protected $customPrices = [];
-
-    /**
-     * @var SpecificPrice[][]
-     */
     protected $specificPrices = [];
 
     /**
@@ -501,59 +496,59 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkFixtureExists($this->products, 'Product', $productName);
     }
 
-    /* CUSTOM PRICE */
+    /* SPECIFIC PRICE */
 
     /**
-     * @Given /^product "(.+)" has a custom price named "(.+)" with an amount discount of (\d+\.\d+)$/
+     * @Given /^product "(.+)" has a specific price named "(.+)" with an amount discount of (\d+\.\d+)$/
      */
-    public function productWithNameHasACustomPriceWithAmountDiscount($productName, $customPriceName, $customPriceDiscount)
+    public function productWithNameHasASpecificPriceWithAmountDiscount($productName, $specificPriceName, $specificPriceDiscount)
     {
-        if (isset($this->customPrices[$productName][$customPriceName])) {
-            throw new \Exception(sprintf('Product named %s has already a custom price named %s', $productName, $customPriceName));
+        if (isset($this->specificPrices[$productName][$specificPriceName])) {
+            throw new Exception(sprintf('Product named %s has already a specific price named %s', $productName, $specificPriceName));
         }
-        $customPrice = new SpecificPrice();
-        $customPrice->id_product = $this->getProductWithName($productName)->id;
-        $customPrice->price = -1;
-        $customPrice->reduction = $customPriceDiscount;
-        $customPrice->reduction_type = 'amount';
-        $customPrice->from_quantity = 1;
-        $customPrice->from = '0000-00-00 00:00:00';
-        $customPrice->to = '0000-00-00 00:00:00';
-        // set required values (no custom rules applied, the price is for everyone)
-        $customPrice->id_shop = 0;
-        $customPrice->id_currency = 0;
-        $customPrice->id_country = 0;
-        $customPrice->id_group = 0;
-        $customPrice->id_customer = 0;
-        $customPrice->add();
-        $this->customPrices[$productName][$customPriceName] = $customPrice;
+        $specificPrice = new SpecificPrice();
+        $specificPrice->id_product = $this->getProductWithName($productName)->id;
+        $specificPrice->price = -1;
+        $specificPrice->reduction = $specificPriceDiscount;
+        $specificPrice->reduction_type = 'amount';
+        $specificPrice->from_quantity = 1;
+        $specificPrice->from = '0000-00-00 00:00:00';
+        $specificPrice->to = '0000-00-00 00:00:00';
+        // set required values (no specific rules applied, the price is for everyone)
+        $specificPrice->id_shop = 0;
+        $specificPrice->id_currency = 0;
+        $specificPrice->id_country = 0;
+        $specificPrice->id_group = 0;
+        $specificPrice->id_customer = 0;
+        $specificPrice->add();
+        $this->specificPrices[$productName][$specificPriceName] = $specificPrice;
     }
 
     /**
-     * @Given /^product "(.+)" has a custom price named "(.+)" with a discount of (\d+\.\d+) percent$/
+     * @Given /^product "(.+)" has a specific price named "(.+)" with a discount of (\d+\.\d+) percent$/
      */
-    public function productWithNameHasACustomPriceWithPercentageDiscount(string $productName, string $customPriceName, float $customPricePercent)
+    public function productWithNameHasASpecificPriceWithPercentageDiscount(string $productName, string $specificPriceName, float $specificPricePercent)
     {
-        if (isset($this->customPrices[$productName][$customPriceName])) {
-            throw new \Exception(sprintf('Product named %s has already a custom price named %s', $productName, $customPriceName));
+        if (isset($this->specificPrices[$productName][$specificPriceName])) {
+            throw new Exception(sprintf('Product named %s has already a specific price named %s', $productName, $specificPriceName));
         }
-        $customPrice = new SpecificPrice();
-        $customPrice->id_product = $this->getProductWithName($productName)->id;
-        $customPrice->price = -1;
-        $customPrice->reduction = $customPricePercent / 100;
-        $customPrice->reduction_type = 'percentage';
-        $customPrice->reduction_tax = 1;
-        $customPrice->from_quantity = 1;
-        $customPrice->from = '0000-00-00 00:00:00';
-        $customPrice->to = '0000-00-00 00:00:00';
-        // set required values (no custom rules applied, the price is for everyone)
-        $customPrice->id_shop = 0;
-        $customPrice->id_currency = 0;
-        $customPrice->id_country = 0;
-        $customPrice->id_group = 0;
-        $customPrice->id_customer = 0;
-        $customPrice->add();
-        $this->customPrices[$productName][$customPriceName] = $customPrice;
+        $specificPrice = new SpecificPrice();
+        $specificPrice->id_product = $this->getProductWithName($productName)->id;
+        $specificPrice->price = -1;
+        $specificPrice->reduction = $specificPricePercent / 100;
+        $specificPrice->reduction_type = 'percentage';
+        $specificPrice->reduction_tax = 1;
+        $specificPrice->from_quantity = 1;
+        $specificPrice->from = '0000-00-00 00:00:00';
+        $specificPrice->to = '0000-00-00 00:00:00';
+        // set required values (no specific rules applied, the price is for everyone)
+        $specificPrice->id_shop = 0;
+        $specificPrice->id_currency = 0;
+        $specificPrice->id_country = 0;
+        $specificPrice->id_group = 0;
+        $specificPrice->id_customer = 0;
+        $specificPrice->add();
+        $this->specificPrices[$productName][$specificPriceName] = $specificPrice;
     }
 
     /**
@@ -571,7 +566,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         int $quantityThreshold
     ): void {
         if (isset($this->specificPrices[$productName][$specificPriceName])) {
-            throw new \Exception(sprintf('Product named %s has already a specific price named %s', $productName, $specificPriceName));
+            throw new Exception(sprintf('Product named %s has already a specific price named %s', $productName, $specificPriceName));
         }
         $specificPrice = new SpecificPrice();
         $specificPrice->id_product = $this->products[$productName]->id;
@@ -593,55 +588,26 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then product :productName should have custom price :customPriceName with following settings:
-     */
-    public function assertCustomPriceSettings(string $productName, string $customPriceName, TableNode $table)
-    {
-        $customPrice = $this->customPrices[$productName][$customPriceName];
-        $databaseCustomPrice = new SpecificPrice($customPrice->id);
-        // Check that it is still in database
-        if ($databaseCustomPrice->id != $customPrice->id) {
-            throw new RuntimeException(sprintf(
-                'Could not find Custom price %s in database',
-                $customPriceName
-            ));
-        }
-        $expectedCustomPriceData = $table->getRowsHash();
-
-        foreach ($expectedCustomPriceData as $fieldName => $expectedValue) {
-            $databaseValue = $databaseCustomPrice->$fieldName;
-            if ($databaseValue != $expectedValue) {
-                throw new RuntimeException(sprintf(
-                    'Custom price field %s has value %s but expected %s',
-                    $fieldName,
-                    $databaseValue,
-                    $expectedValue
-                ));
-            }
-        }
-    }
-
-    /**
      * @Then product :productName should have specific price :specificPriceName with following settings:
      */
     public function assertSpecificPriceSettings(string $productName, string $specificPriceName, TableNode $table)
     {
         $specificPrice = $this->specificPrices[$productName][$specificPriceName];
-        $databaseCustomPrice = new SpecificPrice($specificPrice->id);
+        $databaseSpecificPrice = new SpecificPrice($specificPrice->id);
         // Check that it is still in database
-        if ($databaseCustomPrice->id != $specificPrice->id) {
+        if ($databaseSpecificPrice->id != $specificPrice->id) {
             throw new RuntimeException(sprintf(
-                'Could not find Custom price %s in database',
+                'Could not find Specific price %s in database',
                 $specificPriceName
             ));
         }
-        $expectedCustomPriceData = $table->getRowsHash();
+        $expectedSpecificPriceData = $table->getRowsHash();
 
-        foreach ($expectedCustomPriceData as $fieldName => $expectedValue) {
-            $databaseValue = $databaseCustomPrice->$fieldName;
+        foreach ($expectedSpecificPriceData as $fieldName => $expectedValue) {
+            $databaseValue = $databaseSpecificPrice->$fieldName;
             if ($databaseValue != $expectedValue) {
                 throw new RuntimeException(sprintf(
-                    'Custom price field %s has value %s but expected %s',
+                    'Specific price field %s has value %s but expected %s',
                     $fieldName,
                     $databaseValue,
                     $expectedValue
@@ -655,23 +621,23 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @AfterScenario
      */
-    public function cleanCustomPriceFixtures()
+    public function cleanSpecificPriceFixtures()
     {
-        foreach ($this->customPrices as $productName => $customPrices) {
-            foreach ($customPrices as $customPriceName => $customPrice) {
-                $customPrice->delete();
+        foreach ($this->specificPrices as $productName => $specificPrices) {
+            foreach ($specificPrices as $specificPriceName => $specificPrice) {
+                $specificPrice->delete();
             }
         }
-        $this->customPrices = [];
+        $this->specificPrices = [];
     }
 
     /**
      * @param $productName
      * @param $customPriceName
      */
-    public function checkCustomPriceWithNameExists($productName, $customPriceName)
+    public function checkSpecificPriceWithNameExists($productName, $specificPriceName)
     {
-        $this->checkFixtureExists($this->customPrices[$productName], 'CustomPrice', $customPriceName);
+        $this->checkFixtureExists($this->specificPrices[$productName], 'SpecificPrice', $specificPriceName);
     }
 
     /**
@@ -692,7 +658,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameHasACombinationWithNameAndQuantity($productName, $combinationName, $combinationQuantity)
     {
         if (isset($this->combinations[$productName][$combinationName])) {
-            throw new \Exception(sprintf('Product named %s has already a combination named %s', $productName, $combinationName));
+            throw new Exception(sprintf('Product named %s has already a combination named %s', $productName, $combinationName));
         }
         $combination = new Combination();
         $combination->reference = $combinationName;
@@ -996,7 +962,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
                 $expected = false;
                 break;
             default:
-                throw new \Exception('Unknown stock status: ' . $enoughStock);
+                throw new Exception('Unknown stock status: ' . $enoughStock);
                 break;
         }
         if ($result !== $expected) {

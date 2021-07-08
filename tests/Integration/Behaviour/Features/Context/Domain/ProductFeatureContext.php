@@ -106,6 +106,20 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given I update product :productName price to :price
+     *
+     * @param string $productName
+     * @param float $price
+     */
+    public function updateProductPriceInCart(string $productName, float $price): void
+    {
+        $productId = $this->getProductIdByName($productName);
+        $product = new Product($productId);
+        $product->price = $price;
+        $product->save();
+    }
+
+    /**
      * @param string $productName
      *
      * @return int

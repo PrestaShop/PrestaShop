@@ -23,7 +23,7 @@ Feature: Order from Back Office (BO)
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
 
-  Scenario: In an order, adding a product without combination, which has specific price rules with quantity threshold, will apply the specific price
+  Scenario: In an order, adding a product without combination, which has specific price rules with quantity threshold, will apply the specific price (if the condition is met when the product is added AND no customized price has been used)
     Given order "bo_order1" should have 2 products in total
     And order "bo_order1" should have 0 invoices
     And order "bo_order1" should have 0 cart rule
@@ -60,7 +60,7 @@ Feature: Order from Back Office (BO)
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
-    # The price set is the price without the discount so it is a specific price
+    # The price set is the price without the discount so it is not a customized price
     Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 16.00 |
@@ -106,7 +106,7 @@ Feature: Order from Back Office (BO)
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
-    # The price set is the price without the discount so it is a specific price
+    # The price set is the price without the discount so it is not a customized price, therefore the specific price by quantity is applied
     Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
       | product_quantity            | 6     |
       | product_price               | 12.00 |
@@ -126,7 +126,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    # User specific price
+    # User customized price
     Given I remove product "Test Product With Percentage Discount" from order "bo_order1"
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
@@ -153,7 +153,7 @@ Feature: Order from Back Office (BO)
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
-    # The price set is the price without the discount so it is a specific price
+    # The price set is the not price without the discount so it is a customized price, therefore the specific price is not applied even if the quantity condition is met
     Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
       | product_quantity            | 10     |
       | product_price               | 50.00  |
@@ -211,7 +211,7 @@ Feature: Order from Back Office (BO)
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
-    # The price set is the price without the discount so it is a specific price
+    # The price set is the price without the discount so it is not a customized price
     Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 16.00 |
@@ -245,7 +245,7 @@ Feature: Order from Back Office (BO)
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
-    # The price set is the price without the discount so it is a specific price
+    # The price set is the price without the discount so it is not a customized price, however we don't apply rules from specific prices during a product update
     And product "Test Product With Percentage Discount" in order "bo_order1" has following details:
       | product_quantity            | 6      |
       | product_price               | 16.00  |
@@ -265,7 +265,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0     |
       | total_shipping_tax_excl  | 7.0     |
       | total_shipping_tax_incl  | 7.42    |
-    # User specific price
+    # User customized price
     When I edit product "Test Product With Percentage Discount" to order "bo_order1" with following products details:
       | amount        | 10                    |
       | price         | 50                    |
@@ -279,7 +279,7 @@ Feature: Order from Back Office (BO)
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
-    # The price set is the price without the discount so it is a specific price
+    # The price set is not the price without the discount so it is a customized price, so it makes two reasons not to apply the specific price related to quantity
     Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
       | product_quantity            | 10     |
       | product_price               | 50.00  |
@@ -300,13 +300,13 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0      |
       | total_shipping_tax_incl  | 7.42     |
 
-  Scenario: In an order, when quantity discount is based on combinations, adding a product with combination, will apply the specific price with quantity threshold
+  Scenario: In an order, when quantity discount is based on combinations, adding any combination of a product with specific price, will apply the discount when quantity threshold is reached
     # quantity discounts based on combinations
     Given shop configuration for "PS_QTY_DISCOUNT_ON_COMBINATION" is set to 1
-    When order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 2 products in total
     And order "bo_order1" should have 0 invoices
     And order "bo_order1" should have 0 cart rule
-    Then order "bo_order1" should have following details:
+    And order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
       | total_discounts_tax_excl | 0.0    |
@@ -374,51 +374,6 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_excl      | 174.80  |
       | total_paid_tax_incl      | 185.290 |
       | total_paid               | 185.290 |
-      | total_paid_real          | 0.0     |
-      | total_shipping_tax_excl  | 7.0     |
-      | total_shipping_tax_incl  | 7.42    |
-    Given I remove combination "combination1" of product "Test Product With Combination and Specific Price" from order "bo_order1"
-    Given I remove combination "combination2" of product "Test Product With Combination and Specific Price" from order "bo_order1"
-    Then order "bo_order1" should have following details:
-      | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.650 |
-      | total_paid               | 32.650 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    # Adding only one of the combinations
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Combination and Specific Price    |
-      | combination   | combination1  |
-      | amount        | 6             |
-      | price         | 16            |
-    Then order "bo_order1" should have 8 products in total
-    And order "bo_order1" should contain 6 products "Test Product With Combination and Specific Price"
-    And cart of order "bo_order1" should contain 0 products "Test Product With Combination and Specific Price"
-    And cart of order "bo_order1" should contain 6 combinations "combination1" of product "Test Product With Combination and Specific Price"
-    And cart of order "bo_order1" should contain 0 combinations "combination2" of product "Test Product With Combination and Specific Price"
-    And the available stock for product "Test Product With Combination and Specific Price" should be 194
-    And order "bo_order1" should contain 6 combination "combination1" of product "Test Product With Combination and Specific Price"
-    Then combination "combination1" of product "Test Product With Combination and Specific Price" in order "bo_order1" has following details:
-      | product_quantity            | 6      |
-      | product_price               | 12.00  |
-      | original_product_price      | 16.00  |
-      | unit_price_tax_incl         | 12.72  |
-      | unit_price_tax_excl         | 12.00  |
-      | total_price_tax_incl        | 76.32  |
-      | total_price_tax_excl        | 72.00  |
-    And order "bo_order1" should have following details:
-      | total_products           | 95.80   |
-      | total_products_wt        | 101.550 |
-      | total_discounts_tax_excl | 0.0000  |
-      | total_discounts_tax_incl | 0.0000  |
-      | total_paid_tax_excl      | 102.80  |
-      | total_paid_tax_incl      | 108.970 |
-      | total_paid               | 108.970 |
       | total_paid_real          | 0.0     |
       | total_shipping_tax_excl  | 7.0     |
       | total_shipping_tax_incl  | 7.42    |
@@ -674,3 +629,163 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_incl         | 25.440   |
       | total_shipping_tax_excl     | 7.0      |
       | total_shipping_tax_incl     | 7.42     |
+
+  Scenario: Add product which has specific price rules for a discount, when we change its price in the order it doesn't affect the existing price rule
+    Given order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should have 0 invoices
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
+    And product "Test Product With Percentage Discount" has a specific price named "discount25" with a discount of 25.0 percent
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 1          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Percentage Discount |
+      | amount        | 1                                     |
+      | price         | 12                                    |
+    Then order "bo_order1" should have 3 products in total
+    And order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 99
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 1          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The edited price matches the price with discount applied so it's not a custom price for this order it follows the general rules
+    And order "bo_order1" should have following details:
+      | total_products           | 35.800 |
+      | total_products_wt        | 37.950 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 42.8   |
+      | total_paid_tax_incl      | 45.370 |
+      | total_paid               | 45.370 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 1       |
+      | original_product_price      | 16.00   |
+      | product_price               | 12.00   |
+      | unit_price_tax_incl         | 12.72   |
+      | unit_price_tax_excl         | 12.00   |
+      | total_price_tax_incl        | 12.72   |
+      | total_price_tax_excl        | 12.00   |
+    # When the product is removed assert we don't remove the global CustomPrice either
+    When I remove product "Test Product With Percentage Discount" from order "bo_order1"
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should contain 0 product "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 0 product "Test Product With Percentage Discount"
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 1          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+
+  Scenario: Add product which has specific price rules for a discount but keeps catalog price, then the order has its own customized price
+    Given order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should have 0 invoices
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
+    And product "Test Product With Percentage Discount" has a specific price named "discount25" with a discount of 25.0 percent
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 1          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Percentage Discount |
+      | amount        | 1                                     |
+      | price         | 16                                    |
+    Then order "bo_order1" should have 3 products in total
+    And order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 99
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 1          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the price without the discount so it is a customized price
+    Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 1     |
+      | product_price               | 16.00 |
+      | original_product_price      | 16.00 |
+      | unit_price_tax_incl         | 16.96 |
+      | unit_price_tax_excl         | 16.00 |
+      | total_price_tax_incl        | 16.96 |
+      | total_price_tax_excl        | 16.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 39.800 |
+      | total_products_wt        | 42.190 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 46.8   |
+      | total_paid_tax_incl      | 49.610 |
+      | total_paid               | 49.610 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    # When the product is removed assert we don't remove the global CustomPrice either
+    When I remove product "Test Product With Percentage Discount" from order "bo_order1"
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should contain 0 product "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 0 product "Test Product With Percentage Discount"
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 1          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
