@@ -110,7 +110,7 @@
 								{foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
 									<tr>
 										<td style="width: 30%;">
-											{$customization_infos.name|string_format:{l s='%s:' d='Shop.Pdf' pdf='true'}}
+											{$customization_infos.name|escape:'html':'UTF-8'|string_format:{l s='%s:' d='Shop.Pdf' pdf='true'}}
 										</td>
 										<td>{if (int)$customization_infos.id_module}{$customization_infos.value nofilter}{else}{$customization_infos.value}{/if}</td>
 									</tr>
