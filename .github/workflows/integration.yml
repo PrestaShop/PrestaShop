@@ -3,7 +3,7 @@ on: [push, pull_request]
 jobs:
     integration:
         name: Integration tests
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-latest
         strategy:
             matrix:
                 php: ['7.2', '7.3', '7.4']
@@ -24,6 +24,10 @@ jobs:
                 uses: actions/setup-node@v2
                 with:
                     node-version: '10'
+            -   name: Setup dependencies (mysqldump)
+                run: |
+                    sudo apt install mysql-client
+                    mysqldump -V
             -   uses: actions/checkout@v2
 
             -   name: PrestaShop Configuration

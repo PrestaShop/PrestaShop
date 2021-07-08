@@ -1,4 +1,4 @@
-name: UI tests - PHP 7.4
+name: UI tests - PHP 7.2
 
 on:
   pull_request:
@@ -7,11 +7,11 @@ on:
 jobs:
 
   sanity:
-    runs-on: ubuntu-18.04
-    name: Sanity - PHP 7.4
+    runs-on: ubuntu-latest
+    name: Sanity
     strategy:
       matrix:
-        php: [ '7.4' ]
+        php: [ '7.2', '7.3', '7.4' ]
       fail-fast: false
 
     steps:

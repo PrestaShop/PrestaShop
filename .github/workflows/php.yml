@@ -39,7 +39,7 @@ jobs:
 
   phpstan:
     name: PHP Static Analysis
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
         -   name: Setup PHP
             uses: shivammathur/setup-php@v2
@@ -69,7 +69,7 @@ jobs:
 
   phpunit:
       name: PHPUnit
-      runs-on: ubuntu-18.04
+      runs-on: ubuntu-latest
       strategy:
           matrix:
               php: ['7.2', '7.3', '7.4']
