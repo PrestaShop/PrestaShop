@@ -62,7 +62,7 @@
     </div>
 
     <div class="row js-customer-search-results"></div>
-    <div class="d-none" id="customer-checkout-history">
+    <div class="d-none mt-4" id="customer-checkout-history">
         <ul class="nav nav-pills" role="tablist">
           <li class="nav-item">
             <a class="nav-link active show js-customer-carts-tab"
@@ -103,7 +103,7 @@
         </ul>
         <div class="tab-content collapse show" id="customer-tab-content-container">
           <div class="tab-pane fade active show" id="customer-carts-tab-content" role="tabpanel" aria-labelledby="pills-home-tab">
-            <table class="table table-responsive-md" id="customer-carts-table">
+            <table class="table table-responsive-md mb-0" id="customer-carts-table">
               <thead class="d-none">
                 <tr>
                   <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
@@ -116,7 +116,7 @@
             </table>
           </div>
           <div class="tab-pane fade" id="customer-orders-tab-content" role="tabpanel" aria-labelledby="pills-home-tab">
-            <table class="table table-responsive-md" id="customer-orders-table">
+            <table class="table table-responsive-md mb-0" id="customer-orders-table">
               <thead class="d-none">
               <tr>
                 <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
@@ -196,7 +196,7 @@
     <td class="text-right">
       <a
         title="{{ 'View this order'|trans({}, 'Admin.Orderscustomers.Feature') }}"
-        class="btn btn-outline-primary js-order-details-btn">
+        class="btn btn-outline-secondary js-order-details-btn">
         {{ 'Details'|trans({}, 'Admin.Global') }}
       </a>
 
