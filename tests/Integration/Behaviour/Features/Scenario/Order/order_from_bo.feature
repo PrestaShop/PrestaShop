@@ -319,7 +319,6 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0   |
       | total_shipping_tax_incl  | 7.42  |
     When I remove product "Test Added Product" from order "bo_order1"
-    Then product "Test Added Product" in order "bo_order1" should have no custom price
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should contain 0 product "Test Added Product"
     And cart of order "bo_order1" should contain 0 product "Test Added Product"
@@ -341,7 +340,6 @@ Feature: Order from Back Office (BO)
       | amount        | 3                       |
       | price         | 11.90                   |
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
-    And product "Mug The best is yet to come" in order "bo_order1" should have no custom price
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 3      |
       | product_price               | 11.90  |
@@ -592,7 +590,6 @@ Feature: Order from Back Office (BO)
       | price         | 15                 |
     And I generate invoice for "bo_order1" order
     Then order "bo_order1" should contain 2 products "Test Added Product"
-    And product "Test Added Product" in order "bo_order1" should have no custom price
     And the available stock for product "Test Added Product" should be 98
     And order "bo_order1" should have 4 products in total
     And order "bo_order1" should have 1 invoice
@@ -650,7 +647,6 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl | 7.0   |
       | total_shipping_tax_incl | 7.42  |
     When I remove product "Mug The best is yet to come" from order "bo_order1"
-    Then product "Test Added Product" in order "bo_order1" should have no custom price
     And order "bo_order1" should have 0 products in total
     And order "bo_order1" should contain 0 product "Mug The best is yet to come"
     And cart of order "bo_order1" should contain 0 product "Mug The best is yet to come"

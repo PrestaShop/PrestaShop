@@ -56,7 +56,6 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Then product "Test Product With Custom Price" in order "bo_order1" should have no custom price
     Given I update order "bo_order1" status to "Payment accepted"
     And order "bo_order1" should have 1 invoice
     When I add products to order "bo_order1" with new invoice and the following products details:
@@ -131,7 +130,6 @@ Feature: Order from Back Office (BO)
       | name          | Test Product With Custom Price  |
       | amount        | 1                                 |
       | price         | 15                                |
-    Then product "Test Product With Custom Price" in order "bo_order1" should have no custom price
     And order "bo_order1" should have 4 products in total
     And order "bo_order1" should have following details:
       | total_products           | 53.800 |
@@ -171,7 +169,6 @@ Feature: Order from Back Office (BO)
       | name          | Test Product With Custom Price  |
       | amount        | 1                                 |
       | price         | 15                                |
-    Then product "Test Product With Custom Price" in order "bo_order1" should have no custom price
     And order "bo_order1" should have 2 invoices
     And order "bo_order1" should have 4 products in total
     And order "bo_order1" should have following details:
@@ -219,7 +216,6 @@ Feature: Order from Back Office (BO)
     When I edit product "Test Product With Custom Price" to order "bo_order1" with following products details:
       | amount        | 1                     |
       | price         | 15                    |
-    Then product "Test Product With Custom Price" in order "bo_order1" should have no custom price
     Then the product "Test Product With Custom Price" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
@@ -314,7 +310,6 @@ Feature: Order from Back Office (BO)
       | total_price_tax_incl        | 12.72 |
       | total_price_tax_excl        | 12.00 |
     When I remove product "Test Product With Custom Price" from order "bo_order1"
-    Then product "Test Product With Custom Price" in order "bo_order1" should have no custom price
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should contain 0 product "Test Product With Custom Price"
     And cart of order "bo_order1" should contain 0 product "Test Product With Custom Price"
@@ -437,7 +432,6 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     When I remove product "Test Product With Custom Price" from order "bo_order1"
-    Then product "Test Product With Custom Price" in order "bo_order1" should have no custom price
     And the second invoice from order "bo_order1" should contain 0 product "Test Product With Custom Price"
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should contain 0 product "Test Product With Custom Price"
@@ -455,7 +449,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
-  Scenario: Add product which has customized price rules for a discount, when we change its price in the order it doesn't affect the existing price rule
+  Scenario: Add product which has specific price rules for a discount, when we change its price in the order it doesn't affect the existing price rule
     Given order "bo_order1" should have 2 products in total
     Then order "bo_order1" should have 0 invoices
     Then order "bo_order1" should have 0 cart rule
@@ -471,8 +465,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
-    And product "Test Product With Percentage Discount" has a custom price named "discount20" with a discount of 25.0 percent
-    And product "Test Product With Percentage Discount" should have custom price "discount20" with following settings:
+    And product "Test Product With Percentage Discount" has a specific price named "discount20" with a discount of 25.0 percent
+    And product "Test Product With Percentage Discount" should have specific price "discount20" with following settings:
       | price          | -1         |
       | from_quantity  | 1          |
       | reduction      | 0.25       |
@@ -486,14 +480,13 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 99
-    And product "Test Product With Percentage Discount" should have custom price "discount20" with following settings:
+    And product "Test Product With Percentage Discount" should have specific price "discount20" with following settings:
       | price          | -1         |
       | from_quantity  | 1          |
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
     # The edited price matches the price with discount applied so it's not a custom price for this order it follows the general rules
-    And product "Test Product With Percentage Discount" in order "bo_order1" should have no custom price
     And order "bo_order1" should have following details:
       | total_products           | 35.800 |
       | total_products_wt        | 37.950 |
@@ -507,7 +500,6 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     # When the product is removed assert we don't remove the global CustomPrice either
     When I remove product "Test Product With Percentage Discount" from order "bo_order1"
-    Then product "Test Product With Percentage Discount" in order "bo_order1" should have no custom price
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should contain 0 product "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 0 product "Test Product With Percentage Discount"
@@ -522,15 +514,14 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    # Check that global CustomPrice has been removed along with the product
-    And product "Test Product With Percentage Discount" should have custom price "discount20" with following settings:
+    And product "Test Product With Percentage Discount" should have specific price "discount20" with following settings:
       | price          | -1         |
       | from_quantity  | 1          |
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
 
-  Scenario: Add product which has custom price rules for a discount but keeps catalog price, then the order has its own customized price
+  Scenario: Add product which has specific price rules for a discount but keeps catalog price, then the order has its own customized price
     Given order "bo_order1" should have 2 products in total
     Then order "bo_order1" should have 0 invoices
     Then order "bo_order1" should have 0 cart rule
@@ -546,8 +537,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
-    And product "Test Product With Percentage Discount" has a custom price named "discount20" with a discount of 25.0 percent
-    And product "Test Product With Percentage Discount" should have custom price "discount20" with following settings:
+    And product "Test Product With Percentage Discount" has a specific price named "discount20" with a discount of 25.0 percent
+    And product "Test Product With Percentage Discount" should have specific price "discount20" with following settings:
       | price          | -1         |
       | from_quantity  | 1          |
       | reduction      | 0.25       |
@@ -561,7 +552,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 99
-    And product "Test Product With Percentage Discount" should have custom price "discount20" with following settings:
+    And product "Test Product With Percentage Discount" should have specific price "discount20" with following settings:
       | price          | -1         |
       | from_quantity  | 1          |
       | reduction      | 0.25       |
@@ -589,7 +580,6 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     # When the product is removed assert we don't remove the global CustomPrice either
     When I remove product "Test Product With Percentage Discount" from order "bo_order1"
-    Then product "Test Product With Percentage Discount" in order "bo_order1" should have no custom price
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should contain 0 product "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 0 product "Test Product With Percentage Discount"
@@ -604,7 +594,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    And product "Test Product With Percentage Discount" should have custom price "discount20" with following settings:
+    And product "Test Product With Percentage Discount" should have specific price "discount20" with following settings:
       | price          | -1         |
       | from_quantity  | 1          |
       | reduction      | 0.25       |
@@ -616,14 +606,13 @@ Feature: Order from Back Office (BO)
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "customized_cart"
     And I add 2 products "Mug The best is yet to come" to the cart "customized_cart"
     And I update product "Mug The best is yet to come" in the cart "customized_cart" to 15.00
-    Then product "Mug The best is yet to come" in cart "customized_cart" should have custom price 15.00
+    Then product "Mug The best is yet to come" in cart "customized_cart" should have specific price 15.00
     And I add order "bo_order1" with the following details:
       | cart                | customized_cart            |
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
     # When Order is added all the customized prices associated to the cart are deleted
-    Then product "Mug The best is yet to come" in order "bo_order1" should have no custom price
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2     |
       | product_price               | 15.00 |

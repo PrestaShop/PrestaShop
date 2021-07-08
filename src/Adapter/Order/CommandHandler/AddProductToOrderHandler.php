@@ -445,11 +445,13 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         // Create Cart rule in order to make free shipping
         if ($isFreeShipping) {
+            $langId = $this->configuration->get('PS_LANG_DEFAULT');
+
             // @todo: use private method to create cart rule
             $freeShippingCartRule = new CartRule();
             $freeShippingCartRule->id_customer = $order->id_customer;
             $freeShippingCartRule->name = [
-                $this->configuration->get('PS_LANG_DEFAULT') => $this->translator->trans(
+                $langId => $this->translator->trans(
                     '[Generated] CartRule for Free Shipping',
                     [],
                     'Admin.Orderscustomers.Notification'
@@ -474,7 +476,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             $order->addCartRule(
                 $freeShippingCartRule->id,
-                $freeShippingCartRule->name[$this->configuration->get('PS_LANG_DEFAULT')],
+                $freeShippingCartRule->name[$langId],
                 $values
             );
         }
@@ -640,6 +642,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         }
 
         // PS_QTY_DISCOUNT_ON_COMBINATION === 1 means quantity discount is based on Combinations, otherwise it's based on Products
-        return (1 === (int) $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION'));
+        return 1 === (int) $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION');
     }
 }

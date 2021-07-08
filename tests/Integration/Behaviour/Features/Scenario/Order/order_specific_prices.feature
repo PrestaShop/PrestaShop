@@ -23,7 +23,7 @@ Feature: Order from Back Office (BO)
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
 
-  Scenario: In an order, adding a product without combination, which has specific price rules with quantity threshold, will apply the specific price
+  Scenario: In an order, adding a product without combination, which has specific price rules with quantity threshold, will apply the specific price (if the condition is met when the product is added AND no customized price has been used)
     Given order "bo_order1" should have 2 products in total
     And order "bo_order1" should have 0 invoices
     And order "bo_order1" should have 0 cart rule
@@ -60,7 +60,7 @@ Feature: Order from Back Office (BO)
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
-    # The price set is the price without the discount so it is a specific price
+    # The price set is the price without the discount so it is not a customized price
     Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 16.00 |
@@ -106,7 +106,7 @@ Feature: Order from Back Office (BO)
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
-    # The price set is the price without the discount so it is a specific price
+    # The price set is the price without the discount so it is not a customized price, therefore the specific price by quantity is applied
     Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
       | product_quantity            | 6     |
       | product_price               | 12.00 |
@@ -126,7 +126,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    # User specific price
+    # User customized price
     Given I remove product "Test Product With Percentage Discount" from order "bo_order1"
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
@@ -153,7 +153,7 @@ Feature: Order from Back Office (BO)
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
-    # The price set is the price without the discount so it is a specific price
+    # The price set is the not price without the discount so it is a customized price, therefore the specific price is not applied even if the quantity condition is met
     Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
       | product_quantity            | 10     |
       | product_price               | 50.00  |
@@ -211,7 +211,7 @@ Feature: Order from Back Office (BO)
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
-    # The price set is the price without the discount so it is a specific price
+    # The price set is the price without the discount so it is not a customized price
     Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 16.00 |
@@ -245,7 +245,7 @@ Feature: Order from Back Office (BO)
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
-    # The price set is the price without the discount so it is a specific price
+    # The price set is the price without the discount so it is not a customized price, however we don't apply rules from specific prices during a product update
     And product "Test Product With Percentage Discount" in order "bo_order1" has following details:
       | product_quantity            | 6      |
       | product_price               | 16.00  |
@@ -265,7 +265,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0     |
       | total_shipping_tax_excl  | 7.0     |
       | total_shipping_tax_incl  | 7.42    |
-    # User specific price
+    # User customized price
     When I edit product "Test Product With Percentage Discount" to order "bo_order1" with following products details:
       | amount        | 10                    |
       | price         | 50                    |
@@ -279,7 +279,7 @@ Feature: Order from Back Office (BO)
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
-    # The price set is the price without the discount so it is a specific price
+    # The price set is not the price without the discount so it is a customized price, so it makes two reasons not to apply the specific price related to quantity
     Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
       | product_quantity            | 10     |
       | product_price               | 50.00  |

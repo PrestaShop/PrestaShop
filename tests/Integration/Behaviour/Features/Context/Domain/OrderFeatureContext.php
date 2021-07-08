@@ -77,7 +77,6 @@ use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
 use PrestaShopCollection;
 use Product;
 use RuntimeException;
-use SpecificPrice;
 use stdClass;
 use Tax;
 use TaxCalculator;
@@ -1393,63 +1392,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then product :productName in order :orderReference should have no custom price
-     *
-     * @param string $productName
-     * @param string $orderReference
-     */
-    public function assertNoCustomPrice(string $productName, string $orderReference)
-    {
-        $productId = $this->getProductIdByName($productName);
-        // @todo: maybe manage combination as well
-        $combinationId = 0;
-        $orderId = $this->getSharedStorage()->get($orderReference);
-
-        $customPriceId = $this->getCustomPriceId($productId, $combinationId, $orderId);
-        Assert::assertNull(
-            $customPriceId,
-            sprintf(
-                'Product %s from order %s should have no custom price',
-                $productName,
-                $orderReference
-            )
-        );
-    }
-
-    /**
-     * @Then /^product "(.*)" in order "(.*)" should have specific price (\d+\.\d+)$/
-     *
-     * @param string $productName
-     * @param string $orderReference
-     * @param float $expectedPrice
-     */
-    public function assertSpecificPrice(string $productName, string $orderReference, float $expectedPrice)
-    {
-        $productId = $this->getProductIdByName($productName);
-        // @todo: maybe manage combination as well
-        $combinationId = 0;
-        $orderId = $this->getSharedStorage()->get($orderReference);
-
-        $specificPriceId = $this->getCustomPriceId($productId, $combinationId, $orderId);
-        Assert::assertNotNull(
-            $specificPriceId,
-            sprintf(
-                'Product %s from order %s should have specific price',
-                $productName,
-                $orderReference
-            )
-        );
-
-        $specificPrice = new SpecificPrice($specificPriceId);
-        Assert::assertEquals(
-            $expectedPrice,
-            $specificPrice->price
-        );
-        Assert::assertEquals('amount', $specificPrice->reduction_type);
-        Assert::assertTrue((bool) $specificPrice->reduction_tax);
-    }
-
-    /**
      * @Then order :orderReference preview shipping address should have the following details:
      */
     public function getOrderPreviewShippingAddress(string $orderReference, TableNode $table)
@@ -1512,22 +1454,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $pyStringNode->getRaw()
             )
         );
-    }
-
-    /**
-     * @param int $productId
-     * @param int $combinationId
-     * @param int $orderId
-     *
-     * @return int|null
-     */
-    private function getCustomPriceId(int $productId, int $combinationId, int $orderId): ?int
-    {
-        $order = new Order($orderId);
-
-        $customPriceId = $order->getProductSpecificPriceId($productId, $combinationId);
-
-        return $customPriceId ? (int) $customPriceId : null;
     }
 
     /**
