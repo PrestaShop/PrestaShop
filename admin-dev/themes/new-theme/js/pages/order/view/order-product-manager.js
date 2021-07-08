@@ -58,8 +58,8 @@ export default class OrderProductManager {
         orderId,
       });
     }, (response) => {
-      if (response.message) {
-        $.growl.error({message: response.message});
+      if (response.responseJSON && response.responseJSON.message) {
+        $.growl.error({message: response.responseJSON.message});
       }
     });
   }
