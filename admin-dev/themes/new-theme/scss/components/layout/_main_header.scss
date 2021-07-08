@@ -328,8 +328,7 @@ $header-text-color: #4e6167 !default;
       }
     }
 
-    &.header-right-component,
-    &.gamification-component {
+    &.header-right-component {
       margin: {
         right: 0.3125rem;
         left: 0.3125rem;
@@ -406,13 +405,6 @@ $header-text-color: #4e6167 !default;
           transform: inherit !important;
           /* stylelint-enable */
         }
-      }
-    }
-
-    &.gamification-component {
-      @include media-breakpoint-down("sm") {
-        // stylelint-disable-next-line
-        display: none !important;
       }
     }
 
