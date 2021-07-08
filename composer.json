@@ -190,7 +190,7 @@
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "create-test-db": [
-            "@php ./tests-legacy/create-test-db.php"
+            "@php ./tests-legacy/create-test-db.php -d display_startup_errors=on -d error_reporting=22527"
         ],
         "git-hook-install": "@php .github/contrib/install.php",
         "git-hook-uninstall": "@php .github/contrib/uninstall.php",
