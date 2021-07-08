@@ -1,6 +1,5 @@
 require('module-alias/register');
 
-// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
@@ -27,8 +26,11 @@ let numberOfCustomers = 0;
 const firstCustomerData = new CustomerFaker({firstName: 'todelete'});
 const secondCustomerData = new CustomerFaker({firstName: 'todelete'});
 
-// Create Customers, Then disable / Enable and Delete with Bulk actions
-describe('BO - Customers : Enable/Disable/Delete customer by bulk actions', async () => {
+/*
+Create Customer
+Enable/Disable/Delete by Bulk actions
+*/
+describe('BO - Customers - Customers : Customers bulk actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -79,7 +81,7 @@ describe('BO - Customers : Enable/Disable/Delete customer by bulk actions', asyn
         await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
       });
 
-      it(`should create customer n°${index + 1}`, async function () {
+      it(`should create customer n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCustomer${index + 1}`, baseContext);
 
         const textResult = await addCustomerPage.createEditCustomer(page, test.args.customerToCreate);
@@ -106,14 +108,10 @@ describe('BO - Customers : Enable/Disable/Delete customer by bulk actions', asyn
       {args: {action: 'disable', enabledValue: false}},
       {args: {action: 'enable', enabledValue: true}},
     ].forEach((test) => {
-      it(`should ${test.args.action} customers by bulk actions and check result`, async function () {
+      it(`should ${test.args.action} customers with bulk actions and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Customers`, baseContext);
 
-        const textResult = await customersPage.bulkSetStatus(
-          page,
-          test.args.enabledValue,
-        );
-
+        const textResult = await customersPage.bulkSetStatus(page, test.args.enabledValue);
         await expect(textResult).to.be.equal(customersPage.successfulUpdateMessage);
 
         const numberOfCustomersInGrid = await customersPage.getNumberOfElementInGrid(page);
@@ -138,7 +136,7 @@ describe('BO - Customers : Enable/Disable/Delete customer by bulk actions', asyn
       await expect(textResult).to.contains('todelete');
     });
 
-    it('should delete customers by bulk actions and check result', async function () {
+    it('should delete customers', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCustomers', baseContext);
 
       const deleteTextResult = await customersPage.deleteCustomersBulkActions(page);

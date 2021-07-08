@@ -1,10 +1,10 @@
 require('module-alias/register');
 
-// Import expect from chai
 const {expect} = require('chai');
 
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -18,15 +18,12 @@ const foLoginPage = require('@pages/FO/login');
 const foHomePage = require('@pages/FO/home');
 const foCreateAccountPage = require('@pages/FO/myAccount/add');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_customers_customers_setRequiredFields';
 
 let browserContext;
 let page;
 
-describe('BO - Customers : Set required fields', async () => {
+describe('BO - Customers - Customers : Set required fields', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -68,7 +65,7 @@ describe('BO - Customers : Set required fields', async () => {
     });
 
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goToFO${index}`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
       // View shop
       page = await customersPage.viewMyShop(page);
@@ -80,8 +77,8 @@ describe('BO - Customers : Set required fields', async () => {
       await expect(isHomePage, 'Fail to open FO home page').to.be.true;
     });
 
-    it('should go to create account page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goToCreateAccountPage${index}`, baseContext);
+    it('should go to create account FO and check \'Receive offers from our partners\' checkbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkPartnersOffers${index}`, baseContext);
 
       // Go to create account page
       await foHomePage.goToLoginPage(page);
@@ -104,9 +101,6 @@ describe('BO - Customers : Set required fields', async () => {
 
       // Go back to BO
       page = await foCreateAccountPage.closePage(browserContext, page, 0);
-
-      const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
     });
   });
 });

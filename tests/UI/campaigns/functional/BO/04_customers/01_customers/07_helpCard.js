@@ -1,10 +1,10 @@
 require('module-alias/register');
 
-// Import expect from chai
 const {expect} = require('chai');
 
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -13,16 +13,13 @@ const loginCommon = require('@commonTests/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const customersPage = require('@pages/BO/customers');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_customers_customers_helpCard';
 
 let browserContext;
 let page;
 
 // Check that help card is in english in customers page
-describe('BO - Customers : Help card in customers page', async () => {
+describe('BO - Customers - Customers : Help card on customers page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
