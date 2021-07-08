@@ -4,7 +4,7 @@ admin_payment_preferences:
     defaults:
         _legacy_controller: AdminPaymentPreferences
         _legacy_link: AdminPaymentPreferences
-        _controller: PrestaShopBundle:Admin\Improve\Payment\PaymentPreferences:index
+        _controller: PrestaShopBundle\Controller\Admin\Improve\Payment\PaymentPreferencesController::indexAction
 
 admin_payment_preferences_process:
     path: /preferences
@@ -12,4 +12,4 @@ admin_payment_preferences_process:
     defaults:
         _legacy_controller: AdminPaymentPreferences
         _legacy_link: AdminPaymentPreferences:update
-        _controller: PrestaShopBundle:Admin\Improve\Payment\PaymentPreferences:processForm
+        _controller: PrestaShopBundle\Controller\Admin\Improve\Payment\PaymentPreferencesController::processFormAction

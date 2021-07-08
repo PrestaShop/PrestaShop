@@ -125,12 +125,13 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             )) {
                 $this->printErrors();
             }
-            if (!$this->processInstallDatabase()) {
-                $this->printErrors();
-            }
 
             // Deferred Kernel Init
             $this->initKernel();
+
+            if (!$this->processInstallDatabase()) {
+                $this->printErrors();
+            }
 
             if (!$this->processInstallDefaultData()) {
                 $this->printErrors();

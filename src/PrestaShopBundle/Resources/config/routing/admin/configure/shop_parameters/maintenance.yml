@@ -2,7 +2,7 @@ admin_maintenance:
     path: /
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Maintenance:index'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MaintenanceController::indexAction'
         _legacy_controller: AdminMaintenance
         _legacy_link: AdminMaintenance
 
@@ -10,6 +10,6 @@ admin_maintenance_save:
     path: /
     methods: [PATCH, POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Maintenance:processForm'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MaintenanceController::processFormAction'
         _legacy_controller: AdminMaintenance
         _legacy_link: AdminMaintenance:update

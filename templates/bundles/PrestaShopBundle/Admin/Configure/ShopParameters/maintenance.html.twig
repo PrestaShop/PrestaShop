@@ -1,0 +1,61 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain "Admin.Shopparameters.Feature" %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme generalForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% block content %}
+  {{ form_start(generalForm, {'attr' : {'class': 'form', 'id': 'form-maintenance'} }) }}
+    <div class="row justify-content-center">
+      {% block maintenance_form_general %}
+        <div class="col-xl-12">
+          <div class="card">
+            <h3 class="card-header">
+              <i class="material-icons">business_center</i> {{ 'General'|trans({}, 'Admin.Global') }}
+            </h3>
+            <div class="card-block row">
+              <div class="card-text">
+                {{ form_widget(generalForm) }}
+                {{ form_rest(generalForm) }}
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" id="form-maintenance-save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endblock %}
+    </div>
+  {{ form_end(generalForm) }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/maintenance.bundle.js') }}"></script>
+{% endblock %}

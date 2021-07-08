@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
 use Db;
-use Doctrine\Common\Cache\FilesystemCache;
 use GuzzleHttp\Client;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer;
@@ -47,6 +46,8 @@ use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
@@ -200,7 +201,13 @@ class ModuleManagerBuilder
         $kernelDir = realpath($this->getConfigDir() . '/../../var');
         self::$addonsDataProvider->cacheDir = $kernelDir . ($this->isDebug ? '/cache/dev' : '/cache/prod');
 
-        self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir . '/doctrine');
+        self::$cacheProvider = new DoctrineProvider(
+            new FilesystemAdapter(
+                '',
+                0,
+                self::$addonsDataProvider->cacheDir . '/doctrine'
+            )
+        );
 
         $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
         $themeName = Context::getContext()->shop->theme_name;
