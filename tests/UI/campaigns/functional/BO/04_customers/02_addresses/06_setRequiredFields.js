@@ -1,22 +1,25 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const addressesPage = require('@pages/BO/customers/addresses');
+
+// Import FO pages
 const foLoginPage = require('@pages/FO/login');
 const foHomePage = require('@pages/FO/home');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foAddressesPage = require('@pages/FO/myAccount/addresses');
 const foAddAddressesPage = require('@pages/FO/myAccount/addAddress');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_addresses_setRequiredFields';
 
@@ -35,7 +38,7 @@ Go to FO, new address page and verify that 'Vat number' is required
 Uncheck 'Vat number'
 Go to FO, new address page and verify that 'Vat number' is not required
  */
-describe('Set required fields for addresses', async () => {
+describe('BO - Customers - Addresses : Set required fields for addresses', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -85,6 +88,12 @@ describe('Set required fields for addresses', async () => {
       // Change language in FO
       await foHomePage.changeLanguage(page, 'en');
 
+      const isHomePage = await foHomePage.isHomePage(page);
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
+
+    it('should login in FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `loginFO${index}`, baseContext);
       // Go to create account page
       await foHomePage.goToLoginPage(page);
       await foLoginPage.customerLogin(page, DefaultCustomer);
@@ -94,7 +103,7 @@ describe('Set required fields for addresses', async () => {
     });
 
 
-    it('should go to addresses page', async function () {
+    it('should go to \'Customers > Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToFOAddressesPage${index}`, baseContext);
 
       await foMyAccountPage.goToAddressesPage(page);
@@ -125,9 +134,16 @@ describe('Set required fields for addresses', async () => {
 
       const isCustomerConnected = await foAddAddressesPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Go back to BO
       page = await foAddAddressesPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await addressesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addressesPage.pageTitle);
     });
   });
 });

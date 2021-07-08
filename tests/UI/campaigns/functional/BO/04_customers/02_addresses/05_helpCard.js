@@ -1,26 +1,26 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const addressesPage = require('@pages/BO/customers/addresses');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_customers_addresses_helpCard';
-
 
 let browserContext;
 let page;
 
 // Check that help card is in english in addresses page
-describe('Addresses help card', async () => {
+describe('BO - Customers - Addresses - Help card on addresses page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -35,7 +35,7 @@ describe('Addresses help card', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to addresses page', async function () {
+  it('should go to \'Customers > Addresses\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
