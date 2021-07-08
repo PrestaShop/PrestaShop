@@ -668,6 +668,17 @@ class CartRuleCore extends ObjectModel
 			AND ocr.`id_cart_rule` = ' . (int) $this->id . '
 			AND ' . (int) Configuration::get('PS_OS_ERROR') . ' != o.`current_state`
 			');
+            // also count cart rules that are linked to a cart that is not attached to an order yet
+            if ($alreadyInCart) {
+                $quantityUsedWithoutOrder = Db::getInstance()->getValue('
+                    select count(*)
+                    from ps_cart_cart_rule ccr
+                    LEFT JOIN ps_cart c on c.id_cart = ccr.id_cart
+                    where c.id_customer = ' . $cart->id_customer . '
+                    AND NOT EXISTS (SELECT null FROM ps_orders o where o.id_cart = ccr.id_cart)'
+                );
+                $quantityUsed += $quantityUsedWithoutOrder;
+            }
             // When checking the cart rules present in that cart the request result is accurate
             // When we check if using the cart rule one more time is valid then we increment this value
             if (!$alreadyInCart) {
