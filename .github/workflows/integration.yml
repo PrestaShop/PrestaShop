@@ -3,7 +3,7 @@ on: [push, pull_request]
 jobs:
     integration:
         name: Integration tests
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-latest
         strategy:
             matrix:
                 php: ['7.2', '7.3', '7.4']
@@ -29,6 +29,21 @@ jobs:
             uses: actions/setup-node@v2
             with:
               node-version: '10'
+
+          - name: Setup dependencies (mysqldump)
+            run: |
+              ## Remove MySQLClient (default)
+              sudo apt-get purge mysql-server mysql-client mysql-common mysql-server-core-* mysql-client-core-*
+              sudo rm /usr/share/mysql/charsets/ -rf
+              ## Install dependencies
+              sudo apt -y install libaio1 libnuma1 libtinfo5
+              ## Fetch MySQLClient 5.7
+              wget https://downloads.mysql.com/archives/get/p/23/file/mysql-server_5.7.34-1ubuntu18.04_amd64.deb-bundle.tar
+              tar -xf mysql-server_5.7.34-1ubuntu18.04_amd64.deb-bundle.tar
+              sudo dpkg -i mysql-common_5.7.34-1ubuntu18.04_amd64.deb
+              sudo dpkg -i libmysqlclient20_5.7.34-1ubuntu18.04_amd64.deb
+              sudo dpkg -i mysql-community-client_5.7.34-1ubuntu18.04_amd64.deb
+              sudo dpkg -i mysql-client_5.7.34-1ubuntu18.04_amd64.deb
           - uses: actions/checkout@v2
 
           - name: PrestaShop Configuration

@@ -42,7 +42,7 @@ jobs:
 
   phpstan:
     name: PHP Static Analysis
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.0
@@ -76,7 +76,7 @@ jobs:
 
   phpunit:
     name: PHPUnit
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         php: ['7.2', '7.3', '7.4']
@@ -91,6 +91,21 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
+
+      - name: Setup dependencies (mysqldump)
+        run: |
+            ## Remove MySQLClient (default)
+            sudo apt-get purge mysql-server mysql-client mysql-common mysql-server-core-* mysql-client-core-*
+            sudo rm /usr/share/mysql/charsets/ -rf
+            ## Install dependencies
+            sudo apt -y install libaio1 libnuma1 libtinfo5
+            ## Fetch MySQLClient 5.7
+            wget https://downloads.mysql.com/archives/get/p/23/file/mysql-server_5.7.34-1ubuntu18.04_amd64.deb-bundle.tar
+            tar -xf mysql-server_5.7.34-1ubuntu18.04_amd64.deb-bundle.tar
+            sudo dpkg -i mysql-common_5.7.34-1ubuntu18.04_amd64.deb
+            sudo dpkg -i libmysqlclient20_5.7.34-1ubuntu18.04_amd64.deb
+            sudo dpkg -i mysql-community-client_5.7.34-1ubuntu18.04_amd64.deb
+            sudo dpkg -i mysql-client_5.7.34-1ubuntu18.04_amd64.deb
 
       - uses: actions/checkout@v2
 
