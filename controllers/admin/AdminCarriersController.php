@@ -649,6 +649,23 @@ class AdminCarriersControllerCore extends AdminController
                 $this->_list[$key]['name'] = Carrier::getCarrierNameFromShopName();
             }
         }
+
+        // Add specific sort for naming
+        if ($this->_orderBy == 'name') {
+            $orderWay = $this->_orderWay;
+            usort($this->_list, function (array $a, array $b) use ($orderWay) {
+                $aName = strtolower($a['name']);
+                $bName = strtolower($b['name']);
+                if ($aName == $bName) {
+                    return 0;
+                }
+                if ($orderWay == 'ASC') {
+                    return ($aName < $bName) ? -1 : 1;
+                } else {
+                    return ($aName > $bName) ? -1 : 1;
+                }
+            });
+        }
     }
 
     public function ajaxProcessUpdatePositions()
