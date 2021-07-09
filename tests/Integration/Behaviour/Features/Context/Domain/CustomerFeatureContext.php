@@ -259,6 +259,7 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
     public function assertFoundCustomers(string $searchPhrases, array $expectedCustomers): void
     {
         $foundCustomers = $this->getQueryBus()->handle(new SearchCustomers(explode(' ', $searchPhrases)));
+        $isB2BEnabled = Configuration::get('PS_B2B_ENABLE');
 
         foreach ($expectedCustomers as $currentExpectedCustomer) {
             $wasCurrentExpectedCustomerFound = false;
@@ -296,7 +297,16 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
                         )
                     );
 
-                    if (Configuration::get('PS_B2B_ENABLE')) {
+                    if (!$isB2BEnabled) {
+                        if (isset($currentExpectedCustomer['companyName']) 
+                            || isset($currentFoundCustomer['company'])
+                        ) {
+                            throw new RuntimeException(sprintf(
+                                'Company name isn\'t expected when B2B mode is disabled.',
+                                $currentExpectedCustomer['email']
+                            ));
+                        }
+                    } else {
                         Assert::assertEquals(
                             $currentExpectedCustomer['companyName'],
                             $currentFoundCustomer['company'],
@@ -307,8 +317,6 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
                             )
                         );
                     }
-
-                    continue;
                 }
             }
             if (!$wasCurrentExpectedCustomerFound) {
