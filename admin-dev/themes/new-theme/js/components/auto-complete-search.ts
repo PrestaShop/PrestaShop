@@ -107,7 +107,7 @@ export default class AutoCompleteSearch {
         let displaySuggestion: Record<string, string> | string = item;
 
         if (typeof this.dataSetConfig.display === 'function') {
-          this.dataSetConfig.display(item);
+          displaySuggestion = this.dataSetConfig.display(item);
         } else if (
           Object.prototype.hasOwnProperty.call(
             item,
