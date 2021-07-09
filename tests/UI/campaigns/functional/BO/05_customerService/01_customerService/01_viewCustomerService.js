@@ -35,7 +35,7 @@ let messageDateTime = '';
 Send message by customer to customer service in FO
 View customer message in BO
  */
-describe('BO - Customer service : View messages', async () => {
+describe('BO - Customer Service : View messages', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -59,7 +59,7 @@ describe('BO - Customer service : View messages', async () => {
     await expect(isHomePage).to.be.true;
   });
 
-  it('should go on contact us page', async function () {
+  it('should go to contact us page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
     // Go to contact us page

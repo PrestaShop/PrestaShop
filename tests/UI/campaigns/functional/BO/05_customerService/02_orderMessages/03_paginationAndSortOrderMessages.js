@@ -145,7 +145,7 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
     ];
 
     sortTests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await orderMessagesPage.getAllRowsColumnContent(page, test.args.sortBy);

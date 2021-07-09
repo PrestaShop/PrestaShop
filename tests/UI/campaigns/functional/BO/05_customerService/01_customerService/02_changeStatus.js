@@ -35,7 +35,7 @@ const contactUsData = new ContactUsFakerData({subject: 'Customer service', refer
 Send message by customer to customer service in FO
 Change message status in BO
  */
-describe('BO - Customer service : Change status', async () => {
+describe('BO - Customer Service : Change status', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
