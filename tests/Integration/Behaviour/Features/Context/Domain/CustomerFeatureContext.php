@@ -325,7 +325,7 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $searchPhrases
      */
-    public function assertNoCustomersWasFound(string $searchPhrases)
+    public function assertNoCustomersWasFound(string $searchPhrases): void
     {
         $foundCustomers = $this->getQueryBus()->handle(new SearchCustomers(explode(' ', $searchPhrases)));
         Assert::assertEmpty($foundCustomers);
