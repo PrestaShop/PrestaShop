@@ -67,7 +67,7 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
     await expect(numberOfOrderMessages).to.be.above(0);
   });
 
-  describe('Create 11 order messages in BO', async () => {
+  describe('Create 10 order messages in BO', async () => {
     const tests = new Array(10).fill(0, 0, 10);
     tests.forEach((test, index) => {
       const createOrderMessageData = new OrderMessageFaker({name: `toSortAndPaginate${index}`});
