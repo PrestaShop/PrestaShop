@@ -649,6 +649,27 @@ class AdminCarriersControllerCore extends AdminController
                 $this->_list[$key]['name'] = Carrier::getCarrierNameFromShopName();
             }
         }
+
+        // Add specific sort for naming
+        if ($this->_orderBy == 'name') {
+            usort($this->_list, [$this, 'sortListByCarrierName']);
+        }
+    }
+
+    /**
+     * Sort arrays based on the carrier name
+     *
+     * @param array $a The first array to compare
+     * @param array $b The second array to compare
+     *
+     * @return int 0 if they are equal. If the order way is ASC, -1 for lower and 1 for greater, otherwise, it's the opposite
+     */
+    private function sortListByCarrierName(array $a, array $b): int
+    {
+        $aName = isset($a['name']) ? strtolower($a['name']) : '';
+        $bName = isset($b['name']) ? strtolower($b['name']) : '';
+
+        return $this->_orderWay == 'ASC' ? $aName <=> $bName : $bName <=> $aName;
     }
 
     public function ajaxProcessUpdatePositions()
