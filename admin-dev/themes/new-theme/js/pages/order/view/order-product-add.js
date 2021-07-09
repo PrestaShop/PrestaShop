@@ -65,7 +65,7 @@ export default class OrderProductAdd {
 
   setupListener() {
     this.combinationsSelect.on('change', (event) => {
-      this.priceTaxExcludedInput.val(
+      const taxExcluded = this.priceTaxExcludedInput.val(
         window.ps_round(
           $(event.currentTarget)
             .find(':selected')
@@ -76,7 +76,7 @@ export default class OrderProductAdd {
       this.priceTaxExcludedInput.val(taxExcluded);
       this.taxExcluded = parseFloat(taxExcluded);
 
-      this.priceTaxIncludedInput.val(
+      const taxIncluded = this.priceTaxIncludedInput.val(
         window.ps_round(
           $(event.currentTarget)
             .find(':selected')
@@ -117,8 +117,8 @@ export default class OrderProductAdd {
           this.priceTaxCalculator.calculateTotalPrice(
             newQuantity,
             this.isOrderTaxIncluded ? this.taxIncluded : this.taxExcluded,
-            this.currencyPrecision
-          )
+            this.currencyPrecision,
+          ),
         );
       }
     });
@@ -139,11 +139,11 @@ export default class OrderProductAdd {
 
       this.priceTaxExcludedInput.val(this.taxExcluded);
       this.totalPriceText.html(
-      this.priceTaxCalculator.calculateTotalPrice(
-        quantity,
-        this.isOrderTaxIncluded ? this.taxIncluded : this.taxExcluded,
-        this.currencyPrecision
-      ),
+        this.priceTaxCalculator.calculateTotalPrice(
+          quantity,
+          this.isOrderTaxIncluded ? this.taxIncluded : this.taxExcluded,
+          this.currencyPrecision,
+        ),
       );
     });
 
@@ -161,7 +161,7 @@ export default class OrderProductAdd {
         this.priceTaxCalculator.calculateTotalPrice(
           quantity,
           this.isOrderTaxIncluded ? this.taxIncluded : this.taxExcluded,
-          this.currencyPrecision
+          this.currencyPrecision,
         ),
       );
     });

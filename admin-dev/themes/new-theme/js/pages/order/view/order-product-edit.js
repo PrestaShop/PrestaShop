@@ -110,7 +110,7 @@ export default class OrderProductEdit {
     const updatedTotal = this.priceTaxCalculator.calculateTotalPrice(
       this.quantity,
       this.isOrderTaxIncluded ? this.taxIncluded : this.taxExcluded,
-      this.currencyPrecision
+      this.currencyPrecision,
     );
     this.priceTotalText.html(updatedTotal);
     this.productEditSaveBtn.prop('disabled', updatedTotal === this.initialTotal);
@@ -158,7 +158,7 @@ export default class OrderProductEdit {
     this.initialTotal = this.priceTaxCalculator.calculateTotalPrice(
       product.quantity,
       product.isOrderTaxIncluded ? product.price_tax_incl : product.price_tax_excl,
-      this.currencyPrecision
+      this.currencyPrecision,
     );
     this.isOrderTaxIncluded = product.isOrderTaxIncluded;
     this.quantity = product.quantity;

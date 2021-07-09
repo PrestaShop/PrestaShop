@@ -146,7 +146,7 @@ export default class OrderViewPage {
         $btn.data('availableQuantity'),
         $btn.data('availableOutOfStock'),
         $btn.data('orderInvoiceId'),
-        $btn.data('isOrderTaxIncluded')
+        $btn.data('isOrderTaxIncluded'),
       );
     });
   }
