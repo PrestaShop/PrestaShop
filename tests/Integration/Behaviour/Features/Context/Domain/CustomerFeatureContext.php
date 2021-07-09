@@ -229,7 +229,7 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
                             || isset($currentFoundCustomer['company'])
                         ) {
                             throw new RuntimeException(sprintf(
-                                'Company name isn\'t expected when B2B mode is disabled.',
+                                'Company name isn\'t expected when B2B mode is disabled',
                                 $currentExpectedCustomer['email']
                             ));
                         }
