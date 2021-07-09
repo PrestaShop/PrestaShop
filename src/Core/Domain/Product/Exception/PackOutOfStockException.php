@@ -24,37 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Adapter\OrderMessage\OrderMessageProvider;
-use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
 /**
- * Selects order messages itself.
+ * Is thrown when using pack (e.g. adding to cart) which is out of stock
  */
-final class CustomerServiceOrderMessagesChoiceProvider implements ConfigurableFormChoiceProviderInterface
+class PackOutOfStockException extends ProductOutOfStockException
 {
-    /**
-     * @var OrderMessageProvider
-     */
-    private $orderMessageProvider;
-
-    public function __construct(OrderMessageProvider $orderMessageProvider)
-    {
-        $this->orderMessageProvider = $orderMessageProvider;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChoices(array $options): array
-    {
-        $result = [];
-
-        foreach ($this->orderMessageProvider->getMessages($options['lang_id']) as $orderMessage) {
-            $result[$orderMessage['id_order_message']] = $orderMessage['message'];
-        }
-
-        return $result;
-    }
 }

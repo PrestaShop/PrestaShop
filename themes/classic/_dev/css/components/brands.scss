@@ -17,15 +17,7 @@
 
         &-infos {
           a {
-            &::before {
-              position: absolute;
-              top: 0;
-              left: 0;
-              z-index: 1;
-              width: 100%;
-              height: 100%;
-              content: "";
-            }
+            display: inline-block;
           }
         }
 
@@ -40,6 +32,19 @@
         &-img {
           width: 200px;
           margin: auto;
+          position: relative;
+
+          a {
+            &::before {
+              content: "";
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              z-index: 1;
+              top: 0;
+              left: 0;
+            }
+          }
         }
       }
     }

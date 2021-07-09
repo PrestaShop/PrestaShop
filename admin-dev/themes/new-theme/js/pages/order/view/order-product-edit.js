@@ -53,6 +53,7 @@ export default class OrderProductEdit {
       const previousQuantity = parseInt(this.quantityInput.data('previousQuantity'), 10);
       const remainingAvailable = availableQuantity - (newQuantity - previousQuantity);
       const availableOutOfStock = this.availableText.data('availableOutOfStock');
+      this.quantity = newQuantity;
       this.availableText.text(remainingAvailable);
       this.availableText.toggleClass('text-danger font-weight-bold', remainingAvailable < 0);
       this.updateTotal();
@@ -66,19 +67,19 @@ export default class OrderProductEdit {
 
     this.priceTaxIncludedInput.on('change keyup', (event) => {
       this.taxIncluded = parseFloat(event.target.value);
-      const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
+      this.taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
         this.taxIncluded,
         this.taxRate,
         this.currencyPrecision,
       );
-      this.priceTaxExcludedInput.val(taxExcluded);
+      this.priceTaxExcludedInput.val(this.taxExcluded);
       this.updateTotal();
     });
 
     this.priceTaxExcludedInput.on('change keyup', (event) => {
-      const taxExcluded = parseFloat(event.target.value);
+      this.taxExcluded = parseFloat(event.target.value);
       this.taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
-        taxExcluded,
+        this.taxExcluded,
         this.taxRate,
         this.currencyPrecision,
       );
@@ -108,8 +109,8 @@ export default class OrderProductEdit {
   updateTotal() {
     const updatedTotal = this.priceTaxCalculator.calculateTotalPrice(
       this.quantity,
-      this.taxIncluded,
-      this.currencyPrecision,
+      this.isOrderTaxIncluded ? this.taxIncluded : this.taxExcluded,
+      this.currencyPrecision
     );
     this.priceTotalText.html(updatedTotal);
     this.productEditSaveBtn.prop('disabled', updatedTotal === this.initialTotal);
@@ -156,11 +157,13 @@ export default class OrderProductEdit {
     this.taxRate = product.tax_rate;
     this.initialTotal = this.priceTaxCalculator.calculateTotalPrice(
       product.quantity,
-      product.price_tax_incl,
-      this.currencyPrecision,
+      product.isOrderTaxIncluded ? product.price_tax_incl : product.price_tax_excl,
+      this.currencyPrecision
     );
+    this.isOrderTaxIncluded = product.isOrderTaxIncluded;
     this.quantity = product.quantity;
     this.taxIncluded = product.price_tax_incl;
+    this.taxExcluded = product.price_tax_excl;
 
     // Copy product content in cells
     this.productEditImage.html(

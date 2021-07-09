@@ -58,6 +58,9 @@ export default class OrderProductAdd {
     this.priceTaxCalculator = new OrderPrices();
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
+    this.isOrderTaxIncluded = $(OrderViewPageMap.addProductTableRow).data('isOrderTaxIncluded');
+    this.taxExcluded = null;
+    this.taxIncluded = null;
   }
 
   setupListener() {
@@ -70,6 +73,8 @@ export default class OrderProductAdd {
           this.currencyPrecision,
         ),
       );
+      this.priceTaxExcludedInput.val(taxExcluded);
+      this.taxExcluded = parseFloat(taxExcluded);
 
       this.priceTaxIncludedInput.val(
         window.ps_round(
@@ -79,6 +84,8 @@ export default class OrderProductAdd {
           this.currencyPrecision,
         ),
       );
+      this.priceTaxIncludedInput.val(taxIncluded);
+      this.taxIncluded = parseFloat(taxIncluded);
 
       this.locationText.html(
         $(event.currentTarget)
@@ -105,9 +112,13 @@ export default class OrderProductAdd {
         this.productAddActionBtn.prop('disabled', disableAddActionBtn);
         this.invoiceSelect.prop('disabled', !availableOutOfStock && remainingAvailable < 0);
 
-        const taxIncluded = parseFloat(this.priceTaxIncludedInput.val());
+        this.taxIncluded = parseFloat(this.priceTaxIncludedInput.val());
         this.totalPriceText.html(
-          this.priceTaxCalculator.calculateTotalPrice(newQuantity, taxIncluded, this.currencyPrecision),
+          this.priceTaxCalculator.calculateTotalPrice(
+            newQuantity,
+            this.isOrderTaxIncluded ? this.taxIncluded : this.taxExcluded,
+            this.currencyPrecision
+          )
         );
       }
     });
@@ -126,9 +137,13 @@ export default class OrderProductAdd {
       );
       const quantity = parseInt(this.quantityInput.val(), 10);
 
-      this.priceTaxExcludedInput.val(taxExcluded);
+      this.priceTaxExcludedInput.val(this.taxExcluded);
       this.totalPriceText.html(
-        this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision),
+      this.priceTaxCalculator.calculateTotalPrice(
+        quantity,
+        this.isOrderTaxIncluded ? this.taxIncluded : this.taxExcluded,
+        this.currencyPrecision
+      ),
       );
     });
 
@@ -141,9 +156,13 @@ export default class OrderProductAdd {
       );
       const quantity = parseInt(this.quantityInput.val(), 10);
 
-      this.priceTaxIncludedInput.val(taxIncluded);
+      this.priceTaxIncludedInput.val(this.taxIncluded);
       this.totalPriceText.html(
-        this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision),
+        this.priceTaxCalculator.calculateTotalPrice(
+          quantity,
+          this.isOrderTaxIncluded ? this.taxIncluded : this.taxExcluded,
+          this.currencyPrecision
+        ),
       );
     });
 
@@ -153,8 +172,15 @@ export default class OrderProductAdd {
 
   setProduct(product) {
     this.productIdInput.val(product.productId).trigger('change');
-    this.priceTaxExcludedInput.val(window.ps_round(product.priceTaxExcl, this.currencyPrecision));
-    this.priceTaxIncludedInput.val(window.ps_round(product.priceTaxIncl, this.currencyPrecision));
+
+    const taxExcluded = window.ps_round(product.priceTaxExcl, this.currencyPrecision);
+    this.priceTaxExcludedInput.val(taxExcluded);
+    this.taxExcluded = parseFloat(taxExcluded);
+
+    const taxIncluded = window.ps_round(product.priceTaxIncl, this.currencyPrecision);
+    this.priceTaxIncludedInput.val(taxIncluded);
+    this.taxIncluded = parseFloat(taxIncluded);
+
     this.taxRateInput.val(product.taxRate);
     this.locationText.html(product.location);
     this.available = product.stock;

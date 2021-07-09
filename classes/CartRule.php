@@ -1203,9 +1203,10 @@ class CartRuleCore extends ObjectModel
         }
 
         // Free shipping on selected carriers
+        $reduction_carrier = 0;
         if ($this->free_shipping && in_array($filter, [CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_SHIPPING])) {
             if (!$this->carrier_restriction) {
-                $reduction_value += $context->cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING, null === $package ? null : $package['products'], null === $package ? null : $package['id_carrier']);
+                $reduction_carrier += $context->cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING, null === $package ? null : $package['products'], null === $package ? null : $package['id_carrier']);
             } else {
                 $data = Db::getInstance()->executeS('
 					SELECT crc.id_cart_rule, c.id_carrier
@@ -1216,10 +1217,11 @@ class CartRuleCore extends ObjectModel
 
                 if ($data) {
                     foreach ($data as $cart_rule) {
-                        $reduction_value += $context->cart->getCarrierCost((int) $cart_rule['id_carrier'], $use_tax, $context->country);
+                        $reduction_carrier += $context->cart->getCarrierCost((int) $cart_rule['id_carrier'], $use_tax, $context->country);
                     }
                 }
             }
+            $reduction_value += $reduction_carrier;
         }
 
         if (in_array($filter, [CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_REDUCTION])) {
@@ -1315,7 +1317,10 @@ class CartRuleCore extends ObjectModel
                             if ($use_tax) {
                                 $infos = Product::getTaxesInformations($product, $context);
                                 $tax_rate = $infos['rate'] / 100;
+                                // As the price is tax excluded but ecotax included, we need to substract the ecotax before getting the price tax included
+                                $price -= $product['ecotax'];
                                 $price *= (1 + $tax_rate);
+                                $price += $product['ecotax'];
                             }
 
                             $selected_products_reduction += $price * $product['cart_quantity'];
@@ -1480,10 +1485,17 @@ class CartRuleCore extends ObjectModel
         Cache::store($cache_id, $reduction_value);
 
         // update virtual total values, for percentage reductions that might be applied later
+        // but remove the carrier as free shipping is not a real reduction
         if ($use_tax && !empty($context->virtualTotalTaxIncluded)) {
             $context->virtualTotalTaxIncluded -= $reduction_value;
+            if ($this->free_shipping) {
+                $context->virtualTotalTaxIncluded += $reduction_carrier;
+            }
         } elseif (!$use_tax && !empty($context->virtualTotalTaxExcluded)) {
             $context->virtualTotalTaxExcluded -= $reduction_value;
+            if ($this->free_shipping) {
+                $context->virtualTotalTaxExcluded += $reduction_carrier;
+            }
         }
 
         return $reduction_value;
