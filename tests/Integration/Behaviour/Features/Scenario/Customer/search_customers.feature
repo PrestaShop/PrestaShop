@@ -40,3 +40,11 @@ Feature: Search customers given a search term (BO)
     When I search for the phrases "no customers" I should not get any results
     When I search for the phrases "no companies" I should not get any results
     When I search for the phrases " " I should not get any results
+
+    Given shop configuration for "PS_B2B_ENABLE" is set to 0
+    When I search for the phrases "prestashop" I should get the following results:
+      | firstName | lastName | email                      | birthday   |
+      | Mathieu   | Napoler  | napoler.dev@prestashop.com | 1996-05-04 |
+      | Mathieu   | Polarn   | polarn.dev@prestashop.com  | 1998-10-12 |
+    When I search for the phrases "test" I should not get any results
+    
