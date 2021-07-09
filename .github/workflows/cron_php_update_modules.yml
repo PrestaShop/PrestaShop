@@ -1,56 +1,21 @@
-name: Cron Update JS Routing
+name: Cron Update PHP Modules
 on:
     schedule:
         - cron:  '0 23 * * *'
 jobs:
   js-routing-dump:
     runs-on: ubuntu-latest
-    name: Update JS Routing
+    name: Update PHP Modules
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v1
         with:
-          php-version: '7.4'
+          ## Use the lowest dependency
+          php-version: '7.2'
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
-
-      - name: Setup MySQL
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          mysql version: '5.7'
-          mysql database: 'prestashop'
-          mysql root password: 'password'
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '10'
 
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: PrestaShop Configuration
-        run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
-
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache Node Directory
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-               ${{ runner.os }}-node-
-
-      - name: Cache Composer Directory
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-                 ${{ runner.os }}-composer-
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist
@@ -61,23 +26,23 @@ jobs:
       - name: Install PrestaShop
         run: php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db_server=127.0.0.1 --db_password=password --db_name=prestashop --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
 
-      - name: Dump JS Routing file
-        run: php bin/console fos:js-routing:dump --format=json --target=admin-dev/themes/new-theme/js/fos_js_routes.json
+      - name: Update PrestaShop packages
+        run: composer update "prestashop/*"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
             token: ${{ secrets.GITHUB_TOKEN }}
-            branch: cron-js-routing
-            commit-message: Updated JS Routing file
+            branch: cron-php-update-modules
+            commit-message: Updated PrestaShop Packages
             committer: PrestonBot <noreply@github.com>
             author: prestonBot <prestonBot@users.noreply.github.com>
-            title: 'Updated JS Routing file'
+            title: 'Updated PrestaShop Packages'
             body: |
                     | Questions         | Answers
                     | ----------------- | -------------------------------------------------------
                     | Branch?           | develop
-                    | Description?      | Updated JS Routing file
+                    | Description?      | Updated PrestaShop Packages
                     | Type?             | improvement
                     | Category?         | CO
                     | BC breaks?        | no
