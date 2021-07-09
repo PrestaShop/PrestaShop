@@ -129,9 +129,9 @@ export default class OrderProductAdd {
     });
 
     this.priceTaxIncludedInput.on('change keyup', (event) => {
-      const taxIncluded = parseFloat(event.target.value);
-      const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
-        taxIncluded,
+      this.taxIncluded = parseFloat(event.target.value);
+      this.taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
+        this.taxIncluded,
         this.taxRateInput.val(),
         this.currencyPrecision,
       );
@@ -148,9 +148,9 @@ export default class OrderProductAdd {
     });
 
     this.priceTaxExcludedInput.on('change keyup', (event) => {
-      const taxExcluded = parseFloat(event.target.value);
-      const taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
-        taxExcluded,
+      this.taxExcluded = parseFloat(event.target.value);
+      this.taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
+        this.taxExcluded,
         this.taxRateInput.val(),
         this.currencyPrecision,
       );

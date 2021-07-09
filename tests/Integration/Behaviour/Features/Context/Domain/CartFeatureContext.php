@@ -278,9 +278,9 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             // Clear cart static cache or it will have no products in next calls
             Cart::resetStaticCache();
         } catch (MinimalQuantityException $e) {
-            $this->setLastException = $e;
+            $this->setLastException($e);
         } catch (PackOutOfStockException $e) {
-            $this->setLastException = $e;
+            $this->setLastException($e);
         }
     }
 
