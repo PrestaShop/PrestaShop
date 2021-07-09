@@ -517,7 +517,7 @@ var stock = (function() {
   return {
     'init': function() {
       /** Update qty_0 and shortcut qty_0 field on change */
-      $('#form_step1_qty_0_shortcut, #form_step3_qty_0').keyup(function() {
+      $('#form_step1_qty_0_shortcut, #form_step3_qty_0').on('change', function() {
         if ($(this).attr('id') === 'form_step1_qty_0_shortcut') {
           $('#form_step3_qty_0').val($(this).val());
         } else {
