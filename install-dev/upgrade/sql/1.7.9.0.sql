@@ -13,3 +13,4 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'actionAdminOrdersTrackingNumberUpdate', 'After setting the tracking number for the order', 'This hook allows you to execute code after the unique tracking number for the order was added', '1'),
   (NULL, 'displayBackOfficeEmployeeMenu', 'Administration menu', 'This hook is displayed in the employee menu', '1')
 ;
+ALTER TABLE `PREFIX_carrier` DROP COLUMN `id_tax_rules_group`;
