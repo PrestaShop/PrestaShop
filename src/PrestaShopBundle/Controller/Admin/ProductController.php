@@ -385,6 +385,12 @@ class ProductController extends FrameworkBundleAdminController
                 'icon' => 'add_circle_outline',
                 'class' => 'btn-outline-primary',
             ];
+
+            $toolbarButtons['list_v2'] = [
+                'href' => $this->generateUrl('admin_products_v2_index'),
+                'desc' => $this->trans('List on experimental page', 'Admin.Catalog.Feature'),
+                'class' => 'btn-outline-primary',
+            ];
         }
 
         return $toolbarButtons;
