@@ -677,7 +677,7 @@ class CartRuleCore extends ObjectModel
                     select count(*)
                     from ps_cart_cart_rule ccr
                     LEFT JOIN ps_cart c on c.id_cart = ccr.id_cart
-                    where c.id_customer = ' . $cart->id_customer . ' AND c.id_cart = ' . $cart->id . '
+                    where c.id_customer = ' . $cart->id_customer . ' AND c.id_cart = ' . $cart->id . ' AND ccr.id_cart_rule = ' . (int) $this->id . '
                     AND NOT EXISTS (SELECT null FROM ps_orders o where o.id_cart = ccr.id_cart)'
                 );
             } else {
