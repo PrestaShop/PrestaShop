@@ -67,155 +67,35 @@ class UpdateSchemaCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output)
     {
         $conn = $this->em->getConnection();
         $conn->beginTransaction();
 
         $output->writeln('Updating database schema...');
-        $sqls = 0;
+        $affectedRows = 0;
 
-        // First drop any existing FK
-        $query = $conn->query(
-            'SELECT CONSTRAINT_NAME, TABLE_NAME
-                FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
-                WHERE CONSTRAINT_TYPE = "FOREIGN KEY"
-                    AND TABLE_SCHEMA = "' . $this->dbName . '"
-                    AND TABLE_NAME LIKE "' . $this->dbPrefix . '%" '
-        );
-
-        $results = $query->fetchAll();
-        foreach ($results as $result) {
-            $drop = 'ALTER TABLE ' . $result['TABLE_NAME'] . ' DROP FOREIGN KEY ' . $result['CONSTRAINT_NAME'];
-            $output->writeln('Executing: ' . $drop);
-            $conn->executeQuery($drop);
-            ++$sqls;
-        }
+        $affectedRows = $this->dropExistingForeignKeys($conn);
 
         $schemaTool = new SchemaTool($this->em);
         $updateSchemaSql = $schemaTool->getUpdateSchemaSql($this->metadata, false);
 
-        $removedTables = [];
-        $dropForeignKeyQueries = [];
+        $removedTables = $this->removeDropTables($updateSchemaSql);
+        $this->removeAlterTables($updateSchemaSql, $removedTables);
+        $this->removeDuplicateDropForeignKeys($updateSchemaSql);
+        $this->removeAddConstraints($updateSchemaSql);
 
-        // Remove the DROP TABLE
-        foreach ($updateSchemaSql as $key => $sql) {
-            $matches = [];
-            if (preg_match('/DROP TABLE (.+?)$/', $sql, $matches)) {
-                unset($updateSchemaSql[$key]);
-                $removedTables[] = $matches[1];
-            }
-        }
+        $constraints = $this->moveConstraints($updateSchemaSql);
 
-        // Then remove the ALTER TABLE on removed tables
-        foreach ($updateSchemaSql as $key => $sql) {
-            $matches = [];
-            if (preg_match('/ALTER TABLE (.+?) /', $sql, $matches)) {
-                $alteredTables = $matches[1];
-                if (in_array($alteredTables, $removedTables)) {
-                    unset($updateSchemaSql[$key]);
-                }
-            }
-        }
+        $this->clearQueries($conn, $updateSchemaSql);
 
-        // Remove duplicated DROP FOREIGN KEY
-        foreach ($updateSchemaSql as $key => $sql) {
-            if (preg_match('/ DROP FOREIGN KEY /', $sql)) {
-                $hashedSql = md5($sql);
-                if (in_array($hashedSql, $dropForeignKeyQueries)) {
-                    unset($updateSchemaSql[$key]);
-                } else {
-                    $dropForeignKeyQueries[] = $hashedSql;
-                }
-            }
-        }
-
-        // Remove ADD CONSTRAINT
-        foreach ($updateSchemaSql as $key => $sql) {
-            if (preg_match('/ ADD CONSTRAINT /', $sql)) {
-                unset($updateSchemaSql[$key]);
-            }
-        }
-
-        $constraints = [];
-
-        // Move DROP FOREIGN KEY at the beginning of the sql list
-        foreach ($updateSchemaSql as $key => $sql) {
-            if (preg_match('/ DROP FOREIGN KEY /', $sql)) {
-                $constraints[] = $sql;
-                unset($updateSchemaSql[$key]);
-            }
-        }
-
-        foreach ($constraints as $constraint) {
-            array_unshift($updateSchemaSql, $constraint);
-        }
-
-        // Put back DEFAULT fields, since it cannot be described in the ORM model
-        foreach ($updateSchemaSql as $key => $sql) {
-            $matches = [];
-            if (preg_match('/ALTER TABLE (.+?) /', $sql, $matches)) {
-                $tableName = $matches[1];
-                $matches = [];
-                if (preg_match_all('/([^\s,]*?) CHANGE (.+?) (.+?)(, CHANGE |$)/', $sql, $matches)) {
-                    foreach ($matches[2] as $matchKey => $fieldName) {
-                        $findChange = strpos($matches[0][$matchKey], ', CHANGE ');
-                        // remove table name
-                        $matches[0][$matchKey] = preg_replace(
-                            '/(.+?) CHANGE/',
-                            ' CHANGE',
-                            rtrim($matches[0][$matchKey], ', CHANGE ')
-                        );
-                        $matches[0][$matchKey] .= $findChange !== false ? ', CHANGE ' : '';
-                        // remove quote
-                        $originalFieldName = $fieldName;
-                        $fieldName = str_replace('`', '', $fieldName);
-                        // get old default value
-                        $query = $conn->query('SHOW FULL COLUMNS FROM ' . $tableName . ' WHERE Field="' . $fieldName . '"');
-                        $results = $query->fetchAll();
-                        $oldDefaultValue = $results[0]['Default'];
-                        $extra = $results[0]['Extra'];
-                        if ($oldDefaultValue !== null
-                            && strpos($oldDefaultValue, 'CURRENT_TIMESTAMP') === false) {
-                            $oldDefaultValue = "'" . $oldDefaultValue . "'";
-                        }
-                        if ($oldDefaultValue === null) {
-                            $oldDefaultValue = 'NULL';
-                        }
-                        // set the old default value
-                        if (!($results[0]['Null'] == 'NO' && $results[0]['Default'] === null)
-                            && !($oldDefaultValue === 'NULL'
-                                && strpos($matches[0][$matchKey], 'NOT NULL') !== false)
-                            && (strpos($matches[0][$matchKey], 'BLOB') === false)
-                            && (strpos($matches[0][$matchKey], 'TEXT') === false)
-                        ) {
-                            if (preg_match('/DEFAULT/', $matches[0][$matchKey])) {
-                                $matches[0][$matchKey] =
-                                    preg_replace('/DEFAULT (.+?)(, CHANGE |$)/', 'DEFAULT ' .
-                                        $oldDefaultValue . '$2' . ' ' . $extra, $matches[0][$matchKey]);
-                            } else {
-                                $matches[0][$matchKey] =
-                                    preg_replace('/(.+?)(, CHANGE |$)/uis', '$1 DEFAULT ' .
-                                        $oldDefaultValue . ' ' . $extra . '$2', $matches[0][$matchKey]);
-                            }
-                        }
-                        $updateSchemaSql[$key] = preg_replace(
-                            '/ CHANGE ' . $originalFieldName . ' (.+?)(, CHANGE |$)/uis',
-                            $matches[0][$matchKey],
-                            $updateSchemaSql[$key]
-                        );
-                    }
-                }
-            }
-        }
-
-        $sqls += count($updateSchemaSql);
+        $affectedRows += count($updateSchemaSql);
         // Now execute the queries!
         foreach ($updateSchemaSql as $sql) {
             try {
                 $output->writeln('Executing: ' . $sql);
                 $conn->executeQuery($sql);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $conn->rollBack();
 
                 throw ($e);
@@ -225,9 +105,221 @@ class UpdateSchemaCommand extends Command
             $conn->commit();
         }
 
-        $pluralization = (1 > $sqls) ? 'query was' : 'queries were';
-        $output->writeln(sprintf('Database schema updated successfully! "<info>%s</info>" %s executed', $sqls, $pluralization));
+        $pluralization = (1 > $affectedRows) ? 'query was' : 'queries were';
+        $output->writeln(sprintf('Database schema updated successfully! "<info>%s</info>" %s executed', $affectedRows, $pluralization));
 
         return 0;
+    }
+
+    /**
+     * Drop foreign keys from the database
+     *
+     * @param Connection $connection Database connection to use to clear foreign keys
+     *
+     * @return int The number of affected rows
+     */
+    public function dropExistingForeignKeys(Connection $connection): int
+    {
+        // First drop any existing FK
+        $query = $connection->query(
+            'SELECT CONSTRAINT_NAME, TABLE_NAME ' .
+            'FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS ' .
+            'WHERE CONSTRAINT_TYPE = "FOREIGN KEY" ' .
+            'AND TABLE_SCHEMA = "' . $this->dbName . '" ' .
+            'AND TABLE_NAME LIKE "' . $this->dbPrefix . '%"'
+        );
+
+        $results = $query->fetchAll();
+        $nbQueries = 0;
+
+        foreach ($results as $result) {
+            $drop = 'ALTER TABLE ' . $result['TABLE_NAME'] . ' DROP FOREIGN KEY ' . $result['CONSTRAINT_NAME'];
+            $output->writeln('Executing: ' . $drop);
+
+            $nbQueries += $connection->executeQuery($drop);
+        }
+
+        return $nbQueries;
+    }
+
+    /**
+     * Remove DROP TABLE queries
+     *
+     * @param array $queries List of SQL queries to parse
+     *
+     * @return array Queries that have been removed
+     */
+    public function removeDropTables(array &$queries): array
+    {
+        $removedTables = [];
+        foreach ($queries as $key => $sql) {
+            $matches = [];
+            if (preg_match('/DROP TABLE (.+?)$/', $sql, $matches)) {
+                unset($queries[$key]);
+                $removedTables[] = $matches[1];
+            }
+        }
+
+        return $removedTables;
+    }
+
+    /**
+     * Remove ALTER TABLE queries
+     *
+     * @param array $queries List of SQL queries to parse
+     * @param array $removedTables Tables removed by previous methods
+     *
+     * @return void
+     */
+    public function removeAlterTables(array &$queries, array $removedTables): void
+    {
+        foreach ($queries as $key => $sql) {
+            $matches = [];
+            if (preg_match('/ALTER TABLE (.+?) /', $sql, $matches)) {
+                $alteredTables = $matches[1];
+                if (in_array($alteredTables, $removedTables)) {
+                    unset($queries[$key]);
+                }
+            }
+        }
+    }
+
+    /**
+     * Remove duplicated DROP FOREIGN KEY queries
+     *
+     * @param array $queries List of SQL queries to parse
+     *
+     * @return void
+     */
+    public function removeDuplicateDropForeignKeys(array &$queries): void
+    {
+        $dropForeignKeyQueries = [];
+        foreach ($queries as $key => $sql) {
+            if (preg_match('/ DROP FOREIGN KEY /', $sql)) {
+                if (in_array($sql, $dropForeignKeyQueries)) {
+                    unset($queries[$key]);
+                } else {
+                    $dropForeignKeyQueries[] = $sql;
+                }
+            }
+        }
+    }
+
+    /**
+     * Remove ADD CONSTRAINT queries
+     *
+     * @param array $queries List of SQL queries to parse
+     *
+     * @return void
+     */
+    public function removeAddConstraints(array &$queries): void
+    {
+        foreach ($queries as $key => $sql) {
+            if (preg_match('/ ADD CONSTRAINT /', $sql)) {
+                unset($queries[$key]);
+            }
+        }
+    }
+
+    /**
+     * Move constraints to the top of the list
+     *
+     * @param array $queries List of SQL queries to parse
+     *
+     * @return array The new order
+     */
+    public function moveConstraints(array &$queries): array
+    {
+        $constraints = [];
+
+        foreach ($queries as $key => $sql) {
+            if (preg_match('/ DROP FOREIGN KEY /', $sql)) {
+                $constraints[] = $sql;
+                unset($queries[$key]);
+            }
+        }
+
+        foreach ($constraints as $constraint) {
+            array_unshift($queries, $constraint);
+        }
+
+        return $constraints;
+    }
+
+    /**
+     * Put back DEFAULT fields, since it cannot be described in the ORM model
+     *
+     * @param Connection $connection Database connection to use
+     * @param array $queries List of SQL queries to parse
+     *
+     * return void
+     */
+    public function clearQueries(Connection $conn, array &$queries): void
+    {
+        foreach ($queries as $key => $sql) {
+            $matches = [];
+            if (!preg_match('/ALTER TABLE (.+?) /', $sql, $matches)) {
+                continue;
+            }
+
+            $tableName = $matches[1];
+            $matches = [];
+            preg_match_all('/([^\s,]*?) CHANGE (.+?) (.+?)(, CHANGE |$)/', $sql, $matches);
+            if (!isset($matches[2]) || !is_array($matches[2])) {
+                continue;
+            }
+
+            foreach ($matches[2] as $matchKey => $fieldName) {
+                $findChange = strpos($matches[0][$matchKey], ', CHANGE ');
+                // remove table name
+                $matches[0][$matchKey] = preg_replace(
+                    '/(.+?) CHANGE/',
+                    ' CHANGE',
+                    rtrim($matches[0][$matchKey], ', CHANGE ')
+                );
+                $matches[0][$matchKey] .= $findChange !== false ? ', CHANGE ' : '';
+                // remove quote
+                $originalFieldName = $fieldName;
+                $fieldName = str_replace('`', '', $fieldName);
+                // get old default value
+                $query = $conn->query('SHOW FULL COLUMNS FROM ' . $tableName . ' WHERE Field="' . $fieldName . '"');
+                $results = $query->fetchAll();
+                $oldDefaultValue = $results[0]['Default'];
+                $extra = $results[0]['Extra'];
+
+                if ($oldDefaultValue !== null
+                    && strpos($oldDefaultValue, 'CURRENT_TIMESTAMP') === false) {
+                    $oldDefaultValue = "'" . $oldDefaultValue . "'";
+                }
+
+                if ($oldDefaultValue === null) {
+                    $oldDefaultValue = 'NULL';
+                }
+
+                // set the old default value
+                if (!($results[0]['Null'] == 'NO' && $results[0]['Default'] === null)
+                    && !($oldDefaultValue === 'NULL'
+                         && strpos($matches[0][$matchKey], 'NOT NULL') !== false)
+                    && (strpos($matches[0][$matchKey], 'BLOB') === false)
+                    && (strpos($matches[0][$matchKey], 'TEXT') === false)
+                ) {
+                    if (preg_match('/DEFAULT/', $matches[0][$matchKey])) {
+                        $matches[0][$matchKey] =
+                                               preg_replace('/DEFAULT (.+?)(, CHANGE |$)/', 'DEFAULT ' .
+                                                            $oldDefaultValue . '$2' . ' ' . $extra, $matches[0][$matchKey]);
+                    } else {
+                        $matches[0][$matchKey] =
+                                               preg_replace('/(.+?)(, CHANGE |$)/uis', '$1 DEFAULT ' .
+                                                            $oldDefaultValue . ' ' . $extra . '$2', $matches[0][$matchKey]);
+                    }
+                }
+
+                $queries[$key] = preg_replace(
+                    '/ CHANGE ' . $originalFieldName . ' (.+?)(, CHANGE |$)/uis',
+                    $matches[0][$matchKey],
+                    $queries[$key]
+                );
+            }
+        }
     }
 }
