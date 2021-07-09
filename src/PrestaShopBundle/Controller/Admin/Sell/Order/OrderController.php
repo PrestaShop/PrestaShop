@@ -261,7 +261,7 @@ class OrderController extends FrameworkBundleAdminController
             'recycledPackagingEnabled' => (bool) $configuration->get('PS_RECYCLABLE_PACK'),
             'giftSettingsEnabled' => (bool) $configuration->get('PS_GIFT_WRAPPING'),
             'stockManagementEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
-            'B2BEnabled' => (bool) $configuration->get('PS_B2B_ENABLE'),
+            'isB2BEnabled' => (bool) $configuration->get('PS_B2B_ENABLE'),
         ]);
     }
 
