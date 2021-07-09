@@ -237,7 +237,9 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(GroupNotFoundException::class);
     }
 
-    /** @Transform table:firstName,lastName,email,birthday,companyName
+    /**
+     * @Transform table:firstName,lastName,email,birthday
+     * @Transform table:firstName,lastName,email,birthday,companyName
      *
      * @param TableNode $tableNode
      *
