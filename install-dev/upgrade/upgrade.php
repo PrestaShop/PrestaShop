@@ -96,9 +96,9 @@ if (isset($_GET['action']) && method_exists($upgrade, 'do'.$_GET['action'])) {
 $result = '<?xml version="1.0" encoding="UTF-8"?>';
 if (!$upgrade->hasFailure()) {
     if (!isset($_GET['action']) || 'UpgradeComplete' === $_GET['action']) {
-        Configuration::updateValue('PS_HIDE_OPTIMIZATION_TIPS', 0);
-        Configuration::updateValue('PS_NEED_REBUILD_INDEX', 1);
-        Configuration::updateValue('PS_VERSION_DB', _PS_INSTALL_VERSION_);
+        Configuration::updateGlobalValue('PS_HIDE_OPTIMIZATION_TIPS', 0);
+        Configuration::updateGlobalValue('PS_NEED_REBUILD_INDEX', 1);
+        Configuration::updateGlobalValue('PS_VERSION_DB', _PS_INSTALL_VERSION_);
     }
 
     $result .= '<action result="ok" id="">'."\n";
