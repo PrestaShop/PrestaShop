@@ -45,8 +45,7 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body row">
-              <div class="col-md-12">
+            <div class="modal-body">
                 <p>
                   {% if module_action == 'disable' %}
                     {{ "You are about to disable %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.Modules.Notification') }}
@@ -81,7 +80,6 @@
                     </span>
                   {% endif %}
                 </p>
-              </div>
             </div>
             <div class="modal-footer">
               <input type="button" class="btn btn-outline-secondary" data-dismiss="modal" value="{{ "Cancel"|trans({}, 'Admin.Actions') }}" />

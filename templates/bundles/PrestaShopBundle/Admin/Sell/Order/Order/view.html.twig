@@ -37,33 +37,27 @@
 {% block content %}
   <div id="order-view-page"
        data-order-title="{{ 'Order'|trans({}, 'Admin.Global') }} #{{ orderForViewing.id }} {{ orderForViewing.reference }}">
-    <div class="row d-print-none">
+    <div class="d-print-none">
       {% set displayAdminOrderTopHookContent = renderhook('displayAdminOrderTop', {'id_order': orderForViewing.id}) %}
 
       {% if displayAdminOrderTopHookContent != '' %}
-        <div class="col-md-12">
           {{ displayAdminOrderTopHookContent|raw }}
-        </div>
       {% endif %}
-      <div class="order-actions col-md-12">
+      <div class="order-actions">
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
       </div>
     </div>
 
-    <div class="row d-none d-print-block mb-4">
-      <div class="col-md-12">
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/print_order_statistics.html.twig' %}
-      </div>
+    <div class="d-none d-print-block mb-4">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/print_order_statistics.html.twig' %}
     </div>
 
-    <div class="row d-none mb-4">
-      <div class="col-12" id="orderProductsModificationPosition"></div>
+    <div class="d-none mb-4">
+      <div id="orderProductsModificationPosition"></div>
     </div>
 
-    <div class="row d-none d-print-block mb-4">
-      <div class="col-md-12">
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/print_title.html.twig' %}
-      </div>
+    <div class="d-none d-print-block mb-4">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/print_title.html.twig' %}
     </div>
 
     <div class="product-row row">
@@ -90,8 +84,8 @@
     </div>
 
     {% if orderForViewing.sources.sources is not empty %}
-      <div class="product-row row">
-        <div class="col-md-12 left-column">
+      <div class="product-row">
+        <div class="left-column">
           {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/sources.html.twig' %}
         </div>
       </div>

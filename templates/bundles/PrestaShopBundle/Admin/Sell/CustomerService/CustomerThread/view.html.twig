@@ -26,8 +26,6 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row">
-    <div class="col">
       <div class="card">
         <h3 class="card-header">
           {{ 'Thread'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -47,24 +45,15 @@
           {% endblock %}
         </div>
       </div>
-    </div>
-  </div>
 
-  <div class="row">
-    <div class="col">
       {% block customer_thread_reply %}
         {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/your_answer.html.twig' %}
       {% endblock %}
-    </div>
-  </div>
 
-  <div class="row">
-    <div class="col">
       {% block customer_thread_timeline %}
         {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/timeline.html.twig' %}
       {% endblock %}
-    </div>
-  </div>
+      
 {% endblock %}
 
 {% block javascripts %}

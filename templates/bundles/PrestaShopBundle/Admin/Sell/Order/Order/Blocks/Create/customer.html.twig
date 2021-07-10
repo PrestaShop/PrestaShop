@@ -48,35 +48,23 @@
       </div>
     </div>
 
-    <div id="customer-search-empty-result-warn" class="row d-none">
-      <div class="col">
-        <div class="col">
+    <div id="customer-search-empty-result-warn" class="d-none">
           <div class="alert alert-warning" role="alert">
             <p class="alert-text">{{ 'No customers found'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
           </div>
-        </div>
-      </div>
     </div>
 
-    <div id="customer-search-loading-notice" class="row d-none">
-      <div class="col">
-        <div class="col">
+    <div id="customer-search-loading-notice" class="d-none">
           <div class="alert alert-info" role="alert">
             <p class="alert-text">
               {{ 'Searching for customers'|trans({}, 'Admin.Orderscustomers.Notification') }}
             </p>
           </div>
-        </div>
-      </div>
     </div>
 
-    <div class="row">
-      <div class="col">
-        <div class="row js-customer-search-results"></div>
-      </div>
-    </div>
-    <div class="row d-none" id="customer-checkout-history">
-      <div class="col">
+    <div class="row js-customer-search-results"></div>
+
+    <div class="d-none" id="customer-checkout-history">
         <ul class="nav nav-pills" role="tablist">
           <li class="nav-item">
             <a class="nav-link active show js-customer-carts-tab"
@@ -146,7 +134,6 @@
             </table>
           </div>
         </div>
-      </div>
     </div>
   </div>
 </div>

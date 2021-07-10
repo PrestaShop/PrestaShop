@@ -27,31 +27,18 @@
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 
 {% block content %}
-  <div class="row">
-    <div class="col-sm">
-      {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/meta_showcase_card.html.twig' %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/meta_showcase_card.html.twig' %}
   {% if not isGridDisplayed %}
-    <div class="row">
-      <div class="col-sm">
         <div class="alert alert-info" role="alert">
           <div class="alert-text">
             {{ 'You can only display the page list in a shop context.'|trans({}, 'Admin.Shopparameters.Notification') }}
           </div>
         </div>
-      </div>
-    </div>
   {% else %}
-    <div class="row">
-      <div class="col">
         {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': grid} %}
-      </div>
-    </div>
   {% endif %}
 
-  <div class="row justify-content-center">
-    <div class="col">
+
       {{ form_start(setUpUrlsForm, {attr : {class: 'form'}, action: path('admin_metas_set_up_urls_save') }) }}
         {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/set_up_urls_configuration.html.twig' %}
       {{ form_end(setUpUrlsForm) }}
@@ -76,8 +63,6 @@
       {{ form_start(robotsForm, {'action': path('admin_metas_generate_robots_text_file')}) }}
         {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig' %}
       {{ form_end(robotsForm) }}
-    </div>
-  </div>
 
 {% endblock %}
 

@@ -36,8 +36,6 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="row">
-            <div class="col">
               <div class="form-group">
                 <label class="form-control-label" for="{{ addOrderCartRuleForm.name.vars.id }}">
                   {{ 'Name'|trans({}, 'Admin.Global') }}
@@ -45,8 +43,6 @@
 
                 {{ form_widget(addOrderCartRuleForm.name) }}
               </div>
-            </div>
-          </div>
 
           <div class="row">
             <div class="col">
@@ -78,8 +74,6 @@
           </div>
 
           <div class="{% if not orderForViewing.hasInvoice %}d-none{% endif %}">
-            <div class="row">
-              <div class="col">
                 <div class="form-group">
                   <label class="form-control-label" for="{{ addOrderCartRuleForm.invoice_id.vars.id }}">
                     {{ 'Invoice'|trans({}, 'Admin.Global') }}
@@ -89,8 +83,6 @@
                     'disabled': not orderForViewing.hasInvoice
                   }}) }}
                 </div>
-              </div>
-            </div>
           </div>
         </div>
         <div class="modal-footer">

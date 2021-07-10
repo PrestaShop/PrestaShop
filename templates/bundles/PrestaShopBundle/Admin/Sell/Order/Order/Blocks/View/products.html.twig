@@ -106,15 +106,13 @@
 
     <div class="mb-3">
       <div class="col-md-6 text-left d-print-none order-product-pagination">
-        <div class="form-group row">
+        <div class="form-group">
           <label for="paginator_select_page_limit" class="col-form-label ml-3">{{ "Items per page:"|trans({}, 'Admin.Catalog.Feature') }}</label>
-          <div class="col">
-            <select id="orderProductsTablePaginationNumberSelector" class="pagination-link custom-select">
-              {% for numPageOption in paginationNumOptions %}
-                <option value="{{ numPageOption }}"{% if numPageOption == paginationNum %} selected{% endif %}>{{ numPageOption }}</option>
-              {% endfor %}
-            </select>
-          </div>
+          <select id="orderProductsTablePaginationNumberSelector" class="pagination-link custom-select">
+            {% for numPageOption in paginationNumOptions %}
+              <option value="{{ numPageOption }}"{% if numPageOption == paginationNum %} selected{% endif %}>{{ numPageOption }}</option>
+            {% endfor %}
+          </select>
         </div>
         {% set numPages = max(orderForViewing.products.products|length / paginationNum, 1)|round(0, 'ceil') %}
         <nav aria-label="Products Navigation"{% if orderForViewing.products.products|length <= paginationNum %} class="d-none"{% endif %} id="orderProductsNavPagination">

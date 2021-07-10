@@ -31,9 +31,7 @@
     'attr' : {'class': 'form', 'autocomplete': 'off', id: 'form-delivery-slips-print-pdf'},
     'action': path('admin_order_delivery_slip_pdf') })
   }}
-    <div class="row justify-content-center">
       {% block admin_form_order_delivery_slip_pdf %}
-        <div class="col-xl-12">
           <div class="card" id="delivery_pdf_fieldset">
             <h3 class="card-header">
               <i class="material-icons">print</i> {{ 'Print PDF'|trans }}
@@ -63,15 +61,11 @@
               </div>
             </div>
           </div>
-        </div>
       {% endblock %}
-    </div>
   {{ form_end(pdfForm) }}
 
   {{ form_start(optionsForm, {'attr' : {'class': 'form', 'id': 'form-delivery-slips-options'} }) }}
-    <div class="row justify-content-center">
       {% block admin_form_order_delivery_slip_options %}
-        <div class="col-xl-12">
           <div class="card" id="delivery_options_fieldset">
             <h3 class="card-header">
               <i class="material-icons">settings</i> {{ 'Delivery slip options'|trans }}
@@ -108,9 +102,7 @@
               </div>
             </div>
           </div>
-        </div>
       {% endblock %}
-    </div>
   {{ form_end(optionsForm) }}
 {% endblock %}
 
