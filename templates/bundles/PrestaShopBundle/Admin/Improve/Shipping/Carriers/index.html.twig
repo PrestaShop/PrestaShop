@@ -27,19 +27,11 @@
 
 {% block content %}
   {% block carrier_showcase_card %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Improve/Shipping/Carriers/Blocks/showcase_card.html.twig' %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Improve/Shipping/Carriers/Blocks/showcase_card.html.twig' %}
   {% endblock %}
 
   {% include '@PrestaShop/Admin/Improve/Shipping/Carriers/Blocks/information_block.html.twig' %}
-  <div class="row">
-    <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': carrierGrid} %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': carrierGrid} %}
 
   {# Recommended modules will be attached to here. #}
   <div class="row">

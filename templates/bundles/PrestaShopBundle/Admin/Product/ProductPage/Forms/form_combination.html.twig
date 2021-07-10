@@ -49,13 +49,13 @@
         <div class="btn-group btn-group-sm" role="group">
             <a href="#combination_form_{{ form.vars.value.id_product_attribute }}" class="btn btn-open tooltip-link btn-sm"><i class="material-icons">mode_edit</i></a>
         </div>
-        <div id="combination_form_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" class="combination-form hide row">
-            <div class="col-sm-12 nav">
+        <div id="combination_form_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" class="combination-form hide">
+            <div class="nav">
                 {# "Prev." is short for "Previous" #}
                 <a class="btn-sensitive prev"><i class="material-icons">keyboard_arrow_left</i> {{ 'Prev. combination'|trans({}, 'Admin.Catalog.Feature') }}</a>
                 <a class="next btn-sensitive">{{ 'Next combination'|trans({}, 'Admin.Catalog.Feature') }} <i class="material-icons">keyboard_arrow_right</i></a>
             </div>
-            <div class="panel col-md-12 p-2">
+            <div class="panel p-2">
                 <div class="float-left">
                     <button type="button" class="back-to-product btn btn-outline-secondary btn-back"><i class="material-icons">arrow_back</i> {{ 'Back to product'|trans({}, 'Admin.Catalog.Feature') }}</button>
                 </div>
@@ -236,24 +236,17 @@
                 <h2 class="title">
                   {{ "Images"|trans({}, 'Admin.Catalog.Feature') }}
                 </h2>
-                <div class="row">
-                    <div class="col-md-12">
-                        <fieldset class="form-group js-combination-images">
-                            <label>
-                                <small class="form-control-label">{{ form.id_image_attr.vars.label }}</small>
-                                <small class="form-control-label number-of-images"></small>
-                            </label>
-                            {{ form_errors(form.id_image_attr) }}
-                            {{ form_widget(form.id_image_attr) }}
-                        </fieldset>
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        {{ renderhook('displayAdminProductsCombinationBottom', { 'id_product': form.vars.value.id_product, 'id_product_attribute': form.vars.value.id_product_attribute }) }}
-                    </div>
-                </div>
+                <fieldset class="form-group js-combination-images">
+                    <label>
+                        <small class="form-control-label">{{ form.id_image_attr.vars.label }}</small>
+                        <small class="form-control-label number-of-images"></small>
+                    </label>
+                    {{ form_errors(form.id_image_attr) }}
+                    {{ form_widget(form.id_image_attr) }}
+                </fieldset>
+
+                {{ renderhook('displayAdminProductsCombinationBottom', { 'id_product': form.vars.value.id_product, 'id_product_attribute': form.vars.value.id_product_attribute }) }}
 
                 {{ form_widget(form.id_product_attribute) }}
             </div>

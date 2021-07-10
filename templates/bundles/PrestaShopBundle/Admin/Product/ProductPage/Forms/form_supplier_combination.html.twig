@@ -24,27 +24,25 @@
  *#}
 {% if suppliers|length > 0 %}
   <h4>{{ 'Supplier reference(s)'|trans({}, 'Admin.Catalog.Feature') }}</h4>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="alert alert-info" role="alert">
-        <p class="alert-text">
-          {{ 'You can specify product reference(s) for each associated supplier. Click "%save_label%" after changing selected suppliers to display the associated product references.'|trans({'%save_label%': 'Save'|trans({}, 'Admin.Actions')}, 'Admin.Catalog.Help')|raw }}
-        </p>
-      </div>
-    </div>
+  <div class="alert alert-info" role="alert">
+    <p class="alert-text">
+      {{ 'You can specify product reference(s) for each associated supplier. Click "%save_label%" after changing selected suppliers to display the associated product references.'|trans({'%save_label%': 'Save'|trans({}, 'Admin.Actions')}, 'Admin.Catalog.Help')|raw }}
+    </p>
   </div>
 {% endif %}
 
 {% for supplierId in suppliers %}
   {% set collectionName = 'supplier_combination_' ~ supplierId %}
   <div class="panel panel-default">
-    <div class="panel-heading"><strong>{{ form[collectionName].vars.label }}</strong></div>
+    <div class="panel-heading">
+      <strong>{{ form[collectionName].vars.label }}</strong>
+    </div>
     <div class="panel-body" id="supplier_combination_{{ supplierId }}">
       <div>
         {{ form_errors(form[collectionName]) }}
         <table class="table">
           <thead class="thead-default">
-            <tr >
+            <tr>
               <th width="30%">{{ 'Product name'|trans({}, 'Admin.Catalog.Feature') }}</th>
               <th width="30%">{{ 'Supplier reference'|trans({}, 'Admin.Catalog.Feature') }}</th>
               <th width="20%">{{ 'Cost price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
@@ -52,18 +50,18 @@
             </tr>
           </thead>
           <tbody>
-          {% for supplier_combination in form[collectionName] %}
-            <tr>
-              <td>{{ supplier_combination.vars.value.label }}</td>
-              <td>{{ form_widget(supplier_combination.supplier_reference) }}</td>
-              <td>{{ form_widget(supplier_combination.product_price) }}</td>
-              <td>
-                {{ form_widget(supplier_combination.product_price_currency) }}
-                {{ form_widget(supplier_combination.id_product_attribute) }}
-                {{ form_widget(supplier_combination.supplier_id) }}
-              </td>
-            </tr>
-          {% endfor %}
+            {% for supplier_combination in form[collectionName] %}
+              <tr>
+                <td>{{ supplier_combination.vars.value.label }}</td>
+                <td>{{ form_widget(supplier_combination.supplier_reference) }}</td>
+                <td>{{ form_widget(supplier_combination.product_price) }}</td>
+                <td>
+                  {{ form_widget(supplier_combination.product_price_currency) }}
+                  {{ form_widget(supplier_combination.id_product_attribute) }}
+                  {{ form_widget(supplier_combination.supplier_id) }}
+                </td>
+              </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
