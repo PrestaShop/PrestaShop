@@ -70,7 +70,7 @@
           </h3>
         </div>
         <div class="col-sm-12 col-md-2">
-          <span class="text-ellipsis small-text">
+          <div class="text-ellipsis small-text">
             {% block addon_version %}
               {% if module.attributes.productType == "service" %}
                 {{ 'Service by %author%'|trans({'%author%' : '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
@@ -78,7 +78,12 @@
                 {{ 'v%version% - by %author%'|trans({ '%version%' : module.attributes.version, '%author%' : '<b>' ~ module.attributes.author ~ '</b>' }, 'Admin.Modules.Feature')|raw }}
               {% endif %}
             {% endblock %}
-          </span>
+          </div>
+          <div>
+            {% if module.attributes.urls.upgrade is defined %}
+                <span class="badge badge-success my-1">{{ 'Upgrade available'|trans({}, 'Admin.Modules.Feature') }}</span>
+            {% endif %}
+          </div>          
         </div>
         <div class="col-sm-12 col-md-8 col-lg-7">
           {% block addon_description %}
