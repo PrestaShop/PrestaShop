@@ -23,38 +23,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<div class="row grid js-grid" id="{{ grid.id }}_grid" data-grid-id="{{ grid.id }}">
-  <div class="col-sm">
-    {% block grid_header_row %}
-      <div class="row">
-        {% block grid_bulk_actions_block %}
-          <div class="col-sm">
-            <div class="row">
-              <div class="col-sm">
-                {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions.html.twig', {'grid': grid}) }}
-              </div>
-            </div>
-          </div>
-        {% endblock %}
-      </div>
+<div class="grid js-grid" id="{{ grid.id }}_grid" data-grid-id="{{ grid.id }}">
+  {% block grid_header_row %}
+    {% block grid_bulk_actions_block %}
+      {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions.html.twig', {'grid': grid}) }}
     {% endblock %}
+  {% endblock %}
 
-    {% block grid_table_row %}
-      <div class="row">
-        <div class="col-sm">
-          {{ include('@PrestaShop/Admin/Common/Grid/Blocks/table.html.twig', {'grid': grid}) }}
-        </div>
-      </div>
-    {% endblock %}
+  {% block grid_table_row %}
+    {{ include('@PrestaShop/Admin/Common/Grid/Blocks/table.html.twig', {'grid': grid}) }}
+  {% endblock %}
 
-    {% block grid_footer_row %}
-      <div class="row">
-        <div class="col">
-          {{ include('@PrestaShop/Admin/Common/Grid/Blocks/pagination.html.twig', {'grid': grid}) }}
-        </div>
-      </div>
-    {% endblock %}
-  </div>
+  {% block grid_footer_row %}
+    {{ include('@PrestaShop/Admin/Common/Grid/Blocks/pagination.html.twig', {'grid': grid}) }}
+  {% endblock %}
 </div>
 
 {% block grid_extra_content %}{% endblock %}

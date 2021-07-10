@@ -26,11 +26,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Sell/Address/Blocks/form.html.twig', {'addressForm': addressForm}) }}
-    </div>
-  </div>
+  {{ include('@PrestaShop/Admin/Sell/Address/Blocks/form.html.twig', {'addressForm': addressForm}) }}
 {% endblock %}
 
 {% block javascripts %}

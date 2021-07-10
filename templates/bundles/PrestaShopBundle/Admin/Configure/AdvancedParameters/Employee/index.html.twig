@@ -36,19 +36,11 @@
 
 {% block content %}
   {% block employee_showcase_card %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/showcase_card.html.twig' %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/showcase_card.html.twig' %}
   {% endblock %}
 
   {% block employee_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': employeeGrid } %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': employeeGrid } %}
   {% endblock %}
 
   {% block employee_options %}
