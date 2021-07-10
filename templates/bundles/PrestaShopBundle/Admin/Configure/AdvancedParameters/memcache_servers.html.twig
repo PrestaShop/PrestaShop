@@ -67,7 +67,10 @@
                     <td>{{ server.weight }}</td>
                     <td>
                         {% set removeMsg = 'Do you really want to remove the server %serverIp%:%serverPort% ?'|trans({'%serverIp%': server.ip, '%serverPort%': server.port}, 'Admin.Advparameters.Notification')|json_encode|raw  %}
-                        <a class="btn btn-default" href="" onclick="app.removeServer({{ server.id_memcached_server }}, {{ removeMsg }});"><i class="material-icons">remove_circle</i> {{ 'Remove'|trans({}, 'Admin.Actions') }}</a>
+                        <a class="btn btn-default" href="" 
+                           onclick="app.removeServer({{ server.id_memcached_server }}, {{ removeMsg }});">
+                          <i class="material-icons">remove_circle</i> {{ 'Remove'|trans({}, 'Admin.Actions') }}
+                        </a>
                     </td>
                 </tr>
             {% endfor %}

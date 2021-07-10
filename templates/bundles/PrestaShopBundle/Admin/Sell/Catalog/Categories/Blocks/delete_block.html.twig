@@ -25,39 +25,31 @@
 
 {% if isDeleteSubmitted %}
   {{ form_start(deleteCategoriesForm) }}
-    <div class="col-md-12">
-      <div class="card">
-        <h3 class="card-header">
-          {{ 'What do you want to do with the products associated with this category?'|trans({}, 'Admin.Catalog.Notification') }}
-        </h3>
-        <div class="card-body">
-          <div class="row">
-            <div class="col">
-                <div class="form-group mb-0">
-                  {{ form_widget(deleteCategoriesForm.delete_mode) }}
-                </div>
-                <div class="d-none">
-                  {{ form_widget(deleteCategoriesForm.categories_to_delete) }}
-                </div>
-            </div>
-          </div>
+  <div class="col-md-12">
+    <div class="card">
+      <h3 class="card-header">
+        {{ 'What do you want to do with the products associated with this category?'|trans({}, 'Admin.Catalog.Notification') }}
+      </h3>
+      <div class="card-body">
+        <div class="form-group mb-0">
+          {{ form_widget(deleteCategoriesForm.delete_mode) }}
         </div>
-        <div class="card-footer">
-          <a class="btn btn-secondary btn-sm"
-             href="{{ path('admin_categories_index') }}"
-          >
-            <i class="material-icons">cancel</i>
-            {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-          </a>
-
-          <button class="btn btn-danger btn-sm"
-                  type="submit"
-          >
-            <i class="material-icons">delete</i>
-            {{ 'Delete'|trans({}, 'Admin.Actions') }}
-          </button>
+        <div class="d-none">
+          {{ form_widget(deleteCategoriesForm.categories_to_delete) }}
         </div>
       </div>
+      <div class="card-footer">
+        <a class="btn btn-secondary btn-sm" href="{{ path('admin_categories_index') }}">
+          <i class="material-icons">cancel</i>
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </a>
+
+        <button class="btn btn-danger btn-sm" type="submit">
+          <i class="material-icons">delete</i>
+          {{ 'Delete'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
     </div>
+  </div>
   {{ form_end(deleteCategoriesForm) }}
 {% endif %}

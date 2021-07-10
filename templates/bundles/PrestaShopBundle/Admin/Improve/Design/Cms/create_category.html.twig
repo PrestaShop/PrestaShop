@@ -25,15 +25,11 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Improve/Design/Cms/Blocks/category_form.html.twig', {
-          'cmsPageCategoryForm': cmsPageCategoryForm,
-          'cmsCategoryParentId': app.request.query.get('id_cms_category')
-        })
-      }}
-    </div>
-  </div>
+  {{ include('@PrestaShop/Admin/Improve/Design/Cms/Blocks/category_form.html.twig', {
+      'cmsPageCategoryForm': cmsPageCategoryForm,
+      'cmsCategoryParentId': app.request.query.get('id_cms_category')
+    })
+  }}
 {% endblock %}
 
 {% block javascripts %}

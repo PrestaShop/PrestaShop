@@ -46,18 +46,16 @@
     <div class="content container-fluid">
 
       {% if permission_error|length %}
-      <div class="row">
-        <div class="col-md-12">
-          <div class="alert alert-danger" role="alert">
-            <button type="button" class="close" data-dismiss="alert">
-              <span aria-hidden="true"><i class="material-icons">close</i></span>
-            </button>
-            <p class="alert-text">
-              {{ permission_error }}
-            </p>
-          </div>
+        <div class="alert alert-danger" role="alert">
+          <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">
+              <i class="material-icons">close</i>
+            </span>
+          </button>
+          <p class="alert-text">
+            {{ permission_error }}
+          </p>
         </div>
-      </div>
       {% endif %}
 
       <div class="row align-items-start">
@@ -226,7 +224,7 @@
       <form method="post" action="{{ sql_manager_add_link }}" id="catalog_sql_query_modal_content">
         <div class="modal-body">
           <textarea name="sql" rows="20" cols="65"></textarea>
-          <input type="hidden" name="name" value="" />
+          <input type="hidden" name="name" value=""/>
         </div>
       </form>
     {% endblock %}

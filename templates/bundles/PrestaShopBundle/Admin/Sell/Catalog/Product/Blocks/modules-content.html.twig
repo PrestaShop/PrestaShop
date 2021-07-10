@@ -24,7 +24,7 @@
  *#}
 
 <div class="row module-selection d-none">
-  <div class="col-md-12 col-lg-7">
+  <div class="col-lg-7">
     {% for module in extraModules %}
       <div class="module-render-container module-{{ module.attributes.name }}">
         <div>
@@ -43,7 +43,7 @@
     {% endfor %}
   </div>
 
-  <div class="col-md-12 col-lg-5">
+  <div class="col-lg-5">
     <h2>{{ 'Module to configure'|trans({}, 'Admin.Catalog.Feature') }}</h2>
     <select class="modules-list-select" data-toggle="select2">
       {% for module in extraModules %}

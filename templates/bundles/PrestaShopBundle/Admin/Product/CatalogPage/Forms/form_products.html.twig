@@ -22,59 +22,44 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-<form
-  name="product_catalog_list"
-  id="product_catalog_list"
-  method="post"
-  action="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
-  orderingurl="{{ path('admin_product_catalog', {offset: 0, 'limit': 300, 'orderBy': 'position_ordering', 'sortOrder': sortOrder}) }}"
-  newproducturl="{{ path('admin_product_new') }}"
->
-  <div class="row">
-    <div class="col-md-12">
-      <input type="hidden" name="filter_category" value="{{ filter_category|default('') }}" />
-    </div>
-  </div>
+<form name="product_catalog_list" id="product_catalog_list" 
+      method="post" 
+      action="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}" 
+      orderingurl="{{ path('admin_product_catalog', {offset: 0, 'limit': 300, 'orderBy': 'position_ordering', 'sortOrder': sortOrder}) }}" 
+      newproducturl="{{ path('admin_product_new') }}">
 
-  <div class="row">
-    <div class="col-md-12">
-      {% block product_catalog_form_table %}
-        {{ include('@Product/CatalogPage/Lists/products_table.html.twig', {
-          'limit': limit,
-          'orderBy': orderBy,
-          'offset': offset,
-          'sortOrder': sortOrder,
-          'filter_category': filter_category,
-          'filter_column_id_product': filter_column_id_product,
-          'filter_column_name': filter_column_name,
-          'filter_column_reference': filter_column_reference,
-          'filter_column_name_category': filter_column_name_category,
-          'filter_column_price': filter_column_price,
-          'filter_column_sav_quantity': filter_column_sav_quantity,
-          'filter_column_active':filter_column_active,
-          'has_category_filter': has_category_filter,
-          'activate_drag_and_drop': activate_drag_and_drop,
-          'products': products,
-          'last_sql': last_sql
-          })
-        }}
-      {% endblock %}
-    </div>
-  </div>
+  <input type="hidden" name="filter_category" value="{{ filter_category|default('') }}"/>
+
+  {% block product_catalog_form_table %}
+    {{ include('@Product/CatalogPage/Lists/products_table.html.twig', {
+      'limit': limit,
+      'orderBy': orderBy,
+      'offset': offset,
+      'sortOrder': sortOrder,
+      'filter_category': filter_category,
+      'filter_column_id_product': filter_column_id_product,
+      'filter_column_name': filter_column_name,
+      'filter_column_reference': filter_column_reference,
+      'filter_column_name_category': filter_column_name_category,
+      'filter_column_price': filter_column_price,
+      'filter_column_sav_quantity': filter_column_sav_quantity,
+      'filter_column_active':filter_column_active,
+      'has_category_filter': has_category_filter,
+      'activate_drag_and_drop': activate_drag_and_drop,
+      'products': products,
+      'last_sql': last_sql
+      })
+    }}
+  {% endblock %}
 
   {% if product_count_filtered > 20 %}
-    <div class="row">
-      <div class="col-md-12">
-
-        {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
-          'limit': limit,
-          'offset': offset,
-          'total': product_count_filtered,
-          'caller_route': app.request.attributes.get('_route'),
-          'caller_parameters': pagination_parameters,
-          'limit_choices': pagination_limit_choices
-          })) }}
-      </div>
-    </div>
+    {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
+      'limit': limit,
+      'offset': offset,
+      'total': product_count_filtered,
+      'caller_route': app.request.attributes.get('_route'),
+      'caller_parameters': pagination_parameters,
+      'limit_choices': pagination_limit_choices
+      })) }}
   {% endif %}
 </form>
