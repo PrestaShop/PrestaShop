@@ -248,7 +248,7 @@ class ProductController extends FrameworkBundleAdminController
 
         $toolbarButtons['list_v1'] = [
             'href' => $this->generateUrl('admin_product_catalog'),
-            'desc' => $this->trans('Back to standard page', 'Admin.Actions'),
+            'desc' => $this->trans('Back to standard page', 'Admin.Catalog.Feature'),
             'class' => 'btn-outline-primary',
         ];
 
