@@ -96,6 +96,10 @@ class ApiClient
      */
     public function reset()
     {
+        $this
+            ->setConnectionTimeout(Tools::DEFAULT_CONNECTION_TIMEOUT)
+            ->setTimeout(Tools::DEFAULT_ADDONS_TIMEOUT)
+        ;
         $this->queryParameters = $this->defaultQueryParameters;
     }
 
@@ -370,6 +374,7 @@ class ApiClient
     public function setTimeout(int $timeout): self
     {
         $this->queryParameters['timeout'] = (string) $timeout;
+        $this->addonsApiClient->setDefaultOption('timeout', $timeout);
         $this->updateConnectionTimeout($this->queryParameters['connect_timeout'] ?? Tools::DEFAULT_CONNECTION_TIMEOUT);
 
         return $this;
@@ -402,6 +407,6 @@ class ApiClient
         $computedTimeout = ceil($timeout > 2 * Tools::DEFAULT_CONNECTION_TIMEOUT ? $timeout / 2 : Tools::DEFAULT_CONNECTION_TIMEOUT);
         $connectionTimeout = max($connectionTimeout, $computedTimeout);
 
-        $this->queryParameters['connect_timeout'] = (string) $connectionTimeout;
+        $this->addonsApiClient->setDefaultOption('connect_timeout', $connectionTimeout);
     }
 }
