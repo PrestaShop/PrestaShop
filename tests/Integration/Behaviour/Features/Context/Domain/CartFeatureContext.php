@@ -1118,4 +1118,34 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $cartTotal));
         }
     }
+
+    /**
+     * @When I create an empty anonymous cart :cartReference
+     */
+    public function createEmptyAnonymousCart(string $cartReference)
+    {
+        $cart = new Cart();
+        $cart->id_currency = 1;
+        $cart->id_guest = 1;
+        $cart->save();
+        SharedStorage::getStorage()->set($cartReference, (int) $cart->id);
+    }
+
+    /**
+     * @When I assign customer :customerReference to cart :cartReference
+     *
+     * @param string $customerReference
+     * @param string $cartReference
+     */
+    public function assignCustomerToCart(string $customerReference, string $cartReference)
+    {
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+        $customerId = (int) SharedStorage::getStorage()->get($customerReference);
+
+        $cart = new Cart($cartId);
+        $cart->id_guest = null;
+        $cart->id_customer = $customerId;
+        $cart->save();
+        Context::getContext()->cart = $cart;
+    }
 }

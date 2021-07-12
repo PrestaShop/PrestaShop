@@ -31,9 +31,11 @@ use Behat\Gherkin\Node\TableNode;
 use Cache;
 use CartRule;
 use Configuration;
+use Context;
 use DateInterval;
 use DateTime;
 use Db;
+use Order;
 
 class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -140,6 +142,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $cartRule->active = 1;
         $cartRule->add();
         $this->cartRules[$cartRuleName] = $cartRule;
+        SharedStorage::getStorage()->set($cartRuleName, $cartRule->id);
     }
 
     /**
@@ -177,6 +180,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->cartRules[$cartRuleName]->code = $cartRuleCode;
         $this->cartRules[$cartRuleName]->save();
+        SharedStorage::getStorage()->set($cartRuleCode, $this->cartRules[$cartRuleName]->id);
     }
 
     /**
@@ -477,6 +481,54 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 
         if (!empty($contextualReductionValues)) {
             throw new \RuntimeException(sprintf('The cart rule "%s" was not found', reset($contextualReductionValues)));
+        }
+    }
+
+    /**
+     * @When I create an order for current cart
+     * @When /^I create an order with discount "(.+)" for current cart$/
+     *
+     * @param string $cartRuleName
+     */
+    public function createOrderForCurrentCart(string $cartRuleName)
+    {
+        $cart = $this->getCurrentCart();
+        $order = new Order();
+        $order->id_address_invoice = 4;
+        $order->id_address_delivery = 4;
+        $order->id_cart = $cart->id;
+        $order->id_currency = 1;
+        $order->id_customer = $cart->id_customer;
+        $order->id_carrier = 1;
+        $order->id_shop = 1;
+        $order->id_shop_group = 1;
+        $order->payment = 'Payment by check';
+        $order->module = 'ps_checkpayment';
+        $order->total_paid = 42;
+        $order->total_products = 42;
+        $order->conversion_rate = 1.0;
+        $order->total_paid_real = 42;
+        $order->total_products_wt = 42;
+        $order->save();
+        $order->addCartRule($this->cartRules[$cartRuleName]->id, $cartRuleName, ['tax_excl' => 1, 'tax_incl' => 1.2]);
+    }
+
+    /**
+     * @Then usage limit per user for cart rule :cartRuleReference is detected
+     *
+     * @param string $cartRuleReference
+     */
+    public function checkCartRuleUsageLimitIsDetected(string $cartRuleReference)
+    {
+        // Using the string error message as a check value is far from ideal, but the legacy `checkValidity` method
+        // only returns an error string or a boolean, which would keep us from detecting the error returned
+        $expectedErrorMessage = 'You cannot use this voucher anymore (usage limit reached)';
+
+        $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference);
+        $cartRule = new CartRule($cartRuleId);
+        $result = $cartRule->checkValidity(Context::getContext(), true);
+        if ($result != $expectedErrorMessage) {
+            throw new \RuntimeException(sprintf('Expects "usage limit reached" error message, got %s instead', $result));
         }
     }
 }
