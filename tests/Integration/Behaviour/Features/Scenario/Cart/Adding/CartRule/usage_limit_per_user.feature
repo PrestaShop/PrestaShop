@@ -2,7 +2,7 @@
 @reset-database-before-feature
 @cart-rule-usage-limit
 
-Feature: Remove cart rule from a cart if it's not valid
+Feature: A cart rule's usage limit per user is detected
 
   Background:
     Given country "US" is enabled
