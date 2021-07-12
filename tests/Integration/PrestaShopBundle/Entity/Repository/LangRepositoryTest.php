@@ -78,7 +78,7 @@ class LangRepositoryTest extends KernelTestCase
             $this->assertInstanceOf(LanguageInterface::class, $language);
         }
 
-        $notAvailableLocales = ['en-UK', 'fr'];
+        $notAvailableLocales = ['en-UK', 'es'];
         foreach ($notAvailableLocales as $notAvailableLocale) {
             $language = $languageRepository->getOneByIsoCode($notAvailableLocale);
             $this->assertNull($language);
