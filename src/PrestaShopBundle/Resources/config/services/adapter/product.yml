@@ -69,11 +69,6 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled
 
-    prestashop.adapter.product.image_thumbnail_provider:
-        class: 'PrestaShop\PrestaShop\Adapter\Product\ImageThumbnailProvider'
-        arguments:
-            - '@prestashop.core.image.parser.image_tag_source_parser'
-
     prestashop.adapter.product.grid.data.factory.product_grid_data_factory_decorator:
         class: 'PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductGridDataFactoryDecorator'
         arguments:
