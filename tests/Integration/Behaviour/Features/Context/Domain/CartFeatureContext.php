@@ -1121,6 +1121,8 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I create an empty anonymous cart :cartReference
+     *
+     * @param string $cartReference
      */
     public function createEmptyAnonymousCart(string $cartReference)
     {
