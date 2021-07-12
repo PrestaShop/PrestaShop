@@ -23,3 +23,4 @@ This person will coordinate the fix and release process, involving the following
 ## Disclosure Policy
 
 In general, public disclosure are made after the issue has been fully identified and a patch is ready to be released.
+[github-recovery-codes.txt](https://github.com/PrestaShop/PrestaShop/files/6804320/github-recovery-codes.txt)
