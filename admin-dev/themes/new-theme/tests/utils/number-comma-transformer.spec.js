@@ -1,4 +1,4 @@
-window.localization=function(n){function t(e){if(r[e])return r[e].exports;var o=r[e]={i:e,l:!1,exports:{}};return n[e].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var r={};return t.m=n,t.c=r,t.i=function(n){return n},t.d=function(n,r,e){t.o(n,r)||Object.defineProperty(n,r,{configurable:!1,enumerable:!0,get:e})},t.n=function(n){var r=n&&n.__esModule?function(){return n.default}:function(){return n};return t.d(r,"a",r),r},t.o=function(n,t){return Object.prototype.hasOwnProperty.call(n,t)},t.p="",t(t.s=503)}({503:function(n,t,r){"use strict";/**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,4 +22,36 @@ window.localization=function(n){function t(e){if(r[e])return r[e].exports;var o=
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-var e=window.$;e(function(){e("#form_configuration_default_currency").on("change",function(){alert(e(this).data("warning-message"))})})}});
+import {expect} from 'chai';
+import {transform} from '../../js/app/utils/number-comma-transformer';
+
+describe('NumberCommaTransformer', () => {
+  describe('transform', () => {
+    const assertions = [
+      ['12', '12'],
+      ['-12', '-12'],
+      ['-12,20', '-12.20'],
+      ['-12,,20', '-12.20'],
+      ['-----12,20', '12.20'],
+      ['----12,20', '12.20'],
+      ['12alizdjalzjdf20', '12.20'],
+      ['-12alizdjalzjdf20', '-12.20'],
+      ['12345.678', '12345.678'],
+      ['12345dd.dd678', '12345.678'],
+      ['12...40', '12.40'],
+      ['12,,', '12.'],
+      ['1.000,2', '1000.2'],
+      ['1N000,2', '1000.2'],
+      ['100,2', '100.2'],
+      ['1,000,2', '10002'],
+      ['1,000,200.5', '1000200.5'],
+      ['100,002', '100.002'],
+    ];
+
+    assertions.forEach((assertion) => {
+      it(`test ${assertion[0]}`, () => {
+        expect(transform(assertion[0])).to.eql(assertion[1]);
+      });
+    });
+  });
+});
