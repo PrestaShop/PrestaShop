@@ -123,12 +123,11 @@ final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterfac
         if ($minFieldExists && $maxFieldExists) {
             return self::CASE_BOTH_FIELDS_EXIST;
         }
-
-        if ($minFieldExists && !$maxFieldExists) {
+        if ($minFieldExists) {
             return self::CASE_ONLY_MIN_FIELD_EXISTS;
         }
 
-        if ($maxFieldExists && !$minFieldExists) {
+        if ($maxFieldExists) {
             return self::CASE_ONLY_MAX_FIELD_EXISTS;
         }
 
