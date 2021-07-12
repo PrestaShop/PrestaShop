@@ -26,6 +26,9 @@
 
 require_once 'install_version.php';
 
+echo getenv('SKIP_API_PUSH');echo PHP_EOL;
+die("ha");
+
 if (
     !defined('PHP_VERSION_ID') // PHP_VERSION_ID is available since 5.2.7
     || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_
