@@ -485,7 +485,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When I create an order for current cart
      * @When /^I create an order with discount "(.+)" for current cart$/
      *
      * @param string $cartRuleName
