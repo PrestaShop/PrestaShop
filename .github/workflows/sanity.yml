@@ -80,6 +80,7 @@ jobs:
           DB_NAME: prestashop
           DB_PASSWD: password
           HEADLESS: true
+          SKIP_API_PUSH: true
           TAKE_SCREENSHOT_AFTER_FAIL: true
         working-directory: ./tests/UI
 
