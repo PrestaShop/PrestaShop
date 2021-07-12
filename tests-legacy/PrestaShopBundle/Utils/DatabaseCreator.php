@@ -28,6 +28,7 @@ namespace LegacyTests\PrestaShopBundle\Utils;
 
 use Context;
 use Doctrine\DBAL\DBALException;
+use Language;
 use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Install\Install;
 use Tests\Resources\ResourceResetter;
@@ -66,8 +67,14 @@ class DatabaseCreator
             'admin_email' => 'test@prestashop.com',
             'configuration_agrement' => true,
         ));
-        // Default language is forced as en, we need french as additional language
-        $install->installLanguages(['fr']);
+
+        // Default language is forced as en, we need french translation package as well, we only need the catalog to
+        // be available for the Translator component but we do not want the Language in the DB
+        if (!Language::translationPackIsInCache('fr-FR')) {
+            Language::downloadXLFLanguagePack('fr-FR');
+        }
+        Language::installSfLanguagePack('fr-FR');
+
         $install->installFixtures();
 
         Tab::resetStaticCache();
