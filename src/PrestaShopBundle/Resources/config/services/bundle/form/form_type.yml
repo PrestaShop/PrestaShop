@@ -1502,9 +1502,10 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - "@prestashop.adapter.legacy.context"
-            - "@router"
-            - '@form.type.sell.product.data_transformer.typeahead_redirection_target_transformer'
+            - '@prestashop.adapter.legacy.context'
+            - '@router'
+            - '@form.type.sell.product.data_transformer.redirection_target_transformer'
+            - '@form.type.sell.product.event_listener.redirect_option_listener'
         tags:
             - { name: form.type }
 
@@ -1581,6 +1582,11 @@ services:
 
     form.type.sell.product.data_transformer.typeahead_redirection_target_transformer:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\TypeaheadRedirectionTargetTransformer'
+        deprecated: 'The "%service_id%" service is deprecated since 1.7.9 and will be removed in next major.'
+        public: true
+
+    form.type.sell.product.data_transformer.redirection_target_transformer:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer'
         public: true
 
     form.type.sell.product.event_listener.feature_value_listener:
@@ -1592,6 +1598,10 @@ services:
 
     form.type.sell.product.event_listener.product_type_listener:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
+        public: true
+
+    form.type.sell.product.event_listener.redirect_option_listener:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
         public: true
 
     # Combination form types
@@ -1705,5 +1715,13 @@ services:
         public: true
         arguments:
             - '@prestashop.core.feature_flags.modifier'
+        tags:
+            - { name: form.type }
+
+    form.type.entity_search_input_type:
+        class: 'PrestaShopBundle\Form\Admin\Type\EntitySearchInputType'
+        public: true
+        arguments:
+            - '@translator'
         tags:
             - { name: form.type }

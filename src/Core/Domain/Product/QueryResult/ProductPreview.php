@@ -26,35 +26,64 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Form\IdentifiableObject\OptionProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-use Generator;
-use PHPStan\Testing\TestCase;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\CombinationFormOptionsProvider;
-
-class CombinationFormOptionsProviderTest extends TestCase
+/**
+ * Minimum data to display a preview of a product
+ */
+class ProductPreview
 {
-    public function testGetDefaultOptions(): void
-    {
-        $provider = new CombinationFormOptionsProvider();
-        $defaultOptions = $provider->getDefaultOptions([]);
-        $this->assertEquals([], $defaultOptions);
+    /**
+     * @var int
+     */
+    private $productId;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $image;
+
+    /**
+     * @param int $productId
+     * @param string $name
+     * @param string $imageUrl
+     */
+    public function __construct(
+        int $productId,
+        string $name,
+        string $imageUrl
+    ) {
+        $this->productId = $productId;
+        $this->name = $name;
+        $this->image = $imageUrl;
     }
 
     /**
-     * @dataProvider getTestData
+     * @return int
      */
-    public function testGetOptions(array $formData, array $expectedOptions): void
+    public function getProductId(): int
     {
-        $provider = new CombinationFormOptionsProvider();
-        $options = $provider->getOptions(51, $formData);
-        $this->assertEquals($expectedOptions, $options);
+        return $this->productId;
     }
 
-    public function getTestData(): Generator
+    /**
+     * @return string
+     */
+    public function getName(): string
     {
-        yield [[], ['product_id' => null]];
-        yield [['product_id' => null], ['product_id' => null]];
-        yield [['product_id' => 42], ['product_id' => 42]];
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImage(): string
+    {
+        return $this->image;
     }
 }

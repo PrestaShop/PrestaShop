@@ -29,26 +29,36 @@
  * functions which are, of course, overridable.
  */
 
-interface TypeaheadJQueryDataset extends Twitter.Typeahead.Dataset<any> {
-  dataLimit: number;
+type DisplayFunction = (item: any) => string;
+
+export interface TypeaheadJQueryDataset extends Twitter.Typeahead.Dataset<any> {
+  display: string | DisplayFunction;
   value: string;
-  onSelect: (
-    selectedItem: unknown,
-    event: JQueryEventObject,
-    searchInput: JQuery
-  ) => boolean;
-  onClose: (event: Event, searchInput: JQuery) => void;
+  limit: number;
+  dataLimit: number;
   templates: any;
 }
 
+export interface TypeaheadJQueryOptions extends Twitter.Typeahead.Options {
+  minLength: number,
+  highlight: boolean,
+  hint: boolean,
+  onSelect: (
+    selectedItem: any,
+    event: JQueryEventObject,
+    searchInput: JQuery
+  ) => boolean;
+  onClose: (event: JQueryEventObject, searchInput: JQuery) => void;
+}
+
 export default class AutoCompleteSearch {
-  $searchInput: JQuery;
+  private $searchInput: JQuery;
 
-  searchInputId: string;
+  private searchInputId: string;
 
-  config: Twitter.Typeahead.Options;
+  private config: TypeaheadJQueryOptions;
 
-  dataSetConfig: TypeaheadJQueryDataset;
+  private dataSetConfig: TypeaheadJQueryDataset;
 
   constructor($searchInput: JQuery, config: Record<string, unknown>) {
     this.$searchInput = $searchInput;
@@ -60,6 +70,21 @@ export default class AutoCompleteSearch {
       minLength: 2,
       highlight: true,
       hint: false,
+      onSelect: (
+        selectedItem: any,
+        event: JQueryEventObject,
+        searchInput: JQuery,
+      ): boolean => {
+        searchInput.typeahead('val', selectedItem[this.dataSetConfig.value]);
+        return true;
+      },
+      onClose(
+        event: Event,
+        searchInput: JQuery,
+      ) {
+        searchInput.typeahead('val', '');
+        return true;
+      },
       ...inputConfig,
     };
 
@@ -70,17 +95,6 @@ export default class AutoCompleteSearch {
       value: 'id', // Which field of the object from the list is used for value (can be a string or a callback)
       limit: 20, // Limit the number of displayed suggestion
       dataLimit: 0, // How many elements can be selected max
-      /* eslint-disable @typescript-eslint/no-unused-vars */
-      onSelect(
-        selectedItem: unknown,
-        event: JQueryEventObject,
-        searchInput: JQuery,
-      ) {
-        return true;
-      },
-      /* eslint-enable */
-      /* eslint-disable-next-line */
-      onClose(event: Event, searchInput: JQuery) {},
       ...inputConfig,
     };
 
@@ -93,7 +107,7 @@ export default class AutoCompleteSearch {
         let displaySuggestion: Record<string, string> | string = item;
 
         if (typeof this.dataSetConfig.display === 'function') {
-          this.dataSetConfig.display((item as unknown) as string);
+          displaySuggestion = this.dataSetConfig.display(item);
         } else if (
           Object.prototype.hasOwnProperty.call(
             item,
@@ -128,15 +142,15 @@ export default class AutoCompleteSearch {
   /**
    * Build the typeahead component based on provided configuration.
    */
-  buildTypeahead(): void {
+  private buildTypeahead(): void {
     /* eslint-disable */
     this.$searchInput
       .typeahead(this.config, this.dataSetConfig)
       .bind('typeahead:select', (e: any, selectedItem: any) =>
-        this.dataSetConfig.onSelect(selectedItem, e, this.$searchInput)
+        this.config.onSelect(selectedItem, e, this.$searchInput)
       )
       .bind('typeahead:close', (e: any) => {
-        this.dataSetConfig.onClose(e, this.$searchInput);
+        this.config.onClose(e, this.$searchInput);
       });
     /* eslint-enable */
   }

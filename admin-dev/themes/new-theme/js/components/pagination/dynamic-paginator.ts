@@ -76,17 +76,17 @@ const {$} = window;
  * and renders it depending on needs
  */
 export default class DynamicPaginator {
-  $paginationContainer: JQuery;
+  private $paginationContainer: JQuery;
 
-  paginationService: ServiceType;
+  private paginationService: ServiceType;
 
-  renderer: RendererType;
+  private renderer: RendererType;
 
-  currentPage: number;
+  private currentPage: number;
 
-  selectorsMap: Record<string, string>;
+  private selectorsMap: Record<string, string>;
 
-  pagesCount: number;
+  private pagesCount: number;
 
   /**
    * @param {String} containerSelector
@@ -109,8 +109,8 @@ export default class DynamicPaginator {
     this.setSelectorsMap(selectorsMap);
     this.pagesCount = 0;
     this.init();
-    this.currentPage = 1;
-    if (startingPage !== null) {
+    this.currentPage = startingPage;
+    if (startingPage > 0) {
       this.paginate(startingPage);
     }
   }
@@ -119,7 +119,7 @@ export default class DynamicPaginator {
    * @param {Number} page
    */
   async paginate(page: number): Promise<void> {
-    this.currentPage = page;
+    this.currentPage = page > 0 ? page : 1;
     this.renderer.toggleLoading(true);
     const limit = this.getLimit();
 
@@ -148,6 +148,14 @@ export default class DynamicPaginator {
     this.renderer.toggleLoading(false);
 
     window.prestaShopUiKit.initToolTips();
+  }
+
+  getCurrentPage(): number {
+    return this.currentPage;
+  }
+
+  getPagesCount(): number {
+    return this.pagesCount;
   }
 
   /**

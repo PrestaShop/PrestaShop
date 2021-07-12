@@ -47,6 +47,7 @@
 {# Use bootstrap4 theme (from the Symfony framework) as default base #}
 {% use 'bootstrap_4_layout.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
+{% use '@PrestaShop/Admin/TwigTemplateForm/entity_search_input.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/material.html.twig' %}
 
 {# overrides from bootstrap_4_layout #}
@@ -1084,7 +1085,7 @@
 {%- endblock number_widget -%}
 
 {% block form_help %}
-  {% if help %}
+  {% if help is not null %}
     <small class="form-text">{{ help|raw }}</small>
   {% endif %}
   {% if warning is defined %}
@@ -1191,4 +1192,19 @@
       {{ 'Not available yet'|trans({}, 'Admin.Catalog.Feature') }}
     </p>
   </div>
+{% endblock %}
+
+{% block text_preview_widget %}
+  {# This is the hidden input #}
+  {{- block('form_widget_simple') -}}
+  <span class="label text-preview">
+    {# This just outputs the value #}
+    {{ form.vars.value|e('html') }}
+  </span>
+{% endblock %}
+
+{% block image_preview_widget %}
+  {# This is the hidden input #}
+  {{- block('form_widget_simple') -}}
+  <img src="{{ form.vars.value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" />
 {% endblock %}

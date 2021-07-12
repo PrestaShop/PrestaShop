@@ -51,6 +51,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductRedirectTarget;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
@@ -642,13 +643,25 @@ class ProductFormDataProviderTest extends TestCase
     {
         $datasets = [];
 
+        $categoryName = 'Category 1';
+        $categoryImage = '/path/to/category/img.jpg';
+
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
             'redirect_type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
-            'id_type_redirected' => static::DEFAULT_CATEGORY_ID,
+            'redirect_target' => new ProductRedirectTarget(
+                static::DEFAULT_CATEGORY_ID,
+                ProductRedirectTarget::CATEGORY_TYPE,
+                $categoryName,
+                $categoryImage
+            ),
         ];
         $expectedOutputData['seo']['redirect_option']['type'] = RedirectType::TYPE_CATEGORY_TEMPORARY;
-        $expectedOutputData['seo']['redirect_option']['target'] = static::DEFAULT_CATEGORY_ID;
+        $expectedOutputData['seo']['redirect_option']['target'] = [
+            'id' => static::DEFAULT_CATEGORY_ID,
+            'name' => $categoryName,
+            'image' => $categoryImage,
+        ];
 
         $datasets[] = [
             $productData,
@@ -1012,7 +1025,7 @@ class ProductFormDataProviderTest extends TestCase
             $product['meta_description'] ?? [],
             $product['link_rewrite'] ?? [],
             $product['redirect_type'] ?? RedirectType::TYPE_NOT_FOUND,
-            $product['id_type_redirected'] ?? 0
+            $product['redirect_target'] ?? null
         );
     }
 
@@ -1225,7 +1238,7 @@ class ProductFormDataProviderTest extends TestCase
                 'link_rewrite' => [],
                 'redirect_option' => [
                     'type' => RedirectType::TYPE_NOT_FOUND,
-                    'target' => 0,
+                    'target' => null,
                 ],
             ],
             'shipping' => [

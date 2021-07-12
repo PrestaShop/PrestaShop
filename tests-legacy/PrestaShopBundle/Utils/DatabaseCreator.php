@@ -26,6 +26,7 @@
 
 namespace LegacyTests\PrestaShopBundle\Utils;
 
+use Category;
 use Context;
 use Doctrine\DBAL\DBALException;
 use PrestaShopBundle\Install\DatabaseDump;
@@ -67,6 +68,7 @@ class DatabaseCreator
             'configuration_agrement' => true,
         ));
         $install->installFixtures();
+        Category::regenerateEntireNtree();
         Tab::resetStaticCache();
         $install->installTheme();
         $install->installModules();
