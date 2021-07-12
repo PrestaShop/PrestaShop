@@ -3,6 +3,8 @@ name: UI tests - PHP 7.4
 on:
   pull_request:
     types: [opened,reopened,synchronize]
+env:
+  SKIP_API_PUSH: CI
 
 jobs:
 

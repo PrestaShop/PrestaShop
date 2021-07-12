@@ -26,6 +26,7 @@
 
 require_once 'install_version.php';
 
+echo getenv('CI');echo PHP_EOL;
 echo getenv('SKIP_API_PUSH');echo PHP_EOL;
 die("ha");
 
