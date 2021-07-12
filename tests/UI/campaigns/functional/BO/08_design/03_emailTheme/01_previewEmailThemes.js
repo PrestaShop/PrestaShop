@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -11,16 +15,12 @@ const dashboardPage = require('@pages/BO/dashboard');
 const emailThemesPage = require('@pages/BO/design/emailThemes');
 const previewEmailThemesPage = require('@pages/BO/design/emailThemes/preview');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
-const baseContext = 'functional_BO_design_emailThemes_previewEmailThemes';
-
+const baseContext = 'functional_BO_design_emailThemes_previewEmailTheme';
 
 let browserContext;
 let page;
 
-describe('Preview Email themes classic and modern', async () => {
+describe('BO - Design - Email Theme : Preview Email theme', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -35,8 +35,8 @@ describe('Preview Email themes classic and modern', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to design > email themes page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemesPage', baseContext);
+  it('should go to \'Design > Email Theme\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemePage', baseContext);
 
     await dashboardPage.goToSubMenu(
       page,
@@ -50,14 +50,12 @@ describe('Preview Email themes classic and modern', async () => {
     await expect(pageTitle).to.contains(emailThemesPage.pageTitle);
   });
 
-  describe('Preview email themes', async () => {
-    const tests = [
+  describe('Preview email theme', async () => {
+    [
       {args: {emailThemeName: 'classic', numberOfLayouts: 50}},
       {args: {emailThemeName: 'modern', numberOfLayouts: 50}},
-    ];
-
-    tests.forEach((test) => {
-      it(`should preview email theme ${test.args.emailThemeName} and check number of layouts`, async function () {
+    ].forEach((test) => {
+      it(`should preview email theme '${test.args.emailThemeName}'`, async function () {
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -71,6 +69,15 @@ describe('Preview Email themes classic and modern', async () => {
 
         await expect(pageTitle).to.contains(
           `${previewEmailThemesPage.pageTitle} ${test.args.emailThemeName}`,
+        );
+      });
+
+      it('should check number of layouts', async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `checkNumberLayouts_${test.args.emailThemeName}`,
+          baseContext,
         );
 
         const numberOfLayouts = await previewEmailThemesPage.getNumberOfLayoutInGrid(page);
