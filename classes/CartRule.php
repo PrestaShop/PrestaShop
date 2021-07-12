@@ -670,7 +670,7 @@ class CartRuleCore extends ObjectModel
 			');
 
             if ($alreadyInCart) {
-                // sometimes a cart rule is already in a cart, but the cart is not yet attached to an order (when logging
+                // Sometimes a cart rule is already in a cart, but the cart is not yet attached to an order (when logging
                 // in for example), these cart rules are not taken into account buy the query above:
                 // so we count cart rules that are already linked to the current cart but not attached to an order yet.
                 $quantityUsed += (int) Db::getInstance()->getValue('
