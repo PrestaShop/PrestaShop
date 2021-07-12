@@ -108,9 +108,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         // Get product by EAN-13
         $ean13_product = Tools::getValue('ean13_product');
-        if ($ean13_product !== null) {
+        if ($ean13_product !== null && $id_product !== 0) {
             $id_product = Db::getInstance()->getValue('SELECT `id_product` FROM `'._DB_PREFIX_.'product` p WHERE p.`ean13` = '. (int) $ean13_product);
-            $id_product = (!$id_product) ? null : $id_product;
+            $id_product = $id_product ?? null;
         }
         
         $this->setTemplate('catalog/product', [
