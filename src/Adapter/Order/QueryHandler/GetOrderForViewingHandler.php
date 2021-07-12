@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 
 use Address;
 use Carrier;
+use Cart;
 use ConnectionsSource;
 use Context;
 use Country;
@@ -188,6 +189,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             new ShopConstraint((int) $order->id_shop, (int) $order->id_shop_group)
         );
 
+        $orderInvoiceAddress = $this->getOrderInvoiceAddress($order);
+
         return new OrderForViewing(
             (int) $order->id,
             (int) $order->id_currency,
@@ -205,9 +208,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $order->hasBeenShipped(),
             $invoiceManagementIsEnabled,
             new DateTimeImmutable($order->date_add),
-            $this->getOrderCustomer($order),
+            $this->getOrderCustomer($order, $orderInvoiceAddress),
             $this->getOrderShippingAddress($order),
-            $this->getOrderInvoiceAddress($order),
+            $orderInvoiceAddress,
             $this->getOrderProducts($query->getOrderId(), $query->getProductsSorting()->getValue()),
             $this->getOrderHistory($order),
             $this->getOrderDocuments($order),
@@ -229,29 +232,35 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
      *
      * @return OrderCustomerForViewing|null
      */
-    private function getOrderCustomer(Order $order): ?OrderCustomerForViewing
+    private function getOrderCustomer(Order $order, OrderInvoiceAddressForViewing $invoiceAddress): ?OrderCustomerForViewing
     {
         $currency = new Currency($order->id_currency);
         $customer = new Customer($order->id_customer);
+        $genderName = '';
+        $totalSpentSinceRegistration = null;
 
         if (!Validate::isLoadedObject($customer)) {
-            return null;
+            $cart = new Cart($order->id_cart);
+
+            $customer->firstname = $invoiceAddress->getFirstName();
+            $customer->lastname = $invoiceAddress->getLastName();
+            $customer->email = '';
+            $customer->id_lang = $cart->getAssociatedLanguage()->getId();
+            $customerStats = ['nb_orders' => 1]; // Count this current order as loaded
+        } else {
+            $gender = new Gender($customer->id_gender);
+            if (Validate::isLoadedObject($gender)) {
+                $genderName = $gender->name[(int) $order->getAssociatedLanguage()->getId()];
+            }
+
+            $customerStats = $customer->getStats();
+            $totalSpentSinceRegistration = Tools::convertPrice($customerStats['total_orders'], $order->id_currency);
         }
-
-        $gender = new Gender($customer->id_gender);
-        $genderName = '';
-
-        if (Validate::isLoadedObject($gender)) {
-            $genderName = $gender->name[(int) $order->getAssociatedLanguage()->getId()];
-        }
-
-        $customerStats = $customer->getStats();
-        $totalSpentSinceRegistration = Tools::convertPrice($customerStats['total_orders'], $order->id_currency);
 
         $isB2BEnabled = $this->configuration->getBoolean('PS_B2B_ENABLE');
 
         return new OrderCustomerForViewing(
-            $customer->id,
+            (int) $customer->id,
             $customer->firstname,
             $customer->lastname,
             $genderName,

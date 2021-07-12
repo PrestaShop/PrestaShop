@@ -188,7 +188,7 @@
         </div>
       </div>
     </div>
-    {% if orderForViewing.customer is not null %}
+    {% if orderForViewing.customer is not null and privateNoteForm is not null %}
     <div id="privateNote" class="mt-2 info-block">
       <div class="row">
         {% set isPrivateNoteOpen = not orderForViewing.customer.privateNote is empty %}

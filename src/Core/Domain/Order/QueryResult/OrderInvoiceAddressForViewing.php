@@ -170,6 +170,22 @@ class OrderInvoiceAddressForViewing
     /**
      * @return string
      */
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @return string
+     */
     public function getFullName(): string
     {
         return sprintf('%s %s', $this->firstName, $this->lastName);
