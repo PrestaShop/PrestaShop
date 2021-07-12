@@ -300,10 +300,10 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0      |
       | total_shipping_tax_incl  | 7.42     |
 
-  Scenario: In an order, when quantity discount is based on combinations, adding any combination of a product with specific price, will apply the discount when quantity threshold is reached
+  Scenario: In an order, adding any combination of a product with specific price, will apply the discount when quantity threshold is reached
     # quantity discounts based on combinations
-    Given shop configuration for "PS_QTY_DISCOUNT_ON_COMBINATION" is set to 1
-    And order "bo_order1" should have 2 products in total
+    # Ignored for now - Given shop configuration for "PS_QTY_DISCOUNT_ON_COMBINATION" is set to 1
+    Given order "bo_order1" should have 2 products in total
     And order "bo_order1" should have 0 invoices
     And order "bo_order1" should have 0 cart rule
     And order "bo_order1" should have following details:
@@ -335,29 +335,29 @@ Feature: Order from Back Office (BO)
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product With Combination and Specific Price    |
       | combination   | combination1  |
-      | amount        | 6             |
+      | amount        | 4             |
       | price         | 16            |
     And I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product With Combination and Specific Price    |
       | combination   | combination2  |
       | amount        | 6             |
       | price         | 16            |
-    Then order "bo_order1" should have 14 products in total
-    And order "bo_order1" should contain 12 products "Test Product With Combination and Specific Price"
+    Then order "bo_order1" should have 12 products in total
+    And order "bo_order1" should contain 10 products "Test Product With Combination and Specific Price"
     And cart of order "bo_order1" should contain 0 products "Test Product With Combination and Specific Price"
-    And cart of order "bo_order1" should contain 6 combinations "combination1" of product "Test Product With Combination and Specific Price"
+    And cart of order "bo_order1" should contain 4 combinations "combination1" of product "Test Product With Combination and Specific Price"
     And cart of order "bo_order1" should contain 6 combinations "combination2" of product "Test Product With Combination and Specific Price"
-    And the available stock for product "Test Product With Combination and Specific Price" should be 188
-    And order "bo_order1" should contain 6 combination "combination1" of product "Test Product With Combination and Specific Price"
+    And the available stock for product "Test Product With Combination and Specific Price" should be 190
+    And order "bo_order1" should contain 4 combination "combination1" of product "Test Product With Combination and Specific Price"
     And order "bo_order1" should contain 6 combination "combination2" of product "Test Product With Combination and Specific Price"
     Then combination "combination1" of product "Test Product With Combination and Specific Price" in order "bo_order1" has following details:
-      | product_quantity            | 6      |
-      | product_price               | 12.00  |
+      | product_quantity            | 4      |
+      | product_price               | 16.00  |
       | original_product_price      | 16.00  |
-      | unit_price_tax_incl         | 12.72  |
-      | unit_price_tax_excl         | 12.00  |
-      | total_price_tax_incl        | 76.32  |
-      | total_price_tax_excl        | 72.00  |
+      | unit_price_tax_incl         | 16.96  |
+      | unit_price_tax_excl         | 16.00  |
+      | total_price_tax_incl        | 67.84  |
+      | total_price_tax_excl        | 64.00  |
     Then combination "combination2" of product "Test Product With Combination and Specific Price" in order "bo_order1" has following details:
       | product_quantity            | 6      |
       | product_price               | 12.00  |
@@ -367,136 +367,13 @@ Feature: Order from Back Office (BO)
       | total_price_tax_incl        | 76.32  |
       | total_price_tax_excl        | 72.00  |
     And order "bo_order1" should have following details:
-      | total_products           | 167.80  |
-      | total_products_wt        | 177.870 |
+      | total_products           | 159.80  |
+      | total_products_wt        | 169.390 |
       | total_discounts_tax_excl | 0.0000  |
       | total_discounts_tax_incl | 0.0000  |
-      | total_paid_tax_excl      | 174.80  |
-      | total_paid_tax_incl      | 185.290 |
-      | total_paid               | 185.290 |
-      | total_paid_real          | 0.0     |
-      | total_shipping_tax_excl  | 7.0     |
-      | total_shipping_tax_incl  | 7.42    |
-
-  Scenario: In an order, when quantity discount is based on products, adding a product with combination, will not apply the specific price with quantity threshold
-    # quantity discounts based on products
-    Given shop configuration for "PS_QTY_DISCOUNT_ON_COMBINATION" is set to 0
-    When order "bo_order1" should have 2 products in total
-    And order "bo_order1" should have 0 invoices
-    And order "bo_order1" should have 0 cart rule
-    Then order "bo_order1" should have following details:
-      | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.650 |
-      | total_paid               | 32.650 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    Given there is a product in the catalog named "Test Product With Combination and Specific Price" with a price of 16.0 and 200 items in stock
-    And product "Test Product With Combination and Specific Price" has combinations with following details:
-      | reference    | quantity | attributes |
-      | combination1 | 100      | Size:L     |
-      | combination2 | 100      | Size:M     |
-    Then the available stock for combination "combination1" of product "Test Product With Combination and Specific Price" should be 100
-    And the available stock for combination "combination2" of product "Test Product With Combination and Specific Price" should be 100
-    And product "Test Product With Combination and Specific Price" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
-    Then product "Test Product With Combination and Specific Price" should have specific price "discount25" with following settings:
-      | price          | -1         |
-      | from_quantity  | 5          |
-      | reduction      | 0.25       |
-      | reduction_type | percentage |
-      | reduction_tax  | 1          |
-    # Adding the 2 combinations
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Combination and Specific Price    |
-      | combination   | combination1  |
-      | amount        | 6             |
-      | price         | 16            |
-    And I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Combination and Specific Price    |
-      | combination   | combination2  |
-      | amount        | 6             |
-      | price         | 16            |
-    Then order "bo_order1" should have 14 products in total
-    And order "bo_order1" should contain 12 products "Test Product With Combination and Specific Price"
-    And cart of order "bo_order1" should contain 0 products "Test Product With Combination and Specific Price"
-    And cart of order "bo_order1" should contain 6 combinations "combination1" of product "Test Product With Combination and Specific Price"
-    And cart of order "bo_order1" should contain 6 combinations "combination2" of product "Test Product With Combination and Specific Price"
-    And the available stock for product "Test Product With Combination and Specific Price" should be 188
-    And order "bo_order1" should contain 6 combination "combination1" of product "Test Product With Combination and Specific Price"
-    And order "bo_order1" should contain 6 combination "combination2" of product "Test Product With Combination and Specific Price"
-    Then combination "combination1" of product "Test Product With Combination and Specific Price" in order "bo_order1" has following details:
-      | product_quantity            | 6      |
-      | product_price               | 16.00  |
-      | original_product_price      | 16.00  |
-      | unit_price_tax_incl         | 16.96  |
-      | unit_price_tax_excl         | 16.00  |
-      | total_price_tax_incl        | 101.76 |
-      | total_price_tax_excl        | 96.00  |
-    Then combination "combination2" of product "Test Product With Combination and Specific Price" in order "bo_order1" has following details:
-      | product_quantity            | 6      |
-      | product_price               | 16.00  |
-      | original_product_price      | 16.00  |
-      | unit_price_tax_incl         | 16.96  |
-      | unit_price_tax_excl         | 16.00  |
-      | total_price_tax_incl        | 101.76 |
-      | total_price_tax_excl        | 96.00  |
-    And order "bo_order1" should have following details:
-      | total_products           | 215.80  |
-      | total_products_wt        | 228.750 |
-      | total_discounts_tax_excl | 0.0000  |
-      | total_discounts_tax_incl | 0.0000  |
-      | total_paid_tax_excl      | 222.80  |
-      | total_paid_tax_incl      | 236.170 |
-      | total_paid               | 236.170 |
-      | total_paid_real          | 0.0     |
-      | total_shipping_tax_excl  | 7.0     |
-      | total_shipping_tax_incl  | 7.42    |
-    Given I remove combination "combination1" of product "Test Product With Combination and Specific Price" from order "bo_order1"
-    Given I remove combination "combination2" of product "Test Product With Combination and Specific Price" from order "bo_order1"
-    Then order "bo_order1" should have following details:
-      | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.650 |
-      | total_paid               | 32.650 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    # Adding only one of the combinations
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Combination and Specific Price    |
-      | combination   | combination1  |
-      | amount        | 6             |
-      | price         | 16            |
-    Then order "bo_order1" should have 8 products in total
-    And order "bo_order1" should contain 6 products "Test Product With Combination and Specific Price"
-    And cart of order "bo_order1" should contain 0 products "Test Product With Combination and Specific Price"
-    And cart of order "bo_order1" should contain 6 combinations "combination1" of product "Test Product With Combination and Specific Price"
-    And cart of order "bo_order1" should contain 0 combinations "combination2" of product "Test Product With Combination and Specific Price"
-    And the available stock for product "Test Product With Combination and Specific Price" should be 194
-    And order "bo_order1" should contain 6 combination "combination1" of product "Test Product With Combination and Specific Price"
-    Then combination "combination1" of product "Test Product With Combination and Specific Price" in order "bo_order1" has following details:
-      | product_quantity            | 6      |
-      | product_price               | 16.00  |
-      | original_product_price      | 16.00  |
-      | unit_price_tax_incl         | 16.96  |
-      | unit_price_tax_excl         | 16.00  |
-      | total_price_tax_incl        | 101.76 |
-      | total_price_tax_excl        | 96.00  |
-    And order "bo_order1" should have following details:
-      | total_products           | 119.80  |
-      | total_products_wt        | 126.990 |
-      | total_discounts_tax_excl | 0.0000  |
-      | total_discounts_tax_incl | 0.0000  |
-      | total_paid_tax_excl      | 126.80  |
-      | total_paid_tax_incl      | 134.410 |
-      | total_paid               | 134.410 |
+      | total_paid_tax_excl      | 166.80  |
+      | total_paid_tax_incl      | 176.810 |
+      | total_paid               | 176.810 |
       | total_paid_real          | 0.0     |
       | total_shipping_tax_excl  | 7.0     |
       | total_shipping_tax_incl  | 7.42    |
