@@ -26,6 +26,7 @@
 
 namespace LegacyTests\PrestaShopBundle\Utils;
 
+use AppKernel;
 use Context;
 use Doctrine\DBAL\DBALException;
 use Language;
@@ -95,7 +96,7 @@ class DatabaseCreator
      */
     public static function restoreTestDB()
     {
-        if (!file_exists(sys_get_temp_dir() . '/' . 'ps_dump.sql')) {
+        if (!file_exists(sprintf('%s/ps_dump_%s.sql', sys_get_temp_dir(), AppKernel::VERSION))) {
             throw new DBALException('You need to run \'composer create-test-db\' to create the initial test database');
         }
 
