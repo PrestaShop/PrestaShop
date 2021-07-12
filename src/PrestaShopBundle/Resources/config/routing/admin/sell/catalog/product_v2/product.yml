@@ -8,7 +8,7 @@ admin_products_v2_index:
   path: /
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:index
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:indexAction
     _legacy_controller: AdminProducts
 
 admin_products_search:
