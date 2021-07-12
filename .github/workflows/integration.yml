@@ -56,8 +56,8 @@ jobs:
             -   name: Build assets
                 run: make assets
 
-            -   name: Install PrestaShop
-                run: php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db_server=127.0.0.1 --db_password=password --db_name=prestashop --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
+            -   name: Prepare PrestaShop parameters
+                run: cp .github/workflows/phpunit/parameters.php app/config/parameters.php
 
             -   name: Run integration-tests
                 run: composer run-script integration-tests --timeout=0
