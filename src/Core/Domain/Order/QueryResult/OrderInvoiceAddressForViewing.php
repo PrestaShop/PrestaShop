@@ -188,7 +188,7 @@ class OrderInvoiceAddressForViewing
      */
     public function getFullName(): string
     {
-        return sprintf('%s %s', $this->firstName, $this->lastName);
+        return sprintf('%s %s', $this->getFirstName(), $this->getLastName());
     }
 
     /**
