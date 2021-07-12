@@ -74,14 +74,17 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
      * @var TaxComputer
      */
     private $taxComputer;
+
     /**
-     * @var \PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository
+     * @var ProductRepository
      */
     private $productRepository;
+
     /**
      * @var int
      */
     private $countryId;
+
     /**
      * @var ProductImagePathFactory
      */
