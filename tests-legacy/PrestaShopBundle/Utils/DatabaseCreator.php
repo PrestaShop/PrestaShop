@@ -66,7 +66,10 @@ class DatabaseCreator
             'admin_email' => 'test@prestashop.com',
             'configuration_agrement' => true,
         ));
+        // Default language is forced as en, we need french as additional language
+        $install->installLanguages(['fr']);
         $install->installFixtures();
+
         Tab::resetStaticCache();
         $install->installTheme();
         $install->installModules();
