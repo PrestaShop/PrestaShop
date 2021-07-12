@@ -51,7 +51,7 @@ final class DateTimeColumn extends AbstractColumn
                 'field',
             ])
             ->setDefaults([
-                'format' => 'Y-m-d H:i:s',
+                'format' => 'Y‑m‑d H:i:s', // note the use of non-breaking hyphens (U+2011)
                 'empty_data' => '',
                 'clickable' => false,
             ])
