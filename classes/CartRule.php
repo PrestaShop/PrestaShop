@@ -674,7 +674,7 @@ class CartRuleCore extends ObjectModel
                 // in for example), these cart rules are not taken into account by the query above:
                 // so we count cart rules that are already linked to the current cart but not attached to an order yet.
                 $quantityUsed += (int) Db::getInstance()->getValue('
-                    select count(*)
+                    SELECT count(*)
                     from ps_cart_cart_rule ccr
                     LEFT JOIN ps_cart c on c.id_cart = ccr.id_cart
                     where c.id_customer = ' . $cart->id_customer . ' AND c.id_cart = ' . $cart->id . ' AND ccr.id_cart_rule = ' . (int) $this->id . '
