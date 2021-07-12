@@ -99,28 +99,6 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * Provides filters functionality
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request): RedirectResponse
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.product'),
-            $request,
-            ProductGridDefinitionFactory::GRID_ID,
-            'admin_products_v2_index'
-        );
-    }
-
-    /**
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param Request $request
