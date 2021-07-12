@@ -104,7 +104,7 @@ describe('BO - Customer Service : Contact options', async () => {
       });
 
       it('should go back to BO', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkUploadFile${index}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
         page = await contactUsPage.closePage(browserContext, page, 0);
 
