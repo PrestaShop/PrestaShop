@@ -72,6 +72,12 @@ jobs:
           sudo chown www-data:www-data -R /var/lib/php/sessions && \
           sudo service apache2 restart
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/ms-playwright/
+          key: ${{ runner.os }}-browsers
+
       - name: Run tests
         run: |
           npm install && npm run sanity-tests-fast-fail

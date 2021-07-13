@@ -19,6 +19,12 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/ms-playwright/
+          key: ${{ runner.os }}-browsers
+
       - name: Install dependencies in UI tests directory
         run: npm install
 
@@ -33,6 +39,12 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/ms-playwright/
+          key: ${{ runner.os }}-browsers
 
       - name: Install dependencies in UI tests directory
         run: npm install
