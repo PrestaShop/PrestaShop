@@ -52,6 +52,13 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
 
     public function testLoadLegacyCommandWithoutContextFails()
     {
+        /*
+         * Since PHP 8.0.0, error levels changed, that's why we need to check 2 different exception/warning.
+         * Either way, the exception/warning comes from the fact that we try to get the property of the context currency
+         * but the currency is null.
+         *
+         * @see https://wiki.php.net/rfc/engine_warnings
+         */
         if (version_compare(phpversion(), '8.0', '>=')) {
             $this->expectWarning();
             $this->expectWarningMessage('Attempt to read property "precision" on null');
