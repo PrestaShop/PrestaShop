@@ -10,37 +10,37 @@ class OrderStatusData {
    * @param orderStatusToCreate {Object} Could be used to force the value of some members
    */
   constructor(orderStatusToCreate = {}) {
-    /** @member {string} Name of the status */
+    /** @type {string} Name of the status */
     this.name = orderStatusToCreate.name || `order_status_${faker.lorem.word()}`;
 
-    /** @member {string} Hexadecimal value for the status color */
+    /** @type {string} Hexadecimal value for the status color */
     this.color = orderStatusToCreate.color || faker.internet.color();
 
-    /** @member {boolean} True to consider order is valid */
+    /** @type {boolean} True to consider order is valid */
     this.logableOn = orderStatusToCreate.logableOn === undefined ? true : orderStatusToCreate.logableOn;
 
-    /** @member {boolean} True to allow a customer to download and view PDF versions of the invoices */
+    /** @type {boolean} True to allow a customer to download and view PDF versions of the invoices */
     this.invoiceOn = orderStatusToCreate.invoiceOn === undefined ? true : orderStatusToCreate.invoiceOn;
 
-    /** @member {boolean} True to hide this status in all customer orders. */
+    /** @type {boolean} True to hide this status in all customer orders. */
     this.hiddenOn = orderStatusToCreate.hiddenOn === undefined ? true : orderStatusToCreate.hiddenOn;
 
-    /** @member {boolean} True to send an email to the customer when his/her order status has changed */
+    /** @type {boolean} True to send an email to the customer when his/her order status has changed */
     this.sendEmailOn = orderStatusToCreate.sendEmailOn === undefined ? true : orderStatusToCreate.sendEmailOn;
 
-    /** @member {boolean} True to attach invoice PDF to email */
+    /** @type {boolean} True to attach invoice PDF to email */
     this.pdfInvoiceOn = orderStatusToCreate.pdfInvoiceOn === undefined ? true : orderStatusToCreate.pdfInvoiceOn;
 
-    /** @member {boolean} True to attach delivery slip PDF to email */
+    /** @type {boolean} True to attach delivery slip PDF to email */
     this.pdfDeliveryOn = orderStatusToCreate.pdfDeliveryOn === undefined ? true : orderStatusToCreate.pdfDeliveryOn;
 
-    /** @member {boolean} True to set the order as shipped */
+    /** @type {boolean} True to set the order as shipped */
     this.shippedOn = orderStatusToCreate.shippedOn === undefined ? true : orderStatusToCreate.shippedOn;
 
-    /** @member {boolean} True to set the order as paid */
+    /** @type {boolean} True to set the order as paid */
     this.paidOn = orderStatusToCreate.paidOn === undefined ? true : orderStatusToCreate.paidOn;
 
-    /** @member {boolean} True to show delivery PDF */
+    /** @type {boolean} True to show delivery PDF */
     this.deliveryOn = orderStatusToCreate.deliveryOn === undefined ? true : orderStatusToCreate.deliveryOn;
   }
 }

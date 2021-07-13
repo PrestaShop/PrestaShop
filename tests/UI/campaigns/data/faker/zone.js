@@ -10,10 +10,10 @@ class ZoneData {
    * @param zoneToCreate {Object} Could be used to force the value of some members
    */
   constructor(zoneToCreate = {}) {
-    /** @member {string} Name of the zone */
+    /** @type {string} Name of the zone */
     this.name = zoneToCreate.name || `test ${faker.lorem.word()}`;
 
-    /** @member {boolean} Status of the zone */
+    /** @type {boolean} Status of the zone */
     this.status = zoneToCreate.status === undefined ? true : zoneToCreate.status;
   }
 }

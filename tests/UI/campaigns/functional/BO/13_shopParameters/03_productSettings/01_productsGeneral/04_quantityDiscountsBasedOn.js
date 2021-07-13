@@ -29,8 +29,8 @@ const productWithCombinations = new ProductFaker(
     type: 'Standard product',
     price: 20,
     combinations: {
-      Color: ['White', 'Black'],
-      Size: ['S'],
+      color: ['White', 'Black'],
+      size: ['S'],
     },
     quantity: 10,
     specificPrice: {

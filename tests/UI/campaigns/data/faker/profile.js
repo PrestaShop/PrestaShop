@@ -10,7 +10,7 @@ class ProfileData {
    * @param profileToCreate {Object} Could be used to force the value of some members
    */
   constructor(profileToCreate = {}) {
-    /** @member {string} Name of the profile */
+    /** @type {string} Name of the profile */
     this.name = profileToCreate.name || faker.name.jobType();
   }
 }
