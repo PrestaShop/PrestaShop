@@ -1,24 +1,25 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
-const baseContext = 'functional_BO_catalog_products_helperCard';
+const baseContext = 'functional_BO_catalog_products_helpCard';
 
 let browserContext;
 let page;
 
-describe('Helper card on products page', async () => {
+describe('BO - Catalog - Products : Help card in products page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -33,7 +34,7 @@ describe('Helper card on products page', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to products page', async function () {
+  it('should go to \'Catalog > Products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
