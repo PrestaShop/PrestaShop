@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -13,18 +17,17 @@ const {DefaultCustomer} = require('@data/demo/customer');
 const dashboardPage = require('@pages/BO/dashboard');
 const customersPage = require('@pages/BO/customers');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_customers_customers_filterAndQuickEditCustomers';
-
 
 let browserContext;
 let page;
 let numberOfCustomers = 0;
 
-// Filter And Quick Edit Customers
-describe('Filter And Quick Edit Customers', async () => {
+/*
+Filter customers table by Id, social title, first name, last name, email, active, newsletter and optin
+Quick edit customer enable/disable - status, newsletter and partner offers
+ */
+describe('BO - Customers - Customers : Filter and quick edit Customers table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -39,7 +42,7 @@ describe('Filter And Quick Edit Customers', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to Customers page', async function () {
+  it('should go to \'Customers > Customers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -52,7 +55,7 @@ describe('Filter And Quick Edit Customers', async () => {
     await expect(pageTitle).to.contains(customersPage.pageTitle);
   });
 
-  it('should reset all filters and get Number of customers in BO', async function () {
+  it('should reset all filters and get number of customers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
     numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
@@ -60,7 +63,7 @@ describe('Filter And Quick Edit Customers', async () => {
   });
 
   // 1 : Filter Customers with all inputs and selects in grid table
-  describe('Filter Customers', async () => {
+  describe('Filter customers table', async () => {
     const tests = [
       {
         args:
@@ -202,8 +205,8 @@ describe('Filter And Quick Edit Customers', async () => {
   });
 
   // 2 : Editing customers from grid table
-  describe('Quick Edit Customers', async () => {
-    it('should filter by Email \'pub@prestashop.com\'', async function () {
+  describe('Quick edit customers', async () => {
+    it('should filter by email \'pub@prestashop.com\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
       await customersPage.filterCustomers(
@@ -251,7 +254,7 @@ describe('Filter And Quick Edit Customers', async () => {
     ];
 
     tests.forEach((test) => {
-      it(`should ${test.args.action} for first customer`, async function () {
+      it(`should ${test.args.action} first customer`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
         const isActionPerformed = await customersPage.updateToggleColumnValue(
@@ -269,6 +272,13 @@ describe('Filter And Quick Edit Customers', async () => {
         const customerStatus = await customersPage.getToggleColumnValue(page, 1, test.args.column);
         await expect(customerStatus).to.be.equal(test.args.value);
       });
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
+
+      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
   });
 });
