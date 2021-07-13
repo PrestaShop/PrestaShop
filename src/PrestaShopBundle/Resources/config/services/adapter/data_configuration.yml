@@ -106,7 +106,10 @@ services:
 
     prestashop.adapter.logs.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
-        arguments: ['@prestashop.adapter.legacy.configuration']
+        arguments: 
+            - '@prestashop.adapter.legacy.configuration'
+            - '@translator'
+            - '@prestashop.adapter.validate'
 
     prestashop.adapter.order.delivery.slip.options.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipOptionsConfiguration'
