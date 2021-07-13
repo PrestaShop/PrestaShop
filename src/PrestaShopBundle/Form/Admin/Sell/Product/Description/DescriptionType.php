@@ -110,6 +110,7 @@ class DescriptionType extends TranslatorAwareType
                 'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
             ])
+            ->add('categories', CategoriesType::class)
         ;
     }
 
