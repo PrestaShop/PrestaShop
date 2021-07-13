@@ -35,7 +35,7 @@ Pagination next and previous
 Sort attributes table by ID, Name and Position
 Delete the created attributes by bulk actions
  */
-describe('Sort and pagination attributes', async () => {
+describe('Bo - Catalog - Attributes & Features : Sort, pagination and bulk delete attributes', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -74,7 +74,7 @@ describe('Sort and pagination attributes', async () => {
 
   // 1 : Create 17 new attributes
   const creationTests = new Array(17).fill(0, 0, 17);
-  describe('Create new attributes in BO', async () => {
+  describe('Create 17 new attributes in BO', async () => {
     creationTests.forEach((test, index) => {
       const createAttributeData = new AttributeData({name: `todelete${index}`});
       it('should go to add new attribute page', async function () {
@@ -100,8 +100,8 @@ describe('Sort and pagination attributes', async () => {
 
   // 2 : Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 20 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+    it('should change the items number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
       const paginationNumber = await attributesPage.selectPaginationLimit(page, '20');
       expect(paginationNumber).to.equal('1');
@@ -121,8 +121,8 @@ describe('Sort and pagination attributes', async () => {
       expect(paginationNumber).to.equal('1');
     });
 
-    it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+    it('should change the items number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await attributesPage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.equal('1');

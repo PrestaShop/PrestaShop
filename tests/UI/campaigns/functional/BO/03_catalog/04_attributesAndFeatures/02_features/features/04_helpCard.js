@@ -14,7 +14,7 @@ const featuresPage = require('@pages/BO/catalog/features');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_attributesAndFeatures_features_helperCard';
+const baseContext = 'functional_BO_catalog_attributesAndFeatures_features_helpCard';
 
 let browserContext;
 let page;
@@ -24,7 +24,7 @@ Go to features page
 Open helper card and check language
 Close helper card
  */
-describe('Helper card on features page', async () => {
+describe('BO - Catalog - Attributes & Features : Help card on features page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -39,7 +39,7 @@ describe('Helper card on features page', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to attributes page', async function () {
+  it('should go to \'Catalog > Attributes & Features\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -54,7 +54,7 @@ describe('Helper card on features page', async () => {
     await expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
-  it('should go to features page', async function () {
+  it('should go to Features page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFeaturesPage', baseContext);
 
     await attributesPage.goToFeaturesPage(page);

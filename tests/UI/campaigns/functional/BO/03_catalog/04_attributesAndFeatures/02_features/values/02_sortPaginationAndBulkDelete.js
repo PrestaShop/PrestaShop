@@ -39,7 +39,8 @@ Pagination next and previous
 Sort features table by ID and Name
 Delete the created value by bulk actions
  */
-describe('Sort, pagination and delete by bulk actions feature values', async () => {
+describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and delete by bulk actions '
+  + 'feature values', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -141,8 +142,8 @@ describe('Sort, pagination and delete by bulk actions feature values', async () 
 
   // 2 : Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 20 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+    it('should change the items number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
       const paginationNumber = await viewFeaturePage.selectPaginationLimit(page, '20');
       expect(paginationNumber).to.equal('1');
@@ -162,8 +163,8 @@ describe('Sort, pagination and delete by bulk actions feature values', async () 
       expect(paginationNumber).to.equal('1');
     });
 
-    it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+    it('should change the items number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await viewFeaturePage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.equal('1');

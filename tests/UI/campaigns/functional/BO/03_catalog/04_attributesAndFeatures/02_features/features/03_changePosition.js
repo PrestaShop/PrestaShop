@@ -29,7 +29,7 @@ View first feature
 Change first feature position to 3
 Reset value position
  */
-describe('Change feature position', async () => {
+describe('BO - Catalog - Attributes & Features : Change feature position', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -32,7 +32,7 @@ View first attribute
 Change first value position to 3
 Reset value position
  */
-describe('Change value position', async () => {
+describe('BO - Catalog - Attributes & Features : Change value position', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -61,7 +61,7 @@ describe('Change value position', async () => {
   });
 
   describe('Change value position', async () => {
-    it('should filter list of attributes', async function () {
+    it(`should filter list of attributes by Name ${Attributes.size.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAttributes', baseContext);
 
       await attributesPage.filterTable(page, 'b!name', Attributes.size.name);
