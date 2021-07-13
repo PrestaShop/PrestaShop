@@ -36,6 +36,7 @@ const {$} = window;
 
 const ProductCategoryMap = ProductMap.categories;
 
+//@todo: filename is index.js but its a class CategoriesManager. Shouldn't we keep the filename categories-manager.js?
 export default class CategoriesManager {
   /**
    * @param {EventEmitter} eventEmitter
@@ -43,23 +44,26 @@ export default class CategoriesManager {
    */
   constructor(eventEmitter) {
     this.eventEmitter = eventEmitter;
-    this.categoriesContainer = document.querySelector(
-      ProductCategoryMap.categoriesContainer,
+    this.categoriesSummaryContainer = document.querySelector(ProductCategoryMap.categoriesSummaryContainer);
+    this.addCategoriesBtn = this.categoriesSummaryContainer.querySelector(
+      ProductCategoryMap.addCategoriesBtn,
     );
     this.categories = [];
     this.typeaheadDatas = [];
+
+    this.initAddCategoriesModal();
+
+    return {};
+  }
+
+  async initCategories() {
+    this.categoriesContainer = document.querySelector(ProductCategoryMap.categoriesContainer);
     this.categoryTree = this.categoriesContainer.querySelector(ProductCategoryMap.categoryTree);
     this.prototypeTemplate = this.categoryTree.dataset.prototype;
     this.prototypeName = this.categoryTree.dataset.prototypeName;
     this.expandAllButton = this.categoriesContainer.querySelector(ProductCategoryMap.expandAllButton);
     this.reduceAllButton = this.categoriesContainer.querySelector(ProductCategoryMap.reduceAllButton);
 
-    this.initCategories();
-
-    return {};
-  }
-
-  async initCategories() {
     this.categories = await getCategories();
 
     // This regexp is gonna be used to get id from checkbox name
@@ -338,6 +342,25 @@ export default class CategoriesManager {
       if (category.children) {
         this.initTypeaheadData(category.children, category.breadcrumb);
       }
+    });
+  }
+
+  initAddCategoriesModal() {
+    const modalContent = $(ProductMap.categories.categoriesTemplate);
+
+    $(this.addCategoriesBtn).fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
+      fitToView: false,
+      autoSize: false,
+      helpers: {
+        overlay: {closeClick: false},
+      },
+      content: modalContent.html(),
+      afterShow: () => {
+        this.initCategories();
+      },
     });
   }
 
