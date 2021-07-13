@@ -251,7 +251,9 @@ class TinyMCEEditor {
   }
 
   /**
-   * Updates the characters counter
+   * Updates the characters counter. This counter is used for front but if you don't want to encounter Validation
+   * problems you should be in sync with the TinyMceMaxLengthValidator PHP class. Both codes must behave the same
+   * way.
    *
    * @param id
    */
@@ -260,7 +262,7 @@ class TinyMCEEditor {
     const counter = textarea.attr('counter');
     const counterType = textarea.attr('counter_type');
     const editor = window.tinyMCE.get(id);
-    const max = editor.getContent().length;
+    const max = editor.getBody() ? editor.getBody().textContent.length : 0;
 
     textarea
       .parent()
