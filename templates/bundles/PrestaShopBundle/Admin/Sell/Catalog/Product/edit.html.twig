@@ -88,6 +88,12 @@
         }) }}
       {% endblock %}
 
+      {% block product_tab_description %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/description.html.twig', {
+          'productForm': productForm,
+        }) }}
+      {% endblock %}
+
       {% if productType == 'combinations' %}
         {% block product_tab_combinations %}
           {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig') }}
