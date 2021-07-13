@@ -22,7 +22,7 @@ const foHomePage = require('@pages/FO/home');
 const {LinkWidgets} = require('@data/demo/linkWidgets');
 const {hooks} = require('@data/demo/hooks');
 
-const baseContext = 'functional_BO_design_linkWidget_createAndCheckFooterLInkWidget';
+const baseContext = 'functional_BO_design_linkWidget_createAndCheckFooterLinkWidget';
 
 let browserContext;
 let page;
@@ -63,11 +63,19 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
     await expect(pageTitle).to.contains(linkWidgetsPage.pageTitle);
   });
 
+  it('should get link widget number', async function() {
+    await testContext.addContextItem(this, 'testIdentifier', 'getLinkWidgetNumber', baseContext);
+
+    numberOfLinkWidgetInFooter = await linkWidgetsPage.getNumberOfElementInGrid(page, hooks.displayFooter.name);
+    await expect(numberOfLinkWidgetInFooter).to.be.above(0);
+  });
+
   describe('Create link widget', async () => {
     it('should go to add new link widget page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewLinkWidgetPage', baseContext);
 
       await linkWidgetsPage.goToNewLinkWidgetPage(page);
+
       const pageTitle = await addLinkWidgetPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addLinkWidgetPage.pageTitle);
     });
@@ -78,12 +86,12 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       const textResult = await addLinkWidgetPage.addLinkWidget(page, LinkWidgets.demo_1);
       await expect(textResult).to.equal(linkWidgetsPage.successfulCreationMessage);
 
-      numberOfLinkWidgetInFooter = await linkWidgetsPage.getNumberOfElementInGrid(page, hooks.displayFooter.name);
-      await expect(numberOfLinkWidgetInFooter).to.be.above(0);
+      const numberOfLinkWidget = await linkWidgetsPage.getNumberOfElementInGrid(page, hooks.displayFooter.name);
+      await expect(numberOfLinkWidget).to.equal(numberOfLinkWidgetInFooter + 1);
     });
   });
 
-  describe('Go to FO and check existence of link Widget created', async () => {
+  describe('Go to FO and check existence of new link Widget', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
@@ -97,13 +105,13 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       await expect(pageTitle).to.contains(foHomePage.pageTitle);
     });
 
-    it('should check link widget in home page footer', async function () {
+    it('should check link widget in the footer of home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLinkWidgetInFO', baseContext);
 
-      const title = await foHomePage.getFooterLinksBlockTitle(page, numberOfLinkWidgetInFooter);
+      const title = await foHomePage.getFooterLinksBlockTitle(page, numberOfLinkWidgetInFooter + 1);
       await expect(title).to.contains(LinkWidgets.demo_1.name);
 
-      const linksTextContent = await foHomePage.getFooterLinksTextContent(page, numberOfLinkWidgetInFooter);
+      const linksTextContent = await foHomePage.getFooterLinksTextContent(page, numberOfLinkWidgetInFooter + 1);
 
       await Promise.all([
         expect(linksTextContent).to.include.members(LinkWidgets.demo_1.contentPages),
@@ -124,14 +132,14 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
     });
   });
 
-  describe('Delete link widget created', async () => {
-    it('should delete link widget created', async function () {
+  describe('Delete link widget', async () => {
+    it('should delete link widget', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLinkWidget', baseContext);
 
       const textResult = await linkWidgetsPage.deleteLinkWidget(
         page,
         hooks.displayFooter.name,
-        numberOfLinkWidgetInFooter,
+        numberOfLinkWidgetInFooter + 1,
       );
       await expect(textResult).to.equal(linkWidgetsPage.successfulDeleteMessage);
 
@@ -139,7 +147,7 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
         page,
         hooks.displayFooter.name,
       );
-      await expect(numberOfLinkWidgetAfterDelete).to.equal(numberOfLinkWidgetInFooter - 1);
+      await expect(numberOfLinkWidgetAfterDelete).to.equal(numberOfLinkWidgetInFooter);
     });
   });
 });
