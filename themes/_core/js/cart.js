@@ -97,11 +97,12 @@ $(document).ready(() => {
   $body.on('click', '[data-button-action="add-to-cart"]', (event) => {
     event.preventDefault();
 
-    $('[data-button-action="add-to-cart"]').prop('disabled', true);
-
     const $form = $(event.target.form);
     const query = `${$form.serialize()}&add=1&action=update`;
     const actionURL = $form.attr('action');
+    const addToCartButton = $(event.target);
+
+    addToCartButton.prop('disabled', true);
 
     const isQuantityInputValid = ($input) => {
       let validInput = true;
@@ -157,6 +158,11 @@ $(document).ready(() => {
           eventType: 'addProductToCart',
           resp,
         });
+      })
+      .always(() => {
+        setTimeout(() => {
+          addToCartButton.prop('disabled', false);
+        }, 1000);
       });
   });
 
