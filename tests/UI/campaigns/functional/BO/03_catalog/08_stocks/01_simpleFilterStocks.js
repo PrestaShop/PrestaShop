@@ -1,23 +1,24 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
 const {Products} = require('@data/demo/products');
+const {Suppliers} = require('@data/demo/suppliers');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const stocksPage = require('@pages/BO/catalog/stocks');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_catalog_stocks_simpleFilterStocks';
-
 
 let browserContext;
 let page;
@@ -25,7 +26,7 @@ let page;
 let numberOfProducts = 0;
 
 // Simple filter stocks
-describe('Simple filter stocks', async () => {
+describe('BO - Catalog - Stocks : Simple filter stocks', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -40,7 +41,7 @@ describe('Simple filter stocks', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to "Catalog>Stocks" page', async function () {
+  it('should go to \'Catalog > Stocks\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -62,12 +63,12 @@ describe('Simple filter stocks', async () => {
     await expect(numberOfProducts).to.be.above(0);
   });
 
-  // Filter products with name, reference, supplier
-  describe('Filter products with name, reference, supplier', async () => {
+  // Filter products by name, reference, supplier
+  describe('Filter products by name, reference and supplier', async () => {
     const tests = [
       {args: {testIdentifier: 'filterName', filterBy: 'name', filterValue: Products.demo_1.name}},
       {args: {testIdentifier: 'filterReference', filterBy: 'reference', filterValue: Products.demo_1.reference}},
-      {args: {testIdentifier: 'filterSupplier', filterBy: 'supplier', filterValue: 'N/A'}},
+      {args: {testIdentifier: 'filterSupplier', filterBy: 'supplier', filterValue: Suppliers.fashionSupplier.name}},
     ];
 
     tests.forEach((test) => {
