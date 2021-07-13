@@ -1431,7 +1431,7 @@ class AdminImportControllerCore extends AdminController
                 $category_to_create = new Category();
                 $category_to_create->name = AdminImportController::createMultiLangField($category->parent);
                 $category_to_create->active = 1;
-                $category_link_rewrite = Tools::link_rewrite($category_to_create->name[$id_lang]);
+                $category_link_rewrite = Tools::link_rewrite($info['link_rewrite'] ?? $category_to_create->name[$id_lang]);
                 $category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
                 $category_to_create->id_parent = Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 
