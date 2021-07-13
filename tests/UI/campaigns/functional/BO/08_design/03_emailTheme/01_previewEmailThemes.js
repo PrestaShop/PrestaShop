@@ -20,7 +20,7 @@ const baseContext = 'functional_BO_design_emailThemes_previewEmailTheme';
 let browserContext;
 let page;
 
-describe('BO - Design - Email Theme : Preview Email theme', async () => {
+describe('BO - Design - Email Theme : Preview email theme', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
