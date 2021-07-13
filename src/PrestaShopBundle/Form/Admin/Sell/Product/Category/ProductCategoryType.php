@@ -44,12 +44,6 @@ class ProductCategoryType extends TranslatorAwareType
                     'class' => 'category',
                 ],
             ])
-            ->add('is_default', RadioType::class, [
-                'label' => false,
-                'attr' => [
-                    'class' => 'default-category',
-                ],
-            ])
         ;
     }
 }
