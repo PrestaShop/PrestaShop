@@ -26,8 +26,10 @@
 
 namespace LegacyTests\PrestaShopBundle\Utils;
 
+use AppKernel;
 use Context;
 use Doctrine\DBAL\DBALException;
+use Language;
 use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Install\Install;
 use Tests\Resources\ResourceResetter;
@@ -66,7 +68,16 @@ class DatabaseCreator
             'admin_email' => 'test@prestashop.com',
             'configuration_agrement' => true,
         ));
+
+        // Default language is forced as en, we need french translation package as well, we only need the catalog to
+        // be available for the Translator component but we do not want the Language in the DB
+        if (!Language::translationPackIsInCache('fr-FR')) {
+            Language::downloadXLFLanguagePack('fr-FR');
+        }
+        Language::installSfLanguagePack('fr-FR');
+
         $install->installFixtures();
+
         Tab::resetStaticCache();
         $install->installTheme();
         $install->installModules();
@@ -85,7 +96,7 @@ class DatabaseCreator
      */
     public static function restoreTestDB()
     {
-        if (!file_exists(sys_get_temp_dir() . '/' . 'ps_dump.sql')) {
+        if (!file_exists(sprintf('%s/ps_dump_%s.sql', sys_get_temp_dir(), AppKernel::VERSION))) {
             throw new DBALException('You need to run \'composer create-test-db\' to create the initial test database');
         }
 
