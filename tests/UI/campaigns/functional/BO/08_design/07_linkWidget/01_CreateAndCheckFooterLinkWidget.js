@@ -1,26 +1,28 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const linkWidgetsPage = require('@pages/BO/design/linkWidgets');
 const addLinkWidgetPage = require('@pages/BO/design/linkWidgets/add');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 
 // Import data
 const {LinkWidgets} = require('@data/demo/linkWidgets');
 const {hooks} = require('@data/demo/hooks');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_design_linkWidget_createAndCheckFooterLInkWidget';
-
 
 let browserContext;
 let page;
@@ -31,7 +33,7 @@ Create link widget
 Check existence in FO
 Delete link widget created
  */
-describe('Create footer link widget and check it in FO', async () => {
+describe('BO - Design - Link Widget : Create footer link widget and check it in FO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -46,7 +48,7 @@ describe('Create footer link widget and check it in FO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to link Widget page', async function () {
+  it('should go to \'Design > Link Widget\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLinkWidgetPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -82,14 +84,22 @@ describe('Create footer link widget and check it in FO', async () => {
   });
 
   describe('Go to FO and check existence of link Widget created', async () => {
-    it('should go to FO and check link widget in home page footer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkLinkWidgetInFO', baseContext);
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       // View shop
       page = await linkWidgetsPage.viewMyShop(page);
 
       // Change FO language
       await foHomePage.changeLanguage(page, 'en');
+
+      const pageTitle = await foHomePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(foHomePage.pageTitle);
+    });
+
+    it('should check link widget in home page footer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkLinkWidgetInFO', baseContext);
+
       const title = await foHomePage.getFooterLinksBlockTitle(page, numberOfLinkWidgetInFooter);
       await expect(title).to.contains(LinkWidgets.demo_1.name);
 
@@ -101,9 +111,16 @@ describe('Create footer link widget and check it in FO', async () => {
         expect(linksTextContent).to.include.members(LinkWidgets.demo_1.staticPages),
         expect(linksTextContent).to.include.members(LinkWidgets.demo_1.customPages.map(el => el.name)),
       ]);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
       // Go back to BO
       page = await foHomePage.closePage(browserContext, page, 0);
+
+      const pageTitle = await linkWidgetsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(linkWidgetsPage.pageTitle);
     });
   });
 
