@@ -95,19 +95,35 @@ describe('Filter and quick edit webservice', async () => {
   });
   describe('Filter webservice', async () => {
     tests = [
-      {args: {filterType: 'input', filterBy: 'key', filterValue: firstWebServiceData.key}},
-      {args: {filterType: 'input', filterBy: 'description', filterValue: firstWebServiceData.keyDescription}},
-      {args: {filterType: 'select', filterBy: 'active', filterValue: firstWebServiceData.status}},
+      {
+        args: {
+          identifier: 'filterByKey',
+          filterType: 'input',
+          filterBy: 'key',
+          filterValue: firstWebServiceData.key,
+        },
+      },
+      {
+        args: {
+          identifier: 'filterByDescription',
+          filterType: 'input',
+          filterBy: 'description',
+          filterValue: firstWebServiceData.keyDescription,
+        },
+      },
+      {
+        args: {
+          identifier: 'filterByStatus',
+          filterType: 'select',
+          filterBy: 'active',
+          filterValue: firstWebServiceData.status,
+        },
+      },
     ];
 
     tests.forEach((test, index) => {
       it(`should filter list by ${test.args.filterBy}`, async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `filterBy${webservicePage.uppercaseFirstCharacter(test.args.filterBy)}`,
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
 
         await webservicePage.filterWebserviceTable(
           page,

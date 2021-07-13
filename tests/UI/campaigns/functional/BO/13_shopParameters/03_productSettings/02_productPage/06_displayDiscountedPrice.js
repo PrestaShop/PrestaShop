@@ -135,12 +135,7 @@ describe('Enable/Disable display discounted price', async () => {
     });
 
     it('should check the existence of the unit value', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkUnitValue${productSettingsPage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkUnitValue${index}`, baseContext);
 
       page = await productSettingsPage.viewMyShop(page);
 

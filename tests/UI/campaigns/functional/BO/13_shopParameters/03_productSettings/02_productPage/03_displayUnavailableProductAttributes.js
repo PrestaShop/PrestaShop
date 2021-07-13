@@ -95,7 +95,7 @@ describe('Display unavailable product attributes on the product page', async () 
     {args: {action: 'enable', enable: true}},
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it(`should ${test.args.action} Display unavailable product attributes on the product page`, async function () {
       await testContext.addContextItem(
         this,
@@ -113,12 +113,7 @@ describe('Display unavailable product attributes on the product page', async () 
     });
 
     it('should check the unavailable product attributes in FO product page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkUnavailableAttribute${productSettingsPage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkUnavailableAttribute${index}`, baseContext);
 
       page = await productSettingsPage.viewMyShop(page);
 

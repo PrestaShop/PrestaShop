@@ -58,7 +58,7 @@ describe('Enable B2B mode', async () => {
     {args: {action: 'disable', enable: false}},
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it(`should ${test.args.action} B2B mode`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}B2BMode`, baseContext);
 
@@ -72,12 +72,7 @@ describe('Enable B2B mode', async () => {
     });
 
     it('should go to create customer page in FO and check company input', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkB2BMode${customerSettingsPage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkB2BMode${index}`, baseContext);
 
       // Go to FO and change language
       page = await customerSettingsPage.viewMyShop(page);

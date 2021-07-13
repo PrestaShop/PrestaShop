@@ -61,16 +61,16 @@ describe('Enable reordering option', async () => {
     {args: {action: 'disable', status: false, reorderOption: true}},
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it(`should ${test.args.action} reordering option`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}GuestCheckout`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `setReorderingOption${index}`, baseContext);
 
       const result = await orderSettingsPage.setReorderOptionStatus(page, test.args.status);
       await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AndViewMyShop`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
       // Click on view my shop
       page = await orderSettingsPage.viewMyShop(page);
@@ -83,12 +83,7 @@ describe('Enable reordering option', async () => {
     });
 
     it('should verify the reordering option', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkReorderingOption${homePage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkReorderingOption${index}`, baseContext);
 
       // Login FO
       await homePage.goToLoginPage(page);
@@ -106,7 +101,7 @@ describe('Enable reordering option', async () => {
     });
 
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Logout FO
       await orderHistoryPage.logout(page);

@@ -57,7 +57,7 @@ describe('Enable ask for birth date', async () => {
     {args: {action: 'enable', enable: true}},
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it(`should ${test.args.action} ask for birth date`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AskForBirthDate`, baseContext);
 
@@ -71,12 +71,7 @@ describe('Enable ask for birth date', async () => {
     });
 
     it('should go to customer account in FO and check birth day input', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkIsBirthDate${customerSettingsPage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkIsBirthDate${index}`, baseContext);
 
       // Go to FO
       page = await customerSettingsPage.viewMyShop(page);

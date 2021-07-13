@@ -107,12 +107,7 @@ describe('Enable/Disable catalog mode', async () => {
         });
 
         it('should check product prices in the home page', async function () {
-          await testContext.addContextItem(
-            this,
-            'testIdentifier',
-            `checkPricesInHomePage${productPage.uppercaseFirstCharacter(showPrices.args.action)}`,
-            baseContext,
-          );
+          await testContext.addContextItem(this, 'testIdentifier', `checkPricesInHomePage${index}`, baseContext);
 
           page = await productSettingsPage.viewMyShop(page);
 
@@ -131,13 +126,7 @@ describe('Enable/Disable catalog mode', async () => {
         });
 
         it('should check the existence of product price and add to cart button', async function () {
-          await testContext.addContextItem(
-            this,
-            'testIdentifier',
-            'checkPrice&AddToCartButton'
-              + `${productPage.uppercaseFirstCharacter(showPrices.args.action)}`,
-            baseContext,
-          );
+          await testContext.addContextItem(this, 'testIdentifier', `checkPrice&AddToCartButton${index}`, baseContext);
 
           let isVisible = await productPage.isPriceDisplayed(page);
           await expect(isVisible).to.equal(showPrices.args.isPriceExist);

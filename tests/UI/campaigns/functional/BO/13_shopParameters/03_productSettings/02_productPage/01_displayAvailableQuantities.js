@@ -62,7 +62,7 @@ describe('Display available quantities on the product page', async () => {
     {args: {action: 'enable', enable: true}},
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it(`should ${test.args.action} Display available quantities on the product page`, async function () {
       await testContext.addContextItem(this,
         'testIdentifier',
@@ -75,12 +75,7 @@ describe('Display available quantities on the product page', async () => {
     });
 
     it('should check the product quantity on the product page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkQuantity${productSettingsPage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkQuantity${index}`, baseContext);
 
       page = await productSettingsPage.viewMyShop(page);
 
