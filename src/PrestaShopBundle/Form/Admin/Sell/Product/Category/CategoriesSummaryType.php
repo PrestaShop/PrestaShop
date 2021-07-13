@@ -25,24 +25,20 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Description;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
-use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesSummaryType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-//@todo: dont forget to remove types that was replaced by this one (mainly BasicType)
-class DescriptionType extends TranslatorAwareType
+class CategoriesSummaryType extends TranslatorAwareType
 {
-    /**
-     * {@inheritDoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('categories_summary', CategoriesSummaryType::class, [
-            'label' => false,
+        $builder->add('add_categories_btn', ButtonType::class, [
+            'label' => $this->trans('Add categories', 'Admin.Catalog.Feature'),
             'attr' => [
-                'class' => 'js-categories-summary-container',
+                'class' => 'add-categories-btn',
             ],
         ]);
     }

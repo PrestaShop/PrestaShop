@@ -80,7 +80,9 @@ class ProductFormType extends TranslatorAwareType
             ->add('basic', BasicType::class, [
                 'product_id' => $productId,
             ])
-            ->add('description', DescriptionType::class)
+            ->add('description', DescriptionType::class, [
+                'label' => false,
+            ])
             ->add('shortcuts', ShortcutsType::class)
             ->add('stock', StockType::class, [
                 'virtual_product_file_id' => $options['virtual_product_file_id'],
