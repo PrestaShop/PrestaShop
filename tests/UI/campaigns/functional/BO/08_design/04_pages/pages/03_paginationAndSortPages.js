@@ -104,7 +104,7 @@ describe('BO - design - Pages : Pagination and sort Pages table', async () => {
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await pagesPage.selectPagesPaginationLimit(page, 10);
+      const paginationNumber = await pagesPage.selectPagesPaginationLimit(page, '10');
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
@@ -125,7 +125,7 @@ describe('BO - design - Pages : Pagination and sort Pages table', async () => {
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await pagesPage.selectPagesPaginationLimit(page, 50);
+      const paginationNumber = await pagesPage.selectPagesPaginationLimit(page, '50');
       expect(paginationNumber).to.contain('(page 1 / 1)');
     });
   });

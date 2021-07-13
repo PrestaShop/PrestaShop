@@ -117,7 +117,7 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await pagesPage.selectCategoryPaginationLimit(page, 10);
+      const paginationNumber = await pagesPage.selectCategoryPaginationLimit(page, '10');
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
@@ -138,7 +138,7 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await pagesPage.selectCategoryPaginationLimit(page, 50);
+      const paginationNumber = await pagesPage.selectCategoryPaginationLimit(page, '50');
       expect(paginationNumber).to.contain('(page 1 / 1)');
     });
   });
@@ -179,7 +179,7 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
     ];
 
     sortTests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await pagesPage.getAllRowsColumnContentTableCmsPageCategory(
