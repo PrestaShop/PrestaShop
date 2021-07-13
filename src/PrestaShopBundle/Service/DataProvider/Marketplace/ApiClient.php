@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Service\DataProvider\Marketplace;
 
 use GuzzleHttp\Client;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
+use Tools;
 
 class ApiClient
 {
@@ -65,7 +66,10 @@ class ApiClient
         $this->setIsoLang($isoLang)
             ->setIsoCode($isoCode)
             ->setVersion($shopVersion)
-            ->setShopUrl($domain);
+            ->setShopUrl($domain)
+            ->setConnectionTimeout(Tools::DEFAULT_CONNECTION_TIMEOUT)
+            ->setTimeout(Tools::DEFAULT_ADDONS_TIMEOUT)
+        ;
         $this->defaultQueryParameters = $this->queryParameters;
     }
 
@@ -92,6 +96,10 @@ class ApiClient
      */
     public function reset()
     {
+        $this
+            ->setConnectionTimeout(Tools::DEFAULT_CONNECTION_TIMEOUT)
+            ->setTimeout(Tools::DEFAULT_ADDONS_TIMEOUT)
+        ;
         $this->queryParameters = $this->defaultQueryParameters;
     }
 
@@ -208,6 +216,7 @@ class ApiClient
         return $this->setMethod('module')
             ->setModuleId($moduleId)
             ->setModuleChannel($moduleChannel)
+            ->setTimeout(Tools::MODULE_DOWNLOAD_TIMEOUT)
             ->getPostResponse();
     }
 
@@ -362,11 +371,41 @@ class ApiClient
         return $this;
     }
 
+    public function setTimeout(int $timeout): self
+    {
+        $this->addonsApiClient->setDefaultOption('timeout', $timeout);
+        $this->updateConnectionTimeout($this->queryParameters['connect_timeout'] ?? Tools::DEFAULT_CONNECTION_TIMEOUT);
+
+        return $this;
+    }
+
+    public function setConnectionTimeout(int $connectionTimeout): self
+    {
+        $this->updateConnectionTimeout($connectionTimeout);
+
+        return $this;
+    }
+
     /**
      * @return array<string, string>
      */
     public function getQueryParameters(): array
     {
         return $this->queryParameters;
+    }
+
+    /**
+     * The update method is called when timeout and/or connectionTimeout setters are called to make sure it is always
+     * synced correctly.
+     *
+     * @param int $connectionTimeout
+     */
+    private function updateConnectionTimeout(int $connectionTimeout): void
+    {
+        $timeout = $this->addonsApiClient->getDefaultOption('timeout');
+        $computedTimeout = ceil($timeout > 2 * Tools::DEFAULT_CONNECTION_TIMEOUT ? $timeout / 2 : Tools::DEFAULT_CONNECTION_TIMEOUT);
+        $connectionTimeout = max($connectionTimeout, $computedTimeout);
+
+        $this->addonsApiClient->setDefaultOption('connect_timeout', $connectionTimeout);
     }
 }

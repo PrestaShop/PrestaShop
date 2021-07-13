@@ -42,6 +42,10 @@ class ToolsCore
     const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
     public const CACHE_LIFETIME_SECONDS = 604800;
 
+    public const DEFAULT_CONNECTION_TIMEOUT = 5;
+    public const DEFAULT_ADDONS_TIMEOUT = 30;
+    public const MODULE_DOWNLOAD_TIMEOUT = 60;
+
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
     protected static $_caching;
@@ -2175,9 +2179,13 @@ class ToolsCore
             Tools::refreshCACertFile();
             $curl = curl_init();
 
+            // Connection timeout is part of the whole timeout, so it must be proportional or increasing the global
+            // timeout might have no result, we keep a minimum default value though
+            $connectionTimeout = $curl_timeout > 2 * static::DEFAULT_CONNECTION_TIMEOUT ? $curl_timeout / 2 : static::DEFAULT_CONNECTION_TIMEOUT;
+
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $connectionTimeout);
             curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
             curl_setopt($curl, CURLOPT_CAINFO, _PS_CACHE_CA_CERT_FILE_);
@@ -3954,7 +3962,7 @@ exit;
         $post_data = http_build_query($post_query_data);
 
         $end_point = 'api.addons.prestashop.com';
-
+        $timeout = static::DEFAULT_ADDONS_TIMEOUT;
         switch ($request) {
             case 'native':
                 $post_data .= '&method=listing&action=native';
@@ -4003,6 +4011,7 @@ exit;
                 if (isset($params['username_addons'], $params['password_addons'])) {
                     $post_data .= '&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
                 }
+                $timeout = static::MODULE_DOWNLOAD_TIMEOUT;
 
                 break;
             case 'hosted_module':
@@ -4010,6 +4019,7 @@ exit;
                     . '&password=' . urlencode($params['password_addons'])
                     . '&shop_url=' . urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
                     . '&mail=' . urlencode(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
+                $timeout = static::MODULE_DOWNLOAD_TIMEOUT;
 
                 break;
             case 'install-modules':
@@ -4026,11 +4036,11 @@ exit;
                 'method' => 'POST',
                 'content' => $post_data,
                 'header' => 'Content-type: application/x-www-form-urlencoded',
-                'timeout' => 5,
+                'timeout' => $timeout,
             ],
         ]);
 
-        if ($content = Tools::file_get_contents('https://' . $end_point, false, $context)) {
+        if ($content = Tools::file_get_contents('https://' . $end_point, false, $context, $timeout)) {
             return $content;
         }
 
