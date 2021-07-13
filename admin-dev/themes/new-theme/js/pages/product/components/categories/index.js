@@ -83,16 +83,8 @@ export default class CategoriesManager {
   }
 
   initTree() {
-    const initialElements = {};
-
-    this.categoryTree.querySelectorAll(ProductCategoryMap.treeElement).forEach((treeElement) => {
-      const checkboxInput = treeElement.querySelector(ProductCategoryMap.checkboxInput);
-      const categoryId = this.getIdFromCheckbox(checkboxInput);
-      initialElements[categoryId] = treeElement;
-    });
-
     this.categories.forEach((category) => {
-      const item = this.generateCategoryTree(category, initialElements);
+      const item = this.generateCategoryTree(category);
       this.categoryTree.append(item);
     });
 
@@ -103,30 +95,17 @@ export default class CategoriesManager {
       this.toggleAll(false);
     });
 
+    //@todo: where to store these ids? (should be able to get on page load, but still need to store them because everytime modal is opened they will change, but will not be saved to serverside)
+    const productCategoryIds = [2, 3];
+
     this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkbox) => {
-      checkbox.addEventListener('change', (event) => {
-        const checkboxInput = event.currentTarget;
-        const parentItem = checkboxInput.parentNode.closest(ProductCategoryMap.treeElement);
-        const radioInput = parentItem.querySelector(ProductCategoryMap.radioInput);
+      const categoryId = this.getIdFromCheckbox(checkbox);
 
-        // If checkbox is associated to the default radio input it cannot be unchecked
-        if (radioInput.checked) {
-          event.preventDefault();
-          event.stopImmediatePropagation();
-          this.updateCheckbox(checkboxInput, true);
-        } else {
-          this.updateCategoriesTags();
-        }
-      });
-    });
-
-    this.categoryTree.querySelectorAll(ProductCategoryMap.radioInput).forEach((radioInput) => {
-      radioInput.addEventListener('click', () => {
-        this.selectedDefaultCategory(radioInput);
-      });
-      if (radioInput.checked) {
-        this.updateDefaultCheckbox(radioInput);
+      if (productCategoryIds.includes(categoryId)) {
+        checkbox.checked = true;
       }
+
+      checkbox.addEventListener('change', () => this.updateCategoriesTags());
     });
 
     // Tree is initialized we can show it and hide loader
@@ -142,10 +121,9 @@ export default class CategoriesManager {
    * Used to recursively create items of the category tree
    *
    * @param {Object} category
-   * @param {Object} initialElements
    */
-  generateCategoryTree(category, initialElements) {
-    const categoryNode = this.generateTreeElement(category, initialElements);
+  generateCategoryTree(category) {
+    const categoryNode = this.generateTreeElement(category);
     const childrenList = categoryNode.querySelector(ProductCategoryMap.childrenList);
     childrenList.classList.add('d-none');
 
@@ -168,7 +146,7 @@ export default class CategoriesManager {
 
       // Recursively build the children trees
       category.children.forEach((childCategory) => {
-        const childTree = this.generateCategoryTree(childCategory, initialElements);
+        const childTree = this.generateCategoryTree(childCategory);
 
         childrenList.append(childTree);
       });
@@ -183,21 +161,14 @@ export default class CategoriesManager {
    * category name and click on radio is handled.
    *
    * @param {Object} category
-   * @param {Object} initialElements
    *
    * @returns {HTMLElement}
    */
-  generateTreeElement(category, initialElements) {
-    let categoryNode;
-
-    if (!Object.prototype.hasOwnProperty.call(initialElements, category.id)) {
-      const template = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), category.id);
-      // Trim is important here or the first child could be some text (whitespace, or \n)
-      const frag = document.createRange().createContextualFragment(template.trim());
-      categoryNode = frag.firstChild;
-    } else {
-      categoryNode = initialElements[category.id];
-    }
+  generateTreeElement(category) {
+    const template = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), category.id);
+    // Trim is important here or the first child could be some text (whitespace, or \n)
+    const frag = document.createRange().createContextualFragment(template.trim());
+    const categoryNode = frag.firstChild;
 
     // Add category name as a text between the checkbox and the radio
     const checkboxInput = categoryNode.querySelector(ProductCategoryMap.checkboxInput);
@@ -354,9 +325,6 @@ export default class CategoriesManager {
       height: '90%',
       fitToView: false,
       autoSize: false,
-      helpers: {
-        overlay: {closeClick: false},
-      },
       content: modalContent.html(),
       afterShow: () => {
         this.initCategories();
