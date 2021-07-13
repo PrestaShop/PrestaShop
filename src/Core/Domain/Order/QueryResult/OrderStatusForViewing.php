@@ -73,8 +73,8 @@ class OrderStatusForViewing
     /**
      * @param int $orderHistoryId
      * @param int $orderStatusId
-     * @param string $name
-     * @param string $color
+     * @param string|null $name
+     * @param string|null $color
      * @param DateTimeImmutable $createdAt
      * @param bool $withEmail
      * @param string|null $employeeFirstName
@@ -83,8 +83,8 @@ class OrderStatusForViewing
     public function __construct(
         int $orderHistoryId,
         int $orderStatusId,
-        string $name,
-        string $color,
+        ?string $name,
+        ?string $color,
         DateTimeImmutable $createdAt,
         bool $withEmail,
         ?string $employeeFirstName,
@@ -119,7 +119,7 @@ class OrderStatusForViewing
     /**
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -127,7 +127,7 @@ class OrderStatusForViewing
     /**
      * @return string
      */
-    public function getColor(): string
+    public function getColor(): ?string
     {
         return $this->color;
     }
