@@ -63,7 +63,7 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
     await expect(pageTitle).to.contains(linkWidgetsPage.pageTitle);
   });
 
-  it('should get link widget number', async function() {
+  it('should get link widget number', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getLinkWidgetNumber', baseContext);
 
     numberOfLinkWidgetInFooter = await linkWidgetsPage.getNumberOfElementInGrid(page, hooks.displayFooter.name);
