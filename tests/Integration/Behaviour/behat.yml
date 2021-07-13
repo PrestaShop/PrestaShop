@@ -60,6 +60,8 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CommonDomainFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
         order:
             paths:
                 - %paths.base%/Features/Scenario/Order
