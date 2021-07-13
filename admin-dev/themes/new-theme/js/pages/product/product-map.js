@@ -176,7 +176,6 @@ export default {
     checkedCheckboxInputs: '[type=checkbox]:checked',
     checkboxName: (categoryId) => `categories[product_categories][${categoryId}][is_associated]`,
     materialCheckbox: '.md-checkbox',
-    radioInput: '[type=radio]',
     defaultRadioInput: '[type=radio]:checked',
     radioName: (categoryId) => `categories[product_categories][${categoryId}][is_default]`,
     tagsContainer: '#categories-tags-container',
