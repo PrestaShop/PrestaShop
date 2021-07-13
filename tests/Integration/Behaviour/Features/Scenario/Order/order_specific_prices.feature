@@ -23,442 +23,10 @@ Feature: Order from Back Office (BO)
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
 
-  Scenario: Add product with regular price, add it again with different specific price The first price is updated
-    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
-    Then order "bo_order1" should have 2 products in total
-    Then order "bo_order1" should have 0 invoices
-    Then order "bo_order1" should have 0 cart rule
-    Then order "bo_order1" should have following details:
-      | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.650 |
-      | total_paid               | 32.650 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    Given there is a product in the catalog named "Test Product With Specific Price" with a price of 15.0 and 100 items in stock
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
-      | amount        | 1                                 |
-      | price         | 15                                |
-    Then order "bo_order1" should have 3 products in total
-    Then order "bo_order1" should have following details:
-      | total_products           | 38.800 |
-      | total_products_wt        | 41.130 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 45.8   |
-      | total_paid_tax_incl      | 48.550 |
-      | total_paid               | 48.550 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    Then product "Test Product With Specific Price" in order "bo_order1" should have no specific price
-    Given I update order "bo_order1" status to "Payment accepted"
-    And order "bo_order1" should have 1 invoice
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
-      | amount        | 1                                 |
-      | price         | 12                                |
-    Then the product "Test Product With Specific Price" in the first invoice from the order "bo_order1" should have the following details:
-      | product_quantity            | 1     |
-      | product_price               | 12.00 |
-      | original_product_price      | 15.00 |
-      | unit_price_tax_incl         | 12.72 |
-      | unit_price_tax_excl         | 12.00 |
-      | total_price_tax_incl        | 12.72 |
-      | total_price_tax_excl        | 12.00 |
-    And order "bo_order1" should have 4 products in total
-    And order "bo_order1" should have following details:
-      | total_products           | 47.800 |
-      | total_products_wt        | 50.670 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 54.800 |
-      | total_paid_tax_incl      | 58.090 |
-      | total_paid               | 58.090 |
-      | total_paid_real          | 48.550 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-
-  Scenario: Add product with specific price, add it again with regular price The first price is updated and specific price is removed
-    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
-    Then order "bo_order1" should have 2 products in total
-    Then order "bo_order1" should have 0 invoices
-    Then order "bo_order1" should have 0 cart rule
-    Then order "bo_order1" should have following details:
-      | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.650 |
-      | total_paid               | 32.650 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    Given there is a product in the catalog named "Test Product With Specific Price" with a price of 15.0 and 100 items in stock
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
-      | amount        | 1                                 |
-      | price         | 12                                |
-    Then order "bo_order1" should have 3 products in total
-    Then order "bo_order1" should have following details:
-      | total_products           | 35.800 |
-      | total_products_wt        | 37.950 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 42.8   |
-      | total_paid_tax_incl      | 45.370 |
-      | total_paid               | 45.370 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    Given I update order "bo_order1" status to "Payment accepted"
-    Then the product "Test Product With Specific Price" in the first invoice from the order "bo_order1" should have the following details:
-      | product_quantity            | 1     |
-      | product_price               | 12.00 |
-      | original_product_price      | 15.00 |
-      | unit_price_tax_incl         | 12.72 |
-      | unit_price_tax_excl         | 12.00 |
-      | total_price_tax_incl        | 12.72 |
-      | total_price_tax_excl        | 12.00 |
-    And order "bo_order1" should have 1 invoice
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
-      | amount        | 1                                 |
-      | price         | 15                                |
-    Then product "Test Product With Specific Price" in order "bo_order1" should have no specific price
-    And order "bo_order1" should have 4 products in total
-    And order "bo_order1" should have following details:
-      | total_products           | 53.800 |
-      | total_products_wt        | 57.030 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 60.800 |
-      | total_paid_tax_incl      | 64.450 |
-      | total_paid               | 64.450 |
-      | total_paid_real          | 45.370 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-
-  Scenario: Add twice products product with specific price, when one is edited the other is updated as well
-    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
-    Then order "bo_order1" should have 2 products in total
-    Then order "bo_order1" should have 0 invoices
-    Then order "bo_order1" should have 0 cart rule
-    Then order "bo_order1" should have following details:
-      | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.650 |
-      | total_paid               | 32.650 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    Given there is a product in the catalog named "Test Product With Specific Price" with a price of 15.0 and 100 items in stock
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
-      | amount        | 1                                 |
-      | price         | 12                                |
-    Given I update order "bo_order1" status to "Payment accepted"
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
-      | amount        | 1                                 |
-      | price         | 15                                |
-    Then product "Test Product With Specific Price" in order "bo_order1" should have no specific price
-    And order "bo_order1" should have 2 invoices
-    And order "bo_order1" should have 4 products in total
-    And order "bo_order1" should have following details:
-      | total_products           | 53.800 |
-      | total_products_wt        | 57.030 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 60.800 |
-      | total_paid_tax_incl      | 64.450 |
-      | total_paid               | 64.450 |
-      | total_paid_real          | 45.370 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    When I edit product "Test Product With Specific Price" to order "bo_order1" with following products details:
-      | amount        | 1                     |
-      | price         | 16                    |
-    Then the product "Test Product With Specific Price" in the first invoice from the order "bo_order1" should have the following details:
-      | product_quantity            | 1     |
-      | product_price               | 16.00 |
-      | original_product_price      | 15.00 |
-      | unit_price_tax_incl         | 16.96 |
-      | unit_price_tax_excl         | 16.00 |
-      | total_price_tax_incl        | 16.96 |
-      | total_price_tax_excl        | 16.00 |
-    And the product "Test Product With Specific Price" in the second invoice from the order "bo_order1" should have the following details:
-      | product_quantity            | 1     |
-      | product_price               | 16.00 |
-      | original_product_price      | 15.00 |
-      | unit_price_tax_incl         | 16.96 |
-      | unit_price_tax_excl         | 16.00 |
-      | total_price_tax_incl        | 16.96 |
-      | total_price_tax_excl        | 16.00 |
-    And order "bo_order1" should have 4 products in total
-    And order "bo_order1" should have following details:
-      | total_products           | 55.800 |
-      | total_products_wt        | 59.150 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 62.800 |
-      | total_paid_tax_incl      | 66.570 |
-      | total_paid               | 66.570 |
-      | total_paid_real          | 45.370 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    When I edit product "Test Product With Specific Price" to order "bo_order1" with following products details:
-      | amount        | 1                     |
-      | price         | 15                    |
-    Then product "Test Product With Specific Price" in order "bo_order1" should have no specific price
-    Then the product "Test Product With Specific Price" in the first invoice from the order "bo_order1" should have the following details:
-      | product_quantity            | 1     |
-      | product_price               | 15.00 |
-      | original_product_price      | 15.00 |
-      | unit_price_tax_incl         | 15.90 |
-      | unit_price_tax_excl         | 15.00 |
-      | total_price_tax_incl        | 15.90 |
-      | total_price_tax_excl        | 15.00 |
-    And the product "Test Product With Specific Price" in the second invoice from the order "bo_order1" should have the following details:
-      | product_quantity            | 1     |
-      | product_price               | 15.00 |
-      | original_product_price      | 15.00 |
-      | unit_price_tax_incl         | 15.90 |
-      | unit_price_tax_excl         | 15.00 |
-      | total_price_tax_incl        | 15.90 |
-      | total_price_tax_excl        | 15.00 |
-    And order "bo_order1" should have following details:
-      | total_products           | 53.800 |
-      | total_products_wt        | 57.030 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 60.800 |
-      | total_paid_tax_incl      | 64.450 |
-      | total_paid               | 64.450 |
-      | total_paid_real          | 45.370 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    When I edit product "Test Product With Specific Price" in second invoice from order "bo_order1" with following products details:
-      | amount        | 1                     |
-      | price         | 12                    |
-    Then product "Test Product With Specific Price" in order "bo_order1" has following details:
-      | product_quantity            | 1     |
-      | product_price               | 12.00 |
-      | original_product_price      | 15.00 |
-      | unit_price_tax_incl         | 12.72 |
-      | unit_price_tax_excl         | 12.00 |
-      | total_price_tax_incl        | 12.72 |
-      | total_price_tax_excl        | 12.00 |
-    And order "bo_order1" should have following details:
-      | total_products           | 47.800 |
-      | total_products_wt        | 50.670 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 54.800 |
-      | total_paid_tax_incl      | 58.090 |
-      | total_paid               | 58.090 |
-      | total_paid_real          | 45.370 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-
-  Scenario: Add product with specific price, add then remove it The specific price should be removed
-    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
-    Then order "bo_order1" should have 2 products in total
-    Then order "bo_order1" should have 0 invoices
-    Then order "bo_order1" should have 0 cart rule
-    Then order "bo_order1" should have following details:
-      | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.650 |
-      | total_paid               | 32.650 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    Given there is a product in the catalog named "Test Product With Specific Price" with a price of 15.0 and 100 items in stock
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
-      | amount        | 1                                 |
-      | price         | 12                                |
-    Then order "bo_order1" should have 3 products in total
-    And order "bo_order1" should contain 1 product "Test Product With Specific Price"
-    And cart of order "bo_order1" should contain 1 product "Test Product With Specific Price"
-    Then order "bo_order1" should have following details:
-      | total_products           | 35.800 |
-      | total_products_wt        | 37.950 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 42.8   |
-      | total_paid_tax_incl      | 45.370 |
-      | total_paid               | 45.370 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    Then product "Test Product With Specific Price" in order "bo_order1" has following details:
-      | product_quantity            | 1     |
-      | product_price               | 12.00 |
-      | original_product_price      | 15.00 |
-      | unit_price_tax_incl         | 12.72 |
-      | unit_price_tax_excl         | 12.00 |
-      | total_price_tax_incl        | 12.72 |
-      | total_price_tax_excl        | 12.00 |
-    When I remove product "Test Product With Specific Price" from order "bo_order1"
-    Then product "Test Product With Specific Price" in order "bo_order1" should have no specific price
-    And order "bo_order1" should have 2 products in total
-    And order "bo_order1" should contain 0 product "Test Product With Specific Price"
-    And cart of order "bo_order1" should contain 0 product "Test Product With Specific Price"
-    Then order "bo_order1" should have following details:
-      | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.650 |
-      | total_paid               | 32.650 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-
-  Scenario: Add product with specific price twice, the specific price is only removed when both products are removed
-    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
-    Then order "bo_order1" should have 2 products in total
-    Then order "bo_order1" should have 0 invoices
-    Then order "bo_order1" should have 0 cart rule
-    Then order "bo_order1" should have following details:
-      | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.650 |
-      | total_paid               | 32.650 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    Given there is a product in the catalog named "Test Product With Specific Price" with a price of 15.0 and 100 items in stock
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
-      | amount        | 3                                 |
-      | price         | 12                                |
-    Then order "bo_order1" should have 5 products in total
-    And order "bo_order1" should contain 3 products "Test Product With Specific Price"
-    And cart of order "bo_order1" should contain 3 products "Test Product With Specific Price"
-    And the available stock for product "Test Product With Specific Price" should be 97
-    Then product "Test Product With Specific Price" in order "bo_order1" has following details:
-      | product_quantity            | 3     |
-      | product_price               | 12.00 |
-      | original_product_price      | 15.00 |
-      | unit_price_tax_incl         | 12.72 |
-      | unit_price_tax_excl         | 12.00 |
-      | total_price_tax_incl        | 38.16 |
-      | total_price_tax_excl        | 36.00 |
-    Then order "bo_order1" should have following details:
-      | total_products           | 59.800 |
-      | total_products_wt        | 63.390 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 66.8   |
-      | total_paid_tax_incl      | 70.810 |
-      | total_paid               | 70.810 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    Given I update order "bo_order1" status to "Payment accepted"
-    And order "bo_order1" should have 1 invoice
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
-      | amount        | 2                                 |
-      | price         | 14                                |
-    Then the product "Test Product With Specific Price" in the first invoice from the order "bo_order1" should have the following details:
-      | product_quantity            | 3     |
-      | product_price               | 14.00 |
-      | original_product_price      | 15.00 |
-      | unit_price_tax_incl         | 14.84 |
-      | unit_price_tax_excl         | 14.00 |
-      | total_price_tax_incl        | 44.52 |
-      | total_price_tax_excl        | 42.00 |
-    And the product "Test Product With Specific Price" in the second invoice from the order "bo_order1" should have the following details:
-      | product_quantity            | 2     |
-      | product_price               | 14.00 |
-      | original_product_price      | 15.00 |
-      | unit_price_tax_incl         | 14.84 |
-      | unit_price_tax_excl         | 14.00 |
-      | total_price_tax_incl        | 29.68 |
-      | total_price_tax_excl        | 28.00 |
-    And order "bo_order1" should have 7 products in total
-    And order "bo_order1" should contain 5 products "Test Product With Specific Price"
-    And cart of order "bo_order1" should contain 5 products "Test Product With Specific Price"
-    And the available stock for product "Test Product With Specific Price" should be 95
-    Then order "bo_order1" should have following details:
-      | total_products           | 93.800 |
-      | total_products_wt        | 99.430 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 100.80 |
-      | total_paid_tax_incl      | 106.85 |
-      | total_paid               | 106.85 |
-      | total_paid_real          | 70.810 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    When I remove product "Test Product With Specific Price" from order "bo_order1"
-    Then the first invoice from order "bo_order1" should contain 0 product "Test Product With Specific Price"
-    And the product "Test Product With Specific Price" in the second invoice from the order "bo_order1" should have the following details:
-      | product_quantity            | 2     |
-      | product_price               | 14.00 |
-      | original_product_price      | 15.00 |
-      | unit_price_tax_incl         | 14.84 |
-      | unit_price_tax_excl         | 14.00 |
-      | total_price_tax_incl        | 29.68 |
-      | total_price_tax_excl        | 28.00 |
-    And order "bo_order1" should have 4 products in total
-    And order "bo_order1" should contain 2 products "Test Product With Specific Price"
-    And cart of order "bo_order1" should contain 2 products "Test Product With Specific Price"
-    And the available stock for product "Test Product With Specific Price" should be 98
-    Then order "bo_order1" should have following details:
-      | total_products           | 51.800 |
-      | total_products_wt        | 54.910 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 58.800 |
-      | total_paid_tax_incl      | 62.330 |
-      | total_paid               | 62.330 |
-      | total_paid_real          | 70.810 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    When I remove product "Test Product With Specific Price" from order "bo_order1"
-    Then product "Test Product With Specific Price" in order "bo_order1" should have no specific price
-    And the second invoice from order "bo_order1" should contain 0 product "Test Product With Specific Price"
-    And order "bo_order1" should have 2 products in total
-    And order "bo_order1" should contain 0 product "Test Product With Specific Price"
-    And cart of order "bo_order1" should contain 0 product "Test Product With Specific Price"
-    And the available stock for product "Test Product With Specific Price" should be 100
-    Then order "bo_order1" should have following details:
-      | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.650 |
-      | total_paid               | 32.650 |
-      | total_paid_real          | 70.810 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-
-  Scenario: Add product which has specific price rules for a discount, when we change its price in the order it doesn't affect the existing price rule
+  Scenario: In an order, adding a product without combination, which has specific price rules with quantity threshold, will apply the specific price (if the condition is met when the product is added AND no customized price has been used)
     Given order "bo_order1" should have 2 products in total
-    Then order "bo_order1" should have 0 invoices
-    Then order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 cart rule
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
@@ -471,85 +39,10 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
-    And product "Test Product With Percentage Discount" has a specific price named "discount20" with a discount of 25.0 percent
-    And product "Test Product With Percentage Discount" should have specific price "discount20" with following settings:
+    And product "Test Product With Percentage Discount" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
+    Then product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
       | price          | -1         |
-      | from_quantity  | 1          |
-      | reduction      | 0.25       |
-      | reduction_type | percentage |
-      | reduction_tax  | 1          |
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Percentage Discount |
-      | amount        | 1                                     |
-      | price         | 12                                    |
-    Then order "bo_order1" should have 3 products in total
-    And order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
-    And cart of order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
-    And the available stock for product "Test Product With Percentage Discount" should be 99
-    And product "Test Product With Percentage Discount" should have specific price "discount20" with following settings:
-      | price          | -1         |
-      | from_quantity  | 1          |
-      | reduction      | 0.25       |
-      | reduction_type | percentage |
-      | reduction_tax  | 1          |
-    # The edited price matches the price with discount applied so it's not a specific price for this order it follows the general rules
-    And product "Test Product With Percentage Discount" in order "bo_order1" should have no specific price
-    And order "bo_order1" should have following details:
-      | total_products           | 35.800 |
-      | total_products_wt        | 37.950 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 42.8   |
-      | total_paid_tax_incl      | 45.370 |
-      | total_paid               | 45.370 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    # When the product is removed assert we don't remove the global SpecificPrice either
-    When I remove product "Test Product With Percentage Discount" from order "bo_order1"
-    Then product "Test Product With Percentage Discount" in order "bo_order1" should have no specific price
-    And order "bo_order1" should have 2 products in total
-    And order "bo_order1" should contain 0 product "Test Product With Percentage Discount"
-    And cart of order "bo_order1" should contain 0 product "Test Product With Percentage Discount"
-    Then order "bo_order1" should have following details:
-      | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.650 |
-      | total_paid               | 32.650 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    # Check that global SpecificPrice has been removed along with the product
-    And product "Test Product With Percentage Discount" should have specific price "discount20" with following settings:
-      | price          | -1         |
-      | from_quantity  | 1          |
-      | reduction      | 0.25       |
-      | reduction_type | percentage |
-      | reduction_tax  | 1          |
-
-  Scenario: Add product which has specific price rules for a discount but keeps catalog price, then the order has its own specific price
-    Given order "bo_order1" should have 2 products in total
-    Then order "bo_order1" should have 0 invoices
-    Then order "bo_order1" should have 0 cart rule
-    Then order "bo_order1" should have following details:
-      | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.650 |
-      | total_paid               | 32.650 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
-    And product "Test Product With Percentage Discount" has a specific price named "discount20" with a discount of 25.0 percent
-    And product "Test Product With Percentage Discount" should have specific price "discount20" with following settings:
-      | price          | -1         |
-      | from_quantity  | 1          |
+      | from_quantity  | 5          |
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
@@ -561,13 +54,13 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 99
-    And product "Test Product With Percentage Discount" should have specific price "discount20" with following settings:
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
       | price          | -1         |
-      | from_quantity  | 1          |
+      | from_quantity  | 5          |
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
-    # The price set is the price without the discount so it is a specific price
+    # The price set is the price without the discount so it is not a customized price
     Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 16.00 |
@@ -587,9 +80,492 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    # When the product is removed assert we don't remove the global SpecificPrice either
+    Given I remove product "Test Product With Percentage Discount" from order "bo_order1"
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Percentage Discount |
+      | amount        | 6                                     |
+      | price         | 16                                    |
+    Then order "bo_order1" should have 8 products in total
+    And order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 94
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the price without the discount so it is not a customized price, therefore the specific price by quantity is applied
+    Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 6     |
+      | product_price               | 12.00 |
+      | original_product_price      | 16.00 |
+      | unit_price_tax_incl         | 12.72 |
+      | unit_price_tax_excl         | 12.00 |
+      | total_price_tax_incl        | 76.32 |
+      | total_price_tax_excl        | 72.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 95.800 |
+      | total_products_wt        | 101.55 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 102.80 |
+      | total_paid_tax_incl      | 108.97 |
+      | total_paid               | 108.97 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    # User customized price
+    Given I remove product "Test Product With Percentage Discount" from order "bo_order1"
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Percentage Discount |
+      | amount        | 10                                    |
+      | price         | 50                                    |
+    Then order "bo_order1" should have 12 products in total
+    And order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 90
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the not price without the discount so it is a customized price, therefore the specific price is not applied even if the quantity condition is met
+    Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 10     |
+      | product_price               | 50.00  |
+      | original_product_price      | 16.00  |
+      | unit_price_tax_incl         | 53.00  |
+      | unit_price_tax_excl         | 50.00  |
+      | total_price_tax_incl        | 530.00 |
+      | total_price_tax_excl        | 500.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 523.80   |
+      | total_products_wt        | 555.230  |
+      | total_discounts_tax_excl | 0.0000   |
+      | total_discounts_tax_incl | 0.0000   |
+      | total_paid_tax_excl      | 530.800  |
+      | total_paid_tax_incl      | 562.650  |
+      | total_paid               | 562.650  |
+      | total_paid_real          | 0.0      |
+      | total_shipping_tax_excl  | 7.0      |
+      | total_shipping_tax_incl  | 7.42     |
+
+  Scenario: In an order, updating a product without combination which has specific price rules with quantity threshold, won't apply the specific price
+    Given order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
+    And product "Test Product With Percentage Discount" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
+    Then product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Percentage Discount |
+      | amount        | 1                                     |
+      | price         | 16                                    |
+    Then order "bo_order1" should have 3 products in total
+    And order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 99
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the price without the discount so it is not a customized price
+    Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 1     |
+      | product_price               | 16.00 |
+      | original_product_price      | 16.00 |
+      | unit_price_tax_incl         | 16.96 |
+      | unit_price_tax_excl         | 16.00 |
+      | total_price_tax_incl        | 16.96 |
+      | total_price_tax_excl        | 16.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 39.800 |
+      | total_products_wt        | 42.190 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 46.8   |
+      | total_paid_tax_incl      | 49.610 |
+      | total_paid               | 49.610 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    # quantity higher to threshold
+    When I edit product "Test Product With Percentage Discount" to order "bo_order1" with following products details:
+      | amount        | 6                     |
+      | price         | 16                    |
+    Then order "bo_order1" should have 8 products in total
+    And order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 94
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the price without the discount so it is not a customized price, however we don't apply rules from specific prices during a product update
+    And product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 6      |
+      | product_price               | 16.00  |
+      | original_product_price      | 16.00  |
+      | unit_price_tax_incl         | 16.96  |
+      | unit_price_tax_excl         | 16.00  |
+      | total_price_tax_incl        | 101.76 |
+      | total_price_tax_excl        | 96.00  |
+    And order "bo_order1" should have following details:
+      | total_products           | 119.80   |
+      | total_products_wt        | 126.990  |
+      | total_discounts_tax_excl | 0.0000   |
+      | total_discounts_tax_incl | 0.0000   |
+      | total_paid_tax_excl      | 126.800  |
+      | total_paid_tax_incl      | 134.410  |
+      | total_paid               | 134.410  |
+      | total_paid_real          | 0.0     |
+      | total_shipping_tax_excl  | 7.0     |
+      | total_shipping_tax_incl  | 7.42    |
+    # User customized price
+    When I edit product "Test Product With Percentage Discount" to order "bo_order1" with following products details:
+      | amount        | 10                    |
+      | price         | 50                    |
+    Then order "bo_order1" should have 12 products in total
+    And order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 90
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is not the price without the discount so it is a customized price, so it makes two reasons not to apply the specific price related to quantity
+    Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 10     |
+      | product_price               | 50.00  |
+      | original_product_price      | 16.00  |
+      | unit_price_tax_incl         | 53.00  |
+      | unit_price_tax_excl         | 50.00  |
+      | total_price_tax_incl        | 530.00 |
+      | total_price_tax_excl        | 500.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 523.80   |
+      | total_products_wt        | 555.230  |
+      | total_discounts_tax_excl | 0.0000   |
+      | total_discounts_tax_incl | 0.0000   |
+      | total_paid_tax_excl      | 530.800  |
+      | total_paid_tax_incl      | 562.650  |
+      | total_paid               | 562.650  |
+      | total_paid_real          | 0.0      |
+      | total_shipping_tax_excl  | 7.0      |
+      | total_shipping_tax_incl  | 7.42     |
+
+  Scenario: In an order, adding any combination of a product with specific price, will apply the discount when quantity threshold is reached
+    # quantity discounts based on combinations
+    # Ignored for now - Given shop configuration for "PS_QTY_DISCOUNT_ON_COMBINATION" is set to 1
+    Given order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given there is a product in the catalog named "Test Product With Combination and Specific Price" with a price of 16.0 and 200 items in stock
+    And product "Test Product With Combination and Specific Price" has combinations with following details:
+      | reference    | quantity | attributes |
+      | combination1 | 100      | Size:L     |
+      | combination2 | 100      | Size:M     |
+    Then the available stock for combination "combination1" of product "Test Product With Combination and Specific Price" should be 100
+    And the available stock for combination "combination2" of product "Test Product With Combination and Specific Price" should be 100
+    And product "Test Product With Combination and Specific Price" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
+    Then product "Test Product With Combination and Specific Price" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # Adding the 2 combinations
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Combination and Specific Price    |
+      | combination   | combination1  |
+      | amount        | 4             |
+      | price         | 16            |
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Combination and Specific Price    |
+      | combination   | combination2  |
+      | amount        | 6             |
+      | price         | 16            |
+    Then order "bo_order1" should have 12 products in total
+    And order "bo_order1" should contain 10 products "Test Product With Combination and Specific Price"
+    And cart of order "bo_order1" should contain 0 products "Test Product With Combination and Specific Price"
+    And cart of order "bo_order1" should contain 4 combinations "combination1" of product "Test Product With Combination and Specific Price"
+    And cart of order "bo_order1" should contain 6 combinations "combination2" of product "Test Product With Combination and Specific Price"
+    And the available stock for product "Test Product With Combination and Specific Price" should be 190
+    And order "bo_order1" should contain 4 combination "combination1" of product "Test Product With Combination and Specific Price"
+    And order "bo_order1" should contain 6 combination "combination2" of product "Test Product With Combination and Specific Price"
+    Then combination "combination1" of product "Test Product With Combination and Specific Price" in order "bo_order1" has following details:
+      | product_quantity            | 4      |
+      | product_price               | 16.00  |
+      | original_product_price      | 16.00  |
+      | unit_price_tax_incl         | 16.96  |
+      | unit_price_tax_excl         | 16.00  |
+      | total_price_tax_incl        | 67.84  |
+      | total_price_tax_excl        | 64.00  |
+    Then combination "combination2" of product "Test Product With Combination and Specific Price" in order "bo_order1" has following details:
+      | product_quantity            | 6      |
+      | product_price               | 12.00  |
+      | original_product_price      | 16.00  |
+      | unit_price_tax_incl         | 12.72  |
+      | unit_price_tax_excl         | 12.00  |
+      | total_price_tax_incl        | 76.32  |
+      | total_price_tax_excl        | 72.00  |
+    And order "bo_order1" should have following details:
+      | total_products           | 159.80  |
+      | total_products_wt        | 169.390 |
+      | total_discounts_tax_excl | 0.0000  |
+      | total_discounts_tax_incl | 0.0000  |
+      | total_paid_tax_excl      | 166.80  |
+      | total_paid_tax_incl      | 176.810 |
+      | total_paid               | 176.810 |
+      | total_paid_real          | 0.0     |
+      | total_shipping_tax_excl  | 7.0     |
+      | total_shipping_tax_incl  | 7.42    |
+
+  Scenario: In an order, adding a product without combination, which has specific price rules with quantity threshold in another invoice, will keep the specific price of the first invoice
+    Given order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
+    And product "Test Product With Percentage Discount" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
+    Then product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Percentage Discount |
+      | amount        | 6                                     |
+      | price         | 16                                    |
+    Then order "bo_order1" should have 8 products in total
+    And order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 94
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the price without the discount so it is a specific price
+    Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 6     |
+      | product_price               | 12.00 |
+      | original_product_price      | 16.00 |
+      | unit_price_tax_incl         | 12.72 |
+      | unit_price_tax_excl         | 12.00 |
+      | total_price_tax_incl        | 76.32 |
+      | total_price_tax_excl        | 72.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 95.800 |
+      | total_products_wt        | 101.55 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 102.80 |
+      | total_paid_tax_incl      | 108.97 |
+      | total_paid               | 108.97 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I generate invoice for "bo_order1" order
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products              | 95.800   |
+      | total_products_wt           | 101.55   |
+      | total_discount_tax_excl     | 0.0      |
+      | total_discount_tax_incl     | 0.0      |
+      | total_paid_tax_excl         | 102.80   |
+      | total_paid_tax_incl         | 108.97   |
+      | total_shipping_tax_excl     | 7.0      |
+      | total_shipping_tax_incl     | 7.42     |
+    # Add the same product a second time with quantity threshold not reached
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Percentage Discount |
+      | amount        | 2                                     |
+      | price         | 16                                    |
+    Then order "bo_order1" should have 10 products in total
+    And order "bo_order1" should contain 8 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 8 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 92
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the price without the discount so it is a specific price
+    Then the first orderDetail for product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 6     |
+      | product_price               | 12.00 |
+      | original_product_price      | 16.00 |
+      | unit_price_tax_incl         | 12.72 |
+      | unit_price_tax_excl         | 12.00 |
+      | total_price_tax_incl        | 76.32 |
+      | total_price_tax_excl        | 72.00 |
+    Then the second orderDetail for product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 2     |
+      | product_price               | 12.00 |
+      | original_product_price      | 16.00 |
+      | unit_price_tax_incl         | 12.72 |
+      | unit_price_tax_excl         | 12.00 |
+      | total_price_tax_incl        | 25.44 |
+      | total_price_tax_excl        | 24.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 119.800 |
+      | total_products_wt        | 126.99 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 126.80 |
+      | total_paid_tax_incl      | 134.41 |
+      | total_paid               | 134.41 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products              | 95.800   |
+      | total_products_wt           | 101.55   |
+      | total_discount_tax_excl     | 0.0      |
+      | total_discount_tax_incl     | 0.0      |
+      | total_paid_tax_excl         | 102.80   |
+      | total_paid_tax_incl         | 108.97   |
+      | total_shipping_tax_excl     | 7.0      |
+      | total_shipping_tax_incl     | 7.42     |
+    And the second invoice from order "bo_order1" should have following details:
+      | total_products              | 24.000   |
+      | total_products_wt           | 25.44    |
+      | total_discount_tax_excl     | 0.0      |
+      | total_discount_tax_incl     | 0.0      |
+      | total_paid_tax_excl         | 24.000   |
+      | total_paid_tax_incl         | 25.440   |
+      | total_shipping_tax_excl     | 7.0      |
+      | total_shipping_tax_incl     | 7.42     |
+
+  Scenario: Add product which has specific price rules for a discount, when we change its price in the order it doesn't affect the existing price rule
+    Given order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should have 0 invoices
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
+    And product "Test Product With Percentage Discount" has a specific price named "discount25" with a discount of 25.0 percent
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 1          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Percentage Discount |
+      | amount        | 1                                     |
+      | price         | 12                                    |
+    Then order "bo_order1" should have 3 products in total
+    And order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 99
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 1          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The edited price matches the price with discount applied so it's not a custom price for this order it follows the general rules
+    And order "bo_order1" should have following details:
+      | total_products           | 35.800 |
+      | total_products_wt        | 37.950 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 42.8   |
+      | total_paid_tax_incl      | 45.370 |
+      | total_paid               | 45.370 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 1       |
+      | original_product_price      | 16.00   |
+      | product_price               | 12.00   |
+      | unit_price_tax_incl         | 12.72   |
+      | unit_price_tax_excl         | 12.00   |
+      | total_price_tax_incl        | 12.72   |
+      | total_price_tax_excl        | 12.00   |
+    # When the product is removed assert we don't remove the global CustomPrice either
     When I remove product "Test Product With Percentage Discount" from order "bo_order1"
-    Then product "Test Product With Percentage Discount" in order "bo_order1" should have no specific price
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should contain 0 product "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 0 product "Test Product With Percentage Discount"
@@ -604,42 +580,89 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    And product "Test Product With Percentage Discount" should have specific price "discount20" with following settings:
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 1          |
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
 
-  Scenario: I create a cart with a specific price, it should be present when order is created and stays present even if product price is modified
-    And I create an empty cart "customized_cart" for customer "testCustomer"
-    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "customized_cart"
-    And I add 2 products "Mug The best is yet to come" to the cart "customized_cart"
-    And I update product "Mug The best is yet to come" in the cart "customized_cart" to 15.00
-    Then product "Mug The best is yet to come" in cart "customized_cart" should have specific price 15.00
-    And I add order "bo_order1" with the following details:
-      | cart                | customized_cart            |
-      | message             | test                       |
-      | payment module name | dummy_payment              |
-      | status              | Awaiting bank wire payment |
-    # When Order is added all the specific prices associated to the cart are deleted
-    Then product "Mug The best is yet to come" in order "bo_order1" should have no specific price
-    And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 2     |
-      | product_price               | 15.00 |
-      | original_product_price      | 11.90 |
-      | unit_price_tax_incl         | 15.90 |
-      | unit_price_tax_excl         | 15.00 |
-      | total_price_tax_incl        | 31.80 |
-      | total_price_tax_excl        | 30.00 |
-    And order "bo_order1" should have following details:
-      | total_products           | 30.000 |
-      | total_products_wt        | 31.800 |
+  Scenario: Add product which has specific price rules for a discount but keeps catalog price, then the order has its own customized price
+    Given order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should have 0 invoices
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
       | total_discounts_tax_excl | 0.0    |
       | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 37.000 |
-      | total_paid_tax_incl      | 39.220 |
-      | total_paid               | 39.220 |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
+    Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
+    And product "Test Product With Percentage Discount" has a specific price named "discount25" with a discount of 25.0 percent
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 1          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Percentage Discount |
+      | amount        | 1                                     |
+      | price         | 16                                    |
+    Then order "bo_order1" should have 3 products in total
+    And order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 99
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 1          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the price without the discount so it is a customized price
+    Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 1     |
+      | product_price               | 16.00 |
+      | original_product_price      | 16.00 |
+      | unit_price_tax_incl         | 16.96 |
+      | unit_price_tax_excl         | 16.00 |
+      | total_price_tax_incl        | 16.96 |
+      | total_price_tax_excl        | 16.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 39.800 |
+      | total_products_wt        | 42.190 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 46.8   |
+      | total_paid_tax_incl      | 49.610 |
+      | total_paid               | 49.610 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    # When the product is removed assert we don't remove the global CustomPrice either
+    When I remove product "Test Product With Percentage Discount" from order "bo_order1"
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should contain 0 product "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 0 product "Test Product With Percentage Discount"
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 1          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |

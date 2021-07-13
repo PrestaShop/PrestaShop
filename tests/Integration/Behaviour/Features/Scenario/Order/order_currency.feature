@@ -134,7 +134,6 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | name          | Test Product With Discount and SpecificPrice |
       | amount        | 2                                     |
       | price         | 120                                   |
-    Then product "Test Product With Discount and SpecificPrice" in order "bo_order1" should have no specific price
 #    For product "Test Product With Discount and SpecificPrice"
 #    Due to the specific price 25% of €160, the customer have to pay 75% of the product price : €120
 #    We set 120 here to simulate what the user see by default in the BO

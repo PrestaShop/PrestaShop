@@ -83,7 +83,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.40   |
-    # Edit with values that are not strictly equals, then the specific price is recomputed with additional precision
+    # Edit with values that are not strictly equals, then the custom price is recomputed with additional precision
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount         | 2                       |
       | price          | 83.33                   |
