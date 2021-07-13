@@ -151,8 +151,6 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
     {
         $currency = new Currency($this->defaultCurrencyId);
         foreach ($products as $i => $product) {
-            $productObject = $this->productRepository->get(new ProductId((int) $product['id_product']));
-
             $products[$i]['price_tax_excluded'] = $this->locale->formatPrice(
                 $products[$i]['price_tax_excluded'],
                 $currency->iso_code
@@ -161,7 +159,7 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
             $products[$i]['price_tax_included'] = $this->locale->formatPrice(
                 (string) $this->taxComputer->computePriceWithTaxes(
                     new DecimalNumber($product['price_tax_excluded']),
-                    new TaxRulesGroupId((int) $productObject->getIdTaxRulesGroup()),
+                    new TaxRulesGroupId((int) $product['id_tax_rules_group']),
                     new CountryId($this->countryId)
                 ),
                 $currency->iso_code

@@ -108,6 +108,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('pl.`name`, pl.`link_rewrite`')
             ->addSelect('cl.`name` AS `category`')
             ->addSelect('img_shop.`id_image`')
+            ->addSelect('p.`id_tax_rules_group`')
         ;
 
         if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
