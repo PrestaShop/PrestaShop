@@ -75,7 +75,7 @@ jobs:
       - name: Cache Playwright browsers
         uses: actions/cache@v2
         with:
-          path: ~/.cache/ms-playwright
+          path: ~/.cache/ms-playwright/
           key: ${{ runner.os }}-browsers
 
       - name: Run tests
