@@ -12,6 +12,7 @@ const loginCommon = require('@commonTests/loginBO');
 
 // Import data
 const {Products} = require('@data/demo/products');
+const {Suppliers} = require('@data/demo/suppliers');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -67,7 +68,7 @@ describe('BO - Catalog - Stocks : Simple filter stocks', async () => {
     const tests = [
       {args: {testIdentifier: 'filterName', filterBy: 'name', filterValue: Products.demo_1.name}},
       {args: {testIdentifier: 'filterReference', filterBy: 'reference', filterValue: Products.demo_1.reference}},
-      {args: {testIdentifier: 'filterSupplier', filterBy: 'supplier', filterValue: 'N/A'}},
+      {args: {testIdentifier: 'filterSupplier', filterBy: 'supplier', filterValue: Suppliers.fashionSupplier.name}},
     ];
 
     tests.forEach((test) => {

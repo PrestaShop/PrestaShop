@@ -134,7 +134,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(Products.firstProductData.name);
+      await expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should check the discount', async function () {
@@ -211,7 +211,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(Products.firstProductData.name);
+      await expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should check the discount', async function () {
