@@ -309,7 +309,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
     });
 
     it('should go to \'Sitemap\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToSiteMapPage1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToSiteMapPage2', baseContext);
 
       await foHomePage.goToFooterLink(page, 'Sitemap');
 
