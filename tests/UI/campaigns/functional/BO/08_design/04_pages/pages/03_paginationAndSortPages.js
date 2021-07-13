@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -14,11 +18,7 @@ const dashboardPage = require('@pages/BO/dashboard/index');
 const pagesPage = require('@pages/BO/design/pages/index');
 const addPagePage = require('@pages/BO/design/pages/add');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
-const baseContext = 'functional_BO_design_pages_paginationAndSortPages';
-
+const baseContext = 'functional_BO_design_pages_pages_paginationAndSortPages';
 
 let browserContext;
 let page;
@@ -30,7 +30,7 @@ Paginate between pages
 Sort pages table by id, url, title, position
 Delete pages with bulk actions
  */
-describe('Pagination and sort pages', async () => {
+describe('BO - design - Pages : Pagination and sort Pages table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -70,10 +70,9 @@ describe('Pagination and sort pages', async () => {
   });
 
   // 1 : Create 11 pages
-  const tests = new Array(11).fill(0, 0, 11);
-
-  tests.forEach((test, index) => {
-    describe(`Create page n°${index + 1} in BO`, async () => {
+  describe('Create 11 pages in BO', async () => {
+    const tests = new Array(11).fill(0, 0, 11);
+    tests.forEach((test, index) => {
       const createPageData = new PageFaker({title: `todelete${index}`});
 
       it('should go to add new page page', async function () {
@@ -84,26 +83,26 @@ describe('Pagination and sort pages', async () => {
         await expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
       });
 
-      it('should create page', async function () {
+      it(`should create page n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createPage${index}`, baseContext);
 
         const textResult = await addPagePage.createEditPage(page, createPageData);
         await expect(textResult).to.equal(pagesPage.successfulCreationMessage);
       });
+    });
 
-      it('should check the pages number', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkPagesNumber${index}`, baseContext);
+    it('should check the pages number', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPagesNumber', baseContext);
 
-        const numberOfPagesAfterCreation = await pagesPage.getNumberOfElementInGrid(page, 'cms_page');
-        await expect(numberOfPagesAfterCreation).to.be.equal(numberOfPages + 1 + index);
-      });
+      const numberOfPagesAfterCreation = await pagesPage.getNumberOfElementInGrid(page, 'cms_page');
+      await expect(numberOfPagesAfterCreation).to.be.equal(numberOfPages + 11);
     });
   });
 
   // 2 : Test pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 10 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+    it('should change the items number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
       const paginationNumber = await pagesPage.selectPagesPaginationLimit(page, '10');
       expect(paginationNumber).to.contain('(page 1 / 2)');
@@ -123,8 +122,8 @@ describe('Pagination and sort pages', async () => {
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
-    it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+    it('should change the items number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await pagesPage.selectPagesPaginationLimit(page, '50');
       expect(paginationNumber).to.contain('(page 1 / 1)');
@@ -132,7 +131,7 @@ describe('Pagination and sort pages', async () => {
   });
 
   // 3 : Sort pages table
-  describe('Sort pages', async () => {
+  describe('Sort pages table', async () => {
     const sortTests = [
       {
         args:
@@ -167,7 +166,7 @@ describe('Pagination and sort pages', async () => {
     ];
 
     sortTests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await pagesPage.getAllRowsColumnContentTableCmsPage(page, test.args.sortBy);
@@ -202,7 +201,7 @@ describe('Pagination and sort pages', async () => {
       await expect(textResult).to.contains('todelete');
     });
 
-    it('should delete pages with Bulk Actions and check Result', async function () {
+    it('should delete pages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
       const deleteTextResult = await pagesPage.deleteWithBulkActions(page, 'cms_page');

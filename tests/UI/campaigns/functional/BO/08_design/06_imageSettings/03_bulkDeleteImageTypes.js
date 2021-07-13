@@ -1,7 +1,11 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+// Import expect from chai
+const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -14,19 +18,11 @@ const addImageTypePage = require('@pages/BO/design/imageSettings/add');
 // Import data
 const ImageTypeFaker = require('@data/faker/imageType');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_design_imageSettings_bulkDeleteImageTypes';
-
-// Import expect from chai
-const {expect} = require('chai');
-
 
 // Browser and tab
 let browserContext;
 let page;
-
 
 let numberOfImageTypes = 0;
 
@@ -35,7 +31,11 @@ const ImageTypesToCreate = [
   new ImageTypeFaker({name: 'todelete2'}),
 ];
 
-describe('Create image types then delete them with Bulk actions', async () => {
+/*
+Create 2 image types
+Delete image types by bulk actions
+ */
+describe('BO - Design - Image Settings : Bulk delete image types', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -50,7 +50,7 @@ describe('Create image types then delete them with Bulk actions', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to image settings page', async function () {
+  it('should go to \'Catalog > Image Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToImageSettingsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -82,8 +82,8 @@ describe('Create image types then delete them with Bulk actions', async () => {
         await expect(pageTitle).to.contains(addImageTypePage.pageTitleCreate);
       });
 
-      it('should create image type and check result', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `CreateImageType${index + 1}`, baseContext);
+      it(`should create image type n° ${index + 1} and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createImageType${index + 1}`, baseContext);
 
         const textResult = await addImageTypePage.createEditImageType(page, ImageTypeToCreate);
         await expect(textResult).to.contains(imageSettingsPage.successfulCreationMessage);
@@ -98,23 +98,13 @@ describe('Create image types then delete them with Bulk actions', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await imageSettingsPage.filterTable(
-        page,
-        'input',
-        'name',
-        'todelete',
-      );
+      await imageSettingsPage.filterTable(page, 'input', 'name', 'todelete');
 
       const numberOfImageTypesAfterFilter = await imageSettingsPage.getNumberOfElementInGrid(page);
       await expect(numberOfImageTypesAfterFilter).to.be.at.most(numberOfImageTypes);
 
       for (let i = 1; i <= numberOfImageTypesAfterFilter; i++) {
-        const textColumn = await imageSettingsPage.getTextColumn(
-          page,
-          i,
-          'name',
-        );
-
+        const textColumn = await imageSettingsPage.getTextColumn(page, i, 'name');
         await expect(textColumn).to.contains('todelete');
       }
     });

@@ -1,26 +1,25 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
 
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard/index');
 const pagesPage = require('@pages/BO/design/pages/index');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_design_pages_helperCard';
-
 
 let browserContext;
 let page;
 
-describe('Helper card', async () => {
+describe('BO - Design - Pages : Help card on pages page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
