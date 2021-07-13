@@ -242,6 +242,11 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     public function processInstallAddonsModules()
     {
         $this->initializeContext();
+        if (@getenv('SKIP_API_PUSH')) {
+            $this->ajaxJsonAnswer(true);
+
+            return;
+        }
         if (($module = Tools::getValue('module')) && $id_module = Tools::getValue('id_module')) {
             $result = $this->model_install->installModulesAddons(array('name' => $module, 'id_module' => $id_module));
         } else {
