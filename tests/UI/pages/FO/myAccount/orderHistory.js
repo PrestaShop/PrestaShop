@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Order history page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class OrderHistory extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on order history page
+   */
   constructor() {
     super();
 
@@ -38,7 +47,6 @@ class OrderHistory extends FOBasePage {
   isReorderLinkVisible(page, idOrder = 1) {
     return this.elementVisible(page, this.reorderLink(idOrder), 1000);
   }
-
 
   /**
    *

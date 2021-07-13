@@ -1,14 +1,22 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Add address page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class AddAddress extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add address page
+   */
   constructor() {
     super();
 
     this.pageTitle = 'Address';
     this.creationFormTitle = 'New address';
     this.updateFormTitle = 'Update your address';
-
 
     // Selectors
     this.pageHeaderTitle = '#main .page-header h1';

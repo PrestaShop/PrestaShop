@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Order confirmation page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class OrderConfirmation extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on order confirmation page
+   */
   constructor() {
     super();
 

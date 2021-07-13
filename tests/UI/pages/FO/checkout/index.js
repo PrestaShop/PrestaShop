@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Checkout page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class Checkout extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on checkout page
+   */
   constructor() {
     super();
 
@@ -16,6 +25,7 @@ class Checkout extends FOBasePage {
     this.termsOfServiceModalDiv = '#modal div.js-modal-content';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
     this.shippingValueSpan = '#cart-subtotal-shipping span.value';
+
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
     this.createAccountOptionalNotice = `${this.personalInformationStepForm} `
@@ -33,11 +43,13 @@ class Checkout extends FOBasePage {
     this.checkoutGuestNewsletterCheckbox = `${this.checkoutGuestForm} input[name='newsletter']`;
     this.checkoutGuestGdprCheckbox = `${this.checkoutGuestForm} input[name='psgdpr']`;
     this.checkoutGuestContinueButton = `${this.checkoutGuestForm} button[name='continue']`;
+
     // Checkout login form
     this.checkoutLoginForm = `${this.personalInformationStepForm} #checkout-login-form`;
     this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
     this.passwordInput = `${this.checkoutLoginForm} input[name='password']`;
     this.personalInformationContinueButton = `${this.checkoutLoginForm} #login-form footer button`;
+
     // Checkout address form
     this.addressStepSection = '#checkout-addresses-step';
     this.addressStepCompanyInput = `${this.addressStepSection} input[name='company']`;
@@ -47,6 +59,7 @@ class Checkout extends FOBasePage {
     this.addressStepPhoneInput = `${this.addressStepSection} input[name='phone']`;
     this.addressStepUseSameAddressCheckbox = '#use_same_address';
     this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
+
     // Shipping method step
     this.deliveryStepSection = '#checkout-delivery-step';
     this.deliveryOptionsRadios = 'input[id*=\'delivery_option_\']';
@@ -56,6 +69,7 @@ class Checkout extends FOBasePage {
     this.deliveryOptionAllPricesSpan = '#js-delivery .delivery-option span.carrier-price';
     this.deliveryMessage = '#delivery_message';
     this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
+
     // Gift selectors
     this.giftCheckbox = '#input_gift';
     this.recycableGiftCheckbox = '#input_recyclable';

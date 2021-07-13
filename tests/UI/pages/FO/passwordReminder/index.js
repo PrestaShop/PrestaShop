@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Password reminder page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class PasswordReminder extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on password reminder page
+   */
   constructor() {
     super();
 

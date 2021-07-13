@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
-class CreditSlips extends FOBasePage {
+/**
+ * Credit slip page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
+class CreditSlip extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on credit slip page
+   */
   constructor() {
     super();
 
@@ -9,4 +18,4 @@ class CreditSlips extends FOBasePage {
   }
 }
 
-module.exports = new CreditSlips();
+module.exports = new CreditSlip();

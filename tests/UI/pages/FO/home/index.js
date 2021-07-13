@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Home page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class Home extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on home page
+   */
   constructor() {
     super();
 
@@ -334,8 +343,7 @@ class Home extends FOBasePage {
    * Subscribe to the newsletter from the FO homepage
    * @param page {Page} Browser tab
    * @param email {string} Email to set on input
-   *
-   * @returns {Promise<string|TextContent|*>}
+   * @returns {Promise<string>}
    */
   async subscribeToNewsletter(page, email) {
     await this.setValue(page, this.newsletterFormField, email);

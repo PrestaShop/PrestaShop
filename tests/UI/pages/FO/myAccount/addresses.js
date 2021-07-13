@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Addresses page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class Addresses extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on addresses page
+   */
   constructor() {
     super();
 

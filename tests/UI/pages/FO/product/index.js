@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Product page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class Product extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on product page
+   */
   constructor() {
     super();
 
@@ -30,6 +39,7 @@ class Product extends FOBasePage {
     this.facebookSocialSharing = '.social-sharing .facebook a';
     this.twitterSocialSharing = '.social-sharing .twitter a';
     this.pinterestSocialSharing = '.social-sharing .pinterest a';
+
     // Product prices block
     this.productPricesBlock = 'div.product-prices';
     this.discountAmountSpan = `${this.productPricesBlock} .discount.discount-amount`;
@@ -38,6 +48,7 @@ class Product extends FOBasePage {
     this.productPrice = `${this.productPricesBlock} .current-price span`;
     this.taxShippingDeliveryBlock = `${this.productPricesBlock} div.tax-shipping-delivery-label`;
     this.deliveryInformationSpan = `${this.taxShippingDeliveryBlock} span.delivery-information`;
+
     // Volume discounts table
     this.discountTable = '.table-product-discounts';
     this.quantityDiscountValue = `${this.discountTable} td:nth-child(1)`;
