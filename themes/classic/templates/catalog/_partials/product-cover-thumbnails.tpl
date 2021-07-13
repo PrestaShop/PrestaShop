@@ -36,18 +36,16 @@
             alt="{$product.name}"
           {/if}
           loading="lazy"
-          width="452"
-          height="452"
+          width="100%"
         >
         <div class="layer hidden-sm-down" data-toggle="modal" data-target="#product-modal">
           <i class="material-icons zoom-in">search</i>
         </div>
       {else}
-        <img 
+        <img
           src="{$urls.no_picture_image.bySize.large_default.url}"
           loading="lazy"
-          width="452"
-          height="452"
+          width="100%"
         >
       {/if}
     </div>
