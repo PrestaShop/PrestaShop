@@ -121,17 +121,6 @@ class CustomerFormCore extends AbstractForm
 
     public function validate()
     {
-        $emailField = $this->getField('email');
-        $id_customer = Customer::customerExists($emailField->getValue(), true, true);
-        $customer = $this->getCustomer();
-        if ($id_customer && $id_customer != $customer->id) {
-            $emailField->addError($this->translator->trans(
-                'The email is already used, please choose another one or sign in',
-                [],
-                'Shop.Notifications.Error'
-            ));
-        }
-
         // check birthdayField against null case is mandatory.
         $birthdayField = $this->getField('birthday');
         if (!empty($birthdayField) &&
@@ -215,13 +204,13 @@ class CustomerFormCore extends AbstractForm
     public function submit()
     {
         if ($this->validate()) {
-            $clearTextPassword = $this->getValue('password');
+            $password = $this->getValue('password');
             $newPassword = $this->getValue('new_password');
 
             try {
                 $ok = $this->customerPersister->save(
                     $this->getCustomer(),
-                    $clearTextPassword,
+                    $password,
                     $newPassword,
                     $this->passwordRequired
                 );

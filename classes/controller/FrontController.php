@@ -1894,9 +1894,8 @@ class FrontControllerCore extends Controller
         return $formatter;
     }
 
-    protected function makeCustomerForm()
+    protected function makeCustomerForm($guestAllowed = false, $ignorePasswordsIfCustomerExists = false)
     {
-        $guestAllowedCheckout = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
         $form = new CustomerForm(
             $this->context->smarty,
             $this->context,
@@ -1906,13 +1905,13 @@ class FrontControllerCore extends Controller
                 $this->context,
                 $this->get('hashing'),
                 $this->getTranslator(),
-                $guestAllowedCheckout
+                $guestAllowed,
+                $ignorePasswordsIfCustomerExists
             ),
             $this->getTemplateVarUrls()
         );
 
-        $form->setGuestAllowed($guestAllowedCheckout);
-
+        $form->setGuestAllowed($guestAllowed);
         $form->setAction($this->getCurrentURL());
 
         return $form;

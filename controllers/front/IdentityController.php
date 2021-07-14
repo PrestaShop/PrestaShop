@@ -41,7 +41,7 @@ class IdentityControllerCore extends FrontController
     {
         $should_redirect = false;
 
-        $customer_form = $this->makeCustomerForm()->setPasswordRequired($this->passwordRequired);
+        $customer_form = $this->makeCustomerForm(false, false)->setPasswordRequired($this->passwordRequired);
         $customer = new Customer();
 
         $customer_form->getFormatter()

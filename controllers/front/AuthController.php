@@ -45,8 +45,7 @@ class AuthControllerCore extends FrontController
 
         if (Tools::isSubmit('submitCreate') || Tools::isSubmit('create_account')) {
             $register_form = $this
-                ->makeCustomerForm()
-                ->setGuestAllowed(false)
+                ->makeCustomerForm(false, false)
                 ->fillWith(Tools::getAllValues());
 
             if (Tools::isSubmit('submitCreate')) {

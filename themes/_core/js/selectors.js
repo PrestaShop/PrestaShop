@@ -90,6 +90,8 @@ prestashop.selectors = {
     notValidAddresses: '#not-valid-addresses, .js-not-valid-addresses',
     invoiceAddresses: '#invoice-addresses, .js-address-selector',
     addressForm: '.js-address-form',
+    checkoutNewCustomerRelatedBlock: '.js-checkout-only-new-customer',
+    checkoutCustomerForm: '.js-checkout-customer-form',
   },
   cart: {
     detailedTotals: '.cart-detailed-totals, .js-cart-detailed-totals',

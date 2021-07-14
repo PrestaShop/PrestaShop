@@ -24,12 +24,14 @@
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
+import setUpCustomerForm from './checkout-customer-form.js';
 import setUpAddress from './checkout-address';
 import setUpDelivery from './checkout-delivery';
 import setUpPayment from './checkout-payment';
 import Steps from './checkout-steps';
 
 function setUpCheckout() {
+  setUpCustomerForm();
   setUpAddress();
   setUpDelivery();
   setUpPayment();
