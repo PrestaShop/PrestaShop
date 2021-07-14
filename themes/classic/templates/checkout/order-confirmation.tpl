@@ -93,7 +93,7 @@
   {/block}
 
   {block name='customer_registration_form'}
-    {if $customer.is_guest}
+    {if $customer.is_guest && !$registered_customer_exists}
       <div id="registration-form" class="card">
         <div class="card-block">
           <h4 class="h4">{l s='Save time on your next order, sign up now' d='Shop.Theme.Checkout'}</h4>
