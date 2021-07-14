@@ -285,7 +285,8 @@ class CustomerCore extends ObjectModel
      */
     public function addWs($autodate = true, $null_values = false)
     {
-        if (Customer::customerExists($this->email)) {
+        // Check if registered customer exists with the email we are trying to add
+        if (!$this->isGuest() && Customer::customerExists($this->email)) {
             WebserviceRequest::getInstance()->setError(
                 500,
                 $this->trans(
@@ -354,9 +355,10 @@ class CustomerCore extends ObjectModel
      */
     public function updateWs($nullValues = false)
     {
-        if (Customer::customerExists($this->email)
-            && Customer::customerExists($this->email, true) !== (int) $this->id
-        ) {
+        // Check if registered customer exists with the email we are trying to add.
+        // Also check if the customer found is a different customer than our object.
+        $customerExists = (int) Customer::customerExists($this->email, true);
+        if (!$this->isGuest() && $customerExists > 0 && $customerExists !== (int) $this->id) {
             WebserviceRequest::getInstance()->setError(
                 500,
                 $this->trans(

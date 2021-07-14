@@ -83,6 +83,8 @@ final class TransformGuestToCustomerHandler implements TransformGuestToCustomerH
     }
 
     /**
+     * Checks if a customer with the same email already exists in database.
+     *
      * @param Customer $customer
      *
      * @throws CustomerTransformationException

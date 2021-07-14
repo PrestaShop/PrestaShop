@@ -135,17 +135,16 @@ class CustomerPersisterCore
             $customer->id_default_group = (int) Configuration::get('PS_CUSTOMER_GROUP');
         }
 
-        if ($customer->is_guest || $guestToCustomerConversion) {
-            // guest cannot update their email to that of an existing real customer
-            if (Customer::customerExists($customer->email, false, true)) {
-                $this->errors['email'][] = $this->translator->trans(
-                    'An account was already registered with this email address',
-                    [],
-                    'Shop.Notifications.Error'
-                );
+        // If we are converting to a registered customer, we must check if a customer
+        // with this email doesn't already exist.
+        if ($guestToCustomerConversion && Customer::customerExists($customer->email)) {
+            $this->errors['email'][] = $this->translator->trans(
+                'The email is already used, please choose another one or sign in',
+                [],
+                'Shop.Notifications.Error'
+            );
 
-                return false;
-            }
+            return false;
         }
 
         if ($customer->email != $this->context->customer->email) {
@@ -205,15 +204,13 @@ class CustomerPersisterCore
         }
 
         /*
-         * Check that there is not a customer registered with this email,
-         * we can't have two registered customers with the same email.
-         *
-         * Currently, it also checks for guests, because we don't allow guest checkout
-         * if there is a registered customer already, will be changed.
+         * If a password was entered in the forn, check that there is not
+         * a customer registered with this email, we can't have two
+         * registered customers with the same email.
          */
-        if (Customer::customerExists($customer->email, false, true)) {
+        if (!$customer->isGuest() && Customer::customerExists($customer->email)) {
             $this->errors['email'][] = $this->translator->trans(
-                'An account was already registered with this email address',
+                'The email is already used, please choose another one or sign in',
                 [],
                 'Shop.Notifications.Error'
             );
