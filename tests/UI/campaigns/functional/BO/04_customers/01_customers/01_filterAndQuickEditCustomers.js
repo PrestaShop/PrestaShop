@@ -219,7 +219,7 @@ describe('BO - Customers : Filter and quick edit customers', async () => {
       const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
 
       for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-        const textColumn = await customersPage.getTextColumn(page, 'date_add', i);
+        const textColumn = await customersPage.getTextColumnFromTableCustomers(page, i, 'date_add');
         await expect(textColumn).to.contains(dateToday);
       }
     });
