@@ -1,8 +1,12 @@
 require('module-alias/register');
 
+// Import expect from chai
+const {expect} = require('chai');
+
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -15,13 +19,7 @@ const addCarrierPage = require('@pages/BO/shipping/carriers/add');
 // Import data
 const CarrierFaker = require('@data/faker/carrier');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shipping_carriers_quickEditAndBulkActions';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -34,7 +32,7 @@ Create 2 new carriers
 Quick edit (Enable/Disable)
 Bulk actions (Enable/Disable/Delete)
  */
-describe('Quick edit and bulk actions carriers', async () => {
+describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -49,7 +47,7 @@ describe('Quick edit and bulk actions carriers', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shipping/Carriers\' page', async function () {
+  it('should go to \'Shipping> Carriers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -70,10 +68,10 @@ describe('Quick edit and bulk actions carriers', async () => {
   });
 
   // 1 - Create 2 carriers
-  const creationTests = new Array(2).fill(0, 0, 2);
+  describe('Create 2 carriers in BO', async () => {
+    const creationTests = new Array(2).fill(0, 0, 2);
+    creationTests.forEach((test, index) => {
 
-  creationTests.forEach((test, index) => {
-    describe(`Create carrier n°${index + 1} in BO`, async () => {
       before(() => files.generateImage(`todelete${index}.jpg`));
 
       const carrierData = new CarrierFaker({name: `todelete${index}`});
@@ -86,7 +84,7 @@ describe('Quick edit and bulk actions carriers', async () => {
         await expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
       });
 
-      it('should create carrier and check result', async function () {
+      it(`should create carrier n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCarrier${index}`, baseContext);
 
         const textResult = await addCarrierPage.createEditCarrier(page, carrierData);
@@ -125,12 +123,10 @@ describe('Quick edit and bulk actions carriers', async () => {
       }
     });
 
-    const tests = [
+    [
       {args: {action: 'disable', enabledValue: false}},
       {args: {action: 'enable', enabledValue: true}},
-    ];
-
-    tests.forEach((test) => {
+    ].forEach((test) => {
       it(`should ${test.args.action} first carrier`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Carrier`, baseContext);
 
@@ -179,12 +175,10 @@ describe('Quick edit and bulk actions carriers', async () => {
       }
     });
 
-    const tests = [
+    [
       {args: {action: 'Disable', enabledValue: false}},
       {args: {action: 'Enable', enabledValue: true}},
-    ];
-
-    tests.forEach((test) => {
+    ].forEach((test) => {
       it(`should ${test.args.action} carriers with Bulk Actions and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}ByBulkActions`, baseContext);
 
