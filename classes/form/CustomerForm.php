@@ -121,13 +121,6 @@ class CustomerFormCore extends AbstractForm
         $customer = $this->getCustomer();
         
         // We don't need the check here
-        /* if ($id_customer && $id_customer != $customer->id) {
-            $emailField->addError($this->translator->trans(
-                'The email is already used, please choose another one or sign in',
-                [],
-                'Shop.Notifications.Error'
-            ));
-        }*/
 
         // check birthdayField against null case is mandatory.
         $birthdayField = $this->getField('birthday');
