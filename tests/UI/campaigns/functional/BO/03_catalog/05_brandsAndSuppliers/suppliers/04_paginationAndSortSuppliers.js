@@ -87,7 +87,7 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
         await expect(pageTitle).to.contains(addSupplierPage.pageTitle);
       });
 
-      it(`should create supplier  n°${index + 1} and check result`, async function () {
+      it(`should create supplier n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createSupplier${index}`, baseContext);
 
         const result = await addSupplierPage.createEditSupplier(page, createSupplierData);

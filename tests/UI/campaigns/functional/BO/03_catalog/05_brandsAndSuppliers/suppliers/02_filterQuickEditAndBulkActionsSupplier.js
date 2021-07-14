@@ -100,7 +100,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter, quick edit and bulk action
         await expect(pageTitle).to.contains(addSupplierPage.pageTitle);
       });
 
-      it('should create supplier', async function () {
+      it(`should create supplier n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createSupplier${index + 1}`, baseContext);
 
         const result = await addSupplierPage.createEditSupplier(page, test.args.supplierToCreate);
@@ -117,7 +117,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter, quick edit and bulk action
   });
 
   // 2: Filter Suppliers
-  describe('Filter suppliers', async () => {
+  describe('Filter suppliers table', async () => {
     const tests = [
       {
         args:
