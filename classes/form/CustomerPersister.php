@@ -118,7 +118,7 @@ class CustomerPersisterCore
             );
         }
 
-        // We need to check only if we are converting to customer
+        // If we are converting a customer, we need to check if this email doesn't already exist
         if ($guest_to_customer) {
             // guest cannot update their email to that of an existing real customer
             if (Customer::customerExists($customer->email, false, true)) {
@@ -183,7 +183,7 @@ class CustomerPersisterCore
             _COOKIE_KEY_
         );
 
-        // We need to check only if we are registering a new customer, not guests
+        // If we are registering a new customer, we need to check if this email doesn't already exist
         if (!$customer->is_guest && Customer::customerExists($customer->email, false, true)) {
             $this->errors['email'][] = $this->translator->trans(
                 'An account was already registered with this email address',
