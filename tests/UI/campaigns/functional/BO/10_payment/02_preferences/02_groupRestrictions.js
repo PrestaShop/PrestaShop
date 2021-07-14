@@ -1,26 +1,33 @@
 require('module-alias/register');
+
+// Import expect from chai
+const {expect} = require('chai');
+
+// Import utils
+const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_payment_preferences_groupRestrictions';
-
-const {expect} = require('chai');
-const helper = require('@utils/helpers');
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Importing pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const customersPage = require('@pages/BO/customers');
 const addCustomerPage = require('@pages/BO/customers/add');
 const preferencesPage = require('@pages/BO/payment/preferences');
+
+// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 
-// Importing data
+// Import data
 const {DefaultCustomer} = require('@data/demo/customer');
 const AddressData = require('@data/faker/address');
 const CustomerFaker = require('@data/faker/customer');
+
+const baseContext = 'functional_BO_payment_preferences_groupRestrictions';
 
 let browserContext;
 let page;
@@ -32,7 +39,7 @@ const address = new AddressData({city: 'Paris', country: 'France'});
 const visitorData = new CustomerFaker({defaultCustomerGroup: 'Visitor'});
 const guestData = new CustomerFaker({defaultCustomerGroup: 'Guest'});
 
-describe('Configure group restrictions', async () => {
+describe('BO - Payment - Preferences : Configure group restrictions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -42,6 +49,7 @@ describe('Configure group restrictions', async () => {
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
+
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);
   });
@@ -69,14 +77,10 @@ describe('Configure group restrictions', async () => {
       await expect(numberOfCustomers).to.be.above(0);
     });
 
-
-    const customers = [
+    [
       {args: {customerData: visitorData}},
       {args: {customerData: guestData}},
-    ];
-
-
-    customers.forEach((test, index) => {
+    ].forEach((test, index) => {
       it('should go to add new customer page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCustomerPage${index}`, baseContext);
 
@@ -85,7 +89,7 @@ describe('Configure group restrictions', async () => {
         await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
       });
 
-      it('should create customer and check result', async function () {
+      it(`should create customer n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCustomer${index}`, baseContext);
 
         // Create customer
@@ -113,15 +117,11 @@ describe('Configure group restrictions', async () => {
       await expect(pageTitle).to.contains(preferencesPage.pageTitle);
     });
 
-
-    const groups = [
+    [
       {args: {groupName: 'Visitor', id: 0, customer: visitorData}},
       {args: {groupName: 'Guest', id: 1, customer: guestData}},
       {args: {groupName: 'Customer', id: 2, customer: DefaultCustomer}},
-    ];
-
-
-    groups.forEach((group, groupIndex) => {
+    ].forEach((group, groupIndex) => {
       describe(`Configure '${group.args.groupName}' group restrictions then check in FO`, async () => {
         const tests = [
           {
@@ -185,13 +185,8 @@ describe('Configure group restrictions', async () => {
             await expect(result).to.contains(preferencesPage.successfulUpdateMessage);
           });
 
-          it('should go to FO and add the first product to the cart', async function () {
-            await testContext.addContextItem(
-              this,
-              'testIdentifier',
-              `addFirstProductToCart${index}${groupIndex}`,
-              baseContext,
-            );
+          it('should view my shop', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}${groupIndex}`, baseContext);
 
             // Click on view my shop
             page = await preferencesPage.viewMyShop(page);
@@ -203,6 +198,18 @@ describe('Configure group restrictions', async () => {
 
             // Change FO language
             await homePage.changeLanguage(page, 'en');
+
+            const pageTitle = await homePage.getPageTitle(page);
+            await expect(pageTitle).to.contains(homePage.pageTitle);
+          });
+
+          it('should add the first product to the cart and proceed to checkout', async function () {
+            await testContext.addContextItem(
+              this,
+              'testIdentifier',
+              `addFirstProductToCart${index}${groupIndex}`,
+              baseContext,
+            );
 
             // Go to the first product page
             await homePage.goToProductPage(page, 1);
@@ -264,7 +271,6 @@ describe('Configure group restrictions', async () => {
           }
 
           // Delivery step - Go to payment step and check payment module
-
           it('should continue to payment step and check the existence of payment method', async function () {
             await testContext.addContextItem(
               this,
@@ -301,7 +307,7 @@ describe('Configure group restrictions', async () => {
   });
 
   describe('Delete the two created customers', async () => {
-    it('should go to customers page', async function () {
+    it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToDelete', baseContext);
 
       await preferencesPage.goToSubMenu(
@@ -314,13 +320,10 @@ describe('Configure group restrictions', async () => {
       await expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
-
-    const customers = [
+    [
       {args: {customerData: visitorData}},
       {args: {customerData: guestData}},
-    ];
-
-    customers.forEach((test, index) => {
+    ].forEach((test, index) => {
       it('should filter list by email', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
 
@@ -338,7 +341,7 @@ describe('Configure group restrictions', async () => {
         await expect(textEmail).to.contains(test.args.customerData.email);
       });
 
-      it('should delete customer', async function () {
+      it(`should delete customer n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteCustomer${index}`, baseContext);
 
         const textResult = await customersPage.deleteCustomer(page, 1);
