@@ -27,7 +27,7 @@
     {include file='_partials/form-errors.tpl' errors=$errors['']}
   {/block}
 
-<form action="{block name='customer_form_actionurl'}{$action}{/block}" id="customer-form" class="js-customer-form" method="post">
+<form action="{block name='customer_form_actionurl'}{$action}{/block}" id="customer-form" class="{block name='customer_form_class'}js-customer-form{/block}" method="post">
   <div>
     {block "form_fields"}
       {foreach from=$formFields item="field"}

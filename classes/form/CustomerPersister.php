@@ -51,19 +51,19 @@ class CustomerPersisterCore
         return $this->errors;
     }
 
-    public function save(Customer $customer, $clearTextPassword, $newPassword = '', $passwordRequired = true)
+    public function save(Customer $customer, $plainTextPassword, $newPassword = '', $passwordRequired = true)
     {
         if ($customer->id) {
-            return $this->update($customer, $clearTextPassword, $newPassword, $passwordRequired);
+            return $this->update($customer, $plainTextPassword, $newPassword, $passwordRequired);
         }
 
-        return $this->create($customer, $clearTextPassword);
+        return $this->create($customer, $plainTextPassword);
     }
 
-    private function update(Customer $customer, $clearTextPassword, $newPassword, $passwordRequired = true)
+    private function update(Customer $customer, $plainTextPassword, $newPassword, $passwordRequired = true)
     {
         if (!$customer->is_guest && $passwordRequired && !$this->crypto->checkHash(
-            $clearTextPassword,
+            $plainTextPassword,
             $customer->passwd,
             _COOKIE_KEY_
         )) {
@@ -80,7 +80,7 @@ class CustomerPersisterCore
 
         if (!$customer->is_guest) {
             $customer->passwd = $this->crypto->hash(
-                $newPassword ? $newPassword : $clearTextPassword,
+                $newPassword ? $newPassword : $plainTextPassword,
                 _COOKIE_KEY_
             );
         }
@@ -109,17 +109,18 @@ class CustomerPersisterCore
 
         $guest_to_customer = false;
 
-        if ($clearTextPassword && $customer->is_guest) {
+        if ($plainTextPassword && $customer->is_guest) {
             $guest_to_customer = true;
             $customer->is_guest = false;
             $customer->passwd = $this->crypto->hash(
-                $clearTextPassword,
+                $plainTextPassword,
                 _COOKIE_KEY_
             );
         }
 
-        if ($customer->is_guest || $guest_to_customer) {
-            // guest cannot update their email to that of an existing real customer
+        // If we are converting a customer, we need to check if this email doesn't already exist
+        // Guest cannot update their email to that of an existing real customer
+        if ($guest_to_customer) {
             if (Customer::customerExists($customer->email, false, true)) {
                 $this->errors['email'][] = $this->translator->trans(
                     'An account was already registered with this email address',
@@ -151,9 +152,9 @@ class CustomerPersisterCore
         return $ok;
     }
 
-    private function create(Customer $customer, $clearTextPassword)
+    private function create(Customer $customer, $plainTextPassword)
     {
-        if (!$clearTextPassword) {
+        if (!$plainTextPassword) {
             if (!$this->guest_allowed) {
                 $this->errors['password'][] = $this->translator->trans(
                     'Password is required',
@@ -169,7 +170,7 @@ class CustomerPersisterCore
              * that guests cannot log in even with the generated
              * password. That's the case at least at the time of writing.
              */
-            $clearTextPassword = $this->crypto->hash(
+            $plainTextPassword = $this->crypto->hash(
                 microtime(),
                 _COOKIE_KEY_
             );
@@ -178,11 +179,12 @@ class CustomerPersisterCore
         }
 
         $customer->passwd = $this->crypto->hash(
-            $clearTextPassword,
+            $plainTextPassword,
             _COOKIE_KEY_
         );
 
-        if (Customer::customerExists($customer->email, false, true)) {
+        // If we are registering a new customer, we need to check if this email doesn't already exist
+        if (!$customer->is_guest && Customer::customerExists($customer->email, false, true)) {
             $this->errors['email'][] = $this->translator->trans(
                 'An account was already registered with this email address',
                 [],
