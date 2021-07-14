@@ -1,10 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -29,7 +32,7 @@ const createSupplierData = new SupplierFaker();
 const editSupplierData = new SupplierFaker();
 
 // CRUD Supplier
-describe('Create, update and delete supplier', async () => {
+describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -56,7 +59,7 @@ describe('Create, update and delete supplier', async () => {
   });
 
   // Go to brands page
-  it('should go to brands page', async function () {
+  it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -72,7 +75,7 @@ describe('Create, update and delete supplier', async () => {
   });
 
   // Go to suppliers page
-  it('should go to suppliers page', async function () {
+  it('should go to Suppliers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSuppliersPage', baseContext);
 
     await brandsPage.goToSubTabSuppliers(page);
