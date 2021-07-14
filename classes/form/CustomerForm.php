@@ -119,8 +119,6 @@ class CustomerFormCore extends AbstractForm
         $emailField = $this->getField('email');
         $id_customer = Customer::customerExists($emailField->getValue(), true, true);
         $customer = $this->getCustomer();
-        
-        // We don't need the check here
 
         // check birthdayField against null case is mandatory.
         $birthdayField = $this->getField('birthday');
