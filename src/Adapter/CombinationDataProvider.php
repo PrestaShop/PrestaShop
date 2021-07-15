@@ -147,14 +147,30 @@ class CombinationDataProvider
             $attribute_unity_price_impact = -1;
         }
 
+        $productTaxRate = $product->getTaxesRate();
+
+        // Get product basic prices
         $productPrice = new Number((string) $product->price);
+        $productPriceIncluded = $productPrice->times(new Number((string) (1 + ($productTaxRate / 100))));
         $productEcotax = new Number((string) $product->ecotax);
         $productEcotaxIncluded = $productEcotax->times(new Number((string) (1 + (Tax::getProductEcotaxRate() / 100))));
+
+        // Get combination prices and impacts
         $combinationEcotax = new Number((string) $combination['ecotax_tax_excluded']);
+        $combinationEcotaxIncluded = new Number((string) $combination['ecotax_tax_included']);
+        $combinationImpactTaxExcluded = new Number((string) $combination['price']);
+        $combinationImpactTaxIncluded = $combinationImpactTaxExcluded->times(new Number((string) (1 + ($productTaxRate / 100))));
+
         $ecotax = $combinationEcotax->equalsZero() ? $productEcotax : $combinationEcotax;
         $finalPrice = $productPrice
             ->plus($ecotax)
-            ->plus(new Number((string) $combination['price']))
+            ->plus($combinationImpactTaxExcluded)
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+
+        $ecotaxIncluded = $combinationEcotaxIncluded->equalsZero() ? $productEcotaxIncluded : $combinationEcotaxIncluded;
+        $finalPriceIncluded = $productPriceIncluded
+            ->plus($ecotaxIncluded)
+            ->plus($combinationImpactTaxIncluded)
             ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
 
         return [
@@ -166,9 +182,10 @@ class CombinationDataProvider
             'attribute_mpn' => $combination['mpn'],
             'attribute_wholesale_price' => $combination['wholesale_price'],
             'attribute_price_impact' => $attribute_price_impact,
-            'attribute_price' => $combination['price'],
-            'attribute_price_display' => $this->locale->formatPrice($combination['price'], $this->context->getContext()->currency->iso_code),
+            'attribute_price' => (string) $combinationImpactTaxExcluded,
+            'attribute_price_display' => $this->locale->formatPrice((string) $combinationImpactTaxExcluded, $this->context->getContext()->currency->iso_code),
             'final_price' => (string) $finalPrice,
+            'final_price_tax_included' => (string) $finalPriceIncluded,
             'attribute_priceTI' => '',
             // The value is displayed with tax included
             'product_ecotax' => (string) $productEcotaxIncluded,

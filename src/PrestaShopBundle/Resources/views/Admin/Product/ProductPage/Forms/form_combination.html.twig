@@ -173,7 +173,8 @@
                         </fieldset>
                     </div>
                     <div class="col-md-3">
-                      <small class="form-control-label vcenter">{{ "Final retail price (tax excl.) will be"|trans({}, 'Admin.Catalog.Feature') }}<span class="final-price" data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}</small>
+                      <div class="form-control-label vcenter">{{ "Final retail price (tax excl.) will be"|trans({}, 'Admin.Catalog.Feature') }} <span class="final-price" data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}</div>
+                      <div class="form-control-label vcenter">{{ "Final retail price (tax incl.) will be"|trans({}, 'Admin.Catalog.Feature') }} <span class="final-price-tax-included" data-price="{{ form.vars.value.final_price_tax_included }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price_tax_included }}</span> {{ default_currency }}</div>
                     </div>
                 </div>
                 <div class="row">
