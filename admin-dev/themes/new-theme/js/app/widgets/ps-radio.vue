@@ -36,8 +36,10 @@
   </div>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue';
+
+  export default Vue.extend({
     props: {
       id: {
         type: String,
@@ -59,9 +61,9 @@
       },
     },
     methods: {
-      onChange() {
+      onChange(): void {
         this.$emit('change', this.value);
       },
     },
-  };
+  });
 </script>

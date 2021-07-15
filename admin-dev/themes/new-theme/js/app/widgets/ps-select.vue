@@ -46,8 +46,10 @@
   </div>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue';
+
+  export default Vue.extend({
     props: {
       items: {
         type: Array,
@@ -65,15 +67,19 @@
       },
     },
     methods: {
-      onChange() {
+      onChange(): void {
         this.$emit('change', {
           value: this.selected,
           itemId: this.itemId,
         });
       },
     },
-    data: () => ({selected: 'default'}),
-  };
+    data() {
+      return {
+        selected: 'default',
+      };
+    },
+  });
 </script>
 
 <style lang="scss" scoped>
