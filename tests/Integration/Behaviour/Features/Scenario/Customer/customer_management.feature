@@ -79,3 +79,37 @@ Feature: Customer Management
       | groupIds       | [Guest]                   |
     And I delete customer "CUST-5" with "allow registration after deletion" checked
     Then the customer "CUST-5" should not be found
+
+  Scenario: Edit guest customer email
+    When I create a customer "CUST-6" with following properties:
+      | firstName      | Mathieu                     |
+      | lastName       | Guest                       |
+      | email          | guest@prestashop.com        |
+      | password       | PrestaShopForever1_!        |
+      | defaultGroupId | Guest                       |
+      | groupIds       | [Guest]                     |
+      | isGuest        | true                        |
+    And I create a customer "CUST-7" with following properties:
+      | firstName | Mathieu                     |
+      | lastName  | Customer                    |
+      | email     | customerseven@prestashop.com     |
+      | password  | PrestaShopForever1_!        |
+    And I edit customer "CUST-6" and I change the following properties:
+      | email | customerseven@prestashop.com |
+    Then if I query customer "CUST-6" I should get a Customer with properties:
+      | email | customerseven@prestashop.com |
+
+  Scenario: Edit registered customer email
+    When I create a customer "CUST-8" with following properties:
+      | firstName | Mathieu                     |
+      | lastName  | Customertwo                 |
+      | email     | customereight@prestashop.com  |
+      | password  | PrestaShopForever1_!        |
+    And I create a customer "CUST-9" with following properties:
+      | firstName | Mathieu                     |
+      | lastName  | Customer                    |
+      | email     | customernine@prestashop.com     |
+      | password  | PrestaShopForever1_!        |
+    And I edit customer "CUST-8" and I change the following properties:
+      | email | customernine@prestashop.com |
+    Then I should be returned an error message 'Customer with email "customernine@prestashop.com" already exists'
