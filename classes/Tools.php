@@ -25,6 +25,7 @@
  */
 use Composer\CaBundle\CaBundle;
 use PHPSQLParser\PHPSQLParser;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
@@ -33,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -874,10 +876,20 @@ class ToolsCore
         if (!$context) {
             $context = Context::getContext();
         }
+
         if ($currency === null) {
             $currency = $context->currency;
         } elseif (is_numeric($currency)) {
             $currency = Currency::getCurrencyInstance($currency);
+        }
+
+        if (gettype($price) === 'string') {
+            $price = (new Number($price))
+                ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+        }
+
+        if (!is_numeric($price)) {
+            return $price;
         }
 
         $c_id = (is_array($currency) ? $currency['id_currency'] : $currency->id);
