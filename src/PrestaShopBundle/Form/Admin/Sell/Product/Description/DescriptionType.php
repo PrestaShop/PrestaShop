@@ -23,37 +23,27 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Description;
 
+use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesSummaryType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CategoriesType extends TranslatorAwareType
+//@todo: dont forget to remove types that was replaced by this one (mainly BasicType)
+class DescriptionType extends TranslatorAwareType
 {
     /**
      * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('product_categories', CategoriesCollectionType::class)
-        ;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-        $resolver->setDefaults([
+        $builder->add('categories_summary', CategoriesSummaryType::class, [
             'label' => false,
-            'required' => false,
+            'attr' => [
+                'class' => 'js-categories-summary-container',
+            ],
         ]);
     }
 }

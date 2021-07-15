@@ -23,37 +23,23 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\Admin\Type\UnavailableType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CategoriesType extends TranslatorAwareType
+class CategoriesSummaryType extends TranslatorAwareType
 {
-    /**
-     * {@inheritDoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('product_categories', CategoriesCollectionType::class)
-        ;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'label' => false,
-            'required' => false,
+        $builder->add('add_categories_btn', ButtonType::class, [
+            'label' => $this->trans('Add categories', 'Admin.Catalog.Feature'),
+            'attr' => [
+                'class' => 'add-categories-btn',
+            ],
         ]);
     }
 }

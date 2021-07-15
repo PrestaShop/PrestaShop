@@ -1293,6 +1293,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.description.descritpion_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Description\DescriptionType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.basic.features_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Basic\FeaturesType'
         parent: 'form.type.translatable.aware'
@@ -1368,6 +1375,13 @@ services:
 
     form.type.sell.product.category.product_category_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\ProductCategoryType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.category.categories_summary_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesSummaryType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
