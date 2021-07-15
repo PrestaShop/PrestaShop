@@ -2,6 +2,7 @@
 @reset-database-before-feature
 @duplicate-product
 @reset-downloads-after-feature
+@reset-img-after-feature
 @clear-cache-after-feature
 Feature: Duplicate product from Back Office (BO).
   As an employee I want to be able to duplicate product
@@ -18,7 +19,14 @@ Feature: Duplicate product from Back Office (BO).
     And language "language2" with locale "fr-FR" exists
     And carrier carrier1 named "ecoCarrier" exists
     And carrier carrier2 named "Fast carry" exists
-    Given I add product "product1" with following information:
+    And following image types should be applicable to products:
+      | reference     | name           | width | height |
+      | cartDefault   | cart_default   | 125   | 125    |
+      | homeDefault   | home_default   | 250   | 250    |
+      | largeDefault  | large_default  | 800   | 800    |
+      | mediumDefault | medium_default | 452   | 452    |
+      | smallDefault  | small_default  | 98    | 98     |
+    And I add product "product1" with following information:
       | name[en-US] | smart sunglasses   |
       | name[fr-FR] | lunettes de soleil |
       | type        | standard           |
@@ -111,6 +119,44 @@ Feature: Duplicate product from Back Office (BO).
     And product product1 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product2    |
+    And I update product "product1" stock with following information:
+      | minimal_quantity              | 12           |
+      | quantity                      | 10           |
+      | location                      | dtc          |
+      | low_stock_threshold           | 42           |
+      | low_stock_alert               | true         |
+      | available_now_labels[en-US]   | get it now   |
+      | available_later_labels[en-US] | too late bro |
+      | available_date                | 1969-07-16   |
+    And product "product1" should have following stock information:
+      | minimal_quantity    | 12         |
+      | quantity            | 10         |
+      | location            | dtc        |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "product1" localized "available_now_labels" should be:
+      | locale | value      |
+      | en-US  | get it now |
+      | fr-FR  |            |
+    And product "product1" localized "available_later_labels" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
+    And I add new image "image1" named "app_icon.png" to product "product1"
+    And image "image1" should have same file as "app_icon.png"
+    And I add new image "image2" named "logo.jpg" to product "product1"
+    And image "image2" should have same file as "logo.jpg"
+    And I update image "image1" with following information:
+      | legend[en-US] | image1 en |
+      | legend[fr-FR] | image1 fr |
+    And I update image "image2" with following information:
+      | legend[en-US] | image2 en |
+      | legend[fr-FR] | image2 fr |
+    And product "product1" should have following images:
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
+      | image1          | true     | image1 en     | image1 fr     | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    | image2 en     | image2 fr     | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
 
   Scenario: I duplicate product
 #todo: add specific prices & priorities, test combinations, packs
@@ -198,5 +244,26 @@ Feature: Duplicate product from Back Office (BO).
     And product copy_of_product1 should have identical customization fields to product1
     And product copy_of_product1 should have 1 customizable text field
     And product copy_of_product1 should have 0 customizable file fields
-#@todo: assert stock info
+    And product "copy_of_product1" should have following stock information:
+      | minimal_quantity    | 12         |
+      | quantity            | 0          |
+      | location            |            |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "copy_of_product1" localized "available_now_labels" should be:
+      | locale | value      |
+      | en-US  | get it now |
+      | fr-FR  |            |
+    And product "copy_of_product1" localized "available_later_labels" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
+#    no a way to check if the images are actually the ones we expect,
+#    because references are attached to id, so at least we can count them and check if legends match
+    And product "copy_of_product1" should have 2 images in total
+    And product "copy_of_product1" images should have following legends:
+      | legend[en-US] | legend[fr-FR] |
+      | image1 en     | image1 fr     |
+      | image2 en     | image2 fr     |
 #@todo: add tests for other type of products Pack, Virtual, Combinations

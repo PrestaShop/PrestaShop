@@ -194,13 +194,14 @@ class ProductDuplicator
      */
     private function duplicateProduct(Product $product): Product
     {
-        $product->name = $this->getNewProductName($product->name);
+        $newProduct = clone $product;
+        $newProduct->name = $this->getNewProductName($product->name);
         $this->setPriceByShops($product);
 
-        $product->indexed = false;
-        $product->active = false;
+        $newProduct->indexed = false;
+        $newProduct->active = false;
 
-        return $this->productRepository->duplicate($product);
+        return $this->productRepository->duplicate($newProduct);
     }
 
     /**
