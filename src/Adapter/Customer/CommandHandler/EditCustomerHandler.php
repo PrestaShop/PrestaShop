@@ -214,8 +214,9 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         if ($command->getEmail()->isEqualTo(new Email($customer->email))) {
             return;
         }
+
         // We check this only if dealing with a registered customer
-        // Two guests with the same email can co-exists, two registered customers can't 
+        // Two guests with the same email can co-exist, two registered customers can not 
         if ($customer->is_guest == 1) {
             return;
         }
