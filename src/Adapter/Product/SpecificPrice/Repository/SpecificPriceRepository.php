@@ -33,6 +33,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotAddSpecificPriceException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotUpdateSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
@@ -109,6 +110,20 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
         );
 
         return $specificPrice;
+    }
+
+    /**
+     * @param SpecificPrice $specificPrice
+     * @param string[] $updatableProperties
+     */
+    public function partialUpdate(SpecificPrice $specificPrice, array $updatableProperties): void
+    {
+        $this->specificPriceValidator->validate($specificPrice);
+        $this->partiallyUpdateObjectModel(
+            $specificPrice,
+            $updatableProperties,
+            CannotUpdateSpecificPriceException::class
+        );
     }
 
     /**

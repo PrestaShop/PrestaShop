@@ -114,9 +114,9 @@ class AddProductSpecificPriceCommand
     /**
      * @param int $productId
      * @param string $reductionType
-     * @param float $reductionValue
+     * @param string $reductionValue
      * @param bool $includeTax
-     * @param float $price
+     * @param string $price
      * @param int $fromQuantity
      *
      * @throws DomainConstraintException
@@ -125,15 +125,15 @@ class AddProductSpecificPriceCommand
     public function __construct(
         int $productId,
         string $reductionType,
-        float $reductionValue,
+        string $reductionValue,
         bool $includeTax,
-        float $price,
+        string $price,
         int $fromQuantity
     ) {
         $this->productId = new ProductId($productId);
         $this->reduction = new Reduction($reductionType, $reductionValue);
         $this->includesTax = $includeTax;
-        $this->price = new DecimalNumber((string) $price);
+        $this->price = new DecimalNumber($price);
         $this->fromQuantity = $fromQuantity;
     }
 
