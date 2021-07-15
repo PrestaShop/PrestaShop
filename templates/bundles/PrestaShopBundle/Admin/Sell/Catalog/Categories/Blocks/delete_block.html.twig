@@ -31,16 +31,12 @@
           {{ 'What do you want to do with the products associated with this category?'|trans({}, 'Admin.Catalog.Notification') }}
         </h3>
         <div class="card-body">
-          <div class="row">
-            <div class="col">
                 <div class="form-group mb-0">
                   {{ form_widget(deleteCategoriesForm.delete_mode) }}
                 </div>
                 <div class="d-none">
                   {{ form_widget(deleteCategoriesForm.categories_to_delete) }}
                 </div>
-            </div>
-          </div>
         </div>
         <div class="card-footer">
           <a class="btn btn-secondary btn-sm"

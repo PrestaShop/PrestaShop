@@ -23,8 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 <div id="catalog-actions" class="col order-first">
-  <div class="row">
-    <div class="col">
+
       {% block product_catalog_filter_by_categories %}
         <div id="product_catalog_category_tree_filter" class="d-inline-block dropdown dropdown-clickable mr-2">
           <button
@@ -126,12 +125,8 @@
           } %}
         </div>
       {% endblock %}
-    </div>
-  </div>
 
   {% block product_catalog_filter_select_all %}
-  <div class="row">
-    <div class="col">
       <div class="md-checkbox">
         <label>
           <input
@@ -144,7 +139,5 @@
             {{ "Select all"|trans({}, 'Admin.Actions') }}
         </label>
       </div>
-    </div>
-  </div>
   {% endblock %}
 </div>

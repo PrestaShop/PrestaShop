@@ -31,21 +31,17 @@
     {% if paymentModules|length < 2 %}
       <div class="card-block row alert-block">
         <div class="card-text">
-          <div class="row">
-            <div class="col-sm">
+
               <div class="alert alert-info" role="alert">
                 <div class="alert-text">
                   {{ 'We recommend providing at least two different payment methods. Only one payment method could be problematic if this option cannot be used by a customer because it will prevent him/her from ordering.'|trans({}, 'Admin.Payment.Notification') }}
                 </div>
               </div>
-            </div>
-          </div>
+
         </div>
       </div>
     {% endif %}
 
-    <div class="row">
-      <div class="col">
         {% if isSingleShopContext %}
           <div class="card">
             <h3 class="card-header">
@@ -60,7 +56,6 @@
             <p class="alert-text">{{ 'You have more than one shop and must select one to configure payment.'|trans({}, 'Admin.Payment.Notification') }}</p>
           </div>
         {% endif %}
-      </div>
-    </div>
+
   </div>
 {% endblock %}

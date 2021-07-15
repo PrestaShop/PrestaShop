@@ -37,8 +37,7 @@
 
 {% block content %}
   {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
-  <div class="row">
-    <div class="col">
+
       <div class="alert alert-warning" role="alert">
         <p class="alert-text">{{ 'When you delete a language, all related translations in the database will be deleted.'|trans({}, 'Admin.International.Notification') }}</p>
       </div>
@@ -48,15 +47,10 @@
           <p class="alert-text">{{ 'Your .htaccess file must be writable.'|trans({}, 'Admin.International.Notification') }}</p>
         </div>
       {% endif %}
-    </div>
-  </div>
+
 
   {% block language_listing %}
-    <div class="row">
-      <div class="col-sm">
         {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': languageGrid } %}
-      </div>
-    </div>
   {% endblock %}
 {% endblock %}
 

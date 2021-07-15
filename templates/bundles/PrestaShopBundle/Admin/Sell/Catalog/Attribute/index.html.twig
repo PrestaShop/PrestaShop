@@ -35,8 +35,6 @@
 
 {% block content %}
   {% block attributes_listing %}
-    <div class="row">
-      <div class="col">
         {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': attributeGrid} %}
           {% block grid_panel_footer %}
             <div class="card-footer">
@@ -48,8 +46,6 @@
             </div>
           {% endblock %}
         {% endembed %}
-      </div>
-    </div>
   {% endblock %}
 {% endblock %}
 

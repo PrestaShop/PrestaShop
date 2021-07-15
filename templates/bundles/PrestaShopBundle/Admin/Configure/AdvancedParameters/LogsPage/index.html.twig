@@ -28,23 +28,15 @@
 
 {% block content %}
   {% block logs_severity_level_meaning %}
-    <div class="row">
       {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/LogsPage/Blocks/severity_levels.html.twig') }}
-    </div>
   {% endblock %}
 
   {% block logs_main_panel %}
-    <div class="row">
-      <div class="col">
         {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
-      </div>
-    </div>
   {% endblock %}
 
   {% block logs_by_mail %}
     {{ form_start(logsByEmailForm, {'action': path('admin_logs_save_settings')}) }}
-    <div class="row justify-content-center">
-      <div class="col">
         <div class="card">
           <h3 class="card-header">
             <i class="material-icons">business_center</i> {{ 'Logs by email'|trans }}
@@ -60,8 +52,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
     {{ form_end(logsByEmailForm) }}
   {% endblock %}
 {% endblock %}

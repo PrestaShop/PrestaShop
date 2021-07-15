@@ -28,8 +28,6 @@
     {{ 'Order information'|trans({}, 'Admin.Orderscustomers.Feature') }}
   </h3>
   <div class="card-body">
-    <div class="row">
-      <div class="col">
         {% if cartView.orderInformation.id %}
           <h2>
             <a href="{{ getAdminLink('AdminOrders', true, {'id_order': cartView.orderInformation.id, 'vieworder': 1}) }}">
@@ -54,7 +52,5 @@
             </a>
           {% endif %}
         {% endif %}
-      </div>
-    </div>
   </div>
 </div>

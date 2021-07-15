@@ -27,8 +27,6 @@
 
 {% block content %}
   <div class="container">
-    <div class="row">
-      <div class="col">
         {% if not isSingleShopContext %}
           <div class="alert alert-warning" role="alert">
             <p class="alert-text">
@@ -54,8 +52,6 @@
 
           {% include '@PrestaShop/Admin/Improve/Payment/Preferences/Blocks/payment_preferences_form_block.html.twig' %}
         {% endif %}
-      </div>
-    </div>
   </div>
 {% endblock %}
 

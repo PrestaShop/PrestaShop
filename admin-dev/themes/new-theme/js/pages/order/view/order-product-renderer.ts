@@ -106,7 +106,7 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsPanel)
       .detach()
       .appendTo($modificationPosition);
-    $modificationPosition.closest('.row').removeClass('d-none');
+    $modificationPosition.removeClass('d-none');
 
     // Show column location & refunded
     this.toggleColumn(OrderViewPageMap.productsCellLocation);
@@ -131,7 +131,6 @@ export default class OrderProductRenderer {
   moveProductPanelToOriginalPosition(): void {
     $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
     $(OrderViewPageMap.productModificationPosition)
-      .closest('.row')
       .addClass('d-none');
 
     $(OrderViewPageMap.productsPanel)

@@ -42,11 +42,7 @@
 
   <div class="card-body">
     {% if customerAddressGrid.data.records_total > 0 %}
-      <div class="row">
-        <div class="col">
           {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerAddressGrid} %}
-        </div>
-      </div>
     {% else %}
       <p class="text-muted text-center mb-0">
         {{ '%firstname% %lastname% has not registered any addresses yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}

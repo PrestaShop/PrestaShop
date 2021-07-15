@@ -24,8 +24,7 @@
  *#}
 {% set modulesListShouldBeDisplayed = (modulesList is defined and modulesList is not empty) %}
 {% if modulesListShouldBeDisplayed == true %}
-  <div class="row row-margin-bottom">
-  <div class="col-lg-12">
+<div class="row-margin-bottom">
     <ul class="nav nav-pills">
       {% if modulesList.notInstalled|length > 0 %}
       <li class="active">
@@ -43,7 +42,6 @@
         </li>
       {% endif %}
     </ul>
-  </div>
 </div>
 <div id="modules_list_container_content" class="tab-content modal-content-overflow">
   {% if modulesList.notInstalled is defined and modulesList.notInstalled is not empty %}

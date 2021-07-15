@@ -34,10 +34,8 @@
         <div id="stock-app"></div>
 
     {% else %}
-        <div class="col-md-12">
-            <div class="alert alert-danger" role="alert">
-                <p class="alert-text">{{ 'You can\'t manage your stock in this shop context: select a shop instead of a group of shops.'|trans({}, 'Admin.Catalog.Notification') }}</p>
-            </div>
+        <div class="alert alert-danger" role="alert">
+            <p class="alert-text">{{ 'You can\'t manage your stock in this shop context: select a shop instead of a group of shops.'|trans({}, 'Admin.Catalog.Notification') }}</p>
         </div>
     {% endif %}
 

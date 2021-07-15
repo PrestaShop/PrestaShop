@@ -23,17 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 <div role="tabpanel" class="form-contenttab tab-pane" id="step5">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="container-fluid">
-        <div class="row">
-          {{ include('@Product/ProductPage/Forms/form_seo.html.twig', {
-            'seoForm' : seoForm,
-            'productId': productId
-            })
-          }}
-        </div>
-      </div>
-    </div>
+  <div class="container-fluid">
+    {{ include('@Product/ProductPage/Forms/form_seo.html.twig', {
+      'seoForm' : seoForm,
+      'productId': productId
+      })
+    }}
   </div>
 </div>

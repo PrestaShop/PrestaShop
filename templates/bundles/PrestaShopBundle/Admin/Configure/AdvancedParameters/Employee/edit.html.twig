@@ -40,8 +40,6 @@
     </div>
   {% endif %}
 
-  <div class="row justify-content-center">
-    <div class="col">
       {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/form.html.twig' with {
         employeeForm: employeeForm,
         level: level,
@@ -52,8 +50,7 @@
         getTabsUrl: getTabsUrl,
         avatarUrl: editableEmployee.avatarUrl
       } %}
-    </div>
-  </div>
+
 {% endblock %}
 
 {% block javascripts %}

@@ -23,21 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 <div role="tabpanel" class="form-contenttab tab-pane" id="step6">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="container-fluid">
-        <div class="row">
-
-          <div class="col-md-12">
+  <div class="container-fluid">
 
             {{ renderhook('displayAdminProductsOptionsStepTop', { 'id_product': productId }) }}
 
-            <div class="row">
-              <div class="col-md-12">
-                <h2>{{ 'Visibility'|trans({}, 'Admin.Catalog.Feature') }}</h2>
-                <p class="subtitle">{{ 'Where do you want your product to appear?'|trans({}, 'Admin.Catalog.Feature') }}</p>
-              </div>
-            </div>
+            <h2>{{ 'Visibility'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+            <p class="subtitle">{{ 'Where do you want your product to appear?'|trans({}, 'Admin.Catalog.Feature') }}</p>
 
             <div class="row">
               <div class="col-md-4 form-group">
@@ -89,11 +80,7 @@
               </div>
             </div>
 
-            <div class="row">
-              <div class="col-md-12">
-                <h2>{{ 'Condition & References'|trans({}, 'Admin.Catalog.Feature')|raw }}</h2>
-              </div>
-            </div>
+            <h2>{{ 'Condition & References'|trans({}, 'Admin.Catalog.Feature')|raw }}</h2>
 
             <div class="row">
               <fieldset class="col-md-4 form-group">
@@ -151,28 +138,24 @@
               </fieldset>
             </div>
 
-            <div class="row">
-              <div class="col-md-12">
-                <div id="custom_fields" class="mt-3">
-                  <h2>{{ optionsForm.custom_fields.vars.label }}</h2>
-                  <p class="subtitle">{{ 'Customers can personalize the product by entering some text or by providing custom image files.'|trans({}, 'Admin.Catalog.Feature') }}</p>
-                  {{ form_errors(optionsForm.custom_fields) }}
-                  <ul class="customFieldCollection nostyle" data-prototype="
-                              {% filter escape %}
-                              {{ include('@Product/ProductPage/Forms/form_custom_fields.html.twig', { 'form': optionsForm.custom_fields.vars.prototype }) }}
-                              {% endfilter %}">
-                    {% for field in optionsForm.custom_fields %}
-                      <li>
-                        {{ include('@Product/ProductPage/Forms/form_custom_fields.html.twig', { 'form': field }) }}
-                      </li>
-                    {% endfor %}
-                  </ul>
-                  <a href="#" class="btn btn-outline-secondary add">
-                    <i class="material-icons">add_circle</i>
-                    {{ 'Add a customization field'|trans({}, 'Admin.Catalog.Feature') }}
-                  </a>
-                </div>
-              </div>
+            <div id="custom_fields" class="mt-3">
+              <h2>{{ optionsForm.custom_fields.vars.label }}</h2>
+              <p class="subtitle">{{ 'Customers can personalize the product by entering some text or by providing custom image files.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+              {{ form_errors(optionsForm.custom_fields) }}
+              <ul class="customFieldCollection nostyle" data-prototype="
+                          {% filter escape %}
+                          {{ include('@Product/ProductPage/Forms/form_custom_fields.html.twig', { 'form': optionsForm.custom_fields.vars.prototype }) }}
+                          {% endfilter %}">
+                {% for field in optionsForm.custom_fields %}
+                  <li>
+                    {{ include('@Product/ProductPage/Forms/form_custom_fields.html.twig', { 'form': field }) }}
+                  </li>
+                {% endfor %}
+              </ul>
+              <a href="#" class="btn btn-outline-secondary add">
+                <i class="material-icons">add_circle</i>
+                {{ 'Add a customization field'|trans({}, 'Admin.Catalog.Feature') }}
+              </a>
             </div>
 
             <div class="row mt-4">
@@ -214,17 +197,11 @@
                 {{ include('@Product/ProductPage/Forms/form_supplier_choice.html.twig', { 'form': optionsForm }) }}
               </div>
             </div>
-            <div class="row">
-              <div id="supplier_combination_collection" class="col-md-12" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form', { 'idProduct': productId, 'supplierIds': 1}) }}">
-                {{ include('@Product/ProductPage/Forms/form_supplier_combination.html.twig', { 'suppliers': optionsForm.suppliers.vars.value, 'form': optionsForm }) }}
-              </div>
+            <div id="supplier_combination_collection" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form', { 'idProduct': productId, 'supplierIds': 1}) }}">
+              {{ include('@Product/ProductPage/Forms/form_supplier_combination.html.twig', { 'suppliers': optionsForm.suppliers.vars.value, 'form': optionsForm }) }}
             </div>
 
             {{ renderhook('displayAdminProductsOptionsStepBottom', { 'id_product': productId }) }}
 
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
