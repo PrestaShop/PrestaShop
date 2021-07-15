@@ -1745,6 +1745,14 @@ class FrontControllerCore extends Controller
         ];
     }
 
+    /**
+     * Generate the canonical URL of the current page
+     *
+     * Mainly used for ProductController and CategoryController
+     * but can be implemented by other classes inheriting from FrontController
+     *
+     * @return string|void
+     */
     public function getCanonicalURL()
     {
     }
