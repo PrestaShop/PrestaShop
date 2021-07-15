@@ -51,7 +51,7 @@ export default class TranslatableChoice {
 
     // show all the languages selects
     $formGroup
-      .find(ComponentsMap.form.selectChoice(language))
+      .find(ComponentsMap.form.selectChoice(<string>language))
       .parent()
       .show();
 
@@ -59,7 +59,7 @@ export default class TranslatableChoice {
 
     // Hide all the selects not corresponding to the language selected
     $selects
-      .not(ComponentsMap.form.selectChoice(language))
+      .not(ComponentsMap.form.selectChoice(<string>language))
       .each((index, item) => {
         $(item)
           .parent()
