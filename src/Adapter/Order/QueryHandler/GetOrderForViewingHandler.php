@@ -235,14 +235,14 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     private function getOrderCustomer(Order $order, OrderInvoiceAddressForViewing $invoiceAddress): ?OrderCustomerForViewing
     {
         $currency = new Currency($order->id_currency);
-        $customer = new Customer($order->id_customer);
         $genderName = '';
         $totalSpentSinceRegistration = null;
 
         if (!Validate::isLoadedObject($customer)) {
-            $this->buildFakeCustomerObject($order, $invoiceAddress, $customer);
+            $customer = $this->buildFakeCustomerObject($order, $invoiceAddress, $customer);
             $customerStats = ['nb_orders' => 1]; // Count this current order as loaded
         } else {
+            $customer = new Customer($order->id_customer);
             $gender = new Gender($customer->id_gender);
             if (Validate::isLoadedObject($gender)) {
                 $genderName = $gender->name[(int) $order->getAssociatedLanguage()->getId()];
@@ -856,15 +856,19 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
      * @param OrderInvoiceAddressForViewing $invoiceAddress Invoice address information
      * @param Customer $customer Customer object
      *
-     * @return void
+     * @return Customer The created customer
      */
-    private function buildFakeCustomerObject(Order $order, OrderInvoiceAddressForViewing $invoiceAddress, Customer $customer): void
+    private function buildFakeCustomerObject(Order $order, OrderInvoiceAddressForViewing $invoiceAddress, Customer $customer): Customer
     {
         $cart = new Cart($order->id_cart);
 
+        $customer = new Customer();
         $customer->firstname = $invoiceAddress->getFirstName();
         $customer->lastname = $invoiceAddress->getLastName();
         $customer->email = '';
         $customer->id_lang = $cart->getAssociatedLanguage()->getId();
+        $customer->is_guest = true;
+
+        return $customer;
     }
 }
