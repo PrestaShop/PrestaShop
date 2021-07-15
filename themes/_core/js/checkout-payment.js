@@ -40,6 +40,10 @@ class Payment {
 
     $body.on('change', `${this.conditionsSelector} input[type="checkbox"]`, $.proxy(this.toggleOrderButton, this));
     $body.on('change', 'input[name="payment-option"]', $.proxy(this.toggleOrderButton, this));
+    // call toggle once on init to handle situation where everything
+    // is already ok (like 0 price order, payment already preselected and so on)
+    this.toggleOrderButton();
+
     $body.on('click', `${this.confirmationSelector} button`, $.proxy(this.confirm, this));
 
     this.collapseOptions();
