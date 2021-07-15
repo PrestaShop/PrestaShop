@@ -144,6 +144,20 @@ class CategoryController extends FrameworkBundleAdminController
         );
     }
 
+    public function quickCreateAction(Request $request): JsonResponse
+    {
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.quick_add_category_form_handler');
+        $form = $this->get('prestashop.core.form.identifiable_object.builder.quick_add_category_form_builder')->getForm();
+        $form->handleRequest($request);
+        $handlerResult = $formHandler->handle($form);
+
+        if ($handlerResult->isValid()) {
+            return $this->json(['categoryId' => $handlerResult->getIdentifiableObjectId()]);
+        }
+
+        return $this->json(['errors' => $this->getFormErrorsForJS($form)]);
+    }
+
     /**
      * Show "Add new" form and handle form submit.
      *

@@ -73,6 +73,15 @@ admin_categories_export:
       _legacy_controller: AdminCategories
       _legacy_link: AdminCategories:exportcategory
 
+admin_categories_quick_create:
+    path: /quick-new
+    methods: [GET, POST]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:quickCreate
+        _legacy_controller: AdminCategories
+
 admin_categories_create:
     path: /new
     methods: [GET, POST]

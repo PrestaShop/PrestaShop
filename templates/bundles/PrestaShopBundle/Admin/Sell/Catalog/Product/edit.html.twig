@@ -108,6 +108,12 @@
         {% endblock %}
       {% endif %}
 
+      {% block product_tab_categories %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/categories.html.twig', {
+          'productForm': productForm,
+        }) }}
+      {% endblock %}
+
       {% block product_tab_pricing %}
         {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/pricing.html.twig', {
           'productForm': productForm,
@@ -150,6 +156,10 @@
   {# We don't want the combinations input to be inside the product form which is why this tab is rendered after the form #}
   {% block product_external_tab_combinations %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/external_tab.html.twig') }}
+  {% endblock %}
+
+  {% block external_tab_add_category %}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/external_add_category.html.twig') }}
   {% endblock %}
 {% endblock %}
 

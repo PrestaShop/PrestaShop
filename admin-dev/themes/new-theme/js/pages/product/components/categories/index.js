@@ -30,7 +30,7 @@ import AutoCompleteSearch from '@components/auto-complete-search';
 import Tokenizers from '@components/bloodhound/tokenizers';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
-import {getCategories} from '@pages/product/services/categories';
+import {createCategory, getCategories} from '@pages/product/services/categories';
 
 const {$} = window;
 
@@ -53,10 +53,44 @@ export default class CategoriesManager {
     this.prototypeName = this.categoryTree.dataset.prototypeName;
     this.expandAllButton = this.categoriesContainer.querySelector(ProductCategoryMap.expandAllButton);
     this.reduceAllButton = this.categoriesContainer.querySelector(ProductCategoryMap.reduceAllButton);
+    this.addCategoryBtn = this.categoriesContainer.querySelector(
+      ProductMap.categories.addCategoryBtn,
+    );
 
+    this.initAddNewCategoryModal();
     this.initCategories();
 
     return {};
+  }
+
+  initAddNewCategoryModal() {
+    const modalContent = $(ProductMap.categories.addCategoryTemplate);
+
+    $(this.addCategoryBtn).fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
+      helpers: {
+        overlay: {closeClick: false},
+      },
+      content: modalContent.html(),
+      afterShow: () => {
+        this.initTypeahead(
+          ProductMap.categories.parentCategorySearchInput,
+          (categoryId) => this.selectParentCategory(categoryId),
+        );
+        const form = $(`form[name='${ProductMap.categories.addCategoryFormName}']`);
+        const {fancybox} = parent.$;
+
+        form.on('click', '.cancel-btn', () => {
+          fancybox.close();
+        });
+
+        form.submit((e) => {
+          this.submitNewCategory({e, fancybox});
+        });
+      },
+    });
   }
 
   async initCategories() {
@@ -73,7 +107,7 @@ export default class CategoriesManager {
     this.radioIdRegexp = new RegExp(regexpString);
 
     this.initTypeaheadData(this.categories, '');
-    this.initTypeahead();
+    this.initTypeahead(ProductCategoryMap.searchInput, (categoryId) => this.selectCategory(categoryId));
     this.initTree();
     this.updateCategoriesTags();
   }
@@ -341,7 +375,7 @@ export default class CategoriesManager {
     });
   }
 
-  initTypeahead() {
+  initTypeahead(searchInputSelector, onSelectCallback) {
     const source = new Bloodhound({
       datumTokenizer: Tokenizers.obj.letters(
         'breadcrumb',
@@ -355,14 +389,13 @@ export default class CategoriesManager {
       display: 'breadcrumb',
       value: 'id',
       onSelect: (selectedItem, e, $searchInput) => {
-        this.selectCategory(selectedItem.id);
-
+        onSelectCallback(selectedItem.id);
         // This resets the search input or else previous search is cached and can be added again
         $searchInput.typeahead('val', '');
       },
     };
 
-    new AutoCompleteSearch($(ProductCategoryMap.searchInput), dataSetConfig);
+    new AutoCompleteSearch($(searchInputSelector), dataSetConfig);
   }
 
   updateCategoriesTags() {
@@ -483,5 +516,33 @@ export default class CategoriesManager {
       checkboxInput.checked = checked;
       this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
     }
+  }
+
+  /**
+   * @param {object} eventData
+   */
+  submitNewCategory(eventData) {
+    const submitEvent = eventData.e;
+    submitEvent.preventDefault();
+
+    createCategory(submitEvent.currentTarget).then((resp) => {
+      if (resp.errors) {
+        Object.values(resp.errors).forEach((error) => {
+          $.growl.error({message: error});
+        });
+
+        return;
+      }
+
+      eventData.fancybox.close();
+      this.selectCategory(resp.categoryId);
+    });
+  }
+
+  /**
+   * @param {int} categoryId
+   */
+  selectParentCategory(categoryId) {
+    document.querySelector(ProductMap.categories.parentCategorySelectInput).value = categoryId;
   }
 }

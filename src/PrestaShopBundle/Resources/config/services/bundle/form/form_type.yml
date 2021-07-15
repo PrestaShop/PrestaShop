@@ -1373,6 +1373,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.category.quick_add_category_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Category\QuickAddCategoryType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.stock.stock_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType'
         parent: 'form.type.translatable.aware'
