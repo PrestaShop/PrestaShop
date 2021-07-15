@@ -61,7 +61,6 @@ export default class SubmittableInput {
    */
   private init(): void {
     const inputs = `${this.wrapperSelector} ${this.inputSelector}`;
-    const that = this;
 
     $(document).on('focus', inputs, (e) => {
       this.refreshButtonState(e.currentTarget, true);
@@ -72,7 +71,7 @@ export default class SubmittableInput {
     $(document).on(
       'click',
       `${this.wrapperSelector} ${this.buttonSelector}`,
-      function() {
+      function () {
         this.submitInput(this);
       },
     );
@@ -170,7 +169,7 @@ export default class SubmittableInput {
    *
    * @private
    */
-  toggleLoading(button: Element, loading: boolean) {
+  private toggleLoading(button: Element, loading: boolean): void {
     if (loading) {
       $(button).html('<span class="spinner-border spinner-border-sm"></span>');
     } else {
@@ -184,7 +183,7 @@ export default class SubmittableInput {
    *
    * @private
    */
-  toggleError(button: Element, error: boolean) {
+  private toggleError(button: Element, error: boolean): void {
     const input = this.findInput(button);
 
     $(input).toggleClass('is-invalid', error);

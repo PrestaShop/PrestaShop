@@ -33,7 +33,7 @@ $(() => {
   $('[data-toggle="form-popover-error"]').popover({
     html: true,
     content() {
-      return getErrorContent(<HTMLElement>this);
+      return getErrorContent(<HTMLElement> this);
     },
   });
 
