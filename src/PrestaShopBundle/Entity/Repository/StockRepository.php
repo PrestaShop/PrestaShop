@@ -194,11 +194,11 @@ class StockRepository extends StockManagementRepository
      */
     public function getData(QueryParamsCollection $queryParams)
     {
-        $this->stockManager->updatePhysicalProductQuantity(
-            $this->shopId,
-            $this->orderStates['error'],
-            $this->orderStates['cancellation']
-        );
+        $product_list = parent::getData($queryParams);
+
+        foreach ($product_list as $prod) {
+            $this->syncAllStock($prod['product_id']);
+        }
 
         return parent::getData($queryParams);
     }
