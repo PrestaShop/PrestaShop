@@ -97,6 +97,7 @@ class OrderConfirmationControllerCore extends FrontController
             'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($order),
             'order' => $presentedOrder,
             'register_form' => $register_form,
+            'registered_customer_exists' => Customer::customerExists($this->context->customer->email, false, true),
         ]);
 
         if ($this->context->customer->is_guest) {
