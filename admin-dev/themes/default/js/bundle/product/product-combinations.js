@@ -248,6 +248,7 @@ var combinations = (function() {
 
           /** init combination tax include price */
           priceCalculation.impactTaxInclude(contentElem.find('.attribute_priceTE'));
+          priceCalculation.impactFinalPrice(contentElem.find('.attribute_priceTE'));
 
           contentElem.insertBefore('#form-nav').removeClass('hide').show();
 
