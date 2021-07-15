@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class DateTimeColumn extends AbstractColumn
@@ -42,6 +43,10 @@ final class DateTimeColumn extends AbstractColumn
      * Note the use of non-breaking hyphens (U+2011)
      */
     const DATETIME_WITHOUT_SECONDS = 'Y‑m‑d H:i';
+
+    private const FORMAT_NORMALIZATION_MAP = [
+        '-' => '‑', // convert hyphens into non-breaking hyphens
+    ];
 
     /**
      * {@inheritdoc}
@@ -70,6 +75,12 @@ final class DateTimeColumn extends AbstractColumn
             ->setAllowedTypes('format', 'string')
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('empty_data', 'string')
-            ->setAllowedTypes('clickable', 'bool');
+            ->setAllowedTypes('clickable', 'bool')
+            ->setNormalizer(
+                'format',
+                function (Options $options, $value) {
+                    return strtr($value, self::FORMAT_NORMALIZATION_MAP);
+                }
+            );
     }
 }
