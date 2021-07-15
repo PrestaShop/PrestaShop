@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Shop;
 use Configuration;
 use Context;
 use ImageManager;
+use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShopException;
 use Shop;
 use Tools;
@@ -47,6 +48,11 @@ class LogoUploader
      * @var array
      */
     private $errors = [];
+
+    /**
+     * @var array - a list of svg mime types
+     */
+    protected const SVG_MIMETYPES = ['image/svg+xml', 'image/svg'];
 
     public function __construct(Shop $shop)
     {
@@ -101,7 +107,7 @@ class LogoUploader
         $files = empty($files) ? $_FILES : $files;
 
         if (isset($files[$fieldName]['tmp_name'], $files[$fieldName]['tmp_name'], $files[$fieldName]['size'])) {
-            if ($error = ImageManager::validateUpload($files[$fieldName], Tools::getMaxUploadSize())) {
+            if ($error = ImageManager::validateUpload($files[$fieldName], Tools::getMaxUploadSize(), ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS)) {
                 throw new PrestaShopException($error);
             }
             $tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
@@ -111,6 +117,9 @@ class LogoUploader
             }
 
             $fileExtension = ($fieldName == 'PS_STORES_ICON') ? '.gif' : '.jpg';
+            if ($this->isSvgMimeType($files[$fieldName]['type'])) {
+                $fileExtension = '.svg';
+            }
             $logoName = $this->getLogoName($logoPrefix, $fileExtension);
 
             if ($fieldName == 'PS_STORES_ICON') {
@@ -118,7 +127,11 @@ class LogoUploader
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop icon %s.', $logoName));
                 }
             } else {
-                if (!@ImageManager::resize($tmpName, _PS_IMG_DIR_ . $logoName)) {
+                if ($this->isSvgMimeType($files[$fieldName]['type'])) {
+                    if (!copy($tmpName, _PS_IMG_DIR_ . $logoName)) {
+                        throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
+                    }
+                } elseif (!@ImageManager::resize($tmpName, _PS_IMG_DIR_ . $logoName)) {
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                 }
             }
@@ -141,6 +154,11 @@ class LogoUploader
         }
 
         return false;
+    }
+
+    public function isSvgMimeType(string $mimeType): bool
+    {
+        return (bool) in_array($mimeType, self::SVG_MIMETYPES);
     }
 
     private function updateInMultiShopContext(&$idShop, &$idShopGroup, $fieldName)
