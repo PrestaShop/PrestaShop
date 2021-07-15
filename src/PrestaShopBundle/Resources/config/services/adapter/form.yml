@@ -63,6 +63,11 @@ services:
   prestashop.adapter.form.choice_provider.employee_name_by_id:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\EmployeeNameByIdChoiceProvider'
 
+  prestashop.adapter.form.choice_provider.order_return_state:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\OrderReturnStateChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
   prestashop.adapter.form.choice_provider.features_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider'
     arguments:
