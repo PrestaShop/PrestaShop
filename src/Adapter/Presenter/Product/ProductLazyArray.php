@@ -886,7 +886,10 @@ class ProductLazyArray extends AbstractLazyArray
         $show_price = $this->shouldShowPrice($settings, $product);
         $show_availability = $show_price && $settings->stock_management_enabled;
         $this->product['show_availability'] = $show_availability;
-        $product['quantity_wanted'] = $this->getQuantityWanted();
+
+        if (!isset($product['quantity_wanted'])) {
+            $product['quantity_wanted'] = $this->getQuantityWanted();
+        }
 
         if (isset($product['available_date'])) {
             $date = new DateTime($product['available_date']);
@@ -903,7 +906,7 @@ class ProductLazyArray extends AbstractLazyArray
             if ($availableQuantity >= 0) {
                 $this->product['availability_date'] = $product['available_date'];
 
-                if ($product['quantity'] < $settings->lastRemainingItems) {
+                if ($availableQuantity < $settings->lastRemainingItems) {
                     $this->applyLastItemsInStockDisplayRule();
                 } else {
                     $config = $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS');
@@ -917,7 +920,7 @@ class ProductLazyArray extends AbstractLazyArray
                     : ($config[$language->id] ?? null);
                 $this->product['availability_date'] = $product['available_date'];
                 $this->product['availability'] = 'available';
-            } elseif ($product['quantity_wanted'] > 0 && $product['quantity'] > 0) {
+            } elseif ($product['quantity_wanted'] > 0 && $availableQuantity > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'There are not enough products in stock',
                     [],

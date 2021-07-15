@@ -693,6 +693,7 @@ class CartPresenter implements PresenterInterface
             $this->settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
             $this->settings->showPrices = Configuration::showPrices();
             $this->settings->showLabelOOSListingPages = (bool) Configuration::get('PS_SHOW_LABEL_OOS_LISTING_PAGES');
+            $this->settings->lastRemainingItems = Configuration::get('PS_LAST_QTIES');
         }
 
         return $this->settings;
