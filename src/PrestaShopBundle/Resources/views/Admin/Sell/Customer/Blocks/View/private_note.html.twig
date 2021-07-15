@@ -35,12 +35,14 @@
       </p>
     </div>
 
-    {{ form_start(privateNoteForm, {'action': path('admin_customers_set_private_note', {'customerId': customerInformation.customerId.value})}) }}
-      {{ form_widget(privateNoteForm.note) }}
+    {% if privateNoteForm is not null %}
+      {{ form_start(privateNoteForm, {'action': path('admin_customers_set_private_note', {'customerId': customerInformation.customerId.value})}) }}
+        {{ form_widget(privateNoteForm.note) }}
 
-      <button class="btn btn-primary float-right mt-3" type="submit">
-        {{ 'Save'|trans({}, 'Admin.Actions') }}
-      </button>
-    {{ form_end(privateNoteForm) }}
+        <button class="btn btn-primary float-right mt-3" type="submit">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      {{ form_end(privateNoteForm) }}
+    {% endif %}
   </div>
 </div>
