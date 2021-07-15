@@ -198,6 +198,7 @@ class TranslateCore
         }
 
         if (!isset($translationsMerged[$name][$iso])) {
+            $translationsMerged[$name][$iso] = false;
             $filesByPriority = [
                 // PrestaShop 1.5 translations
                 _PS_MODULE_DIR_ . $name . '/translations/' . $iso . '.php',
@@ -211,9 +212,9 @@ class TranslateCore
                 if (file_exists($file)) {
                     include_once $file;
                     $_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
+                    $translationsMerged[$name][$iso] = true;
                 }
             }
-            $translationsMerged[$name][$iso] = true;
         }
 
         $string = preg_replace("/\\\*'/", "\'", $originalString);
@@ -232,7 +233,9 @@ class TranslateCore
                 $defaultKeyFile = strtolower('<{' . $name . '}prestashop>' . $file) . '_' . $key;
             }
 
-            if (isset($currentKeyFile) && !empty($_MODULES[$currentKeyFile])) {
+            if($translationsMerged[$name][$iso] === false){
+                $ret = stripslashes($string);
+            } elseif (isset($currentKeyFile) && !empty($_MODULES[$currentKeyFile])) {
                 $ret = stripslashes($_MODULES[$currentKeyFile]);
             } elseif (isset($defaultKeyFile) && !empty($_MODULES[$defaultKeyFile])) {
                 $ret = stripslashes($_MODULES[$defaultKeyFile]);
