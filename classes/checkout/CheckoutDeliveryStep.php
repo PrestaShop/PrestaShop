@@ -34,6 +34,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     private $giftCost = 0;
     private $includeTaxes = false;
     private $displayTaxesLabel = false;
+    private $separatePackagesAllowed = false;
 
     public function setRecyclablePackAllowed($recyclablePackAllowed)
     {
@@ -120,6 +121,18 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
         return '';
     }
 
+    public function setSeparatePackagesAllowed($separatePackagesAllowed)
+    {
+        $this->separatePackagesAllowed = $separatePackagesAllowed;
+
+        return $this;
+    }
+
+    public function isSeparatePackagesAllowed()
+    {
+        return $this->separatePackagesAllowed;
+    }
+
     public function handleRequest(array $requestParams = [])
     {
         if (isset($requestParams['delivery_option'])) {
@@ -135,6 +148,9 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             $this->getCheckoutSession()->setGift(
                 $useGift,
                 ($useGift && isset($requestParams['gift_message'])) ? $requestParams['gift_message'] : ''
+            );
+            $this->getCheckoutSession()->setSeparatePackagesAllowed(
+                isset($requestParams['allow_seperated_package']) ? $requestParams['allow_seperated_package'] : false
             );
         }
 
@@ -186,6 +202,10 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                         'Shop.Theme.Checkout'
                     ),
                     'message' => $this->getCheckoutSession()->getGift()['message'],
+                ],
+                'separatePackages' => [
+                    'allowed' => $this->isSeparatePackagesAllowed(),
+                    'isSeparatePackage' =>  $this->getCheckoutSession()->isSeparatePackagesAllowed()
                 ],
             ]
         );
