@@ -8,6 +8,8 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
   ('PS_ORDER_RECALCULATE_SHIPPING', '1', NOW(), NOW()),
   ('PS_MAINTENANCE_TEXT', 'We are currently updating our shop and will be back really soon.&lt;br&gt;Thanks for your patience.', NOW(), NOW());
 
+/* PHP:ps_1700_short_description_config(); */;
+
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) SELECT c.`id_configuration`, l.`id_lang`, c.`value`, NOW() FROM `PREFIX_configuration` c, `PREFIX_lang` l WHERE c.`name` = 'PS_MAINTENANCE_TEXT';
 
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES
