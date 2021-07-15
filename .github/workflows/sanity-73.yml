@@ -1,9 +1,5 @@
 name: UI tests - PHP 7.3
-
-on:
-  pull_request:
-    types: [opened,reopened,synchronize]
-
+on: [push, pull_request]
 jobs:
 
   sanity:
