@@ -176,7 +176,7 @@ class CountryCore extends ObjectModel
      * Get a country ID with its iso code.
      *
      * @param string $isoCode Country iso code
-     * @param bool $active return only active coutries
+     * @param bool $active return only active countries
      *
      * @return int Country ID
      */
