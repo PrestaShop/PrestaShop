@@ -61,6 +61,7 @@ export default class SubmittableInput {
    */
   private init(): void {
     const inputs = `${this.wrapperSelector} ${this.inputSelector}`;
+    const that = this;
 
     $(document).on('focus', inputs, (e) => {
       this.refreshButtonState(e.currentTarget, true);
@@ -72,7 +73,7 @@ export default class SubmittableInput {
       'click',
       `${this.wrapperSelector} ${this.buttonSelector}`,
       function () {
-        this.submitInput(this);
+        that.submitInput(this);
       },
     );
     $(document).on('keyup', inputs, (e: JQueryEventObject) => {
