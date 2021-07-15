@@ -1988,8 +1988,15 @@ class AdminControllerCore extends Controller
             );
         }
 
+        // Fetch Employee Menu
+        $employeeMenuParams = [
+            'links' => [],
+        ];
+        Hook::exec('displayBackOfficeEmployeeMenu', $employeeMenuParams, null, true);
+
         $this->context->smarty->assign([
             'displayBackOfficeTop' => Hook::exec('displayBackOfficeTop'),
+            'displayBackOfficeEmployeeMenu' => $employeeMenuParams['links'],
             'submit_form_ajax' => (int) Tools::getValue('submitFormAjax'),
         ]);
 
