@@ -70,7 +70,17 @@ class PaymentOptionsFinderCore extends HookFinder
         $freeOption = new PaymentOption();
         $freeOption->setModuleName('free_order')
             ->setCallToActionText(Context::getContext()->getTranslator()->trans('Free order', [], 'Admin.Orderscustomers.Feature'))
-            ->setAction(Context::getContext()->link->getPageLink('order-confirmation', null, null, 'free_order=1'));
+            ->setAction(Context::getContext()->link->getPageLink(
+                    'order-confirmation',
+                    null,
+                    null,
+                    [
+                        'free_order' => 1,
+                        'key' => Context::getContext()->cart->secure_key,
+                        'id_cart' => (int) Context::getContext()->cart->id,
+                    ]
+                )
+            );
 
         return ['free_order' => [$freeOption]];
     }
