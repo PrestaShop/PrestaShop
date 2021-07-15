@@ -579,8 +579,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             return false;
         }
 
-        // Get object id in database
-        $this->id = Db::getInstance()->Insert_ID();
+        if (!$this->force_id) {
+            // Get object id in database
+            $this->id = Db::getInstance()->Insert_ID();
+        }
 
         // Database insertion for multishop fields related to the object
         if (Shop::isTableAssociated($this->def['table'])) {
