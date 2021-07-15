@@ -22,6 +22,8 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'displayAdminGridTableBefore', 'Display before Grid table', 'This hook adds new blocks before Grid component table.', '1'),
   (NULL, 'displayAdminGridTableAfter', 'Display after Grid table', 'This hook adds new blocks after Grid component table.', '1'),
   (NULL, 'displayAdminOrderCreateExtraButtons', 'Add buttons on the create order page dropdown', 'Add buttons on the create order page dropdown', '1'),
+  (NULL, 'actionPDFDeliverySlipGenerate', 'Delivery slip generation', 'This hook is executed before the common delivery slips is generated. If true is return by the handler, the system will interpreter that the slip is processed elsewhere and the common delivery slip will not be generated.', '1'),
+  (NULL, 'actionPDFDeliverySlipRender', 'Delivery slip render', 'This hook is executed before the common delivery slips is generated. It is similar to the hook actionPDFInvoiceRender. If true is return by the handler, the system will interpreter that the slip is proccessed elsewhere and the common delivery slip will not be generated.', '1'),
   (NULL, 'actionFeatureFlagForm', 'Modify feature flag options form content', 'This hook allows to modify the Feature Flag page form FormBuilder', 1),
   (NULL, 'actionFeatureFlagSave', 'Modify feature flag options form saved data', 'This hook allows to modify the Feature Flag data being submitted through the form after it was saved', 1),
   (NULL, 'actionProductFormBuilderModifier', 'Modify product identifiable object form', 'This hook allows to modify product identifiable object form content by modifying form builder data or FormBuilder itself', '1'),

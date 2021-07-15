@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
 use Context;
+use Hook;
 use Order;
 use PDF;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -71,9 +72,17 @@ final class DeliverySlipPdfGenerator implements PDFGeneratorInterface
             throw new RuntimeException($this->translator->trans('The order cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
         }
 
-        $order_invoice_collection = $order->getInvoicesCollection();
+        if (Hook::exec('actionPDFDeliverySlipGenerate', ['order' => $order])) {
+            return;
+        }
 
-        $pdf = new PDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP, Context::getContext()->smarty);
+        $order_invoice_list = $order->getInvoicesCollection();
+
+        if (Hook::exec('actionPDFDeliverySlipRender', ['order_invoice_list' => $order_invoice_list])) {
+            return;
+        }
+
+        $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_DELIVERY_SLIP, Context::getContext()->smarty);
         $pdf->render();
     }
 }
