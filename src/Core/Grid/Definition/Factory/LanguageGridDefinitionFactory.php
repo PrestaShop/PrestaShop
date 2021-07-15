@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -242,15 +242,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                      ->setAssociatedColumn('date_format_full')
              )
             ->add(
-                 (new Filter('active', ChoiceType::class))
-                     ->setTypeOptions([
-                         'choices' => [
-                             $this->trans('Yes', [], 'Admin.Global') => 1,
-                             $this->trans('No', [], 'Admin.Global') => 0,
-                         ],
-                         'required' => false,
-                         'choice_translation_domain' => false,
-                     ])
+                 (new Filter('active', YesAndNoChoiceType::class))
                      ->setAssociatedColumn('active')
              )
             ->add(

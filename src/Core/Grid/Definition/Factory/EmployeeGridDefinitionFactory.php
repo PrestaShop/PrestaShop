@@ -231,8 +231,9 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('profile')
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
-            ->setAssociatedColumn('active')
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
+                    ->setAssociatedColumn('active')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
