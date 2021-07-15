@@ -240,12 +240,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $totalSpentSinceRegistration = null;
 
         if (!Validate::isLoadedObject($customer)) {
-            $cart = new Cart($order->id_cart);
-
-            $customer->firstname = $invoiceAddress->getFirstName();
-            $customer->lastname = $invoiceAddress->getLastName();
-            $customer->email = '';
-            $customer->id_lang = $cart->getAssociatedLanguage()->getId();
+            $this->buildFakeCustomerObject($order, $invoiceAddress, $customer);
             $customerStats = ['nb_orders' => 1]; // Count this current order as loaded
         } else {
             $gender = new Gender($customer->id_gender);
@@ -850,5 +845,26 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         return $this->getOrderProductsForViewingHandler->handle(
             GetOrderProductsForViewing::all($orderId->getValue(), $productsOrder)
         );
+    }
+
+    /**
+     * If there is no valid customer attached to the order, the customer must have been deleted
+     * from the database. We then create a fake customer object, using the invoice address data
+     * and cart language.
+     *
+     * @param Order $order Order object
+     * @param OrderInvoiceAddressForViewing $invoiceAddress Invoice address information
+     * @param Customer $customer Customer object
+     *
+     * @return void
+     */
+    private function buildFakeCustomerObject(Order $order, OrderInvoiceAddressForViewing $invoiceAddress, Customer $customer): void
+    {
+        $cart = new Cart($order->id_cart);
+
+        $customer->firstname = $invoiceAddress->getFirstName();
+        $customer->lastname = $invoiceAddress->getLastName();
+        $customer->email = '';
+        $customer->id_lang = $cart->getAssociatedLanguage()->getId();
     }
 }
