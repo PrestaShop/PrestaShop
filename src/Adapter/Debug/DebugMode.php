@@ -47,6 +47,10 @@ class DebugMode
      */
     public function isDebugModeEnabled()
     {
+        if ((!defined('_PS_IN_TEST_') || _PS_IN_TEST_ === false) && defined('_PS_MODE_DEV_')) {
+            return (bool) _PS_MODE_DEV_;
+        }
+
         $definesClean = '';
         $customDefinesPath = _PS_ROOT_DIR_ . '/config/defines_custom.inc.php';
         $definesPath = _PS_ROOT_DIR_ . '/config/defines.inc.php';
