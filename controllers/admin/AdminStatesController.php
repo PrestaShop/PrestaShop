@@ -112,13 +112,11 @@ class AdminStatesControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_state'] = [
-                'href' => self::$currentIndex . '&addstate&token=' . $this->token,
-                'desc' => $this->trans('Add new state', [], 'Admin.International.Feature'),
-                'icon' => 'process-icon-new',
-            ];
-        }
+        $this->page_header_toolbar_btn['new_state'] = [
+            'href' => self::$currentIndex . '&addstate&token=' . $this->token,
+            'desc' => $this->trans('Add new state', [], 'Admin.International.Feature'),
+            'icon' => 'process-icon-new',
+        ];
 
         parent::initPageHeaderToolbar();
     }
