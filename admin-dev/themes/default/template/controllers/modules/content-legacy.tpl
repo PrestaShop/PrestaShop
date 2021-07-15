@@ -92,3 +92,4 @@
 		{include file='controllers/modules/page.tpl'}
 	{/if}
 {/if}
+<span class="text-ellipsis small-text">v{$module_version} - {l s='by'} <b>{$module_author}</b></span>
