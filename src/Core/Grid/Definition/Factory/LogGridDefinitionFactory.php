@@ -139,7 +139,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new DateTimeColumn('date_add'))
                     ->setName($this->trans('Date', [], 'Admin.Global'))
                     ->setOptions([
-                        'format' => 'Y-m-d H:i',
+                        'format' => 'Y‑m‑d H:i', // note the use of non-breaking hyphens (U+2011)
                         'field' => 'date_add',
                     ])
             )
