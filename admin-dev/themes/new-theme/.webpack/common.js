@@ -139,6 +139,7 @@ module.exports = {
       '@node_modules': path.resolve(__dirname, '../node_modules'),
       '@vue': path.resolve(__dirname, '../js/vue'),
       '@PSTypes': path.resolve(__dirname, '../js/types'),
+      '@images': path.resolve(__dirname, '../../../../img'),
     },
   },
   module: {

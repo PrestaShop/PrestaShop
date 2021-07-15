@@ -207,7 +207,7 @@ export default class NavBar {
       .addClass('link')
       .removeClass('m-t-1')
       .prop('outerHTML');
-    const $employee = $('.employee_avatar').prop('outerHTML');
+    const $employee = $('.employee-top').prop('outerHTML');
     const profileLink = $('.profile-link').attr('href');
     const $mainMenu = $('.main-menu');
 
