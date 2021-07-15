@@ -40,6 +40,7 @@ class ValidateTest extends TestCase
 
     /**
      * @param string $name
+     * @param array $data
      * @param string $dataName
      */
     public function __construct($name = null, array $data = [], $dataName = '')
@@ -94,6 +95,60 @@ class ValidateTest extends TestCase
             [false, null],
             [false, 'invalid'],
             [false, '666invalid'],
+        ];
+    }
+
+    /**
+     * @param bool $expected
+     * @param string $email
+     *
+     * @dataProvider isEmailDataProvider
+     */
+    public function testIsEmail(bool $expected, string $email): void
+    {
+        $this->assertSame($expected, $this->validate->isEmail($email));
+    }
+
+    /**
+     * @param bool $expected
+     * @param mixed $data
+     *
+     * @dataProvider isStringDataProvider
+     */
+    public function testIsString(bool $expected, $data): void
+    {
+        $this->assertSame($expected, $this->validate->isString($data));
+    }
+
+    public function isStringDataProvider(): array
+    {
+        return [
+            [true, 'jdkiizdù%'],
+            [true, ' '],
+            [true, '666xlkQM'],
+            [true, '666'],
+            [false, true],
+            [false, false],
+            [false, null],
+        ];
+    }
+
+    public function isEmailDataProvider(): array
+    {
+        return [
+            [true, 'john.doe@prestashop.com'],
+            [true, 'john.doe+alias@prestshop.com'],
+            [true, 'john.doe+alias@pr.e.sta.shop.com'],
+            [true, 'j@p.com'],
+            [true, 'john#doe@prestashop.com'],
+            [false, ''],
+            [false, 'john.doe@prestashop,com'],
+            [true, 'john.doe@prestashop'],
+            [true, 'john.doe@сайт.рф'],
+            [true, 'john.doe@xn--80aswg.xn--p1ai'],
+            [false, 'иван@prestashop.com'], // rfc6531 valid but not swift mailer compatible
+            [true, 'xn--80adrw@prestashop.com'],
+            [true, 'xn--80adrw@xn--80aswg.xn--p1ai'],
         ];
     }
 }

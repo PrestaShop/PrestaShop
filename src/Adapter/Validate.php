@@ -135,4 +135,28 @@ class Validate
     {
         return ValidateLegacy::isLinkRewrite($value);
     }
+
+    /**
+     * Check for a given email validity.
+     *
+     * @param string $email
+     *
+     * @return bool
+     */
+    public function isEmail(string $email): bool
+    {
+        return ValidateLegacy::isEmail($email);
+    }
+
+    /**
+     * Check if $data is a string.
+     *
+     * @param mixed $data Data to validate
+     *
+     * @return bool Validity is ok or not
+     */
+    public function isString($data): bool
+    {
+        return ValidateLegacy::isString($data);
+    }
 }
