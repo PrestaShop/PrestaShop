@@ -253,7 +253,12 @@ class WebserviceController extends FrameworkBundleAdminController
         $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
-        $statusModifier->setStatus($webserviceToEnable, true);
+        if ($statusModifier->setStatus($webserviceToEnable, true)) {
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        }
 
         return $this->redirectToRoute('admin_webservice_keys_index');
     }
@@ -270,10 +275,15 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function bulkDisableAction(Request $request)
     {
-        $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
+        $webserviceToDisable = $request->request->get('webservice_key_bulk_action');
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
-        $statusModifier->setStatus($webserviceToEnable, false);
+        if ($statusModifier->setStatus($webserviceToDisable, false)) {
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        }
 
         return $this->redirectToRoute('admin_webservice_keys_index');
     }
