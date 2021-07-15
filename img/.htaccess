@@ -18,3 +18,8 @@
         Require all granted
     </Files>
 </IfModule>
+
+# If the image doesn't exist here regenerate the thumbnail
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} ^.*$
+RewriteRule ^(.*)$ /resize.php?url=img/$0 [L]
