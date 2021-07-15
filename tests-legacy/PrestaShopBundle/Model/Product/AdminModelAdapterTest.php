@@ -238,31 +238,36 @@ class AdminModelAdapterTest extends KernelTestCase
      */
     public function testGetFormCombination()
     {
-        $expectedStructureReturn = array(
-            "id_product_attribute" => "6",
-            "attribute_reference" => "",
-            "attribute_ean13" => "",
-            "attribute_isbn" => "",
-            "attribute_upc" => "",
-            "attribute_mpn" => "",
-            "attribute_wholesale_price" => "0.000000",
-            "attribute_price_impact" => 0,
-            "attribute_price" => "0.000000",
-            "final_price" => 0,
-            "attribute_priceTI" => "",
-            "attribute_ecotax" => "0.000000",
-            "attribute_weight_impact" => 0,
-            "attribute_weight" => "0.000000",
-            "attribute_unit_impact" => 0,
-            "attribute_unity" => "0.000000",
-            "attribute_minimal_quantity" => "1",
-            "attribute_low_stock_threshold" => "2",
-            "attribute_low_stock_alert" => "1",
-            "available_date_attribute" => "0000-00-00",
-            "attribute_default" => false,
-            "attribute_quantity" => 300,
-            "name" => "Taille - L",
-        );
+        $expectedStructureReturn = [
+            'id_product_attribute' => '6',
+            'attribute_reference' => '',
+            'attribute_ean13' => '',
+            'attribute_isbn' => '',
+            'attribute_upc' => '',
+            'attribute_mpn' => '',
+            'attribute_wholesale_price' => '0.000000',
+            'attribute_price_impact' => 0,
+            'attribute_price' => '0.000000',
+            'attribute_price_display' => '$0.00',
+            'final_price' => '0.000000',
+            'final_price_tax_included' => '0.000000',
+            'attribute_priceTI' => '',
+            'product_ecotax' => '0.000000',
+            'attribute_ecotax' => '0.000000',
+            'attribute_weight_impact' => 0,
+            'attribute_weight' => '0.000000',
+            'attribute_unit_impact' => 0,
+            'attribute_unity' => '0.000000',
+            'attribute_minimal_quantity' => '1',
+            'attribute_low_stock_threshold' => '2',
+            'attribute_low_stock_alert' => '1',
+            'available_date_attribute' => '0000-00-00',
+            'attribute_default' => false,
+            'attribute_location' => false,
+            'attribute_quantity' => 300,
+            'name' => 'Taille - L',
+            'id_product' => null,
+        ];
         $combinationDataProvider = $this->container->get('prestashop.adapter.data_provider.combination');
         $actualReturn = $combinationDataProvider->completeCombination($this->fakeCombination(), $this->product);
 
@@ -274,5 +279,8 @@ class AdminModelAdapterTest extends KernelTestCase
                 sprintf('The expected value for property %s is wrong', $property)
             );
         }
+
+        // Test full equals to check if there are additional unexpected fields
+        $this->assertEquals($expectedStructureReturn, $actualReturn);
     }
 }
