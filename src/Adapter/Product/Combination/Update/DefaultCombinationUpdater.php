@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
- * Updates default combination for product
+ * Responsible for updating product default combination
  */
 class DefaultCombinationUpdater
 {
@@ -58,6 +58,13 @@ class DefaultCombinationUpdater
     }
 
     /**
+     * Marks the provided combination as default (combination->default_on)
+     * and removes the mark from previous default combination
+     *
+     * Notice: Product->cache_default_attribute is updated in Product add(), update(), delete() methods.
+     *
+     * @see Product::updateDefaultAttribute()
+     *
      * @param CombinationId $defaultCombinationId
      *
      * @throws CoreException

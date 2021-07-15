@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationRemover;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater;
@@ -51,9 +51,9 @@ class ProductTypeUpdater
     private $productPackUpdater;
 
     /**
-     * @var CombinationRemover
+     * @var CombinationDeleter
      */
-    private $combinationRemover;
+    private $combinationDeleter;
 
     /**
      * @var VirtualProductUpdater
@@ -63,17 +63,18 @@ class ProductTypeUpdater
     /**
      * @param ProductRepository $productRepository
      * @param ProductPackUpdater $productPackUpdater
-     * @param CombinationRemover $combinationRemover
+     * @param CombinationDeleter $combinationDeleter
+     * @param VirtualProductUpdater $virtualProductUpdater
      */
     public function __construct(
         ProductRepository $productRepository,
         ProductPackUpdater $productPackUpdater,
-        CombinationRemover $combinationRemover,
+        CombinationDeleter $combinationDeleter,
         VirtualProductUpdater $virtualProductUpdater
     ) {
         $this->productRepository = $productRepository;
         $this->productPackUpdater = $productPackUpdater;
-        $this->combinationRemover = $combinationRemover;
+        $this->combinationDeleter = $combinationDeleter;
         $this->virtualProductUpdater = $virtualProductUpdater;
     }
 
@@ -93,7 +94,7 @@ class ProductTypeUpdater
             $this->productPackUpdater->setPackProducts(new PackId($productId->getValue()), []);
         }
         if ($product->product_type === ProductType::TYPE_COMBINATIONS && $productType->getValue() !== ProductType::TYPE_COMBINATIONS) {
-            $this->combinationRemover->removeAllProductCombinations($productId);
+            $this->combinationDeleter->deleteAllProductCombinations($productId);
         }
         if ($product->product_type === ProductType::TYPE_VIRTUAL && $productType->getValue() !== ProductType::TYPE_VIRTUAL) {
             $this->virtualProductUpdater->deleteFileForProduct($productId);

@@ -92,8 +92,8 @@ services:
         arguments:
             - '@prestashop.adapter.product.combination.repository.combination_repository'
 
-    prestashop.adapter.product.combination.update.combination_remover:
-        class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationRemover
+    prestashop.adapter.product.combination.update.combination_deleter:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.combination.repository.combination_repository'
@@ -168,10 +168,18 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllCombinationImagesCommand
 
-    prestashop.adapter.product.combination.command_handler.remove_combination_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\RemoveCombinationCommandHandler
+    prestashop.adapter.product.combination.command_handler.delete_combination_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\DeleteCombinationHandler
         arguments:
-            - '@prestashop.adapter.product.combination.update.combination_remover'
+            - '@prestashop.adapter.product.combination.update.combination_deleter'
         tags:
             - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand
+
+    prestashop.adapter.product.combination.command_handler.bulk_delete_combination_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\BulkDeleteCombinationHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.update.combination_deleter'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand

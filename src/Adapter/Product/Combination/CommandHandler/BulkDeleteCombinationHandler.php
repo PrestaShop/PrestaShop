@@ -23,30 +23,41 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
+namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\BulkDeleteCombinationHandlerInterface;
 
-class RemoveCombinationCommand
+/**
+ * Deletes multiple combinations using legacy object model
+ */
+class BulkDeleteCombinationHandler implements BulkDeleteCombinationHandlerInterface
 {
     /**
-     * @var CombinationId
+     * @var CombinationDeleter
      */
-    private $combinationId;
+    private $combinationDeleter;
 
-    public function __construct(int $combinationId)
-    {
-        $this->combinationId = new CombinationId($combinationId);
+    /**
+     * @param CombinationDeleter $combinationDeleter
+     */
+    public function __construct(
+        CombinationDeleter $combinationDeleter
+    ) {
+        $this->combinationDeleter = $combinationDeleter;
     }
 
     /**
-     * @return CombinationId
+     * {@inheritDoc}
      */
-    public function getCombinationId(): CombinationId
+    public function handle(BulkDeleteCombinationCommand $command): void
     {
-        return $this->combinationId;
+        $this->combinationDeleter->bulkDeleteProductCombinations(
+            $command->getProductId(),
+            $command->getCombinationIds()
+        );
     }
 }
