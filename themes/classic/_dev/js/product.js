@@ -128,7 +128,7 @@ $(document).ready(() => {
   }
 
   function createProductSpin() {
-    const $quantityInput = $(prestashop.selectors.quantityWanted);
+    const $quantityInput = $(prestashop.themeSelectors.product.quantityWanted;
 
     $quantityInput.TouchSpin({
       verticalbuttons: true,
@@ -149,7 +149,7 @@ $(document).ready(() => {
       }
     });
 
-    $('body').on('change keyup', prestashop.selectors.quantityWanted, (e) => {
+    $('body').on('change keyup', prestashop.themeSelectors.product.quantityWanted, (e) => {
       if ($quantityInput.val() !== '') {
         $(e.currentTarget).trigger('touchspin.stopspin');
         prestashop.emit('updateProduct', {
