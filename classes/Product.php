@@ -5607,6 +5607,8 @@ class ProductCore extends ObjectModel
             $quantity = (int) $row['minimal_quantity'];
         }
 
+        $null = null;
+
         $row['price_tax_exc'] = Product::getPriceStatic(
             (int) $row['id_product'],
             false,
@@ -5639,7 +5641,14 @@ class ProductCore extends ObjectModel
                 null,
                 false,
                 false,
-                $quantity
+                $quantity,
+                false,
+                null,
+                null,
+                null,
+                $null,
+                true,
+                false
             );
         } else {
             $row['price'] = Tools::ps_round(
@@ -5663,7 +5672,14 @@ class ProductCore extends ObjectModel
                 null,
                 false,
                 false,
-                $quantity
+                $quantity,
+                false,
+                null,
+                null,
+                null,
+                $null,
+                true,
+                false
             );
             $row['price_without_reduction_without_tax'] = Product::getPriceStatic(
                 (int) $row['id_product'],
@@ -5673,7 +5689,14 @@ class ProductCore extends ObjectModel
                 null,
                 false,
                 false,
-                $quantity
+                $quantity,
+                false,
+                null,
+                null,
+                null,
+                $null,
+                true,
+                false
             );
         }
 
