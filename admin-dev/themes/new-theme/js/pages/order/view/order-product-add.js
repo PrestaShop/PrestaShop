@@ -65,24 +65,20 @@ export default class OrderProductAdd {
 
   setupListener() {
     this.combinationsSelect.on('change', (event) => {
-      const taxExcluded = this.priceTaxExcludedInput.val(
-        window.ps_round(
-          $(event.currentTarget)
-            .find(':selected')
-            .data('priceTaxExcluded'),
-          this.currencyPrecision,
-        ),
+      const taxExcluded = window.ps_round(
+        $(event.currentTarget)
+          .find(':selected')
+          .data('priceTaxExcluded'),
+        this.currencyPrecision,
       );
       this.priceTaxExcludedInput.val(taxExcluded);
       this.taxExcluded = parseFloat(taxExcluded);
 
-      const taxIncluded = this.priceTaxIncludedInput.val(
-        window.ps_round(
-          $(event.currentTarget)
-            .find(':selected')
-            .data('priceTaxIncluded'),
-          this.currencyPrecision,
-        ),
+      const taxIncluded = window.ps_round(
+        $(event.currentTarget)
+          .find(':selected')
+          .data('priceTaxIncluded'),
+        this.currencyPrecision,
       );
       this.priceTaxIncludedInput.val(taxIncluded);
       this.taxIncluded = parseFloat(taxIncluded);
