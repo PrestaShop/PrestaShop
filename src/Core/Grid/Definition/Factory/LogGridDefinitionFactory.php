@@ -51,7 +51,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     public const GRID_ID = 'logs';
 
     /**
-     * @var string
+     * @var string Date format for the current user
      */
     private $contextDateFormat;
 
