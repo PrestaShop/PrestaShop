@@ -54,8 +54,10 @@
   </div>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue';
+
+  export default Vue.extend({
     props: {
       value: {
         type: Number,
@@ -75,23 +77,24 @@
       },
     },
     methods: {
-      onKeyup($event) {
+      onKeyup($event: JQueryEventObject): void {
         this.$emit('keyup', $event);
       },
-      focusIn() {
+      focusIn(): void {
         this.$emit('focus');
       },
-      focusOut($event) {
+      focusOut($event: JQueryEventObject): void {
         this.$emit('blur', $event);
       },
-      increment() {
-        const value = parseInt(this.value === '' ? 0 : this.value, 10);
+      increment(): void {
+        const value = Math.round(this.value);
+
         this.$emit('change', Number.isNaN(value) ? 0 : value + 1);
       },
-      decrement() {
-        const value = parseInt(this.value, 10);
+      decrement(): void {
+        const value = Math.round(this.value);
         this.$emit('change', Number.isNaN(value) ? -1 : value - 1);
       },
     },
-  };
+  });
 </script>
