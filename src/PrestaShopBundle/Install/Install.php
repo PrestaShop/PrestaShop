@@ -238,17 +238,17 @@ class Install extends AbstractInstall
 
             return false;
         } else {
-            return $this->emptyYamlParameters();
+            return $this->unlinkYamlParameters();
         }
     }
 
     /**
      * Prevent availability of YAML parameters.
      */
-    protected function emptyYamlParameters()
+    protected function unlinkYamlParameters()
     {
-        if (!file_put_contents(_PS_ROOT_DIR_ . '/app/config/parameters.yml', 'parameters:')) {
-            $this->setError($this->translator->trans('Cannot write app/config/parameters.yml file', [], 'Install'));
+        if (!unlink(_PS_ROOT_DIR_ . '/app/config/parameters.yml')) {
+            $this->setError($this->translator->trans('Cannot unlink app/config/parameters.yml file', [], 'Install'));
 
             return false;
         }
