@@ -3,7 +3,7 @@
 
 						{$product['name']}
 
-						{$product['price']}
+						{$product['base_price']}
 						{capture "productPriceBlock"}{hook h='displayProductPriceBlock' product=$product type="unit_price"}{/capture}{$smarty.capture.productPriceBlock|strip_tags|trim}
 
 						{$product['quantity']}

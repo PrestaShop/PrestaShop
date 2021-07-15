@@ -5607,6 +5607,8 @@ class ProductCore extends ObjectModel
             $quantity = (int) $row['minimal_quantity'];
         }
 
+        $price_base_tax_exc = $row['price'];
+
         $row['price_tax_exc'] = Product::getPriceStatic(
             (int) $row['id_product'],
             false,
@@ -5781,12 +5783,16 @@ class ProductCore extends ObjectModel
         $combination = new Combination($id_product_attribute);
 
         if (0 != $combination->unit_price_impact && 0 != $row['unit_price_ratio']) {
-            $unitPrice = ($row['price_tax_exc'] / $row['unit_price_ratio']) + $combination->unit_price_impact;
+            $unitPrice = ($price_base_tax_exc / $row['unit_price_ratio']) + $combination->unit_price_impact;
             $row['unit_price_ratio'] = $row['price_tax_exc'] / $unitPrice;
         }
 
         if (isset($row['unit_price_ratio'])) {
-            $row['unit_price'] = ($row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0);
+            if (self::$_taxCalculationMethod == PS_TAX_EXC) {
+                $row['unit_price'] = ($row['unit_price_ratio'] != 0 ? $row['price_tax_exc'] / $row['unit_price_ratio'] : 0);
+            } else {
+                $row['unit_price'] = ($row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0);
+            }
         } else {
             $row['unit_price'] = 0.0;
         }
