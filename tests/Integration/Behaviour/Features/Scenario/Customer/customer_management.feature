@@ -151,3 +151,37 @@ Feature: Customer Management
       | defaultGroupId | Guest                        |
       | groupIds       | [Guest]                      |
     And customer "CUST-7" should be soft deleted
+
+  Scenario: Edit guest customer email
+    When I create a customer "CUST-8" with following properties:
+      | firstName      | Mathieu                     |
+      | lastName       | Guest                       |
+      | email          | guest@prestashop.com        |
+      | password       | PrestaShopForever1_!        |
+      | defaultGroupId | Guest                       |
+      | groupIds       | [Guest]                     |
+      | isGuest        | true                        |
+    And I create a customer "CUST-9" with following properties:
+      | firstName | Mathieu                     |
+      | lastName  | Customer                    |
+      | email     | customernine@prestashop.com |
+      | password  | PrestaShopForever1_!        |
+    And I edit customer "CUST-8" and I change the following properties:
+      | email | customernine@prestashop.com |
+    Then if I query customer "CUST-8" I should get a Customer with properties:
+      | email | customernine@prestashop.com |
+
+  Scenario: Edit registered customer email
+    When I create a customer "CUST-10" with following properties:
+      | firstName | Mathieu                     |
+      | lastName  | Customertwo                 |
+      | email     | customereten@prestashop.com  |
+      | password  | PrestaShopForever1_!        |
+    And I create a customer "CUST-11" with following properties:
+      | firstName | Mathieu                     |
+      | lastName  | Customer                    |
+      | email     | customereleven@prestashop.com     |
+      | password  | PrestaShopForever1_!        |
+    And I edit customer "CUST-10" and I change the following properties:
+      | email | customereleven@prestashop.com |
+    Then I should be returned an error message 'Customer with email "customereleven@prestashop.com" already exists'    
