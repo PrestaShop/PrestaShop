@@ -1,16 +1,20 @@
 require('module-alias/register');
-const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_payment_preferences_countryRestrictions';
-
+// Import expect from chai
 const {expect} = require('chai');
 
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const preferencesPage = require('@pages/BO/payment/preferences');
+
+// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
@@ -19,12 +23,14 @@ const checkoutPage = require('@pages/FO/checkout');
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
 
+const baseContext = 'functional_BO_payment_preferences_countryRestrictions';
+
 let browserContext;
 let page;
 
 const countryID = 74;
 
-describe('Configure country restrictions', async () => {
+describe('BO - Payment - Preferences : Configure country restrictions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -54,14 +60,12 @@ describe('Configure country restrictions', async () => {
     await expect(pageTitle).to.contains(preferencesPage.pageTitle);
   });
 
-  const tests = [
+  [
     {args: {action: 'uncheck', paymentModule: 'ps_wirepayment', exist: false}},
     {args: {action: 'check', paymentModule: 'ps_wirepayment', exist: true}},
     {args: {action: 'uncheck', paymentModule: 'ps_checkpayment', exist: false}},
     {args: {action: 'check', paymentModule: 'ps_checkpayment', exist: true}},
-  ];
-
-  tests.forEach((test, index) => {
+  ].forEach((test, index) => {
     it(`should ${test.args.action} the France country for '${test.args.paymentModule}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.action + test.args.paymentModule, baseContext);
 
@@ -75,19 +79,26 @@ describe('Configure country restrictions', async () => {
       await expect(result).to.contains(preferencesPage.successfulUpdateMessage);
     });
 
-    it('should go to FO and add the first product to the cart', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `check_${test.args.paymentModule}_${test.args.exist}`,
-        baseContext,
-      );
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
       // Click on view my shop
       page = await preferencesPage.viewMyShop(page);
 
       // Change language in FO
       await homePage.changeLanguage(page, 'en');
+
+      const pageTitle = await homePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(homePage.pageTitle);
+    });
+
+    it('should add the first product to the cart and checkout', async function () {
+      await testContext.addContextItem(
+        this,
+        'testIdentifier',
+        `addFirstProductToCart${test.args.paymentModule}_${test.args.exist}`,
+        baseContext,
+      );
 
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
@@ -104,12 +115,7 @@ describe('Configure country restrictions', async () => {
 
     // Personal information step - Login
     it('should login and go to address step', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `loginToFO${index}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `loginToFO${index}`, baseContext);
 
       if (index === 0) {
         // Personal information step - Login
@@ -120,12 +126,7 @@ describe('Configure country restrictions', async () => {
     });
 
     it('should continue to delivery step', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `goToDeliveryStep${index}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
@@ -133,12 +134,7 @@ describe('Configure country restrictions', async () => {
     });
 
     it('should continue to payment step and check the existence of payment method', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `goToPaymentStep${index}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
@@ -147,9 +143,16 @@ describe('Configure country restrictions', async () => {
       // Payment step - Check payment method
       const isVisible = await checkoutPage.isPaymentMethodExist(page, test.args.paymentModule);
       await expect(isVisible).to.be.equal(test.args.exist);
+    });
 
-      // Go back to BO
-      page = await checkoutPage.closePage(browserContext, page, 0);
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
+
+      // Close current tab
+      page = await homePage.closePage(browserContext, page, 0);
+
+      const pageTitle = await preferencesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(preferencesPage.pageTitle);
     });
   });
 });
