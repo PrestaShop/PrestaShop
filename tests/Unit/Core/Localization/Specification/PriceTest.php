@@ -36,7 +36,7 @@ class PriceTest extends NumberTest
      * Let's override numberSpec with the tested Currency specification
      * All NumberTest tests are supposed to pass with a Currency spec.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->latinNumberSpec = new PriceSpecification(

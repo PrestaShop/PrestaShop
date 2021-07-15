@@ -28,6 +28,7 @@ namespace Tests\Unit\Adapter\Routing;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Routing\LegacyHelperLinkBuilder;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 class LegacyHelperLinkBuilderTest extends TestCase
 {
@@ -57,22 +58,20 @@ class LegacyHelperLinkBuilderTest extends TestCase
         $this->assertEquals('index.php?controller=AdminProducts&updateproduct=enabled&id_product=42', $viewLink);
     }
 
-    /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Missing parameter current_index to build legacy link
-     */
     public function testViewLinkWithoutCurrentLinkFails()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Missing parameter current_index to build legacy link');
+
         $builder = new LegacyHelperLinkBuilder();
         $builder->getViewLink('product', ['id_product' => 42]);
     }
 
-    /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Missing parameter current_index to build legacy link
-     */
     public function testEditLinkWithoutCurrentLinkFails()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Missing parameter current_index to build legacy link');
+
         $builder = new LegacyHelperLinkBuilder();
         $builder->getEditLink('product', ['id_product' => 42]);
     }

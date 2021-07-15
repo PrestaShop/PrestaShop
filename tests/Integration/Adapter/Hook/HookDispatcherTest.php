@@ -81,10 +81,16 @@ class HookDispatcherTest extends KernelTestCase
         $hookDispatcher->addListener('test_test_2', [$this, 'listenerCallback2b']);
         $event = $hookDispatcher->dispatch('test_test_2', new RenderingHookEvent());
 
-        $this->assertArraySubset([
+        $subset = [
             'listenerCallback2' => ['result_test_2'],
             'overriden_listener_name' => ['result_test_2b'],
-        ], $event->getContent());
+        ];
+        $array = $event->getContent();
+
+        foreach ($subset as $key => $value) {
+            $this->assertArrayHasKey($key, $array);
+            $this->assertEquals($value, $subset[$key]);
+        }
     }
 
     public function listenerCallback(Event $event, string $eventName): void

@@ -61,7 +61,7 @@ class CustomerFormDataProviderTest extends TestCase
     /**
      * Set up dependencies for CustomerFormDataProvider
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->queryBus = $this->createMock(CommandBusInterface::class);
         $this->queryBus

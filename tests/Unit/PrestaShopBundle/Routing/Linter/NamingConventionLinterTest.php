@@ -39,7 +39,7 @@ class NamingConventionLinterTest extends TestCase
      */
     private $namingConventionLinter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->namingConventionLinter = new NamingConventionLinter();
     }

@@ -41,14 +41,14 @@ class RoutingCacheKeyGeneratorTest extends TestCase
     private $fs;
     private $filesTestDir;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->fs = new Filesystem();
         $this->filesTestDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'routing';
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         $this->cleanTestDir();

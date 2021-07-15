@@ -201,7 +201,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public static function createFromInterface(DateTimeInterface $object)
+    public static function createFromInterface(DateTimeInterface $object): DateTimeImmutable
     {
         throw static::buildUnusableMethodException('createFromInterface');
     }

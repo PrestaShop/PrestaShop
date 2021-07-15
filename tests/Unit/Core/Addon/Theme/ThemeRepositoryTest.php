@@ -39,7 +39,7 @@ class ThemeRepositoryTest extends TestCase
     const NOTICE = '[ThemeRepository] ';
     private $repository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $shop = Phake::mock('Shop');
         $shop->id = 1;
@@ -56,7 +56,7 @@ class ThemeRepositoryTest extends TestCase
         );
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->repository = null;
     }
@@ -80,7 +80,7 @@ class ThemeRepositoryTest extends TestCase
     public function testGetList()
     {
         $themeList = $this->repository->getList();
-        $this->assertInternalType('array', $themeList);
+        $this->assertIsArray($themeList);
         $this->assertInstanceOf('PrestaShop\PrestaShop\Core\Addon\Theme\Theme', current($themeList));
     }
 

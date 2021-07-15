@@ -39,7 +39,7 @@ class DefaultLanguageToFilledArrayDataTransformerTest extends TestCase
      */
     private $defaultLanguageId;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

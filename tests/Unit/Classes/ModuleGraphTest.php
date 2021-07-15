@@ -34,7 +34,7 @@ class ModuleGraphTest extends TestCase
 {
     public static $data;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new class() extends ModuleGraph {
             public function getData($layers)

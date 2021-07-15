@@ -45,7 +45,7 @@ class HookRepositoryTest extends KernelTestCase
      */
     protected $context;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

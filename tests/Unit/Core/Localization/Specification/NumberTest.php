@@ -50,7 +50,7 @@ class NumberTest extends TestCase
      */
     protected $arabSymbolList;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->latinSymbolList = $this->getMockBuilder(NumberSymbolList::class)
             ->disableOriginalConstructor()

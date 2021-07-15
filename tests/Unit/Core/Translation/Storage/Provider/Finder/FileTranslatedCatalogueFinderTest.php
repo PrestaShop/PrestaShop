@@ -42,7 +42,7 @@ class FileTranslatedCatalogueFinderTest extends TestCase
      */
     private static $tempDir;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$tempDir = implode(
             DIRECTORY_SEPARATOR,

@@ -39,7 +39,7 @@ use ReflectionClass;
 
 abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
 

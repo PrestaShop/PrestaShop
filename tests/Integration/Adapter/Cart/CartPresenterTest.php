@@ -44,7 +44,7 @@ class CartPresenterTest extends TestCase
      */
     private $previousSeparator;
 
-    protected function setup()
+    protected function setUp(): void
     {
         parent::setup();
 
@@ -53,7 +53,7 @@ class CartPresenterTest extends TestCase
         $this->cartPresenter = new CartPresenter();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Configuration::set('PS_ATTRIBUTE_ANCHOR_SEPARATOR', $this->previousSeparator);
 

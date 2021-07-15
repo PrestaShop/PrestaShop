@@ -53,7 +53,7 @@ class UserTranslatedCatalogueFinderTest extends TestCase
      */
     private $databaseTranslationLoader;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $catalogue = new MessageCatalogue(CatalogueLayersProviderInterface::DEFAULT_LOCALE);
         foreach (self::$wordings as $domain => $messages) {

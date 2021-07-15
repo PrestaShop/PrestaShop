@@ -266,7 +266,7 @@ class MediaCore
             $fileUri = _PS_ROOT_DIR_ . Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $mediaUri);
             $fileUriHostMode = _PS_CORE_DIR_ . Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, Tools::str_replace_once(_PS_CORE_DIR_, '', $mediaUri));
 
-            if (!@filemtime($fileUri) || @filesize($fileUri) === 0) {
+            if (!file_exists($fileUri) || !@filemtime($fileUri) || @filesize($fileUri) === 0) {
                 if (!defined('_PS_HOST_MODE_')) {
                     return false;
                 } elseif (!@filemtime($fileUriHostMode) || @filesize($fileUriHostMode) === 0) {

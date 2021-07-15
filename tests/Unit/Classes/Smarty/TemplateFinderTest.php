@@ -38,7 +38,7 @@ class TemplateFinderTest extends TestCase
      */
     protected $templateFinder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $root = realpath(_PS_ROOT_DIR_) . '/tests/Resources/template-hierarchy/templates/';
 
@@ -46,7 +46,7 @@ class TemplateFinderTest extends TestCase
         $this->templateFinder = new TemplateFinder([$root], '.tpl');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->templateFinder = null;
     }

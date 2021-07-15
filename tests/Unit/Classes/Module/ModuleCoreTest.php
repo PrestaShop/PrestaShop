@@ -51,7 +51,7 @@ class ModuleCoreTest extends TestCase
 									</div>
 								</div>';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!defined('_PS_VERSION_')) {
             define('_PS_VERSION_', '1.6.1.0');
@@ -69,7 +69,7 @@ class ModuleCoreTest extends TestCase
 
         // then
         $crawler = new Crawler($htmlOutput);
-        $this->assertContains($error, $crawler->filter('.module_error')->text());
+        $this->assertStringContainsString($error, $crawler->filter('.module_error')->text());
     }
 
     public function testDisplayErrorShouldReturnMultipleErrors()

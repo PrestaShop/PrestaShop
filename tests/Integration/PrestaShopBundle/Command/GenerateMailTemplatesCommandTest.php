@@ -39,7 +39,7 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
     /** @var Filesystem */
     private $fileSystem;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->fileSystem = new Filesystem();
@@ -207,7 +207,7 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         return $outputFolder;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         self::$kernel->shutdown();
     }

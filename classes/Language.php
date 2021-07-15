@@ -1548,7 +1548,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             $rows = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
             if (!empty($rows)) {
                 // get all values
-                $tableNames = array_map('reset', $rows);
+                $tableNames = [];
+                foreach ($rows as $row) {
+                    $tableNames[] = reset($row);
+                }
                 static::updateMultilangTables($lang, $tableNames);
             }
         }

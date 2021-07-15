@@ -49,7 +49,7 @@ class StockManagerTest extends TestCase
      */
     private $container;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

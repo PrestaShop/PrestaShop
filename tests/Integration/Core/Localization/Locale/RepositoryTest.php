@@ -50,7 +50,7 @@ class RepositoryTest extends KernelTestCase
      */
     protected $localeRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -92,7 +92,7 @@ class ProductLazyArrayTest extends TestCase
         'out_of_stock' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

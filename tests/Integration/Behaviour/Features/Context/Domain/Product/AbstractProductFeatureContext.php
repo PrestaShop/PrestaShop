@@ -106,7 +106,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
         $categoryId = $this->getSharedStorage()->get($categoryReference);
         $realImageUrl = str_replace(
             '{' . $categoryReference . '}',
-            $categoryId,
+            (string) $categoryId,
             $imageUrl
         );
 

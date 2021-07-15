@@ -64,11 +64,11 @@ class NewsDataProviderTest extends TestCase
             ContextCore::MODE_STD
         );
         $expectedJson = $generator->getData($expectedLocale);
-        $this->assertInternalType('array', $expectedJson);
+        $this->assertIsArray($expectedJson);
         $this->assertArrayHasKey('has_errors', $expectedJson);
         $this->assertFalse($expectedJson['has_errors']);
         $this->assertArrayHasKey('rss', $expectedJson);
-        $this->assertInternalType('array', $expectedJson['rss']);
+        $this->assertIsArray($expectedJson['rss']);
         $this->assertEmpty($expectedJson['rss']);
     }
 
@@ -85,11 +85,11 @@ class NewsDataProviderTest extends TestCase
             ContextCore::MODE_STD
         );
         $expectedJson = $generator->getData($expectedLocale);
-        $this->assertInternalType('array', $expectedJson);
+        $this->assertIsArray($expectedJson);
         $this->assertArrayHasKey('has_errors', $expectedJson);
         $this->assertTrue($expectedJson['has_errors']);
         $this->assertArrayHasKey('rss', $expectedJson);
-        $this->assertInternalType('array', $expectedJson['rss']);
+        $this->assertIsArray($expectedJson['rss']);
         $this->assertEmpty($expectedJson['rss']);
     }
 
@@ -107,11 +107,11 @@ class NewsDataProviderTest extends TestCase
         );
         $expectedJson = $generator->getData($expectedLocale);
 
-        $this->assertInternalType('array', $expectedJson);
+        $this->assertIsArray($expectedJson);
         $this->assertArrayHasKey('has_errors', $expectedJson);
         $this->assertFalse($expectedJson['has_errors']);
         $this->assertArrayHasKey('rss', $expectedJson);
-        $this->assertInternalType('array', $expectedJson['rss']);
+        $this->assertIsArray($expectedJson['rss']);
         $this->assertCount(NewsDataProvider::NUM_ARTICLES, $expectedJson['rss']);
         foreach ($expectedJson['rss'] as $expectedJsonRssItem) {
             $this->assertArrayHasKey('date', $expectedJsonRssItem);
@@ -122,7 +122,7 @@ class NewsDataProviderTest extends TestCase
             $this->assertLessThanOrEqual(150, mb_strlen($expectedJsonRssItem['short_desc']));
             $this->assertArrayHasKey('link', $expectedJsonRssItem);
             $this->assertNotFalse(filter_var($expectedJsonRssItem['link'], FILTER_VALIDATE_URL));
-            $this->assertContains('utm_content=download', $expectedJsonRssItem['link']);
+            $this->assertStringContainsString('utm_content=download', $expectedJsonRssItem['link']);
         }
     }
 

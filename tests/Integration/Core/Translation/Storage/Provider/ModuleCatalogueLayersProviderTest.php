@@ -65,7 +65,7 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
      */
     private $modulesDir;
 
-    public function setUp()
+    public function setUp(): void
     {
         self::bootKernel();
         /*
