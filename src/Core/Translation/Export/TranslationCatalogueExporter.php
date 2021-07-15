@@ -184,7 +184,8 @@ class TranslationCatalogueExporter
             $domainName = $domain->getDomainName();
             foreach ($domain->getMessages() as $message) {
                 $messageCatalogue->set($message->getKey(), $message->getTranslation(), $domainName);
-                $messageCatalogue->setMetadata($message->getKey(), ['file' => '', 'line' => ''], $domainName);
+                $metadata = $message->getMetadata();
+                $messageCatalogue->setMetadata($message->getKey(), ['file' => $metadata['file'] ?? '', 'line' => $metadata['line'] ?? ''], $domainName);
             }
         }
 

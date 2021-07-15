@@ -190,6 +190,7 @@ class TranslationCatalogueBuilder
             foreach ($messages as $translationKey => $translationValue) {
                 $translationKey = (string) $translationKey;
                 $message = new Message($translationKey);
+                $message->setMetadata($defaultCatalogue->getMetadata($translationKey, $domainName) ?? []);
                 if ($fileTranslatedCatalogue->defines($translationKey, $domainName)) {
                     $message->setFileTranslation($fileTranslatedCatalogue->get($translationKey, $domainName));
                 }
