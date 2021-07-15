@@ -40,7 +40,7 @@ class PaymentOptionsFinderCore extends HookFinder
     {
         // Payment options coming from intermediate, deprecated version of the Advanced API
         $this->hookName = 'displayPaymentEU';
-        $rawDisplayPaymentEUOptions = parent::find();
+        $rawDisplayPaymentEUOptions = array_filter(parent::find(), 'is_array');
         $paymentOptions = array_map(
             ['PrestaShop\PrestaShop\Core\Payment\PaymentOption', 'convertLegacyOption'],
             $rawDisplayPaymentEUOptions
