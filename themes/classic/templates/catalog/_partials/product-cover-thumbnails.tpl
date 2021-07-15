@@ -36,8 +36,8 @@
             alt="{$product.name}"
           {/if}
           loading="lazy"
-          width="{$product.default_image.bySize.small_default.width}"
-          height="{$product.default_image.bySize.small_default.height}"
+          width="{$product.default_image.bySize.medium_default.width}"
+          height="{$product.default_image.bySize.medium_default.height}"
         >
         <div class="layer hidden-sm-down" data-toggle="modal" data-target="#product-modal">
           <i class="material-icons zoom-in">search</i>
