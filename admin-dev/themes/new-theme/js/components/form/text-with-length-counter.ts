@@ -30,8 +30,10 @@ const {$} = window;
  *
  * Usage:
  *
- * There must be an element that wraps both input & counter display with ".js-text-with-length-counter" class.
- * Counter display must have ".js-countable-text-display" class and input must have ".js-countable-text-input" class.
+ * There must be an element that wraps both
+ * input & counter display with ".js-text-with-length-counter" class.
+ * Counter display must have ".js-countable-text-display" class
+ * and input must have ".js-countable-text-input" class.
  * Text input must have "data-max-length" attribute.
  *
  * <div class="js-text-with-length-counter">
@@ -44,16 +46,30 @@ const {$} = window;
  * new TextWithLengthCounter();
  */
 export default class TextWithLengthCounter {
+  wrapperSelector: string;
+
+  textSelector: string;
+
+  inputSelector: string;
+
   constructor() {
     this.wrapperSelector = '.js-text-with-length-counter';
     this.textSelector = '.js-countable-text';
     this.inputSelector = '.js-countable-input';
 
-    $(document).on('input', `${this.wrapperSelector} ${this.inputSelector}`, (e) => {
-      const $input = $(e.currentTarget);
-      const remainingLength = $input.data('max-length') - $input.val().length;
+    $(document).on(
+      'input',
+      `${this.wrapperSelector} ${this.inputSelector}`,
+      (e) => {
+        const $input = $(e.currentTarget);
+        const inputVal = <string>$input.val();
+        const remainingLength = $input.data('max-length') - inputVal.length;
 
-      $input.closest(this.wrapperSelector).find(this.textSelector).text(remainingLength);
-    });
+        $input
+          .closest(this.wrapperSelector)
+          .find(this.textSelector)
+          .text(remainingLength);
+      },
+    );
   }
 }

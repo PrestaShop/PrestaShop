@@ -23,10 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const {$} = window;
-
 /**
- * Component responsible for displaying form popover errors with modified width which is calculated based on the
+ * Component responsible for displaying form popover errors with modified
+ * width which is calculated based on the
  * form group width.
  */
 $(() => {
@@ -34,7 +33,7 @@ $(() => {
   $('[data-toggle="form-popover-error"]').popover({
     html: true,
     content() {
-      return getErrorContent(this);
+      return getErrorContent(<HTMLElement> this);
     },
   });
 
@@ -43,17 +42,24 @@ $(() => {
    * to the child elements of the form.
    * @param {Object} event
    */
-  const repositionPopover = (event) => {
+  const repositionPopover = (event: JQueryEventObject) => {
     const $element = $(event.currentTarget);
     const $formGroup = $element.closest('.form-group');
-    const $invalidFeedbackContainer = $formGroup.find('.invalid-feedback-container');
+    const $invalidFeedbackContainer = $formGroup.find(
+      '.invalid-feedback-container',
+    );
     const $errorPopover = $formGroup.find('.form-popover-error');
 
-    const localeVisibleElementWidth = $invalidFeedbackContainer.width();
+    const localeVisibleElementWidth: number = <number>(
+      $invalidFeedbackContainer.width()
+    );
 
     $errorPopover.css('width', localeVisibleElementWidth);
 
-    const horizontalDifference = getHorizontalDifference($invalidFeedbackContainer, $errorPopover);
+    const horizontalDifference = getHorizontalDifference(
+      $invalidFeedbackContainer,
+      $errorPopover,
+    );
 
     $errorPopover.css('left', `${horizontalDifference}px`);
   };
@@ -64,25 +70,40 @@ $(() => {
    * @param {jQuery} $errorPopover
    * @returns {number}
    */
-  const getHorizontalDifference = ($invalidFeedbackContainer, $errorPopover) => {
-    const inputHorizontalPosition = $invalidFeedbackContainer.offset().left;
-    const popoverHorizontalPosition = $errorPopover.offset().left;
+  const getHorizontalDifference = (
+    $invalidFeedbackContainer: JQuery,
+    $errorPopover: JQuery,
+  ): number | null => {
+    const invalidContainerOffset = $invalidFeedbackContainer.offset();
+    const errorPopoverOffset = $errorPopover.offset();
 
-    return inputHorizontalPosition - popoverHorizontalPosition;
+    if (invalidContainerOffset && errorPopoverOffset) {
+      const inputHorizontalPosition = invalidContainerOffset.left;
+      const popoverHorizontalPosition = errorPopoverOffset.left;
+
+      return inputHorizontalPosition - popoverHorizontalPosition;
+    }
+
+    return null;
   };
 
   /**
-   * Gets popover error content pre-fetched in html. It used unique selector to identify which one content to render.
+   * Gets popover error content pre-fetched in html.
+   * It used unique selector to identify which one content to render.
    *
    * @param popoverTriggerElement
    * @returns {jQuery}
    */
-  const getErrorContent = (popoverTriggerElement) => {
+  const getErrorContent = (popoverTriggerElement: HTMLElement) => {
     const popoverTriggerId = $(popoverTriggerElement).data('id');
 
     return $(`.js-popover-error-content[data-id="${popoverTriggerId}"]`).html();
   };
 
   // registers the event which displays the popover
-  $(document).on('shown.bs.popover', '[data-toggle="form-popover-error"]', (event) => repositionPopover(event));
+  $(document).on(
+    'shown.bs.popover',
+    '[data-toggle="form-popover-error"]',
+    (event: JQueryEventObject) => repositionPopover(event),
+  );
 });
