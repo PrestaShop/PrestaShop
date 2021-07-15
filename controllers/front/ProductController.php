@@ -84,6 +84,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCanonicalURL(): string
     {
         $product = $this->context->smarty->getTemplateVars('product');
