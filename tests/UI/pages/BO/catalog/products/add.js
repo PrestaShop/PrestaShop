@@ -562,7 +562,9 @@ class AddProduct extends BOBasePage {
       await this.setCombinationsInProduct(page, productData);
     }
     await this.setProductStatus(page, productData.status);
-    await this.setQuantitiesSettings(page, productData);
+    if (!productData.productHasCombinations) {
+      await this.setQuantitiesSettings(page, productData);
+    }
     return this.saveProduct(page);
   }
 }
