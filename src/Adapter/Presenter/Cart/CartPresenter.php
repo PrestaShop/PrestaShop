@@ -32,6 +32,7 @@ use Configuration;
 use Context;
 use Country;
 use Hook;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
@@ -582,6 +583,12 @@ class CartPresenter implements PresenterInterface
             } else {
                 $freeShippingOnly = false;
                 $totalCartVoucherReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
+            }
+
+            // Avoid display of a voucher if its total is equal to zero tax included
+            if ((new DecimalNumber((string) $totalCartVoucherReduction))->equalsZero()) {
+                unset($vouchers[$cartVoucher['id_cart_rule']]);
+                continue;
             }
 
             // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
