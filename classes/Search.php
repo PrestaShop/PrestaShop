@@ -1039,7 +1039,7 @@ class SearchCore
     {
         $word = str_replace(['%', '_'], ['\\%', '\\_'], $word);
         $start_search = Configuration::get('PS_SEARCH_START') ? '%' : '';
-        $end_search = Configuration::get('PS_SEARCH_END') ? '' : '%';
+        $end_search = Configuration::get('PS_SEARCH_END') ? '%' : '';
         $psSearchMawWordLenth = self::getMaximumWordLength();
         $start_pos = (int) ($word[0] == '-');
 
