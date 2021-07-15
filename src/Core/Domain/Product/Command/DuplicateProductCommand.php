@@ -41,11 +41,20 @@ class DuplicateProductCommand
     private $productId;
 
     /**
-     * @param int $productId
+     * @var bool
      */
-    public function __construct(int $productId)
-    {
+    private $duplicateImages;
+
+    /**
+     * @param int $productId
+     * @param bool $duplicateImages
+     */
+    public function __construct(
+        int $productId,
+        bool $duplicateImages
+    ) {
         $this->productId = new ProductId($productId);
+        $this->duplicateImages = $duplicateImages;
     }
 
     /**
@@ -54,5 +63,13 @@ class DuplicateProductCommand
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function duplicateImages(): bool
+    {
+        return $this->duplicateImages;
     }
 }
