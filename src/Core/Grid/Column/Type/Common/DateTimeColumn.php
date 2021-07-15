@@ -32,6 +32,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 final class DateTimeColumn extends AbstractColumn
 {
     /**
+     * Default date format.
+     * Note the use of non-breaking hyphens (U+2011)
+     */
+    const DEFAULT_FORMAT = 'Y‑m‑d H:i:s';
+
+    /**
+     * Complete datetime format, without seconds.
+     * Note the use of non-breaking hyphens (U+2011)
+     */
+    const DATETIME_WITHOUT_SECONDS = 'Y‑m‑d H:i';
+
+    /**
      * {@inheritdoc}
      */
     public function getType()
@@ -51,7 +63,7 @@ final class DateTimeColumn extends AbstractColumn
                 'field',
             ])
             ->setDefaults([
-                'format' => 'Y‑m‑d H:i:s', // note the use of non-breaking hyphens (U+2011)
+                'format' => self::DEFAULT_FORMAT,
                 'empty_data' => '',
                 'clickable' => false,
             ])

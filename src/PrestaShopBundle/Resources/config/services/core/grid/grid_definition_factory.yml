@@ -14,6 +14,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
 
     prestashop.core.grid.definition.factory.email_logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmailLogsDefinitionFactory'
