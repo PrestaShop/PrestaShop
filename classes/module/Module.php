@@ -2454,6 +2454,9 @@ abstract class ModuleCore implements ModuleInterface
             if ($cache_id !== null) {
                 Tools::enableCache();
             }
+            if ($compile_id === null) {
+                $compile_id = Context::getContext()->shop->theme->getName();
+            }
 
             $result = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->fetch();
 
@@ -2508,12 +2511,19 @@ abstract class ModuleCore implements ModuleInterface
      */
     protected function getCurrentSubTemplate($template, $cache_id = null, $compile_id = null)
     {
+        if ($compile_id === null) {
+            $compile_id = Context::getContext()->shop->theme->getName();
+        }
+
         if (!isset($this->current_subtemplate[$template . '_' . $cache_id . '_' . $compile_id])) {
             if (false === strpos($template, 'module:') &&
                 !file_exists(_PS_ROOT_DIR_ . '/' . $template) &&
                 !file_exists($template)
             ) {
                 $template = $this->getTemplatePath($template);
+            }
+            if ($compile_id === null) {
+                $compile_id = Context::getContext()->shop->theme->getName();
             }
 
             $this->current_subtemplate[$template . '_' . $cache_id . '_' . $compile_id] = $this->context->smarty->createTemplate(
@@ -2567,6 +2577,9 @@ abstract class ModuleCore implements ModuleInterface
         if (false === strpos($template, 'module:') && !file_exists(_PS_ROOT_DIR_ . '/' . $template)) {
             $template = $this->getTemplatePath($template);
         }
+        if ($compile_id === null) {
+            $compile_id = Context::getContext()->shop->theme->getName();
+        }
 
         $is_cached = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->isCached($template, $cache_id, $compile_id);
         Tools::restoreCacheSettings();
@@ -2588,6 +2601,9 @@ abstract class ModuleCore implements ModuleInterface
         static $ps_smarty_clear_cache = null;
         if ($ps_smarty_clear_cache === null) {
             $ps_smarty_clear_cache = Configuration::get('PS_SMARTY_CLEAR_CACHE');
+        }
+        if ($compile_id === null) {
+            $compile_id = Context::getContext()->shop->theme->getName();
         }
 
         if (static::$_batch_mode) {
