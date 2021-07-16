@@ -26,55 +26,25 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\PrestaShopBundle\Controller;
+namespace Tests\Unit\PrestaShopBundle\Service\Routing;
 
-use Tests\Integration\PrestaShopBundle\Controller\Exception\VariableNotFoundException;
+use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Service\Routing\Router;
 
-class TestEntityDTO
+class RouterTest extends TestCase
 {
-    /** @var ?int */
-    private $id;
-
-    /**
-     * @var array
-     */
-    private $variables;
-
-    /**
-     * Address constructor.
-     *
-     * @param int|null $id
-     * @param array $variables
-     */
-    public function __construct(
-        ?int $id,
-        array $variables = []
-    ) {
-        $this->id = $id;
-        $this->variables = $variables;
-    }
-
-    /**
-     * @return ?int
-     */
-    public function getId(): ?int
+    public function testGenerateTokenizedUrlWithFragments(): void
     {
-        return $this->id;
-    }
+        $url = 'my-shop.com/product#routing-in-prestashop';
+        $route = Router::generateTokenizedUrl($url, 'token');
+        static::assertEquals('my-shop.com/product?_token=token#routing-in-prestashop', $route);
 
-    /**
-     * @param string $variableName
-     *
-     * @return mixed
-     *
-     * @throws VariableNotFoundException
-     */
-    public function __get(string $variableName)
-    {
-        if (!isset($this->variables[$variableName])) {
-            throw new VariableNotFoundException(sprintf('Variable %s not found in entity', $variableName));
-        }
+        $url = 'my-shop.com/product?delete=1#routing-in-prestashop';
+        $route = Router::generateTokenizedUrl($url, 'token');
+        static::assertEquals('my-shop.com/product?delete=1&_token=token#routing-in-prestashop', $route);
 
-        return $this->variables[$variableName];
+        $url = 'localhost/shopp/product?delete=1&confirm=1#routing-in-prestashop/tokens?route';
+        $route = Router::generateTokenizedUrl($url, 'token');
+        static::assertEquals('localhost/shopp/product?delete=1&confirm=1&_token=token#routing-in-prestashop/tokens?route', $route);
     }
 }

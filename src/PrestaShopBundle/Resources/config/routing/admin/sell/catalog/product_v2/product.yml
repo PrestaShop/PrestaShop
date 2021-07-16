@@ -4,6 +4,22 @@ _combinations:
 _images:
     resource: 'image.yml'
 
+admin_products_v2_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::indexAction
+    _legacy_controller: AdminProducts
+
+admin_products_search:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Common:searchGrid
+        gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.product
+        redirectRoute: admin_products_v2_index
+        _legacy_controller: AdminProducts
+
 admin_products_v2_create:
   path: /create
   methods: [GET, POST]
@@ -36,3 +52,16 @@ admin_products_v2_download_virtual_product_file:
         _legacy_controller: AdminProducts
     requirements:
         virtualProductFileId: \d+
+
+admin_products_v2_delete:
+    path: /{productId}/delete
+    methods: [POST, DELETE]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:delete
+        _legacy_controller: AdminProducts
+        _legacy_link:
+            - AdminProducts:delete
+        _legacy_parameters:
+            id_product: productId
+    requirements:
+        productId: \d+

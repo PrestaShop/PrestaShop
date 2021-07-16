@@ -26,55 +26,29 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\PrestaShopBundle\Controller;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use Tests\Integration\PrestaShopBundle\Controller\Exception\VariableNotFoundException;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-class TestEntityDTO
+/**
+ * Gets product grid filters.
+ */
+final class ProductFilters extends Filters
 {
-    /** @var ?int */
-    private $id;
+    protected $filterId = ProductGridDefinitionFactory::GRID_ID;
 
     /**
-     * @var array
+     * {@inheritdoc}
      */
-    private $variables;
-
-    /**
-     * Address constructor.
-     *
-     * @param int|null $id
-     * @param array $variables
-     */
-    public function __construct(
-        ?int $id,
-        array $variables = []
-    ) {
-        $this->id = $id;
-        $this->variables = $variables;
-    }
-
-    /**
-     * @return ?int
-     */
-    public function getId(): ?int
+    public static function getDefaults()
     {
-        return $this->id;
-    }
-
-    /**
-     * @param string $variableName
-     *
-     * @return mixed
-     *
-     * @throws VariableNotFoundException
-     */
-    public function __get(string $variableName)
-    {
-        if (!isset($this->variables[$variableName])) {
-            throw new VariableNotFoundException(sprintf('Variable %s not found in entity', $variableName));
-        }
-
-        return $this->variables[$variableName];
+        return [
+            'limit' => 20,
+            'offset' => 0,
+            'orderBy' => 'id_product',
+            'sortOrder' => 'desc',
+            'filters' => [],
+        ];
     }
 }
