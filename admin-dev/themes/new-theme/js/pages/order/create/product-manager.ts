@@ -130,7 +130,7 @@ export default class ProductManager {
     // on success
     EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
       this.productRenderer.cleanCartBlockAlerts();
-      this.updateStockOnProductAdd();
+      this.updateStockSelectedProductOnAdd();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
 
@@ -147,7 +147,7 @@ export default class ProductManager {
    */
   private onRemoveProductFromCart(): void {
     EventEmitter.on(eventMap.productRemovedFromCart, (data) => {
-      this.updateStockOnProductRemove(data.product);
+      this.updateStockSelectedProductOnRemove(data.product);
       EventEmitter.emit(eventMap.cartLoaded, data.cartInfo);
     });
   }
@@ -184,7 +184,7 @@ export default class ProductManager {
     // on success
     EventEmitter.on(eventMap.productQtyChanged, (data) => {
       this.productRenderer.cleanCartBlockAlerts();
-      this.updateStockOnQtyChange(data.product);
+      this.updateStockSelectedProductOnQtyChange(data.product);
 
       $(createOrderMap.createOrderButton).prop('disabled', false);
       EventEmitter.emit(eventMap.cartLoaded, data.cartInfo);
@@ -397,46 +397,52 @@ export default class ProductManager {
    *
    * @private
    */
-  private updateStockOnProductAdd(): void {
+  private updateStockSelectedProductOnAdd(): void {
     const {productId} = <Record<string, any>> this.selectedProduct;
     const attributeId = this.selectedCombinationId;
     const qty = -Number($(createOrderMap.quantityInput).val());
 
-    this.updateStock(productId, <string>attributeId, qty);
+    this.updateStockSelectedProduct(productId, <string>attributeId, qty);
   }
 
   /**
-   * Updates the stock when the product is removed from cart in Orders/"create new order page"
+   * Updates the stock counter for selected product
+   * when the product is removed from cart
+   * in Orders/"create new order page"
    *
    * @private
    */
-  private updateStockOnProductRemove(product: Record<string, any>): void {
+  private updateStockSelectedProductOnRemove(product: Record<string, any>): void {
     const {productId, attributeId, qtyToRemove} = product;
     const qty = qtyToRemove;
 
-    this.updateStock(productId, attributeId, qty);
+    this.updateStockSelectedProduct(productId, attributeId, qty);
   }
 
   /**
-   * Updates the stock when the quantity of product is changed from cart in Orders/"create new order page"
+   * Updates the stock counter for selected product
+   * when the quantity of product is changed from cart
+   * in Orders/"create new order page"
    *
    * @private
    */
-  private updateStockOnQtyChange(product: Record<string, any>): void {
+  private updateStockSelectedProductOnQtyChange(product: Record<string, any>): void {
     const {
       productId, attributeId, prevQty, newQty,
     } = product;
     const qty = prevQty - newQty;
 
-    this.updateStock(productId, attributeId, qty);
+    this.updateStockSelectedProduct(productId, attributeId, qty);
   }
 
   /**
-   * Updates the stock in products object and renders the new stock
+   * For selected product,
+   * Updates the stock in `this.products`
+   * and renders the new value in stock counter
    *
    * @private
    */
-  private updateStock(
+  private updateStockSelectedProduct(
     productId: number,
     attributeId: string | number,
     qty: number,
@@ -446,9 +452,6 @@ export default class ProductManager {
 
     for (let i = 0; i < productKeys.length; i += 1) {
       if (productValues[i].productId === productId) {
-        const $template = this.productRenderer.cloneProductTemplate(
-          productValues[i],
-        );
         // Update the stock value  in products object
         productValues[i].stock += qty;
 
@@ -461,8 +464,8 @@ export default class ProductManager {
         if (this.selectedProduct?.productId === productId) {
           if (this.selectedProduct.combinations.length === 0) {
             this.productRenderer.renderStock(
-              $template.find(createOrderMap.listedProductQtyStock),
-              $template.find(createOrderMap.listedProductQtyInput),
+              $(createOrderMap.inStockCounter),
+              $(createOrderMap.quantityInput),
               productValues[i].stock,
               productValues[i].availableOutOfStock
                 || productValues[i].availableStock <= 0,
@@ -472,8 +475,8 @@ export default class ProductManager {
             && Number(this.selectedCombinationId) === Number(attributeId)
           ) {
             this.productRenderer.renderStock(
-              $template.find(createOrderMap.listedProductQtyStock),
-              $template.find(createOrderMap.listedProductQtyInput),
+              $(createOrderMap.inStockCounter),
+              $(createOrderMap.quantityInput),
               productValues[i].combinations[attributeId].stock,
               productValues[i].availableOutOfStock
                 || productValues[i].availableStock <= 0,
