@@ -72,7 +72,7 @@ export class FormIframeModal extends IframeModal implements FormIframeModalType 
     this.formSelector = params.formSelector || 'form';
   }
 
-  private onIframeLoaded(iframe:HTMLIFrameElement, event: Event) {
+  private onIframeLoaded(iframe:HTMLIFrameElement, event: Event): void {
     if (!iframe.contentWindow) {
       return;
     }

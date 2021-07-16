@@ -26,6 +26,7 @@
 {% form_theme attachmentForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block attachment_form %}
+  {# Add data attribute to allow form iframe modal to easily get the data #}
   {% set formAttributes = {} %}
   {% if attachmentId is defined %}
     {% set formAttributes = {'data-attachment-id': attachmentId} %}

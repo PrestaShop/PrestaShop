@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
 /**
  * Handles @see GetAttachmentInfo query using legacy object model
  */
-final class GetAttachmentInfoHandler implements GetAttachmentInfoHandlerInterface
+class GetAttachmentInfoHandler implements GetAttachmentInfoHandlerInterface
 {
     /**
      * @var AttachmentRepository
