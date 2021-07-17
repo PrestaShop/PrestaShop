@@ -79,58 +79,51 @@
     </div>
 
     {{ form_start(summaryForm, {'action': path('admin_orders_place')}) }}
-      <div class="row mt-3">
-        <div class="col col-11">
+    <div class="row mt-3">
+      <div class="col col-11">
 
-          <div id="js-order-message-wrap">
-            {{ ps.form_group_row(summaryForm.order_message, {}, {
+        <div id="js-order-message-wrap">
+          {{ ps.form_group_row(summaryForm.order_message, {}, {
               'label': 'Order message'|trans({}, 'Admin.Orderscustomers.Feature'),
             }) }}
-          </div>
+        </div>
 
-          {{ ps.form_group_row(summaryForm.payment_module, {}, {
+        {{ ps.form_group_row(summaryForm.payment_module, {}, {
             'label': 'Payment'|trans({}, 'Admin.Global'),
           }) }}
 
-          {{ ps.form_group_row(summaryForm.order_state, {}, {
+        {{ ps.form_group_row(summaryForm.order_state, {}, {
             'label': 'Order status'|trans({}, 'Admin.Orderscustomers.Feature'),
           }) }}
 
-          <div class="form-group row mt-4">
-            <div class="col-sm offset-sm-4">
-              <button class="btn btn-primary" type="submit" id="create-order-button">
-                {{ 'Create order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        <div class="form-group row mt-4">
+          <div class="col-sm offset-sm-4">
+            <button class="btn btn-primary" type="submit" id="create-order-button">
+              {{ 'Create order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            </button>
+
+            <div class="btn-group">
+              <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdown-menu-actions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ 'More actions'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </button>
 
-              <div class="btn-group">
-                <button
-                  class="btn btn-outline-primary dropdown-toggle"
-                  type="button"
-                  id="dropdown-menu-actions"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  {{ 'More actions'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              <div class="dropdown-menu" aria-labelledby="dropdown-menu-actions">
+                <button type="button" class="dropdown-item" id="js-send-process-order-email-btn">
+                  {{ 'Send pre-filled order to the customer by email'|trans({}, 'Admin.Orderscustomers.Feature') }}
                 </button>
+                <a class="dropdown-item" id="js-process-order-link" target="_blank">
+                  {{ 'Proceed to checkout in the front office'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                </a>
 
-                <div class="dropdown-menu" aria-labelledby="dropdown-menu-actions">
-                  <button type="button" class="dropdown-item" id="js-send-process-order-email-btn">
-                    {{ 'Send pre-filled order to the customer by email'|trans({}, 'Admin.Orderscustomers.Feature') }}
-                  </button>
-                  <a class="dropdown-item" id="js-process-order-link" target="_blank">
-                    {{ 'Proceed to checkout in the front office'|trans({}, 'Admin.Orderscustomers.Feature') }}
-                  </a>
-
-                  {{ renderhook('displayAdminOrderCreateExtraButtons') }}
-                </div>
+                {{ renderhook('displayAdminOrderCreateExtraButtons') }}
               </div>
-
-              {{ form_row(summaryForm.cart_id, {'attr': {'class': 'js-place-order-cart-id'}}) }}
             </div>
+
+            {{ form_row(summaryForm.cart_id, {'attr': {'class': 'js-place-order-cart-id'}}) }}
           </div>
         </div>
       </div>
+    </div>
     {{ form_end(summaryForm) }}
 
   </div>

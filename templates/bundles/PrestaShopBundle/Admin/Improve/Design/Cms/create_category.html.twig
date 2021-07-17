@@ -25,7 +25,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-      {{ include('@PrestaShop/Admin/Improve/Design/Cms/Blocks/category_form.html.twig', {
+  {{ include('@PrestaShop/Admin/Improve/Design/Cms/Blocks/category_form.html.twig', {
           'cmsPageCategoryForm': cmsPageCategoryForm,
           'cmsCategoryParentId': app.request.query.get('id_cms_category')
         })

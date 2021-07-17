@@ -36,11 +36,11 @@
 {% block content %}
 
   {% block attribute_group_showcase_card %}
-        {% include '@PrestaShop/Admin/Sell/Catalog/AttributeGroup/Blocks/showcase_card.html.twig' %}
+    {% include '@PrestaShop/Admin/Sell/Catalog/AttributeGroup/Blocks/showcase_card.html.twig' %}
   {% endblock %}
 
   {% block attributes_listing %}
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': attributeGroupGrid} %}
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': attributeGroupGrid} %}
   {% endblock %}
 {% endblock %}
 

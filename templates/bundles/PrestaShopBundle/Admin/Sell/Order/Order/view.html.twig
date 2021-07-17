@@ -25,7 +25,7 @@
 
 {% set use_regular_h1_structure = false %}
 {% set layoutTitle %}
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/header.html.twig' %}
+{% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/header.html.twig' %}
 {% endset %}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
@@ -35,13 +35,11 @@
 {% endblock %}
 
 {% block content %}
-  <div id="order-view-page"
-       data-order-title="{{ 'Order'|trans({}, 'Admin.Global') }} #{{ orderForViewing.id }} {{ orderForViewing.reference }}">
+  <div id="order-view-page" data-order-title="{{ 'Order'|trans({}, 'Admin.Global') }} #{{ orderForViewing.id }} {{ orderForViewing.reference }}">
     <div class="d-print-none">
       {% set displayAdminOrderTopHookContent = renderhook('displayAdminOrderTop', {'id_order': orderForViewing.id}) %}
-
       {% if displayAdminOrderTopHookContent != '' %}
-          {{ displayAdminOrderTopHookContent|raw }}
+        {{ displayAdminOrderTopHookContent|raw }}
       {% endif %}
       <div class="order-actions">
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
@@ -61,10 +59,8 @@
     <div class="product-row row">
       <div class="col-md-4 left-column">
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
-
         {{ renderhook('displayAdminOrderSide', {'id_order': orderForViewing.id}) }}
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/messages.html.twig' %}
-
         {{ renderhook('displayAdminOrderSideBottom', {'id_order': orderForViewing.id}) }}
       </div>
 
@@ -73,10 +69,8 @@
           {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
         </div>
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details.html.twig' %}
-
         {{ renderhook('displayAdminOrderMain', {'id_order': orderForViewing.id}) }}
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments.html.twig' %}
-
         {{ renderhook('displayAdminOrderMainBottom', {'id_order': orderForViewing.id}) }}
       </div>
     </div>

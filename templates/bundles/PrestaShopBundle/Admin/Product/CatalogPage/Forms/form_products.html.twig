@@ -22,16 +22,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-<form
-  name="product_catalog_list"
-  id="product_catalog_list"
-  method="post"
-  action="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
-  orderingurl="{{ path('admin_product_catalog', {offset: 0, 'limit': 300, 'orderBy': 'position_ordering', 'sortOrder': sortOrder}) }}"
-  newproducturl="{{ path('admin_product_new') }}"
->
+<form name="product_catalog_list" id="product_catalog_list" method="post" action="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}" orderingurl="{{ path('admin_product_catalog', {offset: 0, 'limit': 300, 'orderBy': 'position_ordering', 'sortOrder': sortOrder}) }}" newproducturl="{{ path('admin_product_new') }}">
 
-  <input type="hidden" name="filter_category" value="{{ filter_category|default('') }}" />
+  <input type="hidden" name="filter_category" value="{{ filter_category|default('') }}"/>
 
   {% block product_catalog_form_table %}
     {{ include('@Product/CatalogPage/Lists/products_table.html.twig', {

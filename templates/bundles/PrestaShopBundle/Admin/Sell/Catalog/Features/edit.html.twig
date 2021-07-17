@@ -31,7 +31,7 @@
   {% if showDisabledFeatureWarning is defined and showDisabledFeatureWarning %}
     {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/disabled_feature_warning.html.twig' %}
   {% else %}
-        {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/form.html.twig' with {
+    {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/form.html.twig' with {
           featureId: editableFeature.featureId.getValue,
           featureForm: featureForm
         } %}

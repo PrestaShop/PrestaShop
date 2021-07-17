@@ -30,7 +30,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/form.html.twig' with {'isGuest': customerInformation.personalInformation.guest} %}
+  {% include '@PrestaShop/Admin/Sell/Customer/Blocks/form.html.twig' with {'isGuest': customerInformation.personalInformation.guest} %}
 {% endblock %}
 
 {% block javascripts %}

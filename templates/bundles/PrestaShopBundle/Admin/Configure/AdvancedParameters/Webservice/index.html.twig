@@ -40,27 +40,27 @@
 
   {% block webservice_list_notifications %}
     {% if configurationWarnings is not empty  %}
-          <div class="alert alert-warning" role="alert">
-            {% for warning in configurationWarnings %}
-              <p class="alert-text">{{ warning }}</p>
-            {% endfor %}
-          </div>
+      <div class="alert alert-warning" role="alert">
+        {% for warning in configurationWarnings %}
+          <p class="alert-text">{{ warning }}</p>
+        {% endfor %}
+      </div>
     {% endif %}
   {% endblock %}
 
 
-      {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
+  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
 
 
-      {{ form_start(webserviceConfigurationForm, {'action': path('admin_webservice_save_settings') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
+  {{ form_start(webserviceConfigurationForm, {'action': path('admin_webservice_save_settings') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
 
-        {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice_settings.html.twig') }}
+  {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice_settings.html.twig') }}
 
-        {% block webservice_configuration_form_rest %}
-          {{ form_rest(webserviceConfigurationForm) }}
-        {% endblock %}
+  {% block webservice_configuration_form_rest %}
+    {{ form_rest(webserviceConfigurationForm) }}
+  {% endblock %}
 
-      {{ form_end(webserviceConfigurationForm) }}
+  {{ form_end(webserviceConfigurationForm) }}
 
 {% endblock %}
 

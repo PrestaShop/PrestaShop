@@ -47,8 +47,8 @@
     </div>
   </div>
 
-    {{ renderhook('displayAdminCustomers', {'id_customer': customerInformation.customerId.value}) }}
-    {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/addresses.html.twig' %}
+  {{ renderhook('displayAdminCustomers', {'id_customer': customerInformation.customerId.value}) }}
+  {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/addresses.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}

@@ -25,18 +25,18 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-    {# "By Date" block #}
-    {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/generate_by_date.html.twig' %}
+  {# "By Date" block #}
+  {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/generate_by_date.html.twig' %}
 
-    {# "By order status" block #}
-    {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/generate_by_status.html.twig' %}
+  {# "By order status" block #}
+  {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/generate_by_status.html.twig' %}
 
-    {# "Invoice options" block #}
-    {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/invoice_options.html.twig' %}
+  {# "Invoice options" block #}
+  {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/invoice_options.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
+  {{ parent() }}
 
-    <script src="{{ asset('themes/new-theme/public/invoices.bundle.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/invoices.bundle.js') }}"></script>
 {% endblock %}

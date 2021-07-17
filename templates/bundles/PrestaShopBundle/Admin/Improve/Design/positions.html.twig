@@ -45,7 +45,7 @@
                     <select id="show-modules" class="filter">
                       <option value="all">{{ 'All modules' | trans }}&nbsp;</option>
                       {% for module in modules %}
-                        <option value="{{ module.id }}"{% if selectedModule == module.id %} selected="selected"{% endif %}>{{ module.displayName }}</option>
+                        <option value="{{ module.id }}" {% if selectedModule == module.id %} selected="selected" {% endif %}>{{ module.displayName }}</option>
                       {% endfor %}
                     </select>
                   </div>
@@ -68,8 +68,10 @@
             <div class="container mt-3">
               <p class="checkbox">
                 <label class="form-control-label" for="hook-position">
-                  <input type="checkbox" id="hook-position" />
-                  <label class="selectbox" for="hook-position"><i class="material-icons done">done</i></label>
+                  <input type="checkbox" id="hook-position"/>
+                  <label class="selectbox" for="hook-position">
+                    <i class="material-icons done">done</i>
+                  </label>
                   {{ 'Display non-positionable hooks' | trans }}
                 </label>
               </p>
@@ -79,24 +81,19 @@
 
         <form id="module-positions-form" method="post" action="{{ path('admin_modules_positions_unhook') }}" data-update-url="{{ path('api_improve_design_positions_update') }}" data-togglestatus-url="{{ path('admin_modules_positions_toggle_status') }}">
           {% for hook in hooks %}
-            <section class="hook-panel{% if not hook['position'] %} hook-position{% endif %}"{% if not hook['position'] %} style="display:none;"{% endif %}>
+            <section class="hook-panel{% if not hook['position'] %} hook-position{% endif %}" {% if not hook['position'] %} style="display:none;" {% endif %}>
               <a name="{{ hook['name'] }}"></a>
               <header class="hook-panel-header">
                 <span class="hook-status">
-                   <input
-                      class="switch-input-md hook-switch-action"
-                      data-toggle="switch"
-                      data-hook-id="{{ hook['id_hook'] }}"
-                      type="checkbox"
-                      value="{{ hook['active'] }}"
-                      {{ hook['active'] ? 'checked="checked"' : '' }}
-                    />
+                  <input class="switch-input-md hook-switch-action" data-toggle="switch" data-hook-id="{{ hook['id_hook'] }}" type="checkbox" value="{{ hook['active'] }}" {{ hook['active'] ? 'checked="checked"' : '' }}/>
                 </span>
                 <span class="hook-name">{{ hook['name'] }}</span>
                 <label class="badge badge-pill float-right">
                   {% if hook['modules_count'] and canMove %}
-                    <input type="checkbox" class="hook-checker" id="Ghook{{ hook['id_hook'] }}" data-hook-id="{{ hook['id_hook'] }}" />
-                    <label class="selectbox" for="Ghook{{ hook['id_hook'] }}"><i class="material-icons done">done</i></label>
+                    <input type="checkbox" class="hook-checker" id="Ghook{{ hook['id_hook'] }}" data-hook-id="{{ hook['id_hook'] }}"/>
+                    <label class="selectbox" for="Ghook{{ hook['id_hook'] }}">
+                      <i class="material-icons done">done</i>
+                    </label>
                   {% endif %}
 
                   {{ hook['modules_count'] }}
@@ -113,17 +110,18 @@
                   <ul class="list-unstyled{% if hook['modules_count'] > 1 %} sortable{% endif %}">
                     {% for module in hook['modules'] if modules[module['id_module']] is defined %}
                       {% set moduleInstance = modules[module['id_module']] %}
-                      <li id="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"
-                        class="module-position-{{ moduleInstance.id }} module-item{% if canMove and hook['modules_count'] >= 2 %} draggable{% endif %}">
+                      <li id="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}" class="module-position-{{ moduleInstance.id }} module-item{% if canMove and hook['modules_count'] >= 2 %} draggable{% endif %}">
 
                         <div class="module-column-select">
                           <i class="material-icons drag_indicator">drag_indicator</i>
                           <input type="checkbox" id="selecterbox{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}" data-hook-id="{{ hook['id_hook'] }}" class="modules-position-checkbox hook{{ hook['id_hook'] }}" name="unhooks[]" value="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"/>
-                          <label class="selectbox" for="selecterbox{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"><i class="material-icons done">done</i></label>
+                          <label class="selectbox" for="selecterbox{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}">
+                            <i class="material-icons done">done</i>
+                          </label>
                         </div>
 
                         <div class="module-column-icon">
-                          <img src="{{ asset('../modules/' ~ moduleInstance.name ~ '/logo.png') }}" alt="{{ moduleInstance.displayName| escape }}" />
+                          <img src="{{ asset('../modules/' ~ moduleInstance.name ~ '/logo.png') }}" alt="{{ moduleInstance.displayName| escape }}"/>
                         </div>
 
                         <div class="module-column-infos">
@@ -162,8 +160,7 @@
                               <i class="material-icons">edit</i>
                             </a>
 
-                            <a class="btn tooltip-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-                            </a>
+                            <a class="btn tooltip-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent"></a>
 
                             <div class="dropdown-menu">
                               <a class="dropdown-item" href="{{ path('admin_modules_positions_unhook', {moduleId: moduleInstance.id, hookId: hook['id_hook']}) }}">
@@ -197,16 +194,21 @@
 
     <div class="col-3">
       <div class="card" id="modules-position-selection-panel">
-        <h3 class="card-header"><i class="material-icons">checked</i> {{ 'Selection' | trans({}, 'Admin.Global') }}</h3>
+        <h3 class="card-header">
+          <i class="material-icons">checked</i>
+          {{ 'Selection' | trans({}, 'Admin.Global') }}</h3>
         <div class="card-body">
           <p>
             <span id="modules-position-single-selection">{{ '1 module selected' | trans }}</span>
             <span id="modules-position-multiple-selection">
-              <span id="modules-position-selection-count"></span> {{ 'modules selected' | trans({}, 'Admin.Design.Feature') }}
+              <span id="modules-position-selection-count"></span>
+              {{ 'modules selected' | trans({}, 'Admin.Design.Feature') }}
             </span>
           </p>
           <div class="text-center">
-            <button class="btn btn-primary"><i class="icon-remove"></i> {{ 'Unhook the selection' | trans }}</button>
+            <button class="btn btn-primary">
+              <i class="icon-remove"></i>
+              {{ 'Unhook the selection' | trans }}</button>
           </div>
         </div>
       </div>

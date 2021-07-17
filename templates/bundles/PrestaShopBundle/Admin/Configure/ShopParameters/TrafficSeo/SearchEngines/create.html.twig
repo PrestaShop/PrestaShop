@@ -26,7 +26,8 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
-      {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/SearchEngines/Blocks/form.html.twig' with {'searchEngineForm': searchEngineForm} %}
+  {% if multistoreIsUsed %}
+    {{ ps.infotip(multistoreInfoTip, true) }}
+  {% endif %}
+  {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/SearchEngines/Blocks/form.html.twig' with {'searchEngineForm': searchEngineForm} %}
 {% endblock %}
-

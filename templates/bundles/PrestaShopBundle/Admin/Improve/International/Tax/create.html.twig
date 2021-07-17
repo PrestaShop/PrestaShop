@@ -26,8 +26,10 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
-      {{ include('@PrestaShop/Admin/Improve/International/Tax/Blocks/form.html.twig', {'taxForm': taxForm}) }}
+  {% if multistoreIsUsed %}
+    {{ ps.infotip(multistoreInfoTip, true) }}
+  {% endif %}
+  {{ include('@PrestaShop/Admin/Improve/International/Tax/Blocks/form.html.twig', {'taxForm': taxForm}) }}
 {% endblock %}
 
 {% block javascripts %}

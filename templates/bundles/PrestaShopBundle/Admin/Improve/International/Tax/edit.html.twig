@@ -28,7 +28,7 @@
 {% set layoutTitle = 'Edit: %value%'|trans({'%value%': taxName}, 'Admin.Actions') %}
 
 {% block content %}
-      {{ include('@PrestaShop/Admin/Improve/International/Tax/Blocks/form.html.twig', {'taxForm': taxForm}) }}
+  {{ include('@PrestaShop/Admin/Improve/International/Tax/Blocks/form.html.twig', {'taxForm': taxForm}) }}
 {% endblock %}
 
 {% block javascripts %}

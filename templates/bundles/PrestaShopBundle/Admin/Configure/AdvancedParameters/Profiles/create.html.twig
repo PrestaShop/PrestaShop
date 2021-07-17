@@ -26,8 +26,10 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/Blocks/form.html.twig' %}
+  {% if multistoreIsUsed %}
+    {{ ps.infotip(multistoreInfoTip, true) }}
+  {% endif %}
+  {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/Blocks/form.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}

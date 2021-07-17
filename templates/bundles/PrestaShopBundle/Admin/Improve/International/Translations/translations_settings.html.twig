@@ -27,19 +27,19 @@
 {% trans_default_domain 'Admin.International.Feature' %}
 
 {% block content %}
-      <div class="card card-kpis">
-        {% block translations_kpis_row %}
-            {{ render(controller(
+  <div class="card card-kpis">
+    {% block translations_kpis_row %}
+      {{ render(controller(
               'PrestaShopBundle:Admin\\Common:renderKpiRow',
               { 'kpiRow': kpiRow }
             )) }}
-        {% endblock %}
-      </div>
+    {% endblock %}
+  </div>
 
-      {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig' %}
-      {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/add_update_language.html.twig' %}
-      {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/export_language.html.twig' %}
-      {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/copy_language.html.twig' %}
+  {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig' %}
+  {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/add_update_language.html.twig' %}
+  {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/export_language.html.twig' %}
+  {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/copy_language.html.twig' %}
 
 {% endblock %}
 
