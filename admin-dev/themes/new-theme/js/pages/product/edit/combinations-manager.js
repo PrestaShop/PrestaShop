@@ -204,7 +204,7 @@ export default class CombinationsManager {
 
     this.$combinationsContainer.on(
       'click',
-      CombinationsMap.removeCombinationSelector,
+      CombinationsMap.deleteCombinationSelector,
       async (e) => {
         await this.deleteCombination(e.currentTarget);
       },
