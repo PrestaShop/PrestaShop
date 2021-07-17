@@ -19,7 +19,7 @@ Feature: Remove attribute combinations for product in Back Office (BO)
     And attribute "Blue" named "Blue" in en language exists
     And attribute "Red" named "Red" in en language exists
 
-  Scenario: Generate product combinations
+  Scenario: Delete product combination one by one
     Given I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
@@ -84,7 +84,7 @@ Feature: Remove attribute combinations for product in Back Office (BO)
     And product product1 does not have a default combination
     And product product1 should have no attribute groups
 
-  Scenario: Generate product combinations
+  Scenario: Bulk delete product combinations
     Given product product1 does not have a default combination
     And product product1 should have no attribute groups
     And I generate combinations for product product1 using following attributes:
