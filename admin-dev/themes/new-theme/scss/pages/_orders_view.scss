@@ -114,6 +114,14 @@
       display: block;
     }
 
+    .cellProductTaxes {
+      .input-group {
+        > input {
+          min-width: 60px;
+        }
+      }
+    }
+
     .info-block {
       .col-sm:not(:last-child) {
         .text-muted {
@@ -124,7 +132,7 @@
 
     @media (max-width: 1554px) {
       .discount-action,
-      .order-product-pagination{
+      .order-product-pagination {
         flex: 0 0 100%;
         max-width: 100%;
       }

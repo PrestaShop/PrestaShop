@@ -63,7 +63,7 @@ class CustomizationFieldCore extends ObjectModel
         ],
     ];
 
-    /** @var array $webserviceParameters */
+    /** @var array */
     protected $webserviceParameters = [
         'fields' => [
             'id_product' => [

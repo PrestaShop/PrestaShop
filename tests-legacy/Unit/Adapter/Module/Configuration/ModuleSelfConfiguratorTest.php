@@ -33,6 +33,7 @@ use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleSelfConfiguratorTest extends UnitTestCase
@@ -308,14 +309,14 @@ class ConfigurationMock extends Configuration
 {
     private $configurationData = array();
 
-    public function set($key, $value, array $options = [])
+    public function set($key, $value, ShopConstraint $shopConstraint = null, array $options = [])
     {
         $this->configurationData[$key] = $value;
 
         return $this;
     }
 
-    public function get($key, $default = null)
+    public function get($key, $default = null, ShopConstraint $shopConstraint = null)
     {
         return isset($this->configurationData[$key])?$this->configurationData[$key]:$default;
     }

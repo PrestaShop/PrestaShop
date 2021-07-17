@@ -759,13 +759,16 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $key = 'Language::getIdByIso_' . $iso_code;
         if ($no_cache || !Cache::isStored($key)) {
             $id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(strtolower($iso_code)) . '\'');
+            if (empty($id_lang)) {
+                return null;
+            }
 
             Cache::store($key, $id_lang);
 
-            return $id_lang;
+            return (int) $id_lang;
         }
 
-        return Cache::retrieve($key);
+        return (int) Cache::retrieve($key);
     }
 
     /**
@@ -780,7 +783,12 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         $key = 'Language::getIdByLocale_' . $locale;
         if ($noCache || !Cache::isStored($key)) {
-            $idLang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `locale` = \'' . pSQL(strtolower($locale)) . '\'');
+            $idLang = Db::getInstance()
+                ->getValue(
+                    'SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang`
+                    WHERE `locale` = \'' . pSQL(strtolower($locale)) . '\'
+                    OR `language_code` = \'' . pSQL(strtolower($locale)) . '\''
+                );
 
             Cache::store($key, $idLang);
 

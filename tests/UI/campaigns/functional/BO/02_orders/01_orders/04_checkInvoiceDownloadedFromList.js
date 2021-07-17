@@ -11,6 +11,8 @@ const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
 const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
+const foMyAccountPage = require('@pages/FO/myAccount');
+const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
@@ -18,7 +20,7 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Importing data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Test context imports
 const testContext = require('@utils/testContext');
@@ -34,6 +36,7 @@ Create order in FO with bank wire payment
 Go to BO orders page and change order status to 'payment accepted'
 Check invoice creation
 Download invoice from list and check pdf text
+Go to FO and check the new order status
  */
 describe('Check invoice downloaded from list', async () => {
   // before and after functions
@@ -48,7 +51,7 @@ describe('Check invoice downloaded from list', async () => {
 
   describe('Create order in FO', async () => {
     it('should go to FO page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrder', baseContext);
 
       await homePage.goToFo(page);
       await homePage.changeLanguage(page, 'en');
@@ -58,7 +61,7 @@ describe('Check invoice downloaded from list', async () => {
     });
 
     it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFoToOrder', baseContext);
 
       await homePage.goToLoginPage(page);
       const pageTitle = await foLoginPage.getPageTitle(page);
@@ -66,9 +69,9 @@ describe('Check invoice downloaded from list', async () => {
     });
 
     it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'sighInFoToOrder', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -170,6 +173,49 @@ describe('Check invoice downloaded from list', async () => {
       // Check total paid in pdf
       const totalPaidExist = await files.isTextInPDF(filePath, orderInformation.totalPaid);
       await expect(totalPaidExist, `Total paid '${orderInformation.totalPaid}' does not exist in invoice`).to.be.true;
+    });
+  });
+
+  describe('Check order status in FO ', async () => {
+    it('should go to FO page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCheckStatus', baseContext);
+
+      await homePage.goToFo(page);
+      await homePage.changeLanguage(page, 'en');
+
+      const isHomePage = await homePage.isHomePage(page);
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
+
+    it('should go to login page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFoToCheckStatus', baseContext);
+
+      await homePage.goToLoginPage(page);
+      const pageTitle = await foLoginPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+    });
+
+    it('should sign in with default customer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighInFoToCheckStatus', baseContext);
+
+      await foLoginPage.customerLogin(page, DefaultCustomer);
+      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    });
+
+    it('should go to orders history page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
+
+      await foMyAccountPage.goToHistoryAndDetailsPage(page);
+      const pageTitle = await foOrderHistoryPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to open order history page').to.contains(foOrderHistoryPage.pageTitle);
+    });
+
+    it('should check last order status in FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkLastOrderStatus', baseContext);
+
+      const orderStatusFO = await foOrderHistoryPage.getOrderStatus(page, 1);
+      await expect(orderStatusFO, 'Order status is not correct').to.equal(Statuses.paymentAccepted.status);
     });
   });
 });

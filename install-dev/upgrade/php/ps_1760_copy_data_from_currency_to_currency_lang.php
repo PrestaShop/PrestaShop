@@ -54,9 +54,49 @@ function ps_1760_copy_data_from_currency_to_currency_lang()
     /** @var LocaleRepository $localeRepoCLDR */
     $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
     foreach ($currencies as $currency) {
-        $currency->refreshLocalizedCurrencyData($languages, $localeRepoCLDR);
-        $currency->save();
+        refreshLocalizedCurrencyData($currency, $languages, $localeRepoCLDR);
     }
 
     ObjectModel::enableCache();
+}
+
+function refreshLocalizedCurrencyData(Currency $currency, array $languages, LocaleRepository $localeRepoCLDR)
+{
+    $language = new Language($languages[0]['id_lang']);
+    $cldrLocale = $localeRepoCLDR->getLocale($language->locale);
+    $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
+
+    if (!empty($cldrCurrency)) {
+        $fields = [
+            'numeric_iso_code' => $cldrCurrency->getNumericIsoCode(),
+            'precision' => $cldrCurrency->getDecimalDigits(),
+        ];
+        Db::getInstance()->update('currency', $fields, 'id_currency = ' . (int) $currency->id);
+    }
+
+    foreach ($languages as $languageData) {
+        $language = new Language($languageData['id_lang']);
+        if (empty($language->locale)) {
+            // Language doesn't have locale we can't install this language
+            continue;
+        }
+
+        // CLDR locale give us the CLDR reference specification
+        $cldrLocale = $localeRepoCLDR->getLocale($language->locale);
+        // CLDR currency gives data from CLDR reference, for the given language
+        $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
+
+        if (empty($cldrCurrency)) {
+            continue;
+        }
+
+        $fields = [
+            'name' => $cldrCurrency->getDisplayName(),
+            'symbol' => (string) $cldrCurrency->getSymbol() ?: $currency->iso_code
+        ];
+
+        $where = 'id_currency = ' . (int) $currency->id
+            . ' AND id_lang = ' . (int) $language->id;
+        Db::getInstance()->update('currency_lang', $fields, $where);
+    }
 }

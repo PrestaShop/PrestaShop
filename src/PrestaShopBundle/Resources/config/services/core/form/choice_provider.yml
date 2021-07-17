@@ -244,4 +244,4 @@ services:
   prestashop.core.form.choice_provider.customer_service_order_messages:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerServiceOrderMessagesChoiceProvider'
     arguments:
-      - '@=service("prestashop.adapter.order_message.order_message_provider").getMessages()'
+      - '@prestashop.adapter.order_message.order_message_provider'

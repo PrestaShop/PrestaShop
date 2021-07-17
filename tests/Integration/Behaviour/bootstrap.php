@@ -31,5 +31,8 @@
 $rootDirectory = __DIR__ . '/../../../';
 
 define('_PS_IN_TEST_', true);
+if (!defined('_PS_ADMIN_DIR_')) {
+    define('_PS_ADMIN_DIR_', __DIR__);
+}
 require_once $rootDirectory . 'config/config.inc.php';
 require_once $rootDirectory . 'app/AppKernel.php';

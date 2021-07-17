@@ -39,7 +39,6 @@ abstract class AdminStatsTabControllerCore extends AdminController
             return;
         }
 
-        $this->addToolBarModulesListButton();
         $this->toolbar_title = $this->trans('Stats', [], 'Admin.Stats.Feature');
 
         if ($this->display == 'view') {
@@ -175,16 +174,10 @@ abstract class AdminStatsTabControllerCore extends AdminController
 
     protected function getModules()
     {
-        $sql = 'SELECT h.`name` AS hook, m.`name`
-				FROM `' . _DB_PREFIX_ . 'module` m
-				LEFT JOIN `' . _DB_PREFIX_ . 'hook_module` hm ON hm.`id_module` = m.`id_module`
-				LEFT JOIN `' . _DB_PREFIX_ . 'hook` h ON hm.`id_hook` = h.`id_hook`
-				WHERE h.`name` = \'displayAdminStatsModules\'
-					AND m.`active` = 1
-				GROUP BY hm.id_module
-				ORDER BY hm.`position`';
-
-        return Db::getInstance()->executeS($sql);
+        return array_map(
+            function ($moduleArray) {return ['name' => $moduleArray['module']]; },
+            Hook::getHookModuleExecList('displayAdminStatsModules')
+        );
     }
 
     public function displayStats()

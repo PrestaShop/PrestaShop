@@ -26,31 +26,32 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Adapter\OrderMessage\OrderMessageProvider;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 
 /**
  * Selects order messages itself.
  */
-final class CustomerServiceOrderMessagesChoiceProvider implements FormChoiceProviderInterface
+final class CustomerServiceOrderMessagesChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
     /**
-     * @var array
+     * @var OrderMessageProvider
      */
-    private $orderMessages;
+    private $orderMessageProvider;
 
-    public function __construct(array $orderMessages)
+    public function __construct(OrderMessageProvider $orderMessageProvider)
     {
-        $this->orderMessages = $orderMessages;
+        $this->orderMessageProvider = $orderMessageProvider;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getChoices(): array
+    public function getChoices(array $options): array
     {
         $result = [];
 
-        foreach ($this->orderMessages as $orderMessage) {
+        foreach ($this->orderMessageProvider->getMessages($options['lang_id']) as $orderMessage) {
             $result[$orderMessage['id_order_message']] = $orderMessage['message'];
         }
 

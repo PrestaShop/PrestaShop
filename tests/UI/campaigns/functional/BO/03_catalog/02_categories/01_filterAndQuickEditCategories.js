@@ -108,7 +108,6 @@ describe('Filter And Quick Edit Categories', async () => {
             filterBy: 'active',
             filterValue: Categories.accessories.displayed,
           },
-        expected: 'check',
       },
     ];
 
@@ -123,19 +122,23 @@ describe('Filter And Quick Edit Categories', async () => {
           test.args.filterValue,
         );
 
+        // At least 1 category should be displayed after these filters
+        // Can't know most categories that can be displayed
+        // because we don't have total of categories and subcategories
         const numberOfCategoriesAfterFilter = await categoriesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
+        await expect(numberOfCategoriesAfterFilter).to.be.at.least(1);
 
         for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-          const textColumn = await categoriesPage.getTextColumnFromTableCategories(
-            page,
-            i,
-            test.args.filterBy,
-          );
-
-          if (test.expected !== undefined) {
-            await expect(textColumn).to.contains(test.expected);
+          if (test.args.filterBy === 'active') {
+            const categoryStatus = await categoriesPage.getStatus(page, i);
+            await expect(categoryStatus).to.equal(test.args.filterValue);
           } else {
+            const textColumn = await categoriesPage.getTextColumnFromTableCategories(
+              page,
+              i,
+              test.args.filterBy,
+            );
+
             await expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -175,23 +178,19 @@ describe('Filter And Quick Edit Categories', async () => {
       it(`should ${test.args.action} first Category`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Category`, baseContext);
 
-        const isActionPerformed = await categoriesPage.updateToggleColumnValue(
+        const isActionPerformed = await categoriesPage.setStatus(
           page,
           1,
-          'active',
           test.args.enabledValue,
         );
 
         if (isActionPerformed) {
-          const resultMessage = await categoriesPage.getTextContent(
-            page,
-            categoriesPage.growlMessageBlock,
-          );
+          const resultMessage = await categoriesPage.getGrowlMessageContent(page);
 
           await expect(resultMessage).to.contains(categoriesPage.successfulUpdateStatusMessage);
         }
 
-        const categoryStatus = await categoriesPage.getToggleColumnValue(page, 1, 'active');
+        const categoryStatus = await categoriesPage.getStatus(page, 1);
         await expect(categoryStatus).to.be.equal(test.args.enabledValue);
       });
     });

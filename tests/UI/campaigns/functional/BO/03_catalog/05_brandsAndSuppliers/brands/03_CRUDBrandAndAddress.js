@@ -42,6 +42,12 @@ describe('Create, Update and Delete Brand and Address', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create logos
+    await Promise.all([
+      files.generateImage(createBrandData.logo),
+      files.generateImage(editBrandData.logo),
+    ]);
   });
 
   after(async () => {

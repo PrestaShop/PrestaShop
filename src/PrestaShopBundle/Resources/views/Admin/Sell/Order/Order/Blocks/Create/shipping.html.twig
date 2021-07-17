@@ -65,6 +65,51 @@
         </span>
         </div>
       </div>
+      <div class="form-group row {% if not recycledPackagingEnabled %}d-none{% endif %}">
+        <div class="col-3">
+        <span class="float-right">
+          {{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </span>
+        </div>
+        <div class="col-4">
+          <span class="ps-switch">
+            <input id="recycled-packaging_0" class="js-recycled-packaging-switch" name="recycled_packaging" value="0" checked="" type="radio">
+            <label for="recycled-packaging_0">{{ 'No'|trans({}, 'Admin.Global') }}</label>
+            <input id="recycled-packaging_1" class="js-recycled-packaging-switch" name="recycled_packaging" value="1" type="radio">
+            <label for="recycled-packaging_1">{{ 'Yes'|trans({}, 'Admin.Global') }}</label>
+            <span class="slide-button"></span>
+          </span>
+        </div>
+      </div>
+      <div class="form-group row {% if not giftSettingsEnabled %}d-none{% endif %}">
+        <div class="col-3">
+        <span class="float-right">
+          {{ 'Gift'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </span>
+        </div>
+        <div class="col-4">
+          <span class="ps-switch">
+            <input id="is-gift_0" class="js-is-gift-switch" name="is_gift" value="0" checked="" type="radio">
+            <label for="is-gift_0">{{ 'No'|trans({}, 'Admin.Global') }}</label>
+            <input id="is-gift_1" class="js-is-gift-switch" name="is_gift" value="1" type="radio">
+            <label for="is-gift_1">{{ 'Yes'|trans({}, 'Admin.Global') }}</label>
+            <span class="slide-button"></span>
+          </span>
+        </div>
+
+    </span>
+
+      </div>
+      <div class="form-group row type-text {% if not giftSettingsEnabled %}d-none{% endif %}">
+        <div class="col-3">
+        <label class="float-right">
+          {{ 'Gift message'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </label>
+        </div>
+        <div class="col-4">
+          <textarea id="cart_gift_message" name="cart_gift_message" class="form-control" cols="40" rows="4"></textarea>
+        </div>
+      </div>
     </form>
 
     <div class="js-no-carrier-block d-none">

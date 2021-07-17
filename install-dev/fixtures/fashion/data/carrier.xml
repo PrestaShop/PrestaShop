@@ -22,5 +22,13 @@
       <name>My carrier</name>
       <url/>
     </carrier>
+    <carrier id="My_cheap_carrier" id_reference="3" active="0" shipping_handling="1" range_behavior="0" is_free="0" shipping_external="0" need_range="0" shipping_method="2" max_width="0" max_height="0" max_depth="0" max_weight="0.000000" grade="0">
+      <name>My cheap carrier</name>
+      <url/>
+    </carrier>
+    <carrier id="My_light_carrier" id_reference="3" active="0" shipping_handling="1" range_behavior="0" is_free="0" shipping_external="0" need_range="0" shipping_method="1" max_width="0" max_height="0" max_depth="0" max_weight="0.000000" grade="0">
+      <name>My light carrier</name>
+      <url/>
+    </carrier>
   </entities>
 </entity_carrier>

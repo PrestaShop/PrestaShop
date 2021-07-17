@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Crypto\Hashing;
  */
 class EmployeeCore extends ObjectModel
 {
-    /** @var int $id Employee ID */
+    /** @var int Employee ID */
     public $id;
 
     /** @var string Determine employee profile */

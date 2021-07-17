@@ -863,13 +863,17 @@ class CurrencyCore extends ObjectModel
             $query = Currency::getIdByQuery($idShop, $includeDeleted);
             $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
 
-            $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+            if (empty($result)) {
+                return 0;
+            }
+
             Cache::store($cacheId, $result);
 
-            return $result;
+            return (int) $result;
         }
 
-        return Cache::retrieve($cacheId);
+        return (int) Cache::retrieve($cacheId);
     }
 
     /**
@@ -1130,13 +1134,9 @@ class CurrencyCore extends ObjectModel
         $symbolsByLang = $namesByLang = [];
         foreach ($languages as $languageData) {
             $language = new Language($languageData['id_lang']);
-            if (empty($language->locale)) {
-                // Language doesn't have locale we can't install this language
-                continue;
-            }
 
             // CLDR locale give us the CLDR reference specification
-            $cldrLocale = $localeRepoCLDR->getLocale($language->locale);
+            $cldrLocale = $localeRepoCLDR->getLocale($language->getLocale());
             // CLDR currency gives data from CLDR reference, for the given language
             $cldrCurrency = $cldrLocale->getCurrency($this->iso_code);
 

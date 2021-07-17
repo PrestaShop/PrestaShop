@@ -129,6 +129,11 @@ export default {
   deliveryOptionSelect: '#delivery-option-select',
   totalShippingField: '.js-total-shipping-tax-inc',
   freeShippingSwitch: '.js-free-shipping-switch',
+  recycledPackagingSwitch: '.js-recycled-packaging-switch',
+  recycledPackagingSwitchValue: '.js-recycled-packaging-switch:checked',
+  isAGiftSwitch: '.js-is-gift-switch',
+  isAGiftSwitchValue: '.js-is-gift-switch:checked',
+  giftMessageField: '#cart_gift_message',
 
   // selectors related to cart block
   cartBlock: '#cart-block',
@@ -160,6 +165,7 @@ export default {
   listedProductReferenceField: '.js-product-ref',
   listedProductUnitPriceInput: '.js-product-unit-input',
   listedProductQtyInput: '.js-product-qty-input',
+  listedProductQtyStock: '.js-product-qty-stock',
   listedProductGiftQty: '.js-product-gift-qty',
   productTotalPriceField: '.js-product-total-price',
   listedProductCustomizedTextTemplate: '#js-table-product-customized-text-template',
@@ -174,4 +180,5 @@ export default {
   productAddForm: '#js-add-product-form',
   cartErrorAlertBlock: '#js-cart-error-block',
   cartErrorAlertText: '#js-cart-error-block .alert-text',
+  createOrderButton: '#create-order-button',
 };

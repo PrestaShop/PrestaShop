@@ -485,3 +485,12 @@
     border: none;
   }
 }
+
+
+@include media-breakpoint-down(md) {
+  #products {
+    .products {
+      justify-content: center;
+    }
+  }
+}

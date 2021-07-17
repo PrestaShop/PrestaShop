@@ -52,6 +52,18 @@ admin_order_addresses_edit:
   options:
     expose: true
 
+admin_cart_addresses_edit:
+  path: /cart/{cartId}/{addressType}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Address\Address:editCartAddress
+    _legacy_controller: AdminAddresses
+  requirements:
+    cartId: \d+
+    addressType: delivery|invoice
+  options:
+    expose: true
+
 admin_addresses_delete_bulk:
   path: /delete-bulk
   methods: [POST]

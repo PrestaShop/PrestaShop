@@ -70,6 +70,8 @@ describe('Pagination and sort Categories', async () => {
   const creationTests = new Array(10).fill(0, 0, 10);
   creationTests.forEach((test, index) => {
     describe(`Create category n°${index + 1} in BO`, async () => {
+      before(() => files.generateImage(`${createCategoryData.name}.jpg`));
+
       const createCategoryData = new CategoryFaker({name: `todelete${index}`});
 
       it('should go to add new category page', async function () {

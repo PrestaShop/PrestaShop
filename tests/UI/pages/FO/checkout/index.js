@@ -7,19 +7,31 @@ class Checkout extends FOBasePage {
 
     // Selectors
     this.checkoutPageBody = 'body#checkout';
-    this.personalInformationStepSection = '#checkout-personal-information-step';
     this.paymentStepSection = '#checkout-payment-step';
     this.paymentOptionInput = name => `${this.paymentStepSection} input[name='payment-option']`
       + `[data-module-name='${name}']`;
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
     this.conditionToApproveCheckbox = '#conditions_to_approve\\[terms-and-conditions\\]';
+    this.termsOfServiceLink = '#cta-terms-and-conditions-0';
+    this.termsOfServiceModalDiv = '#modal div.js-modal-content';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
+    this.shippingValueSpan = '#cart-subtotal-shipping span.value';
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
     this.createAccountOptionalNotice = `${this.personalInformationStepForm} #customer-form section p`;
     this.signInLink = `${this.personalInformationStepForm} a[href="#checkout-login-form"]`;
     this.checkoutGuestForm = '#checkout-guest-form';
+    this.checkoutGuestGenderInput = pos => `${this.checkoutGuestForm} input[name='id_gender'][value='${pos}']`;
+    this.checkoutGuestFirstnameInput = `${this.checkoutGuestForm} input[name='firstname']`;
+    this.checkoutGuestLastnameInput = `${this.checkoutGuestForm} input[name='lastname']`;
+    this.checkoutGuestEmailInput = `${this.checkoutGuestForm} input[name='email']`;
     this.checkoutGuestPasswordInput = `${this.checkoutGuestForm} input[name='password']`;
+    this.checkoutGuestBirthdayInput = `${this.checkoutGuestForm} input[name='birthday']`;
+    this.checkoutGuestOptinCheckbox = `${this.checkoutGuestForm} input[name='optin']`;
+    this.checkoutGuestCustomerPrivacyCheckbox = `${this.checkoutGuestForm} input[name='customer_privacy']`;
+    this.checkoutGuestNewsletterCheckbox = `${this.checkoutGuestForm} input[name='newsletter']`;
+    this.checkoutGuestGdprCheckbox = `${this.checkoutGuestForm} input[name='psgdpr']`;
+    this.checkoutGuestContinueButton = `${this.checkoutGuestForm} button[name='continue']`;
     // Checkout login form
     this.checkoutLoginForm = `${this.personalInformationStepForm} #checkout-login-form`;
     this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
@@ -35,7 +47,11 @@ class Checkout extends FOBasePage {
     this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
     // Shipping method step
     this.deliveryStepSection = '#checkout-delivery-step';
+    this.deliveryOptionsRadios = 'input[id*=\'delivery_option_\']';
     this.deliveryOptionLabel = id => `${this.deliveryStepSection} label[for='delivery_option_${id}']`;
+    this.deliveryOptionNameSpan = id => `${this.deliveryOptionLabel(id)} span.carrier-name`;
+    this.deliveryOptionAllNamesSpan = '#js-delivery .delivery-option .carriere-name-container span.carrier-name';
+    this.deliveryOptionAllPricesSpan = '#js-delivery .delivery-option span.carrier-price';
     this.deliveryMessage = '#delivery_message';
     this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
     // Gift selectors
@@ -86,10 +102,72 @@ class Checkout extends FOBasePage {
    * @param comment
    * @returns {Promise<boolean>}
    */
-  async chooseShippingMethodAndAddComment(page, shippingMethod, comment) {
+  async chooseShippingMethodAndAddComment(page, shippingMethod, comment = '') {
     await this.waitForSelectorAndClick(page, this.deliveryOptionLabel(shippingMethod));
     await this.setValue(page, this.deliveryMessage, comment);
     return this.goToPaymentStep(page);
+  }
+
+  /**
+   * Is shipping method exist
+   * @param page
+   * @param shippingMethod
+   * @returns {Promise<boolean>}
+   */
+  isShippingMethodVisible(page, shippingMethod) {
+    return this.elementVisible(page, this.deliveryOptionLabel(shippingMethod), 2000);
+  }
+
+  /**
+   * Get selected shipping method name
+   * @param page
+   * @return {Promise<string>}
+   */
+  async getSelectedShippingMethod(page) {
+    // Get checkbox radios
+    const optionsRadiosElement = await page.$$(this.deliveryOptionsRadios);
+    let selectedOptionId = 0;
+
+    // Get id of selected option
+    for (let position = 1; position <= optionsRadiosElement.length; position++) {
+      if (await (await optionsRadiosElement[position - 1].getProperty('checked')).jsonValue()) {
+        selectedOptionId = position;
+        break;
+      }
+    }
+
+    // Return text of the selected option
+    if (selectedOptionId !== 0) {
+      return this.getTextContent(page, this.deliveryOptionNameSpan(selectedOptionId));
+    }
+    throw new Error('No selected option was found');
+  }
+
+  /**
+   * Get all carriers prices
+   * @param page
+   * @returns {Promise<[]>}
+   */
+  async getAllCarriersPrices(page) {
+    return page.$$eval(this.deliveryOptionAllPricesSpan, all => all.map(el => el.textContent));
+  }
+
+  /**
+   * Get shipping value
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getShippingCost(page) {
+    return this.getTextContent(page, this.shippingValueSpan);
+  }
+
+  /**
+   * Get all carriers names
+   * @param page
+   * @returns {Promise<[]>}
+   */
+  async getAllCarriersNames(page) {
+    return page.$$eval(this.deliveryOptionAllNamesSpan, all => all.map(el => el.textContent));
   }
 
   /**
@@ -178,6 +256,16 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Get terms of service page title
+   * @param page
+   * @returns {Promise<text>}
+   */
+  async getTermsOfServicePageTitle(page) {
+    await page.click(this.termsOfServiceLink);
+    return this.getTextContent(page, this.termsOfServiceModalDiv);
+  }
+
+  /**
    * Check if gift checkbox is visible
    * @param page
    * @return {boolean}
@@ -220,6 +308,52 @@ class Checkout extends FOBasePage {
     await this.setValue(page, this.addressStepPhoneInput, address.phone);
     await page.click(this.addressStepContinueButton);
     return this.isStepCompleted(page, this.addressStepSection);
+  }
+
+  /**
+   * Fill personal information form and click on continue
+   * @param page
+   * @param customerData
+   * @return {Promise<boolean>}
+   */
+  async setGuestPersonalInformation(page, customerData) {
+    await page.check(this.checkoutGuestGenderInput(customerData.socialTitle === 'Mr.' ? 1 : 2));
+
+    await this.setValue(page, this.checkoutGuestFirstnameInput, customerData.firstName);
+    await this.setValue(page, this.checkoutGuestLastnameInput, customerData.lastName);
+    await this.setValue(page, this.checkoutGuestEmailInput, customerData.email);
+    await this.setValue(page, this.checkoutGuestPasswordInput, customerData.password);
+
+    // Fill birthday input
+    await this.setValue(
+      page,
+      this.checkoutGuestBirthdayInput,
+      `${customerData.monthOfBirth.padStart(2, '0')}/`
+      + `${customerData.dayOfBirth.padStart(2, '0')}/`
+      + `${customerData.yearOfBirth}`,
+    );
+
+    if (customerData.partnerOffers) {
+      await page.check(this.checkoutGuestOptinCheckbox);
+    }
+
+    if (customerData.newsletter) {
+      await page.check(this.checkoutGuestNewsletterCheckbox);
+    }
+
+    // Check customer privacy input if visible
+    if (await this.elementVisible(page, this.checkoutGuestCustomerPrivacyCheckbox, 500)) {
+      await page.check(this.checkoutGuestCustomerPrivacyCheckbox);
+    }
+
+    // Check gdpr input if visible
+    if (await this.elementVisible(page, this.checkoutGuestGdprCheckbox, 500)) {
+      await page.check(this.checkoutGuestGdprCheckbox);
+    }
+
+    // Click on continue
+    await page.click(this.checkoutGuestContinueButton);
+    return this.isStepCompleted(page, this.personalInformationStepForm, 2000);
   }
 }
 

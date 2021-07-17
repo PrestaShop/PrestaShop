@@ -89,7 +89,7 @@ describe('Enable display suppliers', async () => {
     it(`should check that the message alert contains '${test.args.action}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkAlertContains_${test.args.action}`, baseContext);
 
-      const text = await suppliersPage.getAlertTextMessage(page);
+      const text = await suppliersPage.getAlertInfoBlockParagraphContent(page);
       await expect(text).to.contains(test.args.action);
     });
 
@@ -109,7 +109,7 @@ describe('Enable display suppliers', async () => {
     it('should verify the existence of the suppliers page link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkSuppliersPage_${test.args.action}`, baseContext);
 
-      await homePage.goToSiteMapPage(page);
+      await homePage.goToFooterLink(page, 'Sitemap');
       const pageTitle = await siteMapPage.getPageTitle(page);
       await expect(pageTitle).to.equal(siteMapPage.pageTitle);
 

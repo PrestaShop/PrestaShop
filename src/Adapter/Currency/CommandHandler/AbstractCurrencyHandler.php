@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
@@ -160,6 +161,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
         $this->applyPatternTransformations($entity, $command->getLocalizedTransformations());
 
         $this->refreshLocalizedData($entity);
+        $this->validateCurrency($entity);
 
         //IMPORTANT: specify that we want to save null values
         if (false === $entity->save(true, true)) {
@@ -201,6 +203,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
         }
 
         $this->refreshLocalizedData($entity);
+        $this->validateCurrency($entity);
 
         //IMPORTANT: specify that we want to save null values
         if (false === $entity->update(true)) {
@@ -215,6 +218,45 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
         if (!empty($command->getShopIds())) {
             $this->associateWithShops($entity, $command->getShopIds());
             $this->associateConversionRateToShops($entity, $command->getShopIds());
+        }
+    }
+
+    /**
+     * @param Currency $currency
+     *
+     * @throws CurrencyConstraintException
+     * @throws PrestaShopException
+     */
+    private function validateCurrency(Currency $currency): void
+    {
+        $this->validateLocalizedField($currency, 'name', CurrencyConstraintException::INVALID_NAME);
+        $this->validateLocalizedField($currency, 'symbol', CurrencyConstraintException::INVALID_SYMBOL);
+        $this->validateLocalizedField($currency, 'pattern', CurrencyConstraintException::INVALID_SYMBOL);
+    }
+
+    /**
+     * @param Currency $currency
+     * @param string $propertyName
+     * @param int $errorCode
+     *
+     * @throws CurrencyConstraintException
+     * @throws PrestaShopException
+     */
+    private function validateLocalizedField(Currency $currency, string $propertyName, int $errorCode): void
+    {
+        $localizedValues = $currency->{$propertyName};
+
+        foreach ($localizedValues as $langId => $value) {
+            if (true !== $currency->validateField($propertyName, $value, $langId)) {
+                throw new CurrencyConstraintException(
+                    sprintf(
+                        'Invalid Currency localized property "%s" for language with id "%d"',
+                        $propertyName,
+                        $langId
+                    ),
+                    $errorCode
+                );
+            }
         }
     }
 

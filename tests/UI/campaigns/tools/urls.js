@@ -1,5 +1,5 @@
 require('module-alias/register');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 /**
  * Login into BO to access BO Urls
@@ -12,7 +12,7 @@ const loginBO = async function (page) {
 
   await Promise.all([
     page.click('#submit_login'),
-    page.waitForNavigation({waitUntil: 'load'}),
+    page.waitForNavigation({waitUntil: 'networkidle'}),
   ]);
 
   const block = await page.$('button.onboarding-button-shut-down');
@@ -30,12 +30,12 @@ const loginBO = async function (page) {
  * @return {Promise<void>}
  */
 const loginFO = async function (page) {
-  await page.type('#login-form input[name=email]', DefaultAccount.email);
-  await page.type('#login-form input[name=password]', DefaultAccount.password);
+  await page.type('#login-form input[name=email]', DefaultCustomer.email);
+  await page.type('#login-form input[name=password]', DefaultCustomer.password);
 
   await Promise.all([
     page.click('#submit-login'),
-    page.waitForNavigation('load'),
+    page.waitForNavigation('networkidle'),
   ]);
 };
 
@@ -133,13 +133,13 @@ module.exports = [
       {name: 'BO_module_manager', url: 'index.php/improve/modules/manage'},
       {name: 'BO_module_manager_alerts', url: 'index.php/improve/modules/alerts'},
       {name: 'BO_module_manager_updates', url: 'index.php/improve/modules/updates'},
-      {name: 'BO_module_catalog', url: 'index.php?controller=AdminPsMboModule'},
+      {name: 'BO_module_catalog', url: 'index.php/modules/addons/modules/catalog'},
       {name: 'BO_module_catalog_selection', url: 'index.php/improve/modules/addons-store'},
       {name: 'BO_theme_logo', url: 'index.php/improve/design/themes/'},
       {name: 'BO_add_theme', url: 'index.php/improve/design/themes/import'},
       {name: 'BO_homepage_configuration', url: 'index.php?controller=AdminPsThemeCustoConfiguration'},
       {name: 'BO_advanced_customization', url: 'index.php?controller=AdminPsThemeCustoAdvanced'},
-      {name: 'BO_theme_catalog', url: 'index.php?controller=AdminPsMboTheme'},
+      {name: 'BO_theme_catalog', url: 'index.php/modules/addons/themes/catalog'},
       {name: 'BO_email_theme', url: 'index.php/improve/design/mail_theme/'},
       {name: 'BO_pages', url: 'index.php/improve/design/cms-pages/'},
       {name: 'BO_add_page_category', url: 'index.php/improve/design/cms-pages/category/new'},

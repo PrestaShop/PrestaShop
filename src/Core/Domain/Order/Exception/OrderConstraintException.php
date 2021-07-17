@@ -31,4 +31,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
  */
 class OrderConstraintException extends OrderException
 {
+    /**
+     * Used in create order from BO when the customer message is invalid.
+     */
+    public const INVALID_CUSTOMER_MESSAGE = 1;
+
+    /**
+     * Used in add payment from BO when the payment method is invalid.
+     */
+    public const INVALID_PAYMENT_METHOD = 2;
 }

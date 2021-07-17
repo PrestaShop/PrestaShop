@@ -89,10 +89,12 @@ abstract class ModuleGraphCore extends Module
                     for ($i = $from_array['mday']; $i <= $imax; ++$i) {
                         $days[] = $i;
                     }
+
                     for ($i = 1; $i <= $to_array['mday']; ++$i) {
                         $days[] = $i;
                     }
                 }
+
                 foreach ($days as $i) {
                     if ($layers == 1) {
                         $this->_values[$i] = 0;
@@ -101,9 +103,11 @@ abstract class ModuleGraphCore extends Module
                             $this->_values[$j][$i] = 0;
                         }
                     }
+
                     $this->_legend[$i] = ($i % 2) ? '' : sprintf('%02d', $i);
                 }
             }
+
             if (is_callable([$this, 'setMonthValues'])) {
                 $this->setMonthValues($layers);
             }
@@ -146,6 +150,7 @@ abstract class ModuleGraphCore extends Module
                 for ($i = $from_array['year']; $i <= $to_array['year']; ++$i) {
                     $years[] = $i;
                 }
+
                 foreach ($years as $i) {
                     if ($layers == 1) {
                         $this->_values[$i] = 0;
@@ -157,6 +162,7 @@ abstract class ModuleGraphCore extends Module
                     $this->_legend[$i] = sprintf('%04d', $i);
                 }
             }
+
             if (is_callable([$this, 'setAllTimeValues'])) {
                 $this->setAllTimeValues($layers);
             }
@@ -174,6 +180,7 @@ abstract class ModuleGraphCore extends Module
         if (isset($datas['option'])) {
             $this->setOption($datas['option'], $layers);
         }
+
         $this->getData($layers);
 
         // @todo use native CSV PHP functions ?
@@ -184,15 +191,17 @@ abstract class ModuleGraphCore extends Module
                     $this->_csv .= ';';
                 }
                 if (isset($this->_titles['main'][$i])) {
-                    $this->_csv .= $this->_titles['main'][$i];
+                    $this->_csv .= $this->escapeCell($this->_titles['main'][$i]);
                 }
             }
         } else { // If there is only one column title, there is in fast two column (the first without title)
-            $this->_csv .= ';' . $this->_titles['main'];
+            $this->_csv .= ';' . $this->escapeCell($this->_titles['main']);
         }
+
         $this->_csv .= "\n";
         if (count($this->_legend)) {
             $total = 0;
+
             if ($datas['type'] == 'pie') {
                 foreach ($this->_legend as $key => $legend) {
                     for ($i = 0, $total_main = (is_array($this->_titles['main']) ? count($this->_values) : 1); $i < $total_main; ++$i) {
@@ -200,8 +209,9 @@ abstract class ModuleGraphCore extends Module
                     }
                 }
             }
+
             foreach ($this->_legend as $key => $legend) {
-                $this->_csv .= $legend . ';';
+                $this->_csv .= $this->escapeCell($legend) . ';';
                 for ($i = 0, $total_main = (is_array($this->_titles['main']) ? count($this->_values) : 1); $i < $total_main; ++$i) {
                     if (!isset($this->_values[$i]) || !is_array($this->_values[$i])) {
                         if (isset($this->_values[$key])) {
@@ -209,7 +219,7 @@ abstract class ModuleGraphCore extends Module
                             if (is_numeric($this->_values[$key])) {
                                 $this->_csv .= $this->_values[$key] / (($datas['type'] == 'pie') ? $total : 1);
                             } else {
-                                $this->_csv .= $this->_values[$key];
+                                $this->_csv .= $this->escapeCell($this->_values[$key]);
                             }
                         } else {
                             $this->_csv .= '0';
@@ -219,7 +229,7 @@ abstract class ModuleGraphCore extends Module
                         if (is_numeric($this->_values[$i][$key])) {
                             $this->_csv .= $this->_values[$i][$key] / (($datas['type'] == 'pie') ? $total : 1);
                         } else {
-                            $this->_csv .= $this->_values[$i][$key];
+                            $this->_csv .= $this->escapeCell($this->_values[$i][$key]);
                         }
                     }
                     $this->_csv .= ';';
@@ -227,6 +237,7 @@ abstract class ModuleGraphCore extends Module
                 $this->_csv .= "\n";
             }
         }
+
         $this->_displayCsv();
     }
 
@@ -342,12 +353,12 @@ abstract class ModuleGraphCore extends Module
 
     public function getDate()
     {
-        return ModuleGraph::getDateBetween($this->_employee);
+        return static::getDateBetween($this->_employee);
     }
 
     public static function getDateBetween($employee = null)
     {
-        if ($employee = ModuleGraph::getEmployee($employee)) {
+        if ($employee = static::getEmployee($employee)) {
             return ' \'' . pSQL($employee->stats_date_from) . ' 00:00:00\' AND \'' . pSQL($employee->stats_date_to) . ' 23:59:59\' ';
         }
 
@@ -357,5 +368,28 @@ abstract class ModuleGraphCore extends Module
     public function getLang()
     {
         return $this->_id_lang;
+    }
+
+    /**
+     * Escape cell content.
+     * If the content begins with =+-@ a quote is added at the beginning of
+     * the string.
+     * In all situation, add double quote to encapsulate the content.
+     *
+     * @param string $content
+     *
+     * @return string
+     */
+    public function escapeCell(string $content): string
+    {
+        $escaped = '"';
+        if (preg_match('~^[=+\-@]~', $content)) {
+            $content = '\'' . $content;
+        }
+
+        $escaped .= str_replace('"', '""', $content);
+        $escaped .= '"';
+
+        return $escaped;
     }
 }

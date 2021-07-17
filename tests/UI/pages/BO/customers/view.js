@@ -156,7 +156,7 @@ class ViewCustomer extends BOBasePage {
   async setPrivateNote(page, note) {
     await this.setValue(page, this.privateNoteTextArea, note);
     await page.click(this.privateNoteSaveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -191,6 +191,15 @@ class ViewCustomer extends BOBasePage {
         throw new Error(`${cardTitle} was not found`);
     }
     return this.clickAndWaitForNavigation(page, selector(row));
+  }
+
+  /**
+   * Get customer ID
+   * @param page
+   * @returns {Promise<number>}
+   */
+  async getCustomerID(page) {
+    return this.getNumberFromText(page, this.personnalInformationDiv);
   }
 }
 

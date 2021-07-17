@@ -199,6 +199,7 @@ class CarrierCore extends ObjectModel
         static::$price_by_price = [];
         static::$price_by_price2 = [];
         static::$cache_tax_rule = [];
+        Cache::clean('Carrier::*');
     }
 
     /**

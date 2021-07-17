@@ -36,6 +36,7 @@ use Country;
 use Group;
 use RangePrice;
 use RangeWeight;
+use RuntimeException;
 use State;
 use Zone;
 
@@ -146,7 +147,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a state named "(.+)" with iso code "(.+)" in country"(.+)" and zone "(.+)"$/
+     * @Given /^there is a state named "(.+)" with iso code "(.+)" in country "(.+)" and zone "(.+)"$/
      */
     public function createState($stateName, $stateIsoCode, $countryName, $zoneName)
     {
@@ -231,6 +232,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         $carrier->active = 1;
         $carrier->add();
         $this->carriers[$carrierName] = $carrier;
+        SharedStorage::getStorage()->set($carrierName, $carrier->id);
 
         $groups = Group::getGroups(Context::getContext()->language->id);
         $groupIds = [];
@@ -254,6 +256,17 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
             $groupIds[] = $group['id_group'];
         }
         $carrier->setGroups($groupIds);
+    }
+
+    /**
+     * @Given /^the carrier "(.+)" uses "(.+)" as tracking url$/
+     */
+    public function setCarrierTrackingUrl(string $carrierName, string $url): void
+    {
+        $this->checkCarrierWithNameExists($carrierName);
+        $carrier = $this->carriers[$carrierName];
+        $carrier->url = $url;
+        $carrier->save();
     }
 
     /**
@@ -370,5 +383,58 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkAddressWithNameExists($addresssName);
         $this->getCurrentCart()->id_address_delivery = $this->addresses[$addresssName]->id;
+        Context::getContext()->country = new Country((int) $this->addresses[$addresssName]->id_country);
+    }
+
+    /**
+     * @Given a carrier :carrierReference with name :carrierName exists
+     *
+     * @param string $carrierReference
+     * @param string $carrierName
+     */
+    public function checkExistingCarrier(string $carrierReference, string $carrierName)
+    {
+        $carriers = Carrier::getCarriers((int) Configuration::get('PS_LANG_DEFAULT'));
+        foreach ($carriers as $carrier) {
+            if ($carrier['name'] === $carrierName) {
+                SharedStorage::getStorage()->set($carrierReference, (int) $carrier['id_carrier']);
+
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf(
+            'Could not find carrier with name %s',
+            $carrierName
+        ));
+    }
+
+    /**
+     * @Given I enable carrier :carrierReference
+     *
+     * @param string $carrierReference
+     */
+    public function enableCarrier(string $carrierReference)
+    {
+        $carrierId = SharedStorage::getStorage()->get($carrierReference);
+        $carrier = new Carrier($carrierId);
+        $carrier->active = true;
+        $carrier->save();
+        // Reset cache so that the carrier becomes selectable
+        Carrier::resetStaticCache();
+    }
+
+    /**
+     * @Then I associate the tax rule group :taxRulesGroupReference to carrier :carrierReference
+     *
+     * @param string $taxRulesGroupReference
+     * @param string $carrierReference
+     */
+    public function associateCarrierTaxRulesGroup(string $taxRulesGroupReference, string $carrierReference)
+    {
+        $carrierId = SharedStorage::getStorage()->get($carrierReference);
+        $taxRulesGroupId = SharedStorage::getStorage()->get($taxRulesGroupReference);
+        $carrier = new Carrier($carrierId);
+        $carrier->setTaxRulesGroup($taxRulesGroupId);
     }
 }

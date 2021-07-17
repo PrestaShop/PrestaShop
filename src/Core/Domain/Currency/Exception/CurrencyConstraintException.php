@@ -78,4 +78,19 @@ class CurrencyConstraintException extends CurrencyException
      * @see Precision
      */
     const INVALID_PRECISION = 8;
+
+    /**
+     * Code used when an invalid name is used
+     */
+    const INVALID_NAME = 9;
+
+    /**
+     * Code used when an invalid symbol is used
+     */
+    const INVALID_SYMBOL = 10;
+
+    /**
+     * Code used when an invalid pattern is used
+     */
+    const INVALID_PATTERN = 11;
 }

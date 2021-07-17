@@ -7,7 +7,7 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -68,7 +68,7 @@ describe('Filter And Quick Edit Customers', async () => {
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_customer',
-            filterValue: DefaultAccount.id,
+            filterValue: DefaultCustomer.id,
           },
       },
       {
@@ -77,7 +77,7 @@ describe('Filter And Quick Edit Customers', async () => {
             testIdentifier: 'filterSocialTitle',
             filterType: 'select',
             filterBy: 'social_title',
-            filterValue: DefaultAccount.socialTitle,
+            filterValue: DefaultCustomer.socialTitle,
           },
       },
       {
@@ -86,7 +86,7 @@ describe('Filter And Quick Edit Customers', async () => {
             testIdentifier: 'filterFirstName',
             filterType: 'input',
             filterBy: 'firstname',
-            filterValue: DefaultAccount.firstName,
+            filterValue: DefaultCustomer.firstName,
           },
       },
       {
@@ -95,7 +95,7 @@ describe('Filter And Quick Edit Customers', async () => {
             testIdentifier: 'filterLastName',
             filterType: 'input',
             filterBy: 'lastname',
-            filterValue: DefaultAccount.lastName,
+            filterValue: DefaultCustomer.lastName,
           },
       },
       {
@@ -104,7 +104,7 @@ describe('Filter And Quick Edit Customers', async () => {
             testIdentifier: 'filterEmail',
             filterType: 'input',
             filterBy: 'email',
-            filterValue: DefaultAccount.email,
+            filterValue: DefaultCustomer.email,
           },
       },
       {
@@ -113,9 +113,8 @@ describe('Filter And Quick Edit Customers', async () => {
             testIdentifier: 'filterActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: DefaultAccount.enabled,
+            filterValue: DefaultCustomer.enabled,
           },
-        expected: 'check',
       },
       {
         args:
@@ -123,9 +122,8 @@ describe('Filter And Quick Edit Customers', async () => {
             testIdentifier: 'filterNewsletter',
             filterType: 'select',
             filterBy: 'newsletter',
-            filterValue: DefaultAccount.newsletter,
+            filterValue: DefaultCustomer.newsletter,
           },
-        expected: 'check',
       },
       {
         args:
@@ -135,7 +133,6 @@ describe('Filter And Quick Edit Customers', async () => {
             filterBy: 'optin',
             filterValue: false,
           },
-        expected: 'clear',
       },
     ];
 
@@ -162,16 +159,35 @@ describe('Filter And Quick Edit Customers', async () => {
         await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
 
         for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-          const textColumn = await customersPage.getTextColumnFromTableCustomers(
-            page,
-            i,
-            test.args.filterBy,
-          );
+          switch (test.args.filterBy) {
+            case 'active': {
+              const customerStatus = await customersPage.getCustomerStatus(page, i);
+              await expect(customerStatus).to.equal(test.args.filterValue);
+              break;
+            }
 
-          if (test.expected !== undefined) {
-            await expect(textColumn).to.contains(test.expected);
-          } else {
-            await expect(textColumn).to.contains(test.args.filterValue);
+            case 'newsletter': {
+              const newsletterStatus = await customersPage.getNewsletterStatus(page, i);
+              await expect(newsletterStatus).to.equal(test.args.filterValue);
+              break;
+            }
+
+            case 'optin': {
+              const partnerOffersStatus = await customersPage.getPartnerOffersStatus(page, i);
+              await expect(partnerOffersStatus).to.equal(test.args.filterValue);
+              break;
+            }
+
+            default: {
+              const textColumn = await customersPage.getTextColumnFromTableCustomers(
+                page,
+                i,
+                test.args.filterBy,
+              );
+
+              await expect(textColumn).to.contains(test.args.filterValue);
+              break;
+            }
           }
         }
       });
@@ -194,7 +210,7 @@ describe('Filter And Quick Edit Customers', async () => {
         page,
         'input',
         'email',
-        DefaultAccount.email,
+        DefaultCustomer.email,
       );
 
       const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
@@ -246,10 +262,7 @@ describe('Filter And Quick Edit Customers', async () => {
         );
 
         if (isActionPerformed) {
-          const resultMessage = await customersPage.getTextContent(
-            page,
-            customersPage.alertSuccessBlockParagraph,
-          );
+          const resultMessage = await customersPage.getAlertSuccessBlockParagraphContent(page);
           await expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
         }
 

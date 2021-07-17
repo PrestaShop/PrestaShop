@@ -7,7 +7,7 @@ PROJECT_PATH=$(cd "$( dirname "$0" )/../" && pwd)
 cd $PROJECT_PATH/tests/UI && npm install
 
 echo "* Running sanity tests ...";
-DISPLAY=:10 HEADLESS=true URL_FO="http://localhost/" npm run sanity-travis
+DISPLAY=:10 SLOW_MO=10 HEADLESS=true URL_FO="http://localhost/" npm run sanity-travis
 status=$?
 
 exit $status

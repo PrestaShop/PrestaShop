@@ -39,7 +39,7 @@ class AddWebserviceKey extends BOBasePage {
     await page.click(this.statusSwitchLabel(webserviceData.status ? 1 : 0));
 
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

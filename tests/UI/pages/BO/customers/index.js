@@ -144,10 +144,40 @@ class Customers extends BOBasePage {
    * @param column, column to check
    * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row, column) {
-    await this.waitForVisibleSelector(page, this.customersListTableColumn(row, column), 2000);
-    return this.elementVisible(page, this.customersListColumnValidIcon(row, column), 100);
+  getToggleColumnValue(page, row, column) {
+    return this.elementVisible(page, this.customersListColumnValidIcon(row, column), 1000);
   }
+
+  /**
+   * Get customer status
+   * @param page
+   * @param row
+   * @return {Promise<boolean>}
+   */
+  getCustomerStatus(page, row) {
+    return this.getToggleColumnValue(page, row, 'active');
+  }
+
+  /**
+   * Get newsletter status
+   * @param page
+   * @param row
+   * @return {Promise<boolean>}
+   */
+  getNewsletterStatus(page, row) {
+    return this.getToggleColumnValue(page, row, 'newsletter');
+  }
+
+  /**
+   * Get partner offers status
+   * @param page
+   * @param row
+   * @return {Promise<boolean>}
+   */
+  getPartnerOffersStatus(page, row) {
+    return this.getToggleColumnValue(page, row, 'optin');
+  }
+
 
   /**
    * Quick edit toggle column value
@@ -163,6 +193,39 @@ class Customers extends BOBasePage {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Set customer status in a row
+   * @param page
+   * @param row
+   * @param valueWanted
+   * @return {Promise<boolean>}
+   */
+  setCustomerStatus(page, row, valueWanted = true) {
+    return this.updateToggleColumnValue(page, row, 'active', valueWanted);
+  }
+
+  /**
+   * Set newsletter status in a row
+   * @param page
+   * @param row
+   * @param valueWanted
+   * @return {Promise<boolean>}
+   */
+  setNewsletterStatus(page, row, valueWanted = true) {
+    return this.updateToggleColumnValue(page, row, 'newsletter', valueWanted);
+  }
+
+  /**
+   * Set partner offers status in a row
+   * @param page
+   * @param row
+   * @param valueWanted
+   * @return {Promise<boolean>}
+   */
+  setPartnerOffersStatus(page, row, valueWanted = true) {
+    return this.updateToggleColumnValue(page, row, 'optin', valueWanted);
   }
 
   /**
@@ -192,9 +255,9 @@ class Customers extends BOBasePage {
       lastName: await this.getTextColumnFromTableCustomers(page, row, 'lastname'),
       email: await this.getTextColumnFromTableCustomers(page, row, 'email'),
       sales: await this.getTextColumnFromTableCustomers(page, row, 'total_spent'),
-      status: await this.getToggleColumnValue(page, row, 'active'),
-      newsletter: await this.getToggleColumnValue(page, row, 'newsletter'),
-      partnerOffers: await this.getToggleColumnValue(page, row, 'optin'),
+      status: await this.getCustomerStatus(page, row),
+      newsletter: await this.getNewsletterStatus(page, row, 'newsletter'),
+      partnerOffers: await this.getPartnerOffersStatus(page, row, ''),
     };
   }
 
@@ -266,7 +329,7 @@ class Customers extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCustomerModal),
     ]);
     await this.chooseRegistrationAndDelete(page, allowRegistrationAfterDelete);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -292,7 +355,7 @@ class Customers extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCustomerModal),
     ]);
     await this.chooseRegistrationAndDelete(page, allowRegistrationAfterDelete);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -320,7 +383,7 @@ class Customers extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeCustomersEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -333,7 +396,7 @@ class Customers extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Sort functions */
@@ -347,12 +410,14 @@ class Customers extends BOBasePage {
   async sortTable(page, sortBy, sortDirection) {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 
   /**
@@ -379,7 +444,7 @@ class Customers extends BOBasePage {
 
     // Save setting
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   // Export methods
@@ -397,7 +462,7 @@ class Customers extends BOBasePage {
     const [download] = await Promise.all([
       page.waitForEvent('download'),
       page.click(this.gridActionExportLink),
-      page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
     return download.path();
   }
@@ -439,7 +504,10 @@ class Customers extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
-    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect, number),
+      page.waitForNavigation({waitUntil: 'networkidle'}),
+    ]);
     return this.getPaginationLabel(page);
   }
 
@@ -449,6 +517,7 @@ class Customers extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
+    await this.scrollTo(page, this.paginationNextLink);
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
     return this.getPaginationLabel(page);
   }
@@ -459,6 +528,7 @@ class Customers extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
+    await this.scrollTo(page, this.paginationPreviousLink);
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
     return this.getPaginationLabel(page);
   }

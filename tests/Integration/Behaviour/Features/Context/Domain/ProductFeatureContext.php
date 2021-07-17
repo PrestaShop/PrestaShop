@@ -27,7 +27,10 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Cache;
+use Category;
 use Context;
+use Customer;
+use GroupReduction;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use Product;
@@ -53,6 +56,53 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
         // Important to clean this cache or Product::getIdTaxRulesGroupByIdProduct still returns the initial value
         Cache::clean('product_id_tax_rules_group_*');
+    }
+
+    /**
+     * @Given The default category of product :productName has a group reduction of :reductionPercent% for the customer :customerReference
+     */
+    public function addGroupReductionOnProductDefaultCategoryForCustomerGroup(string $productName, float $reductionPercent, string $customerReference)
+    {
+        $productId = $this->getProductIdByName($productName);
+
+        $product = new Product($productId);
+        if (!Category::categoryExists($product->id_category_default)) {
+            throw new RuntimeException('The product doesn\'t have default category');
+        }
+
+        $customerId = SharedStorage::getStorage()->get($customerReference);
+        if (!Customer::customerIdExistsStatic($customerId)) {
+            throw new RuntimeException('The customer doesn\'t exist');
+        }
+
+        $customer = new Customer((int) $customerId);
+
+        $groupReduction = new GroupReduction();
+        $groupReduction->id_category = $product->id_category_default;
+        $groupReduction->id_group = $customer->id_default_group;
+        $groupReduction->reduction = $reductionPercent / 100;
+
+        if (!$groupReduction->add()) {
+            throw new RuntimeException('Cannot add group reduction to database');
+        }
+
+        GroupReduction::resetStaticCache();
+    }
+
+    /**
+     * @Given The default category of product :productName has no group reduction
+     */
+    public function deleteGroupReductionOnProductDefaultCategory(string $productName)
+    {
+        $productId = $this->getProductIdByName($productName);
+
+        GroupReduction::deleteProductReduction($productId);
+
+        $product = new Product($productId);
+
+        GroupReduction::deleteCategory($product->id_category_default);
+
+        GroupReduction::resetStaticCache();
     }
 
     /**

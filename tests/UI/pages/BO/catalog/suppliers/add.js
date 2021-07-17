@@ -56,8 +56,9 @@ class AddSupplier extends BOBasePage {
     await this.setValue(page, this.postalCodeInput, supplierData.postalCode);
     await this.setValue(page, this.cityInput, supplierData.city);
     await this.setValue(page, this.countryInput, supplierData.country);
+
     // Add logo
-    await this.generateAndUploadImage(page, this.logoFileInput, supplierData.logo);
+    await this.uploadFile(page, this.logoFileInput, supplierData.logo);
 
     // Fill Description, meta title, meta description and meta keywords in english
     await this.changeLanguageForSelectors(page, 'en');
@@ -86,7 +87,7 @@ class AddSupplier extends BOBasePage {
 
     // Save Supplier
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

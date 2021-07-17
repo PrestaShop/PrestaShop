@@ -152,7 +152,7 @@ async function crawlPage(browserPage, thisPageToCrawl) {
 
   await Promise.all([
     browserPage.goto(`${thisPageToCrawl.url}`),
-    browserPage.waitForNavigation('load'),
+    browserPage.waitForNavigation('networkidle'),
   ]);
 
   if (typeof (thisPageToCrawl.customAction) !== 'undefined') {

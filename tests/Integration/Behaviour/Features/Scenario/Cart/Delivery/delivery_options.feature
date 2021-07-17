@@ -1,4 +1,8 @@
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags delivery-options
+
 @reset-database-before-feature
+@delivery-options
+@clear-cache-after-feature
 Feature: Compute correct delivery options
   As a customer
   I should be provided relevant delivery options depending on my cart content and my customer profile
@@ -18,10 +22,10 @@ Feature: Compute correct delivery options
     # Standard location settings
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
-    Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
     Given there is a customer named "customer1" whose email is "fake@prestashop.com"
     Given address "address1" is associated to customer "customer1"

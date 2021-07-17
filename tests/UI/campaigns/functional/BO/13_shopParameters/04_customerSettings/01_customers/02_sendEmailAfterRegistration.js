@@ -11,9 +11,10 @@ const dashboardPage = require('@pages/BO/dashboard');
 const customerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
 const {options} = require('@pages/BO/shopParameters/customerSettings/options');
 const emailPage = require('@pages/BO/advancedParameters/email');
+const customersPage = require('@pages/BO/customers');
 const foHomePage = require('@pages/FO/home');
 const loginFOPage = require('@pages/FO/login');
-const customersPage = require('@pages/BO/customers');
+const foCreateAccountPage = require('@pages/FO/myAccount/add');
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
@@ -105,15 +106,16 @@ describe('Enable send an email after registration', async () => {
 
       // Create account
       await foHomePage.goToLoginPage(page);
-      await loginFOPage.createAccount(page, test.args.customer);
+      await loginFOPage.goToCreateAccountPage(page);
+      await foCreateAccountPage.createAccount(page, test.args.customer);
 
-      const connected = await loginFOPage.isCustomerConnected(page);
+      const connected = await foCreateAccountPage.isCustomerConnected(page);
       await expect(connected, 'Customer is not created in FO').to.be.true;
 
-      await loginFOPage.logout(page);
+      await foCreateAccountPage.logout(page);
 
       // Go back to BO
-      page = await loginFOPage.closePage(browserContext, page, 0);
+      page = await foCreateAccountPage.closePage(browserContext, page, 0);
     });
 
     it('should go to \'Advanced parameters > E-mail\' page', async function () {

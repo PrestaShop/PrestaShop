@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
 use Address;
+use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\AddCustomerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
@@ -35,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressExceptio
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShopException;
 
-final class AddCustomerAddressHandler implements AddCustomerAddressHandlerInterface
+final class AddCustomerAddressHandler extends AbstractAddressHandler implements AddCustomerAddressHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -49,9 +50,7 @@ final class AddCustomerAddressHandler implements AddCustomerAddressHandlerInterf
         $address = $this->createAddressFromCommand($command);
 
         try {
-            if (false === $address->validateFields(false)) {
-                throw new AddressConstraintException('Address contains invalid field values', AddressConstraintException::INVALID_FIELDS);
-            }
+            $this->validateAddress($address);
 
             if (false === $address->add()) {
                 throw new CannotAddAddressException(sprintf('Failed to add new address "%s"', $command->getAddress()));

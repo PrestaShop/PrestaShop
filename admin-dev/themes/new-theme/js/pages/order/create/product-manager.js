@@ -53,14 +53,12 @@ export default class ProductManager {
 
       addProductToCart: cartId => this.cartEditor.addProduct(cartId, this._getProductData()),
 
-      removeProductFromCart: (cartId, product) =>
-        this.cartEditor.removeProductFromCart(cartId, product),
+      removeProductFromCart: (cartId, product) => this.cartEditor.removeProductFromCart(cartId, product),
 
       changeProductPrice: (cartId, customerId, updatedProduct) =>
         this.cartEditor.changeProductPrice(cartId, customerId, updatedProduct),
 
-      changeProductQty: (cartId, updatedProduct) =>
-        this.cartEditor.changeProductQty(cartId, updatedProduct),
+      changeProductQty: (cartId, updatedProduct) => this.cartEditor.changeProductQty(cartId, updatedProduct)
     };
   }
 
@@ -86,7 +84,7 @@ export default class ProductManager {
    * @private
    */
   _onProductSearch() {
-    EventEmitter.on(eventMap.productSearched, (response) => {
+    EventEmitter.on(eventMap.productSearched, response => {
       this.products = response.products;
       this.productRenderer.renderSearchResults(this.products);
       this._selectFirstResult();
@@ -100,13 +98,13 @@ export default class ProductManager {
    */
   _onAddProductToCart() {
     // on success
-    EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
+    EventEmitter.on(eventMap.productAddedToCart, cartInfo => {
       this.productRenderer.cleanCartBlockAlerts();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
 
     // on failure
-    EventEmitter.on(eventMap.productAddToCartFailed, (errorMessage) => {
+    EventEmitter.on(eventMap.productAddToCartFailed, errorMessage => {
       this.productRenderer.renderCartBlockErrorAlert(errorMessage);
     });
   }
@@ -117,7 +115,7 @@ export default class ProductManager {
    * @private
    */
   _onRemoveProductFromCart() {
-    EventEmitter.on(eventMap.productRemovedFromCart, (cartInfo) => {
+    EventEmitter.on(eventMap.productRemovedFromCart, cartInfo => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
   }
@@ -128,7 +126,7 @@ export default class ProductManager {
    * @private
    */
   _onProductPriceChange() {
-    EventEmitter.on(eventMap.productPriceChanged, (cartInfo) => {
+    EventEmitter.on(eventMap.productPriceChanged, cartInfo => {
       this.productRenderer.cleanCartBlockAlerts();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
@@ -140,15 +138,28 @@ export default class ProductManager {
    * @private
    */
   _onProductQtyChange() {
+    const enableQtyInputs = () => {
+      const inputsQty = document.querySelectorAll(createOrderMap.listedProductQtyInput);
+
+      inputsQty.forEach(inputQty => {
+        inputQty.disabled = false;
+      });
+    };
+
     // on success
-    EventEmitter.on(eventMap.productQtyChanged, (cartInfo) => {
+    EventEmitter.on(eventMap.productQtyChanged, cartInfo => {
       this.productRenderer.cleanCartBlockAlerts();
+      $(createOrderMap.createOrderButton).prop('disabled', false);
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+
+      enableQtyInputs();
     });
 
     // on failure
-    EventEmitter.on(eventMap.productQtyChangeFailed, (e) => {
+    EventEmitter.on(eventMap.productQtyChangeFailed, e => {
       this.productRenderer.renderCartBlockErrorAlert(e.responseJSON.message);
+      $(createOrderMap.createOrderButton).prop('disabled', true);
+      enableQtyInputs();
     });
   }
 
@@ -160,7 +171,11 @@ export default class ProductManager {
    * @private
    */
   _initProductSelect(event) {
-    const productId = Number($(event.currentTarget).find(':selected').val());
+    const productId = Number(
+      $(event.currentTarget)
+        .find(':selected')
+        .val()
+    );
     this._selectProduct(productId);
   }
 
@@ -172,7 +187,11 @@ export default class ProductManager {
    * @private
    */
   _initCombinationSelect(event) {
-    const combinationId = Number($(event.currentTarget).find(':selected').val());
+    const combinationId = Number(
+      $(event.currentTarget)
+        .find(':selected')
+        .val()
+    );
     this._selectCombination(combinationId);
   }
 
@@ -192,24 +211,26 @@ export default class ProductManager {
     }
 
     const params = {
-      search_phrase: searchPhrase,
+      search_phrase: searchPhrase
     };
     if ($(createOrderMap.cartCurrencySelect).data('selectedCurrencyId') != undefined) {
       params.currency_id = $(createOrderMap.cartCurrencySelect).data('selectedCurrencyId');
     }
 
-    const $searchRequest = $.get(this.router.generate('admin_products_search'), params);
+    const $searchRequest = $.get(this.router.generate('admin_orders_products_search'), params);
     this.activeSearchRequest = $searchRequest;
 
-    $searchRequest.then((response) => {
-      EventEmitter.emit(eventMap.productSearched, response);
-    }).catch((response) => {
-      if (response.statusText === 'abort') {
-        return;
-      }
+    $searchRequest
+      .then(response => {
+        EventEmitter.emit(eventMap.productSearched, response);
+      })
+      .catch(response => {
+        if (response.statusText === 'abort') {
+          return;
+        }
 
-      showErrorMessage(response.responseJSON.message);
-    });
+        showErrorMessage(response.responseJSON.message);
+      });
   }
 
   /**
@@ -265,7 +286,12 @@ export default class ProductManager {
     const combination = this.selectedProduct.combinations[combinationId];
 
     this.selectedCombinationId = combinationId;
-    this.productRenderer.renderStock(combination.stock);
+    this.productRenderer.renderStock(
+      $(createOrderMap.inStockCounter),
+      $(createOrderMap.quantityInput),
+      combination.stock,
+      this.selectedProduct.availableOutOfStock || combination.stock <= 0
+    );
 
     return combination;
   }
@@ -309,7 +335,7 @@ export default class ProductManager {
 
     return {
       product: formData,
-      fileSizes,
+      fileSizes
     };
   }
 }

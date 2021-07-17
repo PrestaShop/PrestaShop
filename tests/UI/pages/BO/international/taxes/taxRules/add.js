@@ -41,7 +41,7 @@ class AddTaxRules extends BOBasePage {
     await page.click(this.enabledSwitchLabel(taxRuleGroupData.enabled ? 'on' : 'off'));
     // Save Tax rules group
     await this.clickAndWaitForNavigation(page, this.saveTaxButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /**
@@ -57,7 +57,7 @@ class AddTaxRules extends BOBasePage {
     await this.setValue(page, this.descriptionInput, taxRuleData.description);
     // Save Tax rules
     await this.clickAndWaitForNavigation(page, this.saveAndStayButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /**

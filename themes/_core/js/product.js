@@ -154,6 +154,7 @@ function updateProduct(event, eventType, updateUrl) {
       url: updateUrl + ((updateUrl.indexOf('?') === -1) ? '?' : '&') + formSerialized + preview,
       method: 'POST',
       data: {
+        quickview: $('.modal.quickview.in').length,
         ajax: 1,
         action: 'refresh',
         quantity_wanted: eventType === 'updatedProductCombination' ? $quantityWantedInput.attr('min') : $quantityWantedInput.val()
@@ -177,8 +178,8 @@ function updateProduct(event, eventType, updateUrl) {
         const $newImagesContainer = $('<div>').append(data.product_cover_thumbnails);
 
         // Used to avoid image blinking if same image = epileptic friendly
-        if ($('.images-container').html() !== $newImagesContainer.find('.images-container').html()) {
-          $('.images-container').replaceWith(data.product_cover_thumbnails);
+        if ($('.quickview .images-container, .page-product:not(.modal-open) .row .images-container, .page-product:not(.modal-open) .product-container .images-container').html() !== $newImagesContainer.find('.quickview .images-container, .page-product:not(.modal-open) .row .images-container, .page-product:not(.modal-open) .product-container .images-container').html()) {
+          $('.quickview .images-container, .page-product:not(.modal-open) .row .images-container, .page-product:not(.modal-open) .product-container .images-container').replaceWith(data.product_cover_thumbnails);
         }
 
         $(

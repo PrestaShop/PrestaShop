@@ -46,6 +46,5 @@ RUN mkdir -p /tests/reports
 WORKDIR /tests/
 COPY ["./", "./"]
 
-# 7. Install dependencies and force install playwright to download browsers
-RUN npm install \
-    && npm i playwright@1.0.2
+# 7. Install dependencies
+RUN npm install

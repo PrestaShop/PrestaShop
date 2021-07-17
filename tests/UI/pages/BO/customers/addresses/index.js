@@ -42,6 +42,12 @@ class Addresses extends BOBasePage {
     this.paginationLabel = `${this.addressGridPanel} .col-form-label`;
     this.paginationNextLink = `${this.addressGridPanel} #pagination_next_url`;
     this.paginationPreviousLink = `${this.addressGridPanel} [aria-label='Previous']`;
+
+    // Required field section
+    this.setRequiredFieldsButton = 'button[data-target=\'#addressRequiredFieldsContainer\']';
+    this.requiredFieldCheckBox = id => `#required_fields_address_required_fields_${id}`;
+    this.requiredFieldsForm = '#addressRequiredFieldsContainer';
+    this.saveButton = `${this.requiredFieldsForm} button`;
   }
 
   /*
@@ -164,7 +170,7 @@ class Addresses extends BOBasePage {
     ]);
     // Click on delete
     await page.click(this.addressesListTableDeleteLink(row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -189,7 +195,7 @@ class Addresses extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteAddressModal),
     ]);
     await page.click(this.deleteCustomerModalDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Sort functions */
@@ -203,12 +209,14 @@ class Addresses extends BOBasePage {
   async sortTable(page, sortBy, sortDirection) {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 
   /* Pagination methods */
@@ -250,6 +258,34 @@ class Addresses extends BOBasePage {
   async paginationPrevious(page) {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
     return this.getPaginationLabel(page);
+  }
+
+  // Set required field
+  /**
+   * Set required fields
+   * @param page
+   * @param id
+   * @param valueWanted
+   * @returns {Promise<string>}
+   */
+  async setRequiredFields(page, id, valueWanted = true) {
+    // Check if form is open
+    if (await this.elementNotVisible(page, `${this.requiredFieldsForm}.show`, 1000)) {
+      await Promise.all([
+        this.waitForSelectorAndClick(page, this.setRequiredFieldsButton),
+        this.waitForVisibleSelector(page, `${this.requiredFieldsForm}.show`),
+      ]);
+    }
+
+    // Click on checkbox if not selected
+    const isCheckboxSelected = await this.isCheckboxSelected(page, this.requiredFieldCheckBox(id));
+    if (valueWanted !== isCheckboxSelected) {
+      await page.$eval(`${this.requiredFieldCheckBox(id)} + i`, el => el.click());
+    }
+
+    // Save setting
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

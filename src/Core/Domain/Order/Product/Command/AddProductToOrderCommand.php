@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -50,7 +51,7 @@ class AddProductToOrderCommand
     private $productId;
 
     /**
-     * @var int
+     * @var CombinationId|null
      */
     private $combinationId;
 
@@ -77,7 +78,7 @@ class AddProductToOrderCommand
     /**
      * @var bool|null bool if product is being added using new invoice
      */
-    private $isFreeShipping;
+    private $hasFreeShipping;
 
     /**
      * Add product to an order with new invoice. It applies to orders that were already paid and waiting for payment.
@@ -88,7 +89,7 @@ class AddProductToOrderCommand
      * @param string $productPriceTaxIncluded
      * @param string $productPriceTaxExcluded
      * @param int $productQuantity
-     * @param bool $isFreeShipping
+     * @param bool|null $hasFreeShipping
      *
      * @return self
      *
@@ -103,7 +104,7 @@ class AddProductToOrderCommand
         string $productPriceTaxIncluded,
         string $productPriceTaxExcluded,
         int $productQuantity,
-        bool $isFreeShipping
+        ?bool $hasFreeShipping = null
     ) {
         $command = new self(
             $orderId,
@@ -114,7 +115,7 @@ class AddProductToOrderCommand
             $productQuantity
         );
 
-        $command->isFreeShipping = $isFreeShipping;
+        $command->hasFreeShipping = $hasFreeShipping;
 
         return $command;
     }
@@ -181,7 +182,7 @@ class AddProductToOrderCommand
     ) {
         $this->orderId = new OrderId($orderId);
         $this->productId = new ProductId($productId);
-        $this->combinationId = $combinationId;
+        $this->combinationId = !empty($combinationId) ? new CombinationId($combinationId) : null;
         try {
             $this->productPriceTaxIncluded = new Number($productPriceTaxIncluded);
             $this->productPriceTaxExcluded = new Number($productPriceTaxExcluded);
@@ -194,7 +195,7 @@ class AddProductToOrderCommand
     /**
      * @return OrderId
      */
-    public function getOrderId()
+    public function getOrderId(): OrderId
     {
         return $this->orderId;
     }
@@ -202,15 +203,15 @@ class AddProductToOrderCommand
     /**
      * @return ProductId
      */
-    public function getProductId()
+    public function getProductId(): ProductId
     {
         return $this->productId;
     }
 
     /**
-     * @return int
+     * @return CombinationId|null
      */
-    public function getCombinationId()
+    public function getCombinationId(): ?CombinationId
     {
         return $this->combinationId;
     }
@@ -218,7 +219,7 @@ class AddProductToOrderCommand
     /**
      * @return Number
      */
-    public function getProductPriceTaxIncluded()
+    public function getProductPriceTaxIncluded(): Number
     {
         return $this->productPriceTaxIncluded;
     }
@@ -226,7 +227,7 @@ class AddProductToOrderCommand
     /**
      * @return Number
      */
-    public function getProductPriceTaxExcluded()
+    public function getProductPriceTaxExcluded(): Number
     {
         return $this->productPriceTaxExcluded;
     }
@@ -234,7 +235,7 @@ class AddProductToOrderCommand
     /**
      * @return int
      */
-    public function getProductQuantity()
+    public function getProductQuantity(): int
     {
         return $this->productQuantity;
     }
@@ -242,7 +243,7 @@ class AddProductToOrderCommand
     /**
      * @return int|null
      */
-    public function getOrderInvoiceId()
+    public function getOrderInvoiceId(): ?int
     {
         return $this->orderInvoiceId;
     }
@@ -250,9 +251,9 @@ class AddProductToOrderCommand
     /**
      * @return bool|null
      */
-    public function isFreeShipping()
+    public function hasFreeShipping(): ?bool
     {
-        return $this->isFreeShipping;
+        return $this->hasFreeShipping;
     }
 
     /**

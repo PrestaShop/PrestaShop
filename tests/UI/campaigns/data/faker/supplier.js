@@ -1,6 +1,7 @@
 const faker = require('faker');
-
 const {countries} = require('@data/demo/countries');
+
+const countriesNames = Object.values(countries).map(country => country.name);
 
 module.exports = class Supplier {
   constructor(supplierToCreate = {}) {
@@ -13,7 +14,7 @@ module.exports = class Supplier {
     this.secondaryAddress = supplierToCreate.secondaryAddress || faker.address.secondaryAddress();
     this.postalCode = supplierToCreate.postalCode || faker.address.zipCode().replace('.', '-');
     this.city = supplierToCreate.city || faker.address.city();
-    this.country = supplierToCreate.country || faker.random.arrayElement(countries);
+    this.country = supplierToCreate.country || faker.random.arrayElement(countriesNames);
     this.logo = `${this.name.replace(/[^\w\s]/gi, '')}.png`;
     this.metaTitle = supplierToCreate.metaTitle || this.name;
     this.metaTitleFr = supplierToCreate.metaTitleFr || this.metaTitle;

@@ -52,7 +52,7 @@ class FrameworkBundleAdminController extends Controller
     const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
 
     /**
-     * @var ConfigurationInterface
+     * @var ConfigurationInterface|Configuration
      */
     protected $configuration;
 

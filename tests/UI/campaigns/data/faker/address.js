@@ -1,6 +1,7 @@
 const faker = require('faker');
-
 const {countries} = require('@data/demo/countries');
+
+const countriesNames = Object.values(countries).map(country => country.name);
 
 module.exports = class Address {
   constructor(addressToCreate = {}) {
@@ -15,7 +16,7 @@ module.exports = class Address {
     this.secondAddress = addressToCreate.secondAddress || faker.address.secondaryAddress();
     this.postalCode = addressToCreate.postalCode || faker.address.zipCode('#####');
     this.city = addressToCreate.city || faker.address.city();
-    this.country = addressToCreate.country || faker.random.arrayElement(countries);
+    this.country = addressToCreate.country || faker.random.arrayElement(countriesNames);
     this.phone = addressToCreate.homePhone || faker.phone.phoneNumber('01########');
     this.other = addressToCreate.other || '';
   }

@@ -115,3 +115,11 @@
 
   <script src="{{ asset('themes/new-theme/public/order_view.bundle.js') }}"></script>
 {% endblock %}
+
+{% set js_translatable = {
+  "The product was successfully added.": 'The product was successfully added.'|trans({}, 'Admin.Notifications.Success'),
+  "The product was successfully removed.": 'The product was successfully removed.'|trans({}, 'Admin.Notifications.Success'),
+  "[1] products were successfully added.": '[1] products were successfully added.'|trans({}, 'Admin.Notifications.Success'),
+  "[1] products were successfully removed.": '[1] products were successfully removed.'|trans({}, 'Admin.Notifications.Success'),
+}|merge(js_translatable)
+%}

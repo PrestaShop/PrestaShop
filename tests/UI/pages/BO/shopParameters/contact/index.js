@@ -9,6 +9,7 @@ class Contacts extends BOBasePage {
 
     // Selectors
     // Header selectors
+    this.storesTabLink = '#subtab-AdminStores';
     this.addNewContactButton = '#page-header-desc-configuration-add';
     // List of contacts
     this.contactsGridPanel = '#contact_grid_panel';
@@ -38,6 +39,15 @@ class Contacts extends BOBasePage {
   /*
   Methods
    */
+
+  /**
+   * Click on tab stores
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToStoresPage(page) {
+    await this.clickAndWaitForNavigation(page, this.storesTabLink);
+  }
 
   /**
    * Reset input filters
@@ -146,7 +156,7 @@ class Contacts extends BOBasePage {
     ]);
     // Click on delete
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -169,7 +179,7 @@ class Contacts extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Sort methods */
@@ -183,12 +193,14 @@ class Contacts extends BOBasePage {
   async sortTable(page, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 }
 

@@ -530,8 +530,14 @@ class OrderSlipCore extends ObjectModel
                 $ecotax_detail[$row['rate']] = ['ecotax_tax_incl' => 0, 'ecotax_tax_excl' => 0, 'rate' => $row['rate']];
             }
 
-            $ecotax_detail[$row['rate']]['ecotax_tax_incl'] += Tools::ps_round(($row['ecotax_tax_excl'] * $order_slip_details['product_quantity']) + ($row['ecotax_tax_excl'] * $order_slip_details['product_quantity'] * $row['rate'] / 100), 2);
-            $ecotax_detail[$row['rate']]['ecotax_tax_excl'] += Tools::ps_round($row['ecotax_tax_excl'] * $order_slip_details['product_quantity'], 2);
+            $ecotax_detail[$row['rate']]['ecotax_tax_incl'] += Tools::ps_round(
+                ($row['ecotax_tax_excl'] * $order_slip_details['product_quantity']) + ($row['ecotax_tax_excl'] * $order_slip_details['product_quantity'] * $row['rate'] / 100),
+                Context::getContext()->getComputingPrecision()
+            );
+            $ecotax_detail[$row['rate']]['ecotax_tax_excl'] += Tools::ps_round(
+                $row['ecotax_tax_excl'] * $order_slip_details['product_quantity'],
+                Context::getContext()->getComputingPrecision()
+            );
         }
 
         return $ecotax_detail;

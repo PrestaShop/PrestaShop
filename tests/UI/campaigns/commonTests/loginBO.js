@@ -5,10 +5,10 @@ const loginPage = require('@pages/BO/login');
 const dashboardPage = require('@pages/BO/dashboard');
 
 module.exports = {
-  async loginBO(mochaContext, page) {
+  async loginBO(mochaContext, page, email = global.BO.EMAIL, password = global.BO.PASSWD) {
     await testContext.addContextItem(mochaContext, 'testIdentifier', 'loginBO');
     await loginPage.goTo(page, global.BO.URL);
-    await loginPage.login(page, global.BO.EMAIL, global.BO.PASSWD);
+    await loginPage.login(page, email, password);
     const pageTitle = await dashboardPage.getPageTitle(page);
     await expect(pageTitle).to.contains(dashboardPage.pageTitle);
     await dashboardPage.closeOnboardingModal(page);

@@ -103,7 +103,7 @@ class AdminControllerCore extends Controller
     /** @var string "shop" or "group_shop" */
     public $shopLinkType;
 
-    /** @var string Default ORDER BY clause when $_orderBy is not defined */
+    /** @var string Default ORDER BY clause when `$_orderBy` is not defined */
     protected $_defaultOrderBy = false;
 
     /** @var string */
@@ -157,7 +157,7 @@ class AdminControllerCore extends Controller
     /** @var array Edit form to be generated */
     protected $fields_form;
 
-    /** @var array Override of $fields_form */
+    /** @var array Override of `$fields_form` */
     protected $fields_form_override;
 
     /** @var string Override form action */
@@ -1626,8 +1626,6 @@ class AdminControllerCore extends Controller
             $this->page_header_toolbar_title = $this->toolbar_title[count($this->toolbar_title) - 1];
         }
 
-        $this->addPageHeaderToolBarModulesListButton();
-
         $this->context->smarty->assign('help_link', 'https://help.prestashop.com/' . Language::getIsoById($this->context->employee->id_lang) . '/doc/'
             . Tools::getValue('controller') . '?version=' . _PS_VERSION_ . '&country=' . Language::getIsoById($this->context->employee->id_lang));
     }
@@ -1698,7 +1696,6 @@ class AdminControllerCore extends Controller
                     ];
                 }
         }
-        $this->addToolBarModulesListButton();
     }
 
     /**
@@ -2654,10 +2651,11 @@ class AdminControllerCore extends Controller
 
             // add Jquery 3 and its migration script
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.4.1.min.js');
+            $this->addJs(_PS_JS_DIR_ . 'jquery/bo-migrate-mute.min.js');
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-migrate-3.1.0.min.js');
             // implement $.browser object and live method, that has been removed since jquery 1.9
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.browser-0.1.0.min.js');
-            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.live-polyfill-1.1.1.min.js');
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.live-polyfill-1.1.2.min.js');
 
             $this->addJqueryPlugin(['scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox']);
             $this->addJqueryPlugin('growl', null, false);
@@ -2724,6 +2722,12 @@ class AdminControllerCore extends Controller
             ]
         );
 
+        Media::addJsDef([
+            'prestashop' => [
+                'debug' => _PS_MODE_DEV_,
+            ],
+        ]);
+
         // Execute Hook AdminController SetMedia
         Hook::exec('actionAdminControllerSetMedia');
     }
@@ -2762,6 +2766,12 @@ class AdminControllerCore extends Controller
      */
     public function init()
     {
+        Hook::exec(
+            'actionAdminControllerInitBefore',
+            [
+                'controller' => $this,
+            ]
+        );
         parent::init();
 
         if (Tools::getValue('ajax')) {
@@ -2831,6 +2841,12 @@ class AdminControllerCore extends Controller
         $this->initModal();
         $this->initToolbarFlags();
         $this->initNotifications();
+        Hook::exec(
+            'actionAdminControllerInitAfter',
+            [
+                'controller' => $this,
+            ]
+        );
     }
 
     /**
@@ -4261,6 +4277,8 @@ class AdminControllerCore extends Controller
     }
 
     /**
+     * @deprecated Since 1.7.7 Use Tools::isFileFresh instead
+     *
      * @param string $file
      * @param int $timeout
      *
@@ -4268,17 +4286,12 @@ class AdminControllerCore extends Controller
      */
     public function isFresh($file, $timeout = 604800)
     {
-        if (($time = @filemtime(_PS_ROOT_DIR_ . $file)) && filesize(_PS_ROOT_DIR_ . $file) > 0) {
-            return (time() - $time) < $timeout;
-        }
-
-        return false;
+        return Tools::isFileFresh($file, $timeout);
     }
 
-    /** @var bool */
-    protected static $is_prestashop_up = true;
-
     /**
+     * @deprecated Since 1.7.7 Use Tools::refreshFile instead
+     *
      * @param string $file_to_refresh
      * @param string $external_file
      *
@@ -4286,12 +4299,7 @@ class AdminControllerCore extends Controller
      */
     public function refresh($file_to_refresh, $external_file)
     {
-        if (self::$is_prestashop_up && $content = Tools::file_get_contents($external_file)) {
-            return (bool) file_put_contents(_PS_ROOT_DIR_ . $file_to_refresh, $content);
-        }
-        self::$is_prestashop_up = false;
-
-        return false;
+        return Tools::refreshFile($file_to_refresh, $external_file);
     }
 
     /**

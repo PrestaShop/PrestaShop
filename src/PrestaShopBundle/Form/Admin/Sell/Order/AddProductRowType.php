@@ -88,6 +88,7 @@ class AddProductRowType extends TranslatorAwareType
                     'autocomplete' => 'off',
                     'placeholder' => $this->trans('Search for a product', 'Admin.Orderscustomers.Feature'),
                     'data-currency' => $options['currency_id'],
+                    'data-order' => $options['order_id'],
                 ],
             ])
             ->add('addProductCombinations', ChoiceType::class, [

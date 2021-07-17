@@ -314,7 +314,7 @@ class Lang implements LanguageInterface
      */
     public function getLocale()
     {
-        return $this->locale;
+        return !empty($this->locale) ? $this->locale : $this->getLanguageCode();
     }
 
     /**

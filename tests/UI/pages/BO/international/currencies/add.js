@@ -13,6 +13,7 @@ class AddCurrency extends BOBasePage {
     this.currencyNameInput = id => `#currency_names_${id}`;
     this.isoCodeInput = '#currency_iso_code';
     this.exchangeRateInput = '#currency_exchange_rate';
+    this.precisionInput = '#currency_precision';
     this.statusSwitch = id => `label[for='currency_active_${id}']`;
     this.saveButton = 'div.card-footer button[type=\'submit\']';
 
@@ -49,7 +50,7 @@ class AddCurrency extends BOBasePage {
 
     await page.click(this.statusSwitch(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -67,7 +68,33 @@ class AddCurrency extends BOBasePage {
     await this.setValue(page, this.exchangeRateInput, currencyData.exchangeRate.toString());
     await page.click(this.statusSwitch(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Update exchange rate
+   * @param page
+   * @param value
+   * @returns {Promise<string>}
+   */
+  async updateExchangeRate(page, value) {
+    await this.setValue(page, this.exchangeRateInput, value.toString());
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Set precision for a currency
+   * @param page
+   * @param value
+   * @return {Promise<string>}
+   */
+  async setCurrencyPrecision(page, value = 2) {
+    await this.setValue(page, this.precisionInput, value.toString());
+
+    // Save new value
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

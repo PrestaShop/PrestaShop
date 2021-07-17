@@ -34,6 +34,12 @@ describe('Create, update and delete supplier', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Generate logos
+    await Promise.all([
+      files.generateImage(createSupplierData.logo),
+      files.generateImage(editSupplierData.logo),
+    ]);
   });
 
   after(async () => {

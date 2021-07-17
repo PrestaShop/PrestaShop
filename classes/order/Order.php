@@ -570,12 +570,15 @@ class OrderCore extends ObjectModel
 
     public function getProductsDetail()
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-        SELECT *
-        FROM `' . _DB_PREFIX_ . 'order_detail` od
-        LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (p.id_product = od.product_id)
-        LEFT JOIN `' . _DB_PREFIX_ . 'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
-        WHERE od.`id_order` = ' . (int) $this->id);
+        // The `od.ecotax` is a newly added at end as ecotax is used in multiples columns but it's the ecotax value we need
+        $sql = 'SELECT p.*, ps.*, od.*';
+        $sql .= ' FROM `%sorder_detail` od';
+        $sql .= ' LEFT JOIN `%sproduct` p ON (p.id_product = od.product_id)';
+        $sql .= ' LEFT JOIN `%sproduct_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)';
+        $sql .= ' WHERE od.`id_order` = %d';
+        $sql = sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, (int) $this->id);
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
     public function getFirstMessage()
@@ -601,8 +604,8 @@ class OrderCore extends ObjectModel
         $row['tax_calculator'] = $tax_calculator;
         $row['tax_rate'] = $tax_calculator->getTotalRate();
 
-        $row['product_price'] = Tools::ps_round($row['unit_price_tax_excl'], 2);
-        $row['product_price_wt'] = Tools::ps_round($row['unit_price_tax_incl'], 2);
+        $row['product_price'] = Tools::ps_round($row['unit_price_tax_excl'], Context::getContext()->getComputingPrecision());
+        $row['product_price_wt'] = Tools::ps_round($row['unit_price_tax_incl'], Context::getContext()->getComputingPrecision());
 
         $group_reduction = 1;
         if ($row['group_reduction'] > 0) {
@@ -818,7 +821,22 @@ class OrderCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT *
         FROM `' . _DB_PREFIX_ . 'order_cart_rule` ocr
-        WHERE ocr.`id_order` = ' . (int) $this->id);
+        WHERE ocr.`deleted` = 0 AND ocr.`id_order` = ' . (int) $this->id);
+    }
+
+    /**
+     *  Return the list of all order cart rules, even the softy deleted ones
+     *
+     * @return array|false
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public function getDeletedCartRules()
+    {
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        SELECT *
+        FROM `' . _DB_PREFIX_ . 'order_cart_rule` ocr
+        WHERE ocr.`deleted` = 1 AND ocr.`id_order` = ' . (int) $this->id);
     }
 
     public static function getDiscountsCustomer($id_customer, $id_cart_rule)
@@ -827,9 +845,9 @@ class OrderCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $result = (int) Db::getInstance()->getValue('
             SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'orders` o
-            LEFT JOIN ' . _DB_PREFIX_ . 'order_cart_rule ocr ON (ocr.id_order = o.id_order)
-            WHERE o.id_customer = ' . (int) $id_customer . '
-            AND ocr.id_cart_rule = ' . (int) $id_cart_rule);
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_cart_rule` ocr ON (ocr.`id_order` = o.`id_order`)
+            WHERE o.`id_customer` = ' . (int) $id_customer . '
+            AND ocr.`deleted` = 0 AND ocr.`id_cart_rule` = ' . (int) $id_cart_rule);
             Cache::store($cache_id, $result);
 
             return $result;
@@ -1881,10 +1899,16 @@ class OrderCore extends ObjectModel
         } else {
             $default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
             if ($this->id_currency === $default_currency) {
-                $this->total_paid_real += Tools::ps_round(Tools::convertPrice($order_payment->amount, $this->id_currency, false), 2);
+                $this->total_paid_real += Tools::ps_round(
+                    Tools::convertPrice($order_payment->amount, $this->id_currency, false),
+                    Context::getContext()->getComputingPrecision()
+                );
             } else {
                 $amountInDefaultCurrency = Tools::convertPrice($order_payment->amount, $order_payment->id_currency, false);
-                $this->total_paid_real += Tools::ps_round(Tools::convertPrice($amountInDefaultCurrency, $this->id_currency, true), 2);
+                $this->total_paid_real += Tools::ps_round(
+                    Tools::convertPrice($amountInDefaultCurrency, $this->id_currency, true),
+                    Context::getContext()->getComputingPrecision()
+                );
             }
         }
 
@@ -2071,7 +2095,7 @@ class OrderCore extends ObjectModel
             }
         }
 
-        return Tools::ps_round($total, 2);
+        return Tools::ps_round($total, Context::getContext()->getComputingPrecision());
     }
 
     /**
@@ -2586,6 +2610,7 @@ class OrderCore extends ObjectModel
                     'total_tax_base' => $total_tax_base,
                     'unit_amount' => $unit_amount,
                     'total_amount' => $total_amount,
+                    'id_order_invoice' => $order_detail['id_order_invoice'],
                 ];
             }
         }
@@ -2656,6 +2681,30 @@ class OrderCore extends ObjectModel
             'INNER JOIN ' . _DB_PREFIX_ . 'order_detail_tax odt ON odt.id_order_detail = od.id_order_detail ' .
             'INNER JOIN ' . _DB_PREFIX_ . 'tax t ON t.id_tax = odt.id_tax ' .
             'WHERE o.id_order = ' . (int) $this->id
+        );
+    }
+
+    /**
+     * @param int $productId
+     * @param int $productAttributeId
+     *
+     * @return int|null
+     */
+    public function getProductSpecificPriceId(int $productId, int $productAttributeId): ?int
+    {
+        return SpecificPrice::exists(
+            $productId,
+            $productAttributeId,
+            0,
+            0,
+            0,
+            $this->id_currency,
+            $this->id_customer,
+            SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            false,
+            $this->id_cart
         );
     }
 

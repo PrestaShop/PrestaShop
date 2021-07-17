@@ -46,7 +46,7 @@ describe('Check the Product page', async () => {
 
   it('should check the product page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductPage', baseContext);
-    const result = await productPage.getProductInformation(page, ProductData.firstProductData);
+    const result = await productPage.getProductInformation(page);
     await Promise.all([
       expect(result.name.toLowerCase()).to.equal(ProductData.firstProductData.name.toLocaleLowerCase()),
       expect(result.price).to.equal(ProductData.firstProductData.price),

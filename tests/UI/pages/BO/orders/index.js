@@ -7,10 +7,17 @@ class Order extends BOBasePage {
 
     this.pageTitle = 'Orders •';
 
+    // Header selectors
+    this.createNewOrderButton = '#page-header-desc-configuration-add';
+
     // Selectors grid panel
     this.gridPanel = '#order_grid_panel';
     this.gridTable = '#order_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #order_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} button[name='order[actions][search]']`;
@@ -50,6 +57,16 @@ class Order extends BOBasePage {
   Methods
    */
   /**
+   * Go to create new order page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToCreateOrderPage(page) {
+    await this.clickAndWaitForNavigation(page, this.createNewOrderButton);
+  }
+
+
+  /**
    * Click on lint to export orders to a csv file
    * @param page
    * @return {Promise<void>}
@@ -62,7 +79,7 @@ class Order extends BOBasePage {
     const [download] = await Promise.all([
       page.waitForEvent('download'),
       page.click(this.gridActionExportLink),
-      page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
     return download.path();
   }
@@ -165,6 +182,22 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Get column content in all rows
+   * @param page
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, column, i);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
+  }
+
+  /**
    * Get order from table in csv format
    * @param page
    * @param row
@@ -198,7 +231,7 @@ class Order extends BOBasePage {
       page,
       this.updateStatusInTableDropdownChoice(row, status.id),
     );
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -229,6 +262,35 @@ class Order extends BOBasePage {
     return download.path();
   }
 
+
+  /**
+   * Click on customer link to open view page in a new tab
+   * @param page
+   * @param row
+   * @return {Promise<*>}, new browser tab to work with
+   */
+  viewCustomer(page, row) {
+    return this.openLinkWithTargetBlank(
+      page,
+      `${this.tableColumn(row, 'customer')} a`,
+      this.userProfileIcon,
+    );
+  }
+
+  /**
+   * Get order total price
+   * @param page
+   * @param row
+   * @return {number}
+   */
+  async getOrderATIPrice(page, row) {
+    // Delete the first character (currency symbol) before getting price ATI
+    return parseFloat((await this.getTextColumn(page, 'total_paid_tax_incl', row)).substring(1));
+  }
+
+
+  /* Bulk actions methods */
+
   /**
    * Bulk change orders status
    * @param page
@@ -258,12 +320,34 @@ class Order extends BOBasePage {
     // Click on change order status button
     await Promise.all([
       page.click(this.bulkUpdateOrdersStatusButton),
-      this.waitForVisibleSelector(page, `${this.updateOrdersStatusModal}:not([aria-hidden='true']`),
+      this.waitForVisibleSelector(page, `${this.updateOrdersStatusModal}:not([aria-hidden='true'])`),
     ]);
     // Select new orders status in modal and confirm update
     await this.selectByVisibleText(page, this.updateOrdersStatusModalSelect, status);
     await this.clickAndWaitForNavigation(page, this.updateOrdersStatusModalButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 }
 

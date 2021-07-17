@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-/**
+/*
  * @deprecated 1.5.0.1
  */
 define('_CUSTOMIZE_FILE_', 0);
@@ -121,7 +121,11 @@ class ProductCore extends ObjectModel
     /** @var string Reference */
     public $reference;
 
-    /** @var string Supplier Reference */
+    /**
+     * @var string Supplier Reference
+     *
+     * @deprecated since 1.7.7.0
+     */
     public $supplier_reference;
 
     /** @var string Location */
@@ -956,6 +960,22 @@ class ProductCore extends ObjectModel
         Db::getInstance()->update('product', [
             'is_virtual' => (bool) $is_virtual,
         ], 'id_product = ' . (int) $id_product);
+    }
+
+    /**
+     * @see ObjectModel::resetStaticCache()
+     *
+     * reset static cache (eg unit testing purpose).
+     */
+    public static function resetStaticCache()
+    {
+        static::$loaded_classes = [];
+        static::$productPropertiesCache = [];
+        static::$_cacheFeatures = [];
+        static::$_frontFeaturesCache = [];
+        static::$_prices = [];
+        static::$_pricesLevel2 = [];
+        static::$_incat = [];
     }
 
     /**
@@ -3533,6 +3553,58 @@ class ProductCore extends ObjectModel
         return self::$_prices[$cache_id];
     }
 
+    /**
+     * @param int $orderId
+     * @param int $productId
+     * @param int $combinationId
+     * @param bool $withTaxes
+     * @param bool $useReduction
+     * @param bool $withEcoTax
+     *
+     * @return float|null
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function getPriceFromOrder(
+        int $orderId,
+        int $productId,
+        int $combinationId,
+        bool $withTaxes,
+        bool $useReduction,
+        bool $withEcoTax
+    ): ?float {
+        $sql = new DbQuery();
+        $sql->select('od.*, t.rate AS tax_rate');
+        $sql->from('order_detail', 'od');
+        $sql->where('od.`id_order` = ' . $orderId);
+        $sql->where('od.`product_id` = ' . $productId);
+        if (Combination::isFeatureActive()) {
+            $sql->where('od.`product_attribute_id` = ' . $combinationId);
+        }
+        $sql->leftJoin('order_detail_tax', 'odt', 'odt.id_order_detail = od.id_order_detail');
+        $sql->leftJoin('tax', 't', 't.id_tax = odt.id_tax');
+        $res = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS($sql);
+        if (!is_array($res) || empty($res)) {
+            return null;
+        }
+
+        $orderDetail = $res[0];
+        if ($useReduction) {
+            // If we want price with reduction it is already the one stored in OrderDetail
+            $price = $withTaxes ? $orderDetail['unit_price_tax_incl'] : $orderDetail['unit_price_tax_excl'];
+        } else {
+            // Without reduction we use the original product price to compute the original price
+            $tax_rate = $withTaxes ? (1 + ($orderDetail['tax_rate'] / 100)) : 1;
+            $price = $orderDetail['original_product_price'] * $tax_rate;
+        }
+        if (!$withEcoTax) {
+            // Remove the ecotax as the order detail contains already ecotax in the price
+            $price -= ($withTaxes ? $orderDetail['ecotax'] * (1 + $orderDetail['ecotax_tax_rate']) : $orderDetail['ecotax']);
+        }
+
+        return $price;
+    }
+
     public static function convertAndFormatPrice($price, $currency = false, Context $context = null)
     {
         if (!$context) {
@@ -3711,10 +3783,10 @@ class ProductCore extends ObjectModel
      * Get available product quantities (this method already have decreased products in cart).
      *
      * @param int $idProduct Product id
-     * @param int $idProductAttribute Product attribute id (optional)
+     * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack
      * @param Cart|null $cart
-     * @param int $idCustomization Product customization id (optional)
+     * @param int|null $idCustomization Product customization id (optional)
      *
      * @return int Available quantities
      */
@@ -3732,7 +3804,9 @@ class ProductCore extends ObjectModel
         $availableQuantity = StockAvailable::getQuantityAvailableByProduct($idProduct, $idProductAttribute);
         $nbProductInCart = 0;
 
-        if (!empty($cart)) {
+        // we don't substract products in cart if the cart is already attached to an order, since stock quantity
+        // has already been updated, this is only useful when the order has not yet been created
+        if (!empty($cart) && empty(Order::getByCartId($cart->id))) {
             $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
 
             if (!empty($cartProduct['deep_quantity'])) {
@@ -3812,6 +3886,11 @@ class ProductCore extends ObjectModel
         return false;
     }
 
+    /**
+     * @param int $out_of_stock
+     *
+     * @return bool|int Returns false is Stock Management is disabled, or the (int) configuration if it's enabled
+     */
     public static function isAvailableWhenOutOfStock($out_of_stock)
     {
         /** @TODO 1.5.0 Update of STOCK_MANAGEMENT & ORDER_OUT_OF_STOCK */
@@ -4842,6 +4921,17 @@ class ProductCore extends ObjectModel
             $cache_key .= '-pack' . $row['id_product_pack'];
         }
 
+        if (!isset($row['cover_image_id'])) {
+            $cover = static::getCover($row['id_product']);
+            if (isset($cover['id_image'])) {
+                $row['cover_image_id'] = $cover['id_image'];
+            }
+        }
+
+        if (isset($row['cover_image_id'])) {
+            $cache_key .= '-cover' . (int) $row['cover_image_id'];
+        }
+
         if (isset(self::$productPropertiesCache[$cache_key])) {
             return array_merge($row, self::$productPropertiesCache[$cache_key]);
         }
@@ -4869,7 +4959,7 @@ class ProductCore extends ObjectModel
             (int) $row['id_product'],
             false,
             $id_product_attribute,
-            (self::$_taxCalculationMethod == PS_TAX_EXC ? 2 : 6),
+            (self::$_taxCalculationMethod == PS_TAX_EXC ? Context::getContext()->getComputingPrecision() : 6),
             null,
             false,
             true,
@@ -4877,7 +4967,7 @@ class ProductCore extends ObjectModel
         );
 
         if (self::$_taxCalculationMethod == PS_TAX_EXC) {
-            $row['price_tax_exc'] = Tools::ps_round($row['price_tax_exc'], 2);
+            $row['price_tax_exc'] = Tools::ps_round($row['price_tax_exc'], Context::getContext()->getComputingPrecision());
             $row['price'] = Product::getPriceStatic(
                 (int) $row['id_product'],
                 true,
@@ -5027,13 +5117,6 @@ class ProductCore extends ObjectModel
         $row = Product::getTaxesInformations($row, $context);
 
         $row['ecotax_rate'] = (float) Tax::getProductEcotaxRate($context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-
-        if (!isset($row['cover_image_id'])) {
-            $cover = static::getCover($row['id_product']);
-            if (isset($cover['id_image'])) {
-                $row['cover_image_id'] = $cover['id_image'];
-            }
-        }
 
         Hook::exec('actionGetProductPropertiesAfter', [
             'id_lang' => $id_lang,
@@ -6697,7 +6780,7 @@ class ProductCore extends ObjectModel
         $this->quantity = StockAvailable::getQuantityAvailableByProduct($this->id, 0);
         $this->out_of_stock = StockAvailable::outOfStock($this->id);
         $this->depends_on_stock = StockAvailable::dependsOnStock($this->id);
-        $this->location = StockAvailable::getLocation($this->id);
+        $this->location = StockAvailable::getLocation($this->id) ?: '';
 
         if (Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP && Context::getContext()->shop->getContextShopGroup()->share_stock == 1) {
             $this->advanced_stock_management = $this->useAdvancedStockManagement();
@@ -7158,5 +7241,38 @@ class ProductCore extends ObjectModel
         }
 
         return $return;
+    }
+
+    /**
+     * Update default supplier data
+     *
+     * @param int $idSupplier
+     * @param float $wholesalePrice
+     * @param string $supplierReference
+     *
+     * @return bool
+     */
+    public function updateDefaultSupplierData(int $idSupplier, string $supplierReference, float $wholesalePrice): bool
+    {
+        if (!$this->id) {
+            return false;
+        }
+
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'product` ' .
+             'SET ' .
+             'id_supplier = %d, ' .
+             'supplier_reference = "%s", ' .
+             'wholesale_price = "%s" ' .
+             'WHERE id_product = %d';
+
+        return Db::getInstance()->execute(
+            sprintf(
+                $sql,
+                $idSupplier,
+                pSQL($supplierReference),
+                $wholesalePrice,
+                $this->id
+            )
+        );
     }
 }

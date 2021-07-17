@@ -183,6 +183,16 @@ class OrderForViewing
     private $sources;
 
     /**
+     * @var string
+     */
+    private $shippingAddressFormatted;
+
+    /**
+     * @var string
+     */
+    private $invoiceAddressFormatted;
+
+    /**
      * @param int $orderId
      * @param int $currencyId
      * @param int $carrierId
@@ -213,6 +223,8 @@ class OrderForViewing
      * @param OrderDiscountsForViewing $discounts
      * @param OrderSourcesForViewing $sources
      * @param LinkedOrdersForViewing $linkedOrders
+     * @param string $shippingAddressFormatted
+     * @param string $invoiceAddressFormatted
      */
     public function __construct(
         int $orderId,
@@ -244,7 +256,9 @@ class OrderForViewing
         OrderPricesForViewing $prices,
         OrderDiscountsForViewing $discounts,
         OrderSourcesForViewing $sources,
-        LinkedOrdersForViewing $linkedOrders
+        LinkedOrdersForViewing $linkedOrders,
+        string $shippingAddressFormatted = '',
+        string $invoiceAddressFormatted = ''
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
@@ -276,6 +290,8 @@ class OrderForViewing
         $this->invoiceManagementIsEnabled = $invoiceManagementIsEnabled;
         $this->sources = $sources;
         $this->linkedOrders = $linkedOrders;
+        $this->shippingAddressFormatted = $shippingAddressFormatted;
+        $this->invoiceAddressFormatted = $invoiceAddressFormatted;
     }
 
     /**
@@ -536,5 +552,21 @@ class OrderForViewing
         }
 
         return $this->prices->getShippingRefundableAmountRaw()->isGreaterThanZero();
+    }
+
+    /**
+     * @return string
+     */
+    public function getShippingAddressFormatted(): string
+    {
+        return $this->shippingAddressFormatted;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInvoiceAddressFormatted(): string
+    {
+        return $this->invoiceAddressFormatted;
     }
 }

@@ -31,13 +31,13 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
  */
 class CustomerCore extends ObjectModel
 {
-    /** @var int $id Customer ID */
+    /** @var int Customer ID */
     public $id;
 
-    /** @var int $id_shop Shop ID */
+    /** @var int Shop ID */
     public $id_shop;
 
-    /** @var int $id_shop_group ShopGroup ID */
+    /** @var int ShopGroup ID */
     public $id_shop_group;
 
     /** @var string Secure key */
@@ -194,7 +194,7 @@ class CustomerCore extends ObjectModel
             'max_payment_days' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'copy_post' => false],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
-            'note' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 65000, 'copy_post' => false],
+            'note' => ['type' => self::TYPE_HTML, 'size' => 65000, 'copy_post' => false],
             'is_guest' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
             'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false],
             'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false],

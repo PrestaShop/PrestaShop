@@ -24,39 +24,65 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
-use Cart;
-use Customization;
+use Configuration;
 use Exception;
 use Hook;
 use Order;
 use OrderDetail;
 use OrderInvoice;
-use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use Product;
 use StockAvailable;
 use Validate;
 
 /**
  * @internal
  */
-final class UpdateProductInOrderHandler extends AbstractOrderHandler implements UpdateProductInOrderHandlerInterface
+final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler implements UpdateProductInOrderHandlerInterface
 {
+    /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
     /**
      * @var OrderProductQuantityUpdater
      */
     private $orderProductQuantityUpdater;
 
-    public function __construct(OrderProductQuantityUpdater $orderProductQuantityUpdater)
-    {
+    /**
+     * @var OrderDetailUpdater
+     */
+    private $orderDetailUpdater;
+
+    /**
+     * UpdateProductInOrderHandler constructor.
+     *
+     * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
+     * @param OrderDetailUpdater $orderDetailUpdater
+     * @param ContextStateManager $contextStateManager
+     */
+    public function __construct(
+        OrderProductQuantityUpdater $orderProductQuantityUpdater,
+        OrderDetailUpdater $orderDetailUpdater,
+        ContextStateManager $contextStateManager
+    ) {
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
+        $this->orderDetailUpdater = $orderDetailUpdater;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -64,12 +90,11 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
      */
     public function handle(UpdateProductInOrderCommand $command)
     {
-        // Return value
-        $res = true;
-        $temporarySpecificPrices = [];
-
         try {
             $order = $this->getOrder($command->getOrderId());
+
+            $this->setOrderContext($this->contextStateManager, $order);
+
             $orderDetail = new OrderDetail($command->getOrderDetailId());
             $orderInvoice = null;
             if (!empty($command->getOrderInvoiceId())) {
@@ -78,77 +103,33 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 
             // Check fields validity
             $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
+            $this->assertProductNotDuplicate($order, $orderDetail, $orderInvoice);
 
-            if (0 < $orderDetail->id_customization) {
-                $customization = new Customization($orderDetail->id_customization);
-                $customization->quantity = $command->getQuantity();
-                $customization->save();
-            }
-            $product_quantity = $command->getQuantity();
+            // Update current OrderDetail with new price (the object will be updated by reference)
+            $this->orderDetailUpdater->updateOrderDetail(
+                $orderDetail,
+                $order,
+                $command->getPriceTaxExcluded(),
+                $command->getPriceTaxIncluded()
+            );
 
-            // @todo: use https://github.com/PrestaShop/decimal for price computations
-            $product_price_tax_incl = (float) $command->getPriceTaxIncluded()->round(2);
-            $product_price_tax_excl = (float) $command->getPriceTaxExcluded()->round(2);
-            $total_products_tax_incl = $product_price_tax_incl * $product_quantity;
-            $total_products_tax_excl = $product_price_tax_excl * $product_quantity;
+            // We also need to update all identical OrderDetails to be sure that Cart will get the correct price
+            $this->orderDetailUpdater->updateOrderDetailsForProduct(
+                $order,
+                (int) $orderDetail->product_id,
+                (int) $orderDetail->product_attribute_id,
+                $command->getPriceTaxExcluded(),
+                $command->getPriceTaxIncluded()
+            );
 
-            // Calculate differences of price (Before / After)
-            $diff_price_tax_incl = $total_products_tax_incl - $orderDetail->total_price_tax_incl;
-            $diff_price_tax_excl = $total_products_tax_excl - $orderDetail->total_price_tax_excl;
-            if ($diff_price_tax_incl != 0 && $diff_price_tax_excl != 0) {
-                $orderDetail->unit_price_tax_excl = $product_price_tax_excl;
-                $orderDetail->unit_price_tax_incl = $product_price_tax_incl;
-
-                $orderDetail->total_price_tax_incl += $diff_price_tax_incl;
-                $orderDetail->total_price_tax_excl += $diff_price_tax_excl;
-
-                $cart = Cart::getCartByOrderId($order->id);
-                if (!($cart instanceof Cart)) {
-                    throw new OrderException('Cart linked to the order cannot be found.');
-                }
-                $product = $this->getProduct(new ProductId((int) $orderDetail->product_id), (int) $order->id_lang);
-                $combination = $this->getCombination((int) $orderDetail->product_attribute_id);
-
-                // Add specific price for the product being added
-                $specificPrice = $this->createSpecificPriceIfNeeded(
-                    $command->getPriceTaxIncluded(),
-                    $command->getPriceTaxExcluded(),
-                    $order,
-                    $cart,
-                    $product,
-                    $combination
-                );
-
-                if (null !== $specificPrice) {
-                    $temporarySpecificPrices[] = $specificPrice;
-                }
-
-                // Apply changes on Order
-                $order = new Order($orderDetail->id_order);
-                $order->total_products += $diff_price_tax_excl;
-                $order->total_products_wt += $diff_price_tax_incl;
-
-                $order->total_paid += $diff_price_tax_incl;
-                $order->total_paid_tax_excl += $diff_price_tax_excl;
-                $order->total_paid_tax_incl += $diff_price_tax_incl;
-
-                $res &= $order->update();
-            }
-
-            // Update quantity and amounts
-            $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $product_quantity, $orderInvoice);
-
-            if (!$res) {
-                throw new OrderException('An error occurred while editing the product line.');
-            }
+            // Update invoice, quantity and amounts
+            $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $command->getQuantity(), $orderInvoice);
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
-
-            // Delete temporary specific prices
-            $this->clearTemporarySpecificPrices($temporarySpecificPrices);
         } catch (Exception $e) {
-            $this->clearTemporarySpecificPrices($temporarySpecificPrices);
             throw $e;
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
         }
     }
 
@@ -166,6 +147,12 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         Order $order,
         OrderInvoice $orderInvoice = null
     ) {
+        // assert product exists
+        $product = new Product($orderDetail->product_id);
+        if ($product->id !== (int) $orderDetail->product_id) {
+            throw new CannotFindProductInOrderException('You cannot edit the price of a product that no longer exists in your catalog.');
+        }
+
         if (!Validate::isLoadedObject($orderDetail)) {
             throw new OrderException('The Order Detail object could not be loaded.');
         }
@@ -195,28 +182,63 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             throw new OrderException('Invalid price');
         }
 
-        if (!is_array($command->getQuantity())
-            && !Validate::isUnsignedInt($command->getQuantity())
-        ) {
+        if (!Validate::isUnsignedInt($command->getQuantity())) {
             throw new OrderException('Invalid quantity');
         }
 
-        // @todo: check if quantity can be array
-//        if (is_array($command->getQuantity())) {
-//            foreach ($command->getQuantity() as $qty) {
-//                if (!Validate::isUnsignedInt($qty)) {
-//                    throw new OrderException('Invalid quantity');
-//                }
-//            }
-//        }
-
         //check if product is available in stock
-        if (!\Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
+        if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
             $availableQuantity = StockAvailable::getQuantityAvailableByProduct($orderDetail->product_id, $orderDetail->product_attribute_id);
+            $quantityDiff = $command->getQuantity() - (int) $orderDetail->product_quantity;
 
-            if ($availableQuantity < $command->getQuantity()) {
+            if ($quantityDiff > $availableQuantity) {
                 throw new ProductOutOfStockException('Not enough products in stock');
             }
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param OrderDetail $orderDetail
+     * @param OrderInvoice|null $orderInvoice
+     *
+     * @throws DuplicateProductInOrderInvoiceException
+     */
+    private function assertProductNotDuplicate(Order $order, OrderDetail $orderDetail, ?OrderInvoice $orderInvoice = null): void
+    {
+        // If the OrderDetail's invoice is not changed no reason to check
+        if (null === $orderInvoice || (int) $orderInvoice->id === (int) $orderDetail->id_order_invoice) {
+            return;
+        }
+
+        // If no multi invoice possible no reason to check
+        if (!$order->hasInvoice()) {
+            return;
+        }
+
+        $invoicesContainingProduct = [];
+        foreach ($order->getOrderDetailList() as $orderDetailData) {
+            if ((int) $orderDetail->id === (int) $orderDetailData['id_order_detail']) {
+                continue;
+            }
+            if ((int) $orderDetail->product_id !== (int) $orderDetailData['product_id']) {
+                continue;
+            }
+            if ((int) $orderDetail->product_attribute_id !== (int) $orderDetailData['product_attribute_id']) {
+                continue;
+            }
+            $invoicesContainingProduct[] = (int) $orderDetailData['id_order_invoice'];
+        }
+
+        // No invoices contain the product it's fine
+        if (empty($invoicesContainingProduct)) {
+            return;
+        }
+
+        // The newly assigned invoice already contains this product, this it not possible
+        if (in_array((int) $orderInvoice->id, $invoicesContainingProduct)) {
+            $invoiceNumber = $orderInvoice->getInvoiceNumberFormatted((int) Configuration::get('PS_LANG_DEFAULT'), $order->id_shop);
+            throw new DuplicateProductInOrderInvoiceException($invoiceNumber, 'You cannot add this product in this invoice as it is already present');
         }
     }
 }

@@ -9,6 +9,9 @@ class OrderSettings extends BOBasePage {
     this.successfulUpdateMessage = 'Update successful';
 
     // Selectors
+    // SubTab
+    this.statusesTab = '#subtab-AdminStatuses';
+    // Form
     this.generalForm = '#configuration_form';
     this.enableFinalSummaryLabel = toggle => `${this.generalForm}`
       + ` label[for='form_general_enable_final_summary_${toggle}']`;
@@ -26,7 +29,7 @@ class OrderSettings extends BOBasePage {
     this.giftWrappingPriceInput = '#form_gift_options_gift_wrapping_price';
     this.giftWrappingTaxSelect = '#form_gift_options_gift_wrapping_tax_rules_group';
     this.recycledPackagingToggle = toggle => `${this.generalForm}`
-    + ` label[for='form_gift_options_offer_recyclable_pack_${toggle}']`;
+      + ` label[for='form_gift_options_offer_recyclable_pack_${toggle}']`;
     this.saveGiftOptionsFormButton = `${this.generalForm} div:nth-of-type(2) .card-footer button`;
   }
 
@@ -43,7 +46,7 @@ class OrderSettings extends BOBasePage {
   async setFinalSummaryStatus(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.enableFinalSummaryLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -55,7 +58,7 @@ class OrderSettings extends BOBasePage {
   async setGuestCheckoutStatus(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.enableGuestCheckoutLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -67,7 +70,7 @@ class OrderSettings extends BOBasePage {
   async setReorderOptionStatus(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.disableReorderingLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -79,7 +82,7 @@ class OrderSettings extends BOBasePage {
   async setMinimumPurchaseRequiredTotal(page, value) {
     await this.setValue(page, this.minimumPurchaseRequiredValue, value.toString());
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -95,7 +98,7 @@ class OrderSettings extends BOBasePage {
       await this.selectByVisibleText(page, this.pageForTermsAndConditionsSelect, pageName);
     }
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -116,7 +119,16 @@ class OrderSettings extends BOBasePage {
 
     await page.click(this.recycledPackagingToggle(recyclePackagingStatus ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGiftOptionsFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Go to statuses page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToStatusesPage(page) {
+    await this.clickAndWaitForNavigation(page, this.statusesTab);
   }
 }
 

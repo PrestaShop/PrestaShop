@@ -87,5 +87,9 @@ fi
 
 chown -hR www-data:www-data /var/www/html
 
+# Can't uninstall all these modules with cli so removing files
+echo "\n* Delete some modules";
+rm -rf modules/ps_checkout modules/ps_metrics modules/ps_accounts modules/ps_eventbus modules/welcome modules/gamification
+
 echo "\n* Almost ! Starting web server now\n";
 exec apache2-foreground

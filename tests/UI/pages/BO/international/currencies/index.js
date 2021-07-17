@@ -34,6 +34,10 @@ class Currencies extends LocalizationBasePage {
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
+    this.editRowLink = row => `${this.actionsColumn(row)} a[href*='/edit']`;
+    // Exchange rate form
+    this.exchangeRateForm = 'form[name=\'exchange_rates\']';
+    this.updateExchangeRatesButton = `${this.exchangeRateForm} .btn.btn-primary`;
   }
 
   /* Header Methods */
@@ -135,7 +139,7 @@ class Currencies extends LocalizationBasePage {
       symbol: await this.getTextColumnFromTableCurrency(page, row, 'symbol'),
       isoCode: await this.getTextColumnFromTableCurrency(page, row, 'iso_code'),
       exchangeRate: await this.getExchangeRateValue(page, row),
-      enabled: await this.getToggleColumnValue(page, row),
+      enabled: await this.getStatus(page, row),
     };
   }
 
@@ -143,9 +147,9 @@ class Currencies extends LocalizationBasePage {
    * Get toggle column value for a row
    * @param page
    * @param row
-   * @return {Promise<string>}
+   * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row = 1) {
+  async getStatus(page, row = 1) {
     return this.elementVisible(page, this.enableColumnValidIcon(row), 100);
   }
 
@@ -156,12 +160,13 @@ class Currencies extends LocalizationBasePage {
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(page, row = 1, valueWanted = true) {
+  async setStatus(page, row = 1, valueWanted = true) {
     await this.waitForVisibleSelector(page, this.enableColumn(row), 2000);
-    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
+    if (await this.getStatus(page, row) !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.enableColumn(row));
       return true;
     }
+
     return false;
   }
 
@@ -181,7 +186,27 @@ class Currencies extends LocalizationBasePage {
       ),
     ]);
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Go to edit currency page
+   * @param page
+   * @param row
+   * @returns {Promise<void>}
+   */
+  async goToEditCurrencyPage(page, row = 1) {
+    await this.clickAndWaitForNavigation(page, this.editRowLink(row));
+  }
+
+  /**
+   * Click on update exchange rates
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async updateExchangeRate(page) {
+    await this.clickAndWaitForNavigation(page, this.updateExchangeRatesButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

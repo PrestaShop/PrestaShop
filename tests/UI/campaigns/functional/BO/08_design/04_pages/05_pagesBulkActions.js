@@ -112,15 +112,15 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
     });
 
     const statuses = [
-      {args: {status: 'disable', enable: false}, expected: 'clear'},
-      {args: {status: 'enable', enable: true}, expected: 'check'},
+      {args: {status: 'disable', enable: false}},
+      {args: {status: 'enable', enable: true}},
     ];
 
     statuses.forEach((pageStatus) => {
       it(`should ${pageStatus.args.status} pages with Bulk Actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${pageStatus.args.status}Page`, baseContext);
 
-        const textResult = await pagesPage.changeEnabledColumnBulkActions(
+        const textResult = await pagesPage.bulkSetStatus(
           page,
           'cms_page',
           pageStatus.args.enable);
@@ -131,8 +131,8 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
         await expect(numberOfPagesInGrid).to.be.at.most(numberOfPages);
 
         for (let i = 1; i <= numberOfPagesInGrid; i++) {
-          const textColumn = await pagesPage.getTextColumnFromTableCmsPage(page, i, 'active');
-          await expect(textColumn).to.contains(pageStatus.expected);
+          const textColumn = await pagesPage.getStatus(page, 'cms_page', i, 'active');
+          await expect(textColumn).to.equal(pageStatus.args.enable);
         }
       });
     });

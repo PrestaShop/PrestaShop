@@ -48,7 +48,6 @@ import './lib/jquery.scrollbox.min';
 
 import './components/block-cart';
 import $ from 'jquery';
-import 'jquery-migrate';
 
 // "inherit" EventEmitter
 for (const i in EventEmitter.prototype) {

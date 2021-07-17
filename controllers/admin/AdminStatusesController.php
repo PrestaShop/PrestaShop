@@ -66,6 +66,12 @@ class AdminStatusesControllerCore extends AdminController
      */
     protected function initOrderStatutsList()
     {
+        $this->table = 'order_state';
+        $this->className = 'OrderState';
+        $this->_defaultOrderBy = $this->identifier = 'id_order_state';
+        $this->list_id = 'order_state';
+        $this->deleted = true;
+        $this->_orderBy = null;
         $this->fields_list = [
             'id_order_state' => [
                 'title' => $this->trans('ID', [], 'Admin.Global'),
@@ -571,6 +577,7 @@ class AdminStatusesControllerCore extends AdminController
             $this->className = 'OrderReturnState';
             $this->table = 'order_return_state';
             $this->boxes = Tools::getValue('order_return_stateBox');
+            $this->deleted = false;
             parent::processBulkDelete();
         }
 
@@ -596,6 +603,25 @@ class AdminStatusesControllerCore extends AdminController
                 return;
             }
 
+            $langIds = Language::getIDs(false);
+            $langDefault = (int) Configuration::get('PS_LANG_DEFAULT');
+            foreach ($langIds as $id_lang) {
+                $name = (string) Tools::getValue('name_' . $id_lang);
+                if (empty($name)) {
+                    $name = (string) Tools::getValue('name_' . $langDefault);
+                }
+
+                $exists = OrderState::existsLocalizedNameInDatabase(
+                    $name,
+                    (int) $id_lang,
+                    Tools::getIsset('id_order_state') ? (int) Tools::getValue('id_order_state') : null
+                );
+                if ($exists) {
+                    $this->errors[] = $this->trans('This name already exists.', [], 'Admin.Design.Notification');
+                    break;
+                }
+            }
+
             $this->deleted = false; // Disabling saving historisation
             $_POST['invoice'] = (int) Tools::getValue('invoice_on');
             $_POST['logable'] = (int) Tools::getValue('logable_on');
@@ -607,7 +633,7 @@ class AdminStatusesControllerCore extends AdminController
             $_POST['pdf_delivery'] = (int) Tools::getValue('pdf_delivery_on');
             $_POST['pdf_invoice'] = (int) Tools::getValue('pdf_invoice_on');
             if (!$_POST['send_email']) {
-                foreach (Language::getIDs(false) as $id_lang) {
+                foreach ($langIds as $id_lang) {
                     $_POST['template_' . $id_lang] = '';
                 }
             }
@@ -622,14 +648,14 @@ class AdminStatusesControllerCore extends AdminController
             if (!$order_state->isRemovable()) {
                 $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', [], 'Admin.Shopparameters.Notification');
             } else {
-                return $order_state->softDelete();
+                return parent::postProcess();
             }
         } elseif (Tools::isSubmit('submitBulkdelete' . $this->table)) {
             if (!$this->access('delete')) {
                 return;
             }
 
-            foreach (Tools::getValue($this->table . 'Box') as $selection) {
+            foreach (Tools::getValue($this->table . 'Box', []) as $selection) {
                 $order_state = new OrderState((int) $selection, $this->context->language->id);
                 if (!$order_state->isRemovable()) {
                     $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', [], 'Admin.Shopparameters.Notification');

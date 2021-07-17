@@ -193,12 +193,14 @@ class AdminProductWrapper
 
             // We need to reload the product because some other calls have modified the database
             // It's done just for the setAvailableDate to avoid side effects
+            Product::disableCache();
             $consistentProduct = new Product($product->id);
             if ($available_date = $combinationValues['available_date_attribute']) {
                 $consistentProduct->setAvailableDate($available_date);
             } else {
                 $consistentProduct->setAvailableDate();
             }
+            Product::enableCache();
         }
 
         if (isset($combinationValues['attribute_quantity'])) {

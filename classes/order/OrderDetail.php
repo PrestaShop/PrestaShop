@@ -64,22 +64,22 @@ class OrderDetailCore extends ObjectModel
     /** @var int */
     public $product_quantity_reinjected;
 
-    /** @var float */
+    /** @var float Without taxes, includes ecotax */
     public $product_price;
 
     /** @var float */
     public $original_product_price;
 
-    /** @var float */
+    /** @var float With taxes, includes ecotax */
     public $unit_price_tax_incl;
 
-    /** @var float */
+    /** @var float Without taxes, includes ecotax */
     public $unit_price_tax_excl;
 
-    /** @var float */
+    /** @var float With taxes, includes ecotax */
     public $total_price_tax_incl;
 
-    /** @var float */
+    /** @var float Without taxes, includes ecotax */
     public $total_price_tax_excl;
 
     /** @var float */
@@ -139,13 +139,17 @@ class OrderDetailCore extends ObjectModel
     /** @var datetime */
     public $download_deadline;
 
-    /** @var string $tax_name * */
+    /**
+     * @var string @deprecated Order Detail Tax is saved in order_detail_tax table now
+     */
     public $tax_name;
 
-    /** @var float $tax_rate * */
+    /**
+     * @var float @deprecated Order Detail Tax is saved in order_detail_tax table now
+     */
     public $tax_rate;
 
-    /** @var float $tax_computation_method * */
+    /** @var float */
     public $tax_computation_method;
 
     /** @var int Id tax rules group */
@@ -357,9 +361,8 @@ class OrderDetailCore extends ObjectModel
         if ($results = Db::getInstance()->executeS($sql)) {
             foreach ($results as $result) {
                 $taxes[] = new Tax((int) $result['id_tax']);
+                $computation_method = $result['tax_computation_method'];
             }
-
-            $computation_method = $result['tax_computation_method'];
         }
 
         return new TaxCalculator($taxes, $computation_method);
@@ -372,6 +375,9 @@ class OrderDetailCore extends ObjectModel
      * @deprecated Functionality moved to Order::updateOrderDetailTax
      *             because we need the full order object to do a good job here.
      *             Will no longer be supported after 1.6.1
+     *             (Note: this one is not that deprecated because Order::updateOrderDetailTax
+     *             performs no update unless order_detail_tax is filled. So we rely on updateTaxAmount
+     *             which correctly builds the TaxCalculator with up to date taxes unlike getTaxCalculatorStatic)
      *
      * @return bool
      */
@@ -386,14 +392,6 @@ class OrderDetailCore extends ObjectModel
             return false;
         }
 
-        if (count($this->tax_calculator->taxes) == 0) {
-            return true;
-        }
-
-        if ($order->total_products <= 0) {
-            return true;
-        }
-
         $shipping_tax_amount = 0;
 
         foreach ($order->getCartRules() as $cart_rule) {
@@ -404,7 +402,8 @@ class OrderDetailCore extends ObjectModel
             }
         }
 
-        $ratio = $this->unit_price_tax_excl / $order->total_products;
+        $ratio = ($order->total_products > 0) ? ($this->unit_price_tax_excl / $order->total_products) : 1;
+
         $order_reduction_amount = ($order->total_discounts_tax_excl - $shipping_tax_amount) * $ratio;
         $discounted_price_tax_excl = $this->unit_price_tax_excl - $order_reduction_amount;
 
@@ -435,21 +434,48 @@ class OrderDetailCore extends ObjectModel
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'order_detail_tax` WHERE id_order_detail=' . (int) $this->id);
         }
 
-        $values = rtrim($values, ',');
-        $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
+        if (!empty($values)) {
+            $values = rtrim($values, ',');
+            $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
                 VALUES ' . $values;
 
-        return Db::getInstance()->execute($sql);
+            return Db::getInstance()->execute($sql);
+        }
+
+        return true;
     }
 
     public function updateTaxAmount($order)
     {
-        $this->setContext((int) $this->id_shop);
         $address = new Address((int) $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-        $tax_manager = TaxManagerFactory::getManager($address, (int) Product::getIdTaxRulesGroupByIdProduct((int) $this->product_id, $this->context));
-        $this->tax_calculator = $tax_manager->getTaxCalculator();
+        $this->tax_calculator = $this->getTaxCalculatorByAddress($address);
 
         return $this->saveTaxCalculator($order, true);
+    }
+
+    /**
+     * Get a TaxCalculator adapted for the OrderDetail's product and the specified address
+     *
+     * @param Address $address
+     *
+     * @return TaxCalculator
+     */
+    public function getTaxCalculatorByAddress(Address $address): TaxCalculator
+    {
+        $this->setContext((int) $this->id_shop);
+        $tax_manager = TaxManagerFactory::getManager($address, $this->getTaxRulesGroupId());
+
+        return $tax_manager->getTaxCalculator();
+    }
+
+    /**
+     * Dynamically get the taxRulesGroupId instead of relying one the one saved in database
+     *
+     * @return int
+     */
+    public function getTaxRulesGroupId(): int
+    {
+        return (int) Product::getIdTaxRulesGroupByIdProduct((int) $this->product_id, $this->context);
     }
 
     /**
@@ -508,7 +534,7 @@ class OrderDetailCore extends ObjectModel
         if ($id_order_state != Configuration::get('PS_OS_CANCELED') && $id_order_state != Configuration::get('PS_OS_ERROR')) {
             $update_quantity = true;
             if (!StockAvailable::dependsOnStock($product['id_product'])) {
-                $update_quantity = StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int) $product['cart_quantity']);
+                $update_quantity = StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int) $product['cart_quantity'], $product['id_shop'], true);
             }
 
             if ($update_quantity) {
@@ -602,8 +628,24 @@ class OrderDetailCore extends ObjectModel
         $this->setContext((int) $product['id_shop']);
         Product::getPriceStatic((int) $product['id_product'], true, (int) $product['id_product_attribute'], 6, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, $this->context);
         $this->specificPrice = $specific_price;
-        $this->original_product_price = Product::getPriceStatic($product['id_product'], false, (int) $product['id_product_attribute'], 6, null, false, false, 1, false, null, null, null, $null, true, true, $this->context);
-        $this->product_price = $this->original_product_price;
+        $this->product_price = $this->original_product_price = Product::getPriceStatic(
+            $product['id_product'],
+            false,
+            (int) $product['id_product_attribute'],
+            6,
+            null,
+            false,
+            false,
+            1,
+            false,
+            null,
+            null,
+            null,
+            $null,
+            true,
+            true,
+            $this->context
+        );
         $this->unit_price_tax_incl = (float) $product['price_wt'];
         $this->unit_price_tax_excl = (float) $product['price'];
         $this->total_price_tax_incl = (float) $product['total_wt'];
@@ -658,7 +700,7 @@ class OrderDetailCore extends ObjectModel
         if ($quantity_discount) {
             $this->product_quantity_discount = $unit_price;
             if (Product::getTaxCalculationMethod((int) $order->id_customer) == PS_TAX_EXC) {
-                $this->product_quantity_discount = Tools::ps_round($unit_price, 2);
+                $this->product_quantity_discount = Tools::ps_round($unit_price, Context::getContext()->getComputingPrecision());
             }
 
             if (isset($this->tax_calculator)) {
@@ -786,7 +828,7 @@ class OrderDetailCore extends ObjectModel
 
         $this->total_shipping_price_tax_excl = (float) $product['additional_shipping_cost'];
         $this->total_shipping_price_tax_incl = (float) ($this->total_shipping_price_tax_excl * (1 + ($tax_rate / 100)));
-        $this->total_shipping_price_tax_incl = Tools::ps_round($this->total_shipping_price_tax_incl, 2);
+        $this->total_shipping_price_tax_incl = Tools::ps_round($this->total_shipping_price_tax_incl, Context::getContext()->getComputingPrecision());
     }
 
     public function getWsTaxes()

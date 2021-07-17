@@ -1397,6 +1397,7 @@ CREATE TABLE `PREFIX_order_cart_rule` (
   `value` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `value_tax_excl` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `free_shipping` tinyint(1) NOT NULL DEFAULT '0',
+  `deleted` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_order_cart_rule`),
   KEY `id_order` (`id_order`),
   KEY `id_cart_rule` (`id_cart_rule`)

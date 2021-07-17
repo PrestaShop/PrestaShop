@@ -55,7 +55,7 @@ class AddOrderMessage extends BOBasePage {
     await this.setValue(page, this.messageTextarea(2), orderMessageData.frMessage);
     // Save order message
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

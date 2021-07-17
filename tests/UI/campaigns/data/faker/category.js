@@ -4,7 +4,7 @@ const {groupAccess} = require('@data/demo/groupAccess');
 
 module.exports = class Category {
   constructor(categoryToCreate = {}) {
-    this.name = categoryToCreate.name || faker.commerce.department();
+    this.name = categoryToCreate.name || `${faker.commerce.color()} ${faker.commerce.department()}`;
     this.displayed = categoryToCreate.displayed === undefined ? true : categoryToCreate.displayed;
     this.description = faker.lorem.sentence();
     this.metaTitle = categoryToCreate.metaTitle || faker.name.title();
