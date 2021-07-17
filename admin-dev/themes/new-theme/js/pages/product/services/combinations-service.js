@@ -71,7 +71,7 @@ export default class CombinationsService {
    *
    * @returns {Promise}
    */
-  removeCombination(combinationId) {
+  deleteCombination(combinationId) {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_delete_combination', {
         combinationId,
