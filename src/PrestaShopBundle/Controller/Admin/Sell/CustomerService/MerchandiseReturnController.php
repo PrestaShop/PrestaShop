@@ -117,7 +117,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
 
             $result = $formHandler->handleFor($orderReturnId, $form);
 
-            if ($result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_merchandise_returns_index');
