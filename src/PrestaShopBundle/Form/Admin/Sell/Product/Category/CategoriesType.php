@@ -41,11 +41,12 @@ class CategoriesType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('product_categories', CategoriesCollectionType::class)
+            ->add('product_categories', CategoriesCollectionType::class, [
+            ])
             ->add('add_categories_btn', ButtonType::class, [
                 'label' => $this->trans('Add categories', 'Admin.Catalog.Feature'),
                 'attr' => [
-                    'class' => 'add-categories-btn',
+                    'class' => 'add-categories-btn btn-outline-primary',
                 ],
             ])
         ;
