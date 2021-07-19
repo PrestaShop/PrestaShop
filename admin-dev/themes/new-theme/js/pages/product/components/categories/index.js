@@ -36,7 +36,6 @@ const {$} = window;
 
 const ProductCategoryMap = ProductMap.categories;
 
-// @todo: filename is index.js but its a class CategoriesManager. Shouldn't we keep the filename categories-manager.js?
 export default class CategoriesManager {
   /**
    * @param {EventEmitter} eventEmitter
@@ -57,12 +56,12 @@ export default class CategoriesManager {
   }
 
   async initCategories() {
-    this.categoriesContainer = document.querySelector(ProductCategoryMap.categoriesContainer);
-    this.categoryTree = this.categoriesContainer.querySelector(ProductCategoryMap.categoryTree);
+    this.categoriesModalContainer = document.querySelector(ProductCategoryMap.categoriesModalContainer);
+    this.categoryTree = this.categoriesModalContainer.querySelector(ProductCategoryMap.categoryTree);
     this.prototypeTemplate = this.categoryTree.dataset.prototype;
     this.prototypeName = this.categoryTree.dataset.prototypeName;
-    this.expandAllButton = this.categoriesContainer.querySelector(ProductCategoryMap.expandAllButton);
-    this.reduceAllButton = this.categoriesContainer.querySelector(ProductCategoryMap.reduceAllButton);
+    this.expandAllButton = this.categoriesModalContainer.querySelector(ProductCategoryMap.expandAllButton);
+    this.reduceAllButton = this.categoriesModalContainer.querySelector(ProductCategoryMap.reduceAllButton);
 
     this.categories = await getCategories();
 
@@ -109,10 +108,10 @@ export default class CategoriesManager {
     });
 
     // Tree is initialized we can show it and hide loader
-    this.categoriesContainer
+    this.categoriesModalContainer
       .querySelector(ProductCategoryMap.fieldset)
       .classList.remove('d-none');
-    this.categoriesContainer
+    this.categoriesModalContainer
       .querySelector(ProductCategoryMap.loader)
       .classList.add('d-none');
   }
@@ -317,7 +316,7 @@ export default class CategoriesManager {
   }
 
   initAddCategoriesModal() {
-    const modalContent = $(ProductMap.categories.categoriesTemplate);
+    const modalContent = $(ProductCategoryMap.categoriesModalTemplate);
 
     $(this.addCategoriesBtn).fancybox({
       type: 'iframe',
