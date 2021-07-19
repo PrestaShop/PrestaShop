@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
+use OrderReturn;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand;
 
@@ -39,14 +40,14 @@ class OrderReturnFormDataHandler implements FormDataHandlerInterface
     /**
      * @var CommandBusInterface
      */
-    private $bus;
+    private $commandBus;
 
     /**
-     * @param CommandBusInterface $bus
+     * @param CommandBusInterface $commandBus
      */
-    public function __construct(CommandBusInterface $bus)
+    public function __construct(CommandBusInterface $commandBus)
     {
-        $this->bus = $bus;
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -56,7 +57,7 @@ class OrderReturnFormDataHandler implements FormDataHandlerInterface
     {
         $orderReturnStateId = (int) $data['order_return_state'];
 
-        $this->bus->handle(new UpdateOrderReturnStateCommand($orderReturnId, $orderReturnStateId));
+        $this->commandBus->handle(new UpdateOrderReturnStateCommand($orderReturnId, $orderReturnStateId));
     }
 
     /**
@@ -64,7 +65,9 @@ class OrderReturnFormDataHandler implements FormDataHandlerInterface
      *
      * @param array $data
      */
+
     public function create(array $data): void
     {
+        @trigger_error(OrderReturn::class . ' is not created by form, this method should never be called', E_USER_WARNING);
     }
 }
