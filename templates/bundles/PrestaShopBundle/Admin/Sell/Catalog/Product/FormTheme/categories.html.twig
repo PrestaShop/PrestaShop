@@ -24,8 +24,16 @@
  *#}
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
-{% block categories_add_categores_btn_row %}
-  {{ form_row(form.add_categories_btn_row) }}
+{% block form_row %}
+    <div class="pstaggerTagsWrapper categories-tags-container">
+      {% for category in form.vars.data.product_categories %}
+      {% set categoryId = loop.index %}
+      <span class="pstaggerTag">
+            <span data-id="{{ categoryId }}">{{ category.name }}</span>
+            <a class="pstaggerClosingCross" href="#" data-id="{{ categoryId }}">x</a>
+        </span>
+      {% endfor %}
+    </div>
 {% endblock %}
 
 {% block product_category_row %}
