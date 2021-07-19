@@ -31,34 +31,34 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 /**
  * Contains information about product categories
  */
-class ProductCategoriesInformation
+class CategoriesInformation
 {
-    /**
-     * @var int[]
-     */
-    private $categoryIds;
-
     /**
      * @var int
      */
     private $defaultCategoryId;
 
     /**
-     * @param int[] $categoryIds
+     * @var CategoryInformation[]
+     */
+    private $categoriesInformation;
+
+    /**
+     * @param CategoryInformation[] $categoriesInformation
      * @param int $defaultCategoryId
      */
-    public function __construct(array $categoryIds, int $defaultCategoryId)
+    public function __construct(array $categoriesInformation, int $defaultCategoryId)
     {
-        $this->categoryIds = $categoryIds;
+        $this->categoriesInformation = $categoriesInformation;
         $this->defaultCategoryId = $defaultCategoryId;
     }
 
     /**
-     * @return int[]
+     * @return CategoryInformation[]
      */
-    public function getCategoryIds(): array
+    public function getCategoriesInformation(): array
     {
-        return $this->categoryIds;
+        return $this->categoriesInformation;
     }
 
     /**

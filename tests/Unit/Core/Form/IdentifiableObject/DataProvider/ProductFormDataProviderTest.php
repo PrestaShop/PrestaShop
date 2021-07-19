@@ -45,7 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFe
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoriesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
@@ -1113,11 +1113,11 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @param array $product
      *
-     * @return ProductCategoriesInformation
+     * @return CategoriesInformation
      */
-    private function createCategories(array $product): ProductCategoriesInformation
+    private function createCategories(array $product): CategoriesInformation
     {
-        return new ProductCategoriesInformation(
+        return new CategoriesInformation(
             $product['categories'] ?? [self::DEFAULT_CATEGORY_ID],
             $product['default_category'] ?? self::DEFAULT_CATEGORY_ID
         );

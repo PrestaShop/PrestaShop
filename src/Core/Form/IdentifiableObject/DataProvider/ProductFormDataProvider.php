@@ -71,21 +71,29 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $defaultCategoryId;
 
     /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
      * @param int $defaultCategoryId
+     * @param int $contextLangId
      */
     public function __construct(
         CommandBusInterface $queryBus,
         bool $defaultProductActivation,
         int $mostUsedTaxRulesGroupId,
-        int $defaultCategoryId
+        int $defaultCategoryId,
+        int $contextLangId
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
         $this->defaultCategoryId = $defaultCategoryId;
+        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -168,6 +176,13 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 ],
                 'condition' => ProductCondition::NEW,
             ],
+            'categories' => [
+                'product_categories' => [
+                    $this->defaultCategoryId => [
+                        'is_associated' => true,
+                    ],
+                ],
+            ],
             'footer' => [
                 'active' => $this->defaultProductActivation,
             ],
@@ -206,10 +221,12 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     {
         $categoriesInformation = $productForEditing->getCategoriesInformation();
         $categories = [];
-        foreach ($categoriesInformation->getCategoryIds() as $categoryId) {
-            $categories[$categoryId] = [
+        foreach ($categoriesInformation->getCategoriesInformation() as $categoryInformation) {
+            $localizedNames = $categoryInformation->getLocalizedNames();
+
+            $categories[$categoryInformation->getId()] = [
                 'is_associated' => true,
-                'is_default' => $categoryId === $categoriesInformation->getDefaultCategoryId(),
+                'name' => $localizedNames[$this->contextLangId] ?? reset($localizedNames),
             ];
         }
 
@@ -270,8 +287,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
-            'categories' => $this->extractCategoriesData($productForEditing),
             'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
+            'categories' => $this->extractCategoriesData($productForEditing),
         ];
     }
 
