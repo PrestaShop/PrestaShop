@@ -237,6 +237,7 @@ class CategoryController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/create_root.html.twig',
             [
+                'categoryId' => 0,
                 'allowMenuThumbnailsUpload' => true,
                 'rootCategoryForm' => $rootCategoryForm->createView(),
                 'defaultGroups' => $defaultGroups,
@@ -384,6 +385,7 @@ class CategoryController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/edit_root.html.twig',
             [
+                'categoryId' => $categoryId,
                 'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
                 'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
                 'contextLangId' => $this->getContextLangId(),
