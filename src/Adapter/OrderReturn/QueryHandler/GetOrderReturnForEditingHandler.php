@@ -32,6 +32,7 @@ use Customer;
 use DateTime;
 use Order;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\AbstractOrderReturnHandler;
+use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderReturnForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderReturn;
@@ -39,15 +40,25 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderRetur
 /**
  * Handles query which gets order return for editing
  */
-class GetOrderReturnForEditingHandler extends AbstractOrderReturnHandler implements GetOrderReturnForEditingHandlerInterface
+class GetOrderReturnForEditingHandler implements GetOrderReturnForEditingHandlerInterface
 {
+    /**
+     * @var OrderReturnRepository
+     */
+    private $orderReturnRepository;
+
+    public function __construct(OrderReturnRepository $orderReturnRepository)
+    {
+        $this->orderReturnRepository = $orderReturnRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function handle(GetOrderReturnForEditing $query): EditableOrderReturn
     {
         $orderReturnId = $query->getOrderReturnId();
-        $orderReturn = $this->getOrderReturn($orderReturnId);
+        $orderReturn = $this->orderReturnRepository->get($orderReturnId);
         $customer = new Customer($orderReturn->id_customer);
         $order = new Order($orderReturn->id_order);
 
