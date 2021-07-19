@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Category\Repository;
 
+use Category;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
@@ -61,6 +62,25 @@ class CategoryRepository extends AbstractObjectModelRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+    }
+
+    /**
+     * @param CategoryId $categoryId
+     *
+     * @return Category
+     *
+     * @throws CategoryNotFoundException
+     */
+    public function get(CategoryId $categoryId): Category
+    {
+        /** @var Category $category */
+        $category = $this->getObjectModel(
+            $categoryId->getValue(),
+            Category::class,
+            CategoryNotFoundException::class
+        );
+
+        return $category;
     }
 
     /**

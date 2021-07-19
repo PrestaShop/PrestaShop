@@ -32,11 +32,13 @@ use Customization;
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
@@ -44,7 +46,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoriesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoryInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
@@ -77,6 +80,11 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      * @var ProductRepository
      */
     private $productRepository;
+
+    /**
+     * @var CategoryRepository
+     */
+    private $categoryRepository;
 
     /**
      * @var StockAvailableRepository
@@ -116,6 +124,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     /**
      * @param NumberExtractor $numberExtractor
      * @param ProductRepository $productRepository
+     * @param CategoryRepository $categoryRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
      * @param ProductImageRepository $productImageRepository
@@ -127,6 +136,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     public function __construct(
         NumberExtractor $numberExtractor,
         ProductRepository $productRepository,
+        CategoryRepository $categoryRepository,
         StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
         ProductImageRepository $productImageRepository,
@@ -136,11 +146,12 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         ProductImagePathFactory $productImageUrlFactory
     ) {
         $this->numberExtractor = $numberExtractor;
+        $this->productRepository = $productRepository;
+        $this->categoryRepository = $categoryRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->virtualProductFileRepository = $virtualProductFileRepository;
         $this->taxComputer = $taxComputer;
         $this->countryId = $countryId;
-        $this->productRepository = $productRepository;
         $this->targetProvider = $targetProvider;
         $this->productImageRepository = $productImageRepository;
         $this->productImageUrlFactory = $productImageUrlFactory;
@@ -189,14 +200,24 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     /**
      * @param Product $product
      *
-     * @return ProductCategoriesInformation
+     * @return CategoriesInformation
      */
-    private function getCategoriesInformation(Product $product): ProductCategoriesInformation
+    private function getCategoriesInformation(Product $product): CategoriesInformation
     {
-        $categoryIds = array_map('intval', $product->getCategories());
+        $categoryIds = $product->getCategories();
         $defaultCategoryId = (int) $product->id_category_default;
 
-        return new ProductCategoriesInformation($categoryIds, $defaultCategoryId);
+        $categoriesInformation = [];
+        foreach ($categoryIds as $categoryId) {
+            $categoryId = new CategoryId((int) $categoryId);
+            $category = $this->categoryRepository->get($categoryId);
+            $categoriesInformation[] = new CategoryInformation(
+                $categoryId->getValue(),
+                $category->name
+            );
+        }
+
+        return new CategoriesInformation($categoriesInformation, $defaultCategoryId);
     }
 
     /**
