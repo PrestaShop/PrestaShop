@@ -111,7 +111,9 @@ class BasicType extends TranslatorAwareType
                 'label_tag_name' => 'h2',
             ])
             ->add('categories', CategoriesType::class, [
-                'label' => false,
+                'label' => $this->trans('Categories', 'Admin.Catalog.Feature'),
+                'label_help_box' => $this->trans('Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page\'s URL. Disabled categories are written in italics.', 'Admin.Catalog.Help'),
+                'label_tag_name' => 'h2',
                 'attr' => [
                     'class' => 'js-categories-summary-container',
                 ],
