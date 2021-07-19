@@ -33,6 +33,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
@@ -136,6 +137,45 @@ class AttachmentRepository extends AbstractObjectModelRepository
     public function assertAttachmentExists(AttachmentId $attachmentId): void
     {
         $this->assertObjectModelExists($attachmentId->getValue(), 'attachment', AttachmentNotFoundException::class);
+    }
+
+    public function search(string $searchPhrase, LanguageId $languageId): array
+    {
+        $searchPhrase = sprintf('%%%s%%', strtolower($searchPhrase));
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('a.*, al.*')
+            ->from($this->dbPrefix . 'attachment', 'a')
+            ->leftJoin(
+                'a',
+                $this->dbPrefix . 'product_attachment',
+                'pa',
+                'a.id_attachment = pa.id_attachment'
+            )
+            ->leftJoin(
+                'a',
+                $this->dbPrefix . 'attachment_lang',
+                'al',
+                'al.id_attachment = a.id_attachment'
+            )
+            ->where('al.id_lang = :languageId')
+            ->andWhere(
+                $qb->expr()->or(
+                    $qb->expr()->like('LOWER(a.file_name)', ':searchPhrase'),
+                    $qb->expr()->like('LOWER(al.name)', ':searchPhrase'),
+                    $qb->expr()->like('LOWER(al.description)', ':searchPhrase')
+                )
+            )
+            ->setParameter('languageId', $languageId->getValue())
+            ->setParameter('searchPhrase', $searchPhrase)
+        ;
+
+        $results = $qb->execute()->fetchAll();
+
+        if (empty($results)) {
+            return [];
+        }
+
+        return $results;
     }
 
     /**
