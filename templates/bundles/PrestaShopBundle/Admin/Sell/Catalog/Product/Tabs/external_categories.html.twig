@@ -25,7 +25,5 @@
 {% form_theme categoriesForm '@PrestaShop/Admin/Sell/Catalog/Product/Form/categories_form_theme.html.twig' %}
 
 <template id="external-categories-template">
-    {{ form_start(categoriesForm) }}
-    {{ form_widget(categoriesForm) }}
-    {{ form_end(categoriesForm) }}
+    {{ form_row(productForm.basic.categories) }}
 </template>
