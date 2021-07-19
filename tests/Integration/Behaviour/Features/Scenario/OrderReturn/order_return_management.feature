@@ -22,6 +22,7 @@ Feature: Order return Management
       | status              | Awaiting bank wire payment |
     And I add order return state "orderReturnState1"
     And I add order return "testOrderReturn" from order "bo_order1"
+
   Scenario: Change order return status
     When I change order return "testOrderReturn" state to "orderReturnState1"
     Then "testOrderReturn" has state "orderReturnState1"
