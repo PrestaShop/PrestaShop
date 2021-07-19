@@ -95,8 +95,8 @@ export default class CategoriesManager {
       this.toggleAll(false);
     });
 
-    //@todo: where to store these ids? (should be able to get on page load, but still need to store them because everytime modal is opened they will change, but will not be saved to serverside)
-    const productCategoryIds = [2, 3];
+    //@todo: these will be replaced by category labels
+    const productCategoryIds = [1, 2, 3];
 
     this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkbox) => {
       const categoryId = this.getIdFromCheckbox(checkbox);
