@@ -237,6 +237,30 @@ class OrderControllerCore extends FrontController
         ]));
     }
 
+    public function displayAjaxcheckCustomerInformation()
+    {
+        $email = Tools::getValue('email');
+        $isEmailValid = Validate::isEmail($email);
+        $customerExist = false;
+        $data = [];
+
+        if ($isEmailValid) {
+            $customerExist = Customer::customerExists($email, false, true);
+            $data = [
+                'hasError' => false,
+                'customerExists' => $customerExist
+            ];
+        } else {
+            $data = [
+                'hasError' => true,
+            ];
+        }
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+        $this->ajaxRender(Tools::jsonEncode($data));
+    }
+
     public function initContent()
     {
         if (Configuration::isCatalogMode()) {
