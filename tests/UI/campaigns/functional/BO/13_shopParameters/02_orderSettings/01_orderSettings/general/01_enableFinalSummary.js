@@ -83,12 +83,7 @@ describe('Enable final summary', async () => {
     });
 
     it('should check the final summary after checkout', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkFinalSummary${homePage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkFinalSummary${index}`, baseContext);
 
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
