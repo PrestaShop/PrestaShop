@@ -116,7 +116,6 @@ class CustomerFormCore extends AbstractForm
 
     public function validate()
     {
-
         // check birthdayField against null case is mandatory.
         $birthdayField = $this->getField('birthday');
         if (!empty($birthdayField) &&
