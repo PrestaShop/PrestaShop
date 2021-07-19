@@ -113,3 +113,6 @@ services:
 
   prestashop.adapter.customer.customer_data_source:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerDataSource'
+
+  prestashop.core.domain.customer.repository.customer_repository:
+    class: 'PrestaShop\PrestaShop\Core\Domain\Customer\Repository\CustomerRepository'

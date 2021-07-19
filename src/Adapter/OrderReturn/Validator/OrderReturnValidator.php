@@ -32,6 +32,7 @@ use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 class OrderReturnValidator extends AbstractObjectModelValidator
 {
@@ -40,7 +41,7 @@ class OrderReturnValidator extends AbstractObjectModelValidator
      *
      * @throws OrderReturnConstraintException
      */
-    public function validateUpdate(OrderReturn $orderReturn): void
+    public function validate(OrderReturn $orderReturn): void
     {
         $this->validateOrderReturnProperty($orderReturn, 'id_customer', OrderReturnConstraintException::INVALID_ID_CUSTOMER);
         $this->validateOrderReturnProperty($orderReturn, 'id_order', OrderReturnConstraintException::INVALID_ID_ORDER);
@@ -55,7 +56,7 @@ class OrderReturnValidator extends AbstractObjectModelValidator
      * @param string $propertyName
      * @param int $errorCode
      *
-     * @throws OrderReturnConstraintException
+     * @throws CoreException
      */
     private function validateOrderReturnProperty(OrderReturn $product, string $propertyName, int $errorCode = 0): void
     {

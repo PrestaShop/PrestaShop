@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult;
 
 use DateTime;
 
-class EditableOrderReturn
+class OrderReturnForEditing
 {
     /**
      * @var int
@@ -73,7 +73,7 @@ class EditableOrderReturn
     private $question;
 
     /**
-     * EditableOrderReturn constructor.
+     * OrderReturnForEditing constructor.
      *
      * @param int $orderReturnId
      * @param int $customerId

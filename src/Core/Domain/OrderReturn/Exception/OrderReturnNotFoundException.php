@@ -28,39 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
-
 /**
  * Is thrown when order return is not found in order return subdomain
  */
 class OrderReturnNotFoundException extends OrderReturnException
 {
-    /**
-     * @var OrderReturnId
-     */
-    private $orderReturnId;
-
-    /**
-     * @param OrderReturnId $orderReturnId
-     * @param string $message
-     * @param int $code
-     * @param \Exception|null $previous
-     */
-    public function __construct(
-        OrderReturnId $orderReturnId,
-        string $message = '',
-        int $code = 0,
-        $previous = null
-    ) {
-        parent::__construct($message, $code, $previous);
-        $this->orderReturnId = $orderReturnId;
-    }
-
-    /**
-     * @return OrderReturnId
-     */
-    public function getOrderReturnId(): OrderReturnId
-    {
-        return $this->orderReturnId;
-    }
 }

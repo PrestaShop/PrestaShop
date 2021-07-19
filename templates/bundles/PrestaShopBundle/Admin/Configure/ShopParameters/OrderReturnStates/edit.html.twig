@@ -25,7 +25,7 @@
 
 {% set enableSidebar = true %}
 {% set layoutTitle = 'Edit: %name%'|trans({
-  '%name%': editableOrderReturnState.localizedNames[contextLangId]
+  '%name%': orderReturnStateForEditing.localizedNames[contextLangId]
 }, 'Admin.Actions') %}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
