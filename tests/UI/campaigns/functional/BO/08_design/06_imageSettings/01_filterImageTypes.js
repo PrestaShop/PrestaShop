@@ -1,25 +1,23 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+// Import expect from chai
+const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import'Design > Image Settings' pages
 const dashboardPage = require('@pages/BO/dashboard');
 const imageSettingsPage = require('@pages/BO/design/imageSettings');
 
 // Import data
 const {imageTypes} = require('@data/demo/imageTypes');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_design_imageSettings_filterImageTypes';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -27,7 +25,10 @@ let page;
 
 let numberOfImageTypes = 0;
 
-describe('Filter image types by id, name, width, height and status in pages', async () => {
+/*
+Filter image types table by ID, name, Width, Height, Products, Categories, Brands, Suppliers and Stores
+ */
+describe('BO - Design - Positions : Filter image types table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -42,7 +43,7 @@ describe('Filter image types by id, name, width, height and status in pages', as
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to image settings page', async function () {
+  it('should go to \'Design > Image Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToImageSettingsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -64,7 +65,7 @@ describe('Filter image types by id, name, width, height and status in pages', as
     await expect(numberOfImageTypes).to.be.above(0);
   });
 
-  describe('Filter image types', async () => {
+  describe('Filter image types table', async () => {
     const tests = [
       {
         args:

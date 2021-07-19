@@ -1,7 +1,11 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+// Import expect from chai
+const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -14,13 +18,7 @@ const addImageTypePage = require('@pages/BO/design/imageSettings/add');
 // Import data
 const ImageTypeFaker = require('@data/faker/imageType');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_design_imageSettings_CRUDImageType';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -31,8 +29,12 @@ let numberOfImageTypes = 0;
 const createImageTypeData = new ImageTypeFaker();
 const editImageTypeData = new ImageTypeFaker();
 
-
-describe('Create, update and delete image type in BO', async () => {
+/*
+Create image type
+Update image type
+Delete image type
+ */
+describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -47,7 +49,7 @@ describe('Create, update and delete image type in BO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to image settings page', async function () {
+  it('should go to \'Design > Image Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToImageSettingsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -69,6 +71,7 @@ describe('Create, update and delete image type in BO', async () => {
     await expect(numberOfImageTypes).to.be.above(0);
   });
 
+  // 1 - Create image type
   describe('Create image type in BO', async () => {
     it('should go to add new image type page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddImageTypePage', baseContext);
@@ -89,7 +92,8 @@ describe('Create, update and delete image type in BO', async () => {
     });
   });
 
-  describe('Update image type created', async () => {
+  // 2 - Update image type
+  describe('Update image type', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
@@ -125,6 +129,7 @@ describe('Create, update and delete image type in BO', async () => {
     });
   });
 
+  // 3 - Delete image type
   describe('Delete image type', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
