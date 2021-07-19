@@ -36,7 +36,7 @@ const {$} = window;
 
 const ProductCategoryMap = ProductMap.categories;
 
-//@todo: filename is index.js but its a class CategoriesManager. Shouldn't we keep the filename categories-manager.js?
+// @todo: filename is index.js but its a class CategoriesManager. Shouldn't we keep the filename categories-manager.js?
 export default class CategoriesManager {
   /**
    * @param {EventEmitter} eventEmitter
@@ -44,8 +44,8 @@ export default class CategoriesManager {
    */
   constructor(eventEmitter) {
     this.eventEmitter = eventEmitter;
-    this.categoriesSummaryContainer = document.querySelector(ProductCategoryMap.categoriesSummaryContainer);
-    this.addCategoriesBtn = this.categoriesSummaryContainer.querySelector(
+    this.categoriesContainer = document.querySelector(ProductCategoryMap.categoriesContainer);
+    this.addCategoriesBtn = this.categoriesContainer.querySelector(
       ProductCategoryMap.addCategoriesBtn,
     );
     this.categories = [];
@@ -95,7 +95,7 @@ export default class CategoriesManager {
       this.toggleAll(false);
     });
 
-    //@todo: these will be replaced by category labels
+    // @todo: these will be replaced by category labels
     const productCategoryIds = [1, 2, 3];
 
     this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkbox) => {
@@ -358,47 +358,50 @@ export default class CategoriesManager {
 
   updateCategoriesTags() {
     const checkedCheckboxes = this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
-    const tagsContainer = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer);
-    tagsContainer.innerHTML = '';
-    const defaultCategoryId = this.getDefaultCategoryId();
+    const tagsContainers = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer);
 
-    checkedCheckboxes.forEach((checkboxInput) => {
-      const categoryId = this.getIdFromCheckbox(checkboxInput);
-      const category = this.getCategoryById(categoryId);
+    tagsContainers.forEach((tagsContainer) => {
+      tagsContainer.innerHTML = '';
+      const defaultCategoryId = this.getDefaultCategoryId();
 
-      if (!category) {
-        return;
-      }
+      checkedCheckboxes.forEach((checkboxInput) => {
+        const categoryId = this.getIdFromCheckbox(checkboxInput);
+        const category = this.getCategoryById(categoryId);
 
-      const removeCrossTemplate = defaultCategoryId !== categoryId
-        ? `<a class="pstaggerClosingCross" href="#" data-id="${category.id}">x</a>`
-        : '';
-      const template = `
+        if (!category) {
+          return;
+        }
+
+        const removeCrossTemplate = defaultCategoryId !== categoryId
+          ? `<a class="pstaggerClosingCross" href="#" data-id="${category.id}">x</a>`
+          : '';
+        const template = `
         <span class="pstaggerTag">
             <span data-id="${category.id}" title="${category.breadcrumb}">${category.name}</span>
             ${removeCrossTemplate}
         </span>
       `;
 
-      // Trim is important here or the first child could be some text (whitespace, or \n)
-      const frag = document.createRange().createContextualFragment(template.trim());
-      tagsContainer.append(frag.firstChild);
-    });
-
-    tagsContainer.querySelectorAll('.pstaggerClosingCross').forEach((closeLink) => {
-      closeLink.addEventListener('click', (event) => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
-        const categoryId = Number(event.currentTarget.dataset.id);
-
-        if (categoryId !== defaultCategoryId) {
-          this.unselectCategory(categoryId);
-        }
+        // Trim is important here or the first child could be some text (whitespace, or \n)
+        const frag = document.createRange().createContextualFragment(template.trim());
+        tagsContainer.append(frag.firstChild);
       });
-    });
 
-    tagsContainer.classList.toggle('d-block', checkedCheckboxes.length > 0);
+      tagsContainer.querySelectorAll('.pstaggerClosingCross').forEach((closeLink) => {
+        closeLink.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+
+          const categoryId = Number(event.currentTarget.dataset.id);
+
+          if (categoryId !== defaultCategoryId) {
+            this.unselectCategory(categoryId);
+          }
+        });
+      });
+
+      tagsContainer.classList.toggle('d-block', checkedCheckboxes.length > 0);
+    });
   }
 
   /**

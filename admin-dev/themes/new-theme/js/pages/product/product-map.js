@@ -166,8 +166,7 @@ export default {
     deleteProductButton: '.delete-product-button',
   },
   categories: {
-    categoriesSummaryContainer: '.js-categories-summary-container',
-    categoriesContainer: '.js-categories-container',
+    categoriesContainer: '#product_basic_categories',
     categoriesTemplate: '#categories-modal-template',
     categoryTree: '.js-categories-tree',
     treeElement: '.category-tree-element',
@@ -178,7 +177,7 @@ export default {
     materialCheckbox: '.md-checkbox',
     defaultRadioInput: '[type=radio]:checked',
     radioName: (categoryId) => `product[basic][categories][product_categories][${categoryId}][is_default]`,
-    tagsContainer: '#categories-tags-container',
+    tagsContainer: '.categories-tags-container',
     searchInput: '#ps-select-product-category',
     fieldset: '.tree-fieldset',
     loader: '.categories-tree-loader',

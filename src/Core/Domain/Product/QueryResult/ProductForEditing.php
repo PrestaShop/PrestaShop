@@ -51,7 +51,7 @@ class ProductForEditing
     private $basicInformation;
 
     /**
-     * @var ProductCategoriesInformation
+     * @var CategoriesInformation
      */
     private $categoriesInformation;
 
@@ -105,7 +105,7 @@ class ProductForEditing
      * @param string $type
      * @param ProductCustomizationOptions $customizationOptions
      * @param ProductBasicInformation $basicInformation
-     * @param ProductCategoriesInformation $categoriesInformation
+     * @param CategoriesInformation $categoriesInformation
      * @param ProductPricesInformation $pricesInformation
      * @param ProductOptions $options
      * @param ProductDetails $details
@@ -120,7 +120,7 @@ class ProductForEditing
         string $type,
         ProductCustomizationOptions $customizationOptions,
         ProductBasicInformation $basicInformation,
-        ProductCategoriesInformation $categoriesInformation,
+        CategoriesInformation $categoriesInformation,
         ProductPricesInformation $pricesInformation,
         ProductOptions $options,
         ProductDetails $details,
@@ -178,9 +178,9 @@ class ProductForEditing
     }
 
     /**
-     * @return ProductCategoriesInformation
+     * @return CategoriesInformation
      */
-    public function getCategoriesInformation(): ProductCategoriesInformation
+    public function getCategoriesInformation(): CategoriesInformation
     {
         return $this->categoriesInformation;
     }
