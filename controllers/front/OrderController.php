@@ -237,6 +237,46 @@ class OrderControllerCore extends FrontController
         ]));
     }
 
+    public function displayAjaxcheckCustomerInformation(): void
+    {
+        $email = Tools::getValue('email');
+        $isEmailValid = Validate::isEmail($email);
+        $isGuestAllowed = (bool) Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
+        $customerExists = false;
+        $responseData = [];
+        $alert = [];
+
+        if ($isEmailValid) {
+            $customerExists = Customer::customerExists($email, false, true);
+        }
+
+        if ($customerExists) {
+            $alert['type'] = $isGuestAllowed ? 'info' : 'danger';
+            $alert['message'] = $isGuestAllowed ?
+                $this->translator->trans(
+                    'You already have an account, don\'t hesitate to sign in!',
+                    [],
+                    'Shop.Theme.Checkout'
+                )
+                :
+                $this->translator->trans(
+                    'An account was already registered with this email address',
+                    [],
+                    'Shop.Notifications.Error'
+                );
+        }
+
+        $responseData = array_merge($responseData, [
+            'guestAllowed' => $isGuestAllowed,
+            'alert' => $alert,
+            'customerExists' => $customerExists,
+        ]);
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+        $this->ajaxRender(Tools::jsonEncode($responseData));
+    }
+
     public function initContent()
     {
         if (Configuration::isCatalogMode()) {
