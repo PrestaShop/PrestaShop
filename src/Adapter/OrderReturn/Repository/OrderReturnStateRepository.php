@@ -26,49 +26,18 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\OrderReturn;
+namespace PrestaShop\PrestaShop\Adapter\OrderReturn\Repository;
 
-use OrderReturn;
 use OrderReturnState;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\MissingOrderReturnRequiredFieldsException;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
 use PrestaShopException;
 
-/**
- * Provides reusable methods for order return command/query handlers
- */
-abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
+class OrderReturnStateRepository extends AbstractObjectModelRepository
 {
-    /**
-     * Gets legacy OrderReturn
-     *
-     * @param OrderReturnId $orderReturnId
-     *
-     * @return OrderReturn
-     *
-     * @throws OrderReturnException
-     */
-    protected function getOrderReturn(OrderReturnId $orderReturnId): OrderReturn
-    {
-        try {
-            $orderReturn = new OrderReturn($orderReturnId->getValue());
-        } catch (PrestaShopException $e) {
-            throw new OrderReturnException('Failed to create new order return', 0, $e);
-        }
-
-        if ($orderReturn->id !== $orderReturnId->getValue()) {
-            throw new OrderReturnNotFoundException($orderReturnId, sprintf('Merchandise return with id "%d" was not found.', $orderReturnId->getValue()));
-        }
-
-        return $orderReturn;
-    }
-
     /**
      * Gets legacy OrderReturnState
      *
@@ -77,9 +46,8 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
      * @return OrderReturnState
      *
      * @throws OrderReturnException
-     * @throws OrderReturnOrderStateConstraintException
      */
-    protected function getOrderReturnState(OrderReturnStateId $orderReturnStateId): OrderReturnState
+    public function getOrderReturnState(OrderReturnStateId $orderReturnStateId): OrderReturnState
     {
         try {
             $orderReturnState = new OrderReturnState($orderReturnStateId->getValue());
@@ -94,22 +62,5 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
         }
 
         return $orderReturnState;
-    }
-
-    /**
-     * @param OrderReturn $orderReturn
-     *
-     * @throws MissingOrderReturnRequiredFieldsException
-     * @throws PrestaShopException
-     */
-    protected function assertRequiredFieldsAreNotMissing(OrderReturn $orderReturn): void
-    {
-        $errors = $orderReturn->validateFieldsRequiredDatabase();
-
-        if (!empty($errors)) {
-            $missingFields = array_keys($errors);
-
-            throw new MissingOrderReturnRequiredFieldsException($missingFields, sprintf('One or more required fields for order return are missing. Missing fields are: %s', implode(',', $missingFields)));
-        }
     }
 }

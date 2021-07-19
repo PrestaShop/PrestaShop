@@ -29,14 +29,48 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler;
 
 use OrderReturn;
+use PrestaShop\Module\PsAccounts\Repository\OrderRepository;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\AbstractOrderReturnHandler;
+use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
+use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnStateRepository;
+use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\UpdateOrderReturnStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
 
-class UpdateOrderReturnStateHandler extends AbstractOrderReturnHandler implements UpdateOrderReturnStateHandlerInterface
+class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInterface
 {
+    /**
+     * @var OrderReturnRepository
+     */
+    private $orderReturnRepository;
+    /**
+     * @var OrderReturnStateRepository
+     */
+    private $orderReturnStateRepository;
+    /**
+     * @var OrderReturnValidator
+     */
+    private $validator;
+
+    /**
+     * UpdateOrderReturnStateHandler constructor.
+     *
+     * @param OrderReturnRepository $orderReturnRepository
+     * @param OrderReturnStateRepository $orderReturnStateRepository
+     * @param OrderReturnValidator $validator
+     */
+    public function __construct(
+        OrderReturnRepository $orderReturnRepository,
+        OrderReturnStateRepository $orderReturnStateRepository,
+        OrderReturnValidator $validator
+    ) {
+        $this->orderReturnRepository = $orderReturnRepository;
+        $this->orderReturnStateRepository = $orderReturnStateRepository;
+        $this->validator = $validator;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -44,15 +78,11 @@ class UpdateOrderReturnStateHandler extends AbstractOrderReturnHandler implement
     {
         $orderReturnId = $command->getOrderReturnId();
 
-        $orderReturn = $this->getOrderReturn($orderReturnId);
+        $orderReturn = $this->orderReturnRepository->get($orderReturnId);
 
         $orderReturn = $this->updateOrderReturnWithCommandData($orderReturn, $command);
 
-        $this->assertRequiredFieldsAreNotMissing($orderReturn);
-
-        if (false === $orderReturn->validateFields(false)) {
-            throw new OrderReturnException('Order return contains invalid field values');
-        }
+        $this->validator->validateUpdate($orderReturn);
 
         if (false === $orderReturn->update()) {
             throw new OrderReturnException('Failed to update order return');
@@ -70,7 +100,7 @@ class UpdateOrderReturnStateHandler extends AbstractOrderReturnHandler implement
      */
     private function updateOrderReturnWithCommandData(OrderReturn $orderReturn, UpdateOrderReturnStateCommand $command): OrderReturn
     {
-        $orderReturnState = $this->getOrderReturnState($command->getOrderReturnStateId());
+        $orderReturnState = $this->orderReturnStateRepository->getOrderReturnState($command->getOrderReturnStateId());
         $orderReturn->state = $orderReturnState->id;
 
         return $orderReturn;
