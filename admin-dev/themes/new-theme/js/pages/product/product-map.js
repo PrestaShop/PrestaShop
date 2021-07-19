@@ -178,7 +178,7 @@ export default {
     materialCheckbox: '.md-checkbox',
     defaultRadioInput: '[type=radio]:checked',
     radioName: (categoryId) => `product[basic][categories][product_categories][${categoryId}][is_default]`,
-    tagsContainer: '.categories-tags-container',
+    tagsContainer: '.pstaggerTagsWrapper',
     searchInput: '#ps-select-product-category',
     fieldset: '.tree-fieldset',
     loader: '.categories-tree-loader',

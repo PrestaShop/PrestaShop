@@ -56,12 +56,12 @@ export default class CategoriesManager {
   }
 
   async initCategories() {
-    this.categoriesModalContainer = document.querySelector(ProductCategoryMap.categoriesModalContainer);
-    this.categoryTree = this.categoriesModalContainer.querySelector(ProductCategoryMap.categoryTree);
+    this.categoriesContainer = document.querySelector(ProductCategoryMap.categoriesModalContainer);
+    this.categoryTree = this.categoriesContainer.querySelector(ProductCategoryMap.categoryTree);
     this.prototypeTemplate = this.categoryTree.dataset.prototype;
     this.prototypeName = this.categoryTree.dataset.prototypeName;
-    this.expandAllButton = this.categoriesModalContainer.querySelector(ProductCategoryMap.expandAllButton);
-    this.reduceAllButton = this.categoriesModalContainer.querySelector(ProductCategoryMap.reduceAllButton);
+    this.expandAllButton = this.categoriesContainer.querySelector(ProductCategoryMap.expandAllButton);
+    this.reduceAllButton = this.categoriesContainer.querySelector(ProductCategoryMap.reduceAllButton);
 
     this.categories = await getCategories();
 
@@ -108,10 +108,10 @@ export default class CategoriesManager {
     });
 
     // Tree is initialized we can show it and hide loader
-    this.categoriesModalContainer
+    this.categoriesContainer
       .querySelector(ProductCategoryMap.fieldset)
       .classList.remove('d-none');
-    this.categoriesModalContainer
+    this.categoriesContainer
       .querySelector(ProductCategoryMap.loader)
       .classList.add('d-none');
   }
@@ -355,13 +355,14 @@ export default class CategoriesManager {
     new AutoCompleteSearch($(ProductCategoryMap.searchInput), dataSetConfig);
   }
 
+  //@todo: sync tags in modal with form. Get rid of html template in js
   updateCategoriesTags() {
     const checkedCheckboxes = this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
-    const tagsContainers = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer);
+    const tagsContainers = this.categoriesContainer.querySelectorAll(ProductCategoryMap.tagsContainer);
+    const defaultCategoryId = this.getDefaultCategoryId();
 
     tagsContainers.forEach((tagsContainer) => {
       tagsContainer.innerHTML = '';
-      const defaultCategoryId = this.getDefaultCategoryId();
 
       checkedCheckboxes.forEach((checkboxInput) => {
         const categoryId = this.getIdFromCheckbox(checkboxInput);
@@ -386,20 +387,20 @@ export default class CategoriesManager {
         tagsContainer.append(frag.firstChild);
       });
 
-      tagsContainer.querySelectorAll('.pstaggerClosingCross').forEach((closeLink) => {
-        closeLink.addEventListener('click', (event) => {
-          event.preventDefault();
-          event.stopImmediatePropagation();
-
-          const categoryId = Number(event.currentTarget.dataset.id);
-
-          if (categoryId !== defaultCategoryId) {
-            this.unselectCategory(categoryId);
-          }
-        });
-      });
-
       tagsContainer.classList.toggle('d-block', checkedCheckboxes.length > 0);
+    });
+
+    this.categoriesContainer.querySelectorAll('.pstaggerClosingCross').forEach((closeLink) => {
+      closeLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const categoryId = Number(event.currentTarget.dataset.id);
+
+        if (categoryId !== defaultCategoryId) {
+          this.unselectCategory(categoryId);
+        }
+      });
     });
   }
 

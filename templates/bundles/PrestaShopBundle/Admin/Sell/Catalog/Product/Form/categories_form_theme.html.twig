@@ -27,7 +27,7 @@
 {% block categories_row %}
   <div {{ block('widget_attributes') }}>
     {{ form_label(form) }}
-    <div class="pstaggerTagsWrapper categories-tags-container d-block">
+    <div class="pstaggerTagsWrapper d-block">
       {% for category in form.vars.data.product_categories %}
         {% set categoryId = loop.index %}
         <span class="pstaggerTag">
@@ -61,7 +61,7 @@
 
             <label class="form-control-label text-uppercase">{{ 'Associated categories'|trans({}, 'Admin.Catalog.Feature') }}</label>
 
-            <div id="categories-tags-container" class="pstaggerTagsWrapper">
+            <div class="pstaggerTagsWrapper">
             </div>
 
             <div class="categories-tree-actions js-categories-tree-actions">
