@@ -37,4 +37,34 @@ class OrderReturnConstraintException extends OrderReturnException
      * When order return id is not valid
      */
     public const INVALID_ID = 10;
+
+    /**
+     * When customer id is not valid
+     */
+    public const INVALID_ID_CUSTOMER = 10;
+
+    /**
+     * When order id is not valid
+     */
+    public const INVALID_ID_ORDER = 10;
+
+    /**
+     * When state is not valid
+     */
+    public const INVALID_STATE = 10;
+
+    /**
+     * When question is not valid
+     */
+    public const INVALID_QUESTION = 10;
+
+    /**
+     * When date added is not valid
+     */
+    public const INVALID_DATE_ADD = 10;
+
+    /**
+     * When date updated is not valid
+     */
+    public const INVALID_DATE_UPD = 10;
 }
