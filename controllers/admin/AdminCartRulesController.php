@@ -505,10 +505,9 @@ class AdminCartRulesControllerCore extends AdminController
                 break;
             case 'categories':
                 $categories = ['selected' => [], 'unselected' => []];
-                $flatCategories = [];
                 $categoryTree = Category::getNestedCategories(Category::getRootCategory()->id, (int) Context::getContext()->language->id, false);
 
-                $flatCategories = $this->populateCategories($flatCategories, $categoryTree);
+                $flatCategories = $this->populateCategories([], $categoryTree);
 
                 foreach ($flatCategories as $row) {
                     $categories[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
