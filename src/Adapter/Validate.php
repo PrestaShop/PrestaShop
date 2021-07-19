@@ -77,6 +77,18 @@ class Validate
     }
 
     /**
+     * Check for a given email validity.
+     *
+     * @param string $email
+     *
+     * @return bool
+     */
+    public function isEmail(string $email): bool
+    {
+        return ValidateLegacy::isEmail($email);
+    }
+
+    /**
      * Check for module name validity.
      *
      * @param string $name Module name to validate
