@@ -30,7 +30,11 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Attachment;
 use Behat\Gherkin\Node\TableNode;
+use Language;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShopException;
 use RuntimeException;
 use Tests\Resources\DummyFileUploader;
@@ -78,6 +82,61 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
         Assert::assertEquals($data['file_name'], $attachment->file_name);
         Assert::assertEquals($data['mime'], $attachment->mime);
         Assert::assertEquals($data['size'], $attachment->file_size);
+    }
+
+    /**
+     * @When I search for attachment matching :searchPhrase with language :languageReference I get following results:
+     *
+     * @param string $searchPhrase
+     * @param string $languageReference
+     */
+    public function searchAttachment(string $searchPhrase, string $languageReference, TableNode $tableNode): void
+    {
+        /** @var Language $language */
+        $language = $this->getSharedStorage()->get($languageReference);
+
+        /** @var AttachmentInformation[] $foundAttachments */
+        $foundAttachments = $this->getCommandBus()->handle(new SearchAttachment($searchPhrase, (int) $language->id));
+        $expectedAttachments = $tableNode->getColumnsHash();
+
+        Assert::assertEquals(count($expectedAttachments), count($foundAttachments));
+        foreach ($expectedAttachments as $expectedAttachment) {
+            $expectedAttachmentId = (int) $this->getSharedStorage()->get($expectedAttachment['attachment_id']);
+            $matchingAttachment = null;
+            foreach ($foundAttachments as $foundAttachment) {
+                if ($foundAttachment->getAttachmentId() === $expectedAttachmentId) {
+                    $matchingAttachment = $foundAttachment;
+                    break;
+                }
+            }
+            if (null === $matchingAttachment) {
+                throw new RuntimeException(sprintf('Could not find expected attachment %s', $expectedAttachment['attachment_id']));
+            }
+
+            Assert::assertEquals($expectedAttachment['name'], $matchingAttachment->getName());
+            Assert::assertEquals($expectedAttachment['mime'], $matchingAttachment->getType());
+            Assert::assertEquals($expectedAttachment['file_name'], $matchingAttachment->getFileName());
+        }
+    }
+
+    /**
+     * @When I search for attachment matching :searchPhrase with language :languageReference I get no results
+     *
+     * @param string $searchPhrase
+     * @param string $languageReference
+     */
+    public function searchAttachmentFails(string $searchPhrase, string $languageReference): void
+    {
+        /** @var Language $language */
+        $language = $this->getSharedStorage()->get($languageReference);
+
+        $caughtException = null;
+        try {
+            $this->getCommandBus()->handle(new SearchAttachment($searchPhrase, (int) $language->id));
+        } catch (EmptySearchException $e) {
+            $caughtException = $e;
+        }
+        Assert::assertNotNull($caughtException, 'Expected to get no results for this search');
     }
 
     /**
