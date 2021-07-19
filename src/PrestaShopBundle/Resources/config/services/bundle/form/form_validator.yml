@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.bundle.form.validator.constraints.tiny_mce_max_length_validator:
+        class: 'PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLengthValidator'
+        arguments:
+            - '@translator'
+        tags:
+            - { name: validator.constraint_validator }

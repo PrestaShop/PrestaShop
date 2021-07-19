@@ -1183,14 +1183,26 @@ class ProductCore extends ObjectModel
     public function validateField($field, $value, $id_lang = null, $skip = [], $human_errors = false)
     {
         if ($field == 'description_short') {
+            // The legacy validation is basic, so the idea here is to adapt the allowed limit so that it takes into
+            // account the difference between the raw text and the html text (since actually the limit is only about
+            // the raw text) This is a bit ugly the real validation should only be performed by TinyMceMaxLengthValidator
+            // but we have to deal with this for now.
             $limit = (int) Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
             if ($limit <= 0) {
                 $limit = 800;
             }
 
-            $size_without_html = Tools::strlen(strip_tags($value));
+            $replaceArray = [
+                "\n",
+                "\r",
+                "\n\r",
+                "\r\n",
+            ];
+            $str = str_replace($replaceArray, [''], strip_tags($value));
+            $size_without_html = iconv_strlen($str);
             $size_with_html = Tools::strlen($value);
-            $this->def['fields']['description_short']['size'] = $limit + $size_with_html - $size_without_html;
+            $adaptedLimit = $limit + $size_with_html - $size_without_html;
+            $this->def['fields']['description_short']['size'] = $adaptedLimit;
         }
 
         return parent::validateField($field, $value, $id_lang, $skip, $human_errors);
