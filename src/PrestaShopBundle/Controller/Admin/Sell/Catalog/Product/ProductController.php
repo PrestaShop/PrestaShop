@@ -86,8 +86,6 @@ class ProductController extends FrameworkBundleAdminController
             return $this->renderDisableMultistorePage();
         }
 
-        //@todo: form builder
-        $categoriesForm = $this->createForm(CategoriesType::class);
         $productForm = $this->getProductFormBuilder()->getForm();
 
         try {
@@ -104,7 +102,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->renderProductForm($productForm, $categoriesForm);
+        return $this->renderProductForm($productForm);
     }
 
     /**
@@ -161,7 +159,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->renderProductForm($productForm, $categoriesForm, $productId);
+        return $this->renderProductForm($productForm, $productId);
     }
 
     /**
@@ -170,7 +168,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    private function renderProductForm(FormInterface $productForm, FormInterface $categoriesForm, ?int $productId = null): Response
+    private function renderProductForm(FormInterface $productForm, ?int $productId = null): Response
     {
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
@@ -178,7 +176,6 @@ class ProductController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
             'showContentHeader' => false,
             'productForm' => $productForm->createView(),
-            'categoriesForm' => $categoriesForm->createView(),
             'statsLink' => $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null,
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
             'isMultiShopContext' => $isMultiShopContext,

@@ -25,7 +25,6 @@
 {% set isBasicTabValid = productForm.basic.vars.valid %}
 {% set isOptionsTabValid = productForm.options.vars.valid %}
 {% set isPricingTabValid = productForm.pricing.vars.valid %}
-{% set isDescriptionTabValid = productForm.description.vars.valid %}
 {% set isSEOTabValid = productForm.seo.vars.valid %}
 
 {# Some forms may be removed #}
@@ -41,12 +40,6 @@
     <li id="basic-tab-nav" class="nav-item{% if not isBasicTabValid %} has-error{% endif %}">
       <a href="#basic-tab" role="tab" data-toggle="tab" class="nav-link active">
         {{ 'Basic settings'|trans({}, 'Admin.Catalog.Feature') }}
-      </a>
-    </li>
-
-    <li id="description-tab-nav" class="nav-item{% if not isDescriptionTabValid %} has-error{% endif %}">
-      <a href="#description-tab" role="tab" data-toggle="tab" class="nav-link">
-        {{ 'Description'|trans({}, 'Admin.Catalog.Feature') }}
       </a>
     </li>
 
