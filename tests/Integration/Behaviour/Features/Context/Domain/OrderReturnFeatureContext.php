@@ -95,7 +95,7 @@ class OrderReturnFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateOrderReturnState(string $orderReturnReference, string $orderRetunStateReference): void
     {
-        $orderReturnId = SharedStorage::getStorage()->get($orderReturnReference);
+        $orderReturnId = $this->getSharedStorage()->get($orderReturnReference);
         $orderReturnStateId = SharedStorage::getStorage()->get($orderRetunStateReference);
 
         $this->getCommandBus()->handle(
