@@ -54,6 +54,11 @@ export default class OrderProductAutocomplete {
   delaySearch(input) {
     clearTimeout(this.searchTimeoutId);
 
+    // Search only if the search phrase length is greater than 2 characters
+    if (input.value.length < 2) {
+      return;
+    }
+
     this.searchTimeoutId = setTimeout(() => {
       this.search(input.value, $(input).data('currency'), $(input).data('order'));
     }, 300);
