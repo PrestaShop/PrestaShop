@@ -508,7 +508,7 @@ class AdminCartRulesControllerCore extends AdminController
                 $flatCategories = [];
                 $categoryTree = Category::getNestedCategories(Category::getRootCategory()->id, (int) Context::getContext()->language->id, false);
 
-                $this->populateCategories($flatCategories, $categoryTree);
+                $flatCategories = $this->populateCategories($flatCategories, $categoryTree);
 
                 foreach ($flatCategories as $row) {
                     $categories[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
@@ -526,10 +526,10 @@ class AdminCartRulesControllerCore extends AdminController
         return $this->createTemplate('product_rule.tpl')->fetch();
     }
 
-    public function populateCategories(&$flatCategories, $currentCategoryTree, $currentPath = ''): void
+    public function populateCategories($flatCategories, $currentCategoryTree, $currentPath = ''): array
     {
         if (!$currentCategoryTree) {
-            return;
+            return $flatCategories;
         }
 
         $separator = ' > ';
@@ -538,9 +538,11 @@ class AdminCartRulesControllerCore extends AdminController
             $flatCategories[] = ['id' => $categoryArray['id_category'], 'name' => $fullName];
             // recursive call for childrens
             if (!empty($categoryArray['children'])) {
-                $this->populateCategories($flatCategories, $categoryArray['children'], $fullName);
+                $flatCategories = $this->populateCategories($flatCategories, $categoryArray['children'], $fullName);
             }
         }
+
+        return $flatCategories;
     }
 
     public function ajaxProcess()
