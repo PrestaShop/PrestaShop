@@ -22,8 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
- import $ from 'jquery';
- import prestashop from 'prestashop';
+import $ from 'jquery';
+import prestashop from 'prestashop';
 
 export default function () {
   const $body = $('body');
@@ -37,17 +37,17 @@ export default function () {
   let timeout;
 
   const handleBlockDisplay = (displayType = 'reset') => {
-    if (displayType == 'customerExists') {
+    if (displayType === 'customerExists') {
       $checkoutNewCustomerRelatedBlock.hide();
       $checkoutLoginSuggestionBlock.show();
-    } else if (displayType == 'customerNotExists') {
+    } else if (displayType === 'customerNotExists') {
       $checkoutNewCustomerRelatedBlock.show();
       $checkoutLoginSuggestionBlock.hide();
     } else {
       $checkoutNewCustomerRelatedBlock.hide();
       $checkoutLoginSuggestionBlock.hide();
     }
-  }
+  };
 
   const handleRequest = (email) => {
     const url = $checkoutCustomerForm.attr('action');
@@ -55,20 +55,20 @@ export default function () {
     $.post(url, {
       ajax: 1,
       action: 'checkCustomerInformation',
-      email
+      email,
     })
-    .then((resp) => {
-      if (!resp.hasError) {
-        if (resp.customerExists) {
-          handleBlockDisplay('customerExists');
+      .then((resp) => {
+        if (!resp.hasError) {
+          if (resp.customerExists) {
+            handleBlockDisplay('customerExists');
+          } else {
+            handleBlockDisplay('customerNotExists');
+          }
         } else {
-          handleBlockDisplay('customerNotExists');
+          handleBlockDisplay();
         }
-      } else {
-        handleBlockDisplay();
-      }
-    })
-  }
+      });
+  };
 
   const fetchForCustomerInformation = () => {
     const email = $checkoutFormEmailInput.val();
