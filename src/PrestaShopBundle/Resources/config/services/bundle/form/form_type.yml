@@ -1293,13 +1293,6 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.description.descritpion_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Description\DescriptionType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        tags:
-            - { name: form.type }
-
     form.type.sell.product.basic.features_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Basic\FeaturesType'
         parent: 'form.type.translatable.aware'

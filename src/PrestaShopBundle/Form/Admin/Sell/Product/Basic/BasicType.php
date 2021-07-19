@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Basic;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
+use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ProductImageType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
@@ -108,6 +109,12 @@ class BasicType extends TranslatorAwareType
             ->add('related_products', UnavailableType::class, [
                 'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
+            ])
+            ->add('categories', CategoriesType::class, [
+                'label' => false,
+                'attr' => [
+                    'class' => 'js-categories-summary-container',
+                ],
             ])
         ;
     }
