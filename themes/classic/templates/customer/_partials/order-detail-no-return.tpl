@@ -128,6 +128,9 @@
             {if $product.product_reference}
               <div class="ref">{l s='Reference' d='Shop.Theme.Catalog'}: {$product.product_reference}</div>
             {/if}
+            {if isset($product.download_link)}
+              <a href="{$product.download_link}">{l s='Download' d='Shop.Theme.Actions'}</a><br/>
+            {/if}
             {if $product.customizations}
               {foreach $product.customizations as $customization}
                 <div class="customization">
