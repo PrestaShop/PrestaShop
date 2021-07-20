@@ -32,11 +32,17 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
+// Create a previous date for cart rules (yyyy-mm-dd)
+const today = new Date();
+today.setFullYear(today.getFullYear() - 1);
+const previousDate = today.toISOString().slice(0, 10);
+
 const cartRuleWithoutCode = new CartRuleFaker(
   {
     name: 'withoutCode',
     discountType: 'Percent',
     discountPercent: 20,
+    dateFrom: previousDate,
   },
 );
 
@@ -46,6 +52,7 @@ const cartRuleWithCode = new CartRuleFaker(
     code: '4QABV6L3',
     discountType: 'Percent',
     discountPercent: 20,
+    dateFrom: previousDate,
   },
 );
 
