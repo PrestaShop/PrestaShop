@@ -23,9 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *
  */
-$component-name: modal-iframe !default;
-
-.#{$component-name} {
+.modal-iframe {
   .modal-dialog {
     width: 90%;
     max-width: 1200px;
@@ -40,7 +38,7 @@ $component-name: modal-iframe !default;
       .modal-body {
         padding: 0;
 
-        .#{$component-name}-loader {
+        .modal-iframe-loader {
           position: absolute;
           z-index: 1;
           display: flex;
