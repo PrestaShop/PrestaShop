@@ -22,13 +22,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import LocalizationPageMap from '@pages/localization/LocalizationPageMap';
 
-const {$} = window;
+/* eslint-disable max-len */
 
-$(() => {
-  // Show warning message when currency is changed
-  $(LocalizationPageMap.formDefaultCurrency).on('change', function () {
-    alert($(this).data('warning-message'));
-  });
-});
+export default {
+  formDefaultCurrency: '#form_default_currency',
+};
