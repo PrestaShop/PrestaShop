@@ -36,9 +36,9 @@ class AttachmentInformation
     private $attachmentId;
 
     /**
-     * @var string
+     * @var array<int, string>
      */
-    private $name;
+    private $localizedNames;
 
     /**
      * @var string
@@ -48,20 +48,20 @@ class AttachmentInformation
     /**
      * @var string
      */
-    private $type;
+    private $mimeType;
 
     /**
      * @param int $attachmentId
-     * @param string $name
+     * @param array $localizedNames
      * @param string $fileName
-     * @param string $type
+     * @param string $mimeType
      */
-    public function __construct(int $attachmentId, string $name, string $fileName, string $type)
+    public function __construct(int $attachmentId, array $localizedNames, string $fileName, string $mimeType)
     {
         $this->attachmentId = $attachmentId;
-        $this->name = $name;
+        $this->localizedNames = $localizedNames;
         $this->fileName = $fileName;
-        $this->type = $type;
+        $this->mimeType = $mimeType;
     }
 
     /**
@@ -73,11 +73,11 @@ class AttachmentInformation
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getName(): string
+    public function getLocalizedNames(): array
     {
-        return $this->name;
+        return $this->localizedNames;
     }
 
     /**
@@ -91,8 +91,8 @@ class AttachmentInformation
     /**
      * @return string
      */
-    public function getType(): string
+    public function getMimeType(): string
     {
-        return $this->type;
+        return $this->mimeType;
     }
 }
