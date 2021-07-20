@@ -291,10 +291,7 @@ class AttachmentController extends FrameworkBundleAdminController
     {
         try {
             /** @var AttachmentInformation[] $attachments */
-            $attachments = $this->getCommandBus()->handle(new SearchAttachment(
-                $searchPhrase,
-                (int) $this->getContext()->language->id
-            ));
+            $attachments = $this->getCommandBus()->handle(new SearchAttachment($searchPhrase));
         } catch (EmptySearchException $e) {
             return $this->json(
                 [$e, 'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
