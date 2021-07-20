@@ -82,10 +82,7 @@ class OptionsType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Display condition on product page', 'Admin.Catalog.Feature'),
             ])
-            ->add('attachments', ProductAttachmentsType::class, [
-                'label' => $this->trans('Attached files', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-            ])
+            ->add('attachments', ProductAttachmentsType::class)
             ->add('suppliers', SuppliersType::class)
         ;
     }
