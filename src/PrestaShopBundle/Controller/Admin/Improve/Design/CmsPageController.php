@@ -225,7 +225,6 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Improve/Design/Cms/add.html.twig',
             [
-                'cmsPageId' => 0,
                 'cmsPageForm' => $form->createView(),
                 'cmsCategoryParentId' => $categoryParentId,
                 'enableSidebar' => true,

@@ -25,7 +25,7 @@
 
 {% form_theme cmsPageForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
-{{ form_start(cmsPageForm, {'attr': {'data-id': cmsPageId}}) }}
+{{ form_start(cmsPageForm, {'attr': {'data-id': cmsPageId|default(0)}}) }}
   <div class="card">
     <div class="card-header">
       {{ 'Page'|trans({}, 'Admin.Shopparameters.Feature') }}
