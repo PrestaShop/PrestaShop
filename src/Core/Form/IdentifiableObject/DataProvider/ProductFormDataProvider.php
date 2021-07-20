@@ -485,7 +485,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $attachmentsData['attached_files'][] = [
                 'attachment_id' => $productAttachment->getAttachmentId(),
                 'name' => $localizedNames[$this->contextLangId] ?? reset($localizedNames),
-                'filename' => $productAttachment->getFilename(),
+                'file_name' => $productAttachment->getFilename(),
                 'mime_type' => $productAttachment->getMimeType(),
             ];
         }

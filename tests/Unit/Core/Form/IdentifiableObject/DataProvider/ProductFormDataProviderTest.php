@@ -637,13 +637,13 @@ class ProductFormDataProviderTest extends TestCase
             [
                 'attachment_id' => 1,
                 'name' => 'english',
-                'filename' => 'test1',
+                'file_name' => 'test1',
                 'mime_type' => 'image/jpeg',
             ],
             [
                 'attachment_id' => 2,
                 'name' => 'russian',
-                'filename' => 'test2',
+                'file_name' => 'test2',
                 'mime_type' => 'image/png',
             ],
         ];

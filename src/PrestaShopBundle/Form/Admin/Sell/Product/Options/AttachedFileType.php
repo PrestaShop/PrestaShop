@@ -27,14 +27,18 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
-use PrestaShopBundle\Form\Admin\Type\IconButtonType;
-use PrestaShopBundle\Form\Admin\Type\PreviewType;
+use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class AttachedFileType extends TranslatorAwareType
 {
+    public const ID_PLACEHOLDER = '__attachment_id__';
+    public const NAME_PLACEHOLDER = '__name__';
+    public const FILE_NAME_PLACEHOLDER = '__file_name__';
+    public const MIME_TYPE_PLACEHOLDER = '__mime_type__';
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -43,23 +47,25 @@ class AttachedFileType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'attachment-id-input',
                 ],
+                'default_empty_data' => self::ID_PLACEHOLDER,
             ])
-            ->add('name', PreviewType::class, [
+            ->add('name', TextPreviewType::class, [
                 'label' => $this->trans('Title', 'Admin.Global'),
+                'default_empty_data' => self::NAME_PLACEHOLDER,
             ])
-            ->add('filename', PreviewType::class, [
+            ->add('file_name', TextPreviewType::class, [
                 'label' => $this->trans('File name', 'Admin.Global'),
+                'default_empty_data' => self::FILE_NAME_PLACEHOLDER,
             ])
-            ->add('mime_type', PreviewType::class, [
+            ->add('mime_type', TextPreviewType::class, [
                 'label' => $this->trans('Type', 'Admin.Global'),
-            ])
-            ->add('remove', IconButtonType::class, [
-                'icon' => 'delete',
-                'attr' => [
-                    'class' => 'remove-attachment',
-                    'data-original-title' => $this->trans('Remove', 'Admin.Actions'),
-                ],
+                'default_empty_data' => self::MIME_TYPE_PLACEHOLDER,
             ])
         ;
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'entity_item';
     }
 }
