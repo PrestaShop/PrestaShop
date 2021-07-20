@@ -36,7 +36,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
@@ -617,8 +617,8 @@ class ProductFormDataProviderTest extends TestCase
             'mpn' => 'mpn_2',
             'reference' => 'reference_2',
             'attachments' => [
-                new AttachmentInfo(1, $localizedValues, 'test1', 'image/jpeg'),
-                new AttachmentInfo(2, [2 => 'russian'], 'test2', 'image/png'),
+                new AttachmentInformation(1, $localizedValues, 'test1', 'image/jpeg'),
+                new AttachmentInformation(2, [2 => 'russian'], 'test2', 'image/png'),
             ],
         ];
         $expectedOutputData['footer']['active'] = false;

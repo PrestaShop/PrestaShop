@@ -28,14 +28,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInfo;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentInfoHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentInformationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 
 /**
- * Handles @see GetAttachmentInfo query using legacy object model
+ * Handles @see GetAttachmentInformation query using legacy object model
  */
-class GetAttachmentInfoHandler implements GetAttachmentInfoHandlerInterface
+class GetAttachmentInformationHandler implements GetAttachmentInformationHandlerInterface
 {
     /**
      * @var AttachmentRepository
@@ -51,11 +51,11 @@ class GetAttachmentInfoHandler implements GetAttachmentInfoHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(GetAttachmentInfo $query): AttachmentInfo
+    public function handle(GetAttachmentInformation $query): AttachmentInformation
     {
         $attachment = $this->attachmentRepository->get($query->getAttachmentId());
 
-        return new AttachmentInfo(
+        return new AttachmentInformation(
             (int) $attachment->id,
             $attachment->name,
             $attachment->file_name,

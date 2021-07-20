@@ -41,10 +41,9 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptyFileException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
@@ -276,7 +275,7 @@ class AttachmentController extends FrameworkBundleAdminController
      */
     public function getAttachmentInfoAction(int $attachmentId): JsonResponse
     {
-        $attachmentInfo = $this->getQueryBus()->handle(new GetAttachmentInfo($attachmentId));
+        $attachmentInfo = $this->getQueryBus()->handle(new GetAttachmentInformation($attachmentId));
 
         return $this->json(['attachmentInfo' => $this->presentAttachmentInfo($attachmentInfo)]);
     }
@@ -305,31 +304,26 @@ class AttachmentController extends FrameworkBundleAdminController
 
         $result = [];
         foreach ($attachments as $attachment) {
-            $result[] = [
-                'attachment_id' => $attachment->getAttachmentId(),
-                'name' => $attachment->getName(),
-                'file_name' => $attachment->getFileName(),
-                'mime_type' => $attachment->getType(),
-            ];
+            $result[] = $this->presentAttachmentInfo($attachment);
         }
 
         return $this->json($result);
     }
 
     /**
-     * @param AttachmentInfo $productAttachmentInfo
+     * @param AttachmentInformation $productAttachmentInfo
      *
      * @return array<string, mixed>
      */
-    private function presentAttachmentInfo(AttachmentInfo $productAttachmentInfo): array
+    private function presentAttachmentInfo(AttachmentInformation $productAttachmentInfo): array
     {
         $localizedNames = $productAttachmentInfo->getLocalizedNames();
 
         return [
-            'id' => $productAttachmentInfo->getAttachmentId(),
+            'attachment_id' => $productAttachmentInfo->getAttachmentId(),
             'name' => $localizedNames[$this->getContextLangId()] ?? reset($localizedNames),
-            'filename' => $productAttachmentInfo->getFilename(),
-            'mimeType' => $productAttachmentInfo->getMimeType(),
+            'file_name' => $productAttachmentInfo->getFilename(),
+            'mime_type' => $productAttachmentInfo->getMimeType(),
         ];
     }
 

@@ -26,18 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInfo;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 
 /**
- * Defines contract to handle @see GetAttachmentInfo query
+ * Defines contract to handle @see GetAttachmentInformation query
  */
-interface GetAttachmentInfoHandlerInterface
+interface GetAttachmentInformationHandlerInterface
 {
     /**
-     * @param GetAttachmentInfo $query
+     * @param GetAttachmentInformation $query
      *
-     * @return AttachmentInfo
+     * @return AttachmentInformation
      */
-    public function handle(GetAttachmentInfo $query): AttachmentInfo;
+    public function handle(GetAttachmentInformation $query): AttachmentInformation;
 }
