@@ -34,6 +34,8 @@ use OrderReturn;
 use OrderReturnState;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnForEditing;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use RuntimeException;
@@ -118,10 +120,13 @@ class OrderReturnFeatureContext extends AbstractDomainFeatureContext
     public function checkOrderReturnState(string $orderReturnReference, string $orderReturnStateReference): void
     {
         $orderReturnId = SharedStorage::getStorage()->get($orderReturnReference);
-        $orderReturn = new OrderReturn($orderReturnId);
+        /**
+         * @var $orderReturn OrderReturnForEditing
+         */
+        $orderReturn = $this->getCommandBus()->handle(new GetOrderReturnForEditing($orderReturnId));
         $orderReturnStateId = SharedStorage::getStorage()->get($orderReturnStateReference);
-        if ($orderReturn->state !== $orderReturnStateId) {
-            $errorMessage = sprintf('Invalid order state for  %s, expected %s but got %s', $orderReturnReference, $orderReturnStateReference, $orderReturn->state);
+        if ($orderReturn->getOrderReturnStateId() !== $orderReturnStateId) {
+            $errorMessage = sprintf('Invalid order state for  %s, expected %s but got %s', $orderReturnReference, $orderReturnStateReference, $orderReturn->getOrderReturnStateId());
             throw new RuntimeException($errorMessage);
         }
     }
