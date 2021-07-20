@@ -244,7 +244,7 @@ export default class EntitySearchInput {
       value: '',
       templates: {
         suggestion: (entity: any) => {
-          let entityImage;
+          let entityImage = '';
 
           if (Object.prototype.hasOwnProperty.call(entity, 'image')) {
             entityImage = `<img src="${entity.image}" /> `;

@@ -51,6 +51,9 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class EntitySearchInputType extends CollectionType
 {
+    public const LIST_LAYOUT = 'list';
+    public const TABLE_LAYOUT = 'table';
+
     /**
      * @var TranslatorInterface
      */
@@ -101,6 +104,9 @@ class EntitySearchInputType extends CollectionType
                 'image' => EntityItemType::IMAGE_PLACEHOLDER,
             ],
 
+            // Layout
+            'layout' => static::LIST_LAYOUT,
+
             // Remove modal wording
             'remove_modal' => null,
         ]);
@@ -121,6 +127,9 @@ class EntitySearchInputType extends CollectionType
 
             return $resolver->resolve($value ?? []);
         });
+
+        $resolver->setAllowedTypes('layout', ['string']);
+        $resolver->setAllowedValues('layout', [static::LIST_LAYOUT, static::TABLE_LAYOUT]);
     }
 
     /**
@@ -143,6 +152,7 @@ class EntitySearchInputType extends CollectionType
             'placeholder' => $options['placeholder'],
             'prototype_mapping' => $options['prototype_mapping'],
             'remove_modal' => $removeModal,
+            'list_layout' => $options['layout'],
         ]);
     }
 
