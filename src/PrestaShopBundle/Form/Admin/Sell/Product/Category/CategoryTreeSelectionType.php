@@ -28,39 +28,34 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CategoriesType extends TranslatorAwareType
+class CategoryTreeSelectionType extends CollectionType
 {
     /**
-     * {@inheritDoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('product_categories', CategoriesCollectionType::class)
-//            ->add('category_tree', CategoryTreeSelectionType::class)
-            ->add('add_categories_btn', ButtonType::class, [
-                'label' => $this->trans('Add categories', 'Admin.Catalog.Feature'),
-                'attr' => [
-                    'class' => 'add-categories-btn btn-outline-primary',
-                ],
-            ])
-        ;
-    }
-
-    /**
-     * {@inheritDoc}
+     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'label' => false,
             'required' => false,
+            'entry_type' => CheckboxType::class,
+            'block_prefix' => 'category_tree_selection',
+            'entry_options' => [
+                'block_prefix' => 'category_tree_selection_entry',
+                'label' => false,
+                'attr' => [
+                    'class' => 'category',
+                ],
+            ],
+            'allow_add' => true,
+            'allow_delete' => true,
+            'prototype_name' => '__CATEGORY_INDEX__',
         ]);
     }
 }

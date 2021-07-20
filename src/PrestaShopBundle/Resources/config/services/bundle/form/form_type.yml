@@ -1394,6 +1394,12 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.category.category_tree_selection_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryTreeSelectionType'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.stock.stock_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType'
         parent: 'form.type.translatable.aware'

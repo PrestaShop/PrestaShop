@@ -56,6 +56,8 @@ export default class CategoriesManager {
   }
 
   async initCategories() {
+    //@todo: this.categoriesContainer was already defined in constructor as other container.
+    //    need to clear things up and either move the whole TreeSelection to separate reusable component or adapt it to product page only
     this.categoriesContainer = document.querySelector(ProductCategoryMap.categoriesModalContainer);
     this.categoryTree = this.categoriesContainer.querySelector(ProductCategoryMap.categoryTree);
     this.prototypeTemplate = this.categoryTree.dataset.prototype;
@@ -65,15 +67,10 @@ export default class CategoriesManager {
 
     this.categories = await getCategories();
 
-    // This regexp is gonna be used to get id from checkbox name
-    let regexpString = ProductCategoryMap.checkboxName('__REGEXP__');
-    regexpString = _.escapeRegExp(regexpString).replace('__REGEXP__', '([0-9]+)');
-    this.checkboxIdRegexp = new RegExp(regexpString);
-
-    // This regexp is gonna be used to get id from radio name
-    regexpString = ProductCategoryMap.radioName('__REGEXP__');
-    regexpString = _.escapeRegExp(regexpString).replace('__REGEXP__', '([0-9]+)');
-    this.radioIdRegexp = new RegExp(regexpString);
+    // // This regexp is gonna be used to get id from checkbox name
+    // let regexpString = ProductCategoryMap.checkboxName('__REGEXP__');
+    // regexpString = _.escapeRegExp(regexpString).replace('__REGEXP__', '([0-9]+)');
+    // this.checkboxIdRegexp = new RegExp(regexpString);
 
     this.initTypeaheadData(this.categories, '');
     this.initTypeahead();
@@ -93,14 +90,18 @@ export default class CategoriesManager {
     this.reduceAllButton.addEventListener('click', () => {
       this.toggleAll(false);
     });
+    const tags = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer)
+      .querySelectorAll(ProductCategoryMap.tagItem);
 
-    // @todo: these will be replaced by category labels
-    const productCategoryIds = [1, 2, 3];
+    const categoryIds = [];
+    tags.forEach((tag) => {
+      categoryIds.push(tag.dataset.id);
+    });
 
     this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkbox) => {
       const categoryId = this.getIdFromCheckbox(checkbox);
 
-      if (productCategoryIds.includes(categoryId)) {
+      if (categoryIds.includes(categoryId)) {
         checkbox.checked = true;
       }
 
