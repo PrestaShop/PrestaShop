@@ -62,7 +62,7 @@ export default {
   entitySearchInput: {
     searchInputSelector: '.entity-search-input',
     listSelector: '.entities-list',
-    entityItemSelector: 'li.entity-item',
+    entityItemSelector: '.entity-item',
     entityDeleteSelector: '.entity-item-delete',
   },
 };
