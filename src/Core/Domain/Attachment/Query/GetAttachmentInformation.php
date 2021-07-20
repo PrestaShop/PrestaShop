@@ -25,77 +25,30 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
 
-class AttachmentInfo
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
+
+class GetAttachmentInformation
 {
     /**
-     * @var int
+     * @var AttachmentId
      */
     private $attachmentId;
 
     /**
-     * @var array<int, string>
-     */
-    private $localizedNames;
-
-    /**
-     * @var string
-     */
-    private $filename;
-
-    /**
-     * @var string
-     */
-    private $mimeType;
-
-    /**
      * @param int $attachmentId
-     * @param array $localizedNames
-     * @param string $filename
-     * @param string $mimeType
      */
-    public function __construct(
-        int $attachmentId,
-        array $localizedNames,
-        string $filename,
-        string $mimeType
-    ) {
-        $this->attachmentId = $attachmentId;
-        $this->localizedNames = $localizedNames;
-        $this->filename = $filename;
-        $this->mimeType = $mimeType;
+    public function __construct(int $attachmentId)
+    {
+        $this->attachmentId = new AttachmentId($attachmentId);
     }
 
     /**
-     * @return int
+     * @return AttachmentId
      */
-    public function getAttachmentId(): int
+    public function getAttachmentId(): AttachmentId
     {
         return $this->attachmentId;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedNames(): array
-    {
-        return $this->localizedNames;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFilename(): string
-    {
-        return $this->filename;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMimeType(): string
-    {
-        return $this->mimeType;
     }
 }

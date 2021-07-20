@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchInputException;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
 class SearchAttachment
 {
@@ -38,20 +37,13 @@ class SearchAttachment
      */
     private $searchPhrase;
 
-    /**
-     * @var LanguageId
-     */
-    private $languageId;
-
     public function __construct(
-        string $searchPhrase,
-        int $languageId
+        string $searchPhrase
     ) {
         if (empty($searchPhrase)) {
             throw new EmptySearchInputException('Search parameter cannot be empty');
         }
         $this->searchPhrase = $searchPhrase;
-        $this->languageId = new LanguageId($languageId);
     }
 
     /**
@@ -60,13 +52,5 @@ class SearchAttachment
     public function getSearchPhrase(): string
     {
         return $this->searchPhrase;
-    }
-
-    /**
-     * @return LanguageId
-     */
-    public function getLanguageId(): LanguageId
-    {
-        return $this->languageId;
     }
 }

@@ -30,7 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
 use Tests\Integration\Behaviour\Features\Transform\StringToArrayTransformContext;
@@ -41,7 +41,7 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
      * @Then product :productReference should have following attachments associated:
      *
      * @param string $productReference
-     * @param AttachmentInfo[] $attachmentsInfo
+     * @param AttachmentInformation[] $attachmentsInfo
      *
      * @see transformAttachmentsInfo()
      */
@@ -69,15 +69,15 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
      *
      * @param TableNode $tableNode
      *
-     * @return AttachmentInfo[]
+     * @return AttachmentInformation[]
      */
-    public function transformAttachmentsInfo(TableNode $tableNode): array
+    public function transformAttachmentsInformation(TableNode $tableNode): array
     {
         $infos = $tableNode->getColumnsHash();
 
         $attachmentsInfo = [];
         foreach ($infos as $info) {
-            $attachmentsInfo[] = new AttachmentInfo(
+            $attachmentsInfo[] = new AttachmentInformation(
                 $this->getSharedStorage()->get($info['attachment reference']),
                 $this->localizeByCell($info['title']),
                 $info['file name'],
