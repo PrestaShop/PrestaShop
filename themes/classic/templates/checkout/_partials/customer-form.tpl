@@ -36,7 +36,7 @@
       </p>
       {$smarty.block.parent}
     </div>
-  {elseif $field.name === 'email' and $guest_allowed}
+  {elseif $field.name === 'email'}
     {$smarty.block.parent}
     <div class="js-checkout-login-suggestion alert alert-info" style="display:none;">
       {l s='You already have an account, don\'t hesitate to log in!' d='Shop.Theme.Checkout'}
