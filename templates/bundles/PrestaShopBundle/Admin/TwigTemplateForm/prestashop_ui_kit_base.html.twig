@@ -168,7 +168,7 @@
     {% endif %}
     </{{ labelTag }}>
     {% if label_subtitle is defined %}
-      <p class="subtitle">{{ label_subtitle }}</p>
+      <p class="subtitle">{{ label_subtitle|raw('html') }}</p>
     {% endif %}
   {%- endif -%}
 {%- endblock form_label -%}
