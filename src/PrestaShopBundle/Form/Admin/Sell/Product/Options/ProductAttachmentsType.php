@@ -27,9 +27,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
+use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -53,12 +53,20 @@ class ProductAttachmentsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('attached_files', CollectionType::class, [
-                'label' => false,
+            ->add('attached_files', EntitySearchInputType::class, [
                 'entry_type' => AttachedFileType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype_name' => '__ATTACHMENT_INDEX__',
+                'layout' => EntitySearchInputType::TABLE_LAYOUT,
+                'prototype_mapping' => [
+                    'attachment_id' => AttachedFileType::ID_PLACEHOLDER,
+                    'name' => AttachedFileType::NAME_PLACEHOLDER,
+                    'file_name' => AttachedFileType::FILE_NAME_PLACEHOLDER,
+                    'mime_type' => AttachedFileType::MIME_TYPE_PLACEHOLDER,
+                ],
+                'required' => false,
+                'limit' => 1,
+                'label' => false,
+                'remote_url' => $this->urlGenerator->generate('admin_attachments_search', ['searchPhrase' => '__QUERY__']),
+                'placeholder' => $this->trans('Search file', 'Admin.Catalog.Feature'),
             ])
             ->add('add_attachment_btn', IconButtonType::class, [
                 'label' => $this->trans('Add new file', 'Admin.Catalog.Feature'),
