@@ -248,7 +248,7 @@ class OrderControllerCore extends FrontController
             $customerExist = Customer::customerExists($email, false, true);
             $data = [
                 'hasError' => false,
-                'customerExists' => $customerExist
+                'customerExists' => $customerExist,
             ];
         } else {
             $data = [
