@@ -117,6 +117,16 @@ export default class EntitySearchInput {
   }
 
   /**
+   * Append the item to the selection, respecting the configured limit so if limit is already reached the item is not
+   * added.
+   *
+   * @param newItem
+   */
+  addItem(newItem: any): void {
+    this.appendSelectedItem(newItem);
+  }
+
+  /**
    * @param optionName
    */
   getOption(optionName: string): any {

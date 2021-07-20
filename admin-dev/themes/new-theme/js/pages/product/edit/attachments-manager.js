@@ -73,7 +73,7 @@ export default class AttachmentsManager {
             </div>`);
 
             getAttachmentInfo(dataAttributes.attachmentId).then((response) => {
-              this.addAttachmentRow(response.attachmentInfo);
+              this.entitySearchInput.addItem(response.attachmentInfo);
               setTimeout(() => { iframeModal.hide(); }, 2000);
             });
           }
