@@ -1373,9 +1373,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.category.categories_summary_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesSummaryType'
-        parent: 'form.type.translatable.aware'
+    form.type.sell.product.category.category_tree_selection_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryTreeSelectionType'
         public: true
         tags:
             - { name: form.type }

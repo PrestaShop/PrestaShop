@@ -216,8 +216,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $localizedNames = $categoryInformation->getLocalizedNames();
 
             $categories[$categoryInformation->getId()] = [
-                'is_associated' => true,
+                'id' => $categoryInformation->getId(),
                 'name' => $localizedNames[$this->contextLangId] ?? reset($localizedNames),
+                'is_associated' => true,
             ];
         }
 
