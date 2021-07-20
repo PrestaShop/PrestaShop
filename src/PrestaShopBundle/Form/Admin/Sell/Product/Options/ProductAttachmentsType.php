@@ -63,7 +63,6 @@ class ProductAttachmentsType extends TranslatorAwareType
                     'mime_type' => AttachedFileType::MIME_TYPE_PLACEHOLDER,
                 ],
                 'required' => false,
-                'limit' => 1,
                 'label' => false,
                 'remote_url' => $this->urlGenerator->generate('admin_attachments_search', ['searchPhrase' => '__QUERY__']),
                 'placeholder' => $this->trans('Search file', 'Admin.Catalog.Feature'),
