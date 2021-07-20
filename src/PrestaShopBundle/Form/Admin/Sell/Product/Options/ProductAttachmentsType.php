@@ -102,8 +102,7 @@ class ProductAttachmentsType extends TranslatorAwareType
         $resolver->setDefaults([
             'label' => $this->trans('Attached files', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h2',
-            'label_subtitle' =>
-                $this->trans('Select the files (instructions, documentation, recipes, etc.) your customers can directly download on this product page.', 'Admin.Catalog.Feature') .
+            'label_subtitle' => $this->trans('Select the files (instructions, documentation, recipes, etc.) your customers can directly download on this product page.', 'Admin.Catalog.Feature') .
                 '<br>' .
                 $this->trans(
                     'Need to browse all files? Go to [1]Catalog > Files[/1]',
