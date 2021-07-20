@@ -1,0 +1,52 @@
+ul.entities-list {
+  list-style: none;
+}
+
+.entity-search-widget {
+  .entities-list {
+    max-width: 100%;
+    padding: 0;
+
+    li {
+      @extend .p-1;
+      @extend .mt-1;
+      @extend .d-flex;
+      @extend .align-items-center;
+      border: 1px solid $gray-light;
+    }
+
+    .entity-item {
+      // thumbnail
+      > .media-left {
+        img {
+          max-width: 50px;
+          max-height: 50px;
+        }
+      }
+
+      // text
+      > .media-body {
+        .label {
+          @extend .mx-1;
+        }
+
+        // delete button
+        i.entity-item-delete {
+          float: right;
+        }
+      }
+
+      // delete button
+      i.entity-item-delete {
+        color: $medium-gray;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .search-suggestion {
+    img {
+      width: 50px;
+    }
+  }
+}
