@@ -51,8 +51,4 @@ export default {
     clearFilters: 'clearFilters',
     selectCombination: 'selectCombination',
   },
-  attachments: {
-    rowRemoved: 'attachmentsRowRemoved',
-    rowAdded: 'attachmentsRowAdded',
-  },
 };
