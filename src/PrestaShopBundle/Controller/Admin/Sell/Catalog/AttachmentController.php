@@ -38,11 +38,14 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUnlinkAttachmen
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUpdateAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptyFileException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -276,6 +279,41 @@ class AttachmentController extends FrameworkBundleAdminController
         $attachmentInfo = $this->getQueryBus()->handle(new GetAttachmentInfo($attachmentId));
 
         return $this->json(['attachmentInfo' => $this->presentAttachmentInfo($attachmentInfo)]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")
+     *
+     * @param string $searchPhrase
+     *
+     * @return JsonResponse
+     */
+    public function searchAction(string $searchPhrase): JsonResponse
+    {
+        try {
+            /** @var AttachmentInformation[] $attachments */
+            $attachments = $this->getCommandBus()->handle(new SearchAttachment(
+                $searchPhrase,
+                (int) $this->getContext()->language->id
+            ));
+        } catch (EmptySearchException $e) {
+            return $this->json(
+                [$e, 'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $result = [];
+        foreach ($attachments as $attachment) {
+            $result[] = [
+                'attachment_id' => $attachment->getAttachmentId(),
+                'name' => $attachment->getName(),
+                'file_name' => $attachment->getFileName(),
+                'mime_type' => $attachment->getType(),
+            ];
+        }
+
+        return $this->json($result);
     }
 
     /**
