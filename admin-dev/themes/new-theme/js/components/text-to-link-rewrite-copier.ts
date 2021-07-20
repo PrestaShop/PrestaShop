@@ -66,7 +66,7 @@ interface TextToLinkParams {
 const textToLinkRewriteCopier = ({
   sourceElementSelector,
   destinationElementSelector,
-  options = { eventName: 'input' },
+  options = {eventName: 'input'},
 }: TextToLinkParams): void => {
   $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
     if (!$(event.currentTarget).closest('form').data('id')) {
