@@ -1323,11 +1323,9 @@ $product-page-padding-bottom: 80px !default;
 
 #related-product,
 #id-product-redirected,
-.redirect-option-widget,
-.entity-search-widget {
+.redirect-option-widget {
   // list of added related products
-  .typeahead-list,
-  .entities-list {
+  .typeahead-list {
     li {
       @extend .p-1;
       @extend .mt-1;
@@ -1359,8 +1357,7 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
-  .autocomplete-search,
-  .entity-search-widget {
+  .autocomplete-search {
     .search-suggestion {
       img {
         width: 50px;
