@@ -28,17 +28,15 @@ import ProductEventMap from '@pages/product/product-event-map';
 import Router from '@components/router';
 import {getAttachmentInfo} from '@pages/product/services/attachments-service';
 import {FormIframeModal} from '@components/modal/form-iframe-modal';
+import EntitySearchInput from '@components/entity-search-input';
 
 const {$} = window;
 
 export default class AttachmentsManager {
   constructor() {
     this.$attachmentsContainer = $(ProductMap.attachments.attachmentsContainer);
-    this.$attachmentsCollection = $(ProductMap.attachments.attachmentsCollection);
-    this.$attachmentsTableBody = $(ProductMap.attachments.attachmentsTableBody);
+    this.$searchAttributeInput = $(ProductMap.attachments.searchAttributeInput);
     this.$addAttachmentBtn = $(ProductMap.attachments.addAttachmentBtn, this.$attachmentsContainer);
-    this.prototypeTemplate = this.$attachmentsCollection.data('prototype');
-    this.prototypeName = this.$attachmentsCollection.data('prototypeName');
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.router = new Router();
     this.init();
@@ -49,9 +47,7 @@ export default class AttachmentsManager {
    */
   init() {
     this.initAddAttachmentIframe();
-    this.$attachmentsContainer.on('click', ProductMap.attachments.removeAttachmentBtn, (e) => {
-      this.removeAttachmentRow(e);
-    });
+    this.initSearchInput();
   }
 
   /**
@@ -87,67 +83,14 @@ export default class AttachmentsManager {
     });
   }
 
-  /**
-   * @param {Object} event
-   *
-   * @private
-   */
-  removeAttachmentRow(event) {
-    const $removeButton = $(event.currentTarget);
-    const $thisRow = $removeButton.closest(ProductMap.attachments.attachedFileRow);
-    const attachmentId = $thisRow.find(ProductMap.attachments.attachmentIdInputs).val();
-
-    $thisRow.remove();
-    this.eventEmitter.emit(ProductEventMap.attachments.rowRemoved, {attachmentId});
-    this.refreshState();
-  }
-
-  /**
-   * @private
-   */
-  addAttachmentRow(attachmentInfo) {
-    const rowIndex = this.$attachmentsTableBody.find(ProductMap.attachments.attachedFileRow).length;
-    const $row = $(this.getPrototypeRow(rowIndex));
-    const attachmentId = attachmentInfo.id;
-    const $attachmentIdInput = $(ProductMap.attachments.tableRow.attachmentIdInput(rowIndex), $row);
-    const $attachmentNamePreview = $(ProductMap.attachments.tableRow.attachmentNamePreview, $row);
-    const $attachmentFilenamePreview = $(ProductMap.attachments.tableRow.attachmentFilenamePreview, $row);
-    const $attachmentTypePreview = $(ProductMap.attachments.tableRow.attachmentTypePreview, $row);
-
-    $attachmentIdInput.val(attachmentId);
-    $attachmentNamePreview.html(attachmentInfo.name);
-    $attachmentFilenamePreview.html(attachmentInfo.filename);
-    $attachmentTypePreview.html(attachmentInfo.mimeType);
-
-    this.$attachmentsTableBody.append($row);
-    this.eventEmitter.emit(ProductEventMap.attachments.rowAdded, {attachmentId});
-    this.refreshState();
-  }
-
-  /**
-   * @private
-   */
-  refreshState() {
-    const isEmpty = this.$attachmentsTableBody.find(ProductMap.attachments.attachedFileRow).length === 0;
-    const $emptyState = $(ProductMap.attachments.emptyState);
-
-    if (isEmpty) {
-      $emptyState.removeClass('d-none');
-      this.$attachmentsCollection.addClass('d-none');
-    } else {
-      $emptyState.addClass('d-none');
-      this.$attachmentsCollection.removeClass('d-none');
-    }
-  }
-
-  /**
-   * @param {Number} rowIndex
-   *
-   * @returns {String}
-   *
-   * @private
-   */
-  getPrototypeRow(rowIndex) {
-    return this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), rowIndex);
+  initSearchInput() {
+    this.entitySearchInput = new EntitySearchInput(this.$searchAttributeInput, {
+      onRemovedContent: () => {
+        this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
+      },
+      onSelectedContent: () => {
+        this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
+      },
+    });
   }
 }

@@ -200,18 +200,7 @@ export default {
   },
   attachments: {
     attachmentsContainer: attachmentsBlockId,
-    attachmentsCollection: '.attachments-collection',
-    attachmentsTableBody: '.attachments-collection tbody',
+    searchAttributeInput: '#product_options_attachments_attached_files',
     addAttachmentBtn: '.add-attachment',
-    removeAttachmentBtn: '.remove-attachment',
-    attachedFileRow: '.attached_file_row',
-    attachmentIdInputs: '.attachment-id-input',
-    emptyState: '#attachments-empty-state',
-    tableRow: {
-      attachmentIdInput: (rowIndex) => `${attachmentsBlockId}_attached_files_${rowIndex}_attachment_id`,
-      attachmentNamePreview: '.name .preview',
-      attachmentFilenamePreview: '.filename .preview',
-      attachmentTypePreview: '.mime_type .preview',
-    },
   },
 };
