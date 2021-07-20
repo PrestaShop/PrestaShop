@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *
  */
-$component-name: modal-iframe;
+$component-name: modal-iframe !default;
 
 .#{$component-name} {
   .modal-dialog {
