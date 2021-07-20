@@ -31,6 +31,7 @@ use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -78,8 +79,8 @@ class ProductAttachmentsType extends TranslatorAwareType
                             'Admin.Catalog.Feature'
                         ),
                         $this->trans(
-                            'This window is gonna close automatically.',
-                            'Admin.Glocal'
+                            'This window will close automatically.',
+                            'Admin.Global'
                         )
                     ),
                     'class' => 'btn-outline-secondary add-attachment',
@@ -90,5 +91,28 @@ class ProductAttachmentsType extends TranslatorAwareType
                 ],
             ])
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'label' => $this->trans('Attached files', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h2',
+            'label_subtitle' =>
+                $this->trans('Select the files (instructions, documentation, recipes, etc.) your customers can directly download on this product page.', 'Admin.Catalog.Feature') .
+                '<br>' .
+                $this->trans(
+                    'Need to browse all files? Go to [1]Catalog > Files[/1]',
+                    'Admin.Catalog.Feature',
+                    [
+                        '[1]' => sprintf('<a target="_blank" href="%s">', $this->urlGenerator->generate('admin_attachments_index')),
+                        '[/1]' => '</a>',
+                    ]
+                ),
+        ]);
     }
 }
