@@ -72,7 +72,7 @@ admin_attachments_attachment_info:
     path: /{attachmentId}/info
     methods: [GET]
     defaults:
-        _controller: PrestaShop\Admin\Sell\Catalog\AttachmentController::getAttachmentInfoAction
+        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::getAttachmentInfoAction
     requirements:
         attachmentId: \d+
     options:
