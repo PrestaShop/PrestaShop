@@ -41,29 +41,27 @@ Feature: Manage attachment from Back Office (BO)
       | size               | 22405               |
 
     Scenario: I can search attachments file based on a language
-      When I search for attachment matching "puffin" with language "languageEn" I get following results:
-        | attachment_id | file_name    | name   | mime      |
-        | att1          | app_icon.png | puffin | image/png |
+      When I search for attachment matching "puffin" I get following results:
+        | attachment_id | file_name    | name[en-US] | name[fr-FR] | mime      |
+        | att1          | app_icon.png | puffin      | macareux    | image/png |
       # Case insensitive
-      And I search for attachment matching "PuFfin" with language "languageEn" I get following results:
-        | attachment_id | file_name    | name   | mime      |
-        | att1          | app_icon.png | puffin | image/png |
+      And I search for attachment matching "PuFfin" I get following results:
+        | attachment_id | file_name    | name[en-US] | name[fr-FR] | mime      |
+        | att1          | app_icon.png | puffin      | macareux    | image/png |
       # Search in description as well
-      And I search for attachment matching "photo" with language "languageEn" I get following results:
-        | attachment_id | file_name    | name   | mime      |
-        | att1          | app_icon.png | puffin | image/png |
+      And I search for attachment matching "photo" I get following results:
+        | attachment_id | file_name    | name[en-US] | name[fr-FR] | mime      |
+        | att1          | app_icon.png | puffin      | macareux    | image/png |
       # Search in file_name as well
-      And I search for attachment matching "dummy" with language "languageFr" I get following results:
-        | attachment_id | file_name     | name   | mime            |
-        | att2          | dummy_zip.zip | notice | application/zip |
-      And I search for attachment matching "notice" with language "languageFr" I get following results:
-        | attachment_id | file_name     | name   | mime            |
-        | att2          | dummy_zip.zip | notice | application/zip |
-      And I search for attachment matching "tRoN" with language "languageFr" I get following results:
-        | attachment_id | file_name     | name   | mime            |
-        | att2          | dummy_zip.zip | notice | application/zip |
+      And I search for attachment matching "dummy" I get following results:
+        | attachment_id | file_name     | name[en-US] | name[fr-FR] | mime            |
+        | att2          | dummy_zip.zip | user guide  | notice      | application/zip |
+      And I search for attachment matching "notice" I get following results:
+        | attachment_id | file_name     | name[en-US] | name[fr-FR] | mime            |
+        | att2          | dummy_zip.zip | user guide  | notice      | application/zip |
+      And I search for attachment matching "tRoN" I get following results:
+        | attachment_id | file_name     | name[en-US] | name[fr-FR] | mime            |
+        | att2          | dummy_zip.zip | user guide  | notice      | application/zip |
 
     Scenario: I can search attachments file and get no results
-      When I search for attachment matching "puffin" with language "languageFr" I get no results
-      When I search for attachment matching "anything" with language "languageFr" I get no results
-      And I search for attachment matching "notice" with language "languageEn" I get no results
+      When I search for attachment matching "toto" I get no results

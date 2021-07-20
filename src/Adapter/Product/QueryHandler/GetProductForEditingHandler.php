@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
@@ -184,7 +184,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     /**
      * @param ProductId $productId
      *
-     * @return AttachmentInfo[]
+     * @return AttachmentInformation[]
      */
     private function getAttachments(ProductId $productId): array
     {
@@ -192,7 +192,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
 
         $attachmentsInfo = [];
         foreach ($attachments as $attachment) {
-            $attachmentsInfo[] = new AttachmentInfo(
+            $attachmentsInfo[] = new AttachmentInformation(
                 (int) $attachment['id_attachment'],
                 $attachment['name'],
                 $attachment['file_name'],

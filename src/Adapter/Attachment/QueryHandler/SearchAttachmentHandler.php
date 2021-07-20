@@ -48,7 +48,7 @@ class SearchAttachmentHandler implements SearchAttachmentHandlerInterface
 
     public function handle(SearchAttachment $query): array
     {
-        $attachments = $this->repository->search($query->getSearchPhrase(), $query->getLanguageId());
+        $attachments = $this->repository->search($query->getSearchPhrase());
         if (empty($attachments)) {
             throw new EmptySearchException(sprintf('No attachments found with search "%s"', $query->getSearchPhrase()));
         }
