@@ -316,17 +316,9 @@ export default class CategoryTreeSelector {
         return;
       }
 
-      // @todo: remove html from js
-      const removeCrossTemplate = this.defaultCategoryId !== categoryId
-        ? `<a class="pstaggerClosingCross" href="#" data-id="${category.id}">x</a>`
-        : '';
-      const template = `
-        <span class="pstaggerTag">
-            <span data-id="${category.id}" title="${category.breadcrumb}">${category.name}</span>
-            ${removeCrossTemplate}
-        </span>
-      `;
-
+      //@todo: default category must not have 'X'. & for some reason there is no prototypeNames in data-id.
+      let template = tagsContainer.dataset.prototype;
+      template = template.replace(RegExp(tagsContainer.dataset.prototypeName, 'g'), categoryId);
       // Trim is important here or the first child could be some text (whitespace, or \n)
       const frag = document.createRange().createContextualFragment(template.trim());
       tagsContainer.append(frag.firstChild);

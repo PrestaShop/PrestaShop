@@ -28,35 +28,37 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class CategoryTreeSelectorType extends CollectionType
 {
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::configureOptions($resolver);
-
-        $resolver->setDefaults([
-            'label' => false,
-            'required' => false,
-            'entry_type' => CheckboxType::class,
-            'entry_options' => [
-                'block_prefix' => 'category_tree_selector_entry',
+        $builder
+            ->add('product_categories', CategoryTagsCollectionType::class)
+            ->add('category_tree', CollectionType::class, [
                 'label' => false,
-                'attr' => [
-                    'class' => 'category',
-                    'data-id' => '__CATEGORY_ID__',
+                'required' => false,
+                'entry_type' => CheckboxType::class,
+                'block_prefix' => 'category_tree_collection',
+                'entry_options' => [
+                    'block_prefix' => 'category_tree_entry',
+                    'label' => false,
+                    'attr' => [
+                        'class' => 'category',
+                        'data-id' => '__CATEGORY_ID__',
+                    ],
                 ],
-            ],
-            'allow_add' => true,
-            'allow_delete' => true,
-            'prototype_name' => '__CATEGORY_ID__',
-        ]);
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype_name' => '__CATEGORY_ID__',
+            ])
+            ->add('apply_btn', ButtonType::class)
+        ;
     }
 
     public function getBlockPrefix(): string
