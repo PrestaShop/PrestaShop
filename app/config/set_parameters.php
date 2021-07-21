@@ -81,6 +81,7 @@ if (isset($container) && $container instanceof \Symfony\Component\DependencyInje
         }
     }
     $container->setParameter('cache.driver', $driver);
+    $container->setParameter('cache.driver.doctrine', $driver . '_doctrine');
     $container->setParameter('cache.adapter', $adapters[$driver]);
 
     // Parameter used only in dev and test env

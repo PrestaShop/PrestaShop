@@ -96,7 +96,6 @@ describe('Filter, sort and pagination order status', async () => {
             filterType: 'input',
             filterBy: 'id_order_state',
             filterValue: Statuses.paymentAccepted.id,
-            idColumn: 1,
           },
       },
       {
@@ -106,7 +105,6 @@ describe('Filter, sort and pagination order status', async () => {
             filterType: 'input',
             filterBy: 'name',
             filterValue: Statuses.shipped.status,
-            idColumn: 2,
           },
       },
       {
@@ -116,9 +114,7 @@ describe('Filter, sort and pagination order status', async () => {
             filterType: 'select',
             filterBy: 'send_email',
             filterValue: true,
-            idColumn: 4,
           },
-        expected: 'Enabled',
       },
       {
         args:
@@ -127,9 +123,7 @@ describe('Filter, sort and pagination order status', async () => {
             filterType: 'select',
             filterBy: 'delivery',
             filterValue: true,
-            idColumn: 5,
           },
-        expected: 'Enabled',
       },
       {
         args:
@@ -138,9 +132,7 @@ describe('Filter, sort and pagination order status', async () => {
             filterType: 'select',
             filterBy: 'invoice',
             filterValue: false,
-            idColumn: 6,
           },
-        expected: 'Disabled',
       },
       {
         args:
@@ -149,7 +141,6 @@ describe('Filter, sort and pagination order status', async () => {
             filterType: 'input',
             filterBy: 'template',
             filterValue: Statuses.canceled.emailTemplate,
-            idColumn: 7,
           },
       },
     ];
@@ -170,17 +161,17 @@ describe('Filter, sort and pagination order status', async () => {
         await expect(numberOfLinesAfterFilter).to.be.at.most(numberOfOrderStatuses);
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
-          const textColumn = await statusesPage.getTextColumn(
-            page,
-            tableName,
-            row,
-            test.args.filterBy,
-            test.args.idColumn,
-          );
-
-          if (test.expected !== undefined) {
-            await expect(textColumn).to.contains(test.expected);
+          if (typeof test.args.filterValue === 'boolean') {
+            const columnStatus = await statusesPage.getStatus(page, row, test.args.filterBy);
+            await expect(columnStatus).to.equal(test.args.filterValue);
           } else {
+            const textColumn = await statusesPage.getTextColumn(
+              page,
+              tableName,
+              row,
+              test.args.filterBy,
+            );
+
             await expect(textColumn).to.contains(test.args.filterValue);
           }
         }

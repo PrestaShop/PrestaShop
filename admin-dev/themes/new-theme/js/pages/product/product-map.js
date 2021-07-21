@@ -70,6 +70,7 @@ export default {
     combinationIdInputsSelector: '.combination-id-input',
     isDefaultInputsSelector: '.combination-is-default-input',
     removeCombinationSelector: '.remove-combination-item',
+    combinationName: 'form .card-header span',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
     quantityInputWrapper: '.combination-quantity',
@@ -83,6 +84,9 @@ export default {
       tokenKey: 'combination_item[_token]',
     },
     editionForm: 'form[name="combination_form"]',
+    editionFormInputs:
+      // eslint-disable-next-line
+      'form[name="combination_form"] input, form[name="combination_form"] textarea, form[name="combination_form"] select',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
       combinationImg: '.combination-image',
@@ -145,6 +149,9 @@ export default {
     redirectOption: {
       typeInput: '#product_seo_redirect_option_type',
       targetInput: '#product_seo_redirect_option_target',
+      groupSelector: '.form-group',
+      labelSelector: 'label',
+      helpSelector: 'small.form-text',
     },
   },
   jsTabs: '.js-tabs',
@@ -178,5 +185,16 @@ export default {
     everyItems: '.less, .more',
     expandAllButton: '#categories-tree-expand',
     reduceAllButton: '#categories-tree-reduce',
+  },
+  modules: {
+    previewContainer: '.module-render-container.all-modules',
+    previewButton: '.modules-list-button',
+    selectorContainer: '.module-selection',
+    moduleSelector: '.modules-list-select',
+    selectorPreviews: '.module-selection .module-render-container',
+    selectorPreview: (moduleId) => `.module-selection .module-render-container.${moduleId}`,
+    contentContainer: '.module-contents',
+    moduleContents: '.module-contents .module-render-container',
+    moduleContent: (moduleId) => `.module-contents .module-render-container.${moduleId}`,
   },
 };

@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -51,15 +53,31 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
     private $manufacturerRepository;
 
     /**
+     * @var ProductIndexationUpdater
+     */
+    private $productIndexationUpdater;
+
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param ProductRepository $productRepository
      * @param ManufacturerRepository $manufacturerRepository
+     * @param ProductIndexationUpdater $productIndexationUpdater
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         ProductRepository $productRepository,
-        ManufacturerRepository $manufacturerRepository
+        ManufacturerRepository $manufacturerRepository,
+        ProductIndexationUpdater $productIndexationUpdater,
+        ConfigurationInterface $configuration
     ) {
         $this->productRepository = $productRepository;
         $this->manufacturerRepository = $manufacturerRepository;
+        $this->productIndexationUpdater = $productIndexationUpdater;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -71,6 +89,9 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
         $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_OPTIONS);
+        if (true === $command->isActive() && $this->configuration->get('PS_SEARCH_INDEXATION')) {
+            $this->productIndexationUpdater->updateIndexation($product->id);
+        }
     }
 
     /**

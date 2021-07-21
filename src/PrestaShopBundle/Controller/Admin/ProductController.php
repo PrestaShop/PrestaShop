@@ -124,8 +124,10 @@ class ProductController extends FrameworkBundleAdminController
         $orderBy = 'id_product',
         $sortOrder = 'desc'
     ) {
-        if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
-            return $this->redirect('admin_dashboard');
+        foreach ([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE] as $permission) {
+            if (!$this->isGranted($permission, self::PRODUCT_OBJECT)) {
+                return $this->redirect('admin_dashboard');
+            }
         }
 
         $language = $this->getContext()->language;
@@ -272,7 +274,7 @@ class ProductController extends FrameworkBundleAdminController
         $sortOrder = 'asc',
         $view = 'full'
     ) {
-        if (!$this->isGranted([PageVoter::READ], self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted(PageVoter::READ, self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -383,6 +385,12 @@ class ProductController extends FrameworkBundleAdminController
                 'icon' => 'add_circle_outline',
                 'class' => 'btn-outline-primary',
             ];
+
+            $toolbarButtons['list_v2'] = [
+                'href' => $this->generateUrl('admin_products_v2_index'),
+                'desc' => $this->trans('List on experimental page', 'Admin.Catalog.Feature'),
+                'class' => 'btn-outline-primary',
+            ];
         }
 
         return $toolbarButtons;
@@ -451,8 +459,10 @@ class ProductController extends FrameworkBundleAdminController
     {
         gc_disable();
 
-        if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
-            return $this->redirect('admin_dashboard');
+        foreach ([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE] as $permission) {
+            if (!$this->isGranted($permission, self::PRODUCT_OBJECT)) {
+                return $this->redirect('admin_dashboard');
+            }
         }
 
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
@@ -666,6 +676,7 @@ class ProductController extends FrameworkBundleAdminController
             'drawerModules' => $drawerModules,
             'layoutTitle' => $this->trans('Product', 'Admin.Global'),
             'isProductPageV2Enabled' => ($this->isProductPageV2Enabled()),
+            'isCreationMode' => (int) $product->state === Product::STATE_TEMP,
         ];
     }
 
@@ -1172,7 +1183,7 @@ class ProductController extends FrameworkBundleAdminController
      * Toggle product status
      *
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
      *

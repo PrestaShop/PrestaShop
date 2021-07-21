@@ -12,7 +12,7 @@ parameters:
     AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
     translator.class: PrestaShopBundle\Translation\Translator
     translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
-    admin_page: "%kernel.root_dir%/../src/PrestaShopBundle/Resources/views/Admin"
+    admin_page: "%kernel.root_dir%/../templates/bundles/PrestaShopBundle/Admin"
     env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
     mail_themes_uri: "/mails/themes"
     mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
@@ -47,8 +47,6 @@ framework:
     csrf_protection: ~
     validation:      { enable_annotations: true }
     serializer:      { enable_annotations: true }
-    templating:
-        engines: ['twig']
     default_locale:  "%locale%"
     trusted_hosts:   ~
     session:
@@ -78,8 +76,9 @@ twig:
     autoescape:       "name"
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    exception_controller: null
     form_themes:
-        - 'PrestaShopBundle:Admin/TwigTemplateForm:bootstrap_4_horizontal_layout.html.twig'
+        - '@PrestaShop/Admin/TwigTemplateForm/bootstrap_4_horizontal_layout.html.twig'
     paths:
         '%admin_page%/Product': Product
         '%admin_page%/TwigTemplateForm': Twig
@@ -121,3 +120,7 @@ prestashop:
         api_client:
             ttl: 7200 # 2h
             # verify_ssl: ~ # Bundle CA by default, declaring "addons.api_client.verify_ssl" parameter overrides its usage
+
+sensio_framework_extra:
+    router:
+        annotations: false

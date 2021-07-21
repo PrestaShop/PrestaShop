@@ -32,10 +32,18 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
+        AddSpecificPriceCommand::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * Adds specific price
- *
- * @deprecated since 1.7.8.0 Use UpdateProductPriceInCartCommand or AddProductSpecificPriceCommand
+ * @deprecated since 1.7.9.0 and will be removed in the next major version.
+ * @see UpdateProductPriceInCartCommand or
+ * @see AddProductSpecificPriceCommand
  */
 class AddSpecificPriceCommand
 {

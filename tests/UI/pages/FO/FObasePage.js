@@ -239,7 +239,7 @@ class FOBasePage extends CommonPage {
    */
   async goToSubCategory(page, categoryID, subCategoryID) {
     await page.hover(this.categoryMenu(categoryID));
-    await this.waitForSelectorAndClick(page, this.categoryMenu(subCategoryID));
+    await this.clickAndWaitForNavigation(page, this.categoryMenu(subCategoryID));
   }
 
   /**

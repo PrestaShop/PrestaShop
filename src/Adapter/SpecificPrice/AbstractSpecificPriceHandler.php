@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\SpecificPrice;
 
 use DateTime;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceNotFoundException;
@@ -34,8 +36,18 @@ use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShopException;
 use SpecificPrice;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
+        AbstractSpecificPriceHandler::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * Provides reusable methods for specific price handlers
+ * @deprecated since 1.7.9.0 and will be removed in the next major version.
+ * @see SpecificPriceValidator
+ * @see SpecificPriceRepository
  */
 abstract class AbstractSpecificPriceHandler
 {

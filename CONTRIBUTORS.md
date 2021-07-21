@@ -520,6 +520,7 @@ GitHub contributors:
 - Mickael ANDRIEU
 - Mickaël Andrieu
 - Mickael Desgranges
+- Mickaël Fernandez
 - Mikael Blotin
 - Mikko Hellsing
 - Milow

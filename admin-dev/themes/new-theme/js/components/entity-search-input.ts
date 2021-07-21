@@ -24,96 +24,226 @@
  */
 
 import AutoCompleteSearch from '@components/auto-complete-search';
+import ComponentsMap from '@components/components-map';
+import ConfirmModal from '@components/modal';
 // @ts-ignore-next-line
 import Bloodhound from 'typeahead.js';
 
+const EntitySearchInputMap = ComponentsMap.entitySearchInput;
+
+type RemoveFunction = (item: any) => void;
+type SelectFunction = ($node: JQuery, item: any) => void;
+export interface EntitySearchInputOptions extends OptionsObject {
+  prototypeTemplate: string,
+  prototypeIndex: string,
+  prototypeMapping: OptionsObject,
+
+  allowDelete: boolean,
+  dataLimit: number,
+  remoteUrl: string,
+
+  removeModal: ModalOptions,
+
+  searchInputSelector: string,
+  listSelector: string,
+  entityItemSelector: string,
+  entityDeleteSelector: string,
+  queryWildcard: string,
+
+  onRemovedContent: RemoveFunction | undefined,
+  onSelectedContent: SelectFunction | undefined,
+}
+export interface ModalOptions extends OptionsObject {
+  id: string;
+  title: string;
+  message: string;
+  apply: string;
+  cancel: string;
+  buttonClass: string;
+}
+
 /**
- * This component is used to search and select an entity, it is uses the AutoSearchComplete
+ * This component is used to search and select one or several entities, it uses the AutoSearchComplete
  * component which displays a list of suggestion based on an API returned response. Then when
- * an element is selected it is added to the selection container and hidden inputs are created to
- * send an array of entity IDs in the form request.
+ * an element is selected it is added to the selection container relying on the prototype template provided.
  *
- * This component is used with TypeaheadType forms, and is tightly linked to the content of this
- * twig file src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/typeahead.html.twig
+ * This component is used with EntitySearchInputType forms, and is tightly linked to the content of this
+ * twig file src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/entity_search_input.html.twig
  *
- * @todo: the component relies on this TypeaheadType because it was the historical type but it would be worth
- * creating a new clean form type with better templating (the tplcollection brings nearly no value as is)
+ * The default content of the collection is an EntityItemType with a simple default template but you can
+ * either override it in a theme or create your own entity type if you need to customize the behaviour.
  */
 export default class EntitySearchInput {
-  $entitySearchInput: JQuery;
+  private $entitySearchInputContainer: JQuery;
 
-  entitySearchInputId: string;
+  private $entitySearchInput: JQuery;
 
-  $autoCompleteSearchContainer: JQuery;
+  private $selectionContainer: JQuery;
 
-  $selectionContainer: JQuery;
+  private options!: EntitySearchInputOptions;
 
-  searchInputFullName: string;
+  private entityRemoteSource: Bloodhound;
 
-  options: OptionsObject;
+  private autoSearch!: AutoCompleteSearch;
 
-  entityRemoteSource: any;
+  constructor($entitySearchInputContainer: JQuery, options: OptionsObject) {
+    this.$entitySearchInputContainer = $entitySearchInputContainer;
+    this.options = <EntitySearchInputOptions>{};
+    this.buildOptions(options);
 
-  autoSearch: any;
+    this.$entitySearchInput = $(this.options.searchInputSelector, this.$entitySearchInputContainer);
+    this.$selectionContainer = $(this.options.listSelector, this.$entitySearchInputContainer);
 
-  constructor($entitySearchInput: JQuery, options: OptionsObject) {
-    this.$entitySearchInput = $entitySearchInput;
-    this.entitySearchInputId = this.$entitySearchInput.prop('id');
-    this.$autoCompleteSearchContainer = this.$entitySearchInput.closest(
-      '.autocomplete-search',
-    );
-    this.$selectionContainer = $(`#${this.entitySearchInputId}-data`);
-    this.searchInputFullName = this.$autoCompleteSearchContainer.data(
-      'fullname',
-    );
-
-    const inputOptions = options || {};
-    this.options = {
-      value: 'id',
-      dataLimit: 1,
-      ...inputOptions,
-    };
-    this.entityRemoteSource = {};
     this.buildRemoteSource();
     this.buildAutoCompleteSearch();
-  }
-
-  /**
-   * Change the remote url of the endpoint that returns suggestions.
-   *
-   * @param remoteUrl {string}
-   */
-  setRemoteUrl(remoteUrl: string): void {
-    this.entityRemoteSource.remote.url = remoteUrl;
+    this.buildActions();
   }
 
   /**
    * Force selected values, the input is an array of object that must match the format from
    * the API if you want the selected entities to be correctly displayed.
    *
-   * @param values {array}
+   * @param values {Array<any>}
    */
-  setValue(values: JQuery): void {
+  setValues(values: any[]): void {
     this.clearSelectedItems();
     if (!values || values.length <= 0) {
       return;
     }
 
-    values.each((index: number, value: any) => {
+    values.forEach((index: number, value: any) => {
       this.appendSelectedItem(value);
     });
   }
 
   /**
+   * @param optionName
+   */
+  getOption(optionName: string): any {
+    return this.options[optionName];
+  }
+
+  /**
+   * @param {string} optionName
+   * @param {unknown} value
+   */
+  setOption(optionName: string, value: unknown): void {
+    this.options[optionName] = value;
+
+    // Apply special options to components when needed
+    if (optionName === 'remoteUrl') {
+      this.entityRemoteSource.remote.url = this.options.remoteUrl;
+    }
+  }
+
+  /**
+   * @param {Object} options
+   */
+  private buildOptions(options: OptionsObject): void {
+    const inputOptions = options || {};
+    const defaultOptions: OptionsObject = {
+      prototypeTemplate: undefined,
+      prototypeIndex: '__index__',
+      prototypeMapping: {
+        id: '__id__',
+        name: '__name__',
+        image: '__image__',
+      },
+
+      allowDelete: true,
+      dataLimit: 0,
+      remoteUrl: undefined,
+
+      removeModal: {
+        id: 'modal-confirm-remove-entity',
+        title: 'Delete item',
+        message: 'Are you sure you want to delete this item?',
+        apply: 'Delete',
+        cancel: 'Cancel',
+        buttonClass: 'btn-danger',
+      },
+
+      // Most of the previous config are configurable via the EntitySearchInputForm options, the following ones are only
+      // overridable via js config (as long as you use the default template)
+      searchInputSelector: EntitySearchInputMap.searchInputSelector,
+      listSelector: EntitySearchInputMap.listSelector,
+      entityItemSelector: EntitySearchInputMap.entityItemSelector,
+      entityDeleteSelector: EntitySearchInputMap.entityDeleteSelector,
+      queryWildcard: '__QUERY__',
+
+      // These are configurable callbacks
+      onRemovedContent: undefined,
+      onSelectedContent: undefined,
+    };
+
+    Object.keys(defaultOptions).forEach((optionName) => {
+      // This gets the proper value for each option, respecting the priority: input > data-attribute > default
+      this.initOption(optionName, inputOptions, defaultOptions[optionName]);
+    });
+  }
+
+  /**
+   * Init the option value, the input config has the more priority. It overrides the data attribute option
+   * (if present), finally a default value is used (if defined).
+   *
+   * @param {string} optionName
+   * @param {Object} inputOptions
+   * @param {*|undefined} defaultOption
+   */
+  private initOption(optionName: string, inputOptions: OptionsObject, defaultOption: any = undefined): void {
+    if (Object.prototype.hasOwnProperty.call(inputOptions, optionName)) {
+      this.options[optionName] = inputOptions[optionName];
+    } else if (typeof this.$entitySearchInputContainer.data(optionName) !== 'undefined') {
+      this.options[optionName] = this.$entitySearchInputContainer.data(optionName);
+    } else {
+      this.options[optionName] = defaultOption;
+    }
+  }
+
+  private buildActions(): void {
+    // Always check for click even if it is useless when allowDelete options is false, it can be changed dynamically
+    $(this.$selectionContainer).on('click', this.options.entityDeleteSelector, (event) => {
+      if (!this.options.allowDelete) {
+        return;
+      }
+
+      const $entity = $(event.target).closest(this.options.entityItemSelector);
+
+      const modal = new (ConfirmModal as any)(
+        {
+          id: this.options.removeModal.id,
+          confirmTitle: this.options.removeModal.title,
+          confirmMessage: this.options.removeModal.message,
+          closeButtonLabel: this.options.removeModal.cancel,
+          confirmButtonLabel: this.options.removeModal.apply,
+          confirmButtonClass: this.options.removeModal.buttonClass,
+          closable: true,
+        },
+        () => {
+          $entity.remove();
+          if (typeof this.options.onRemovedContent !== 'undefined') {
+            this.options.onRemovedContent($entity);
+          }
+        },
+      );
+      modal.show();
+    });
+
+    // For now adapt the display based on the allowDelete option
+    const $entityDelete = $(this.options.entityDeleteSelector, this.$selectionContainer);
+    $entityDelete.toggle(!!this.options.allowDelete);
+  }
+
+  /**
    * Build the AutoCompleteSearch component
    */
-  buildAutoCompleteSearch(): void {
+  private buildAutoCompleteSearch(): void {
     const autoSearchConfig = {
       source: this.entityRemoteSource,
       dataLimit: this.options.dataLimit,
       value: '',
       templates: {
-        suggestion: (entity: OptionsObject) => {
+        suggestion: (entity: any) => {
           let entityImage;
 
           if (Object.prototype.hasOwnProperty.call(entity, 'image')) {
@@ -123,11 +253,7 @@ export default class EntitySearchInput {
           return `<div class="search-suggestion">${entityImage}${entity.name}</div>`;
         },
       },
-      onClose: (event: JQueryEventObject) => {
-        this.onSelectionClose(event);
-      },
-      /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-      onSelect: (selectedItem: OptionsObject, event: JQueryEventObject) => {
+      onSelect: (selectedItem: any) => {
         // When limit is one we cannot select additional elements so we replace them instead
         if (this.options.dataLimit === 1) {
           return this.replaceSelectedItem(selectedItem);
@@ -137,8 +263,8 @@ export default class EntitySearchInput {
     };
 
     // Can be used to format value depending on selected item
-    if (this.options.value !== undefined) {
-      autoSearchConfig.value = <string> this.options.value;
+    if (this.options.mappingValue !== undefined) {
+      autoSearchConfig.value = <string> this.options.mappingValue;
     }
     this.autoSearch = new AutoCompleteSearch(
       this.$entitySearchInput,
@@ -148,14 +274,14 @@ export default class EntitySearchInput {
 
   /**
    * Build the Bloodhound remote source which will call the API. The placeholder to
-   * inject the query search parameter is __QUERY__ (@todo: could be configurable)
+   * inject the query search parameter is __QUERY__
    *
    * @returns {Bloodhound}
    */
-  buildRemoteSource(): void {
+  private buildRemoteSource(): void {
     const sourceConfig = {
-      mappingValue: this.$autoCompleteSearchContainer.data('mappingvalue'),
-      remoteUrl: this.$autoCompleteSearchContainer.data('remoteurl'),
+      mappingValue: this.options.mappingValue,
+      remoteUrl: this.options.remoteUrl,
     };
 
     this.entityRemoteSource = new Bloodhound({
@@ -167,7 +293,7 @@ export default class EntitySearchInput {
       remote: {
         url: sourceConfig.remoteUrl,
         cache: false,
-        wildcard: '__QUERY__',
+        wildcard: this.options.queryWildcard,
         transform(response: any) {
           if (!response) {
             return [];
@@ -179,20 +305,10 @@ export default class EntitySearchInput {
   }
 
   /**
-   * When an item is selected we empty the input search, since the selected data is stored in hidden inputs anyway
-   *
-   * @param event
-   */
-  onSelectionClose(event: JQueryEventObject): void {
-    $(event.target).val('');
-  }
-
-  /**
    * Removes selected items.
    */
-  clearSelectedItems(): void {
-    const formIdItem = $('li', this.$selectionContainer);
-    formIdItem.remove();
+  private clearSelectedItems(): void {
+    this.$selectionContainer.empty();
   }
 
   /**
@@ -202,7 +318,7 @@ export default class EntitySearchInput {
    * @param selectedItem {Object}
    * @returns {boolean}
    */
-  replaceSelectedItem(selectedItem: OptionsObject): boolean {
+  private replaceSelectedItem(selectedItem: any): boolean {
     this.clearSelectedItems();
     this.addSelectedContentToContainer(selectedItem);
 
@@ -216,14 +332,11 @@ export default class EntitySearchInput {
    * @param selectedItem {Object}
    * @returns {boolean}
    */
-  appendSelectedItem(selectedItem: OptionsObject): boolean {
+  private appendSelectedItem(selectedItem: any): boolean {
     // If collection length is up to limit, return
-    const formIdItem = $('li', this.$selectionContainer);
+    const $entityItems = $(this.options.entityItemSelector, this.$selectionContainer);
 
-    if (
-      this.options.dataLimit !== 0
-      && formIdItem.length >= this.options.dataLimit
-    ) {
+    if (this.options.dataLimit !== 0 && $entityItems.length >= this.options.dataLimit) {
       return false;
     }
 
@@ -233,59 +346,44 @@ export default class EntitySearchInput {
   }
 
   /**
-   * Add the selected content to the selection container, the HTML is generated based on the render function
-   * then a hidden input is automatically added inside it, and finally the rendered selection is added to the list.
+   * Add the selected content to the selection container, the HTML is generated based on the render that relies on the
+   * prototype template and mapping, and finally the rendered selection is added to the list.
    *
-   * @param selectedItem {Object}
+   * @param {Object} selectedItem
    */
-  addSelectedContentToContainer(selectedItem: OptionsObject): void {
-    let value;
+  private addSelectedContentToContainer(selectedItem: any): void {
+    const newIndex = this.$selectionContainer.children().length;
+    const selectedHtml = this.renderSelected(selectedItem, newIndex);
 
-    if (typeof this.options.value === 'function') {
-      // @ts-ignore-next-line
-      value = this.options.value(selectedItem);
-    } else {
-      value = selectedItem[<string> this.options.value];
-    }
-
-    const selectedHtml = this.renderSelected(selectedItem);
-    // Hidden input is added into the selected li
     const $selectedNode = $(selectedHtml);
-    const $hiddenInput = $(
-      `<input type="hidden" name="${this.searchInputFullName}[data][]" value="${value}" />`,
-    );
-    $selectedNode.append($hiddenInput);
+    const $entityDelete = $(this.options.entityDeleteSelector, $selectedNode);
+    $entityDelete.toggle(!!this.options.allowDelete);
 
-    // Then the li is added to the list
     this.$selectionContainer.append($selectedNode);
 
-    // Trigger the change so that listeners detect the form data has been modified
-    $hiddenInput.trigger('change');
+    if (typeof this.options.onSelectedContent !== 'undefined') {
+      this.options.onSelectedContent($selectedNode, selectedItem);
+    }
   }
 
   /**
-   * Render the selected element, this will be appended in the selection list (ul),
-   * no need to include the hidden input as it is automatically handled in addSelectedContentToContainer
+   * Render the selected element, this will be appended in the selection list (ul), prototypeTemplate is used as the
+   * base the we rely on prototypeMapping to replace every placeholders in the template by their mapping value in the
+   * provided entity.
    *
-   * @param entity {Object}
+   * @param {Object} entity
+   * @param {number} index
    *
    * @returns {string}
    */
-  renderSelected(entity: OptionsObject): string {
-    // @todo: the tplcollection idea is not bad but it only contains a span for now, to fo to the end of this idea
-    // it should contain the whole div (with media-left media-body and all)
-    const $templateContainer = $(`#tplcollection-${this.entitySearchInputId}`);
-    const innerTemplateHtml = $templateContainer
-      .html()
-      .replace('%s', <string>entity.name);
+  private renderSelected(entity: any, index: number): string {
+    let template = this.options.prototypeTemplate.replace(new RegExp(this.options.prototypeIndex, 'g'), String(index));
 
-    return `<li class="media">
-        <div class="media-left">
-          <img class="media-object image" src="${entity.image}" />
-        </div>
-        <div class="media-body media-middle">
-          ${innerTemplateHtml}
-        </div>
-      </li>`;
+    Object.keys(this.options.prototypeMapping).forEach((fieldName) => {
+      const fieldValue = entity[fieldName] || '';
+      template = template.replace(new RegExp(this.options.prototypeMapping[fieldName], 'g'), fieldValue);
+    });
+
+    return template;
   }
 }

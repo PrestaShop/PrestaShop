@@ -309,7 +309,10 @@ class WebserviceController extends FrameworkBundleAdminController
      * Process the Webservice configuration form.
      *
      * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
-     * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this."
+     * )
      *
      * @param Request $request
      * @param WebserviceKeyFilters $filters

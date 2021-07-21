@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Pages page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Pages extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on pages page
+   */
   constructor() {
     super();
 
@@ -78,115 +87,120 @@ class Pages extends BOBasePage {
 
   /**
    * Reset input filters
-   * @param page
-   * @param table
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to reset and get number of lines
    * @return {Promise<void>}
    */
-  async resetAndGetNumberOfLines(page, table) {
-    const resetButton = this.filterResetButton(table);
+  async resetAndGetNumberOfLines(page, tableName) {
+    const resetButton = this.filterResetButton(tableName);
 
     if (await this.elementVisible(page, resetButton, 2000)) {
       await this.clickAndWaitForNavigation(page, resetButton);
     }
-    return this.getNumberFromText(page, this.gridHeaderTitle(table));
+    return this.getNumberFromText(page, this.gridHeaderTitle(tableName));
   }
 
   /**
    * Filter table
-   * @param page
-   * @param table
-   * @param filterType, input or select to choose method of filter
-   * @param filterBy, column to filter
-   * @param value, value to filter with
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to filter
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
-  async filterTable(page, table, filterType, filterBy, value = '') {
+  async filterTable(page, tableName, filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(table, filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(tableName, filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(page, this.filterColumn(table, filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.filterColumn(tableName, filterBy), value ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton(table));
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton(tableName));
   }
 
   /**
    * Delete row in table
-   * @param page
-   * @param table
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to delete row from it
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  async deleteRowInTable(page, table, row) {
+  async deleteRowInTable(page, tableName, row) {
     // Click on dropDown
     await Promise.all([
-      page.click(this.listTableToggleDropDown(table, row)),
-      this.waitForVisibleSelector(page, `${this.listTableToggleDropDown(table, row)}[aria-expanded='true']`),
+      page.click(this.listTableToggleDropDown(tableName, row)),
+      this.waitForVisibleSelector(page, `${this.listTableToggleDropDown(tableName, row)}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.deleteRowLink(table, row)),
-      this.waitForVisibleSelector(page, `${this.confirmDeleteModal(table)}.show`),
+      page.click(this.deleteRowLink(tableName, row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal(tableName)}.show`),
     ]);
-    await this.confirmDeleteFromTable(page, table);
+    await this.confirmDeleteFromTable(page, tableName);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Delete all rows in table with Bulk Actions
-   * @param page
-   * @param table
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to delete rows with bulk actions
    * @returns {Promise<string>}
    */
-  async deleteWithBulkActions(page, table) {
+  async deleteWithBulkActions(page, tableName) {
     // Add listener to dialog to accept deletion
     this.dialogListener(page);
+
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel(table), el => el.click()),
-      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(table)}:not([disabled])`),
+      page.$eval(this.selectAllRowsLabel(tableName), el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}:not([disabled])`),
     ]);
+
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton(table)),
-      this.waitForVisibleSelector(page, this.bulkActionsDeleteButton(table)),
+      page.click(this.bulkActionsToggleButton(tableName)),
+      this.waitForVisibleSelector(page, this.bulkActionsDeleteButton(tableName)),
     ]);
+
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.bulkActionsDeleteButton(table)),
-      this.waitForVisibleSelector(page, `${this.confirmDeleteModal(table)}.show`),
+      page.click(this.bulkActionsDeleteButton(tableName)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal(tableName)}.show`),
     ]);
-    await this.confirmDeleteFromTable(page, table);
+    await this.confirmDeleteFromTable(page, tableName);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Confirm delete with in modal
-   * @param page
-   * @param table
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to confirm delete
    * @return {Promise<void>}
    */
-  async confirmDeleteFromTable(page, table) {
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton(table));
+  async confirmDeleteFromTable(page, tableName) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton(tableName));
   }
 
   /**
-   * Get Value of column Displayed in table
-   * @param page
-   * @param table
-   * @param row, row in table
+   * Get value of column Displayed in table
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to get status
+   * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
-  async getStatus(page, table, row) {
+  async getStatus(page, tableName, row) {
     // Get value of the check input
     const inputValue = await this.getAttributeContent(
       page,
-      `${this.listTableStatusColumnToggleInput(table, row)}:checked`,
+      `${this.listTableStatusColumnToggleInput(tableName, row)}:checked`,
       'value',
     );
 
@@ -196,15 +210,15 @@ class Pages extends BOBasePage {
 
   /**
    * Quick edit toggle column value in table
-   * @param page
-   * @param table
-   * @param row, row in table
-   * @param valueWanted, Value wanted in column
+   * @param page {Page} Browser tab
+   * @param tableName {string} table name to set status
+   * @param row {number} row on table
+   * @param valueWanted {boolean} Value wanted in column
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
-  async setStatus(page, table, row, valueWanted = true) {
-    if (await this.getStatus(page, table, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.listTableStatusColumn(table, row));
+  async setStatus(page, tableName, row, valueWanted = true) {
+    if (await this.getStatus(page, tableName, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.listTableStatusColumn(tableName, row));
 
       return true;
     }
@@ -214,47 +228,50 @@ class Pages extends BOBasePage {
 
   /**
    * Enable / disable column by Bulk Actions
-   * @param page
-   * @param table
-   * @param enable
+   * @param page {Page} Browser tab
+   * @param tableName {string}  Table name to bulk delete rows
+   * @param enable {boolean} True if we need to bulk enable, false if not
    * @returns {Promise<string>}
    */
-  async bulkSetStatus(page, table, enable = true) {
+  async bulkSetStatus(page, tableName, enable = true) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel(table), el => el.click()),
-      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(table)}:not([disabled])`),
+      page.$eval(this.selectAllRowsLabel(tableName), el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}:not([disabled])`),
     ]);
+
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton(table)),
-      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(table)}`),
+      page.click(this.bulkActionsToggleButton(tableName)),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}`),
     ]);
+
     // Click on enable/disable and wait for modal
     await this.clickAndWaitForNavigation(
       page,
-      enable ? this.bulkActionsEnableButton(table) : this.bulkActionsDisableButton(table),
+      enable ? this.bulkActionsEnableButton(tableName) : this.bulkActionsDisableButton(tableName),
     );
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * get text from a column
-   * @param page
-   * @param table, Pages or Categories
-   * @param row, row in table
-   * @param column, which column
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to get text column
+   * @param row {number} Row on table
+   * @param column{string} Column name to get text from it
    * @return {Promise<string>}
    */
-  async getTextColumnFromTable(page, table, row, column) {
-    return this.getTextContent(page, this.listTableColumn(table, row, column));
+  async getTextColumnFromTable(page, tableName, row, column) {
+    return this.getTextContent(page, this.listTableColumn(tableName, row, column));
   }
 
   /**
    * Get text column form table cms page
-   * @param page
-   * @param row, row in table
-   * @param column, which column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column name to get text from it
    * @return {Promise<string>}
    */
   getTextColumnFromTableCmsPage(page, row, column) {
@@ -263,32 +280,31 @@ class Pages extends BOBasePage {
 
   /**
    * Get text column form table cms page category
-   * @param page
-   * @param row, row in table
-   * @param column, which column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column name to get text from it
    * @return {Promise<string>}
    */
   getTextColumnFromTableCmsPageCategory(page, row, column) {
     return this.getTextColumnFromTable(page, 'cms_page_category', row, column);
   }
 
-
   /**
    * Get content from all rows
-   * @param page
-   * @param table
-   * @param column
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to get all rows column content
+   * @param column {string} Column name to get all rows column content
    * @return {Promise<string[]>}
    */
-  async getAllRowsColumnContent(page, table, column) {
-    const rowsNumber = await this.getNumberOfElementInGrid(page, table);
+  async getAllRowsColumnContent(page, tableName, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page, tableName);
     const allRowsContentTable = [];
     let rowContent;
 
     for (let i = 1; i <= rowsNumber; i++) {
-      if (table === 'cms_page_category') {
+      if (tableName === 'cms_page_category') {
         rowContent = await this.getTextColumnFromTableCmsPageCategory(page, i, column);
-      } else if (table === 'cms_page') {
+      } else if (tableName === 'cms_page') {
         rowContent = await this.getTextColumnFromTableCmsPage(page, i, column);
       }
       await allRowsContentTable.push(rowContent);
@@ -299,8 +315,8 @@ class Pages extends BOBasePage {
 
   /**
    * Get content from all rows table cms page category
-   * @param page
-   * @param column
+   * @param page {Page} Browser tab
+   * @param column {string} Column name to get all rows column content
    * @return {Promise<string[]>}
    */
   getAllRowsColumnContentTableCmsPageCategory(page, column) {
@@ -309,8 +325,8 @@ class Pages extends BOBasePage {
 
   /**
    * Get content from all rows table cms page
-   * @param page
-   * @param column
+   * @param page {Page} Browser tab
+   * @param column {string} Column name to get all rows column content
    * @returns {Promise<string[]>}
    */
   getAllRowsColumnContentTableCmsPage(page, column) {
@@ -318,27 +334,27 @@ class Pages extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @param page
-   * @param table
+   * Get number of elements in grid
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to get number of elements
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid(page, table) {
-    return this.getNumberFromText(page, this.gridTitle(table));
+  async getNumberOfElementInGrid(page, tableName) {
+    return this.getNumberFromText(page, this.gridTitle(tableName));
   }
 
   /* Sort methods */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param table, table to sort
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to sort
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, table, sortBy, sortDirection = 'asc') {
-    const sortColumnDiv = `${this.sortColumnDiv(table, sortBy)}[data-sort-direction='${sortDirection}']`;
-    const sortColumnSpanButton = this.sortColumnSpanButton(table, sortBy);
+  async sortTable(page, tableName, sortBy, sortDirection = 'asc') {
+    const sortColumnDiv = `${this.sortColumnDiv(tableName, sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(tableName, sortBy);
 
     let i = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
@@ -351,9 +367,9 @@ class Pages extends BOBasePage {
 
   /**
    * Sort table cms page category
-   * @param page
-   * @param sortBy
-   * @param sortDirection
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTableCmsPageCategory(page, sortBy, sortDirection = 'asc') {
@@ -362,9 +378,9 @@ class Pages extends BOBasePage {
 
   /**
    * Sort table cms page
-   * @param page
-   * @param sortBy
-   * @param sortDirection
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTableCmsPage(page, sortBy, sortDirection = 'asc') {
@@ -375,8 +391,8 @@ class Pages extends BOBasePage {
 
   /**
    * Go to Edit Category page
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async goToEditCategoryPage(page, row) {
@@ -394,7 +410,7 @@ class Pages extends BOBasePage {
 
   /**
    * Go to new Page Category page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewPageCategory(page) {
@@ -403,7 +419,7 @@ class Pages extends BOBasePage {
 
   /**
    * Back to Pages page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async backToList(page) {
@@ -412,8 +428,8 @@ class Pages extends BOBasePage {
 
   /**
    * View Category
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async viewCategory(page, row) {
@@ -424,7 +440,7 @@ class Pages extends BOBasePage {
 
   /**
    * Go to new Page page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewPage(page) {
@@ -433,8 +449,8 @@ class Pages extends BOBasePage {
 
   /**
    * Go to Edit page Page
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async goToEditPage(page, row) {
@@ -443,64 +459,71 @@ class Pages extends BOBasePage {
 
   /**
    * Select category pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectCategoryPaginationLimit(page, number) {
     await this.selectByVisibleText(page, this.categoriesPaginationLimitSelect, number);
+
     return this.getTextContent(page, this.categoriesPaginationLabel);
   }
 
   /**
    * Category pagination next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationCategoryNext(page) {
     await this.clickAndWaitForNavigation(page, this.categoriesPaginationNextLink);
+
     return this.getTextContent(page, this.categoriesPaginationLabel);
   }
 
   /**
    * Category pagination previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationCategoryPrevious(page) {
     await this.clickAndWaitForNavigation(page, this.categoriesPaginationPreviousLink);
+
     return this.getTextContent(page, this.categoriesPaginationLabel);
   }
 
   /**
    * Select pages pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit number
    * @returns {Promise<string>}
    */
   async selectPagesPaginationLimit(page, number) {
     await this.selectByVisibleText(page, this.pagesPaginationLimitSelect, number);
+
     return this.getTextContent(page, this.pagesPaginationLabel);
   }
 
   /**
    * Pages pagination next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPagesNext(page) {
     await this.clickAndWaitForNavigation(page, this.pagesPaginationNextLink);
+
     return this.getTextContent(page, this.pagesPaginationLabel);
   }
 
   /**
    * Pages pagination previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPagesPrevious(page) {
     await this.clickAndWaitForNavigation(page, this.pagesPaginationPreviousLink);
+
     return this.getTextContent(page, this.pagesPaginationLabel);
   }
 }
+
 module.exports = new Pages();

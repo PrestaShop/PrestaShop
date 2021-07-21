@@ -2,7 +2,7 @@ admin_product_preferences:
     path: /
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\ProductPreferences:index'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\ProductPreferencesController::indexAction'
         _legacy_controller: AdminPPreferences
         _legacy_link: AdminPPreferences
 
@@ -10,7 +10,7 @@ admin_product_preferences_general_save:
     path: /general
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\ProductPreferences:processGeneralForm'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\ProductPreferencesController::processGeneralFormAction'
         _legacy_controller: AdminPPreferences
         _legacy_link: AdminPPreferences:update
 
@@ -18,7 +18,7 @@ admin_product_preferences_pagination_save:
     path: /pagination
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\ProductPreferences:processPaginationForm'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\ProductPreferencesController::processPaginationFormAction'
         _legacy_controller: AdminPPreferences
         _legacy_link: AdminPPreferences:update
 
@@ -26,7 +26,7 @@ admin_product_preferences_page_save:
     path: /page
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\ProductPreferences:processPageForm'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\ProductPreferencesController::processPageFormAction'
         _legacy_controller: AdminPPreferences
         _legacy_link: AdminPPreferences:update
 
@@ -34,6 +34,6 @@ admin_product_preferences_stock_save:
     path: /stock
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\ProductPreferences:processStockForm'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\ProductPreferencesController::processStockFormAction'
         _legacy_controller: AdminPPreferences
         _legacy_link: AdminPPreferences:update

@@ -152,6 +152,25 @@ class ProductImageRepository extends AbstractObjectModelRepository
     /**
      * @param ProductId $productId
      *
+     * @return ImageId|null
+     *
+     * @throws CoreException
+     */
+    public function getDefaultImageId(ProductId $productId): ?ImageId
+    {
+        $coverId = $this->findCoverId($productId);
+        if ($coverId) {
+            return $coverId;
+        }
+
+        $imagesIds = $this->getImagesIds($productId);
+
+        return !empty($imagesIds) ? reset($imagesIds) : null;
+    }
+
+    /**
+     * @param ProductId $productId
+     *
      * @return Image[]
      *
      * @throws CoreException
@@ -227,11 +246,11 @@ class ProductImageRepository extends AbstractObjectModelRepository
     /**
      * @param ProductId $productId
      *
-     * @return Image|null
+     * @return ImageId|null
      *
      * @throws CoreException
      */
-    public function findCover(ProductId $productId): ?Image
+    public function findCoverId(ProductId $productId): ?ImageId
     {
         try {
             $qb = $this->connection->createQueryBuilder();
@@ -248,7 +267,21 @@ class ProductImageRepository extends AbstractObjectModelRepository
             throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
         }
 
-        return $id ? $this->get(new ImageId($id)) : null;
+        return $id ? new ImageId($id) : null;
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return Image|null
+     *
+     * @throws CoreException
+     */
+    public function findCover(ProductId $productId): ?Image
+    {
+        $imageId = $this->findCoverId($productId);
+
+        return $imageId ? $this->get($imageId) : null;
     }
 
     /**

@@ -197,8 +197,10 @@ export default class CategoriesManager {
 
     // Add category name as a text between the checkbox and the radio
     const checkboxInput = categoryNode.querySelector(ProductCategoryMap.checkboxInput);
+    const nameelem = document.createTextNode(category.name);
+    const elem = category.active ? nameelem : document.createElement('i').appendChild(nameelem).parentNode;
     checkboxInput.parentNode.insertBefore(
-      document.createTextNode(category.name),
+      elem,
       checkboxInput,
     );
 
@@ -342,7 +344,6 @@ export default class CategoriesManager {
   initTypeahead() {
     const source = new Bloodhound({
       datumTokenizer: Tokenizers.obj.letters(
-        'name',
         'breadcrumb',
       ),
       queryTokenizer: Bloodhound.tokenizers.nonword,
@@ -359,15 +360,6 @@ export default class CategoriesManager {
         // This resets the search input or else previous search is cached and can be added again
         $searchInput.typeahead('val', '');
       },
-      onClose: (event, $searchInput) => {
-        // This resets the search input or else previous search is cached and can be added again
-        $searchInput.typeahead('val', '');
-        return true;
-      },
-    };
-
-    dataSetConfig.templates = {
-      suggestion: (item) => `<div class="px-2">${item.breadcrumb}</div>`,
     };
 
     new AutoCompleteSearch($(ProductCategoryMap.searchInput), dataSetConfig);

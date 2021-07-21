@@ -72,8 +72,8 @@ class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function getExtendedType(): string
+    public static function getExtendedTypes(): iterable
     {
-        return MultistoreConfigurationType::class;
+        return [MultistoreConfigurationType::class];
     }
 }

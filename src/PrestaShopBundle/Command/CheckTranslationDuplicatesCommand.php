@@ -27,13 +27,25 @@
 namespace PrestaShopBundle\Command;
 
 use PrestaShopBundle\Translation\Translator;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Translation\TranslatorBagInterface;
 
-class CheckTranslationDuplicatesCommand extends ContainerAwareCommand
+class CheckTranslationDuplicatesCommand extends Command
 {
+    /**
+     * @var TranslatorBagInterface
+     */
+    private $translator;
+
+    public function __construct(TranslatorBagInterface $translator)
+    {
+        parent::__construct();
+        $this->translator = $translator;
+    }
+
     protected function configure()
     {
         $this
@@ -44,8 +56,7 @@ class CheckTranslationDuplicatesCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Get dependancies
-        $translator = $this->getContainer()->get('translator');
-        $catalogue = $translator->getCatalogue()->all();
+        $catalogue = $this->translator->getCatalogue()->all();
 
         // Init progress bar
         $progress = new ProgressBar($output, count($catalogue, COUNT_RECURSIVE));

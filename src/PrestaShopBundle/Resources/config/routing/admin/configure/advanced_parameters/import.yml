@@ -2,7 +2,7 @@ admin_import:
     path: /
     methods: [GET, POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:import'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ImportController::importAction'
         _legacy_controller: AdminImport
         _legacy_link: AdminImport
 
@@ -10,7 +10,7 @@ admin_import_data_configuration_index:
     path: /data
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\ImportDataConfiguration:index'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ImportDataConfigurationController::indexAction'
         _legacy_controller: AdminImport
 
 # This redirect prevents an error (redirects to import first page instead) when
@@ -28,14 +28,14 @@ admin_import_process:
     path: /process
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:processImport'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ImportController::processImportAction'
         _legacy_controller: AdminImport
 
 admin_import_file_upload:
     path: /file/upload
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:upload'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ImportController::uploadAction'
         _legacy_controller: AdminImport
         _legacy_link: AdminImport:uploadCsv
 
@@ -43,7 +43,7 @@ admin_import_file_delete:
     path: /file/delete
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:delete'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ImportController::deleteAction'
         _legacy_controller: AdminImport
         _legacy_link: AdminImport:delete
 
@@ -51,7 +51,7 @@ admin_import_file_download:
     path: /file/download
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:download'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ImportController::downloadAction'
         _legacy_controller: AdminImport
         _legacy_link: AdminImport:download
 
@@ -59,7 +59,7 @@ admin_import_sample_download:
     path: /sample/download/{sampleName}
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:downloadSample'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ImportController::downloadSampleAction'
         _legacy_controller: AdminImport
         _legacy_link: AdminImport:sampleDownload
 
@@ -67,7 +67,7 @@ admin_import_data_configuration_create:
     path: /match
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\ImportDataConfiguration:create'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ImportDataConfigurationController::createAction'
         _legacy_controller: AdminImport
         _legacy_link: AdminImport:saveImportMatch
 
@@ -75,7 +75,7 @@ admin_import_data_configuration_get:
     path: /match
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\ImportDataConfiguration:get'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ImportDataConfigurationController::getAction'
         _legacy_controller: AdminImport
         _legacy_link: AdminImport:getImportMatch
 
@@ -83,7 +83,7 @@ admin_import_data_configuration_delete:
   path: /match
   methods: [DELETE]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\ImportDataConfiguration:delete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ImportDataConfigurationController::deleteAction'
     _legacy_controller: AdminImport
     _legacy_link: AdminImport:deleteImportMatch
 
@@ -91,6 +91,6 @@ admin_import_get_available_fields:
   path: /fields
   methods: [GET]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:getAvailableEntityFields'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ImportController::getAvailableEntityFieldsAction'
     _legacy_controller: AdminImport
     _legacy_link: AdminImport:getAvailableEntityFields

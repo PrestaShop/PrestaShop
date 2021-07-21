@@ -18,7 +18,8 @@ class Checkout extends FOBasePage {
     this.shippingValueSpan = '#cart-subtotal-shipping span.value';
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
-    this.createAccountOptionalNotice = `${this.personalInformationStepForm} #customer-form section p`;
+    this.createAccountOptionalNotice = `${this.personalInformationStepForm} `
+      + '#customer-form .form-informations .form-informations-title';
     this.signInLink = `${this.personalInformationStepForm} a[href="#checkout-login-form"]`;
     this.checkoutGuestForm = '#checkout-guest-form';
     this.checkoutGuestGenderInput = pos => `${this.checkoutGuestForm} input[name='id_gender'][value='${pos}']`;

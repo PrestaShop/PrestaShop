@@ -1,0 +1,69 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<div class="row justify-content-center">
+  <ul class="pagination mb-0">
+    <li class="page-item {% if first_url %}{% else %}disabled{% endif %}">
+      <a class="page-link" {% if first_url %}href="{{ first_url }}"{% else %}nohref{% endif %}>1</a>
+    </li>
+    <li class="page-item previous {% if previous_url %}{% else %}disabled{% endif %}">
+      <a class="page-link" aria-label="Previous" {% if previous_url %}href="{{ previous_url }}"{% else %}nohref{% endif %}><span class="sr-only">Previous</span></a>
+    </li>
+    <li class="page-item active">
+      <input name="paginator_jump_page" class="jump-to-page" type="text" value="{{ current_page }}" psurl="{{ jump_page_url }}" psmax="{{ page_count }}" pslimit="{{ limit }}" aria-label="{{ "Enter page number and press enter"|trans({}, 'Admin.Catalog.Feature') }}"/>
+    </li>
+    <li class="page-item next {% if next_url is defined and next_url != false %}{% else %}disabled{% endif %}">
+      <a class="page-link" aria-label="Next" id="pagination_next_url" {% if next_url is defined and next_url != false %}href="{{ next_url }}"{% else %}nohref{% endif %}><span class="sr-only">Next</span></a>
+    </li>
+    <li class="page-item {% if last_url is defined and last_url != false %}{% else %}disabled{% endif %}">
+      <a class="page-link" {% if last_url is defined and last_url != false %}href="{{ last_url }}"{% else %}nohref{% endif %}>{{ page_count }}</a>
+    </li>
+  </ul>
+  <div class="mx-3">
+    <label class="col-form-label">
+      {{ "Viewing %from%-%to% on %total% (page %current_page% / %page_count%)"|trans({
+        '%from%': from+1,
+        '%to%': min(to+1, total),
+        '%total%': total,
+        '%current_page%': current_page,
+        '%page_count%': page_count
+      }, 'Admin.Catalog.Feature') }}
+    </label>
+  </div>
+  <div class="mx-3">
+    <div class="form-group row mb-0">
+      <label for="paginator_select_page_limit" class="col-form-label mr-2">{{ "Items per page:"|trans({}, 'Admin.Catalog.Feature') }}</label>
+      <div>
+        <select name="paginator_select_page_limit" id="paginator_select_page_limit" psurl="{{ changeLimitUrl }}" class="pagination-link custom-select">
+          {% if limit not in limit_choices %}
+            <option value="{{ limit }}" selected="selected">{{ limit }}</option>
+          {% endif %}
+          {% for limit_choice in limit_choices %}
+            <option value="{{ limit_choice }}" {% if limit==limit_choice %}selected="selected"{% endif %}>{{ limit_choice }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

@@ -65,6 +65,11 @@
                   <em>{$order.carrier.delay}</em>
                 </li>
               {/if}
+              {if $order.details.recyclable}
+                <li>  
+                  <em>{l s='You have given permission to receive your order in recycled packaging.' d="Shop.Theme.Customeraccount"}</em>
+                </li>
+              {/if}
             </ul>
           </div>
         {/block}

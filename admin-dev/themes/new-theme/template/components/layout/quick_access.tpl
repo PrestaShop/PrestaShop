@@ -5,7 +5,7 @@
   </button>
   <div class="dropdown-menu">
     {foreach $quick_access as $quick}
-      <a class="dropdown-item{if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access} active{/if}"
+      <a class="dropdown-item quick-row-link{if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access} active{/if}"
          href="{$quick.link|escape:'html':'UTF-8'}"
         {if $quick.new_window} target="_blank"{/if}
          data-item="{$quick.name}"
@@ -13,7 +13,7 @@
     {/foreach}
     <div class="dropdown-divider"></div>
     {if isset($matchQuickLink)}
-      <a
+      <a id="quick-remove-link"
         class="dropdown-item js-quick-link"
         href="#"
         data-method="remove"
@@ -29,7 +29,7 @@
         {l s='Remove from Quick Access' d='Admin.Navigation.Header'}
       </a>
     {else}
-      <a
+      <a id="quick-add-link"
         class="dropdown-item js-quick-link"
         href="#"
         data-rand="{1|rand:200}"
@@ -44,7 +44,7 @@
         {l s='Add current page to Quick Access'  d='Admin.Actions'}
       </a>
     {/if}
-    <a class="dropdown-item" href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
+    <a id="quick-manage-link" class="dropdown-item" href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
       <i class="material-icons">settings</i>
       {l s='Manage your quick accesses' d='Admin.Navigation.Header'}
     </a>

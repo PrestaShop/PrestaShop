@@ -31,7 +31,7 @@
         "cssjanus/cssjanus": "dev-patch-1",
         "curl/curl": "^1.2.1",
         "defuse/php-encryption": "~2.0.1",
-        "doctrine/cache": "^1.8",
+        "doctrine/cache": "^2.0",
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/orm": "^2.7",
         "egulias/email-validator": "^2.1",
@@ -83,7 +83,7 @@
         "prestashop/ps_featuredproducts": "^2",
         "prestashop/ps_imageslider": "^3",
         "prestashop/ps_languageselector": "^2",
-        "prestashop/ps_linklist": "^4",
+        "prestashop/ps_linklist": "^5",
         "prestashop/ps_mainmenu": "^2",
         "prestashop/ps_searchbar": "^2",
         "prestashop/ps_sharebuttons": "^2",
@@ -147,7 +147,7 @@
             "file": "app/config/parameters.yml"
         },
         "symfony": {
-            "require": "~3.4"
+            "require": "~4.4"
         },
         "symfony-app-dir": "app",
         "symfony-assets-install": "relative",
@@ -201,33 +201,13 @@
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Integration/phpunit.xml"
         ],
-        "phpunit-admin": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml"
-        ],
-        "phpunit-controllers": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/old-controllers.xml"
-        ],
         "phpunit-endpoints": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-endpoints.xml"
         ],
-        "phpunit-legacy": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml"
-        ],
-        "phpunit-sf": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/sf-tests.xml"
-        ],
         "test-all": [
-            "@composer phpunit-admin",
-            "@composer phpunit-legacy",
             "@composer unit-tests",
-            "@composer phpunit-sf",
             "@composer integration-tests",
-            "@composer phpunit-controllers",
             "@composer integration-behaviour-tests"
         ],
         "unit-tests": [

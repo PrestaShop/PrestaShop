@@ -686,3 +686,89 @@ Feature: Order from Back Office (BO)
     Then cart "dummy_cart_freegift" should contain 2 products
     When I select carrier "carrier2" for cart "dummy_cart_freegift"
     Then cart "dummy_cart_freegift" should contain 1 products
+
+  Scenario: Add a cart rule with free shipping to an order with a total of 0
+    Given there is a product in the catalog named "product1" with a price of 0.00 and 100 items in stock
+    When I create an empty cart "dummy_cart_free_shipping" for customer "testCustomer"
+    And I add 1 products "product1" to the cart "dummy_cart_free_shipping"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_free_shipping"
+    Then cart "dummy_cart_free_shipping" should contain 1 products
+    When I add order "bo_order1" with the following details:
+      | cart                | dummy_cart_free_shipping   |
+      | message             |                            |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 0.000  |
+      | total_products_wt        | 0.000  |
+      | total_discounts_tax_excl | 0.000  |
+      | total_discounts_tax_incl | 0.000  |
+      | total_paid_tax_excl      | 7.000  |
+      | total_paid_tax_incl      | 7.420  |
+      | total_paid               | 7.420  |
+      | total_paid_real          | 0.000  |
+      | total_shipping_tax_excl  | 7.000  |
+      | total_shipping_tax_incl  | 7.420  |
+    When I add discount to order "bo_order1" with following details:
+      | name      | Free Shipping |
+      | type      | free_shipping |
+    Then I should get no error
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 0.000  |
+      | total_products_wt        | 0.000  |
+      | total_discounts_tax_excl | 7.000  |
+      | total_discounts_tax_incl | 7.420  |
+      | total_paid_tax_excl      | 0.000  |
+      | total_paid_tax_incl      | 0.000  |
+      | total_paid               | 0.000  |
+      | total_paid_real          | 0.000  |
+      | total_shipping_tax_excl  | 7.000  |
+      | total_shipping_tax_incl  | 7.420  |
+
+  @order-cart-rules1
+  Scenario: Add a cart rule with free shipping to an order with a total of 0 and existing order
+    Given there is a product in the catalog named "product1" with a price of 0.00 and 100 items in stock
+    When I create an empty cart "dummy_cart_free_shipping" for customer "testCustomer"
+    And I add 1 products "product1" to the cart "dummy_cart_free_shipping"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_free_shipping"
+    Then cart "dummy_cart_free_shipping" should contain 1 products
+    When I add order "bo_order1" with the following details:
+      | cart                | dummy_cart_free_shipping   |
+      | message             |                            |
+      | payment module name | dummy_payment              |
+      | status              | Payment accepted           |
+    Then order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 0.000  |
+      | total_products_wt        | 0.000  |
+      | total_discounts_tax_excl | 0.000  |
+      | total_discounts_tax_incl | 0.000  |
+      | total_paid_tax_excl      | 7.000  |
+      | total_paid_tax_incl      | 7.420  |
+      | total_paid               | 7.420  |
+      | total_paid_real          | 7.420  |
+      | total_shipping_tax_excl  | 7.000  |
+      | total_shipping_tax_incl  | 7.420  |
+    And order "bo_order1" should have invoice
+    When I add discount to order "bo_order1" on first invoice and following details:
+      | name      | Free Shipping |
+      | type      | free_shipping |
+    Then I should get no error
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 0.000  |
+      | total_products_wt        | 0.000  |
+      | total_discounts_tax_excl | 7.000  |
+      | total_discounts_tax_incl | 7.420  |
+      | total_paid_tax_excl      | 0.000  |
+      | total_paid_tax_incl      | 0.000  |
+      | total_paid               | 0.000  |
+      | total_paid_real          | 7.420  |
+      | total_shipping_tax_excl  | 7.000  |
+      | total_shipping_tax_incl  | 7.420  |

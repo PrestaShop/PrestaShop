@@ -29,13 +29,14 @@ declare(strict_types=1);
 namespace Tests\Integration\Adapter\Module\PrestaTrust;
 
 use Currency;
-use Doctrine\Common\Cache\ArrayCache;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker;
 use PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Translation\Translator;
 
 class PrestaTrustCheckerTest extends TestCase
@@ -103,7 +104,7 @@ class PrestaTrustCheckerTest extends TestCase
             ->method('trans')
             ->will($this->returnArgument(0));
 
-        $cache = new ArrayCache();
+        $cache = new DoctrineProvider(new ArrayAdapter());
         $cache->save(
             'module-verified-from-addons-api',
             (object) ['hash' => '366d25acf8172ef93c7086c3ee78f9a2f3e7870356df498d34bda30fb294ae3b']

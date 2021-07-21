@@ -76,17 +76,17 @@ const {$} = window;
  * and renders it depending on needs
  */
 export default class DynamicPaginator {
-  $paginationContainer: JQuery;
+  private $paginationContainer: JQuery;
 
-  paginationService: ServiceType;
+  private paginationService: ServiceType;
 
-  renderer: RendererType;
+  private renderer: RendererType;
 
-  currentPage: number;
+  private currentPage: number;
 
-  selectorsMap: Record<string, string>;
+  private selectorsMap: Record<string, string>;
 
-  pagesCount: number;
+  private pagesCount: number;
 
   /**
    * @param {String} containerSelector
@@ -109,10 +109,53 @@ export default class DynamicPaginator {
     this.setSelectorsMap(selectorsMap);
     this.pagesCount = 0;
     this.init();
-    this.currentPage = 1;
-    if (startingPage !== null) {
+    this.currentPage = startingPage;
+    if (startingPage > 0) {
       this.paginate(startingPage);
     }
+  }
+
+  /**
+   * @param {Number} page
+   */
+  async paginate(page: number): Promise<void> {
+    this.currentPage = page > 0 ? page : 1;
+    this.renderer.toggleLoading(true);
+    const limit = this.getLimit();
+
+    const data: FetchResponse = await this.paginationService.fetch(
+      this.calculateOffset(page, limit),
+      limit,
+    );
+
+    $(this.selectorsMap.jumpToPageInput).val(page);
+    this.countPages(<number>data.total);
+    this.refreshButtonsData(page);
+    this.refreshInfoLabel(page, <number>data.total);
+
+    this.toggleTargetAvailability(this.selectorsMap.firstPageItem, page > 1);
+    this.toggleTargetAvailability(this.selectorsMap.previousPageItem, page > 1);
+    this.toggleTargetAvailability(
+      this.selectorsMap.nextPageItem,
+      page < this.pagesCount,
+    );
+    this.toggleTargetAvailability(
+      this.selectorsMap.lastPageItem,
+      page < this.pagesCount,
+    );
+
+    this.renderer.render(data);
+    this.renderer.toggleLoading(false);
+
+    window.prestaShopUiKit.initToolTips();
+  }
+
+  getCurrentPage(): number {
+    return this.currentPage;
+  }
+
+  getPagesCount(): number {
+    return this.pagesCount;
   }
 
   /**
@@ -144,47 +187,14 @@ export default class DynamicPaginator {
   }
 
   /**
-   * @param {Number} page
-   */
-  async paginate(page: number): Promise<void> {
-    this.currentPage = page;
-    this.renderer.toggleLoading(true);
-    const limit = this.getLimit();
-
-    const data: FetchResponse = await this.paginationService.fetch(
-      this.calculateOffset(page, limit),
-      limit,
-    );
-
-    $(this.selectorsMap.jumpToPageInput).val(page);
-    this.countPages(<number>data.total);
-    this.refreshButtonsData(page);
-    this.refreshInfoLabel(page, <number>data.total);
-
-    this.toggleTargetAvailability(this.selectorsMap.firstPageItem, page > 1);
-    this.toggleTargetAvailability(this.selectorsMap.previousPageItem, page > 1);
-    this.toggleTargetAvailability(
-      this.selectorsMap.nextPageItem,
-      page < this.pagesCount,
-    );
-    this.toggleTargetAvailability(
-      this.selectorsMap.lastPageItem,
-      page < this.pagesCount,
-    );
-
-    this.renderer.render(data);
-    this.renderer.toggleLoading(false);
-
-    window.prestaShopUiKit.initToolTips();
-  }
-
-  /**
    * @param page
    * @param limit
    *
    * @returns {Number}
+   *
+   * @private
    */
-  calculateOffset(page: number, limit: number): number {
+  private calculateOffset(page: number, limit: number): number {
     return (page - 1) * limit;
   }
 
@@ -193,7 +203,7 @@ export default class DynamicPaginator {
    *
    * @private
    */
-  refreshButtonsData(page: number): void {
+  private refreshButtonsData(page: number): void {
     this.$paginationContainer
       .find(this.selectorsMap.nextPageBtn)
       .data('page', page + 1);
@@ -208,8 +218,10 @@ export default class DynamicPaginator {
   /**
    * @param {Number} page
    * @param {Number} total
+   *
+   * @private
    */
-  refreshInfoLabel(page: number, total: number): void {
+  private refreshInfoLabel(page: number, total: number): void {
     const infoLabel = this.$paginationContainer.find(
       this.selectorsMap.paginationInfoLabel,
     );
@@ -272,12 +284,13 @@ export default class DynamicPaginator {
   }
 
   /**
-   *
    * @param page
    *
    * @returns {Number}
+   *
+   * @private
    */
-  getValidPageNumber(page: number): number {
+  private getValidPageNumber(page: number): number {
     if (page > this.pagesCount) {
       return this.pagesCount;
     }
@@ -291,14 +304,10 @@ export default class DynamicPaginator {
 
   /**
    * @param {Object} selectorsMap
+   *
+   * @private
    */
-  setSelectorsMap(selectorsMap: Record<string, string>): void {
-    if (selectorsMap) {
-      this.selectorsMap = selectorsMap;
-
-      return;
-    }
-
+  private setSelectorsMap(selectorsMap: Record<string, string>): void {
     this.selectorsMap = {
       jumpToPageInput: 'input[name="paginator-jump-page"]',
       firstPageBtn: 'button.page-link.first',
@@ -312,6 +321,8 @@ export default class DynamicPaginator {
       pageLink: 'button.page-link',
       limitSelect: '#paginator-limit',
       paginationInfoLabel: '#pagination-info',
+      //override with custom selectors if any provided
+      ...selectorsMap,
     };
   }
 }
