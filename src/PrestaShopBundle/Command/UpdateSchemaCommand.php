@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Command;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -41,8 +42,6 @@ class UpdateSchemaCommand extends Command
      */
     private $em;
 
-    private $metadata;
-
     private $dbName;
 
     private $dbPrefix;
@@ -53,7 +52,6 @@ class UpdateSchemaCommand extends Command
         $this->dbName = $databaseName;
         $this->dbPrefix = $databasePrefix;
         $this->em = $manager;
-        $this->metadata = $manager->getMetadataFactory()->getAllMetadata();
     }
 
     protected function configure()
@@ -78,7 +76,10 @@ class UpdateSchemaCommand extends Command
         $affectedRows = $this->dropExistingForeignKeys($conn);
 
         $schemaTool = new SchemaTool($this->em);
-        $updateSchemaSql = $schemaTool->getUpdateSchemaSql($this->metadata, false);
+        $updateSchemaSql = $schemaTool->getUpdateSchemaSql(
+            $this->em->getMetadataFactory()->getAllMetadata(),
+            false
+        );
 
         $removedTables = $this->removeDropTables($updateSchemaSql);
         $this->removeAlterTables($updateSchemaSql, $removedTables);

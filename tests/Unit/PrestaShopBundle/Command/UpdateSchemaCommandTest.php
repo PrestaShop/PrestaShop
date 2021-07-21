@@ -30,6 +30,7 @@ namespace Tests\Unit\PrestaShopBundle\Command;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
+use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Command\UpdateSchemaCommand;
 
@@ -42,7 +43,15 @@ class UpdateSchemaCommandTest extends TestCase
 
     protected function setUp()
     {
-        $this->command = new UpdateSchemaCommand();
+        $manager = $this
+            ->getMockBuilder(EntityManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->command = new UpdateSchemaCommand(
+            'prestashop',
+            'ps',
+            $manager
+        );
     }
 
     public function testRemoveDropTables(): void
