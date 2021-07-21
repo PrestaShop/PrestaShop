@@ -31,6 +31,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use PDO;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -67,13 +68,13 @@ class UpdateSchemaCommand extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $conn = $this->em->getConnection();
-        $conn->beginTransaction();
+        $connection = $this->em->getConnection();
+        $connection->beginTransaction();
 
         $output->writeln('Updating database schema...');
         $affectedRows = 0;
 
-        $affectedRows = $this->dropExistingForeignKeys($conn);
+        $affectedRows = $this->dropExistingForeignKeys($connection, $output);
 
         $schemaTool = new SchemaTool($this->em);
         $updateSchemaSql = $schemaTool->getUpdateSchemaSql(
@@ -88,22 +89,22 @@ class UpdateSchemaCommand extends Command
 
         $constraints = $this->moveConstraints($updateSchemaSql);
 
-        $this->clearQueries($conn, $updateSchemaSql);
+        $this->clearQueries($connection, $updateSchemaSql);
 
         $affectedRows += count($updateSchemaSql);
         // Now execute the queries!
         foreach ($updateSchemaSql as $sql) {
             try {
                 $output->writeln('Executing: ' . $sql);
-                $conn->executeQuery($sql);
+                $connection->executeQuery($sql);
             } catch (Exception $e) {
-                $conn->rollBack();
+                $connection->rollBack();
 
                 throw ($e);
             }
         }
-        if (!$conn->getWrappedConnection() instanceof PDO || $conn->getWrappedConnection()->inTransaction()) {
-            $conn->commit();
+        if (!$connection->getWrappedConnection() instanceof PDO || $connection->getWrappedConnection()->inTransaction()) {
+            $connection->commit();
         }
 
         $pluralization = (1 > $affectedRows) ? 'query was' : 'queries were';
@@ -116,10 +117,11 @@ class UpdateSchemaCommand extends Command
      * Drop foreign keys from the database
      *
      * @param Connection $connection Database connection to use to clear foreign keys
+     * @param OutputInterface $output The output renderer
      *
      * @return int The number of affected rows
      */
-    public function dropExistingForeignKeys(Connection $connection): int
+    public function dropExistingForeignKeys(Connection $connection, OutputInterface $output): int
     {
         // First drop any existing FK
         $query = $connection->executeQuery(
@@ -255,7 +257,7 @@ class UpdateSchemaCommand extends Command
      *
      * return void
      */
-    public function clearQueries(Connection $conn, array &$queries): void
+    public function clearQueries(Connection $connection, array &$queries): void
     {
         foreach ($queries as $key => $sql) {
             $matches = [];
@@ -283,7 +285,7 @@ class UpdateSchemaCommand extends Command
                 $originalFieldName = $fieldName;
                 $fieldName = str_replace('`', '', $fieldName);
                 // get old default value
-                $query = $conn->executeQuery('SHOW FULL COLUMNS FROM ' . $tableName . ' WHERE Field="' . $fieldName . '"');
+                $query = $connection->executeQuery('SHOW FULL COLUMNS FROM ' . $tableName . ' WHERE Field="' . $fieldName . '"');
                 $results = $query->fetchAllAssociative();
                 if (empty($results[0])) {
                     continue;
