@@ -45,17 +45,22 @@ class CategoryTreeSelectionType extends CollectionType
             'label' => false,
             'required' => false,
             'entry_type' => CheckboxType::class,
-            'block_prefix' => 'category_tree_selection',
             'entry_options' => [
                 'block_prefix' => 'category_tree_selection_entry',
                 'label' => false,
                 'attr' => [
                     'class' => 'category',
+                    'data-id' => '__CATEGORY_ID__',
                 ],
             ],
             'allow_add' => true,
             'allow_delete' => true,
-            'prototype_name' => '__CATEGORY_INDEX__',
+            'prototype_name' => '__CATEGORY_ID__',
         ]);
+    }
+
+    public function getBlockPrefix(): string
+    {
+        return 'category_tree_selection';
     }
 }
