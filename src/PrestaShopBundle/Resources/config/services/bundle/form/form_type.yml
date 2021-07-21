@@ -1341,8 +1341,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.category.categories_collection_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesCollectionType'
+    form.type.sell.product.category.category_tags_collection_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryTagsCollectionType'
         arguments:
             - "@translator"
         public: true
