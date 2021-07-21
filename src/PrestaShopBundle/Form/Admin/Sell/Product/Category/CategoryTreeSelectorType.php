@@ -36,6 +36,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class CategoryTreeSelectorType extends CollectionType
 {
+    private const PROTOTYPE_INDEX_PLACEHOLDER = '__CATEGORY_ID__';
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -50,12 +52,12 @@ class CategoryTreeSelectorType extends CollectionType
                     'label' => false,
                     'attr' => [
                         'class' => 'category',
-                        'data-id' => '__CATEGORY_ID__',
+                        'data-id' => self::PROTOTYPE_INDEX_PLACEHOLDER,
                     ],
                 ],
                 'allow_add' => true,
                 'allow_delete' => true,
-                'prototype_name' => '__CATEGORY_ID__',
+                'prototype_name' => self::PROTOTYPE_INDEX_PLACEHOLDER,
             ])
             ->add('apply_btn', ButtonType::class)
         ;
