@@ -32,6 +32,7 @@ use Attachment;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment;
@@ -117,9 +118,28 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
                 Assert::assertTrue(isset($attachmentNames[$langId]));
                 Assert::assertEquals($name, $attachmentNames[$langId]);
             }
+            $attachmentDescriptions = $matchingAttachment->getLocalizedDescriptions();
+            foreach ($expectedAttachment['description'] as $langId => $description) {
+                Assert::assertTrue(isset($attachmentDescriptions[$langId]));
+                Assert::assertEquals($description, $attachmentDescriptions[$langId]);
+            }
+
             Assert::assertEquals($expectedAttachment['mime'], $matchingAttachment->getMimeType());
             Assert::assertEquals($expectedAttachment['file_name'], $matchingAttachment->getFileName());
+            Assert::assertEquals((int) $expectedAttachment['size'], $matchingAttachment->getFileSize());
         }
+    }
+
+    /**
+     * @When I delete attachment :attachmentReference
+     *
+     * @param string $attachmentReference
+     */
+    public function deleteAttachment(string $attachmentReference): void
+    {
+        $this->getCommandBus()->handle(
+            new DeleteAttachmentCommand((int) $this->getSharedStorage()->get($attachmentReference))
+        );
     }
 
     /**
