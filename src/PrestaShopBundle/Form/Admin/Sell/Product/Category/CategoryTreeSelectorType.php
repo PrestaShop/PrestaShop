@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -59,7 +58,11 @@ class CategoryTreeSelectorType extends CollectionType
                 'allow_delete' => true,
                 'prototype_name' => self::PROTOTYPE_INDEX_PLACEHOLDER,
             ])
-            ->add('apply_btn', ButtonType::class)
+            ->add('apply_btn', ButtonType::class, [
+                'attr' => [
+                    'class' => 'js-apply-categories-btn btn-outline-primary',
+                ],
+            ])
         ;
     }
 

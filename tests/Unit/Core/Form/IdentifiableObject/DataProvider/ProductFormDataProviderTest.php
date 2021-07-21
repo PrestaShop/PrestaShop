@@ -45,8 +45,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatu
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoriesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;

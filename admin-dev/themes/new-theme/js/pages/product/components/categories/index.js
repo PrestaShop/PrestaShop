@@ -53,14 +53,20 @@ export default class CategoriesManager {
     this.categoryTreeSelector = new CategoryTreeSelector(eventEmitter);
 
     this.addCategoriesBtn.addEventListener('click', () => this.categoryTreeSelector.showModal(
-      this.getInitialCategoryIds(),
-
+      this.collectCategoryIdsFromTags(),
     ));
+    this.listenCategoryTreeChanges();
 
     return {};
   }
 
-  getInitialCategoryIds() {
+  listenCategoryTreeChanges() {
+    this.eventEmitter.on(ProductEventMap.categories.applyCategoryTreeChanges, (eventData) => {
+      this.updateCategories(eventData.categories);
+    });
+  }
+
+  collectCategoryIdsFromTags() {
     const tags = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer)
       .querySelectorAll(ProductCategoryMap.tagItem);
 
@@ -74,6 +80,20 @@ export default class CategoriesManager {
 
   getDefaultCategoryId() {
     //@todo: default category will have to be retrieved from dedicated input when its implemented
-    return this.getInitialCategoryIds()[0];
+    return this.collectCategoryIdsFromTags()[0];
+  }
+
+  updateCategories(categories) {
+    const tagsContainer = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer);
+    tagsContainer.innerHTML = '';
+
+    const tagTemplate = tagsContainer.dataset.prototype;
+
+    categories.forEach((category) => {
+      const template = tagTemplate.replace(RegExp(tagsContainer.dataset.prototypeName, 'g'), category.id);
+      const frag = document.createRange().createContextualFragment(template.trim());
+      frag.firstChild.querySelector(ProductCategoryMap.tagItem).innerHTML = category.name;
+      tagsContainer.append(frag);
+    });
   }
 }
