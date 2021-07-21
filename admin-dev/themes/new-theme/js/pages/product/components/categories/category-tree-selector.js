@@ -53,8 +53,8 @@ export default class CategoryTreeSelector {
     this.defaultCategoryId = defaultCategoryId;
     const modalContent = $(ProductCategoryMap.categoriesModalTemplate);
 
-    // @todo: replace fancybox with Modal after this PR is merged https://github.com/PrestaShop/PrestaShop/pull/25184
-    $.fancybox({
+    // @todo: replace fancybox with Modal after following PR is merged - https://github.com/PrestaShop/PrestaShop/pull/25184
+    this.fancybox = $.fancybox({
       type: 'iframe',
       width: '90%',
       height: '90%',
@@ -63,7 +63,17 @@ export default class CategoryTreeSelector {
       content: modalContent.html(),
       afterShow: () => {
         this.initCategories();
+        this.onApplyCategoryChanges();
       },
+    });
+  }
+
+  onApplyCategoryChanges() {
+    this.modalContainer.querySelector(ProductCategoryMap.applyCategoriesBtn).addEventListener('click', () => {
+      this.eventEmitter.emit(ProductEventMap.categories.applyCategoryTreeChanges, {
+        categories: this.collectSelectedCategories(),
+      });
+      //@todo: close modal. ($.fancybox.close() not working)
     });
   }
 
@@ -301,7 +311,6 @@ export default class CategoryTreeSelector {
     new AutoCompleteSearch($(ProductCategoryMap.searchInput), dataSetConfig);
   }
 
-  // @todo: sync tags in modal with form. Get rid of html template in js
   updateCategoriesTags() {
     const checkedCheckboxes = this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
     const tagsContainer = this.modalContainer.querySelector(ProductCategoryMap.tagsContainer);
@@ -316,12 +325,13 @@ export default class CategoryTreeSelector {
         return;
       }
 
-      //@todo: default category must not have 'X'. & for some reason there is no prototypeNames in data-id.
+      // @todo: default category should not be deletable - no 'X' button
       let template = tagsContainer.dataset.prototype;
       template = template.replace(RegExp(tagsContainer.dataset.prototypeName, 'g'), categoryId);
       // Trim is important here or the first child could be some text (whitespace, or \n)
       const frag = document.createRange().createContextualFragment(template.trim());
-      tagsContainer.append(frag.firstChild);
+      frag.firstChild.querySelector(ProductCategoryMap.tagItem).innerHTML = category.name;
+      tagsContainer.append(frag);
     });
 
     tagsContainer.classList.toggle('d-block', checkedCheckboxes.length > 0);
@@ -378,5 +388,21 @@ export default class CategoryTreeSelector {
       checkboxInput.checked = checked;
       this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
     }
+  }
+
+  collectSelectedCategories() {
+    const tags = this.modalContainer
+      .querySelector(ProductCategoryMap.tagsContainer)
+      .querySelectorAll(ProductCategoryMap.tagItem);
+
+    const categories = [];
+    tags.forEach((tagItem) => {
+      categories.push({
+        id: tagItem.dataset.id,
+        name: tagItem.innerHTML,
+      });
+    });
+
+    return categories;
   }
 }
