@@ -57,12 +57,6 @@ class ProductAttachmentsType extends TranslatorAwareType
             ->add('attached_files', EntitySearchInputType::class, [
                 'entry_type' => AttachedFileType::class,
                 'layout' => EntitySearchInputType::TABLE_LAYOUT,
-                'prototype_mapping' => [
-                    'attachment_id' => AttachedFileType::ID_PLACEHOLDER,
-                    'name' => AttachedFileType::NAME_PLACEHOLDER,
-                    'file_name' => AttachedFileType::FILE_NAME_PLACEHOLDER,
-                    'mime_type' => AttachedFileType::MIME_TYPE_PLACEHOLDER,
-                ],
                 'required' => false,
                 'label' => false,
                 'remote_url' => $this->urlGenerator->generate('admin_attachments_search', ['searchPhrase' => '__QUERY__']),

@@ -34,32 +34,20 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class AttachedFileType extends TranslatorAwareType
 {
-    public const ID_PLACEHOLDER = '__attachment_id__';
-    public const NAME_PLACEHOLDER = '__name__';
-    public const FILE_NAME_PLACEHOLDER = '__file_name__';
-    public const MIME_TYPE_PLACEHOLDER = '__mime_type__';
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('attachment_id', HiddenType::class, [
                 'label' => false,
-                'attr' => [
-                    'class' => 'attachment-id-input',
-                ],
-                'default_empty_data' => self::ID_PLACEHOLDER,
             ])
             ->add('name', TextPreviewType::class, [
                 'label' => $this->trans('Title', 'Admin.Global'),
-                'default_empty_data' => self::NAME_PLACEHOLDER,
             ])
             ->add('file_name', TextPreviewType::class, [
                 'label' => $this->trans('File name', 'Admin.Global'),
-                'default_empty_data' => self::FILE_NAME_PLACEHOLDER,
             ])
             ->add('mime_type', TextPreviewType::class, [
                 'label' => $this->trans('Type', 'Admin.Global'),
-                'default_empty_data' => self::MIME_TYPE_PLACEHOLDER,
             ])
         ;
     }
