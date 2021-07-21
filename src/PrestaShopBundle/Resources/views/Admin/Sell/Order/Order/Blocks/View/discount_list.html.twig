@@ -22,28 +22,30 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-<table class="table discountList{% if discounts is empty %} d-none{% endif %}">
-  <thead>
-  <tr>
-    <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
-    <th>{{ 'Value'|trans({}, 'Admin.Global') }}</th>
-    <th class="text-right d-print-none">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
-  </tr>
-  </thead>
-  <tbody>
-  {% for discount in discounts %}
+<div class="col-md-12">
+  <table class="table discountList{% if discounts is empty %} d-none{% endif %}">
+    <thead>
     <tr>
-      <td class="discountList-name">{{ discount.name }}</td>
-      <td>
-        {% if discount.amountRaw.greaterThan(number(0)) %}-{% endif %}
-        {{ discount.amountFormatted }}
-      </td>
-      <td class="text-right d-print-none">
-        <a class="delete-cart-rule btn btn-text" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderId, 'orderCartRuleId': discount.orderCartRuleId}) }}">
-          <i class="material-icons">delete</i>
-        </a>
-      </td>
+      <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
+      <th>{{ 'Value'|trans({}, 'Admin.Global') }}</th>
+      <th class="text-right d-print-none">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
     </tr>
-  {% endfor %}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+    {% for discount in discounts %}
+      <tr>
+        <td class="discountList-name">{{ discount.name }}</td>
+        <td>
+          {% if discount.amountRaw.greaterThan(number(0)) %}-{% endif %}
+          {{ discount.amountFormatted }}
+        </td>
+        <td class="text-right d-print-none">
+          <a class="delete-cart-rule btn btn-text" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderId, 'orderCartRuleId': discount.orderCartRuleId}) }}">
+            <i class="material-icons">delete</i>
+          </a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
