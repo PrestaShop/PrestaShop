@@ -19,7 +19,7 @@ UPDATE `PREFIX_hook_module` AS hm
 DELETE FROM `PREFIX_hook` WHERE name = 'displayAdminListAfter';
 
 
-INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES
+INSERT IGNORE INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES
      ('displayAdminGridTableBefore', 'displayAdminListBefore'),
      ('displayAdminGridTableAfter', 'displayAdminListAfter')
 ;
