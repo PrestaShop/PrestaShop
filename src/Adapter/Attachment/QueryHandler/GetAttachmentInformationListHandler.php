@@ -73,8 +73,10 @@ final class GetAttachmentInformationListHandler implements GetAttachmentsForList
             $attachmentInformationList[] = new AttachmentInformation(
                 (int) $attachment['id_attachment'],
                 $attachment['name'],
+                $attachment['description'],
                 $attachment['file_name'],
-                $attachment['mime']
+                $attachment['mime'],
+                $attachment['file_size'],
             );
         }
 
