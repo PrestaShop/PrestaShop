@@ -32,7 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CategoryTreeSelectionType extends CollectionType
+class CategoryTreeSelectorType extends CollectionType
 {
     /**
      * @param OptionsResolver $resolver
@@ -46,7 +46,7 @@ class CategoryTreeSelectionType extends CollectionType
             'required' => false,
             'entry_type' => CheckboxType::class,
             'entry_options' => [
-                'block_prefix' => 'category_tree_selection_entry',
+                'block_prefix' => 'category_tree_selector_entry',
                 'label' => false,
                 'attr' => [
                     'class' => 'category',
@@ -61,6 +61,6 @@ class CategoryTreeSelectionType extends CollectionType
 
     public function getBlockPrefix(): string
     {
-        return 'category_tree_selection';
+        return 'category_tree_selector';
     }
 }
