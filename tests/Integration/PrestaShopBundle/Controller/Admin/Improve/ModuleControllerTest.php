@@ -132,7 +132,7 @@ class ModuleControllerTest extends WebTestCase
     {
         return $this->translator->trans(
             'This functionality has been disabled.',
-            array(),
+            [],
             'Admin.Notifications.Error'
         );
     }
