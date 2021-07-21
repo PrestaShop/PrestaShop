@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturnState\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Query\GetOrderReturnStateForEditing;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\QueryResult\OrderReturnStateForEditing;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\QueryResult\EditableOrderReturnState;
 
 /**
  * Interface for service that gets order return state data for editing
@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\QueryResult\OrderReturnSt
 interface GetOrderReturnStateForEditingHandlerInterface
 {
     /**
-     * @return OrderReturnStateForEditing
+     * @return EditableOrderReturnState
      */
     public function handle(GetOrderReturnStateForEditing $query);
 }
