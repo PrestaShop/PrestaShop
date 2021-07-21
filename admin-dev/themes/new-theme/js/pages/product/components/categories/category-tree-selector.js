@@ -181,43 +181,6 @@ export default class CategoryTreeSelector {
   }
 
   /**
-   * @param {HTMLElement} radioInput
-   */
-  selectedDefaultCategory(radioInput) {
-    // Uncheck all other radio inputs when one is selected
-    this.categoryTree.querySelectorAll(ProductCategoryMap.radioInput).forEach((radioTreeElement) => {
-      if (radioTreeElement !== radioInput) {
-        radioTreeElement.checked = false;
-      }
-    });
-
-    this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkboxTreeElement) => {
-      const materialCheckbox = checkboxTreeElement.parentNode.closest(ProductCategoryMap.materialCheckbox);
-      materialCheckbox.classList.remove('disabled');
-    });
-
-    this.updateDefaultCheckbox(radioInput);
-  }
-
-  /**
-   * @param {HTMLElement} radioInput
-   */
-  updateDefaultCheckbox(radioInput) {
-    // If the element is selected as default it is also associated by definition
-    const parentItem = radioInput.parentNode.closest(ProductCategoryMap.treeElement);
-    const checkbox = parentItem.querySelector(ProductCategoryMap.checkboxInput);
-
-    // A default category is necessarily associated, so displayed as disabled (we do not use the disabled
-    // attribute because it removes the data from the form).
-    const materialCheckbox = checkbox.parentNode.closest(ProductCategoryMap.materialCheckbox);
-    materialCheckbox.classList.add('disabled');
-
-    this.updateCheckbox(checkbox, true);
-    this.updateCategoriesTags();
-    this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
-  }
-
-  /**
    * Expand/reduce the category tree
    *
    * @param {boolean} expanded Force expanding instead of toggle
@@ -353,7 +316,7 @@ export default class CategoryTreeSelector {
         return;
       }
 
-      //@todo: remove html from js
+      // @todo: remove html from js
       const removeCrossTemplate = this.defaultCategoryId !== categoryId
         ? `<a class="pstaggerClosingCross" href="#" data-id="${category.id}">x</a>`
         : '';
@@ -377,6 +340,7 @@ export default class CategoryTreeSelector {
         event.stopImmediatePropagation();
 
         const categoryId = Number(event.currentTarget.dataset.id);
+
         if (categoryId !== this.defaultCategoryId) {
           this.unselectCategory(categoryId);
         }
