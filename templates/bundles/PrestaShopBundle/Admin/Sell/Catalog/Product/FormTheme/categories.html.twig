@@ -26,15 +26,15 @@
 
 {% block categories_row %}
   <div {{ block('widget_attributes') }}>
-    <div class="form-group pstaggerTagsWrapper d-block">
+{#    <div class="form-group pstaggerTagsWrapper d-block">#}
       {{ form_row(form.product_categories) }}
-    </div>
+{#    </div>#}
 
     {{ form_row(form.add_categories_btn) }}
   </div>
 {% endblock %}
 
-{% block product_category_row %}
+{% block category_tags_collection_entry_row %}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTag')|trim }) -%}
   {% set categoryId = form.vars.data.id|default(form.parent.vars.prototype.name) %}
   <span {{ block('widget_attributes') }}>
@@ -44,10 +44,19 @@
   </span>
 {% endblock %}
 
+{% block category_tags_collection_row %}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTagsWrapper d-block')|trim }) -%}
+  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+  <div {{ block('widget_attributes') }}>
+    {{ form_row(form) }}
+  </div>
+{% endblock %}
+
 {% block category_tree_selector_row %}
   <template id="categories-modal-template">
     <div id="categories-modal-container">
-      <div class="categories-tree">
+        {{ form_row(form.product_categories) }}
+
         <fieldset class="form-group tree-fieldset d-none">
           <div class="ui-widget">
             <div class="search search-with-icon">
@@ -55,38 +64,39 @@
             </div>
 
             <label class="form-control-label text-uppercase">{{ 'Associated categories'|trans({}, 'Admin.Catalog.Feature') }}</label>
-
-            <div class="pstaggerTagsWrapper">
-            </div>
-
-            <div class="categories-tree-actions js-categories-tree-actions">
-              <span class="form-control-label" id="categories-tree-expand"><i class="material-icons">expand_more</i>{{ 'Expand All'|trans({}, 'Admin.Actions') }}</span>
-              <span class="form-control-label" id="categories-tree-reduce"><i class="material-icons">expand_less</i>{{ 'Collapse All'|trans({}, 'Admin.Actions') }}</span>
-            </div>
-
-            <div class="category-tree-overflow js-category-tree-overflow">
-              {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
-              {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' js-categories-tree category-tree')|trim }) -%}
-              <ul {{ block('widget_attributes') }}>
-                {{- block('form_rows') -}}
-              </ul>
-            </div>
+            {{ form_row(form.category_tree) }}
           </div>
         </fieldset>
 
         <div class="categories-tree-loader d-none">
           <div class="spinner m-auto d-block"></div>
         </div>
-      </div>
     </div>
   </template>
 {% endblock %}
 
-{% block category_tree_selector_entry_row %}
+{% block category_tree_entry_row %}
   <li class="category-tree-element">
     <div class="checkbox category-tree-inputs">
       {{ form_widget(form) }}
     </div>
     <ul class="children-list"></ul>
   </li>
+{% endblock %}
+
+{% block category_tree_collection_row %}
+<div class="category-tree-container">
+  <div class="categories-tree-actions js-categories-tree-actions">
+    <span class="form-control-label" id="categories-tree-expand"><i class="material-icons">expand_more</i>{{ 'Expand All'|trans({}, 'Admin.Actions') }}</span>
+    <span class="form-control-label" id="categories-tree-reduce"><i class="material-icons">expand_less</i>{{ 'Collapse All'|trans({}, 'Admin.Actions') }}</span>
+  </div>
+
+  <div class="category-tree-overflow js-category-tree-overflow">
+    {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' js-category-tree-list category-tree')|trim }) -%}
+    <ul {{ block('widget_attributes') }}>
+      {{- block('form_rows') -}}
+    </ul>
+  </div>
+</div>
 {% endblock %}
