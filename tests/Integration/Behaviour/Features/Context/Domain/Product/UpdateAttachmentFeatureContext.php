@@ -65,7 +65,7 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Transform table:attachment reference,title,file name,type
+     * @Transform table:attachment reference,title,description,file name,type,size
      *
      * @param TableNode $tableNode
      *
@@ -80,8 +80,10 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
             $attachmentsInfo[] = new AttachmentInformation(
                 $this->getSharedStorage()->get($info['attachment reference']),
                 $this->localizeByCell($info['title']),
+                $this->localizeByCell($info['description']),
                 $info['file name'],
-                $info['type']
+                $info['type'],
+                (int) $info['size']
             );
         }
 
