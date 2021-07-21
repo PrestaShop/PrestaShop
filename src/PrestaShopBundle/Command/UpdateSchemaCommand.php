@@ -121,7 +121,7 @@ class UpdateSchemaCommand extends Command
     public function dropExistingForeignKeys(Connection $connection): int
     {
         // First drop any existing FK
-        $query = $connection->query(
+        $query = $connection->executeQuery(
             'SELECT CONSTRAINT_NAME, TABLE_NAME ' .
             'FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS ' .
             'WHERE CONSTRAINT_TYPE = "FOREIGN KEY" ' .
@@ -129,7 +129,7 @@ class UpdateSchemaCommand extends Command
             'AND TABLE_NAME LIKE "' . $this->dbPrefix . '%"'
         );
 
-        $results = $query->fetchAll();
+        $results = $query->fetchAllAssociative();
         $nbQueries = 0;
 
         foreach ($results as $result) {
@@ -265,7 +265,7 @@ class UpdateSchemaCommand extends Command
             $tableName = $matches[1];
             $matches = [];
             preg_match_all('/([^\s,]*?) CHANGE (.+?) (.+?)(, CHANGE |$)/', $sql, $matches);
-            if (!isset($matches[2]) || !is_array($matches[2])) {
+            if (empty($matches[2]) || !is_array($matches[2])) {
                 continue;
             }
 
@@ -282,8 +282,12 @@ class UpdateSchemaCommand extends Command
                 $originalFieldName = $fieldName;
                 $fieldName = str_replace('`', '', $fieldName);
                 // get old default value
-                $query = $conn->query('SHOW FULL COLUMNS FROM ' . $tableName . ' WHERE Field="' . $fieldName . '"');
-                $results = $query->fetchAll();
+                $query = $conn->executeQuery('SHOW FULL COLUMNS FROM ' . $tableName . ' WHERE Field="' . $fieldName . '"');
+                $results = $query->fetchAllAssociative();
+                if (empty($results[0])) {
+                    continue;
+                }
+
                 $oldDefaultValue = $results[0]['Default'];
                 $extra = $results[0]['Extra'];
 
@@ -304,13 +308,17 @@ class UpdateSchemaCommand extends Command
                     && (strpos($matches[0][$matchKey], 'TEXT') === false)
                 ) {
                     if (preg_match('/DEFAULT/', $matches[0][$matchKey])) {
-                        $matches[0][$matchKey] =
-                                               preg_replace('/DEFAULT (.+?)(, CHANGE |$)/', 'DEFAULT ' .
-                                                            $oldDefaultValue . '$2' . ' ' . $extra, $matches[0][$matchKey]);
+                        $matches[0][$matchKey] = preg_replace(
+                            '/DEFAULT (.+?)(, CHANGE |$)/',
+                            'DEFAULT ' . $oldDefaultValue . '$2' . ' ' . $extra,
+                            $matches[0][$matchKey]
+                        );
                     } else {
-                        $matches[0][$matchKey] =
-                                               preg_replace('/(.+?)(, CHANGE |$)/uis', '$1 DEFAULT ' .
-                                                            $oldDefaultValue . ' ' . $extra . '$2', $matches[0][$matchKey]);
+                        $matches[0][$matchKey] = preg_replace(
+                            '/(.+?)(, CHANGE |$)/uis',
+                            '$1 DEFAULT ' . $oldDefaultValue . ' ' . $extra . '$2',
+                            $matches[0][$matchKey]
+                        );
                     }
                 }
 

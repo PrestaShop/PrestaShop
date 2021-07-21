@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\Command;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Statement;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Command\UpdateSchemaCommand;
 
@@ -90,7 +92,7 @@ class UpdateSchemaCommandTest extends TestCase
             'ALTER TABLE `ps_attribute` DROP FOREIGN KEY `FK_3ABE46A776283763`',
         ];
 
-        $duplicateQueries = $this->command->removeDuplicateDropForeignKeys(
+        $this->command->removeDuplicateDropForeignKeys(
             $queries
         );
 
@@ -100,10 +102,6 @@ class UpdateSchemaCommandTest extends TestCase
                 2 => 'ALTER TABLE `ps_attribute` DROP FOREIGN KEY `FK_3ABE46A776283763`',
             ],
             $queries
-        );
-        $this->assertEquals(
-            [],
-            $duplicateQueries
         );
     }
 
@@ -145,9 +143,133 @@ class UpdateSchemaCommandTest extends TestCase
         );
     }
 
-    public function testClearQueries(): void
+    /**
+     * @dataProvider getQueriesForClear
+     */
+    public function testClearQueries(string $query, string $expected): void
     {
-        $queries = $this->getQueries();
+        $queries = [$query];
+
+        $connection = $this
+            ->getMockBuilder(Connection::class)
+            ->disableOriginalConstructor()
+            ->setMethods(
+                [
+                    'executeQuery',
+                ]
+            )
+            ->getMock();
+
+        $connection
+            ->expects($this->any())
+            ->method('executeQuery')
+            ->will($this->returnCallback([$this, 'columnsNames']));
+
+        $this->command->clearQueries($connection, $queries);
+        $this->assertEquals(
+            [
+                $expected,
+            ],
+            $queries
+        );
+    }
+
+    public function columnsNames(string $name): Statement
+    {
+        $data = [
+            'SHOW FULL COLUMNS FROM ps_pa_subcontractor WHERE Field="cutting_price"' => [
+                [
+                    'Default' => '0',
+                    'Extra' => '',
+                    'Null' => 'NO',
+                ],
+            ],
+            'SHOW FULL COLUMNS FROM ps_pa_fixation WHERE Field="resistance"' => [
+                [
+                    'Default' => '0',
+                    'Extra' => '',
+                    'Null' => 'YES',
+                ],
+            ],
+            'SHOW FULL COLUMNS FROM ps_pa_form WHERE Field="active"' => [
+                [
+                    'Default' => '0',
+                    'Extra' => '',
+                    'Null' => 'NO',
+                ],
+            ],
+            'SHOW FULL COLUMNS FROM ps_pa_subcontractor_material WHERE Field="labor_cost"' => [
+                [
+                    'Default' => '0',
+                    'Extra' => '',
+                    'Null' => 'NO',
+                ],
+            ],
+            'SHOW FULL COLUMNS FROM ps_pa_structure WHERE Field="position"' => [
+                [
+                    'Default' => '0',
+                    'Extra' => '',
+                    'Null' => 'NO',
+                ],
+            ],
+            'SHOW FULL COLUMNS FROM ps_pa_nettype WHERE Field="active"' => [
+                [
+                    'Default' => '0',
+                    'Extra' => '',
+                    'Null' => 'NO',
+                ],
+            ],
+            'SHOW FULL COLUMNS FROM ps_pa_answer WHERE Field="nright"' => [
+                [
+                    'Default' => '0',
+                    'Extra' => '',
+                    'Null' => 'NO',
+                ],
+            ],
+            'SHOW FULL COLUMNS FROM ps_pa_quotation_net WHERE Field="id_employee"' => [
+                [
+                    'Default' => '0',
+                    'Extra' => '',
+                    'Null' => 'NO',
+                ],
+            ],
+            'SHOW FULL COLUMNS FROM ps_pa_quotation_net WHERE Field="dimensions"' => [
+                [
+                    'Default' => '0',
+                    'Extra' => '',
+                    'Null' => 'YES',
+                ],
+            ],
+            'SHOW FULL COLUMNS FROM ps_pa_quotation_net WHERE Field="mirror"' => [
+                [
+                    'Default' => null,
+                    'Extra' => '',
+                    'Null' => '',
+                ],
+            ],
+            'SHOW FULL COLUMNS FROM ps_pa_quotation_net WHERE Field="is_complete"' => [
+                [
+                    // Empty data, no result
+                ],
+            ],
+        ];
+
+        $statement = $this
+            ->getMockBuilder(Statement::class)
+            ->disableOriginalConstructor()
+            ->setMethods(
+                [
+                    'fetchAllAssociative',
+                ]
+            )
+            ->getMockForAbstractClass();
+
+        $statement
+            ->expects($this->any())
+            ->method('fetchAllAssociative')
+            ->willReturn($data[$name]);
+
+        return $statement;
     }
 
     public function getQueries(): array
@@ -159,6 +281,52 @@ class UpdateSchemaCommandTest extends TestCase
             'ALTER TABLE ps_attribute ADD CONSTRAINT FK_6C3355F967A664FB FOREIGN KEY (id_attribute_group) REFERENCES ps_attribute_group (id_attribute_group)',
             'ALTER TABLE ps_attribute_lang ADD CONSTRAINT FK_3ABE46A7BA299860 FOREIGN KEY (id_lang) REFERENCES ps_lang (id_lang) ON DELETE CASCADE',
             'ALTER TABLE `ps_attribute_lang` DROP FOREIGN KEY `FK_3ABE46A7BA299860`',
+        ];
+    }
+
+    public function getQueriesForClear(): array
+    {
+        return [
+            [
+                'UNKNOW SQL COMMAND',
+                'UNKNOW SQL COMMAND',
+            ],
+            [
+                'ALTER TABLE ps_check MISSING SQL',
+                'ALTER TABLE ps_check MISSING SQL',
+            ],
+            [
+                'ALTER TABLE ps_pa_subcontractor CHANGE cutting_price cutting_price NUMERIC(20, 6) NOT NULL',
+                'ALTER TABLE ps_pa_subcontractor CHANGE cutting_price cutting_price NUMERIC(20, 6) NOT NULL DEFAULT \'0\' ',
+            ],
+            [
+                'ALTER TABLE ps_pa_fixation CHANGE resistance resistance LONGTEXT NOT NULL COMMENT \'(DC2Type:json)\', CHANGE position position INT UNSIGNED DEFAULT 0 NOT NULL',
+                'ALTER TABLE ps_pa_fixation CHANGE resistance resistance LONGTEXT NOT NULL COMMENT \'(DC2Type:json)\', CHANGE position position INT UNSIGNED DEFAULT 0 NOT NULL',
+            ],
+            [
+                'ALTER TABLE ps_pa_form CHANGE active active TINYINT(1) DEFAULT \'0\' NOT NULL',
+                'ALTER TABLE ps_pa_form CHANGE active active TINYINT(1) DEFAULT \'0\' ',
+            ],
+            [
+                'ALTER TABLE ps_pa_subcontractor_material CHANGE labor_cost labor_cost NUMERIC(20, 6) NOT NULL',
+                'ALTER TABLE ps_pa_subcontractor_material CHANGE labor_cost labor_cost NUMERIC(20, 6) NOT NULL DEFAULT \'0\' ',
+            ],
+            [
+                'ALTER TABLE ps_pa_structure CHANGE position position INT UNSIGNED DEFAULT 0 NOT NULL',
+                'ALTER TABLE ps_pa_structure CHANGE position position INT UNSIGNED DEFAULT \'0\' ',
+            ],
+            [
+                'ALTER TABLE ps_pa_nettype CHANGE active active TINYINT(1) DEFAULT \'0\' NOT NULL',
+                'ALTER TABLE ps_pa_nettype CHANGE active active TINYINT(1) DEFAULT \'0\' ',
+            ],
+            [
+                'ALTER TABLE ps_pa_answer CHANGE nright nright INT NOT NULL',
+                'ALTER TABLE ps_pa_answer CHANGE nright nright INT NOT NULL DEFAULT \'0\' ',
+            ],
+            [
+                'ALTER TABLE ps_pa_quotation_net CHANGE id_employee id_employee INT NOT NULL, CHANGE uuid uuid VARCHAR(36) NOT NULL, CHANGE dimensions dimensions LONGTEXT NOT NULL COMMENT \'(DC2Type:json)\', CHANGE plan_dimensions plan_dimensions LONGTEXT NOT NULL COMMENT \'(DC2Type:json)\', CHANGE mirror mirror TINYINT(1) NOT NULL, CHANGE net_cost_price net_cost_price NUMERIC(20, 6) NOT NULL, CHANGE is_complete is_complete TINYINT(1) NOT NULL',
+                'ALTER TABLE ps_pa_quotation_net CHANGE id_employee id_employee INT NOT NULL DEFAULT \'0\' , CHANGE uuid uuid VARCHAR(36) NOT NULL, CHANGE dimensions dimensions LONGTEXT NOT NULL COMMENT \'(DC2Type:json)\', CHANGE plan_dimensions plan_dimensions LONGTEXT NOT NULL COMMENT \'(DC2Type:json)\', CHANGE mirror mirror TINYINT(1) NOT NULL, CHANGE net_cost_price net_cost_price NUMERIC(20, 6) NOT NULL, CHANGE is_complete is_complete TINYINT(1) NOT NULL',
+            ],
         ];
     }
 }
