@@ -15,7 +15,7 @@ admin_products_search:
     path: /
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Common:searchGrid
+        _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
         gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.product
         redirectRoute: admin_products_v2_index
         _legacy_controller: AdminProducts
@@ -57,7 +57,7 @@ admin_products_v2_delete:
     path: /{productId}/delete
     methods: [POST, DELETE]
     defaults:
-        _controller: PrestaShopBundle\Admin\Sell\Catalog\Product\ProductController::deleteAction
+        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::deleteAction
         _legacy_controller: AdminProducts
         _legacy_link:
             - AdminProducts:delete
