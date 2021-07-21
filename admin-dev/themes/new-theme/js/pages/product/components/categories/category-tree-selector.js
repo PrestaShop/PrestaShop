@@ -314,22 +314,6 @@ export default class CategoryTreeSelector {
     });
   }
 
-  initAddCategoriesModal() {
-    const modalContent = $(ProductCategoryMap.categoriesModalTemplate);
-
-    $(this.addCategoriesBtn).fancybox({
-      type: 'iframe',
-      width: '90%',
-      height: '90%',
-      fitToView: false,
-      autoSize: false,
-      content: modalContent.html(),
-      afterShow: () => {
-        this.initCategories();
-      },
-    });
-  }
-
   initTypeahead() {
     const source = new Bloodhound({
       datumTokenizer: Tokenizers.obj.letters(

@@ -1394,8 +1394,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.category.category_tree_selection_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryTreeSelectionType'
+    form.type.sell.product.category.category_tree_selector_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryTreeSelectorType'
         public: true
         tags:
             - { name: form.type }
