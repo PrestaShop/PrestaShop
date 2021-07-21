@@ -76,6 +76,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductSearchEmptyPhraseException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
@@ -1763,6 +1764,11 @@ class OrderController extends FrameworkBundleAdminController
             return $this->json([
                 'products' => $foundProducts,
             ]);
+        } catch (ProductSearchEmptyPhraseException $e) {
+            return $this->json(
+                [$e, 'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
         } catch (Exception $e) {
             return $this->json(
                 [$e, 'message' => $this->getErrorMessageForException($e, [])],
