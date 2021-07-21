@@ -23,18 +23,21 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 
 class OrderConfirmationControllerCore extends FrontController
 {
     public $ssl = true;
     public $php_self = 'order-confirmation';
-    public $id_cart;
     public $id_module;
     public $id_order;
-    public $reference;
     public $secure_key;
-    public $order_presenter;
+    public $order;
+    public $customer;
+    public $reference; // Deprecated
+    public $id_cart; // Deprecated
+    public $order_presenter; // Deprecated
 
     /**
      * Initialize order confirmation controller.
@@ -45,31 +48,92 @@ class OrderConfirmationControllerCore extends FrontController
     {
         parent::init();
 
+        // If are coming to this page to finish free order, we need to run additional logic
         if (true === (bool) Tools::getValue('free_order')) {
             $this->checkFreeOrder();
         }
 
-        $this->id_cart = (int) (Tools::getValue('id_cart', 0));
-
-        $redirectLink = 'index.php?controller=history';
-
+        // We get the required data from URL
         $this->id_module = (int) (Tools::getValue('id_module', 0));
-        $this->id_order = Order::getIdByCartId((int) ($this->id_cart));
+        $this->id_order = (int) (Tools::getValue('id_order', 0));
         $this->secure_key = Tools::getValue('key', false);
-        $order = new Order((int) ($this->id_order));
+        $this->order = new Order((int) ($this->id_order));
 
+        // We run all the required checks and if something is smelly, we redirect him to order history
+        // The confirmation link must contain a unique secure key matching the order key,
+        // it prevents user to view other customer's order confirmations
+        $redirectLink = 'index.php?controller=history';
         if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
             Tools::redirect($redirectLink . (Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
         }
-        $this->reference = $order->reference;
-        if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key) {
+        if (!Validate::isLoadedObject($this->order) || $this->secure_key != $this->order->secure_key) {
             Tools::redirect($redirectLink);
         }
         $module = Module::getInstanceById((int) ($this->id_module));
-        if ($order->module != $module->name) {
+        if ($this->order->module != $module->name) {
             Tools::redirect($redirectLink);
         }
-        $this->order_presenter = new OrderPresenter();
+
+        // If checks passed, initialize customer, we will need him anyway
+        $this->customer = new Customer((int) ($this->order->id_customer));
+    }
+
+    /**
+     * Logic after submitting forms
+     *
+     * @see FrontController::postProcess()
+     */
+    public function postProcess()
+    {
+        // If user filled the password and submitted the form to convert his account on the bottom of screen
+        if (Tools::isSubmit('submitTransformGuestToCustomer')) {
+            // Only variable we need is the password
+            // There is no need to check other variables, because hacker would be kicked out in init(), if he tried to convert another customer
+            $password = Tools::getValue('password');
+
+            // If no password was entered
+            if (empty($password)) {
+                $this->errors[] = $this->trans(
+                    'To convert your account, you must enter a password.',
+                    [],
+                    'Shop.Forms.Help'
+                );
+
+            // If the password is short
+            } elseif (strlen($password) < Validate::PASSWORD_LENGTH) {
+                $this->errors[] = $this->trans(
+                    'Your password must be at least %min% characters long.',
+                    ['%min%' => Validate::PASSWORD_LENGTH],
+                    'Shop.Forms.Help'
+                );
+
+            // Prevent error
+            // A) either on page refresh
+            // B) if we already transformed him in other window or through backoffice
+            } elseif ($this->customer->is_guest == 0) {
+                $this->success[] = $this->trans(
+                    'Your guest account has been already transformed into a customer account. You can log in as a registered shopper.',
+                    [],
+                    'Shop.Notifications.Success'
+                );
+
+            // Attempt to convert the customer
+            } elseif ($this->customer->transformToCustomer($this->context->language->id, $password)) {
+                $this->success[] = $this->trans(
+                    'Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.',
+                    [],
+                    'Shop.Notifications.Success'
+                );
+
+            // Show general error if something unexpected happened
+            } else {
+                $this->success[] = $this->trans(
+                    'An unexpected error occurred while creating your account.',
+                    [],
+                    'Shop.Notifications.Error'
+                );
+            }
+        }
     }
 
     /**
@@ -79,31 +143,26 @@ class OrderConfirmationControllerCore extends FrontController
      */
     public function initContent()
     {
-        if (Configuration::isCatalogMode()) {
-            Tools::redirect('index.php');
-        }
-
-        $order = new Order(Order::getIdByCartId((int) ($this->id_cart)));
-        $presentedOrder = $this->order_presenter->present($order);
-        $register_form = $this
-            ->makeCustomerForm()
-            ->setGuestAllowed(false)
-            ->fillWith(Tools::getAllValues());
+        // Initialize presenters
+        $order_presenter = new OrderPresenter();
+        $object_presenter = new ObjectPresenter();
 
         parent::initContent();
 
+        // Assign data to output and set template
         $this->context->smarty->assign([
-            'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($order),
-            'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($order),
-            'order' => $presentedOrder,
-            'register_form' => $register_form,
+            'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($this->order),
+            'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($this->order),
+            'order' => $order_presenter->present($this->order),
+            'order_customer' => $object_presenter->present($this->customer),
+            'registered_customer_exists' => Customer::customerExists($this->customer->email, false, true),
         ]);
+        $this->setTemplate('checkout/order-confirmation');
 
+        // If logged in guest we clear the cookie for security reason
         if ($this->context->customer->is_guest) {
-            /* If guest we clear the cookie for security reason */
             $this->context->customer->mylogout();
         }
-        $this->setTemplate('checkout/order-confirmation');
     }
 
     /**

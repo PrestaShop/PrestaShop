@@ -13,7 +13,7 @@
             {/block}
 
             <p>
-              {l s='An email has been sent to your mail address %email%.' d='Shop.Theme.Checkout' sprintf=['%email%' => $customer.email]}
+              {l s='An email has been sent to your mail address %email%.' d='Shop.Theme.Checkout' sprintf=['%email%' => $order_customer.email]}
               {if $order.details.invoice_url}
                 {* [1][/1] is for a HTML tag. *}
                 {l
@@ -93,11 +93,31 @@
   {/block}
 
   {block name='customer_registration_form'}
-    {if $customer.is_guest}
+    {if $order_customer.is_guest && !$registered_customer_exists}
       <div id="registration-form" class="card">
         <div class="card-block">
-          <h4 class="h4">{l s='Save time on your next order, sign up now' d='Shop.Theme.Checkout'}</h4>
-          {render file='customer/_partials/customer-form.tpl' ui=$register_form}
+          <h4 class="h4">{l s='Save time on your next order, sign up now and enjoy:' d='Shop.Theme.Checkout'}</h4>
+          <ul>
+            <li> -{l s='Personalized and secure access' d='Shop.Theme.Customeraccount'}</li>
+            <li> -{l s='Fast and easy checkout' d='Shop.Theme.Customeraccount'}</li>
+            <li> -{l s='Easier merchandise return' d='Shop.Theme.Customeraccount'}</li>
+          </ul>
+          <form method="post">
+            <div>
+              <div class="form-group">
+                <label class="form-control-label required" for="field-email">
+                  {l s='Set your password:' d='Shop.Forms.Labels'}
+                </label>
+                <input type="password" class="form-control" data-validate="isPasswd" required name="password" value="">
+              </div>
+            </div>
+            <footer class="form-footer">
+              <input type="hidden" name="submitTransformGuestToCustomer" value="1">
+              <input type="hidden" name="id_order" value="{$order.details.id}">
+              <input type="hidden" name="email" value="{$order_customer.email}">
+              <button class="btn btn-primary" type="submit">{l s='Create account' d='Shop.Theme.Actions'}</button>
+            </footer>
+          </form>
         </div>
       </div>
     {/if}
