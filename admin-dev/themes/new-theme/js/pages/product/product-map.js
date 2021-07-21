@@ -169,6 +169,7 @@ export default {
     categoriesContainer: '#product_basic_categories',
     categoriesModalTemplate: '#categories-modal-template',
     categoriesModalContainer: '#categories-modal-container',
+    applyCategoriesBtn: '.js-apply-categories-btn',
     categoryTree: '.js-category-tree-list',
     treeElement: '.category-tree-element',
     treeElementInputs: '.category-tree-inputs',
