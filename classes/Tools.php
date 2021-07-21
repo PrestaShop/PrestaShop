@@ -488,7 +488,7 @@ class ToolsCore
     {
         $urlHost = Tools::extractHost($url);
 
-        return empty($urlHost) || $urlHost === Tools::getServerName();
+        return empty($urlHost) || ($urlHost === Tools::getServerName() || $urlHost === 'www.'.Tools::getServerName());
     }
 
     /**
