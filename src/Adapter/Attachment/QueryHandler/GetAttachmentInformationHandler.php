@@ -58,8 +58,10 @@ class GetAttachmentInformationHandler implements GetAttachmentInformationHandler
         return new AttachmentInformation(
             (int) $attachment->id,
             $attachment->name,
+            $attachment->description,
             $attachment->file_name,
-            $attachment->mime
+            $attachment->mime,
+            (int) $attachment->file_size
         );
     }
 }

@@ -31,10 +31,12 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Attachment;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
-use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use RuntimeException;
 use Tests\Resources\DummyFileUploader;
 
@@ -49,20 +51,22 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
     public function addAttachment(string $reference, TableNode $tableNode): void
     {
         $data = $this->localizeByRows($tableNode);
-        $fileName = $data['file_name'];
+        $addCommand = new AddAttachmentCommand(
+            $data['name'],
+            $data['description']
+        );
+        $destination = $this->uploadDummyFile($data['file_name']);
+        $fileSize = filesize($destination);
+        $addCommand->setFileInformation(
+            pathinfo($destination, PATHINFO_BASENAME),
+            $fileSize,
+            mime_content_type($destination),
+            $data['file_name']
+        );
 
-        $destination = $this->uploadDummyFile($fileName);
-
-        $attachment = new Attachment();
-        $attachment->description = $data['description'];
-        $attachment->name = $data['name'];
-        $attachment->file_name = $fileName;
-        $attachment->mime = mime_content_type($destination);
-        $attachment->file = pathinfo($destination, PATHINFO_BASENAME);
-
-        $attachment->add();
-
-        $this->getSharedStorage()->set($reference, (int) $attachment->id);
+        /** @var AttachmentId $attachmentId */
+        $attachmentId = $this->getCommandBus()->handle($addCommand);
+        $this->getSharedStorage()->set($reference, $attachmentId->getValue());
     }
 
     /**
@@ -76,11 +80,11 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
         $attachment = $this->getAttachment($reference);
         $data = $this->localizeByRows($tableNode);
 
-        Assert::assertEquals($data['description'], $attachment->description);
-        Assert::assertEquals($data['name'], $attachment->name);
-        Assert::assertEquals($data['file_name'], $attachment->file_name);
-        Assert::assertEquals($data['mime'], $attachment->mime);
-        Assert::assertEquals($data['size'], $attachment->file_size);
+        Assert::assertEquals($data['name'], $attachment->getLocalizedNames());
+        Assert::assertEquals($data['description'], $attachment->getLocalizedDescriptions());
+        Assert::assertEquals($data['file_name'], $attachment->getFileName());
+        Assert::assertEquals($data['mime'], $attachment->getMimeType());
+        Assert::assertEquals((int) $data['size'], $attachment->getFileSize());
     }
 
     /**
@@ -137,20 +141,13 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param string $reference
      *
-     * @return Attachment
-     *
-     * @throws PrestaShopException
+     * @return AttachmentInformation
      */
-    private function getAttachment(string $reference): Attachment
+    private function getAttachment(string $reference): AttachmentInformation
     {
         $id = $this->getSharedStorage()->get($reference);
-        $attachment = new Attachment($id);
 
-        if (!$attachment->id) {
-            throw new RuntimeException(sprintf('Failed to load attachment with id %d', $id));
-        }
-
-        return $attachment;
+        return $this->getCommandBus()->handle(new GetAttachmentInformation((int) $id));
     }
 
     /**
