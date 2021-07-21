@@ -26,30 +26,27 @@
 
 {% block categories_row %}
   <div {{ block('widget_attributes') }}>
-{#    <div class="form-group pstaggerTagsWrapper d-block">#}
-      {{ form_row(form.product_categories) }}
-{#    </div>#}
-
+    {{ form_row(form.product_categories) }}
     {{ form_row(form.add_categories_btn) }}
   </div>
-{% endblock %}
-
-{% block category_tags_collection_entry_row %}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTag')|trim }) -%}
-  {% set categoryId = form.vars.data.id|default(form.parent.vars.prototype.name) %}
-  <span {{ block('widget_attributes') }}>
-    <span class="tag-item" data-id="{{ categoryId }}">{{ form.vars.data.name|default('') }}</span>
-    <a class="pstaggerClosingCross" href="#" data-id="{{ categoryId }}">x</a>
-    <input type="hidden" value="{{ categoryId }}">
-  </span>
 {% endblock %}
 
 {% block category_tags_collection_row %}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTagsWrapper d-block')|trim }) -%}
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
   <div {{ block('widget_attributes') }}>
-    {{ form_row(form) }}
+    {{ block('form_rows') }}
   </div>
+{% endblock %}
+
+{% block category_tags_collection_entry_row %}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTag')|trim }) -%}
+  {% set categoryId = form.vars.data.id|default(form.vars.name) %}
+  <span {{ block('widget_attributes') }}>
+    <span class="tag-item" data-id="{{ categoryId }}">{{ form.vars.data.name|default('') }}</span>
+    <a class="pstaggerClosingCross" href="#" data-id="{{ categoryId }}">x</a>
+    <input type="hidden" value="{{ categoryId }}">
+  </span>
 {% endblock %}
 
 {% block category_tree_selector_row %}
