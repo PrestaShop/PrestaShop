@@ -58,8 +58,10 @@ class SearchAttachmentHandler implements SearchAttachmentHandlerInterface
             $attachmentInfos[] = new AttachmentInformation(
                 (int) $attachment['id_attachment'],
                 $attachment['name'],
+                $attachment['description'],
                 $attachment['file_name'],
-                $attachment['mime']
+                $attachment['mime'],
+                (int) $attachment['file_size']
             );
         }
 
