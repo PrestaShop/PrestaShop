@@ -43,22 +43,22 @@ Feature: Update product attachments from Back Office (BO).
     And product product1 should have no attachments associated
     When I associate product product1 with following attachments: "[att1]"
     Then product product1 should have following attachments associated:
-      | attachment reference | title                       | file name    | type      |
-      | att1                 | en-US:puffin;fr-Fr:frpuffin | app_icon.png | image/png |
+      | attachment reference | title                       | description                   | file name    | type      | size  |
+      | att1                 | en-US:puffin;fr-Fr:frpuffin | en-US:puffin photo nr1;fr-Fr: | app_icon.png | image/png | 19187 |
     When I associate product product1 with following attachments: "[att2]"
     Then product product1 should have following attachments associated:
-      | attachment reference | title                       | file name    | type       |
-      | att2                 | en-US:myShop;fr-Fr:myShop   | logo.jpg     | image/jpeg |
+      | attachment reference | title                     | description               | file name    | type       | size |
+      | att2                 | en-US:myShop;fr-Fr:myShop | en-US:my shop logo;fr-Fr: | logo.jpg     | image/jpeg | 2758 |
     When I associate product product1 with following attachments: "[att1,att2]"
     Then product product1 should have following attachments associated:
-      | attachment reference | title                       | file name    | type       |
-      | att1                 | en-US:puffin;fr-Fr:frpuffin | app_icon.png | image/png  |
-      | att2                 | en-US:myShop;fr-Fr:myShop   | logo.jpg     | image/jpeg |
+      | attachment reference | title                       | description                   | file name    | type       | size  |
+      | att1                 | en-US:puffin;fr-Fr:frpuffin | en-US:puffin photo nr1;fr-Fr: | app_icon.png | image/png  | 19187 |
+      | att2                 | en-US:myShop;fr-Fr:myShop   | en-US:my shop logo;fr-Fr:     | logo.jpg     | image/jpeg | 2758 |
 
   Scenario: Remove association of product attachments
     Given product product1 should have following attachments associated:
-      | attachment reference | title                       | file name    | type       |
-      | att1                 | en-US:puffin;fr-Fr:frpuffin | app_icon.png | image/png  |
-      | att2                 | en-US:myShop;fr-Fr:myShop   | logo.jpg     | image/jpeg |
+      | attachment reference | title                       | description                   | file name    | type       | size  |
+      | att1                 | en-US:puffin;fr-Fr:frpuffin | en-US:puffin photo nr1;fr-Fr: | app_icon.png | image/png  | 19187 |
+      | att2                 | en-US:myShop;fr-Fr:myShop   | en-US:my shop logo;fr-Fr:     | logo.jpg     | image/jpeg | 2758  |
     When I remove product product1 attachments association
     Then product product1 should have no attachments associated
