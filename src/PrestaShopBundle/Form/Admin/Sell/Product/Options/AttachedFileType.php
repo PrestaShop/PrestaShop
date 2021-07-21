@@ -52,6 +52,11 @@ class AttachedFileType extends TranslatorAwareType
         ;
     }
 
+    /**
+     * Use entity_item block prefix to rely on default table template from the UI kit.
+     *
+     * @return string
+     */
     public function getBlockPrefix()
     {
         return 'entity_item';
