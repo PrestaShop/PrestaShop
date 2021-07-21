@@ -42,26 +42,32 @@ Feature: Manage attachment from Back Office (BO)
 
     Scenario: I can search attachments file based on a language
       When I search for attachment matching "puffin" I get following results:
-        | attachment_id | file_name    | name[en-US] | name[fr-FR] | mime      |
-        | att1          | app_icon.png | puffin      | macareux    | image/png |
+        | attachment_id | file_name    | name[en-US] | name[fr-FR] | description[en-US] | description[fr-FR] | mime      | size  |
+        | att1          | app_icon.png | puffin      | macareux    | puffin photo nr1   | photo de macareux  | image/png | 19187 |
       # Case insensitive
       And I search for attachment matching "PuFfin" I get following results:
-        | attachment_id | file_name    | name[en-US] | name[fr-FR] | mime      |
-        | att1          | app_icon.png | puffin      | macareux    | image/png |
+        | attachment_id | file_name    | name[en-US] | name[fr-FR] | description[en-US] | description[fr-FR] | mime      | size  |
+        | att1          | app_icon.png | puffin      | macareux    | puffin photo nr1   | photo de macareux  | image/png | 19187 |
       # Search in description as well
       And I search for attachment matching "photo" I get following results:
-        | attachment_id | file_name    | name[en-US] | name[fr-FR] | mime      |
-        | att1          | app_icon.png | puffin      | macareux    | image/png |
+        | attachment_id | file_name    | name[en-US] | name[fr-FR] | description[en-US] | description[fr-FR] | mime      | size  |
+        | att1          | app_icon.png | puffin      | macareux    | puffin photo nr1   | photo de macareux  | image/png | 19187 |
       # Search in file_name as well
       And I search for attachment matching "dummy" I get following results:
-        | attachment_id | file_name     | name[en-US] | name[fr-FR] | mime            |
-        | att2          | dummy_zip.zip | user guide  | notice      | application/zip |
+        | attachment_id | file_name     | name[en-US] | name[fr-FR] | description[en-US]  | description[fr-FR]  | mime            | size  |
+        | att2          | dummy_zip.zip | user guide  | notice      | chainsaw user guide | notice tronçonneuse | application/zip | 22405 |
       And I search for attachment matching "notice" I get following results:
-        | attachment_id | file_name     | name[en-US] | name[fr-FR] | mime            |
-        | att2          | dummy_zip.zip | user guide  | notice      | application/zip |
+        | attachment_id | file_name     | name[en-US] | name[fr-FR] | description[en-US]  | description[fr-FR]  | mime            | size  |
+        | att2          | dummy_zip.zip | user guide  | notice      | chainsaw user guide | notice tronçonneuse | application/zip | 22405 |
       And I search for attachment matching "tRoN" I get following results:
-        | attachment_id | file_name     | name[en-US] | name[fr-FR] | mime            |
-        | att2          | dummy_zip.zip | user guide  | notice      | application/zip |
-
-    Scenario: I can search attachments file and get no results
+        | attachment_id | file_name     | name[en-US] | name[fr-FR] | description[en-US]  | description[fr-FR]  | mime            | size  |
+        | att2          | dummy_zip.zip | user guide  | notice      | chainsaw user guide | notice tronçonneuse | application/zip | 22405 |
       When I search for attachment matching "toto" I get no results
+      And I search for attachment matching "ot" I get following results:
+        | attachment_id | file_name    | name[en-US] | name[fr-FR] | description[en-US] | description[fr-FR] | mime      | size  |
+        | att1          | app_icon.png | puffin      | macareux    | puffin photo nr1   | photo de macareux  | image/png | 19187 |
+        | att2          | dummy_zip.zip | user guide  | notice      | chainsaw user guide | notice tronçonneuse | application/zip | 22405 |
+      And I delete attachment att2
+      Then I search for attachment matching "ot" I get following results:
+        | attachment_id | file_name    | name[en-US] | name[fr-FR] | description[en-US] | description[fr-FR] | mime      | size  |
+        | att1          | app_icon.png | puffin      | macareux    | puffin photo nr1   | photo de macareux  | image/png | 19187 |
