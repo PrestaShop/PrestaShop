@@ -42,7 +42,6 @@ class CategoriesType extends TranslatorAwareType
     {
         $builder
             ->add('product_categories', CategoriesCollectionType::class)
-//            ->add('category_tree', CategoryTreeSelectionType::class)
             ->add('add_categories_btn', ButtonType::class, [
                 'label' => $this->trans('Add categories', 'Admin.Catalog.Feature'),
                 'attr' => [
