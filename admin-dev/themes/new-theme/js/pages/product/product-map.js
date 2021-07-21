@@ -174,7 +174,7 @@ export default {
     treeElementInputs: '.category-tree-inputs',
     checkboxInput: '[type=checkbox]',
     checkedCheckboxInputs: '[type=checkbox]:checked',
-    checkboxName: (categoryId) => `product[basic][categories][product_categories][${categoryId}][is_associated]`,
+    treeCheckboxName: (categoryId) => `category_tree_selection[${categoryId}]`,
     materialCheckbox: '.md-checkbox',
     defaultRadioInput: '[type=radio]:checked',
     tagsContainer: '.pstaggerTagsWrapper',
