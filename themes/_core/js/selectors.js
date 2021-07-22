@@ -91,7 +91,6 @@ prestashop.selectors = {
     invoiceAddresses: '#invoice-addresses, .js-address-selector',
     addressForm: '.js-address-form',
     checkoutNewCustomerRelatedBlock: '.js-checkout-only-new-customer',
-    checkoutLoginSuggestionBlock: '.js-checkout-login-suggestion',
     checkoutCustomerForm: '.js-checkout-customer-form',
   },
   cart: {

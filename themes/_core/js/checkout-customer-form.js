@@ -28,25 +28,37 @@ import prestashop from 'prestashop';
 export default function () {
   const $body = $('body');
   const {checkoutNewCustomerRelatedBlock} = prestashop.selectors.checkout;
-  const {checkoutLoginSuggestionBlock} = prestashop.selectors.checkout;
+  const checkoutLoginAlertClass = 'js-checkout-login-alert';
   const {checkoutCustomerForm} = prestashop.selectors.checkout;
   const $checkoutNewCustomerRelatedBlock = $(checkoutNewCustomerRelatedBlock);
-  const $checkoutLoginSuggestionBlock = $(checkoutLoginSuggestionBlock);
   const $checkoutCustomerForm = $(checkoutCustomerForm);
+  const $checkoutCustomerFormSubmitBtn = $checkoutCustomerForm.find('[type="submit"]');
   const $checkoutFormEmailInput = $checkoutCustomerForm.find('[name="email"]');
   let timeout;
 
-  const handleBlockDisplay = (displayType = 'reset') => {
-    if (displayType === 'customerExists') {
+  const handleBlockDisplay = ({customerExists}) => {
+    if (customerExists) {
       $checkoutNewCustomerRelatedBlock.hide();
-      $checkoutLoginSuggestionBlock.show();
-    } else if (displayType === 'customerNotExists') {
-      $checkoutNewCustomerRelatedBlock.show();
-      $checkoutLoginSuggestionBlock.hide();
     } else {
-      $checkoutNewCustomerRelatedBlock.hide();
-      $checkoutLoginSuggestionBlock.hide();
+      $checkoutNewCustomerRelatedBlock.show();
     }
+  };
+
+  const handleAlertMessage = ({alert}) => {
+    $(`.${checkoutLoginAlertClass}`).remove();
+
+    if (alert.message) {
+      // help-block class only to keep styling consistent with themes/classic/templates/_partials/form-errors.tpl
+      const $alertBlock = $('<div>').addClass(`alert help-block ${checkoutLoginAlertClass}`).text(alert.message);
+      const alertTypeClass = alert.type === 'danger' ? 'alert-danger' : 'alert-info';
+
+      $alertBlock.addClass(alertTypeClass);
+      $checkoutFormEmailInput.after($alertBlock);
+    }
+  };
+
+  const handleFormSubmitting = ({guestAllowed, customerExists}) => {
+    $checkoutCustomerFormSubmitBtn.attr('disabled', !guestAllowed && customerExists);
   };
 
   const handleRequest = (email) => {
@@ -58,15 +70,9 @@ export default function () {
       email,
     })
       .then((resp) => {
-        if (!resp.hasError) {
-          if (resp.customerExists) {
-            handleBlockDisplay('customerExists');
-          } else {
-            handleBlockDisplay('customerNotExists');
-          }
-        } else {
-          handleBlockDisplay();
-        }
+        handleBlockDisplay(resp);
+        handleFormSubmitting(resp);
+        handleAlertMessage(resp);
       });
   };
 

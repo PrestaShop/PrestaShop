@@ -36,11 +36,6 @@
       </p>
       {$smarty.block.parent}
     </div>
-  {elseif $field.name === 'email' && $field.errors|count === 0}
-    {$smarty.block.parent}
-    <div class="js-checkout-login-suggestion alert alert-info" style="display:none;">
-      {l s='You already have an account, don\'t hesitate to log in!' d='Shop.Theme.Checkout'}
-    </div>
   {else}
     {$smarty.block.parent}
   {/if}

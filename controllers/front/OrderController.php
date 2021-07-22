@@ -241,24 +241,40 @@ class OrderControllerCore extends FrontController
     {
         $email = Tools::getValue('email');
         $isEmailValid = Validate::isEmail($email);
-        $customerExist = false;
-        $data = [];
+        $isGuestAllowed = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
+        $customerExists = false;
+        $responseData = [];
+        $alert = [];
 
         if ($isEmailValid) {
-            $customerExist = Customer::customerExists($email, false, true);
-            $data = [
-                'hasError' => false,
-                'customerExists' => $customerExist,
-            ];
-        } else {
-            $data = [
-                'hasError' => true,
-            ];
+            $customerExists = Customer::customerExists($email, false, true);
         }
+
+        if ($customerExists) {
+            $alert['type'] = $isGuestAllowed ? 'info' : 'danger';
+            $alert['message'] = $isGuestAllowed ?
+            $this->translator->trans(
+                    'You already have an account, don\'t hesitate to log in!',
+                    [],
+                    'Shop.Theme.Checkout'
+                )
+                :
+                $this->translator->trans(
+                    'An account was already registered with this email address',
+                    [],
+                    'Shop.Notifications.Error'
+                );
+        }
+
+        $responseData = array_merge($responseData, [
+            'guestAllowed' => (bool) $isGuestAllowed,
+            'alert' => $alert,
+            'customerExists' => $customerExists,
+        ]);
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode($data));
+        $this->ajaxRender(Tools::jsonEncode($responseData));
     }
 
     public function initContent()
