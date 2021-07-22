@@ -83,6 +83,7 @@ class HistoryControllerCore extends FrontController
      *
      * @param Order $order
      * @param Context $context
+     * 
      * @return string
      */
     public static function getUrlToInvoice($order, $context)
@@ -90,7 +91,6 @@ class HistoryControllerCore extends FrontController
         $url_to_invoice = '';
 
         if ((bool) Configuration::get('PS_INVOICE') && OrderState::invoiceAvailable($order->current_state) && count($order->getInvoicesCollection())) {
-
             $params = [
                 'id_order' => (int) $order->id,
                 'secure_key' => (!$context->customer->isLogged()) ? $order->secure_key : null,
@@ -107,13 +107,14 @@ class HistoryControllerCore extends FrontController
      *
      * @param int $id_order
      * @param Context $context
+     * 
      * @return string
      */
     public static function getUrlToReorder($id_order, $context)
     {
         $url_to_reorder = '';
         if (!(bool) Configuration::get('PS_DISALLOW_HISTORY_REORDERING')) {
-            $params= [
+            $params = [
                 'submitReorder' => 1,
                 'id_order' => (int) $id_order,
             ];
