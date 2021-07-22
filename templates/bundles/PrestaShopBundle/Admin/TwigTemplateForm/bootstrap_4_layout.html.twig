@@ -334,7 +334,7 @@
 {%- endblock translate_textarea_widget %}
 
 {% block date_picker_widget %}
-  {% spaceless %}
+  {% apply spaceless %}
     {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker form-control')|trim)}) %}
     {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
     <div class="input-group datepicker">
@@ -345,27 +345,27 @@
         </div>
       </div>
     </div>
-  {% endspaceless %}
+  {% endapply %}
 {% endblock date_picker_widget %}
 
 {% block date_range_widget %}
-  {% spaceless %}
+  {% apply spaceless %}
     {{ form_widget(form.from) }}
     {{ form_widget(form.to) }}
-  {% endspaceless %}
+  {% endapply %}
 {% endblock date_range_widget %}
 
 {% block color_picker_widget %}
-  {% spaceless %}
+  {% apply spaceless %}
     {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' form-control colorpicker')|trim)}) %}
     <div class="input-group colorpicker">
       <input type="text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
     </div>
-  {% endspaceless %}
+  {% endapply %}
 {% endblock color_picker_widget %}
 
 {% block search_and_reset_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         <button type="submit"
                 class="btn btn-primary grid-search-button d-block float-right"
                 title="{{ 'Search'|trans({}, 'Admin.Actions') }}"
@@ -388,11 +388,11 @@
             </button>
           </div>
       {% endif %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock search_and_reset_widget %}
 
 {% block switch_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
     <span class="ps-switch">
         {% for choice in choices %}
             {% set inputId = id ~'_' ~ choice.value %}
@@ -409,7 +409,7 @@
         {% endfor %}
         <span class="slide-button"></span>
     </span>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock switch_widget %}
 
 {% block _form_step6_attachments_widget %}
@@ -578,7 +578,7 @@
 {# Material design widgets #}
 
 {% block material_choice_table_widget %}
-  {% spaceless %}
+  {% apply spaceless %}
     <div class="choice-table">
       <table class="table table-bordered mb-0">
         <thead>
@@ -605,11 +605,11 @@
         </tbody>
       </table>
     </div>
-  {% endspaceless %}
+  {% endapply %}
 {% endblock material_choice_table_widget %}
 
 {% block material_multiple_choice_table_widget %}
-  {% spaceless %}
+  {% apply spaceless %}
     <div class="choice-table{% if headers_fixed %}-headers-fixed{% endif %} table-responsive">
       <table class="table">
         <thead>
@@ -658,7 +658,7 @@
         </tbody>
       </table>
     </div>
-  {% endspaceless %}
+  {% endapply %}
 {% endblock material_multiple_choice_table_widget %}
 
 {% block translatable_widget -%}

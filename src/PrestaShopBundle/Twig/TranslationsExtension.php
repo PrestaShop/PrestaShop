@@ -31,10 +31,10 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Twig_Extension;
-use Twig_SimpleFunction;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class TranslationsExtension extends Twig_Extension
+class TranslationsExtension extends AbstractExtension
 {
     /**
      * @var TranslatorInterface
@@ -75,8 +75,8 @@ class TranslationsExtension extends Twig_Extension
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction('getTranslationsTree', [$this, 'getTranslationsTree']),
-            new Twig_SimpleFunction('getTranslationsForms', [$this, 'getTranslationsForms']),
+            new TwigFunction('getTranslationsTree', [$this, 'getTranslationsTree']),
+            new TwigFunction('getTranslationsForms', [$this, 'getTranslationsForms']),
         ];
     }
 

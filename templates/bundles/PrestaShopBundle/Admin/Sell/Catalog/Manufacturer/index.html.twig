@@ -25,6 +25,8 @@
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
 {% set layoutHeaderToolbarBtn = {
   add_manufacturer: {
     href: path('admin_manufacturers_create'),
