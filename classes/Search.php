@@ -288,14 +288,13 @@ class SearchCore
         $fuzzyLoop = 0;
         $wordCnt = 0;
         $eligibleProducts2Full = [];
-        $expressions = explode(';', rtrim($expr, ';'));
+        $expressions = explode(';', $expr);
         $fuzzyMaxLoop = (int) Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP');
         $psFuzzySearch = (int) Configuration::get('PS_SEARCH_FUZZY');
         $psSearchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
         foreach ($expressions as $expression) {
             $eligibleProducts2 = null;
             $words = Search::extractKeyWords($expression, $id_lang, false, $context->language->iso_code);
-            $wordCnt += count($words);
             foreach ($words as $key => $word) {
                 if (empty($word) || strlen($word) < $psSearchMinWordLength) {
                     unset($words[$key]);
@@ -337,8 +336,10 @@ class SearchCore
 
                 $scoreArray[] = 'sw.word LIKE \'' . $sql_param_search . '\'';
             }
-
-            $eligibleProducts2Full = array_merge($eligibleProducts2Full, $eligibleProducts2);
+            $wordCnt += count($words);
+            if ($eligibleProducts2) {
+                $eligibleProducts2Full = array_merge($eligibleProducts2Full, $eligibleProducts2);
+            }
         }
 
         $eligibleProducts2Full = array_unique($eligibleProducts2Full);
