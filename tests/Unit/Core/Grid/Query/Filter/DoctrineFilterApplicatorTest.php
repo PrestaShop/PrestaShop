@@ -41,7 +41,7 @@ class DoctrineFilterApplicatorTest extends TestCase
      */
     private $doctrineFilterApplicator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->doctrineFilterApplicator = new DoctrineFilterApplicator();
     }
