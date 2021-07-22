@@ -40,7 +40,7 @@ class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilde
      */
     private $commandsBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->commandsBuilder = new ProductAttachmentsCommandsBuilder();
     }
