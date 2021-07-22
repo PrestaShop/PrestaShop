@@ -73,69 +73,70 @@
     </div>
 
     <div id="virtual_product" data-action="{{ path('admin_product_virtual_save_action', { 'idProduct': productId }) }}" data-action-remove="{{ path('admin_product_virtual_remove_action', {'idProduct': productId }) }}">
+        
+      <h2>{{ formVirtualProduct.vars.label }}</h2>
+      <fieldset class="form-group">
+        {{ form_widget(formVirtualProduct.is_virtual_file) }}
+      </fieldset>
 
       <div class="row">
-        <div class="col-md-4">
-          <h2>{{ formVirtualProduct.vars.label }}</h2>
-        </div>
         <div class="col-md-8">
-          <fieldset class="form-group">
-            {{ form_widget(formVirtualProduct.is_virtual_file) }}
-          </fieldset>
+          <div id="virtual_product_content" class="bg-light p-3">
+            <div class="row">
+              {{ form_errors(formVirtualProduct) }}
+              <div class="col-md-12">
+                <fieldset class="form-group">
+                  <label class="form-control-label">{{ formVirtualProduct.file.vars.label }}</label>
+                  <span class="help-box" data-toggle="popover" data-content="{{ "Upload a file from your computer (%maxUploadSize% max.)"|trans({'%maxUploadSize%': max_upload_size}, 'Admin.Catalog.Help') }}"></span>
+                  <div id="form_step3_virtual_product_file_input" class="{{ formVirtualProduct.vars.value.filename is defined ? 'hide' : 'show' }}">
+                    {{ form_widget(formVirtualProduct.file) }}
+                  </div>
+                  <div id="form_step3_virtual_product_file_details" class="{{ formVirtualProduct.vars.value.filename is defined ? 'show' : 'hide' }}">
+                    <a href="{{ formVirtualProduct.vars.value.file_download_link is defined ? formVirtualProduct.vars.value.file_download_link : '' }}" class="btn btn-default btn-sm download">{{ 'Download file'|trans({}, 'Admin.Actions') }}</a>
+                    <a href="{{ path('admin_product_virtual_remove_file_action', {'idProduct': productId}) }}" class="btn btn-danger btn-sm delete">{{ 'Delete this file'|trans({}, 'Admin.Actions') }}</a>
+                  </div>
+                </fieldset>
+              </div>
+              <div class="col-md-6">
+                <fieldset class="form-group">
+                  <label class="form-control-label">{{ formVirtualProduct.name.vars.label }}</label>
+                  <span class="help-box" data-toggle="popover" data-content="{{ "The full filename with its extension (e.g. Book.pdf)"|trans({}, 'Admin.Catalog.Help') }}"></span>
+                  {{ form_errors(formVirtualProduct.name) }}
+                  {{ form_widget(formVirtualProduct.name) }}
+                </fieldset>
+              </div>
+              <div class="col-md-6">
+                <fieldset class="form-group">
+                  <label class="form-control-label">{{ formVirtualProduct.nb_downloadable.vars.label }}</label>
+                  <span class="help-box" data-toggle="popover" data-content="{{ "Number of downloads allowed per customer. Set to 0 for unlimited downloads."|trans({}, 'Admin.Catalog.Help') }}"></span>
+                  {{ form_errors(formVirtualProduct.nb_downloadable) }}
+                  {{ form_widget(formVirtualProduct.nb_downloadable) }}
+                </fieldset>
+              </div>
+              <div class="col-md-6">
+                <fieldset class="form-group">
+                  <label class="form-control-label">{{ formVirtualProduct.expiration_date.vars.label }}</label>
+                  <span class="help-box" data-toggle="popover" data-content="{{ "If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date."|trans({}, 'Admin.Catalog.Help') }}"></span>
+                  {{ form_errors(formVirtualProduct.expiration_date) }}
+                  {{ form_widget(formVirtualProduct.expiration_date) }}
+                </fieldset>
+              </div>
+              <div class="col-md-6">
+                <fieldset class="form-group">
+                  <label class="form-control-label">{{ formVirtualProduct.nb_days.vars.label }}</label>
+                  <span class="help-box" data-toggle="popover" data-content="{{ "Number of days this file can be accessed by customers. Set to zero for unlimited access."|trans({}, 'Admin.Catalog.Help') }}"></span>
+                  {{ form_errors(formVirtualProduct.nb_days) }}
+                  {{ form_widget(formVirtualProduct.nb_days) }}
+                </fieldset>
+              </div>
+              <div class="col-md-12">
+                {{ form_widget(formVirtualProduct.save) }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div id="virtual_product_content" class="row col-md-8">
-        {{ form_errors(formVirtualProduct) }}
-        <div class="col-md-12">
-          <fieldset class="form-group">
-            <label class="form-control-label">{{ formVirtualProduct.file.vars.label }}</label>
-            <span class="help-box" data-toggle="popover" data-content="{{ "Upload a file from your computer (%maxUploadSize% max.)"|trans({'%maxUploadSize%': max_upload_size}, 'Admin.Catalog.Help') }}"></span>
-            <div id="form_step3_virtual_product_file_input" class="{{ formVirtualProduct.vars.value.filename is defined ? 'hide' : 'show' }}">
-              {{ form_widget(formVirtualProduct.file) }}
-            </div>
-            <div id="form_step3_virtual_product_file_details" class="{{ formVirtualProduct.vars.value.filename is defined ? 'show' : 'hide' }}">
-              <a href="{{ formVirtualProduct.vars.value.file_download_link is defined ? formVirtualProduct.vars.value.file_download_link : '' }}" class="btn btn-default btn-sm download">{{ 'Download file'|trans({}, 'Admin.Actions') }}</a>
-              <a href="{{ path('admin_product_virtual_remove_file_action', {'idProduct': productId}) }}" class="btn btn-danger btn-sm delete">{{ 'Delete this file'|trans({}, 'Admin.Actions') }}</a>
-            </div>
-          </fieldset>
-        </div>
-        <div class="col-md-6">
-          <fieldset class="form-group">
-            <label class="form-control-label">{{ formVirtualProduct.name.vars.label }}</label>
-            <span class="help-box" data-toggle="popover" data-content="{{ "The full filename with its extension (e.g. Book.pdf)"|trans({}, 'Admin.Catalog.Help') }}"></span>
-            {{ form_errors(formVirtualProduct.name) }}
-            {{ form_widget(formVirtualProduct.name) }}
-          </fieldset>
-        </div>
-        <div class="col-md-6">
-          <fieldset class="form-group">
-            <label class="form-control-label">{{ formVirtualProduct.nb_downloadable.vars.label }}</label>
-            <span class="help-box" data-toggle="popover" data-content="{{ "Number of downloads allowed per customer. Set to 0 for unlimited downloads."|trans({}, 'Admin.Catalog.Help') }}"></span>
-            {{ form_errors(formVirtualProduct.nb_downloadable) }}
-            {{ form_widget(formVirtualProduct.nb_downloadable) }}
-          </fieldset>
-        </div>
-        <div class="col-md-6">
-          <fieldset class="form-group">
-            <label class="form-control-label">{{ formVirtualProduct.expiration_date.vars.label }}</label>
-            <span class="help-box" data-toggle="popover" data-content="{{ "If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date."|trans({}, 'Admin.Catalog.Help') }}"></span>
-            {{ form_errors(formVirtualProduct.expiration_date) }}
-            {{ form_widget(formVirtualProduct.expiration_date) }}
-          </fieldset>
-        </div>
-        <div class="col-md-6">
-          <fieldset class="form-group">
-            <label class="form-control-label">{{ formVirtualProduct.nb_days.vars.label }}</label>
-            <span class="help-box" data-toggle="popover" data-content="{{ "Number of days this file can be accessed by customers. Set to zero for unlimited access."|trans({}, 'Admin.Catalog.Help') }}"></span>
-            {{ form_errors(formVirtualProduct.nb_days) }}
-            {{ form_widget(formVirtualProduct.nb_days) }}
-          </fieldset>
-        </div>
-        <div class="col-md-12">
-          {{ form_widget(formVirtualProduct.save) }}
-        </div>
-      </div>
     </div>
 
     {% if asm_globally_activated and formType.vars.value != "2" %}
@@ -160,11 +161,13 @@
     {% if configuration('PS_STOCK_MANAGEMENT') %}
       <div id="pack_stock_type">
         <h2>{{ formPackStockType.vars.label }}</h2>
-        <div class="row col-md-4">
-          <fieldset class="form-group">
-            {{ form_errors(formPackStockType) }}
-            {{ form_widget(formPackStockType) }}
-          </fieldset>
+        <div class="row">
+          <div class="col-md-4">
+            <fieldset class="form-group">
+              {{ form_errors(formPackStockType) }}
+              {{ form_widget(formPackStockType) }}
+            </fieldset>
+          </div>
         </div>
       </div>
     {% endif %}

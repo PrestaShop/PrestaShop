@@ -26,22 +26,44 @@
 {% trans_default_domain "Admin.Design.Feature" %}
 
 {% block content %}
-  <div class="row m-0">
+  <div class="row">
     {% if not canMove %}
       <p class="alert alert-warning alert-can-move">
         {{ 'If you want to order/move the following data, please select a shop from the shop list.' | trans({}, 'Admin.Design.Notification') }}
       </p>
     {% endif %}
 
-    <div class="card col-9">
-      <div class="card-body">
-        <div class="card">
-          <form class="mt-2" id="position-filters">
-            <div class="container">
-              <div class="row">
-                <div class="row col-md-12 col-lg-6">
-                  <label class="form-control-label col-4 text-left mt-1">{{ 'Show' | trans({}, 'Admin.Actions') }}</label>
-                  <div class="col-8">
+    <div class="col-md-3">
+      <div class="card" id="modules-position-selection-panel">
+        <h3 class="card-header">
+          <i class="material-icons">check</i>
+          {{ 'Selection' | trans({}, 'Admin.Global') }}</h3>
+        <div class="card-body">
+          <p>
+            <span id="modules-position-single-selection">{{ '1 module selected' | trans }}</span>
+            <span id="modules-position-multiple-selection">
+              <span id="modules-position-selection-count"></span>
+              {{ 'modules selected' | trans({}, 'Admin.Design.Feature') }}
+            </span>
+          </p>
+          <div>
+            <button class="btn btn-primary">
+              <i class="icon-remove"></i>
+              {{ 'Unhook the selection' | trans }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9 order-md-first">
+      <div class="card card-body">
+        <div class="card bg-light p-3">
+          <form id="position-filters">
+            <div class="row">
+              <div class="col-md-12 col-lg-6 mb-2">
+                <div class="row align-items-center">
+                  <label class="form-control-label col-md-4 text-left text-lg-center">{{ 'Show' | trans({}, 'Admin.Actions') }}</label>
+                  <div class="col-md-8">
                     <select id="show-modules" class="filter">
                       <option value="all">{{ 'All modules' | trans }}&nbsp;</option>
                       {% for module in modules %}
@@ -50,10 +72,12 @@
                     </select>
                   </div>
                 </div>
+              </div>
 
-                <div class="row col-md-12 col-lg-6">
-                  <label class="form-control-label col-5 text-center mt-1">{{ 'Search for a hook' | trans }}</label>
-                  <div class="input-group col-7">
+              <div class="col-md-12 col-lg-6 mb-2">
+                <div class="row align-items-center">
+                  <label class="form-control-label col-md-4 text-left text-lg-center">{{ 'Search for a hook' | trans }}</label>
+                  <div class="input-group col-md-8">
                     <div class="input-group-prepend">
                       <div class="input-group-text">
                         <i class="material-icons">search</i>
@@ -65,17 +89,15 @@
               </div>
             </div>
 
-            <div class="container mt-3">
-              <p class="checkbox">
-                <label class="form-control-label" for="hook-position">
-                  <input type="checkbox" id="hook-position"/>
-                  <label class="selectbox" for="hook-position">
-                    <i class="material-icons done">done</i>
-                  </label>
-                  {{ 'Display non-positionable hooks' | trans }}
+            <p class="checkbox mt-3 mb-0">
+              <label class="form-control-label" for="hook-position">
+                <input type="checkbox" id="hook-position"/>
+                <label class="selectbox" for="hook-position">
+                  <i class="material-icons done">done</i>
                 </label>
-              </p>
-            </div>
+                {{ 'Display non-positionable hooks' | trans }}
+              </label>
+            </p>
           </form>
         </div>
 
@@ -189,28 +211,6 @@
             </button>
           </div>
         </form>
-      </div>
-    </div>
-
-    <div class="col-3">
-      <div class="card" id="modules-position-selection-panel">
-        <h3 class="card-header">
-          <i class="material-icons">checked</i>
-          {{ 'Selection' | trans({}, 'Admin.Global') }}</h3>
-        <div class="card-body">
-          <p>
-            <span id="modules-position-single-selection">{{ '1 module selected' | trans }}</span>
-            <span id="modules-position-multiple-selection">
-              <span id="modules-position-selection-count"></span>
-              {{ 'modules selected' | trans({}, 'Admin.Design.Feature') }}
-            </span>
-          </p>
-          <div class="text-center">
-            <button class="btn btn-primary">
-              <i class="icon-remove"></i>
-              {{ 'Unhook the selection' | trans }}</button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
