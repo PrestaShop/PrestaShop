@@ -240,7 +240,7 @@ class ThemeTranslationsFactoryTest extends TestCase
      */
     protected function assertPropertiesTranslations(string $locale): void
     {
-        self::assertIsArray($this->translations);
+        $this->assertIsArray($this->translations);
 
         $this->assertArrayHasKey('messages', $this->translations);
 

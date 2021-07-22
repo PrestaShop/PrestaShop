@@ -43,7 +43,7 @@ class SymfonyIntegrationTestCase extends WebTestCase
      */
     protected $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->contextMocker = new ContextMocker();
@@ -60,13 +60,13 @@ class SymfonyIntegrationTestCase extends WebTestCase
         $kernel = self::$kernel;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         $this->contextMocker->resetContext();
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         DatabaseCreator::restoreTestDB();
         require_once __DIR__ . '/../../config/config.inc.php';
