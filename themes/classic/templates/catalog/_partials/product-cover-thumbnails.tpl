@@ -47,8 +47,8 @@
           class="img-fluid"
           src="{$urls.no_picture_image.bySize.medium_default.url}"
           loading="lazy"
-          width="{$product.default_image.bySize.medium_default.width}"
-          height="{$product.default_image.bySize.medium_default.height}"
+          width="{$urls.no_picture_image.bySize.medium_default.width}"
+          height="{$urls.no_picture_image.bySize.medium_default.height}"
         >
       {/if}
     </div>
