@@ -22,7 +22,7 @@ jobs:
           - name: Setup MySQL
             uses: mirromutth/mysql-action@v1.1
             with:
-              mysql version: '5.7'
+              mysql version: '8.0'
               mysql database: 'prestashop'
               mysql root password: 'password'
           - name: Setup Node
@@ -30,20 +30,6 @@ jobs:
             with:
               node-version: '10'
 
-          - name: Setup dependencies (mysqldump)
-            run: |
-              ## Remove MySQLClient (default)
-              sudo apt-get purge mysql-server mysql-client mysql-common mysql-server-core-* mysql-client-core-*
-              sudo rm /usr/share/mysql/charsets/ -rf
-              ## Install dependencies
-              sudo apt -y install libaio1 libnuma1 libtinfo5
-              ## Fetch MySQLClient 5.7
-              wget https://downloads.mysql.com/archives/get/p/23/file/mysql-server_5.7.34-1ubuntu18.04_amd64.deb-bundle.tar
-              tar -xf mysql-server_5.7.34-1ubuntu18.04_amd64.deb-bundle.tar
-              sudo dpkg -i mysql-common_5.7.34-1ubuntu18.04_amd64.deb
-              sudo dpkg -i libmysqlclient20_5.7.34-1ubuntu18.04_amd64.deb
-              sudo dpkg -i mysql-community-client_5.7.34-1ubuntu18.04_amd64.deb
-              sudo dpkg -i mysql-client_5.7.34-1ubuntu18.04_amd64.deb
           - uses: actions/checkout@v2
 
           - name: PrestaShop Configuration
@@ -72,6 +58,9 @@ jobs:
 
           - name: Build assets
             run: make assets
+
+          - name: Change MySQL authentication method
+            run: mysql -h127.0.0.1 -uroot -ppassword -e "ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
 
           - name: Install PrestaShop
             run: php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db_server=127.0.0.1 --db_password=password --db_name=prestashop --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
