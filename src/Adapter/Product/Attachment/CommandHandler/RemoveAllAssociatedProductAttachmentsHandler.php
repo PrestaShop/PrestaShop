@@ -26,11 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Attachment\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllAssociatedProductAttachmentsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\RemoveAllAssociatedProductAttachmentsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\CommandHandler\RemoveAllAssociatedProductAttachmentsHandlerInterface;
 
 /**
  * Removes all product-attachment associations for given product
