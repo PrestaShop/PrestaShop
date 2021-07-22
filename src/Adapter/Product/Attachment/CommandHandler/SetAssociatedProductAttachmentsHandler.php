@@ -26,35 +26,36 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Adapter\Product\Attachment\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\SetAssociatedProductAttachmentsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\CommandHandler\SetAssociatedProductAttachmentsHandlerInterface;
 
 /**
- * @todo: should be moved to Product/Attachments ns along with command-related classes (in Adapter too) accordingly
- *
- * Removes all product-attachment associations for provided product
+ * Handles @see SetAssociatedProductAttachmentsCommand using legacy object model
  */
-class RemoveAllAssociatedProductAttachmentsCommand
+final class SetAssociatedProductAttachmentsHandler implements SetAssociatedProductAttachmentsHandlerInterface
 {
     /**
-     * @var ProductId
+     * @var ProductAttachmentUpdater
      */
-    private $productId;
+    private $productAttachmentUpdater;
 
     /**
-     * @param int $productId
+     * @param ProductAttachmentUpdater $productUpdater
      */
-    public function __construct(int $productId)
-    {
-        $this->productId = new ProductId($productId);
+    public function __construct(
+        ProductAttachmentUpdater $productUpdater
+    ) {
+        $this->productAttachmentUpdater = $productUpdater;
     }
 
     /**
-     * @return ProductId
+     * {@inheritdoc}
      */
-    public function getProductId(): ProductId
+    public function handle(SetAssociatedProductAttachmentsCommand $command): void
     {
-        return $this->productId;
+        $this->productAttachmentUpdater->setAttachments($command->getProductId(), $command->getAttachmentIds());
     }
 }

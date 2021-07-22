@@ -24,19 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Defines contract to handle @see SetAssociatedProductAttachmentsCommand
+ * Removes all product-attachment associations for provided product
  */
-interface SetAssociatedProductAttachmentsHandlerInterface
+class RemoveAllAssociatedProductAttachmentsCommand
 {
     /**
-     * @param SetAssociatedProductAttachmentsCommand $command
-     *
-     * @return void
+     * @var ProductId
      */
-    public function handle(SetAssociatedProductAttachmentsCommand $command): void;
+    private $productId;
+
+    /**
+     * @param int $productId
+     */
+    public function __construct(int $productId)
+    {
+        $this->productId = new ProductId($productId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
 }
