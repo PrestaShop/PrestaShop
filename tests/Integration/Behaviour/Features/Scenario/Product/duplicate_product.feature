@@ -195,8 +195,8 @@ Feature: Duplicate product from Back Office (BO).
     And product copy_of_product1 should have following related products:
       | product2 |
     And product copy_of_product1 should have following attachments associated:
-      | attachment reference | title                       | file name    | type      |
-      | att1                 | en-US:puffin;fr-Fr:macareux | app_icon.png | image/png |
+      | attachment reference | title                       | description                           | file name    | type      | size  |
+      | att1                 | en-US:puffin;fr-Fr:macareux | en-US:puffin photo nr1;fr-Fr:macareux | app_icon.png | image/png | 19187 |
     And product copy_of_product1 should have identical customization fields to product1
     And product copy_of_product1 should have 1 customizable text field
     And product copy_of_product1 should have 0 customizable file fields
