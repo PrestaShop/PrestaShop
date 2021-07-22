@@ -2634,6 +2634,10 @@ class CartCore extends ObjectModel
                     }
                 }
             }
+            
+            if (!$product['is_virtual'] && empty($product['carrier_list'])) {
+                return [];
+            }
 
             if (!isset($grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse])) {
                 $grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse] = [];
