@@ -257,6 +257,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'type' => $productForEditing->getType(),
             'name' => $productForEditing->getBasicInformation()->getLocalizedNames(),
+            'cover' => $productForEditing->getCoverUrl(),
         ];
     }
 

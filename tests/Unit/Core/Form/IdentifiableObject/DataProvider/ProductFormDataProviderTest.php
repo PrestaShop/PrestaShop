@@ -79,6 +79,7 @@ class ProductFormDataProviderTest extends TestCase
     private const DEFAULT_CATEGORY_ID = 51;
     private const DEFAULT_VIRTUAL_PRODUCT_FILE_ID = 69;
     private const DEFAULT_QUANTITY = 12;
+    private const COVER_URL = 'http://localhost/cover.jpg';
 
     public function testGetDefaultData()
     {
@@ -377,14 +378,17 @@ class ProductFormDataProviderTest extends TestCase
             1 => 'english',
             2 => 'french',
         ];
+        $newCover = 'http://localhost/super_cover.jpg';
         $productData = [
             'type' => ProductType::TYPE_COMBINATIONS,
             'name' => $localizedValues,
             'description' => $localizedValues,
             'description_short' => $localizedValues,
+            'cover' => $newCover,
         ];
         $expectedOutputData['header']['name'] = $localizedValues;
         $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['header']['cover'] = $newCover;
 
         $expectedOutputData['description']['description'] = $localizedValues;
         $expectedOutputData['description']['description_short'] = $localizedValues;
@@ -885,7 +889,8 @@ class ProductFormDataProviderTest extends TestCase
             $this->createSeoOptions($product),
             $product['attachments'] ?? [],
             $this->createProductStockInformation($product),
-            $this->createVirtualProductFile($product)
+            $this->createVirtualProductFile($product),
+            $product['cover'] ?? static::COVER_URL
         );
     }
 
@@ -1191,6 +1196,7 @@ class ProductFormDataProviderTest extends TestCase
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
                 'name' => [],
+                'cover' => static::COVER_URL,
             ],
             'description' => [
                 'description' => [],
