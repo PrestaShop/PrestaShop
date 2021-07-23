@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 
 /**
@@ -101,6 +102,11 @@ class ProductForEditing
     private $virtualProductFile;
 
     /**
+     * @var ProductImage|null
+     */
+    private $cover;
+
+    /**
      * @param int $productId
      * @param string $type
      * @param ProductCustomizationOptions $customizationOptions
@@ -114,6 +120,7 @@ class ProductForEditing
      * @param array $associatedAttachmentIds
      * @param ProductStockInformation $stockInformation
      * @param VirtualProductFileForEditing|null $virtualProductFile
+     * @param ProductImage|null $cover
      */
     public function __construct(
         int $productId,
@@ -128,7 +135,8 @@ class ProductForEditing
         ProductSeoOptions $productSeoOptions,
         array $associatedAttachmentIds,
         ProductStockInformation $stockInformation,
-        ?VirtualProductFileForEditing $virtualProductFile
+        ?VirtualProductFileForEditing $virtualProductFile,
+        ?ProductImage $cover
     ) {
         $this->productId = $productId;
         $this->type = $type;
@@ -143,6 +151,7 @@ class ProductForEditing
         $this->associatedAttachmentIds = $associatedAttachmentIds;
         $this->stockInformation = $stockInformation;
         $this->virtualProductFile = $virtualProductFile;
+        $this->cover = $cover;
     }
 
     /**
@@ -247,5 +256,13 @@ class ProductForEditing
     public function getVirtualProductFile(): ?VirtualProductFileForEditing
     {
         return $this->virtualProductFile;
+    }
+
+    /**
+     * @return ProductImage|null
+     */
+    public function getCover(): ?ProductImage
+    {
+        return $this->cover;
     }
 }

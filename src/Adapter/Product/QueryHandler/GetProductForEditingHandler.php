@@ -30,12 +30,16 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
 use DateTime;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
@@ -86,6 +90,11 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private $virtualProductFileRepository;
 
     /**
+     * @var ProductImageRepository
+     */
+    private $productImageRepository;
+
+    /**
      * @var TaxComputer
      */
     private $taxComputer;
@@ -101,22 +110,31 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private $targetProvider;
 
     /**
+     * @var ProductImagePathFactory
+     */
+    private $productImageUrlFactory;
+
+    /**
      * @param NumberExtractor $numberExtractor
      * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
+     * @param ProductImageRepository $productImageRepository
      * @param TaxComputer $taxComputer
      * @param int $countryId
      * @param RedirectTargetProvider $targetProvider
+     * @param ProductImagePathFactory $productImageUrlFactory
      */
     public function __construct(
         NumberExtractor $numberExtractor,
         ProductRepository $productRepository,
         StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
+        ProductImageRepository $productImageRepository,
         TaxComputer $taxComputer,
         int $countryId,
-        RedirectTargetProvider $targetProvider
+        RedirectTargetProvider $targetProvider,
+        ProductImagePathFactory $productImageUrlFactory
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
@@ -125,6 +143,8 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         $this->countryId = $countryId;
         $this->productRepository = $productRepository;
         $this->targetProvider = $targetProvider;
+        $this->productImageRepository = $productImageRepository;
+        $this->productImageUrlFactory = $productImageUrlFactory;
     }
 
     /**
@@ -147,7 +167,8 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $this->getSeoOptions($product),
             $product->getAssociatedAttachmentIds(),
             $this->getProductStockInformation($product),
-            $this->getVirtualProductFile($product)
+            $this->getVirtualProductFile($product),
+            $this->getCover($product)
         );
     }
 
@@ -389,6 +410,25 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             (int) $virtualProductFile->nb_days_accessible,
             (int) $virtualProductFile->nb_downloadable,
             $virtualProductFile->date_expiration === DateTimeUtil::NULL_DATETIME ? null : new DateTime($virtualProductFile->date_expiration)
+        );
+    }
+
+    private function getCover(Product $product): ?ProductImage
+    {
+        $coverImage = $this->productImageRepository->findCover(new ProductId((int) $product->id));
+        if (!$coverImage) {
+            return null;
+        }
+
+        $imageId = new ImageId((int) $coverImage->id);
+
+        return new ProductImage(
+            (int) $coverImage->id,
+            (bool) $coverImage->cover,
+            (int) $coverImage->position,
+            $coverImage->legend,
+            $this->productImageUrlFactory->getPath($imageId),
+            $this->productImageUrlFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT)
         );
     }
 }

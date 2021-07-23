@@ -37,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCo
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\DummyFileUploader;
@@ -270,6 +272,22 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then product :productReference should have following cover:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function assertProductCover(string $productReference, TableNode $tableNode): void
+    {
+        /** @var ProductForEditing $productForEditing */
+        $productForEditing = $this->getCommandBus()->handle(new GetProductForEditing(
+            (int) $this->getSharedStorage()->get($productReference)
+        ));
+        $images = $productForEditing->getCover() ? [$productForEditing->getCover()] : [];
+        $this->assertImages($images, $tableNode);
+    }
+
+    /**
      * @Then product :productReference should have following images:
      *
      * @param string $productReference
@@ -278,6 +296,11 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     public function assertProductImages(string $productReference, TableNode $tableNode): void
     {
         $images = $this->getProductImages($productReference);
+        $this->assertImages($images, $tableNode);
+    }
+
+    private function assertImages(array $images, TableNode $tableNode): void
+    {
         $dataRows = $this->localizeByColumns($tableNode);
 
         Assert::assertEquals(
