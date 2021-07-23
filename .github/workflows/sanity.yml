@@ -1,13 +1,13 @@
-name: UI tests - PHP 7.2
+name: UI tests
 on: [push, pull_request]
 jobs:
 
   sanity:
-    runs-on: ubuntu-18.04
-    name: Sanity - PHP 7.2
+    runs-on: ubuntu-latest
+    name: Sanity
     strategy:
       matrix:
-        php: [ '7.2' ]
+        php: [ '7.2', '7.3', '7.4' ]
       fail-fast: false
 
     steps:
@@ -25,7 +25,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml, pdo, mysql
 
       - name: Setup MySQL
         uses: mirromutth/mysql-action@v1.1
