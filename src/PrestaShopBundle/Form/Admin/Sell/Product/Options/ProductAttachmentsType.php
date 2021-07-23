@@ -61,6 +61,7 @@ class ProductAttachmentsType extends TranslatorAwareType
                 'label' => false,
                 'remote_url' => $this->urlGenerator->generate('admin_attachments_search', ['searchPhrase' => '__QUERY__']),
                 'placeholder' => $this->trans('Search file', 'Admin.Catalog.Feature'),
+                'empty_state' => $this->trans('No files associated', 'Admin.Catalog.Feature'),
             ])
             ->add('add_attachment_btn', IconButtonType::class, [
                 'label' => $this->trans('Add new file', 'Admin.Catalog.Feature'),

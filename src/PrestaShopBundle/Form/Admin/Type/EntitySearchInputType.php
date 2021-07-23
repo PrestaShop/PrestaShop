@@ -105,6 +105,9 @@ class EntitySearchInputType extends CollectionType
 
             // Remove modal wording
             'remove_modal' => null,
+
+            // Empty state wording
+            'empty_state' => null,
         ]);
 
         $resolver->setAllowedTypes('search_attr', ['array']);
@@ -126,6 +129,7 @@ class EntitySearchInputType extends CollectionType
 
         $resolver->setAllowedTypes('layout', ['string']);
         $resolver->setAllowedValues('layout', [static::LIST_LAYOUT, static::TABLE_LAYOUT]);
+        $resolver->setAllowedTypes('empty_state', ['string', 'null']);
     }
 
     /**
@@ -164,6 +168,7 @@ class EntitySearchInputType extends CollectionType
             'prototype_mapping' => $options['prototype_mapping'],
             'remove_modal' => $removeModal,
             'list_layout' => $options['layout'],
+            'empty_state' => $options['empty_state'],
         ]);
     }
 
