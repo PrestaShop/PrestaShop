@@ -150,8 +150,24 @@ $product-page-padding-bottom: 80px !default;
         flex-direction: row;
         margin: 0 -1rem;
 
-        > .form-group {
+        .image_preview-widget {
+          width: 98px;
+
+          img {
+            max-width: 98px;
+            max-height: 98px;
+            width: auto;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+          }
+        }
+
+        .header-name {
           flex-grow: 1;
+        }
+
+        > .form-group {
           margin: 0 1rem;
 
           &.select-widget {
