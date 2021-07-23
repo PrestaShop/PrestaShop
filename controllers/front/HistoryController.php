@@ -83,7 +83,7 @@ class HistoryControllerCore extends FrontController
      *
      * @param Order $order
      * @param Context $context
-     * 
+     *
      * @return string
      */
     public static function getUrlToInvoice($order, $context)
@@ -107,7 +107,7 @@ class HistoryControllerCore extends FrontController
      *
      * @param int $id_order
      * @param Context $context
-     * 
+     *
      * @return string
      */
     public static function getUrlToReorder($id_order, $context)
