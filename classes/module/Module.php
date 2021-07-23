@@ -3534,7 +3534,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @return string
      */
-    public function getDefaultCompileId(): string
+    public function getDefaultCompileId()
     {
         return Context::getContext()->shop->theme->getName();
     }
