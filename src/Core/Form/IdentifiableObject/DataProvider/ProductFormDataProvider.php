@@ -100,7 +100,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $productData = [
             'id' => $productId,
             'header' => $this->extractHeaderData($productForEditing),
-            'basic' => $this->extractBasicData($productForEditing),
+            'description' => $this->extractDescriptionData($productForEditing),
+            'specifications' => $this->extractSpecificationsData($productForEditing),
             'stock' => $this->extractStockData($productForEditing),
             'pricing' => $this->extractPricingData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
@@ -124,7 +125,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
-            'basic' => [
+            'description' => [
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
@@ -264,13 +265,35 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      *
      * @return array<string, mixed>
      */
-    private function extractBasicData(ProductForEditing $productForEditing): array
+    private function extractDescriptionData(ProductForEditing $productForEditing): array
     {
         return [
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
-            'features' => $this->extractFeatureValues($productForEditing->getProductId()),
             'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
+            'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
+        ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, mixed>
+     */
+    private function extractSpecificationsData(ProductForEditing $productForEditing): array
+    {
+        $details = $productForEditing->getDetails();
+
+        return [
+            'features' => $this->extractFeatureValues($productForEditing->getProductId()),
+            'customizations' => $this->extractCustomizationsData($productForEditing),
+            'references' => [
+                'mpn' => $details->getMpn(),
+                'upc' => $details->getUpc(),
+                'ean_13' => $details->getEan13(),
+                'isbn' => $details->getIsbn(),
+                'reference' => $details->getReference(),
+            ],
         ];
     }
 
@@ -437,7 +460,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private function extractOptionsData(ProductForEditing $productForEditing): array
     {
         $options = $productForEditing->getOptions();
-        $details = $productForEditing->getDetails();
 
         return [
             'visibility' => [
@@ -446,17 +468,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'show_price' => $options->showPrice(),
                 'online_only' => $options->isOnlineOnly(),
             ],
-            'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
             'show_condition' => $options->showCondition(),
             'condition' => $options->getCondition(),
-            'references' => [
-                'mpn' => $details->getMpn(),
-                'upc' => $details->getUpc(),
-                'ean_13' => $details->getEan13(),
-                'isbn' => $details->getIsbn(),
-                'reference' => $details->getReference(),
-            ],
-            'customizations' => $this->extractCustomizationsData($productForEditing),
             'suppliers' => $this->extractSuppliersData($productForEditing),
         ];
     }
