@@ -200,7 +200,7 @@ export default {
   },
   attachments: {
     attachmentsContainer: attachmentsBlockId,
-    searchAttributeInput: '#product_options_attachments_attached_files',
+    searchAttributeInput: `${attachmentsBlockId}_attached_files`,
     addAttachmentBtn: '.add-attachment',
   },
 };
