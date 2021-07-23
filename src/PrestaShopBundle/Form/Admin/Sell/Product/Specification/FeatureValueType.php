@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Basic;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Specification;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
