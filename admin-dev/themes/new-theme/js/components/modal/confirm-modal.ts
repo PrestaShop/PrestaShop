@@ -58,7 +58,7 @@ export type InputConfirmModalParams = Partial<ConfirmModalParams>;
  * This container is built on the basic ModalContainer and adds some confirm/cancel buttons along with a message
  * in the body, it is mostly used as a Rich confirm dialog box.
  */
-class ConfirmModalContainer extends ModalContainer implements ConfirmModalContainerType {
+export class ConfirmModalContainer extends ModalContainer implements ConfirmModalContainerType {
   footer!: HTMLElement;
 
   closeButton!: HTMLElement;
@@ -71,7 +71,7 @@ class ConfirmModalContainer extends ModalContainer implements ConfirmModalContai
     super(params);
   }
 
-  buildModalContainer(params: ConfirmModalParams) {
+  buildModalContainer(params: ConfirmModalParams): void {
     super.buildModalContainer(params);
 
     // Modal message element

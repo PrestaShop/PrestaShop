@@ -27,11 +27,7 @@
 
 {% block attachment_form %}
   {# Add data attribute to allow form iframe modal to easily get the data #}
-  {% set formAttributes = {} %}
-  {% if attachmentId is defined %}
-    {% set formAttributes = {'data-attachment-id': attachmentId} %}
-  {% endif %}
-  {{ form_start(attachmentForm, {'attr': formAttributes}) }}
+  {{ form_start(attachmentForm, {'attr': {'data-attachment-id': attachmentId|default('')}}) }}
     <div class="card">
       <h3 class="card-header">
         <i class="material-icons">person</i>
