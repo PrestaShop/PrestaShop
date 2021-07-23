@@ -55,18 +55,25 @@
     {% else %}
       {{- block('entity_search_list_layout') -}}
     {% endif %}
+    {% if empty_state is not null %}
+      <div class="alert alert-info empty-entity-list mt-2" role="alert">
+        <p class="alert-text">
+          {{ empty_state|raw('html') }}
+        </p>
+      </div>
+    {% endif %}
   </div>
 {% endblock %}
 
 {% block entity_search_list_layout %}
-  {%- set attr = list_attr|merge({'class': (list_attr.class|default('') ~ ' entities-list')|trim }) -%}
+  {%- set attr = list_attr|merge({'class': (list_attr.class|default('') ~ ' entities-list entities-list-container')|trim }) -%}
   <ul {{ block('widget_container_attributes') }}>
     {{- block('form_rows') -}}
   </ul>
 {% endblock %}
 
 {% block entity_search_table_layout %}
-  {%- set attr = list_attr -%}
+  {%- set attr = list_attr|merge({'class': (list_attr.class|default('') ~ ' entities-list-container')|trim }) -%}
   <div {{ block('widget_attributes') }}>
     <div class="row">
       <div class="col-sm">
