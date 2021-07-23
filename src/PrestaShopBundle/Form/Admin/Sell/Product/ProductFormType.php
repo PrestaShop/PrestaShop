@@ -36,7 +36,7 @@ use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType;
 use PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Shipping\ShippingType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\ShortcutsType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -81,7 +81,7 @@ class ProductFormType extends TranslatorAwareType
             ->add('description', DescriptionType::class, [
                 'product_id' => $productId,
             ])
-            ->add('specification', SpecificationType::class)
+            ->add('specifications', SpecificationsType::class)
             ->add('shortcuts', ShortcutsType::class)
             ->add('stock', StockType::class, [
                 'virtual_product_file_id' => $options['virtual_product_file_id'],

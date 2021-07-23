@@ -22,7 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% set isBasicTabValid = productForm.basic.vars.valid %}
+{% set isDescriptionTabValid = productForm.description.vars.valid %}
+{% set isSpecificationsTabValid = productForm.specifications.vars.valid %}
 {% set isOptionsTabValid = productForm.options.vars.valid %}
 {% set isPricingTabValid = productForm.pricing.vars.valid %}
 {% set isSEOTabValid = productForm.seo.vars.valid %}
@@ -37,9 +38,15 @@
   </div>
 
   <ul class="nav nav-tabs js-nav-tabs" id="form-nav" role="tablist">
-    <li id="basic-tab-nav" class="nav-item{% if not isBasicTabValid %} has-error{% endif %}">
-      <a href="#basic-tab" role="tab" data-toggle="tab" class="nav-link active">
-        {{ 'Basic settings'|trans({}, 'Admin.Catalog.Feature') }}
+    <li id="description-tab-nav" class="nav-item{% if not isDescriptionTabValid %} has-error{% endif %}">
+      <a href="#description-tab" role="tab" data-toggle="tab" class="nav-link active">
+        {{ 'Description'|trans({}, 'Admin.Catalog.Feature') }}
+      </a>
+    </li>
+
+    <li id="specifications-tab-nav" class="nav-item{% if not isSpecificationsTabValid %} has-error{% endif %}">
+      <a href="#specifications-tab" role="tab" data-toggle="tab" class="nav-link">
+        {{ 'Specifications'|trans({}, 'Admin.Catalog.Feature') }}
       </a>
     </li>
 
