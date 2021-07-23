@@ -272,19 +272,20 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference should have following cover:
+     * @Then product :productReference should have following cover :coverUrl
      *
      * @param string $productReference
-     * @param TableNode $tableNode
+     * @param string $coverUrl
      */
-    public function assertProductCover(string $productReference, TableNode $tableNode): void
+    public function assertProductCover(string $productReference, string $coverUrl): void
     {
         /** @var ProductForEditing $productForEditing */
         $productForEditing = $this->getCommandBus()->handle(new GetProductForEditing(
             (int) $this->getSharedStorage()->get($productReference)
         ));
-        $images = $productForEditing->getCover() ? [$productForEditing->getCover()] : [];
-        $this->assertImages($images, $tableNode);
+        $realImageUrl = $this->getRealImageUrl($coverUrl);
+
+        Assert::assertEquals($realImageUrl, $productForEditing->getCoverUrl());
     }
 
     /**
@@ -296,11 +297,6 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     public function assertProductImages(string $productReference, TableNode $tableNode): void
     {
         $images = $this->getProductImages($productReference);
-        $this->assertImages($images, $tableNode);
-    }
-
-    private function assertImages(array $images, TableNode $tableNode): void
-    {
         $dataRows = $this->localizeByColumns($tableNode);
 
         Assert::assertEquals(
