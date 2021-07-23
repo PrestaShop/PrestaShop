@@ -1358,9 +1358,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.specification.specification_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationType'
-        parent: 'form.type.translatable.aware'
+    form.type.sell.product.specification.specifications_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationsType'
         public: true
         tags:
             - { name: form.type }

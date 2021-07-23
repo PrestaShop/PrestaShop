@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,19 +22,41 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% form_theme productForm.categories '@PrestaShop/Admin/Sell/Catalog/Product/Form/categories_form_theme.html.twig' %}
+declare(strict_types=1);
 
-<div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
-  <div class="row">
-    <div class="col-md-9 left-column">
-      {% form_theme productForm.basic.features '@PrestaShop/Admin/Sell/Catalog/Product/Form/features_form_theme.html.twig' %}
-      {{ form_row(productForm.basic) }}
-    </div>
-    <div class="col-md-3 right-column">
-      {{ form_row(productForm.shortcuts) }}
-      {{ form_row(productForm.categories) }}
-    </div>
-  </div>
-</div>
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Specification;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class SpecificationsType extends AbstractType
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('features', FeaturesType::class)
+            ->add('customizations', CustomizationsType::class)
+            ->add('references', ReferencesType::class)
+        ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver
+            ->setDefaults([
+                'required' => false,
+                'label' => false,
+            ])
+        ;
+    }
+}
