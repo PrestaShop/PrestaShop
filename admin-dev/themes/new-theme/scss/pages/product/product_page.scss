@@ -154,17 +154,29 @@ $product-page-padding-bottom: 80px !default;
           width: 98px;
 
           img {
-            max-width: 98px;
-            max-height: 98px;
-            width: auto;
-            height: auto;
-            margin: 0 auto;
             display: block;
+            width: auto;
+            max-width: 98px;
+            height: auto;
+            max-height: 98px;
+            margin: 0 auto;
           }
         }
 
         .header-name {
           flex-grow: 1;
+        }
+
+        .references-display {
+          margin: 1rem 0;
+
+          label {
+            font-weight: 600;
+
+            &::after {
+              content: ":";
+            }
+          }
         }
 
         > .form-group {
