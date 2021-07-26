@@ -32,7 +32,7 @@
 {% endblock %}
 
 {% block category_tags_collection_row %}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTagsWrapper d-block')|trim }) -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTagsWrapper')|trim }) -%}
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
   <div {{ block('widget_attributes') }}>
     {{ block('form_rows') }}
