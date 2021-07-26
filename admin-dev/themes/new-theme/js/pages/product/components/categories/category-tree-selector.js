@@ -30,6 +30,7 @@ import Tokenizers from '@components/bloodhound/tokenizers';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import {getCategories} from '@pages/product/services/categories';
+import Tags from '@pages/product/components/categories/tags';
 
 const {$} = window;
 
@@ -38,8 +39,6 @@ const ProductCategoryMap = ProductMap.categories;
 export default class CategoryTreeSelector {
   constructor(eventEmitter) {
     this.eventEmitter = eventEmitter;
-    this.modalContainer = document.querySelector(ProductCategoryMap.categoriesModalContainer);
-
     this.categories = [];
     this.typeaheadDatas = [];
 
@@ -52,9 +51,8 @@ export default class CategoryTreeSelector {
     this.selectedCategoryIds = selectedCategoryIds;
     this.defaultCategoryId = defaultCategoryId;
     const modalContent = $(ProductCategoryMap.categoriesModalTemplate);
-
     // @todo: replace fancybox with Modal after following PR is merged - https://github.com/PrestaShop/PrestaShop/pull/25184
-    this.fancybox = $.fancybox({
+    $.fancybox({
       type: 'iframe',
       width: '90%',
       height: '90%',
@@ -63,7 +61,6 @@ export default class CategoryTreeSelector {
       content: modalContent.html(),
       afterShow: () => {
         this.initCategories();
-        this.onApplyCategoryChanges();
       },
     });
   }
@@ -73,7 +70,7 @@ export default class CategoryTreeSelector {
       this.eventEmitter.emit(ProductEventMap.categories.applyCategoryTreeChanges, {
         categories: this.collectSelectedCategories(),
       });
-      //@todo: close modal. ($.fancybox.close() not working)
+      // @todo: close modal. ($.fancybox.close() not working)
     });
   }
 
@@ -84,7 +81,11 @@ export default class CategoryTreeSelector {
     this.prototypeName = this.categoryTree.dataset.prototypeName;
     this.expandAllButton = this.modalContainer.querySelector(ProductCategoryMap.expandAllButton);
     this.reduceAllButton = this.modalContainer.querySelector(ProductCategoryMap.reduceAllButton);
-
+    this.tags = new Tags(
+      `${ProductCategoryMap.categoriesModalContainer} ${ProductCategoryMap.tagsContainer}`,
+      this.selectedCategoryIds,
+      true,
+    );
     this.categories = await getCategories();
 
     this.initTypeaheadData(this.categories, '');
@@ -107,15 +108,14 @@ export default class CategoryTreeSelector {
     });
 
     this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkbox) => {
-      const categoryId = checkbox.dataset.id;
+      const categoryId = Number(checkbox.dataset.id);
 
-      if (this.selectedCategoryIds.includes(categoryId)) {
+      if (this.selectedCategoryIds.some((category) => category.id === categoryId)) {
         checkbox.checked = true;
       }
 
       checkbox.addEventListener('change', () => this.updateCategoriesTags());
-    });
-
+    }, this);
     // Tree is initialized we can show it and hide loader
     this.modalContainer
       .querySelector(ProductCategoryMap.fieldset)
@@ -313,10 +313,8 @@ export default class CategoryTreeSelector {
 
   updateCategoriesTags() {
     const checkedCheckboxes = this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
-    const tagsContainer = this.modalContainer.querySelector(ProductCategoryMap.tagsContainer);
 
-    tagsContainer.innerHTML = '';
-
+    const categories = [];
     checkedCheckboxes.forEach((checkboxInput) => {
       const categoryId = Number(checkboxInput.dataset.id);
       const category = this.getCategoryById(categoryId);
@@ -325,29 +323,9 @@ export default class CategoryTreeSelector {
         return;
       }
 
-      // @todo: default category should not be deletable - no 'X' button
-      let template = tagsContainer.dataset.prototype;
-      template = template.replace(RegExp(tagsContainer.dataset.prototypeName, 'g'), categoryId);
-      // Trim is important here or the first child could be some text (whitespace, or \n)
-      const frag = document.createRange().createContextualFragment(template.trim());
-      frag.firstChild.querySelector(ProductCategoryMap.tagItem).innerHTML = category.name;
-      tagsContainer.append(frag);
+      categories.push(category);
     });
-
-    tagsContainer.classList.toggle('d-block', checkedCheckboxes.length > 0);
-
-    this.modalContainer.querySelectorAll('.pstaggerClosingCross').forEach((closeLink) => {
-      closeLink.addEventListener('click', (event) => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
-        const categoryId = Number(event.currentTarget.dataset.id);
-
-        if (categoryId !== this.defaultCategoryId) {
-          this.unselectCategory(categoryId);
-        }
-      });
-    });
+    this.tags.refresh(categories);
   }
 
   /**
