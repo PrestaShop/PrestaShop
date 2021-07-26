@@ -35,7 +35,6 @@ use PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType;
 use PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Shipping\ShippingType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\ShortcutsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
