@@ -87,8 +87,10 @@
                       <fieldset class="form-group">
                           <label class="form-control-label">
                             {{ form.attribute_minimal_quantity.vars.label }}
-                            <span class="help-box" data-toggle="popover"
-                              data-content="{{ "The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                            <span class="help-box" 
+                                  data-toggle="popover"
+                                  data-content="{{ "The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity."|trans({}, 'Admin.Catalog.Help') }}" >
+                            </span>
                           </label>
                           {{ form_errors(form.attribute_minimal_quantity) }}
                           {{ form_widget(form.attribute_minimal_quantity) }}
@@ -126,7 +128,11 @@
                       <div class="widget-checkbox-inline">
                         {{ form_errors(form.attribute_low_stock_alert) }}
                         {{ form_widget(form.attribute_low_stock_alert) }}
-                        <span class="help-box" data-toggle="popover" data-html="true" data-content="{{ "The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]"|trans({'[1]':'<a href=&quot;'~getAdminLink("AdminEmployees")~'&quot;>','[/1]':'</a>'}, 'Admin.Catalog.Help')|raw }}" ></span>
+                        <span class="help-box" 
+                              data-toggle="popover" 
+                              data-html="true" 
+                              data-content="{{ "The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]"|trans({'[1]':'<a href=&quot;'~getAdminLink("AdminEmployees")~'&quot;>','[/1]':'</a>'}, 'Admin.Catalog.Help')|raw }}" >
+                        </span>
                       </div>
                     </fieldset>
                   </div>
@@ -146,8 +152,10 @@
                         <fieldset class="form-group">
                             <label class="form-control-label">
                               {{ form.attribute_price.vars.label }}
-                              <span class="help-box" data-toggle="popover"
-                                data-content="{{ "Does this combination have a different price? Is it cheaper or more expensive than the default retail price?"|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                              <span class="help-box" 
+                                    data-toggle="popover"
+                                    data-content="{{ "Does this combination have a different price? Is it cheaper or more expensive than the default retail price?"|trans({}, 'Admin.Catalog.Help') }}" >
+                              </span>
                             </label>
                             {{ form_errors(form.attribute_price) }}
                             {{ form_widget(form.attribute_price) }}
@@ -176,8 +184,10 @@
                         <fieldset class="form-group">
                             <label class="form-control-label">
                               {{ form.attribute_unity.vars.label }}
-                              <span class="help-box" data-toggle="popover"
-                                data-content="{{ "Does this combination have a different price per unit?"|trans({}, 'Admin.Catalog.Feature') }}" ></span>
+                              <span class="help-box" 
+                                    data-toggle="popover"
+                                    data-content="{{ "Does this combination have a different price per unit?"|trans({}, 'Admin.Catalog.Feature') }}" >
+                              </span>
                             </label>
                             {{ form_errors(form.attribute_unity) }}
                             {{ form_widget(form.attribute_unity) }}
@@ -211,8 +221,10 @@
                         <fieldset class="form-group">
                             <label class="form-control-label">
                               {{ form.attribute_ean13.vars.label }}
-                              <span class="help-box" data-toggle="popover"
-                                data-content="{{ "This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                              <span class="help-box" 
+                                    data-toggle="popover"
+                                    data-content="{{ "This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America."|trans({}, 'Admin.Catalog.Help') }}" >
+                              </span>
                             </label>
                             {{ form_errors(form.attribute_ean13) }}
                             {{ form_widget(form.attribute_ean13) }}

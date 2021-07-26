@@ -86,7 +86,10 @@
       <fieldset class="col-md-4 form-group">
         <label class="form-control-label">
           {{ optionsForm.condition.vars.label }}
-          <span class="help-box" data-toggle="popover" data-content="{{ "Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces."|trans({}, 'Admin.Catalog.Help') }}"></span>
+          <span class="help-box" 
+                data-toggle="popover" 
+                data-content="{{ "Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces."|trans({}, 'Admin.Catalog.Help') }}">
+          </span>
         </label>
         {{ form_errors(optionsForm.condition) }}
         {{ form_widget(optionsForm.condition) }}
@@ -100,7 +103,10 @@
       <fieldset class="col-md-4 form-group">
         <label class="form-control-label">
           {{ optionsForm.isbn.vars.label }}
-          <span class="help-box" data-toggle="popover" data-content="{{ "ISBN is used internationally to identify books and their various editions."|trans({}, 'Admin.Catalog.Help') }}"></span>
+          <span class="help-box" 
+                data-toggle="popover" 
+                data-content="{{ "ISBN is used internationally to identify books and their various editions."|trans({}, 'Admin.Catalog.Help') }}">
+          </span>
         </label>
         {{ form_errors(optionsForm.isbn) }}
         {{ form_widget(optionsForm.isbn) }}
@@ -108,7 +114,10 @@
       <fieldset class="col-md-4 form-group">
         <label class="form-control-label">
           {{ optionsForm.ean13.vars.label }}
-          <span class="help-box" data-toggle="popover" data-content="{{ "This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America."|trans({}, 'Admin.Catalog.Help') }}"></span>
+          <span class="help-box" 
+                data-toggle="popover" 
+                data-content="{{ "This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America."|trans({}, 'Admin.Catalog.Help') }}">
+          </span>
         </label>
         {{ form_errors(optionsForm.ean13) }}
         {{ form_widget(optionsForm.ean13) }}
@@ -118,7 +127,10 @@
       <fieldset class="col-md-4 form-group">
         <label class="form-control-label">
           {{ optionsForm.upc.vars.label }}
-          <span class="help-box" data-toggle="popover" data-content="{{ "This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries."|trans({}, 'Admin.Catalog.Help') }}"></span>
+          <span class="help-box" 
+                data-toggle="popover" 
+                data-content="{{ "This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries."|trans({}, 'Admin.Catalog.Help') }}">
+          </span>
         </label>
         {{ form_errors(optionsForm.upc) }}
         {{ form_widget(optionsForm.upc) }}
@@ -126,7 +138,10 @@
       <fieldset class="col-md-4 form-group">
         <label class="form-control-label">
           {{ optionsForm.mpn.vars.label }}
-          <span class="help-box" data-toggle="popover" data-content="{{ "MPN is used internationally to identify the Manufacturer Part Number."|trans({}, 'Admin.Catalog.Help') }}"></span>
+          <span class="help-box" 
+                data-toggle="popover" 
+                data-content="{{ "MPN is used internationally to identify the Manufacturer Part Number."|trans({}, 'Admin.Catalog.Help') }}">
+          </span>
         </label>
         {{ form_errors(optionsForm.mpn) }}
         {{ form_widget(optionsForm.mpn) }}

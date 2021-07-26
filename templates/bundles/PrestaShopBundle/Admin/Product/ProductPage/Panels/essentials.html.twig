@@ -143,7 +143,10 @@
           <div class="form-group mb-3" id="show_variations_selector">
             <h2>
               {{ "Combinations"|trans({}, 'Admin.Catalog.Feature') }}
-              <span class="help-box" data-toggle="popover" data-content="{{ "Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. Does your product require combinations?"|trans({}, 'Admin.Catalog.Help') }}"></span>
+              <span class="help-box" 
+                    data-toggle="popover" 
+                    data-content="{{ "Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. Does your product require combinations?"|trans({}, 'Admin.Catalog.Help') }}">
+              </span>
             </h2>
             <div class="radio">
               <label>
@@ -170,7 +173,10 @@
         <div class="form-group mb-4">
           <h2>
             {{ "Reference"|trans({}, 'Admin.Catalog.Feature') }}
-            <span class="help-box" data-toggle="popover" data-content="{{ "Your reference code for this product. Allowed special characters: .-_#\."|trans({}, 'Admin.Catalog.Help') }}"></span>
+            <span class="help-box" 
+                  data-toggle="popover" 
+                  data-content="{{ "Your reference code for this product. Allowed special characters: .-_#\."|trans({}, 'Admin.Catalog.Help') }}">
+            </span>
           </h2>
           {{ form_errors(formReference) }}
           <div class="row">
@@ -184,7 +190,10 @@
           <div class="form-group mb-4" id="product_qty_0_shortcut_div">
             <h2>
               {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
-              <span class="help-box" data-toggle="popover" data-content="{{ "How many products should be available for sale?"|trans({}, 'Admin.Catalog.Help') }}"></span>
+              <span class="help-box" 
+                    data-toggle="popover" 
+                    data-content="{{ "How many products should be available for sale?"|trans({}, 'Admin.Catalog.Help') }}">
+              </span>
             </h2>
             {{ form_errors(formQuantityShortcut) }}
             <div class="row">
@@ -203,7 +212,10 @@
         <div class="form-group mb-4">
           <h2>
             {{ "Price"|trans({}, 'Admin.Global') }}
-            <span class="help-box" data-toggle="popover" data-content="{{ "This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select."|trans({}, 'Admin.Catalog.Help') }}"></span>
+            <span class="help-box" 
+                  data-toggle="popover" 
+                  data-content="{{ "This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select."|trans({}, 'Admin.Catalog.Help') }}">
+            </span>
           </h2>
           <div class="row">
             <div class="col-md-6">

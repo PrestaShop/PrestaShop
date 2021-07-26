@@ -54,8 +54,10 @@
 <fieldset class="form-group">
   <label class="form-control-label">
     {{ seoForm.link_rewrite.vars.label }}
-    <span class="help-box" data-toggle="popover"
-      data-content="{{ "This is the human-readable URL, as generated from the product's name. You can change it if you want."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+    <span class="help-box" 
+          data-toggle="popover"
+          data-content="{{ "This is the human-readable URL, as generated from the product's name. You can change it if you want."|trans({}, 'Admin.Catalog.Help') }}" >
+    </span>
   </label>
   {{ form_errors(seoForm.link_rewrite) }}
   <div class="row">
@@ -93,8 +95,10 @@
 
 <h2 class="mt-4">
   {{ 'Redirection page'|trans({}, 'Admin.Catalog.Feature') }}
-  <span class="help-box" data-toggle="popover"
-    data-content="{{ "When your product is disabled, choose to which page you’d like to redirect the customers visiting its page by typing the product or category name."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+  <span class="help-box" 
+        data-toggle="popover"
+        data-content="{{ "When your product is disabled, choose to which page you’d like to redirect the customers visiting its page by typing the product or category name."|trans({}, 'Admin.Catalog.Help') }}" >
+  </span>
 </h2>
 
 <div class="row">
