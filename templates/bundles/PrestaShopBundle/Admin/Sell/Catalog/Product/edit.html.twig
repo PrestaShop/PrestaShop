@@ -100,6 +100,10 @@
         {% endblock %}
       {% endif %}
 
+      {% block product_tab_categories %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/categories.html.twig') }}
+      {% endblock %}
+
       {% if productForm.stock is defined %}
         {% block product_tab_stock %}
           {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/stock.html.twig') }}
