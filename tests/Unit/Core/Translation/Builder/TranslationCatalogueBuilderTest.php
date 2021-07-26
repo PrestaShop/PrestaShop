@@ -31,6 +31,8 @@ use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Catalogue;
+use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Domain;
+use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Message;
 use PrestaShop\PrestaShop\Core\Translation\Builder\TranslationCatalogueBuilder;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueLayersProviderInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFactory;
@@ -81,8 +83,18 @@ class TranslationCatalogueBuilderTest extends TestCase
 
         // Build Default catalogue
         $catalogue = new MessageCatalogue(self::LOCALE);
+        $i = 0;
         foreach (self::$defaultTranslations as $domain => $messages) {
             $catalogue->add($messages, $domain);
+
+            foreach ($messages as $messageKey => $messageValue) {
+                $catalogue->setMetadata($messageKey, [
+                    'file' => 'someFakeFile.xlf',
+                    'line' => $i,
+                ], $domain);
+
+                ++$i;
+            }
         }
         $provider->method('getDefaultCatalogue')->willReturn($catalogue);
 
@@ -358,6 +370,45 @@ class TranslationCatalogueBuilderTest extends TestCase
         $this->assertArrayHasKey('default', $messages['AdminFirstDomain']['First Domain First Wording']);
         $this->assertArrayHasKey('project', $messages['AdminFirstDomain']['First Domain First Wording']);
         $this->assertArrayHasKey('user', $messages['AdminFirstDomain']['First Domain First Wording']);
+    }
+
+    public function testGetRawCatalogue(): void
+    {
+        $catalogue = $this->translationCatalogueBuilder->getRawCatalogue(
+            new BackofficeProviderDefinition(),
+            self::LOCALE,
+            []
+        );
+        $this->assertInstanceOf(Catalogue::class, $catalogue);
+
+        $this->assertCount(3, $catalogue->getDomains());
+
+        $this->assertInstanceOf(Domain::class, $catalogue->getDomain('AdminFirstDomain'));
+        $this->assertInstanceOf(Domain::class, $catalogue->getDomain('AdminSecondDomain'));
+
+        $this->assertCount(2, $catalogue->getDomain('AdminFirstDomain')->getMessages());
+
+        $messages = $catalogue->getDomain('AdminFirstDomain')->getMessages();
+
+        $this->assertArrayHasKey('First Domain First Wording', $messages);
+        $this->assertArrayHasKey('First Domain Second Wording', $messages);
+
+        $this->assertInstanceOf(Message::class, $messages['First Domain First Wording']);
+        $this->assertSame([
+            'default' => 'First Domain First Wording',
+            'project' => 'First Domain First Wording File Translation',
+            'user' => 'First Domain First Wording User Translation',
+        ], $messages['First Domain First Wording']->toArray());
+
+        $this->assertSame([
+            'file' => 'someFakeFile.xlf',
+            'line' => 0,
+        ], $messages['First Domain First Wording']->getMetadata());
+
+        $this->assertSame([
+            'file' => 'someFakeFile.xlf',
+            'line' => 1,
+        ], $messages['First Domain Second Wording']->getMetadata());
     }
 
     public function testGetCatalogue(): void
