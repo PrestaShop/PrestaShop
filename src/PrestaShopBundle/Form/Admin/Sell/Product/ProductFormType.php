@@ -39,6 +39,7 @@ use PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\ShortcutsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -83,6 +84,7 @@ class ProductFormType extends TranslatorAwareType
             ])
             ->add('specifications', SpecificationsType::class)
             ->add('shortcuts', ShortcutsType::class)
+            ->add('categories', CategoriesType::class)
             ->add('stock', StockType::class, [
                 'virtual_product_file_id' => $options['virtual_product_file_id'],
             ])
@@ -90,7 +92,10 @@ class ProductFormType extends TranslatorAwareType
             ->add('pricing', PricingType::class)
             ->add('seo', SEOType::class)
             ->add('options', OptionsType::class)
-            ->add('categories', CategoriesType::class)
+            ->add('related_products', UnavailableType::class, [
+                'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+            ])
             ->add('footer', FooterType::class, [
                 'product_id' => $productId,
             ])

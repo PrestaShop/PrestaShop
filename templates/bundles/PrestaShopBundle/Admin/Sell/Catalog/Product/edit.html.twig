@@ -136,6 +136,12 @@
         }) }}
       {% endblock %}
 
+      {% block product_tab_related %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/related.html.twig', {
+          'productForm': productForm,
+        }) }}
+      {% endblock %}
+
       {% block product_extra_tab %}
         {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/modules.html.twig', {
           'productForm': productForm,

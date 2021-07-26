@@ -25,9 +25,10 @@
 {% set isDescriptionTabValid = productForm.description.vars.valid %}
 {% set isSpecificationsTabValid = productForm.specifications.vars.valid %}
 {% set isCategoriesTabValid = productForm.categories.vars.valid %}
-{% set isOptionsTabValid = productForm.options.vars.valid %}
 {% set isPricingTabValid = productForm.pricing.vars.valid %}
 {% set isSEOTabValid = productForm.seo.vars.valid %}
+{% set isOptionsTabValid = productForm.options.vars.valid %}
+{% set isRelatedTabValid = productForm.related_products.vars.valid %}
 
 {# Some forms may be removed #}
 {% set isStockTabValid = productForm.stock is not defined or productForm.stock.vars.valid %}
@@ -100,6 +101,12 @@
     <li id="options-tab-nav" class="nav-item{% if not isOptionsTabValid %} has-error{% endif %}">
       <a href="#options-tab" role="tab" data-toggle="tab" class="nav-link">
         {{ 'Options'|trans({}, 'Admin.Global') }}
+      </a>
+    </li>
+
+    <li id="related-tab-nav" class="nav-item{% if not isRelatedTabValid %} has-error{% endif %}">
+      <a href="#related-tab" role="tab" data-toggle="tab" class="nav-link">
+        {{ 'Related'|trans({}, 'Admin.Global') }}
       </a>
     </li>
 

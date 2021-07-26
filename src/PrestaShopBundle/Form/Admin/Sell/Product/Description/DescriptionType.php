@@ -151,10 +151,6 @@ class DescriptionType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('related_products', UnavailableType::class, [
-                'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-            ])
         ;
     }
 
