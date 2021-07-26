@@ -85,7 +85,7 @@ class Calculator
 
     /**
      * @param Cart $cart
-     * @param $carrierId
+     * @param int $carrierId
      * @param int|null $computePrecision
      * @param int|null $orderId
      */
