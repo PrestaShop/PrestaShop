@@ -412,6 +412,11 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         );
     }
 
+    /**
+     * @param Product $product
+     *
+     * @return string
+     */
     private function getCover(Product $product): string
     {
         $coverImage = $this->productImageRepository->findCover(new ProductId((int) $product->id));

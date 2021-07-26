@@ -33,6 +33,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class DetailsCommandsBuilder implements ProductCommandsBuilderInterface
 {
+    /**
+     * @param ProductId $productId
+     * @param array $formData
+     *
+     * @return array|UpdateProductDetailsCommand[]
+     */
     public function buildCommands(ProductId $productId, array $formData): array
     {
         if (empty($formData['specifications']['references'])) {
