@@ -23,17 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Bloodhound from 'typeahead.js';
-import _ from 'lodash';
-
-import AutoCompleteSearch from '@components/auto-complete-search';
-import Tokenizers from '@components/bloodhound/tokenizers';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
-import {getCategories} from '@pages/product/services/categories';
 import CategoryTreeSelector from '@pages/product/components/categories/category-tree-selector';
-
-const {$} = window;
+import Tags from '@pages/product/components/categories/tags';
 
 const ProductCategoryMap = ProductMap.categories;
 
@@ -48,13 +41,19 @@ export default class CategoriesManager {
     this.addCategoriesBtn = this.categoriesContainer.querySelector(
       ProductCategoryMap.addCategoriesBtn,
     );
-    this.categories = [];
+    this.categories = this.collectCategoryIdsFromTags();
     this.typeaheadDatas = [];
     this.categoryTreeSelector = new CategoryTreeSelector(eventEmitter);
 
     this.addCategoriesBtn.addEventListener('click', () => this.categoryTreeSelector.showModal(
-      this.collectCategoryIdsFromTags(),
+      this.categories,
+      this.getDefaultCategoryId(),
     ));
+    this.tags = new Tags(
+      `${ProductCategoryMap.categoriesContainer} ${ProductCategoryMap.tagsContainer}`,
+      this.categories,
+      (id) => id !== this.getDefaultCategoryId(),
+    );
     this.listenCategoryTreeChanges();
 
     return {};
@@ -62,38 +61,27 @@ export default class CategoriesManager {
 
   listenCategoryTreeChanges() {
     this.eventEmitter.on(ProductEventMap.categories.applyCategoryTreeChanges, (eventData) => {
-      this.updateCategories(eventData.categories);
+      this.tags.refresh(eventData.categories);
     });
   }
 
   collectCategoryIdsFromTags() {
     const tags = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer)
       .querySelectorAll(ProductCategoryMap.tagItem);
+    const categories = [];
 
-    const categoryIds = [];
     tags.forEach((tag) => {
-      categoryIds.push(tag.dataset.id);
+      categories.push({
+        id: Number(tag.dataset.id),
+        name: tag.firstChild.data,
+      });
     });
 
-    return categoryIds;
+    return categories;
   }
 
   getDefaultCategoryId() {
-    //@todo: default category will have to be retrieved from dedicated input when its implemented
-    return this.collectCategoryIdsFromTags()[0];
-  }
-
-  updateCategories(categories) {
-    const tagsContainer = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer);
-    tagsContainer.innerHTML = '';
-
-    const tagTemplate = tagsContainer.dataset.prototype;
-
-    categories.forEach((category) => {
-      const template = tagTemplate.replace(RegExp(tagsContainer.dataset.prototypeName, 'g'), category.id);
-      const frag = document.createRange().createContextualFragment(template.trim());
-      frag.firstChild.querySelector(ProductCategoryMap.tagItem).innerHTML = category.name;
-      tagsContainer.append(frag);
-    });
+    // @todo: default category will have to be retrieved from dedicated input when its implemented
+    return this.collectCategoryIdsFromTags()[0].id;
   }
 }
