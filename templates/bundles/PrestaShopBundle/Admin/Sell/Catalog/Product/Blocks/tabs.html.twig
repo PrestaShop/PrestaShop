@@ -24,6 +24,7 @@
  *#}
 {% set isDescriptionTabValid = productForm.description.vars.valid %}
 {% set isSpecificationsTabValid = productForm.specifications.vars.valid %}
+{% set isCategoriesTabValid = productForm.categories.vars.valid %}
 {% set isOptionsTabValid = productForm.options.vars.valid %}
 {% set isPricingTabValid = productForm.pricing.vars.valid %}
 {% set isSEOTabValid = productForm.seo.vars.valid %}
@@ -47,6 +48,12 @@
     <li id="specifications-tab-nav" class="nav-item{% if not isSpecificationsTabValid %} has-error{% endif %}">
       <a href="#specifications-tab" role="tab" data-toggle="tab" class="nav-link">
         {{ 'Specifications'|trans({}, 'Admin.Catalog.Feature') }}
+      </a>
+    </li>
+
+    <li id="categories-tab-nav" class="nav-item{% if not isCategoriesTabValid %} has-error{% endif %}">
+      <a href="#categories-tab" role="tab" data-toggle="tab" class="nav-link">
+        {{ 'Categories'|trans({}, 'Admin.Catalog.Feature') }}
       </a>
     </li>
 
