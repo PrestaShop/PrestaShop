@@ -32,7 +32,7 @@
 {% endblock %}
 
 {% block category_tags_collection_row %}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTagsWrapper')|trim }) -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTagsWrapper form-group')|trim }) -%}
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
   <div {{ block('widget_attributes') }}>
     {{ block('form_rows') }}
@@ -40,11 +40,13 @@
 {% endblock %}
 
 {% block category_tags_collection_entry_row %}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTag')|trim }) -%}
   {% set categoryId = form.vars.data.id|default(form.vars.name) %}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTag tag-item')|trim }) -%}
+  {%- set attr = attr|merge({'data-id': categoryId}) -%}
+
   <span {{ block('widget_attributes') }}>
-    <span class="tag-item" data-id="{{ categoryId }}">{{ form.vars.data.name|default('') }}</span>
-    <a class="pstaggerClosingCross" href="#" data-id="{{ categoryId }}">x</a>
+    <span class="category-name-preview">{{ form.vars.data.name|default('') }}</span>
+    <a class="pstaggerClosingCross" href="#">x</a>
     <input type="hidden" value="{{ categoryId }}">
   </span>
 {% endblock %}
