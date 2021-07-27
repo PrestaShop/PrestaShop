@@ -57,7 +57,7 @@ export default class Tags {
 
       frag.firstChild.querySelector(ProductCategoryMap.categoryNamePreview).innerHTML = category.name;
       this.container.append(frag);
-    }, this);
+    });
     this.listenDelete();
   }
 
@@ -80,6 +80,6 @@ export default class Tags {
         tagItem.remove();
         this.onDeleteCallback(categoryId);
       });
-    }, this);
+    });
   }
 }
