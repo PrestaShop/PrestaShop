@@ -1198,8 +1198,13 @@
   {# This is the hidden input #}
   {{- block('form_widget_simple') -}}
   <span class="label text-preview">
-    {# This just outputs the value #}
-    {{ form.vars.value|e('html') }}
+    {% if  form.vars.allow_html %}
+      {# This outputs raw value #}
+      {{ form.vars.value|raw }}
+    {% else %}
+      {# This just outputs the value #}
+      {{ form.vars.value|e('html') }}
+    {% endif %}
   </span>
 {% endblock %}
 
@@ -1207,4 +1212,12 @@
   {# This is the hidden input #}
   {{- block('form_widget_simple') -}}
   <img src="{{ form.vars.value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" />
+{% endblock %}
+
+{% block link_preview_widget %}
+  {# This is the hidden input #}
+  {{- block('form_widget_simple') -}}
+  <a href="{{ form.vars.value }}" class="{{ attr.class|default('') }}">
+    {{ form.vars.button_label }}
+  </a>
 {% endblock %}

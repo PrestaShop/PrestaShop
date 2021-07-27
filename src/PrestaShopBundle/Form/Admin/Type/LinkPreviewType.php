@@ -29,8 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,7 +38,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * It is based on a hidden input so it could be changed programmatically, or be used just to display
  * a data in a form.
  */
-class TextPreviewType extends HiddenType
+class LinkPreviewType extends HiddenType
 {
     /**
      * {@inheritDoc}
@@ -49,7 +47,7 @@ class TextPreviewType extends HiddenType
     {
         parent::buildView($view, $form, $options);
         $view->vars['type'] = 'hidden';
-        $view->vars['allow_html'] = $options['allow_html'];
+        $view->vars['button_label'] =  $options['button_label'];
     }
 
     /**
@@ -57,7 +55,7 @@ class TextPreviewType extends HiddenType
      */
     public function getBlockPrefix()
     {
-        return 'text_preview';
+        return 'link_preview';
     }
 
     /**
@@ -67,8 +65,8 @@ class TextPreviewType extends HiddenType
     {
         $resolver->setDefaults([
             'required' => false,
-            'allow_html' => false, // Start automatically TinyMCE
+            'button_label' => '', // Start automatically TinyMCE
         ]);
-        $resolver->setAllowedTypes('allow_html', 'bool');
+        $resolver->setAllowedTypes('button_label', 'string');
     }
 }

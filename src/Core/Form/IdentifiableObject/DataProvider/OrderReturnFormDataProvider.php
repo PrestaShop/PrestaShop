@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnForEditing;
+use PrestaShopBundle\Service\Routing\Router;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Provides data for order return edit form
@@ -42,12 +45,33 @@ class OrderReturnFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
+     * @var Router
+     */
+    private $router;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var string
+     */
+    private $dateFormat;
+
+    /**
      * @param CommandBusInterface $queryBus
      */
     public function __construct(
-        CommandBusInterface $queryBus
+        CommandBusInterface $queryBus,
+        Router $router,
+        TranslatorInterface $translator,
+        string $dateFormat
     ) {
         $this->queryBus = $queryBus;
+        $this->router = $router;
+        $this->translator = $translator;
+        $this->dateFormat = $dateFormat;
     }
 
     /**
@@ -55,9 +79,19 @@ class OrderReturnFormDataProvider implements FormDataProviderInterface
      */
     public function getData($orderReturnId): array
     {
+        /** @var OrderReturnForEditing $orderReturnForEditing */
         $orderReturnForEditing = $this->queryBus->handle(new GetOrderReturnForEditing($orderReturnId));
 
         return [
+            'question' => $orderReturnForEditing->getQuestion(),
+            'customer_name' => $orderReturnForEditing->getCustomerFullName(),
+            'customer_link' => $this->router->generate('admin_customers_view', [
+                'customerId' => $orderReturnForEditing->getCustomerId()
+            ]),
+            'order' => $this->buildOrderReturnInformation($orderReturnForEditing),
+            'order_link' => $this->router->generate('admin_orders_view', [
+                'orderId' => $orderReturnForEditing->getOrderId()
+            ]),
             'order_return_state' => $orderReturnForEditing->getOrderReturnStateId(),
         ];
     }
@@ -68,5 +102,15 @@ class OrderReturnFormDataProvider implements FormDataProviderInterface
     public function getDefaultData(): array
     {
         return [];
+    }
+
+    private function buildOrderReturnInformation(OrderReturnForEditing $orderReturnForEditing)
+    {
+        return sprintf(
+            '#%s %s %s',
+            $orderReturnForEditing->getOrderId(),
+            $this->translator->trans('from', [], 'Admin.Global'),
+            $orderReturnForEditing->getOrderDate()->format($this->dateFormat)
+        );
     }
 }

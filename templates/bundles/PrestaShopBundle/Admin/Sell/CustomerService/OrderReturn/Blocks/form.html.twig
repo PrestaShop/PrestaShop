@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
+{% form_theme orderReturnForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
 {{ form_start(orderReturnForm) }}
 <div class="card">
   <h3 class="card-header">
@@ -32,47 +34,6 @@
 
   <div class="card-block row">
     <div class="card-text">
-      {{ form_errors(orderReturnForm) }}
-
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Customer'|trans({}, 'Admin.Global') }}
-        </label>
-
-        <div class="col-sm form-control-value">
-          <p>{{ orderReturnForEditing.customerFullName }}</p>
-
-          <a href="{{ path('admin_customers_view', {'customerId': orderReturnForEditing.customerId }) }}" class="btn btn-outline-secondary">
-            {{ 'View customer details'|trans({}, 'Admin.Actions') }}
-          </a>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Order'|trans({}, 'Admin.Global') }}
-        </label>
-
-        <div class="col-sm form-control-value">
-          <p>#{{ orderReturnForEditing.orderId }} {{ 'from'|trans({}, 'Admin.Global') }} {{ orderReturnForEditing.orderDate.format(dateFormat) }}</p>
-
-          <a href="{{ path('admin_orders_view', {'orderId': orderReturnForEditing.orderId }) }}" class="btn btn-outline-secondary">
-            {{ 'View order details'|trans({}, 'Admin.Actions') }}
-          </a>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Customer explanation'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </label>
-
-        <div class="col-sm form-control-value">
-{#          Raw needed to display values like < properly. Should be safe because OrderReturn object model has isCleanHtml validation#}
-          <p>{{ orderReturnForEditing.question|raw }}</p>
-        </div>
-      </div>
-
       {% block order_return_form_rest %}
         {{ form_widget(orderReturnForm) }}
       {% endblock %}
