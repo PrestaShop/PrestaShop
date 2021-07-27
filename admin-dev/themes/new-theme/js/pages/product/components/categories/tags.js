@@ -31,9 +31,13 @@ export default class Tags {
   constructor(
     containerSelector,
     initialCategories,
+    defaultCategoryId,
+    onDeleteCallback,
   ) {
     this.container = document.querySelector(containerSelector);
-    this.refresh(initialCategories);
+    this.defaultCategoryId = defaultCategoryId;
+    this.onDeleteCallback = (categoryId) => onDeleteCallback(categoryId);
+    this.refresh(initialCategories, defaultCategoryId);
   }
 
   refresh(categories) {
@@ -45,6 +49,11 @@ export default class Tags {
     categories.forEach((category) => {
       const template = tagTemplate.replace(RegExp(this.container.dataset.prototypeName, 'g'), category.id);
       const frag = document.createRange().createContextualFragment(template.trim());
+      if (this.defaultCategoryId === category.id) {
+        //@todo: move tagger selector to map
+        frag.firstChild.querySelector('.pstaggerClosingCross').remove();
+      }
+
       frag.firstChild.querySelector(ProductCategoryMap.tagItem).innerHTML = category.name;
       this.container.append(frag);
     }, this);
@@ -65,10 +74,9 @@ export default class Tags {
         event.preventDefault();
         event.stopImmediatePropagation();
 
-        // const categoryId = Number(event.currentTarget.dataset.id);
-
-        //@todo it shouldnt be possible to delete defautl category
+        const categoryId = Number(event.currentTarget.dataset.id);
         event.currentTarget.closest('.pstaggerTag').remove();
+        this.onDeleteCallback(categoryId);
       });
     }, this);
   }
