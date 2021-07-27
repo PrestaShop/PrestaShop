@@ -383,7 +383,7 @@ export default class CategoryTreeSelector {
     tagItems.forEach((tagItem) => {
       categories.push({
         id: Number(tagItem.dataset.id),
-        name: tagItem.querySelector(ProductCategoryMap.categoryNamePreview).innerHtml,
+        name: tagItem.querySelector(ProductCategoryMap.categoryNamePreview).innerHTML,
       });
     });
 
