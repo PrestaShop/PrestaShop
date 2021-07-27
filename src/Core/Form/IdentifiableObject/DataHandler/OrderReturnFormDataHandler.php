@@ -65,7 +65,6 @@ class OrderReturnFormDataHandler implements FormDataHandlerInterface
      *
      * @param array $data
      */
-
     public function create(array $data): void
     {
         @trigger_error(OrderReturn::class . ' is not created by form, this method should never be called', E_USER_WARNING);

@@ -47,7 +47,7 @@ class LinkPreviewType extends HiddenType
     {
         parent::buildView($view, $form, $options);
         $view->vars['type'] = 'hidden';
-        $view->vars['button_label'] =  $options['button_label'];
+        $view->vars['button_label'] = $options['button_label'];
     }
 
     /**
