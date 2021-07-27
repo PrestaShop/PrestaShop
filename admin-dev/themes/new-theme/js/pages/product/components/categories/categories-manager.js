@@ -74,7 +74,7 @@ export default class CategoriesManager {
     tags.forEach((tag) => {
       categories.push({
         id: Number(tag.dataset.id),
-        name: tag.firstChild.data,
+        name: tag.querySelector(ProductCategoryMap.categoryNamePreview).firstChild.data,
       });
     });
 

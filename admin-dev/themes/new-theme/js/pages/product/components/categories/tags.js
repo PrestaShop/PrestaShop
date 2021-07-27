@@ -49,12 +49,13 @@ export default class Tags {
     categories.forEach((category) => {
       const template = tagTemplate.replace(RegExp(this.container.dataset.prototypeName, 'g'), category.id);
       const frag = document.createRange().createContextualFragment(template.trim());
+
+      // do not allow removing default category (thus don't render the tag removal cross)
       if (this.defaultCategoryId === category.id) {
-        //@todo: move tagger selector to map
-        frag.firstChild.querySelector('.pstaggerClosingCross').remove();
+        frag.firstChild.querySelector(ProductCategoryMap.tagRemoveBtn).remove();
       }
 
-      frag.firstChild.querySelector(ProductCategoryMap.tagItem).innerHTML = category.name;
+      frag.firstChild.querySelector(ProductCategoryMap.categoryNamePreview).innerHTML = category.name;
       this.container.append(frag);
     }, this);
     this.listenDelete();
@@ -69,13 +70,14 @@ export default class Tags {
   }
 
   listenDelete() {
-    this.container.querySelectorAll('.pstaggerClosingCross').forEach((element) => {
+    this.container.querySelectorAll(ProductCategoryMap.tagRemoveBtn).forEach((element) => {
       element.addEventListener('click', (event) => {
         event.preventDefault();
         event.stopImmediatePropagation();
+        const tagItem = event.currentTarget.closest(ProductCategoryMap.tagItem);
+        const categoryId = Number(tagItem.dataset.id);
 
-        const categoryId = Number(event.currentTarget.dataset.id);
-        event.currentTarget.closest('.pstaggerTag').remove();
+        tagItem.remove();
         this.onDeleteCallback(categoryId);
       });
     }, this);
