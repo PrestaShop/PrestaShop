@@ -67,38 +67,34 @@ class OrderReturnType extends TranslatorAwareType
     {
         $builder
             ->add('customer_name', TextPreviewType::class, [
-                    'label' => $this->trans('Customer', 'Admin.Global'),
-                ]
+                'label' => $this->trans('Customer', 'Admin.Global'),
+            ]
             )
             ->add('customer_link', LinkPreviewType::class, [
-                    'button_label' => $this->trans('View customer details', 'Admin.Actions'),
-                    'attr' => [
-                        'class' => 'btn btn-outline-secondary'
-                    ]
-                ]
-            )
+                'button_label' => $this->trans('View customer details', 'Admin.Actions'),
+                'attr' => [
+                    'class' => 'btn btn-outline-secondary',
+                ],
+            ])
             ->add('order', TextPreviewType::class, [
-                    'label' => $this->trans('Order', 'Admin.Global'),
-                    'attr' => [
-                        'class' => 'form-control-value'
-                    ],
-                    'row_attr' => [
-                        'class' => 'form-control-value'
-                    ],
-                ]
-            )
+                'label' => $this->trans('Order', 'Admin.Global'),
+                'attr' => [
+                    'class' => 'form-control-value',
+                ],
+                'row_attr' => [
+                    'class' => 'form-control-value',
+                ],
+            ])
             ->add('order_link', LinkPreviewType::class, [
-                    'button_label' => $this->trans('View order details', 'Admin.Actions'),
-                    'attr' => [
-                        'class' => 'btn btn-outline-secondary'
-                    ]
-                ]
-            )
+                'button_label' => $this->trans('View order details', 'Admin.Actions'),
+                'attr' => [
+                    'class' => 'btn btn-outline-secondary',
+                ],
+            ])
             ->add('question', TextPreviewType::class, [
-                    'allow_html' => true,
-                    'label' => $this->trans('Customer explanation', 'Admin.Orderscustomers.Feature'),
-                ]
-            )
+                'allow_html' => true,
+                'label' => $this->trans('Customer explanation', 'Admin.Orderscustomers.Feature'),
+            ])
             ->add('order_return_state', ChoiceType::class, [
                 'required' => true,
                 'choices' => $this->stateChoices,
