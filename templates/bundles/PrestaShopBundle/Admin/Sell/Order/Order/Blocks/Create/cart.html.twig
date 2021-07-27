@@ -99,7 +99,8 @@
           <hr>
         </div>
         <div class="js-no-records-found"></div>
-            <table id="products-table" class="table table-responsive-md d-none">
+          <div class="table-responsive">
+            <table id="products-table" class="table d-none">
               <thead>
               <tr>
                 <th>{{ 'Product'|trans({}, 'Admin.Global') }}</th>
@@ -113,6 +114,7 @@
               </thead>
               <tbody></tbody>
             </table>
+          </div>
         <div class="row js-tax-warning d-none">
           <div class="col-xl-6 offset-xl-3">
             <div class="alert alert-warning">
