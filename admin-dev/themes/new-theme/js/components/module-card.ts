@@ -308,7 +308,7 @@ export default class ModuleCard {
               self.moduleActionMenuUninstallLinkSelector,
               $(
                 ModuleCardMap.moduleItemList(
-                    <string>$(this).attr('data-tech-name'),
+                    <string>$(e.target).attr('data-tech-name'),
                 ),
               ),
             ),
