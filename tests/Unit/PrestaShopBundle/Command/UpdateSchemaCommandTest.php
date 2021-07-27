@@ -41,7 +41,7 @@ class UpdateSchemaCommandTest extends TestCase
      */
     protected $command;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $manager = $this
             ->getMockBuilder(EntityManager::class)
