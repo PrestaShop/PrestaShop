@@ -64,6 +64,8 @@ class LinkPreviewType extends HiddenType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'error_bubbling' => true,
+            'compound' => false,
             'required' => false,
             'button_label' => '', // Start automatically TinyMCE
         ]);

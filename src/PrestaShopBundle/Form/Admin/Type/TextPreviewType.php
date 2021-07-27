@@ -65,6 +65,8 @@ class TextPreviewType extends HiddenType
     {
         $resolver->setDefaults([
             'required' => false,
+            'error_bubbling' => true,
+            'compound' => false,
             'allow_html' => false, // Start automatically TinyMCE
         ]);
         $resolver->setAllowedTypes('allow_html', 'bool');

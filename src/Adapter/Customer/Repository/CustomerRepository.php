@@ -26,13 +26,16 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Repository;
+namespace PrestaShop\PrestaShop\Adapter\Customer\Repository;
 
 use Customer;
+use Exception;
+use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopException;
 
 class CustomerRepository extends AbstractObjectModelRepository
 {
@@ -47,8 +50,24 @@ class CustomerRepository extends AbstractObjectModelRepository
      */
     public function get(CustomerId $customerId): Customer
     {
-        /** @var Customer $customer */
-        $customer = $this->getObjectModel($customerId->getValue(), Customer::class, CustomerNotFoundException::class);
+        try {
+            $customer = new Customer($customerId->getValue());
+
+            if ($customer->id !== $customerId->getValue()) {
+                throw new CustomerNotFoundException($customerId, sprintf('%s #%d was not found', Customer::class, $customerId->getValue()));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when trying to get %s #%d [%s]',
+                    Customer::class,
+                    $customerId->getValue(),
+                    $e->getMessage()
+                ),
+                0,
+                $e
+            );
+        }
 
         return $customer;
     }

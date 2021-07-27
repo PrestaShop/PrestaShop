@@ -19,3 +19,6 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\EditOrderReturnStateCommand'
+
+  prestashop.adapter.order_return_state.repository.order_return_state_repository:
+      class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\Repository\OrderReturnStateRepository'
