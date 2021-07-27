@@ -46,6 +46,7 @@ class OrderReturnStateRepository extends AbstractObjectModelRepository
      * @return OrderReturnState
      *
      * @throws OrderReturnException
+     * @throws OrderReturnConstraintException
      */
     public function getOrderReturnState(OrderReturnStateId $orderReturnStateId): OrderReturnState
     {
