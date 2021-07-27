@@ -24,7 +24,6 @@
  */
 
 import Bloodhound from 'typeahead.js';
-
 import AutoCompleteSearch from '@components/auto-complete-search';
 import Tokenizers from '@components/bloodhound/tokenizers';
 import ProductMap from '@pages/product/product-map';
@@ -51,7 +50,8 @@ export default class CategoryTreeSelector {
     this.selectedCategories = selectedCategories;
     this.defaultCategoryId = defaultCategoryId;
     const modalContent = $(ProductCategoryMap.categoriesModalTemplate);
-    // @todo: replace fancybox with Modal after following PR is merged - https://github.com/PrestaShop/PrestaShop/pull/25184
+    // @todo: replace fancybox with Modal after following PR is merged:
+    //    https://github.com/PrestaShop/PrestaShop/pull/25184
     $.fancybox({
       type: 'iframe',
       width: '90%',
@@ -60,21 +60,21 @@ export default class CategoryTreeSelector {
       autoSize: false,
       content: modalContent.html(),
       afterShow: () => {
-        this.initCategories();
+        this.initModal();
       },
     });
   }
 
-  onApplyCategoryChanges() {
+  applyCategoryTreeChanges() {
     this.modalContainer.querySelector(ProductCategoryMap.applyCategoriesBtn).addEventListener('click', () => {
       this.eventEmitter.emit(ProductEventMap.categories.applyCategoryTreeChanges, {
-        categories: this.collectSelectedCategories(),
+        categories: this.selectedCategories,
       });
       // @todo: close modal. ($.fancybox.close() not working)
     });
   }
 
-  async initCategories() {
+  async initModal() {
     this.modalContainer = document.querySelector(ProductCategoryMap.categoriesModalContainer);
     this.categoryTree = this.modalContainer.querySelector(ProductCategoryMap.categoryTree);
     this.prototypeTemplate = this.categoryTree.dataset.prototype;
@@ -92,8 +92,8 @@ export default class CategoryTreeSelector {
     this.initTypeaheadData(this.categories, '');
     this.initTypeahead();
     this.initTree();
-    this.updateCategoriesTags();
-    this.onApplyCategoryChanges();
+    this.updateSelectedCategories();
+    this.applyCategoryTreeChanges();
     this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, (categoryId) => this.unselectCategory(categoryId));
   }
 
@@ -117,7 +117,7 @@ export default class CategoryTreeSelector {
         checkbox.checked = true;
       }
 
-      checkbox.addEventListener('change', () => this.updateCategoriesTags());
+      checkbox.addEventListener('change', () => this.updateSelectedCategories());
     }, this);
     // Tree is initialized we can show it and hide loader
     this.modalContainer
@@ -231,7 +231,7 @@ export default class CategoryTreeSelector {
     }
     this.updateCheckbox(checkbox, true);
     this.openCategoryParents(checkbox);
-    this.updateCategoriesTags();
+    this.updateSelectedCategories();
   }
 
   /**
@@ -272,7 +272,7 @@ export default class CategoryTreeSelector {
     }
     this.updateCheckbox(checkbox, false);
     this.openCategoryParents(checkbox);
-    this.updateCategoriesTags();
+    this.updateSelectedCategories();
   }
 
   /**
@@ -314,13 +314,13 @@ export default class CategoryTreeSelector {
     new AutoCompleteSearch($(ProductCategoryMap.searchInput), dataSetConfig);
   }
 
-  updateCategoriesTags() {
+  updateSelectedCategories() {
     const checkedCheckboxes = this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
 
     const categories = [];
     checkedCheckboxes.forEach((checkboxInput) => {
       const categoryId = Number(checkboxInput.dataset.id);
-      const category = this.getCategoryById(categoryId);
+      const category = this.searchCategoryInTree(categoryId, this.categories);
 
       if (!category) {
         return;
@@ -328,16 +328,8 @@ export default class CategoryTreeSelector {
 
       categories.push(category);
     });
-    this.tags.refresh(categories);
-  }
-
-  /**
-   * @param {int} categoryId
-   *
-   * @returns {Object|null}
-   */
-  getCategoryById(categoryId) {
-    return this.searchCategory(categoryId, this.categories);
+    this.tags.update(categories);
+    this.selectedCategories = categories;
   }
 
   /**
@@ -345,7 +337,7 @@ export default class CategoryTreeSelector {
    * @param {array} categories
    * @returns {Object|null}
    */
-  searchCategory(categoryId, categories) {
+  searchCategoryInTree(categoryId, categories) {
     let searchedCategory = null;
     categories.forEach((category) => {
       if (categoryId === category.id) {
@@ -353,7 +345,7 @@ export default class CategoryTreeSelector {
       }
 
       if (searchedCategory === null && category.children && category.children.length > 0) {
-        searchedCategory = this.searchCategory(categoryId, category.children);
+        searchedCategory = this.searchCategoryInTree(categoryId, category.children);
       }
     });
 
@@ -369,21 +361,5 @@ export default class CategoryTreeSelector {
       checkboxInput.checked = checked;
       this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
     }
-  }
-
-  collectSelectedCategories() {
-    const tagItems = this.modalContainer
-      .querySelector(ProductCategoryMap.tagsContainer)
-      .querySelectorAll(ProductCategoryMap.tagItem);
-
-    const categories = [];
-    tagItems.forEach((tagItem) => {
-      categories.push({
-        id: Number(tagItem.dataset.id),
-        name: tagItem.querySelector(ProductCategoryMap.categoryNamePreview).innerHTML,
-      });
-    });
-
-    return categories;
   }
 }

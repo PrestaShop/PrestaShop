@@ -37,36 +37,38 @@ export default class CategoriesManager {
    */
   constructor(eventEmitter) {
     this.eventEmitter = eventEmitter;
-    this.categoriesContainer = document.querySelector(ProductCategoryMap.categoriesContainer);
-    this.addCategoriesBtn = this.categoriesContainer.querySelector(
-      ProductCategoryMap.addCategoriesBtn,
-    );
-    this.categories = this.collectCategoryIdsFromTags();
-    this.typeaheadDatas = [];
     this.categoryTreeSelector = new CategoryTreeSelector(eventEmitter);
-
-    this.addCategoriesBtn.addEventListener('click', () => this.categoryTreeSelector.showModal(
-      this.collectCategoryIdsFromTags(),
-      this.getDefaultCategoryId(),
-    ));
+    this.categoriesContainer = document.querySelector(ProductCategoryMap.categoriesContainer);
+    this.addCategoriesBtn = this.categoriesContainer.querySelector(ProductCategoryMap.addCategoriesBtn);
+    this.typeaheadDatas = [];
     this.tags = new Tags(
       eventEmitter,
       `${ProductCategoryMap.categoriesContainer} ${ProductCategoryMap.tagsContainer}`,
-      this.categories,
+      this.collectCategories(),
       this.getDefaultCategoryId(),
     );
-    this.listenCategoryTreeChanges();
+
+    this.initCategoryTreeModal();
 
     return {};
   }
 
-  listenCategoryTreeChanges() {
+  initCategoryTreeModal() {
+    this.addCategoriesBtn.addEventListener('click', () => this.categoryTreeSelector.showModal(
+      this.collectCategories(),
+      this.getDefaultCategoryId(),
+    ));
     this.eventEmitter.on(ProductEventMap.categories.applyCategoryTreeChanges, (eventData) => {
-      this.tags.refresh(eventData.categories);
+      this.tags.update(eventData.categories);
     });
   }
 
-  collectCategoryIdsFromTags() {
+  /**
+   * Collects categories from tags
+   *
+   * @returns {[]}
+   */
+  collectCategories() {
     const tags = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer)
       .querySelectorAll(ProductCategoryMap.tagItem);
     const categories = [];

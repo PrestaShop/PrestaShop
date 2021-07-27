@@ -38,10 +38,10 @@ export default class Tags {
     this.eventEmitter = eventEmitter;
     this.container = document.querySelector(containerSelector);
     this.defaultCategoryId = defaultCategoryId;
-    this.refresh(initialCategories, defaultCategoryId);
+    this.update(initialCategories);
   }
 
-  refresh(categories) {
+  update(categories) {
     this.toggleContainerVisibility();
     this.container.innerHTML = '';
 
