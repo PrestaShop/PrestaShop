@@ -72,7 +72,6 @@ class UpdateSchemaCommand extends Command
         $connection->beginTransaction();
 
         $output->writeln('Updating database schema...');
-        $affectedRows = 0;
 
         $affectedRows = $this->dropExistingForeignKeys($connection, $output);
 
