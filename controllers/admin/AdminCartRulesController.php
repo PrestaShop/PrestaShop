@@ -241,6 +241,7 @@ class AdminCartRulesControllerCore extends AdminController
         if (Tools::isSubmit('delete' . $this->table)) {
             $back = rawurldecode(Tools::getValue('back', ''));
             if (!empty($back)) {
+                $back .= (strpos($back, '?') === false ? '?' : '&') . 'conf=1';
                 $this->redirect_after = $back;
             }
         }

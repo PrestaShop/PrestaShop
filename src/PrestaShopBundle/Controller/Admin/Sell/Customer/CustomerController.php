@@ -975,6 +975,7 @@ class CustomerController extends AbstractAdminController
     private function manageLegacyFlashes($messageId)
     {
         $messages = [
+            1 => $this->trans('Successful deletion', 'Admin.Notifications.Success'),
             4 => $this->trans('Update successful.', 'Admin.Notifications.Success'),
         ];
 
