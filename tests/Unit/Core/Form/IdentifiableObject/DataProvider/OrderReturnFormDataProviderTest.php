@@ -29,22 +29,14 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 
 use DateTime;
-use Exception;
 use Generator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnForEditing;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\LanguageFormDataProvider;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\OrderReturnFormDataProvider;
 use PrestaShopBundle\Service\Routing\Router;
 use RuntimeException;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class OrderReturnFormDataProviderTest extends TestCase
@@ -112,13 +104,12 @@ class OrderReturnFormDataProviderTest extends TestCase
         return $queryBusMock;
     }
 
-
     /**
      * @return Generator
      */
     public function getExpectedChoices(): Generator
     {
-        yield  [
+        yield [
             new OrderReturnForEditing(
                 1,
                 2,
@@ -136,7 +127,7 @@ class OrderReturnFormDataProviderTest extends TestCase
                 'order' => '#3 from 2020-02-22',
                 'order_link' => 'order_3',
                 'order_return_state' => 4,
-            ]
+            ],
         ];
     }
 
@@ -157,6 +148,4 @@ class OrderReturnFormDataProviderTest extends TestCase
 
         throw new RuntimeException(sprintf('Route "%s" was not expected in query bus mock', $route));
     }
-
-
 }
