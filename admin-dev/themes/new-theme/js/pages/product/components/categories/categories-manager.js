@@ -50,10 +50,10 @@ export default class CategoriesManager {
       this.getDefaultCategoryId(),
     ));
     this.tags = new Tags(
+      eventEmitter,
       `${ProductCategoryMap.categoriesContainer} ${ProductCategoryMap.tagsContainer}`,
       this.categories,
       this.getDefaultCategoryId(),
-      () => {},
     );
     this.listenCategoryTreeChanges();
 

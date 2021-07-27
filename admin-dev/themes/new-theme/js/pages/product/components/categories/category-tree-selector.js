@@ -82,10 +82,10 @@ export default class CategoryTreeSelector {
     this.expandAllButton = this.modalContainer.querySelector(ProductCategoryMap.expandAllButton);
     this.reduceAllButton = this.modalContainer.querySelector(ProductCategoryMap.reduceAllButton);
     this.tags = new Tags(
+      this.eventEmitter,
       `${ProductCategoryMap.categoriesModalContainer} ${ProductCategoryMap.tagsContainer}`,
       this.selectedCategories,
       this.defaultCategoryId,
-      (categoryId) => this.onDeleteTag(categoryId),
     );
     this.categories = await getCategories();
 
@@ -94,10 +94,7 @@ export default class CategoryTreeSelector {
     this.initTree();
     this.updateCategoriesTags();
     this.onApplyCategoryChanges();
-  }
-
-  onDeleteTag(categoryId) {
-    this.unselectCategory(categoryId);
+    this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, (categoryId) => this.unselectCategory(categoryId));
   }
 
   initTree() {
