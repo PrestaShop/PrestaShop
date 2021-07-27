@@ -43,12 +43,12 @@ export default class CategoryTreeSelector {
     this.typeaheadDatas = [];
 
     return {
-      showModal: (selectedCategoryIds, defaultCategoryId) => this.showModal(selectedCategoryIds, defaultCategoryId),
+      showModal: (selectedCategories, defaultCategoryId) => this.showModal(selectedCategories, defaultCategoryId),
     };
   }
 
-  showModal(selectedCategoryIds, defaultCategoryId) {
-    this.selectedCategoryIds = selectedCategoryIds;
+  showModal(selectedCategories, defaultCategoryId) {
+    this.selectedCategories = selectedCategories;
     this.defaultCategoryId = defaultCategoryId;
     const modalContent = $(ProductCategoryMap.categoriesModalTemplate);
     // @todo: replace fancybox with Modal after following PR is merged - https://github.com/PrestaShop/PrestaShop/pull/25184
@@ -83,8 +83,9 @@ export default class CategoryTreeSelector {
     this.reduceAllButton = this.modalContainer.querySelector(ProductCategoryMap.reduceAllButton);
     this.tags = new Tags(
       `${ProductCategoryMap.categoriesModalContainer} ${ProductCategoryMap.tagsContainer}`,
-      this.selectedCategoryIds,
-      true,
+      this.selectedCategories,
+      this.defaultCategoryId,
+      (categoryId) => this.onDeleteTag(categoryId),
     );
     this.categories = await getCategories();
 
@@ -92,6 +93,11 @@ export default class CategoryTreeSelector {
     this.initTypeahead();
     this.initTree();
     this.updateCategoriesTags();
+    this.onApplyCategoryChanges();
+  }
+
+  onDeleteTag(categoryId) {
+    this.unselectCategory(categoryId);
   }
 
   initTree() {
@@ -110,7 +116,7 @@ export default class CategoryTreeSelector {
     this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkbox) => {
       const categoryId = Number(checkbox.dataset.id);
 
-      if (this.selectedCategoryIds.some((category) => category.id === categoryId)) {
+      if (this.selectedCategories.some((category) => category.id === categoryId)) {
         checkbox.checked = true;
       }
 
@@ -376,7 +382,7 @@ export default class CategoryTreeSelector {
     const categories = [];
     tags.forEach((tagItem) => {
       categories.push({
-        id: tagItem.dataset.id,
+        id: Number(tagItem.dataset.id),
         name: tagItem.innerHTML,
       });
     });
