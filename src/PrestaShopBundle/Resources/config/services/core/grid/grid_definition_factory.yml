@@ -14,6 +14,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
 
     prestashop.core.grid.definition.factory.email_logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmailLogsDefinitionFactory'
@@ -79,6 +81,7 @@ services:
             - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
             - '@=service("prestashop.adapter.form.choice_provider.gender_by_id_choice_provider").getChoices()'
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
         public: true
 
     prestashop.core.grid.definition.factory.customer.discount:
@@ -279,6 +282,7 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
         public: true
 
     prestashop.core.grid.definition.factory.carrier:
