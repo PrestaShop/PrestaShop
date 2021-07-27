@@ -2,7 +2,7 @@ services:
     _defaults:
         public: true
 
-    prestashop.adapter.order_return.query_handler.get_order_return_for_editing:
+    prestashop.adapter.order_return.query_handler.get_order_return_for_editing_handler:
         class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderReturnForEditingHandler'
         tags:
             - name: tactician.handler
@@ -12,7 +12,7 @@ services:
            - '@prestashop.core.domain.customer.repository.customer_repository'
            - '@prestashop.core.domain.order.repository.order_repository'
 
-    prestashop.adapter.order_return.command_handler.edit_order_return_handler:
+    prestashop.adapter.order_return.command_handler.edit_order_return_state_handler:
         class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\UpdateOrderReturnStateHandler'
         tags:
             - name: tactician.handler
