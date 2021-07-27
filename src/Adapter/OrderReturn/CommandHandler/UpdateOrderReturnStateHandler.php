@@ -29,15 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler;
 
 use OrderReturn;
-use PrestaShop\Module\PsAccounts\Repository\OrderRepository;
-use PrestaShop\PrestaShop\Adapter\OrderReturn\AbstractOrderReturnHandler;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnStateRepository;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\UpdateOrderReturnStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
 
 class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInterface
 {

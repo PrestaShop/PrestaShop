@@ -86,11 +86,11 @@ class OrderReturnFormDataProvider implements FormDataProviderInterface
             'question' => $orderReturnForEditing->getQuestion(),
             'customer_name' => $orderReturnForEditing->getCustomerFullName(),
             'customer_link' => $this->router->generate('admin_customers_view', [
-                'customerId' => $orderReturnForEditing->getCustomerId()
+                'customerId' => $orderReturnForEditing->getCustomerId(),
             ]),
             'order' => $this->buildOrderReturnInformation($orderReturnForEditing),
             'order_link' => $this->router->generate('admin_orders_view', [
-                'orderId' => $orderReturnForEditing->getOrderId()
+                'orderId' => $orderReturnForEditing->getOrderId(),
             ]),
             'order_return_state' => $orderReturnForEditing->getOrderReturnStateId(),
         ];
