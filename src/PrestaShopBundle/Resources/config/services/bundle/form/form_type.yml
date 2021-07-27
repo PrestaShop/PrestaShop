@@ -1375,6 +1375,8 @@ services:
 
     form.type.sell.product.category.category_tree_selector_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryTreeSelectorType'
+        arguments:
+            - '@translator'
         public: true
         tags:
             - { name: form.type }
