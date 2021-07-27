@@ -375,15 +375,15 @@ export default class CategoryTreeSelector {
   }
 
   collectSelectedCategories() {
-    const tags = this.modalContainer
+    const tagItems = this.modalContainer
       .querySelector(ProductCategoryMap.tagsContainer)
       .querySelectorAll(ProductCategoryMap.tagItem);
 
     const categories = [];
-    tags.forEach((tagItem) => {
+    tagItems.forEach((tagItem) => {
       categories.push({
         id: Number(tagItem.dataset.id),
-        name: tagItem.innerHTML,
+        name: tagItem.querySelector(ProductCategoryMap.categoryNamePreview).innerHtml,
       });
     });
 
