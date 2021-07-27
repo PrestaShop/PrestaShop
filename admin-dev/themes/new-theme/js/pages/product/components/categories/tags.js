@@ -24,24 +24,25 @@
  */
 
 import ProductMap from '@pages/product/product-map';
+import ProductEventMap from '@pages/product/product-event-map';
 
 const ProductCategoryMap = ProductMap.categories;
 
 export default class Tags {
   constructor(
+    eventEmitter,
     containerSelector,
     initialCategories,
     defaultCategoryId,
-    onDeleteCallback,
   ) {
+    this.eventEmitter = eventEmitter;
     this.container = document.querySelector(containerSelector);
     this.defaultCategoryId = defaultCategoryId;
-    this.onDeleteCallback = (categoryId) => onDeleteCallback(categoryId);
     this.refresh(initialCategories, defaultCategoryId);
   }
 
   refresh(categories) {
-    this.toggle();
+    this.toggleContainerVisibility();
     this.container.innerHTML = '';
 
     const tagTemplate = this.container.dataset.prototype;
@@ -50,7 +51,7 @@ export default class Tags {
       const template = tagTemplate.replace(RegExp(this.container.dataset.prototypeName, 'g'), category.id);
       const frag = document.createRange().createContextualFragment(template.trim());
 
-      // do not allow removing default category (thus don't render the tag removal cross)
+      // do not allow removing default category (thus don't render the tag removal element)
       if (this.defaultCategoryId === category.id) {
         frag.firstChild.querySelector(ProductCategoryMap.tagRemoveBtn).remove();
       }
@@ -58,10 +59,10 @@ export default class Tags {
       frag.firstChild.querySelector(ProductCategoryMap.categoryNamePreview).innerHTML = category.name;
       this.container.append(frag);
     });
-    this.listenDelete();
+    this.listenTagRemoval();
   }
 
-  toggle() {
+  toggleContainerVisibility() {
     this.container.querySelector(ProductCategoryMap.tagsContainer);
     this.container.classList.toggle(
       'd-block',
@@ -69,7 +70,7 @@ export default class Tags {
     );
   }
 
-  listenDelete() {
+  listenTagRemoval() {
     this.container.querySelectorAll(ProductCategoryMap.tagRemoveBtn).forEach((element) => {
       element.addEventListener('click', (event) => {
         event.preventDefault();
@@ -78,7 +79,7 @@ export default class Tags {
         const categoryId = Number(tagItem.dataset.id);
 
         tagItem.remove();
-        this.onDeleteCallback(categoryId);
+        this.eventEmitter.emit(ProductEventMap.categories.categoryRemoved, categoryId);
       });
     });
   }
