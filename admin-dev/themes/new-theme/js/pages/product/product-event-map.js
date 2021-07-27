@@ -53,5 +53,5 @@ export default {
   },
   categories: {
     applyCategoryTreeChanges: 'applyCategoryTreeChanges',
-  }
+  },
 };

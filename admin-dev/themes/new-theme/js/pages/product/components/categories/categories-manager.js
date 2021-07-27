@@ -46,13 +46,14 @@ export default class CategoriesManager {
     this.categoryTreeSelector = new CategoryTreeSelector(eventEmitter);
 
     this.addCategoriesBtn.addEventListener('click', () => this.categoryTreeSelector.showModal(
-      this.categories,
+      this.collectCategoryIdsFromTags(),
       this.getDefaultCategoryId(),
     ));
     this.tags = new Tags(
       `${ProductCategoryMap.categoriesContainer} ${ProductCategoryMap.tagsContainer}`,
       this.categories,
-      (id) => id !== this.getDefaultCategoryId(),
+      this.getDefaultCategoryId(),
+      () => {},
     );
     this.listenCategoryTreeChanges();
 
@@ -82,6 +83,6 @@ export default class CategoriesManager {
 
   getDefaultCategoryId() {
     // @todo: default category will have to be retrieved from dedicated input when its implemented
-    return this.collectCategoryIdsFromTags()[0].id;
+    return 2;
   }
 }
