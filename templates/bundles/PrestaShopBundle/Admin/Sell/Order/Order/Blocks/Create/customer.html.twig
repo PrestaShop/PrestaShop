@@ -103,33 +103,37 @@
         </ul>
         <div class="tab-content collapse show" id="customer-tab-content-container">
           <div class="tab-pane fade active show" id="customer-carts-tab-content" role="tabpanel" aria-labelledby="pills-home-tab">
-            <table class="table table-responsive-md mb-0" id="customer-carts-table">
-              <thead class="d-none">
+            <div class="table-responsive">
+              <table class="table mb-0" id="customer-carts-table">
+                <thead class="d-none">
+                  <tr>
+                    <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+                    <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+                    <th>{{ 'Total'|trans({}, 'Admin.Global') }}</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="customer-orders-tab-content" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="table-responsive">
+              <table class="table mb-0" id="customer-orders-table">
+                <thead class="d-none">
                 <tr>
                   <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
                   <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-                  <th>{{ 'Total'|trans({}, 'Admin.Global') }}</th>
+                  <th>{{ 'Products'|trans({}, 'Admin.Global') }}</th>
+                  <th>{{ 'Total paid'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+                  <th>{{ 'Payment'|trans({}, 'Admin.Global') }}</th>
+                  <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
                   <th></th>
                 </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-          <div class="tab-pane fade" id="customer-orders-tab-content" role="tabpanel" aria-labelledby="pills-home-tab">
-            <table class="table table-responsive-md mb-0" id="customer-orders-table">
-              <thead class="d-none">
-              <tr>
-                <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
-                <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-                <th>{{ 'Products'|trans({}, 'Admin.Global') }}</th>
-                <th>{{ 'Total paid'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-                <th>{{ 'Payment'|trans({}, 'Admin.Global') }}</th>
-                <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
         </div>
     </div>
