@@ -145,7 +145,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages(Exception $e = null): array
+    private function getErrorMessages(): array
     {
         return [
             OrderReturnConstraintException::class => [

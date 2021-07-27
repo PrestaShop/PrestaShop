@@ -43,7 +43,7 @@ class OrderRepository extends AbstractObjectModelRepository
      *
      * @return Order
      *
-     * @throws CoreException
+     * @throws OrderNotFoundException
      */
     public function get(OrderId $orderId): Order
     {
