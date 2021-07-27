@@ -330,6 +330,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $this->context->smarty->assign('packItems', $presentedPackItems);
             $this->context->smarty->assign('noPackPrice', $this->product->getNoPackPrice());
             $this->context->smarty->assign('displayPackPrice', ($pack_items && $productPrice < $this->product->getNoPackPrice()) ? true : false);
+            $this->context->smarty->assign('priceDisplay', $priceDisplay);
             $this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
 
             $accessories = $this->product->getAccessories($this->context->language->id);
@@ -1113,7 +1114,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
         }
         if ($ecotax) {
-            $useTax = !Tax::excludeTaxeOption();
+            // Try to get price display from already assigned smarty variable for better performance
+            $priceDisplay = $this->context->smarty->getTemplateVars('priceDisplay');
+            if (null === $priceDisplay) {
+                $priceDisplay = Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer);
+            }
+
+            $useTax = $priceDisplay == 0;
             if ($useTax) {
                 $ecotax *= (1 + Tax::getProductEcotaxRate() / 100);
             }
