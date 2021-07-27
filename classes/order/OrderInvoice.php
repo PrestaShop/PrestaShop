@@ -129,7 +129,7 @@ class OrderInvoiceCore extends ObjectModel
     public function getProductsDetail()
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-        SELECT *
+        SELECT *, od.ecotax as od_ecotax, od.ecotax_tax_rate as od_ecotax_tax_rate
         FROM `' . _DB_PREFIX_ . 'order_detail` od
         LEFT JOIN `' . _DB_PREFIX_ . 'product` p
         ON p.id_product = od.product_id
@@ -207,8 +207,13 @@ class OrderInvoiceCore extends ObjectModel
             /* Ecotax */
             $round_mode = $order->round_mode;
 
-            $row['ecotax_tax_excl'] = $row['ecotax']; // alias for coherence
-            $row['ecotax_tax_incl'] = $row['ecotax'] * (100 + $row['ecotax_tax_rate']) / 100;
+            // Use values from order_detail not from product because they are more accurate at the time the Order was made
+            // and they contain the true value for combinations
+            $ecotax = isset($row['od_ecotax']) ? $row['od_ecotax'] : $row['ecotax'];
+            $ecotaxRate = isset($row['od_ecotax_tax_rate']) ? $row['od_ecotax_tax_rate'] : $row['ecotax_tax_rate'];
+
+            $row['ecotax_tax_excl'] = $ecotax; // alias for coherence
+            $row['ecotax_tax_incl'] = $ecotax * (100 + $ecotaxRate) / 100;
             $row['ecotax_tax'] = $row['ecotax_tax_incl'] - $row['ecotax_tax_excl'];
 
             if ($round_mode == Order::ROUND_ITEM) {
@@ -737,7 +742,7 @@ class OrderInvoiceCore extends ObjectModel
         $query->innerJoin(
             'order_invoice_payment',
             'oip2',
-            'oip2.id_order_payment = oip1.id_order_payment 
+            'oip2.id_order_payment = oip1.id_order_payment
                 AND oip2.id_order_invoice <> oip1.id_order_invoice
                 AND oip2.id_order = oip1.id_order'
         );
@@ -774,7 +779,7 @@ class OrderInvoiceCore extends ObjectModel
         $query->innerJoin(
             'order_invoice_payment',
             'oip2',
-            'oip2.id_order_payment = oip1.id_order_payment 
+            'oip2.id_order_payment = oip1.id_order_payment
                 AND oip2.id_order_invoice <> oip1.id_order_invoice
                 AND oip2.id_order = oip1.id_order'
         );
