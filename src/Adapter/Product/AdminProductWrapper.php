@@ -41,6 +41,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShopBundle\Form\Admin\Type\CustomMoneyType;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
 use ProductDownload;
@@ -138,13 +139,18 @@ class AdminProductWrapper
         if (!isset($combinationValues['attribute_weight_impact'])) {
             $combinationValues['attribute_weight_impact'] = 0;
         }
+
+        // This is VERY UGLY, but since ti ComputingPrecision can never return enough decimals for now we have no
+        // choice but to hard code this one to make sure enough precision is saved in the DB or it results in errors
+        // of 1 cent in the shop
+        $computingPrecision = CustomMoneyType::PRESTASHOP_DECIMALS;
         if (!isset($combinationValues['attribute_ecotax'])) {
             $combinationValues['attribute_ecotax'] = 0;
         } else {
             // Value is displayed tax included but must be saved tax excluded
             $combinationValues['attribute_ecotax'] = Tools::ps_round(
                 $combinationValues['attribute_ecotax'] / (1 + Tax::getProductEcotaxRate() / 100),
-                Context::getContext()->getComputingPrecision()
+                $computingPrecision
             );
         }
         if ((isset($combinationValues['attribute_default']) && $combinationValues['attribute_default'] == 1)) {
