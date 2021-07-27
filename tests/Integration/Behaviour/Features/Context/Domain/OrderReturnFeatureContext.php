@@ -28,10 +28,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Configuration;
-use Order;
-use OrderReturn;
-use OrderReturnState;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
@@ -43,50 +39,6 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderReturnFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @When I add order return state :orderReturnStateReference
-     *
-     * @param string $orderReturnStateReference
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    public function createOrderReturnState(string $orderReturnStateReference): void
-    {
-        $orderReturnState = new OrderReturnState(null, Configuration::get('PS_LANG_DEFAULT'));
-        $orderReturnState->name = 'New order return state';
-        $orderReturnState->add();
-        SharedStorage::getStorage()->set($orderReturnStateReference, $orderReturnState->id);
-    }
-
-    /**
-     * @When I add order return :orderReturnReference from order :orderReference
-     *
-     * @param string $orderReturnReference
-     * @param string $orderReference
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     */
-    public function createOrderReturn(string $orderReturnReference, string $orderReference): void
-    {
-        $orderId = SharedStorage::getStorage()->get($orderReference);
-        $order = new Order($orderId);
-        $orderReturn = new OrderReturn();
-        $orderReturn->id_customer = (int) $order->id_customer;
-        $orderReturn->id_order = $order->id;
-        $orderReturn->question = 'Why?';
-        $orderReturn->state = 1;
-        $orderReturn->add();
-        $orderDetailIds = $quantities = $customizationIds = $customizationQuantityIds = [];
-        foreach ($order->getProducts() as $product) {
-            $orderDetailIds[] = $product['id_order_detail'];
-            $quantities[] = $product['product_quantity'];
-        }
-        $orderReturn->addReturnDetail($orderDetailIds, $quantities, $customizationIds, $customizationQuantityIds);
-        SharedStorage::getStorage()->set($orderReturnReference, $orderReturn->id);
-    }
-
     /**
      * @When I change order return :orderReturnReference state to :orderReturnStateReference
      *
