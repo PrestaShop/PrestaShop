@@ -1991,7 +1991,7 @@ var priceCalculation = (function() {
       var impactPriceTI = this.getImpactTIInputValue(obj);
       var impactPriceTE = this.computePriceTaxExcluded(impactPriceTI);
 
-      this.updateImpactTEInput(impactPriceTE);
+      this.updateImpactTEInput(impactPriceTE, obj);
     },
 
     /**
