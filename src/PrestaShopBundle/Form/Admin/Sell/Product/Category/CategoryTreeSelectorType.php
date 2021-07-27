@@ -28,15 +28,29 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
-use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CategoryTreeSelectorType extends CollectionType
 {
     private const PROTOTYPE_INDEX_PLACEHOLDER = '__CATEGORY_ID__';
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(
+        TranslatorInterface $translator
+    ) {
+        $this->translator = $translator;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -60,6 +74,7 @@ class CategoryTreeSelectorType extends CollectionType
                 'prototype_name' => self::PROTOTYPE_INDEX_PLACEHOLDER,
             ])
             ->add('apply_btn', ButtonType::class, [
+                'label' => $this->translator->trans('Apply', [], 'Admin.Actions'),
                 'attr' => [
                     'class' => 'js-apply-categories-btn btn-outline-primary',
                 ],
