@@ -580,7 +580,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         // Get object id in database if force_id is not true
-        if (isset($this->id) && !$this->force_id) {
+        if (!$this->force_id) {
             $this->id = Db::getInstance()->Insert_ID();
         }
 
