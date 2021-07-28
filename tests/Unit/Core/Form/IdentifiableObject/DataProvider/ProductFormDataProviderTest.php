@@ -92,6 +92,14 @@ class ProductFormDataProviderTest extends TestCase
                 'type' => ProductType::TYPE_STANDARD,
             ],
             'description' => [
+                'categories' => [
+                    'product_categories' => [
+                        self::HOME_CATEGORY_ID => [
+                            'is_associated' => true,
+                            'is_default' => true,
+                        ],
+                    ],
+                ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
@@ -126,14 +134,6 @@ class ProductFormDataProviderTest extends TestCase
                     'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 ],
                 'condition' => ProductCondition::NEW,
-            ],
-            'categories' => [
-                'product_categories' => [
-                    self::HOME_CATEGORY_ID => [
-                        'is_associated' => true,
-                        'is_default' => true,
-                    ],
-                ],
             ],
             'footer' => [
                 'active' => false,
@@ -161,6 +161,14 @@ class ProductFormDataProviderTest extends TestCase
                 'type' => ProductType::TYPE_STANDARD,
             ],
             'description' => [
+                'categories' => [
+                    'product_categories' => [
+                        self::HOME_CATEGORY_ID => [
+                            'is_associated' => true,
+                            'is_default' => true,
+                        ],
+                    ],
+                ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
@@ -195,14 +203,6 @@ class ProductFormDataProviderTest extends TestCase
                     'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 ],
                 'condition' => ProductCondition::NEW,
-            ],
-            'categories' => [
-                'product_categories' => [
-                    self::HOME_CATEGORY_ID => [
-                        'is_associated' => true,
-                        'is_default' => true,
-                    ],
-                ],
             ],
             'footer' => [
                 'active' => true,
@@ -518,12 +518,12 @@ class ProductFormDataProviderTest extends TestCase
             'default_category' => 51,
         ];
 
-        $expectedOutputData['categories']['product_categories'] = [];
-        $expectedOutputData['categories']['product_categories'][42] = [
+        $expectedOutputData['description']['categories']['product_categories'] = [];
+        $expectedOutputData['description']['categories']['product_categories'][42] = [
             'is_associated' => true,
             'is_default' => false,
         ];
-        $expectedOutputData['categories']['product_categories'][51] = [
+        $expectedOutputData['description']['categories']['product_categories'][51] = [
             'is_associated' => true,
             'is_default' => true,
         ];
@@ -1201,6 +1201,14 @@ class ProductFormDataProviderTest extends TestCase
             'description' => [
                 'description' => [],
                 'description_short' => [],
+                'categories' => [
+                    'product_categories' => [
+                        self::DEFAULT_CATEGORY_ID => [
+                            'is_associated' => true,
+                            'is_default' => true,
+                        ],
+                    ],
+                ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
                 'tags' => [],
             ],
@@ -1284,14 +1292,6 @@ class ProductFormDataProviderTest extends TestCase
                 'show_condition' => false,
                 'condition' => ProductCondition::NEW,
                 'suppliers' => [],
-            ],
-            'categories' => [
-                'product_categories' => [
-                    self::DEFAULT_CATEGORY_ID => [
-                        'is_associated' => true,
-                        'is_default' => true,
-                    ],
-                ],
             ],
             'footer' => [
                 'active' => true,
