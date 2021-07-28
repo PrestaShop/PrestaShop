@@ -229,9 +229,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     /**
      * @param Order $order
      *
-     * @return OrderCustomerForViewing|null
+     * @return OrderCustomerForViewing
      */
-    private function getOrderCustomer(Order $order, OrderInvoiceAddressForViewing $invoiceAddress): ?OrderCustomerForViewing
+    private function getOrderCustomer(Order $order, OrderInvoiceAddressForViewing $invoiceAddress): OrderCustomerForViewing
     {
         $currency = new Currency($order->id_currency);
         $customer = new Customer($order->id_customer);
