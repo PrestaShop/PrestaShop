@@ -28,11 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Specification;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SpecificationsType extends AbstractType
+class SpecificationsType extends TranslatorAwareType
 {
     /**
      * {@inheritDoc}
@@ -40,9 +41,13 @@ class SpecificationsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('features', FeaturesType::class)
-            ->add('customizations', CustomizationsType::class)
             ->add('references', ReferencesType::class)
+            ->add('features', FeaturesType::class)
+            ->add('attached_files', UnavailableType::class, [
+                'label' => $this->trans('Attached files', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+            ])
+            ->add('customizations', CustomizationsType::class)
         ;
     }
 

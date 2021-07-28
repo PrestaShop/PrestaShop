@@ -30,7 +30,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -82,10 +81,6 @@ class OptionsType extends TranslatorAwareType
             ->add('show_condition', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Display condition on product page', 'Admin.Catalog.Feature'),
-            ])
-            ->add('attached_files', UnavailableType::class, [
-                'label' => $this->trans('Attached files', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
             ])
             ->add('suppliers', SuppliersType::class)
         ;

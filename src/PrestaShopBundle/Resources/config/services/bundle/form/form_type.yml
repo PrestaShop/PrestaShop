@@ -1360,6 +1360,7 @@ services:
 
     form.type.sell.product.specification.specifications_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationsType'
+        parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }
