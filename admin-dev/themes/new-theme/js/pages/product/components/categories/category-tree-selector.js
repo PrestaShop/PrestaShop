@@ -120,12 +120,8 @@ export default class CategoryTreeSelector {
       checkbox.addEventListener('change', () => this.updateSelectedCategories());
     }, this);
     // Tree is initialized we can show it and hide loader
-    this.modalContainer
-      .querySelector(ProductCategoryMap.fieldset)
-      .classList.remove('d-none');
-    this.modalContainer
-      .querySelector(ProductCategoryMap.loader)
-      .classList.add('d-none');
+    this.modalContainer.querySelector(ProductCategoryMap.fieldset).classList.remove('d-none');
+    this.modalContainer.querySelector(ProductCategoryMap.loader).classList.add('d-none');
   }
 
   /**
