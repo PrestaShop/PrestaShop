@@ -384,11 +384,11 @@ class ProductFormDataProviderTest extends TestCase
             'name' => $localizedValues,
             'description' => $localizedValues,
             'description_short' => $localizedValues,
-            'cover' => $newCover,
+            'cover_thumbnail' => $newCover,
         ];
         $expectedOutputData['header']['name'] = $localizedValues;
         $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
-        $expectedOutputData['header']['cover'] = $newCover;
+        $expectedOutputData['header']['cover_thumbnail'] = $newCover;
 
         $expectedOutputData['description']['description'] = $localizedValues;
         $expectedOutputData['description']['description_short'] = $localizedValues;
@@ -890,7 +890,7 @@ class ProductFormDataProviderTest extends TestCase
             $product['attachments'] ?? [],
             $this->createProductStockInformation($product),
             $this->createVirtualProductFile($product),
-            $product['cover'] ?? static::COVER_URL
+            $product['cover_thumbnail'] ?? static::COVER_URL
         );
     }
 
@@ -1196,7 +1196,7 @@ class ProductFormDataProviderTest extends TestCase
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
                 'name' => [],
-                'cover' => static::COVER_URL,
+                'cover_thumbnail' => static::COVER_URL,
             ],
             'description' => [
                 'description' => [],

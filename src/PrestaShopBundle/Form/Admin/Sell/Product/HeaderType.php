@@ -46,7 +46,7 @@ class HeaderType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('cover', ImagePreviewType::class, [
+            ->add('cover_thumbnail', ImagePreviewType::class, [
                 'label' => false,
             ])
             ->add('name', TranslatableType::class, [
