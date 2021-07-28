@@ -31,11 +31,13 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Description;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
+use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ProductImageType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -124,6 +126,7 @@ class DescriptionType extends TranslatorAwareType
                 ],
                 'label_tag_name' => 'h2',
             ])
+            ->add('categories', CategoriesType::class)
             ->add('manufacturer', ManufacturerType::class)
             ->add('tags', TranslatableType::class, [
                 'required' => false,
@@ -149,6 +152,10 @@ class DescriptionType extends TranslatorAwareType
                         '[/1]' => '</a>',
                     ]),
                 ],
+            ])
+            ->add('related_products', UnavailableType::class, [
+                'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
             ])
         ;
     }

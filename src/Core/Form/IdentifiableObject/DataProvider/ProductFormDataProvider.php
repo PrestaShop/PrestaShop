@@ -107,7 +107,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'seo' => $this->extractSEOData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
-            'categories' => $this->extractCategoriesData($productForEditing),
             'footer' => [
                 'active' => $productForEditing->getOptions()->isActive(),
             ],
@@ -126,6 +125,14 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'type' => ProductType::TYPE_STANDARD,
             ],
             'description' => [
+                'categories' => [
+                    'product_categories' => [
+                        $this->defaultCategoryId => [
+                            'is_associated' => true,
+                            'is_default' => true,
+                        ],
+                    ],
+                ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
@@ -160,14 +167,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                     'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 ],
                 'condition' => ProductCondition::NEW,
-            ],
-            'categories' => [
-                'product_categories' => [
-                    $this->defaultCategoryId => [
-                        'is_associated' => true,
-                        'is_default' => true,
-                    ],
-                ],
             ],
             'footer' => [
                 'active' => $this->defaultProductActivation,
@@ -271,6 +270,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
+            'categories' => $this->extractCategoriesData($productForEditing),
             'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
             'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
         ];
