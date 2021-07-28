@@ -60,8 +60,8 @@ class ProductAttachmentsType extends TranslatorAwareType
                 'required' => false,
                 'label' => false,
                 'remote_url' => $this->urlGenerator->generate('admin_attachments_search', ['searchPhrase' => '__QUERY__']),
-                'placeholder' => $this->trans('Search file', 'Admin.Catalog.Feature'),
-                'empty_state' => $this->trans('No files associated', 'Admin.Catalog.Feature'),
+                'placeholder' => $this->trans('Search file', 'Admin.Catalog.Help'),
+                'empty_state' => $this->trans('No files attached', 'Admin.Catalog.Feature'),
             ])
             ->add('add_attachment_btn', IconButtonType::class, [
                 'label' => $this->trans('Add new file', 'Admin.Catalog.Feature'),
@@ -70,7 +70,7 @@ class ProductAttachmentsType extends TranslatorAwareType
                 'attr' => [
                     'data-success-create-message' => sprintf('%s %s',
                         $this->trans(
-                            'Attachment was successfully created and added to the selection.',
+                            'The file was successfully added.',
                             'Admin.Catalog.Feature'
                         ),
                         $this->trans(
@@ -78,6 +78,7 @@ class ProductAttachmentsType extends TranslatorAwareType
                             'Admin.Global'
                         )
                     ),
+                    'data-modal-title' => $this->trans('Add new file', 'Admin.Catalog.Feature'),
                     'class' => 'btn-outline-secondary add-attachment',
                     'href' => $this->urlGenerator->generate('admin_attachments_create', [
                         'liteDisplaying' => true,
@@ -97,16 +98,7 @@ class ProductAttachmentsType extends TranslatorAwareType
         $resolver->setDefaults([
             'label' => $this->trans('Attached files', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h2',
-            'label_subtitle' => $this->trans('Select the files (instructions, documentation, recipes, etc.) your customers can directly download on this product page.', 'Admin.Catalog.Feature') .
-                '<br>' .
-                $this->trans(
-                    'Need to browse all files? Go to [1]Catalog > Files[/1]',
-                    'Admin.Catalog.Feature',
-                    [
-                        '[1]' => sprintf('<a target="_blank" href="%s">', $this->urlGenerator->generate('admin_attachments_index')),
-                        '[/1]' => '</a>',
-                    ]
-                ),
+            'label_help_box' => $this->trans('Instruction manuals, technical works or any file you want to add to a product.', 'Admin.Catalog.Help'),
         ]);
     }
 }
