@@ -24,52 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Type;
+declare(strict_types=1);
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
-class TextWithUnitType extends AbstractType
+/**
+ * Is thrown when product search is an empty string
+ */
+class ProductSearchEmptyPhraseException extends ProductException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return NumberType::class;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'widget' => 'single_text',
-            'unit' => 'unit',
-        ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        parent::buildView($view, $form, $options);
-
-        $view->vars = array_merge($view->vars, [
-            'unit' => $options['unit'],
-        ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'text_with_unit';
-    }
 }

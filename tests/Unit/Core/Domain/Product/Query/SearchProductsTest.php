@@ -24,52 +24,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Type;
+declare(strict_types=1);
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace Tests\Unit\Core\Domain\Product\Query;
 
-class TextWithUnitType extends AbstractType
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductSearchEmptyPhraseException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+
+class SearchProductsTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
+    public function testEmptyPhrase(): void
     {
-        return NumberType::class;
-    }
+        $this->expectException(ProductSearchEmptyPhraseException::class);
+        $this->expectExceptionMessage('Product search phrase must be a not empty string');
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'widget' => 'single_text',
-            'unit' => 'unit',
-        ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        parent::buildView($view, $form, $options);
-
-        $view->vars = array_merge($view->vars, [
-            'unit' => $options['unit'],
-        ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'text_with_unit';
+        new SearchProducts('', 1, 'fr');
     }
 }

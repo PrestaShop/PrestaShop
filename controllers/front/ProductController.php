@@ -351,7 +351,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             $this->context->smarty->assign('packItems', $presentedPackItems);
             $this->context->smarty->assign('noPackPrice', $this->product->getNoPackPrice());
-            $this->context->smarty->assign('displayPackPrice', ($pack_items && $productPrice < Pack::noPackPrice((int) $this->product->id)));
+            $this->context->smarty->assign('displayPackPrice', ($pack_items && $productPrice < $this->product->getNoPackPrice()) ? true : false);
+            $this->context->smarty->assign('priceDisplay', $priceDisplay);
             $this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
 
             $accessories = $this->product->getAccessories($this->context->language->id);
@@ -1109,7 +1110,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(['product' => $this->product])->present();
-        $product['ecotax'] = Tools::convertPrice((float) $product['ecotax'], $this->context->currency, true, $this->context);
+
+        $product['ecotax'] = Tools::convertPrice($this->getProductEcotax($product), $this->context->currency, true, $this->context);
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 
@@ -1171,6 +1173,37 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         return $minimal_quantity;
+    }
+
+    /**
+     * @param array $product
+     *
+     * @return float
+     */
+    protected function getProductEcotax(array $product): float
+    {
+        $ecotax = $product['ecotax'];
+
+        if ($product['id_product_attribute']) {
+            $combination = $this->findProductCombinationById($product['id_product_attribute']);
+            if (isset($combination['ecotax']) && $combination['ecotax'] > 0) {
+                $ecotax = $combination['ecotax'];
+            }
+        }
+        if ($ecotax) {
+            // Try to get price display from already assigned smarty variable for better performance
+            $priceDisplay = $this->context->smarty->getTemplateVars('priceDisplay');
+            if (null === $priceDisplay) {
+                $priceDisplay = Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer);
+            }
+
+            $useTax = $priceDisplay == 0;
+            if ($useTax) {
+                $ecotax *= (1 + Tax::getProductEcotaxRate() / 100);
+            }
+        }
+
+        return (float) $ecotax;
     }
 
     /**

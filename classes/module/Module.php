@@ -2442,6 +2442,9 @@ abstract class ModuleCore implements ModuleInterface
             if ($cache_id !== null) {
                 Tools::enableCache();
             }
+            if ($compile_id === null) {
+                $compile_id = $this->getDefaultCompileId();
+            }
 
             $result = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->fetch();
 
@@ -2470,7 +2473,7 @@ abstract class ModuleCore implements ModuleInterface
             Tools::enableCache();
         }
         if ($compile_id === null) {
-            $compile_id = Context::getContext()->shop->theme->getName();
+            $compile_id = $this->getDefaultCompileId();
         }
 
         $template = $this->context->smarty->createTemplate(
@@ -2496,6 +2499,10 @@ abstract class ModuleCore implements ModuleInterface
      */
     protected function getCurrentSubTemplate($template, $cache_id = null, $compile_id = null)
     {
+        if ($compile_id === null) {
+            $compile_id = $this->getDefaultCompileId();
+        }
+
         if (!isset($this->current_subtemplate[$template . '_' . $cache_id . '_' . $compile_id])) {
             if (false === strpos($template, 'module:') &&
                 !file_exists(_PS_ROOT_DIR_ . '/' . $template) &&
@@ -2555,6 +2562,9 @@ abstract class ModuleCore implements ModuleInterface
         if (false === strpos($template, 'module:') && !file_exists(_PS_ROOT_DIR_ . '/' . $template)) {
             $template = $this->getTemplatePath($template);
         }
+        if ($compile_id === null) {
+            $compile_id = $this->getDefaultCompileId();
+        }
 
         $is_cached = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->isCached($template, $cache_id, $compile_id);
         Tools::restoreCacheSettings();
@@ -2576,6 +2586,9 @@ abstract class ModuleCore implements ModuleInterface
         static $ps_smarty_clear_cache = null;
         if ($ps_smarty_clear_cache === null) {
             $ps_smarty_clear_cache = Configuration::get('PS_SMARTY_CLEAR_CACHE');
+        }
+        if ($compile_id === null) {
+            $compile_id = $this->getDefaultCompileId();
         }
 
         if (static::$_batch_mode) {
@@ -3543,6 +3556,16 @@ abstract class ModuleCore implements ModuleInterface
     public function saveDashConfig(array $config)
     {
         return false;
+    }
+
+    /**
+     * Returns shop theme name from context as a default compile Id.
+     *
+     * @return string
+     */
+    public function getDefaultCompileId()
+    {
+        return Context::getContext()->shop->theme->getName();
     }
 
     /**

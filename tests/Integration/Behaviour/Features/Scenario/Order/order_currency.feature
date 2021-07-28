@@ -133,9 +133,9 @@ Feature: Multiple currencies for Order in Back Office (BO)
     And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
     And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product With Discount and SpecificPrice"
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name   | Test Product With Discount and SpecificPrice |
-      | amount | 2                                            |
-      | price  | 120                                          |
+      | name          | Test Product With Discount and SpecificPrice |
+      | amount        | 2                                            |
+      | price         | 120                                          |
     Then product "Test Product With Discount and SpecificPrice" in order "bo_order1" should have no specific price
 #    For product "Test Product With Discount and SpecificPrice"
 #    Due to the specific price 25% of €160, the customer have to pay 75% of the product price : €120
@@ -155,12 +155,13 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity     | 2      |
-      | product_price        | 119.00 |
-      | unit_price_tax_incl  | 126.14 |
-      | unit_price_tax_excl  | 119.00 |
-      | total_price_tax_incl | 252.28 |
-      | total_price_tax_excl | 238.00 |
+      | product_quantity            | 2        |
+      | product_price               | 119.00   |
+      | original_product_price      | 119.00   |
+      | unit_price_tax_incl         | 126.14   |
+      | unit_price_tax_excl         | 119.00   |
+      | total_price_tax_incl        | 252.28   |
+      | total_price_tax_excl        | 238.00   |
     And product "Test Product With Discount and SpecificPrice" in order "bo_order1" has following details:
       | product_quantity       | 2      |
       | original_product_price | 160.00 |
@@ -228,12 +229,13 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | price         | 11.90                   |
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 3     |
-      | product_price               | 11.90 |
+      | product_quantity            | 3      |
+      | original_product_price      | 119.00 |
+      | product_price               | 11.90  |
       | unit_price_tax_incl         | 12.614 |
-      | unit_price_tax_excl         | 11.90 |
-      | total_price_tax_incl        | 37.84 |
-      | total_price_tax_excl        | 35.70 |
+      | unit_price_tax_excl         | 11.90  |
+      | total_price_tax_incl        | 37.84  |
+      | total_price_tax_excl        | 35.70  |
     And order "bo_order1" should have following details:
       | total_products           | 35.70 |
       | total_products_wt        | 37.84 |
@@ -250,12 +252,13 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | price         | 20.00                   |
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 3     |
-      | product_price               | 20.00 |
-      | unit_price_tax_incl         | 21.20 |
-      | unit_price_tax_excl         | 20.00 |
-      | total_price_tax_incl        | 63.60 |
-      | total_price_tax_excl        | 60.00 |
+      | product_quantity            | 3      |
+      | original_product_price      | 119.00 |
+      | product_price               | 20.00  |
+      | unit_price_tax_incl         | 21.20  |
+      | unit_price_tax_excl         | 20.00  |
+      | total_price_tax_incl        | 63.60  |
+      | total_price_tax_excl        | 60.00  |
     And order "bo_order1" should have following details:
       | total_products           | 60.00 |
       | total_products_wt        | 63.60 |

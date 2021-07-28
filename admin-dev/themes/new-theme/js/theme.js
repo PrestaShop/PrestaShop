@@ -53,6 +53,7 @@ import Header from '@js/header';
 import initDatePickers from '@js/app/utils/datepicker';
 import initInvalidFields from '@js/app/utils/fields';
 import initEmailFields from '@js/app/utils/email-idn';
+import initNumberCommaTransformer from '@js/app/utils/number-comma-transformer';
 import initPrestashopComponents from '@js/app/utils/init-components';
 
 const {$} = window;
@@ -68,4 +69,5 @@ $(() => {
   initDatePickers();
   initInvalidFields();
   initEmailFields('input[type="email"]');
+  initNumberCommaTransformer('.js-comma-transformer');
 });

@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,28 +21,37 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
+import {expect} from 'chai';
+import {transform} from '../../js/app/utils/number-comma-transformer';
 
-<div class="card customer-private-note-card">
-  <h3 class="card-header">
-    <i class="material-icons">visibility_off</i>
-    {{ 'Add a private note'|trans({}, 'Admin.Orderscustomers.Feature') }}
-  </h3>
-  <div class="card-body clearfix">
-    <div class="alert alert-info" role="alert">
-      <p class="alert-text">
-        {{ 'This note will be displayed to all employees but not to customers.'|trans({}, 'Admin.Orderscustomers.Help') }}
-      </p>
-    </div>
+describe('NumberCommaTransformer', () => {
+  describe('transform', () => {
+    const assertions = [
+      ['12', '12'],
+      ['-12', '-12'],
+      ['-12,20', '-12.20'],
+      ['-12,,20', '-12.20'],
+      ['-----12,20', '12.20'],
+      ['----12,20', '12.20'],
+      ['12alizdjalzjdf20', '12.20'],
+      ['-12alizdjalzjdf20', '-12.20'],
+      ['12345.678', '12345.678'],
+      ['12345dd.dd678', '12345.678'],
+      ['12...40', '12.40'],
+      ['12,,', '12.'],
+      ['1.000,2', '1000.2'],
+      ['1N000,2', '1000.2'],
+      ['100,2', '100.2'],
+      ['1,000,2', '10002'],
+      ['1,000,200.5', '1000200.5'],
+      ['100,002', '100.002'],
+    ];
 
-    {% if privateNoteForm is not null %}
-      {{ form_start(privateNoteForm, {'action': path('admin_customers_set_private_note', {'customerId': customerInformation.customerId.value})}) }}
-        {{ form_widget(privateNoteForm.note) }}
-
-        <button class="btn btn-primary float-right mt-3" id="save-private-note" type="submit">
-          {{ 'Save'|trans({}, 'Admin.Actions') }}
-        </button>
-      {{ form_end(privateNoteForm) }}
-    {% endif %}
-  </div>
-</div>
+    assertions.forEach((assertion) => {
+      it(`test ${assertion[0]}`, () => {
+        expect(transform(assertion[0])).to.eql(assertion[1]);
+      });
+    });
+  });
+});
