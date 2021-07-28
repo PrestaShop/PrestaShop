@@ -285,7 +285,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         ));
         $realImageUrl = $this->getRealImageUrl($coverUrl);
 
-        Assert::assertEquals($realImageUrl, $productForEditing->getCoverUrl());
+        Assert::assertEquals($realImageUrl, $productForEditing->getCoverThumbnailUrl());
     }
 
     /**
