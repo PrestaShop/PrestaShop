@@ -59,7 +59,7 @@ export default class AttachmentsManager {
 
       const iframeModal = new FormIframeModal({
         id: 'modal-create-product-attachment',
-        modalTitle: 'Create attachment',
+        modalTitle: this.$addAttachmentBtn.data('modalTitle'),
         formSelector: 'form[name="attachment"]',
         formUrl: $(event.target).prop('href'),
         closable: true,
