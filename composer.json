@@ -109,7 +109,7 @@
         "prestashop/statssales": "^2",
         "prestashop/statssearch": "^2",
         "prestashop/statsstock": "^2",
-        "prestashop/translationtools-bundle": "^4.0",
+        "prestashop/translationtools-bundle": "^5.0",
         "prestashop/welcome": "^6",
         "sensio/framework-extra-bundle": "^5.1",
         "shudrum/array-finder": "^1.1.0",
@@ -122,7 +122,7 @@
         "symfony/symfony": "^4.4",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
-        "twig/twig": "^1.38"
+        "twig/twig": "^3.0"
     },
     "require-dev": {
         "behat/behat": "^3.5",
