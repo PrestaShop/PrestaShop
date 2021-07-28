@@ -59,27 +59,28 @@ window.combinations = (function () {
    * @param {jQuery} tableRow - Table row that contains the combination
    */
   function updateFinalPrice(tableRow) {
-      if (!tableRow.is('tr')) {
-          throw new Error('Structure of table has changed, this function needs to be updated.');
-      }
+    if (!tableRow.is('tr')) {
+      throw new Error('Structure of table has changed, this function needs to be updated.');
+    }
 
-      // We need this because there is a specific data="smthg" attribute so we can't use data() function
-      var attributeId = tableRow.attr('data');
+    // We need this because there is a specific data="smthg" attribute so we can't use data() function
+    const attributeId = tableRow.attr('data');
 
-      // Get combination final price value from combination form
-      var finalPrice = priceCalculation.getCombinationFinalPriceTaxExcludedById(attributeId);
-      var finalPriceLabel = tableRow.find('.attribute-finalprice span.final-price');
-      finalPriceLabel.html(finalPrice);
+    // Get combination final price value from combination form
+    const finalPrice = priceCalculation.getCombinationFinalPriceTaxExcludedById(attributeId);
+    const finalPriceLabel = tableRow.find('.attribute-finalprice span.final-price');
+    finalPriceLabel.html(finalPrice);
 
-      // Update ecotax preview (tax included)
-      var combinationEcotaxTI = priceCalculation.getCombinationEcotaxTaxIncludedById(attributeId);
-      if (combinationEcotaxTI === 0) {
-        combinationEcotaxTI = priceCalculation.getProductEcotaxTaxIncluded();
-      }
-      var ecoTaxLabel = tableRow.find('.attribute-finalprice span.attribute-ecotax');
-      ecoTaxLabel.html(Number(ps_round(combinationEcotaxTI, 2)).toFixed(2)); // 2 digits for short
-      var ecoTaxPreview = tableRow.find('.attribute-finalprice .attribute-ecotax-preview');
-      ecoTaxPreview.toggleClass('d-none', Number(combinationEcotaxTI) === 0);
+    // Update ecotax preview (tax included)
+    let combinationEcotaxTI = priceCalculation.getCombinationEcotaxTaxIncludedById(attributeId);
+
+    if (combinationEcotaxTI === 0) {
+      combinationEcotaxTI = priceCalculation.getProductEcotaxTaxIncluded();
+    }
+    const ecoTaxLabel = tableRow.find('.attribute-finalprice span.attribute-ecotax');
+    ecoTaxLabel.html(Number(ps_round(combinationEcotaxTI, 2)).toFixed(2)); // 2 digits for short
+    const ecoTaxPreview = tableRow.find('.attribute-finalprice .attribute-ecotax-preview');
+    ecoTaxPreview.toggleClass('d-none', Number(combinationEcotaxTI) === 0);
   }
 
   /**
@@ -155,12 +156,12 @@ window.combinations = (function () {
 
         .on({
           // when ecotax on the form is changed, update final price
-          'change': function () {
-            var attributeId = $(this).closest('.combination-form').attr('data');
-            var finalPriceLabel = getCombinationRow(attributeId).find('.attribute-finalprice span.final-price');
+          change() {
+            const attributeId = $(this).closest('.combination-form').attr('data');
+            const finalPriceLabel = getCombinationRow(attributeId).find('.attribute-finalprice span.final-price');
 
             updateFinalPrice($(finalPriceLabel.parents('tr')[0]));
-          }
+          },
         }, 'input[id^="combination"][id$="_attribute_ecotax"]')
 
         // when price impact is changed on the row, update it on the form

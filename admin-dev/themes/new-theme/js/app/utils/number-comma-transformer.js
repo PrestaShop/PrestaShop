@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import _ from 'lodash';
-
 const findAllUnwantedCharsExceptTheLatestOne = /(?:(?!^-\d+))[^\d]+(?=.*[^\d])/g;
 const findAllUnwantedChars = /(?:(?!^-\d+))([^\d]+)/g;
 
@@ -46,6 +44,7 @@ export const transform = (value) => {
 
   if (unwantedChars.length > 1) {
     const unique = [...new Set(unwantedChars)];
+
     if (unique.length === 1) {
       return val.replace(findAllUnwantedChars, '');
     }
@@ -63,7 +62,7 @@ const clearNumberInputValue = (event, selector) => {
     return;
   }
 
-  const value = event.target.value;
+  const {value} = event.target;
   event.target.value = transform(value);
 };
 
