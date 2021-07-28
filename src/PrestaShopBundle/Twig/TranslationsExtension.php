@@ -258,7 +258,7 @@ class TranslationsExtension extends Twig_Extension
 
         $breadcrumbParts = explode('_', Inflector::getInflector()->tableize($domain));
 
-        return $this->container->get('templating')->render(
+        return $this->container->get('twig')->render(
             '@PrestaShop/Admin/Translations/include/form-edit-message.html.twig',
             [
                 'default_translation_value' => $defaultTranslationValue,
@@ -365,7 +365,7 @@ class TranslationsExtension extends Twig_Extension
         }
 
         if ($hasMessagesSubtree) {
-            $output .= $this->container->get('templating')->render(
+            $output .= $this->container->get('twig')->render(
                 '@PrestaShop/Admin/Translations/include/button-toggle-messages-visibility.html.twig',
                 [
                     'label_show_messages' => $this->translator->trans('Show messages', [], 'Admin.International.Feature'),
@@ -377,7 +377,7 @@ class TranslationsExtension extends Twig_Extension
         }
 
         $formStart = $this->getTranslationsFormStart($subtree, $output);
-        $output = $this->container->get('templating')->render(
+        $output = $this->container->get('twig')->render(
             '@PrestaShop/Admin/Translations/include/translations-form-end.html.twig',
             [
                 'form_start' => $formStart,
@@ -439,7 +439,7 @@ class TranslationsExtension extends Twig_Extension
             unset($subtree['__metadata']);
         }
 
-        return $this->container->get('templating')->render(
+        return $this->container->get('twig')->render(
             '@PrestaShop/Admin/Translations/include/translations-form-start.html.twig',
             [
                 'id' => $id,
@@ -534,7 +534,7 @@ class TranslationsExtension extends Twig_Extension
      */
     protected function getNavigation($id)
     {
-        return $this->container->get('templating')->render(
+        return $this->container->get('twig')->render(
             '@PrestaShop/Admin/Translations/include/pagination-bar.html.twig',
             ['page_id' => $id]
         );
