@@ -272,7 +272,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
             'categories' => $this->extractCategoriesData($productForEditing),
             'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
-            'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
         ];
     }
 
@@ -398,6 +397,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'meta_description' => $seoOptions->getLocalizedMetaDescriptions(),
             'link_rewrite' => $seoOptions->getLocalizedLinkRewrites(),
             'redirect_option' => $this->extractRedirectOptionData($productForEditing),
+            'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
         ];
     }
 

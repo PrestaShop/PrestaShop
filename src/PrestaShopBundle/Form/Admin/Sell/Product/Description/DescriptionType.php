@@ -28,8 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Description;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType;
@@ -40,30 +38,10 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 
 class DescriptionType extends TranslatorAwareType
 {
-    /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param LegacyContext $legacyContext
-     */
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        LegacyContext $legacyContext
-    ) {
-        parent::__construct($translator, $locales);
-        $this->legacyContext = $legacyContext;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -128,31 +106,6 @@ class DescriptionType extends TranslatorAwareType
             ])
             ->add('categories', CategoriesType::class)
             ->add('manufacturer', ManufacturerType::class)
-            ->add('tags', TranslatableType::class, [
-                'required' => false,
-                'label' => $this->trans('Tags', 'Admin.Catalog.Feature'),
-                'options' => [
-                    'constraints' => [
-                        new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
-                    ],
-                    'attr' => [
-                        'class' => 'js-taggable-field',
-                        'placeholder' => $this->trans('Use a comma to create separate tags. E.g.: dress, cotton, party dresses.', 'Admin.Catalog.Help'),
-                    ],
-                    'required' => false,
-                ],
-                'alert_title' => $this->trans('Tags are meant to help your customers find your products via the search bar.', 'Admin.Catalog.Help'),
-                'alert_message' => [
-                    $this->trans('Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.', 'Admin.Catalog.Help'),
-                    $this->trans('You can manage tag aliases in the [1]Search section[/1]. If you add new tags, you have to rebuild the index.', 'Admin.Catalog.Help', [
-                        '[1]' => sprintf(
-                            '<a target="_blank" href="%s">',
-                            $this->legacyContext->getAdminLink('AdminSearchConf')
-                        ),
-                        '[/1]' => '</a>',
-                    ]),
-                ],
-            ])
             ->add('related_products', UnavailableType::class, [
                 'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
