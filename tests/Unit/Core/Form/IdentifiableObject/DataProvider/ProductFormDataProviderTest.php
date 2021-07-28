@@ -1210,7 +1210,6 @@ class ProductFormDataProviderTest extends TestCase
                     ],
                 ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
-                'tags' => [],
             ],
             'specifications' => [
                 'features' => [],
@@ -1266,6 +1265,7 @@ class ProductFormDataProviderTest extends TestCase
                     'type' => RedirectType::TYPE_NOT_FOUND,
                     'target' => null,
                 ],
+                'tags' => [],
             ],
             'shipping' => [
                 'dimensions' => [

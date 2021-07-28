@@ -1290,8 +1290,6 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Description\DescriptionType'
         parent: 'form.type.translatable.aware'
         public: true
-        arguments:
-            - '@prestashop.adapter.legacy.context'
         tags:
             - { name: form.type }
 
@@ -1510,6 +1508,7 @@ services:
             - "@router"
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_REWRITING_SETTINGS')"
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FORCE_FRIENDLY_PRODUCT')"
+            - '@prestashop.adapter.legacy.context'
         tags:
             - { name: form.type }
 
