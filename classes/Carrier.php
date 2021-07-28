@@ -599,15 +599,15 @@ class CarrierCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             'SELECT id_tax_rules_group
-            FROM (
-                SELECT COUNT(*) n, c.id_tax_rules_group
-                FROM ' . _DB_PREFIX_ . 'carrier c
-                JOIN ' . _DB_PREFIX_ . 'tax_rules_group trg ON (c.id_tax_rules_group = trg.id_tax_rules_group)
-                WHERE trg.active = 1 AND trg.deleted = 0
-                GROUP BY c.id_tax_rules_group
-                ORDER BY n DESC
-                LIMIT 1
-            ) most_used'
+			FROM (
+				SELECT COUNT(*) n, c.id_tax_rules_group
+				FROM ' . _DB_PREFIX_ . 'carrier_tax_rules_group_shop c
+				JOIN ' . _DB_PREFIX_ . 'tax_rules_group trg ON (c.id_tax_rules_group = trg.id_tax_rules_group)
+				WHERE trg.active = 1 AND trg.deleted = 0
+				GROUP BY c.id_tax_rules_group
+				ORDER BY n DESC
+				LIMIT 1
+			) most_used'
         );
     }
 
