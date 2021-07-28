@@ -14,6 +14,7 @@ var combinations = (function() {
     modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
       onContinue: function() {
 
+        // We need this because there is a specific data="smthg" attribute so we can't use data() function
         var attributeId = elem.attr('data');
         $.ajax({
           type: 'DELETE',
@@ -54,16 +55,24 @@ var combinations = (function() {
       if (!tableRow.is('tr')) {
           throw new Error('Structure of table has changed, this function needs to be updated.');
       }
-      var priceImpactInput = tableRow.find('.attribute_priceTE').first();
-      var finalPriceLabel = tableRow.find('.attribute-finalprice span');
 
-      var impactOnPrice = Tools.parseFloatFromString(priceImpactInput.val());
-      var previousImpactOnPrice = Tools.parseFloatFromString(priceImpactInput.attr('value'));
+      // We need this because there is a specific data="smthg" attribute so we can't use data() function
+      var attributeId = tableRow.attr('data');
 
-      var currentFinalPrice = Tools.parseFloatFromString(finalPriceLabel.data('price'), true);
-      var finalPrice = currentFinalPrice - previousImpactOnPrice + impactOnPrice;
+      // Get combination final price value from combination form
+      var finalPrice = priceCalculation.getCombinationFinalPriceTaxExcludedById(attributeId);
+      var finalPriceLabel = tableRow.find('.attribute-finalprice span.final-price');
+      finalPriceLabel.html(finalPrice);
 
-      finalPriceLabel.html(Number(ps_round(finalPrice, 6)).toFixed(6));
+      // Update ecotax preview (tax included)
+      var combinationEcotaxTI = priceCalculation.getCombinationEcotaxTaxIncludedById(attributeId);
+      if (combinationEcotaxTI === 0) {
+        combinationEcotaxTI = priceCalculation.getProductEcotaxTaxIncluded();
+      }
+      var ecoTaxLabel = tableRow.find('.attribute-finalprice span.attribute-ecotax');
+      ecoTaxLabel.html(Number(ps_round(combinationEcotaxTI, 2)).toFixed(2)); // 2 digits for short
+      var ecoTaxPreview = tableRow.find('.attribute-finalprice .attribute-ecotax-preview');
+      ecoTaxPreview.toggleClass('d-none', Number(combinationEcotaxTI) === 0);
   }
 
   /**
@@ -137,12 +146,24 @@ var combinations = (function() {
           }
         }, 'input[id^="combination"][id$="_attribute_price"]')
 
+        .on({
+          // when ecotax on the form is changed, update final price
+          'change': function () {
+            var attributeId = $(this).closest('.combination-form').attr('data');
+            var finalPriceLabel = getCombinationRow(attributeId).find('.attribute-finalprice span.final-price');
+
+            updateFinalPrice($(finalPriceLabel.parents('tr')[0]));
+          }
+        }, 'input[id^="combination"][id$="_attribute_ecotax"]')
+
         // when price impact is changed on the row, update it on the form
         .on('change', '.attribute-price input', function() {
           var attributeId = $(this).closest('.combination').attr('data');
           var input = getCombinationForm(attributeId).find('input[id^="combination"][id$="_attribute_price"]');
 
           input.val($(this).val());
+          // Trigger keyup to update form final price
+          input.trigger('keyup');
 
           updateFinalPrice($(this).parent().parent().parent());
         })
@@ -227,6 +248,7 @@ var combinations = (function() {
 
           /** init combination tax include price */
           priceCalculation.impactTaxInclude(contentElem.find('.attribute_priceTE'));
+          priceCalculation.impactFinalPrice(contentElem.find('.attribute_priceTE'));
 
           contentElem.insertBefore('#form-nav').removeClass('hide').show();
 
