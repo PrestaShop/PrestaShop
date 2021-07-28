@@ -31,7 +31,6 @@ namespace Tests\Integration\PrestaShopBundle\Form;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
-use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -40,7 +39,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form type is not used in the project but in the tests, it allows to build a complicated
- * form type and check that it is correctly cloned by @see FormCloner
+ * form type and use it in test.
+ *
+ * @see FormClonerTest
+ * @see FormBuilderModifierTest
  */
 class AdvancedFormType extends TranslatorAwareType
 {

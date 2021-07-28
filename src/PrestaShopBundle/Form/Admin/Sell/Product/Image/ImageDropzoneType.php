@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Image;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\Util\StringUtil;
@@ -47,31 +46,23 @@ class ImageDropzoneType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        parent::buildForm($builder, $options);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'translations' => [
                 'window.selectAll' => $this->trans('Select all', 'Admin.Actions'),
-                'window.settingsUpdated' => $this->trans('Settings udpated', 'Admin.Actions'),
-                'window.imageReplaced' => $this->trans('Image replaced', 'Admin.Actions'),
+                'window.settingsUpdated' => $this->trans('Settings updated', 'Admin.Global'),
+                'window.imageReplaced' => $this->trans('Image replaced', 'Admin.Catalog.Notification'),
                 'window.unselectAll' => $this->trans('Unselect all', 'Admin.Actions'),
                 'window.replaceSelection' => $this->trans('Replace selection', 'Admin.Actions'),
-                'window.cantDisableCover' => $this->trans('You cannot disable the cover image.', 'Admin.Actions'),
+                'window.cantDisableCover' => $this->trans('Using another image as cover will automatically uncheck this box.', 'Admin.Catalog.Help'),
                 'window.selectedFiles' => $this->trans(
                     '[1]%filesNb%[/1] selected file(s)',
-                    'Admin.Actions',
+                    'Admin.Catalog.Feature',
                     ['[1]' => '<span>', '[/1]' => '</span>']
                 ),
-                'window.useAsCover' => $this->trans('Use as cover image', 'Admin.Actions'),
+                'window.useAsCover' => $this->trans('Use as cover image', 'Admin.Catalog.Feature'),
                 'window.saveImage' => $this->trans('Save image settings', 'Admin.Actions'),
                 'window.delete' => $this->trans('Delete selection', 'Admin.Actions'),
                 'window.close' => $this->trans('Close window', 'Admin.Actions'),
@@ -88,7 +79,7 @@ class ImageDropzoneType extends TranslatorAwareType
                 'modal.title' => $this->trans('Are you sure you want to delete the selected image?|Are you sure you want to delete the %filesNb% selected images?', 'Admin.Catalog.Notification'),
                 'delete.success' => $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success'),
                 'window.fileisTooLarge' => $this->trans(
-                    'The file is too large. Maximum size allowed is => [1] MB. The file you are trying to upload is [2] MB.',
+                    'The file is too large. The maximum size allowed is [1] MB. The file you are trying to upload is [2] MB.',
                     'Admin.Notifications.Error',
                     ['[1]' => '{{maxFilesize}}', '[2]' => '{{filesize}}']
                 ),
@@ -101,6 +92,11 @@ class ImageDropzoneType extends TranslatorAwareType
             ],
             'product_id' => null,
             'update_form_type' => null,
+            'attr' => [
+                'class' => 'product-image-dropzone',
+            ],
+            'required' => false,
+            'label' => false,
         ]);
 
         $resolver->setAllowedTypes('product_id', ['int', 'null']);

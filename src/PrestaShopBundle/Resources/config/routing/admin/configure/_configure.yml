@@ -10,7 +10,7 @@ admin_close_showcase_card:
     path: /showcase-card/close
     methods: POST
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShowcaseCard:closeShowcaseCard'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShowcaseCardController::closeShowcaseCardAction'
     requirements:
         close: \d+
         name: \w+

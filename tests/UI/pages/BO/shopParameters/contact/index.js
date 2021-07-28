@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Contacts page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Contacts extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on contacts page
+   */
   constructor() {
     super();
 
@@ -11,29 +20,35 @@ class Contacts extends BOBasePage {
     // Header selectors
     this.storesTabLink = '#subtab-AdminStores';
     this.addNewContactButton = '#page-header-desc-configuration-add';
+
     // List of contacts
     this.contactsGridPanel = '#contact_grid_panel';
     this.contactsGridTitle = `${this.contactsGridPanel} h3.card-header-title`;
     this.contactsListForm = '#contact_grid';
     this.contactsListTableRow = row => `${this.contactsListForm} tbody tr:nth-child(${row})`;
     this.contactsListTableColumn = (row, column) => `${this.contactsListTableRow(row)} td.column-${column}`;
+
     // Filters
     this.contactFilterInput = filterBy => `${this.contactsListForm} #contact_${filterBy}`;
     this.filterSearchButton = `${this.contactsListForm} .grid-search-button`;
     this.filterResetButton = `${this.contactsListForm} .grid-reset-button`;
+
     // Actions buttons in Row
     this.contactsListTableActionsColumn = row => this.contactsListTableColumn(row, 'actions');
     this.listTableToggleDropDown = row => `${this.contactsListTableActionsColumn(row)} a[data-toggle='dropdown']`;
     this.listTableEditLink = row => `${this.contactsListTableActionsColumn(row)} a.grid-edit-row-link`;
     this.deleteRowLink = row => `${this.contactsListTableActionsColumn(row)} a.grid-delete-row-link`;
+
     // Bulk Actions
     this.selectAllRowsLabel = `${this.contactsGridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.contactsGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#contact_grid_bulk_action_delete_selection';
+
     // Sort Selectors
     this.tableHead = `${this.contactsGridPanel} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
     // Delete modal
     this.confirmDeleteModal = '#contact-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
@@ -45,7 +60,7 @@ class Contacts extends BOBasePage {
 
   /**
    * Click on tab stores
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToStoresPage(page) {
@@ -54,7 +69,7 @@ class Contacts extends BOBasePage {
 
   /**
    * Reset input filters
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
@@ -65,7 +80,7 @@ class Contacts extends BOBasePage {
 
   /**
    * Get number of elements in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -73,8 +88,8 @@ class Contacts extends BOBasePage {
   }
 
   /**
-   * Reset Filter And get number of elements in list
-   * @param page
+   * Reset Filter and get number of elements in list
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -84,9 +99,9 @@ class Contacts extends BOBasePage {
 
   /**
    * Filter list of contacts
-   * @param page
-   * @param filterBy, column to filter
-   * @param value, value to filter with
+   * @param page {Page} Browser tab
+   * @param filterBy {string} Column to filter with
+   * @param value {string} value to filter with
    * @return {Promise<void>}
    */
   async filterContacts(page, filterBy, value = '') {
@@ -97,9 +112,9 @@ class Contacts extends BOBasePage {
 
   /**
    * Get text from a column
-   * @param page
-   * @param row, row in table
-   * @param column, which column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column name to get
    * @returns {Promise<string>}
    */
   async getTextColumnFromTableContacts(page, row, column) {
@@ -108,8 +123,8 @@ class Contacts extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param column
+   * @param page {Page} Browser tab
+   * @param column {string} Column name to get
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, column) {
@@ -126,7 +141,7 @@ class Contacts extends BOBasePage {
 
   /**
    * Go to new Contact page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewContactPage(page) {
@@ -135,8 +150,8 @@ class Contacts extends BOBasePage {
 
   /**
    * Go to Edit Contact page
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async goToEditContactPage(page, row) {
@@ -145,8 +160,8 @@ class Contacts extends BOBasePage {
 
   /**
    * Delete Contact
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row Row on table
    * @returns {Promise<string>}
    */
   async deleteContact(page, row) {
@@ -170,7 +185,7 @@ class Contacts extends BOBasePage {
 
   /**
    * Confirm delete with in modal
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async confirmDeleteContact(page) {
@@ -179,7 +194,7 @@ class Contacts extends BOBasePage {
 
   /**
    * Delete all contacts in table with Bulk Actions
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async deleteContactsBulkActions(page) {
@@ -207,9 +222,9 @@ class Contacts extends BOBasePage {
   /* Sort methods */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column name to sort with
+   * @param sortDirection {string} Sort direction by asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection = 'asc') {

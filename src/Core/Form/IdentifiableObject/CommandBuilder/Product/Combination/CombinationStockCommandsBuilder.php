@@ -48,20 +48,20 @@ final class CombinationStockCommandsBuilder implements CombinationCommandsBuilde
         $quantityData = $formData['stock'];
         $command = new UpdateCombinationStockCommand($combinationId->getValue());
 
-        if (isset($quantityData['quantity'])) {
-            $command->setQuantity((int) $quantityData['quantity']);
+        if (isset($quantityData['quantities']['quantity'])) {
+            $command->setQuantity((int) $quantityData['quantities']['quantity']);
         }
-        if (isset($quantityData['minimal_quantity'])) {
-            $command->setMinimalQuantity((int) $quantityData['minimal_quantity']);
+        if (isset($quantityData['quantities']['minimal_quantity'])) {
+            $command->setMinimalQuantity((int) $quantityData['quantities']['minimal_quantity']);
         }
-        if (isset($quantityData['stock_location'])) {
-            $command->setLocation($quantityData['stock_location']);
+        if (isset($quantityData['options']['stock_location'])) {
+            $command->setLocation($quantityData['options']['stock_location']);
         }
-        if (isset($quantityData['low_stock_threshold'])) {
-            $command->setLowStockThreshold((int) $quantityData['low_stock_threshold']);
+        if (isset($quantityData['options']['low_stock_threshold'])) {
+            $command->setLowStockThreshold((int) $quantityData['options']['low_stock_threshold']);
         }
-        if (isset($quantityData['low_stock_alert'])) {
-            $command->setLowStockAlert((bool) $quantityData['low_stock_alert']);
+        if (isset($quantityData['options']['low_stock_alert'])) {
+            $command->setLowStockAlert((bool) $quantityData['options']['low_stock_alert']);
         }
         if (isset($quantityData['available_date'])) {
             $command->setAvailableDate(new DateTime($quantityData['available_date']));

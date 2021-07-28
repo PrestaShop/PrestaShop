@@ -2,24 +2,36 @@ name: Nightly
 
 on:
   schedule:
-    - cron:  '30 2 * * *'
+    - cron:  '0 1 * * *'
+  # Allows maintainers to trigger nightly manually
+  # workflow_dispatch:
 
 jobs:
   nightly:
     runs-on: ubuntu-latest
     name: Nightly
+    strategy:
+      matrix:
+        include:
+          - branch: develop
+            instance: develop
+          - branch: 1.7.8.x
+            instance: release
+      fail-fast: false
     env:
-      GC_INSTANCE_KEY: ${{ secrets.GC_INSTANCE_KEY }}
       GC_INSTANCE_NAME: ${{ secrets.GC_INSTANCE_NAME }}
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
       GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
       GC_ZONE: ${{ secrets.GC_ZONE }}
-      GH_BRANCH: 'develop'
+      GH_BRANCH: ${{ matrix.branch }}
+      INSTANCE_TYPE: ${{ matrix.instance }}
+      NIGHTLY_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}
 
     steps:
       -   uses: actions/checkout@v2
           with:
             fetch-depth: 0
+            ref: ${{ env.GH_BRANCH }}
 
       -   name: Setup PHP
           uses: shivammathur/setup-php@v1
@@ -28,12 +40,12 @@ jobs:
             extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
 
       -   name: Initialize GCloud Service Key
-          run: echo ${{ secrets.GC_SERVICE_KEY }} | base64 --decode -i > $HOME/gcloud-service-key.json
+          run: echo $GC_SERVICE_KEY > $HOME/gcloud-service-key.json
 
       -   uses: google-github-actions/setup-gcloud@master
           with:
-            service_account_key: ${{ secrets.GC_SERVICE_KEY }}
-            project_id: ${{ secrets.GC_PROJECT_ID }}
+            service_account_key: ${{ env.GC_SERVICE_KEY }}
+            project_id: ${{ env.GC_PROJECT_ID }}
 
       -   name: Create directory
           run: mkdir -p /tmp/ps-release
@@ -48,10 +60,6 @@ jobs:
 
       -   name: Upload to Google Cloud Storage (GCS)
           run: gsutil cp -r "/tmp/ps-release" gs://prestashop-core-nightly
-
-      -   name: Set environment variable INSTANCE_TYPE
-          run: |
-            echo "::set-env name=INSTANCE_TYPE::$([[ $GH_BRANCH = "develop" ]] && echo 'develop' || echo 'release';)"
 
       -   name: Stop the instance if started
           run: gcloud compute instances stop --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}"

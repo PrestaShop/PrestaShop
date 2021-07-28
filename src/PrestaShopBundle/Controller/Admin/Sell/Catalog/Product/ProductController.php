@@ -29,17 +29,26 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
+use PrestaShop\PrestaShop\Core\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Entity\ProductDownload;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -64,7 +73,30 @@ class ProductController extends FrameworkBundleAdminController
     private const PRODUCT_CONTROLLER_PERMISSION = 'ADMINPRODUCTS_';
 
     /**
-     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     * Shows products listing.
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param ProductFilters $filters
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request, ProductFilters $filters): Response
+    {
+        $productGridFactory = $this->get('prestashop.core.grid.factory.product');
+        $productGrid = $productGridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/index.html.twig', [
+            'productGrid' => $this->presentGrid($productGrid),
+            'enableSidebar' => true,
+            'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons(),
+            'help_link' => $this->generateSidebarLink('AdminProducts'),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param Request $request
      *
@@ -72,6 +104,15 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
+        if (!$this->isProductPageV2Enabled()) {
+            $this->addFlashMessageProductV2IsDisabled();
+
+            return $this->redirectToRoute('admin_product_new');
+        }
+        if ($this->get('prestashop.adapter.multistore_feature')->isUsed()) {
+            return $this->renderDisableMultistorePage();
+        }
+
         $productForm = $this->getProductFormBuilder()->getForm();
 
         try {
@@ -92,7 +133,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param Request $request
      * @param int $productId
@@ -101,6 +142,16 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $productId): Response
     {
+        if (!$this->isProductPageV2Enabled()) {
+            $this->addFlashMessageProductV2IsDisabled();
+
+            return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
+        }
+
+        if ($this->get('prestashop.adapter.multistore_feature')->isUsed()) {
+            return $this->renderDisableMultistorePage($productId);
+        }
+
         $productForm = $this->getProductFormBuilder()->getFormFor($productId, [], [
             'product_id' => $productId,
             // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
@@ -113,16 +164,70 @@ class ProductController extends FrameworkBundleAdminController
 
             $result = $this->getProductFormHandler()->handleFor($productId, $productForm);
 
-            if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            if ($result->isSubmitted()) {
+                if ($result->isValid()) {
+                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $productId]);
+                    return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $productId]);
+                } else {
+                    // Display root level errors with flash messages
+                    foreach ($productForm->getErrors() as $error) {
+                        $this->addFlash('error', sprintf(
+                            '%s: %s',
+                            $error->getOrigin()->getName(),
+                            $error->getMessage()
+                        ));
+                    }
+                }
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->renderProductForm($productForm, $productId);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $productId
+     *
+     * @return Response
+     */
+    public function deleteAction(Request $request, int $productId): Response
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteProductCommand($productId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * @return array
+     */
+    private function getProductToolbarButtons(): array
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['add'] = [
+            'href' => $this->generateUrl('admin_product_new'),
+            'desc' => $this->trans('New product', 'Admin.Actions'),
+            'icon' => 'add_circle_outline',
+        ];
+
+        $toolbarButtons['list_v1'] = [
+            'href' => $this->generateUrl('admin_product_catalog'),
+            'desc' => $this->trans('Back to standard page', 'Admin.Catalog.Feature'),
+            'class' => 'btn-outline-primary',
+        ];
+
+        return $toolbarButtons;
     }
 
     /**
@@ -136,17 +241,42 @@ class ProductController extends FrameworkBundleAdminController
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
 
-        $statsLink = null !== $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null;
-
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
             'showContentHeader' => false,
             'productForm' => $productForm->createView(),
-            'productId' => $productId,
-            'statsLink' => $statsLink,
+            'statsLink' => $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null,
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
             'isMultiShopContext' => $isMultiShopContext,
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
         ]);
+    }
+
+    /**
+     * Download the content of the virtual product.
+     *
+     * @param int $virtualProductFileId
+     *
+     * @return BinaryFileResponse
+     */
+    public function downloadVirtualFileAction(int $virtualProductFileId): BinaryFileResponse
+    {
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $download = $this->getDoctrine()
+            ->getRepository(ProductDownload::class)
+            ->findOneBy([
+                'id' => $virtualProductFileId,
+            ]);
+
+        $response = new BinaryFileResponse(
+            $configuration->get('_PS_DOWNLOAD_DIR_') . $download->getFilename()
+        );
+
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $download->getDisplayFilename()
+        );
+
+        return $response;
     }
 
     /**
@@ -178,9 +308,21 @@ class ProductController extends FrameworkBundleAdminController
     {
         // @todo: all the constraint error messages are missing for now (see ProductConstraintException)
         return [
+            CannotDeleteProductException::class => $this->trans(
+                'An error occurred while deleting the object.',
+                'Admin.Notifications.Error'
+            ),
+            CannotBulkDeleteProductException::class => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+            ),
             ProductConstraintException::class => [
                 ProductConstraintException::INVALID_PRICE => $this->trans(
                     'Product price is invalid',
+                    'Admin.Notifications.Error'
+                ),
+                ProductConstraintException::INVALID_REDIRECT_TARGET => $this->trans(
+                    'When redirecting towards a product you must select a target product.',
                     'Admin.Notifications.Error'
                 ),
             ],
@@ -193,5 +335,58 @@ class ProductController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    private function isProductPageV2Enabled(): bool
+    {
+        $productPageV2FeatureFlag = $this->get('prestashop.core.feature_flags.modifier')
+            ->getOneFeatureFlagByName(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
+
+        if (null === $productPageV2FeatureFlag) {
+            return false;
+        }
+
+        return $productPageV2FeatureFlag->isEnabled();
+    }
+
+    private function addFlashMessageProductV2IsDisabled(): void
+    {
+        $this->addFlash(
+            'warning',
+            $this->trans(
+                'The experimental product page is not enabled. To enable it, go to the %sExperimental Features%s page.',
+                'Admin.Catalog.Notification',
+                [
+                    sprintf('<a href="%s">', $this->get('router')->generate('admin_feature_flags_index')),
+                    '</a>',
+                ]
+            )
+        );
+    }
+
+    /**
+     * @param int|null $productId
+     *
+     * @return Response
+     */
+    private function renderDisableMultistorePage(int $productId = null): Response
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig', [
+            'errorMessage' => $this->trans(
+                'This page is not yet compatible with the multistore feature. To access the page, please [1]disable the multistore feature[/1].',
+                'Admin.Notifications.Info',
+                [
+                    '[1]' => sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences')),
+                    '[/1]' => '</a>',
+                ]
+            ),
+            'standardPageUrl' => $this->generateUrl(
+                !empty($productId) ? 'admin_product_form' : 'admin_product_new',
+                !empty($productId) ? ['id' => $productId] : []
+            ),
+        ]);
     }
 }

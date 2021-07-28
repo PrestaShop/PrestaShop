@@ -65,6 +65,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Exception\InvoiceException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderConstraints;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
@@ -559,7 +560,7 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted(['update', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_orders_view",
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
@@ -596,7 +597,9 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['update', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     * )
      *
      * @param int $orderId
      * @param Request $request
@@ -629,7 +632,9 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['update', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     * )
      *
      * @param int $orderId
      * @param Request $request
@@ -682,7 +687,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
      * @param Request $request
@@ -771,7 +776,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
      *
@@ -807,7 +812,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
      */
@@ -827,7 +832,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
      */
@@ -845,7 +850,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
      */
@@ -956,12 +961,18 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function updateInvoiceNoteAction(int $orderId, int $orderInvoiceId, Request $request): RedirectResponse
     {
-        $this->getCommandBus()->handle(new UpdateInvoiceNoteCommand(
-            $orderInvoiceId,
-            $request->request->get('invoice_note')
-        ));
-
-        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        try {
+            $this->getCommandBus()->handle(new UpdateInvoiceNoteCommand(
+                $orderInvoiceId,
+                $request->request->get('invoice_note')
+            ));
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+        } catch (InvoiceException $e) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($e, $this->getErrorMessages($e))
+            );
+        }
 
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
@@ -1635,7 +1646,7 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted(['update', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_orders_view",
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
@@ -1739,7 +1750,7 @@ class OrderController extends FrameworkBundleAdminController
      * Set order internal note.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))",
      *     redirectRoute="admin_orders_index"
      * )
      *
@@ -1785,7 +1796,7 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted(['create', 'update'], request.get('_legacy_controller'))",
+     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to perform this search."
      * )
      *
@@ -1874,6 +1885,10 @@ class OrderController extends FrameworkBundleAdminController
                 'Admin.Orderscustomers.Notification'
             ),
             OrderException::class => $this->trans(
+                $e->getMessage(),
+                'Admin.Orderscustomers.Notification'
+            ),
+            InvoiceException::class => $this->trans(
                 $e->getMessage(),
                 'Admin.Orderscustomers.Notification'
             ),

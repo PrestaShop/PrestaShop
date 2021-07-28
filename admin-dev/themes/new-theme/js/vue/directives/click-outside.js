@@ -28,7 +28,20 @@ let binded = [];
 
 function handler(e) {
   binded.forEach((el) => {
-    if (!el.node.contains(e.target)) {
+    // Going through the path is more accurate because the initial target might have been removed
+    // from the DOM by the time this handler is reached (ex: click on typeahead research suggestion)
+    if (e.path && e.path.length) {
+      for (let i = 0; i < e.path.length; i += 1) {
+        const ancestor = e.path[i];
+
+        if (ancestor === el.node) {
+          return;
+        }
+      }
+
+      // No ancestors matched el, so the click was outside
+      el.callback(e);
+    } else if (!el.node.contains(e.target)) {
       el.callback(e);
     }
   });

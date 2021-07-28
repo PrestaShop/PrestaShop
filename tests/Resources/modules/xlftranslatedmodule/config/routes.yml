@@ -1,0 +1,7 @@
+xlftranslatedmodule_admin_index:
+  path: xlftranslatedmodule
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShop\Module\Xlftranslatedmodule\Controller\Admin\ExempleController::indexAction'
+    _legacy_controller: 'AdminXlftranslatedmoduleIndexClass'
+    _legacy_link: AdminXlftranslatedmoduleIndexClass

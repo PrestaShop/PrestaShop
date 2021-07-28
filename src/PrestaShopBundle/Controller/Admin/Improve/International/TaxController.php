@@ -81,7 +81,7 @@ class TaxController extends FrameworkBundleAdminController
      * Process tax options configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index"
      * )
      * @DemoRestricted(redirectRoute="admin_taxes_index")
@@ -185,6 +185,11 @@ class TaxController extends FrameworkBundleAdminController
             'taxForm' => $taxForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'multistoreInfoTip' => $this->trans(
+                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Admin.Notifications.Info'
+            ),
+            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
         ]);
     }
 

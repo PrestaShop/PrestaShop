@@ -53,3 +53,17 @@
 .addons-style-search-bar {
   padding-top: 0;
 }
+
+&#content #psthemecusto {
+  @media (max-width: $screen-xs) {
+    .panel .panel-heading {
+      display: flex;
+      flex-wrap: wrap;
+      padding-top: 5rem;
+
+      .btn.btn-primary {
+        margin: 0.5rem;
+      }
+    }
+  }
+}

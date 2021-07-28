@@ -31,8 +31,17 @@ use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\TabModuleListProviderInterface;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.8.0 and will be removed in the next major version.',
+        PaymentModulesPresenter::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * Class PaymentModulesPresenter is responsible for presenting payment modules.
+ * @deprecated since 1.7.8.0
+ * @see \PrestaShop\PrestaShop\Adapter\Presenter\Module\PaymentModulesPresenter
  */
 class PaymentModulesPresenter
 {

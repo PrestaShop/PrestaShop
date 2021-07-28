@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add brand page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddBrand extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on add brand page
+   */
   constructor() {
     super();
 
@@ -32,8 +41,8 @@ class AddBrand extends BOBasePage {
 
   /**
    * Create or edit Brand
-   * @param page
-   * @param brandData
+   * @param page {Page} Browser tab
+   * @param brandData {object} Data to set in brand form
    * @returns {Promise<string>}
    */
   async createEditBrand(page, brandData) {
@@ -69,8 +78,8 @@ class AddBrand extends BOBasePage {
 
   /**
    * Delete all keywords
-   * @param page
-   * @param lang, to specify which input to empty
+   * @param page {Page} Browser tab
+   * @param lang {string} To specify which input to empty
    * @return {Promise<void>}
    */
   async deleteKeywords(page, lang = 'en') {
@@ -85,12 +94,12 @@ class AddBrand extends BOBasePage {
 
   /**
    * Add keywords
-   * @param page
-   * @param keywords, array of keywords
-   * @param id, to choose which lang (1 for en, 2 for fr)
+   * @param page {Page} Browser tab
+   * @param keywords {array} Array of keywords
+   * @param id {number} ID for lang (1 for en, 2 for fr)
    * @return {Promise<void>}
    */
-  async addKeywords(page, keywords, id = '1') {
+  async addKeywords(page, keywords, id = 1) {
     /* eslint-disable no-await-in-loop, no-restricted-syntax */
     for (const keyword of keywords) {
       await page.type(this.metaKeywordsInput(id), keyword);
@@ -101,8 +110,8 @@ class AddBrand extends BOBasePage {
 
   /**
    * Change language for selector
-   * @param page
-   * @param lang
+   * @param page {Page} Browser tab
+   * @param lang {string} Language to choose
    * @return {Promise<void>}
    */
   async changeLanguage(page, lang) {

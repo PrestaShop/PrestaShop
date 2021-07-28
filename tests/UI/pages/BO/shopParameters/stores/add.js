@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add store page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddStore extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on add store page
+   */
   constructor() {
     super();
 
@@ -32,8 +41,8 @@ class AddStore extends BOBasePage {
 
   /**
    * Fill creation / edition form for store and save it
-   * @param page
-   * @param storeData
+   * @param page {Page} Browser tab
+   * @param storeData {StoreData} Data to set on store form
    * @return {Promise<string>}
    */
   async createEditStore(page, storeData) {

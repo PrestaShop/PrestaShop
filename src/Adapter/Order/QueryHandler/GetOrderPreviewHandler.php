@@ -34,7 +34,10 @@ use Group;
 use Order;
 use OrderCarrier;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Address\AddressFormatter;
 use PrestaShop\PrestaShop\Adapter\Entity\Address;
+use PrestaShop\PrestaShop\Core\Address\AddressFormatterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderPreviewHandlerInterface;
@@ -64,15 +67,23 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     private $locale;
 
     /**
+     * @var AddressFormatterInterface
+     */
+    private $addressFormatter;
+
+    /**
      * @param LocaleRepository $localeRepository
      * @param string $locale
+     * @param AddressFormatterInterface|null $addressFormatter
      */
     public function __construct(
         LocaleRepository $localeRepository,
-        string $locale
+        string $locale,
+        AddressFormatterInterface $addressFormatter = null
     ) {
         $this->localeRepository = $localeRepository;
         $this->locale = $locale;
+        $this->addressFormatter = $addressFormatter ?? new AddressFormatter();
     }
 
     /**
@@ -88,7 +99,9 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $this->getShippingDetails($order),
             $this->getProductDetails($order),
             $order->isVirtual(),
-            $priceDisplayMethod == PS_TAX_INC
+            $priceDisplayMethod == PS_TAX_INC,
+            $this->addressFormatter->format(new AddressId((int) $order->id_address_invoice)),
+            $this->addressFormatter->format(new AddressId((int) $order->id_address_delivery))
         );
     }
 
@@ -150,15 +163,16 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $carrier = new Carrier($order->id_carrier);
         $state = new State($address->id_state);
 
-        $carrierName = null;
+        $carrierName = $trackingUrl = null;
         $stateName = Validate::isLoadedObject($state) ? $state->name : null;
-
-        if (Validate::isLoadedObject($carrier)) {
-            $carrierName = $carrier->name;
-        }
 
         $orderCarrierId = $order->getIdOrderCarrier();
         $orderCarrier = new OrderCarrier($orderCarrierId);
+
+        if (Validate::isLoadedObject($carrier)) {
+            $carrierName = $carrier->name;
+            $trackingUrl = str_replace('@', $orderCarrier->tracking_number ?: '@', $carrier->url);
+        }
 
         $dni = Address::dniRequired($address->id_country) ? $address->dni : null;
 
@@ -176,7 +190,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $address->phone,
             $carrierName,
             $orderCarrier->tracking_number ?: null,
-            $dni
+            $dni,
+            $trackingUrl
         );
     }
 

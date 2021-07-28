@@ -4,7 +4,16 @@ const BOBasePage = require('@pages/BO/BObasePage');
 // Needed to create customer in orders page
 const addCustomerPage = require('@pages/BO/customers/add');
 
+/**
+ * Add order page, contains functions that can be used on create order page
+ * @class
+ * @extends BOBasePage
+ */
 class AddOrder extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on create order page
+   */
   constructor() {
     super();
 
@@ -16,9 +25,11 @@ class AddOrder extends BOBasePage {
     this.addCustomerIframe = 'iframe.fancybox-iframe';
     this.customerSearchInput = '#customer-search-input';
     this.customerSearchLoadingNoticeBlock = '#customer-search-loading-notice';
+
     // Empty results
     this.customerSearchEmptyResultBlock = '#customer-search-empty-result-warn';
     this.customerSearchEmptyResultParagraphe = `${this.customerSearchEmptyResultBlock} .alert-text`;
+
     // Full results
     this.customerSearchFullResultsBlock = '.js-customer-search-results';
     this.customerCardBlock = pos => `${this.customerSearchFullResultsBlock} `
@@ -56,20 +67,20 @@ class AddOrder extends BOBasePage {
 
   /**
    * Fill customer search input and wait for results to load
-   * @param page
-   * @param customerToSearch
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param customer {string} Customer name/email to search
+   * @returns {Promise<void>}
    */
-  async searchCustomer(page, customerToSearch) {
-    await this.setValue(page, this.customerSearchInput, customerToSearch);
+  async searchCustomer(page, customer) {
+    await this.setValue(page, this.customerSearchInput, customer);
 
     await this.waitForHiddenSelector(page, this.customerSearchLoadingNoticeBlock);
   }
 
   /**
    * Get Error message when when no customer was found after searching
-   * @param page
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
    */
   getNoCustomerFoundError(page) {
     return this.getTextContent(page, this.customerSearchEmptyResultParagraphe);
@@ -77,9 +88,9 @@ class AddOrder extends BOBasePage {
 
   /**
    * Get customer name from card result
-   * @param page
-   * @param cardPosition, position of the card in results
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @param cardPosition {number} Position of the card in results
+   * @returns {Promise<string>}
    */
   getCustomerNameFromResult(page, cardPosition = 1) {
     return this.getTextContent(page, this.customerCardNameTitle(cardPosition));
@@ -87,9 +98,9 @@ class AddOrder extends BOBasePage {
 
   /**
    * Click on add new customer and new customer iFrame
-   * @param page
-   * @param customerData
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @param customerData {object} Customer data fake object
+   * @returns {Promise<string>}
    */
   async addNewCustomer(page, customerData) {
     await page.click(this.addCustomerLink);
@@ -109,9 +120,9 @@ class AddOrder extends BOBasePage {
 
   /**
    * Click on choose customer in list
-   * @param page
-   * @param cardPosition
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param cardPosition {number} Position of customer to choose on the list
+   * @returns {Promise<void>}
    */
   async chooseCustomer(page, cardPosition = 1) {
     await page.click(this.customerCardChooseButton(cardPosition));
@@ -126,10 +137,10 @@ class AddOrder extends BOBasePage {
 
   /**
    * Add product to cart
-   * @param page
-   * @param product
-   * @param quantity
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param product {object} Product data to search with
+   * @param quantity {number} Product quantity to add to the cart
+   * @returns {Promise<void>}
    */
   async addProductToCart(page, product, quantity) {
     // Search product
@@ -146,15 +157,14 @@ class AddOrder extends BOBasePage {
     await this.waitForVisibleSelector(page, this.productsTable);
   }
 
-
   /* Addresses methods */
 
   /**
    * Choose addresses in form
-   * @param page
-   * @param deliveryAddress
-   * @param invoiceAddress
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param deliveryAddress {string} Delivery address to choose
+   * @param invoiceAddress {string} Invoice address to choose
+   * @returns {Promise<void>}
    */
   async chooseAddresses(page, deliveryAddress, invoiceAddress) {
     await this.selectByVisibleText(page, this.deliveryAddressSelect, deliveryAddress);
@@ -165,22 +175,22 @@ class AddOrder extends BOBasePage {
 
   /**
    * Fill delivery option form
-   * @param page
-   * @param deliveryOptionName
-   * @param freeShipping
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param deliveryOptionName {string} Delivery option name to choose
+   * @param isFreeShipping {boolean} True if we want a free shipping
+   * @returns {Promise<void>}
    */
-  async setDeliveryOption(page, deliveryOptionName, freeShipping = false) {
+  async setDeliveryOption(page, deliveryOptionName, isFreeShipping = false) {
     await this.selectByVisibleText(page, this.deliveryOptionSelect, deliveryOptionName);
-    await page.check(this.freeShippingToggleInput(freeShipping ? 1 : 0));
+    await page.check(this.freeShippingToggleInput(isFreeShipping ? 1 : 0));
   }
 
   /* Summary methods */
   /**
    * Set payment method
-   * @param page
-   * @param paymentMethodName
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param paymentMethodName {string} Payment method to choose
+   * @returns {Promise<void>}
    */
   async setPaymentMethod(page, paymentMethodName) {
     await this.selectByVisibleText(page, this.paymentMethodSelect, paymentMethodName);
@@ -188,9 +198,9 @@ class AddOrder extends BOBasePage {
 
   /**
    * Set order status
-   * @param page
-   * @param orderStatus
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param orderStatus {string} Order status to choose
+   * @returns {Promise<void>}
    */
   async setOrderStatus(page, orderStatus) {
     await this.selectByVisibleText(page, this.orderStatusSelect, orderStatus.status);
@@ -200,16 +210,16 @@ class AddOrder extends BOBasePage {
 
   /**
    * Create order with existing customer
-   * @param page
-   * @param orderToMake
-   * @param newCustomer
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param orderToMake {object} Order data to create
+   * @param isNewCustomer {boolean} True if the customer is new
+   * @returns {Promise<void>}
    */
-  async createOrder(page, orderToMake, newCustomer = false) {
+  async createOrder(page, orderToMake, isNewCustomer = false) {
     // Choose customer
     // If it's a new customer, the creation of customer should be done in test
     // with add customer page
-    if (!newCustomer) {
+    if (!isNewCustomer) {
       await this.searchCustomer(page, orderToMake.customer.email);
     }
 

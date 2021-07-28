@@ -38,12 +38,12 @@ class SEOCommandsBuilder implements ProductCommandsBuilderInterface
 {
     public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['seo']) && !isset($formData['redirect_option'])) {
+        if (!isset($formData['seo'])) {
             return [];
         }
 
         $seoData = $formData['seo'] ?? [];
-        $redirectionData = $formData['redirect_option'] ?? [];
+        $redirectionData = $formData['seo']['redirect_option'] ?? [];
         $command = new UpdateProductSeoCommand($productId->getValue());
 
         if (isset($seoData['meta_title'])) {
@@ -57,7 +57,7 @@ class SEOCommandsBuilder implements ProductCommandsBuilderInterface
         }
 
         if (isset($redirectionData['type'])) {
-            $targetId = (int) ($redirectionData['target'] ?? 0);
+            $targetId = (int) ($redirectionData['target']['id'] ?? 0);
             $command->setRedirectOption($redirectionData['type'], $targetId);
         }
 

@@ -67,14 +67,14 @@
       @click="$emit('selectAll')"
       v-if="files.length > 0 && selectedFiles.length !== files.length"
     >
-      {{ $t("window.selectAll") }}
+      {{ $t('window.selectAll') }}
     </p>
     <p
       class="dropzone-window-unselect"
       v-if="selectedFiles.length === files.length"
       @click="$emit('unselectAll')"
     >
-      {{ $t("window.unselectAll") }}
+      {{ $t('window.unselectAll') }}
     </p>
 
     <div
@@ -88,17 +88,17 @@
           type="checkbox"
           :disabled="isCover"
           :checked="isCover"
-          @change="coverChanged"
+          @change.prevent.stop="coverChanged"
         >
         <i class="md-checkbox-control" />
-        {{ $t("window.useAsCover") }}
+        {{ $t('window.useAsCover') }}
       </label>
     </div>
 
     <input
       type="file"
       class="dropzone-window-filemanager"
-      @change="watchFiles"
+      @change.prevent.stop="watchFiles"
     >
 
     <div
@@ -109,7 +109,7 @@
         for="caption-textarea"
         class="control-label"
       >{{
-        $t("window.caption")
+        $t('window.caption')
       }}</label>
       <div
         class="dropdown"
@@ -147,6 +147,8 @@
       class="form-control"
       v-if="selectedFile !== null"
       v-model="captionValue[selectedLocale.id_lang]"
+      @change.prevent.stop="prevent"
+      @keyup.prevent.stop="prevent"
     />
 
     <div
@@ -159,7 +161,7 @@
         @click="$emit('saveSelectedFile', captionValue, coverData)"
       >
         <span v-if="!loading">
-          {{ $t("window.saveImage") }}
+          {{ $t('window.saveImage') }}
         </span>
         <span
           class="spinner-border spinner-border-sm"
@@ -173,6 +175,10 @@
 </template>
 
 <script>
+  import ProductMap from '@pages/product/product-map';
+
+  const DropzoneMap = ProductMap.dropzone;
+
   export default {
     name: 'DropzoneWindow',
     props: {
@@ -240,6 +246,7 @@
       window.prestaShopUiKit.initToolTips();
       // We set the intial value of the first item in order to use the computed
       this.captionValue = this.selectedFile.legends;
+      this.coverData = this.selectedFile.is_cover;
     },
     updated() {
       window.prestaShopUiKit.initToolTips();
@@ -255,7 +262,7 @@
        * Used to open the native file manager
        */
       openFileManager() {
-        const fileInput = document.querySelector('.dropzone-window-filemanager');
+        const fileInput = document.querySelector(DropzoneMap.windowFileManager);
         fileInput.click();
       },
       /**
@@ -264,12 +271,17 @@
       coverChanged(event) {
         this.coverData = event.target.value;
       },
+      prevent(event) {
+        event.preventDefault();
+        event.stopPropagation();
+      },
     },
   };
 </script>
 
 <style lang="scss" type="text/scss">
-@import "~@scss/config/_settings.scss";
+@import '~@scss/config/_settings.scss';
+@import '~@scss/config/_bootstrap.scss';
 
 .product-page {
   .dropzone-window {
@@ -370,6 +382,11 @@
           color: primary;
         }
       }
+    }
+
+    @include media-breakpoint-down(xs) {
+      width: 100%;
+      min-width: 100%;
     }
   }
 }

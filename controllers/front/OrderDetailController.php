@@ -51,9 +51,8 @@ class OrderDetailControllerCore extends FrontController
                 $this->errors[] = $this->trans('The order is no longer valid.', [], 'Shop.Notifications.Error');
             } elseif (empty($msgText)) {
                 $this->errors[] = $this->trans('The message cannot be blank.', [], 'Shop.Notifications.Error');
-            } elseif (!Validate::isMessage($msgText)) {
-                $this->errors[] = $this->trans('This message is invalid (HTML is not allowed).', [], 'Shop.Notifications.Error');
             }
+
             if (!count($this->errors)) {
                 $order = new Order($idOrder);
                 if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {

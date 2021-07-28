@@ -473,13 +473,9 @@
     <access id="access_1_482" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_READ"/>
     <access id="access_1_483" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_UPDATE"/>
     <access id="access_1_484" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_DELETE"/>
-    <access id="access_1_485" id_profile="SuperAdmin" id_authorization_role="TAB_DEFAULT_CREATE"/>
-    <access id="access_1_486" id_profile="SuperAdmin" id_authorization_role="TAB_DEFAULT_READ"/>
-    <access id="access_1_487" id_profile="SuperAdmin" id_authorization_role="TAB_DEFAULT_UPDATE"/>
-    <access id="access_1_488" id_profile="SuperAdmin" id_authorization_role="TAB_DEFAULT_DELETE"/>
-    <access id="access_1_489" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_CREATE"/>
-    <access id="access_1_490" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_READ"/>
-    <access id="access_1_491" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_UPDATE"/>
-    <access id="access_1_492" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_DELETE"/>
+    <access id="access_1_485" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_CREATE"/>
+    <access id="access_1_486" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_READ"/>
+    <access id="access_1_487" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_UPDATE"/>
+    <access id="access_1_488" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_DELETE"/>
   </entities>
 </entity_access>

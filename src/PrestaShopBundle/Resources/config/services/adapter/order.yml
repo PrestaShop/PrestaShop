@@ -51,6 +51,8 @@ services:
     arguments:
         - '@prestashop.adapter.order.amount.updater'
         - '@prestashop.adapter.order.order_detail.updater'
+        - '@prestashop.adapter.context_state_manager'
+        - '@prestashop.adapter.order.product_quantity.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand
@@ -204,6 +206,7 @@ services:
       - '@prestashop.adapter.data_provider.customer'
       - '@prestashop.adapter.order.query_handler.get_order_products_for_viewing_handler'
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.address.formatter'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing
@@ -230,6 +233,7 @@ services:
     arguments:
       - '@prestashop.core.localization.locale.repository'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.getLocale()"
+      - '@prestashop.adapter.address.formatter'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview'
@@ -262,6 +266,7 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.context_state_manager'
       - '@prestashop.adapter.order.order_detail.updater'
+      - '@prestashop.adapter.order.product.remover'
 
   prestashop.adapter.order.product_quantity.updater:
     class: PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater

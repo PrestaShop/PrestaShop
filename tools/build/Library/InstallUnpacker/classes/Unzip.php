@@ -90,9 +90,6 @@ class Unzip
     private function extractWithZipArchive($fromFile, $toDir)
     {
         $zip = $this->openWithZipArchive($fromFile);
-        if ($zip === false) {
-            throw new PrestashopCouldNotUnzipLatestVersionException('Unzip operation failed');
-        }
 
         if (false === $zip->extractTo($toDir)) {
             throw new PrestashopCouldNotUnzipLatestVersionException(sprintf(

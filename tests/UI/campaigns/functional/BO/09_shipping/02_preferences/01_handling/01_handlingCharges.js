@@ -43,6 +43,7 @@ const createCarrierData = new CarrierFaker({
   allZones: true,
   handlingCosts: true,
   allZonesValue: 5.00,
+  rangeSup: 50,
 });
 const priceDisplayMethod = ['Tax excluded', 'Tax included'];
 const defaultHandlingChargesValue = 2.00;

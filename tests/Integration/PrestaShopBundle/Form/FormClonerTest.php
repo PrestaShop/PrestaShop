@@ -30,7 +30,6 @@ namespace Tests\Integration\PrestaShopBundle\Form;
 
 use Closure;
 use PrestaShopBundle\Form\FormCloner;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\ChoiceList\ChoiceListInterface;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -46,13 +45,8 @@ use Symfony\Component\Form\FormInterface;
  * long process, and it would probably end up in mistakes in the test initialization process itself which would
  * reduce the overall quality of the test.
  */
-class FormClonerTest extends KernelTestCase
+class FormClonerTest extends AbstractFormTester
 {
-    protected function setUp()
-    {
-        self::bootKernel();
-    }
-
     public function testClone(): void
     {
         $form = $this->createForm(AdvancedFormType::class);
@@ -384,17 +378,5 @@ class FormClonerTest extends KernelTestCase
             // We can't check the whole object but at least the type
             $this->assertInstanceOf(get_class($originalTransformer), $clonedTransformer);
         }
-    }
-
-    /**
-     * @param string $type
-     * @param array $options
-     * @param null $data
-     *
-     * @return FormInterface
-     */
-    private function createForm(string $type, array $options = [], $data = null): FormInterface
-    {
-        return self::$kernel->getContainer()->get('form.factory')->create($type, $data, $options);
     }
 }

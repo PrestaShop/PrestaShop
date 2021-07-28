@@ -52,19 +52,19 @@ describe('Export languages in translations page', async () => {
     {
       args:
         {
-          testIdentifier: 'sortByIdDesc', language: Languages.english, theme: 'classic',
+          language: Languages.english, types: ['Front office'],
         },
     },
     {
       args:
         {
-          testIdentifier: 'sortByIdDesc', language: Languages.french, theme: 'classic',
+          language: Languages.french, types: ['Front office'],
         },
     },
   ];
 
   tests.forEach((test) => {
-    it(`Export language '${test.args.language.name}' for theme '${test.args.theme}'`, async function () {
+    it(`Export language '${test.args.language.name}'`, async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
@@ -72,7 +72,11 @@ describe('Export languages in translations page', async () => {
         baseContext,
       );
 
-      const filePath = await translationsPage.exportLanguage(page, test.args.language.name, test.args.theme);
+      const filePath = await translationsPage.exportPrestashopTranslations(
+        page,
+        test.args.language.name,
+        test.args.types,
+      );
 
       const doesFileExist = await files.doesFileExist(filePath);
       await expect(doesFileExist, `File '${filePath}' was not downloaded`).to.be.true;

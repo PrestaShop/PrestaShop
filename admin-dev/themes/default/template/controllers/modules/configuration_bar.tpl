@@ -29,7 +29,7 @@
 <div class="bootstrap panel">
 	<h3><i class="icon-cogs"></i> {l s='Configuration' d='Admin.Global'}</h3>
 	<input type="checkbox" name="activateModule" value="1"{if $module->isEnabledForShopContext()} checked="checked"{/if}
-		onclick="location.href = '{$current_url|regex_replace:$smarty.capture.default:''}&amp;module_name={$module_name}&amp;enable=' + (($(this).attr('checked')) ? 1 : 0);" />
+		onclick="location.href = '{$current_url|regex_replace:$smarty.capture.default:''}&amp;module_name={$module_name}&amp;enable=' + ($(this).prop('checked') ? '1' : '0');" />
 	{l s='Activate module for this shop context: %s.' sprintf=[$shop_context] d='Admin.Modules.Notification'}
 </div>
 {/if}

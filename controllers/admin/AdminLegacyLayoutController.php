@@ -38,9 +38,22 @@ class AdminLegacyLayoutControllerCore extends AdminController
     protected $showContentHeader = true;
     /** @var string */
     protected $headerTabContent = '';
-    /** @var bool */
+    /**
+     * See the $helpLink phpDoc below
+     *
+     * @var bool
+     */
     protected $enableSidebar = false;
-    /** @var string */
+    /**
+     * The Help Link is used for the 'Help' button in the top right of Back Office pages
+     *
+     * If $enableSidebar is true, the 'Help' button will download the content available at $helpLink
+     * and inject it into the sidebar window
+     *
+     * If $enableSidebar is false, the 'Help' button is a link that redirects to $helpLink
+     *
+     * @var string
+     */
     protected $helpLink;
     /** @var bool */
     protected $useRegularH1Structure;
@@ -77,7 +90,15 @@ class AdminLegacyLayoutControllerCore extends AdminController
         // Some controllers can only be used in "All shops" context.
         // This makes sure that user cannot switch shop contexts
         // when in one of pages (controller) below.
-        $controllers = ['AdminLanguages', 'AdminProfiles', 'AdminSpecificPriceRule', 'AdminPerformance'];
+        $controllers = [
+            'AdminFeatureFlag',
+            'AdminLanguages',
+            'AdminPerformance',
+            'AdminProfiles',
+            'AdminSpecificPriceRule',
+            'AdminStatuses',
+            'AdminTranslations',
+        ];
 
         if (in_array($controllerName, $controllers)) {
             $this->multishop_context = Shop::CONTEXT_ALL;

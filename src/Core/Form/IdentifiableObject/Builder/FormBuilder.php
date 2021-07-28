@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\FormOptionsProviderInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -58,21 +59,29 @@ final class FormBuilder implements FormBuilderInterface
     private $formType;
 
     /**
+     * @var FormOptionsProviderInterface|null
+     */
+    private $optionsProvider;
+
+    /**
      * @param FormFactoryInterface $formFactory
      * @param HookDispatcherInterface $hookDispatcher
      * @param FormDataProviderInterface $dataProvider
      * @param string $formType
+     * @param FormOptionsProviderInterface|null $optionsProvider
      */
     public function __construct(
         FormFactoryInterface $formFactory,
         HookDispatcherInterface $hookDispatcher,
         FormDataProviderInterface $dataProvider,
-        $formType
+        string $formType,
+        ?FormOptionsProviderInterface $optionsProvider = null
     ) {
         $this->formFactory = $formFactory;
         $this->hookDispatcher = $hookDispatcher;
         $this->dataProvider = $dataProvider;
         $this->formType = $formType;
+        $this->optionsProvider = $optionsProvider;
     }
 
     /**
@@ -82,6 +91,10 @@ final class FormBuilder implements FormBuilderInterface
     {
         if (is_array($defaultData = $this->dataProvider->getDefaultData())) {
             $data = array_merge($defaultData, $data);
+        }
+        if (null !== $this->optionsProvider
+            && is_array($defaultOptions = $this->optionsProvider->getDefaultOptions($data))) {
+            $options = array_merge($defaultOptions, $options);
         }
 
         return $this->buildForm(
@@ -98,6 +111,9 @@ final class FormBuilder implements FormBuilderInterface
     public function getFormFor($id, array $data = [], array $options = [])
     {
         $data = array_merge($this->dataProvider->getData($id), $data);
+        if (null !== $this->optionsProvider) {
+            $options = array_merge($this->optionsProvider->getOptions($id, $data), $options);
+        }
 
         return $this->buildForm(
             $this->formType,
@@ -122,6 +138,7 @@ final class FormBuilder implements FormBuilderInterface
         $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($formBuilder->getName()) . 'FormBuilderModifier', [
             'form_builder' => $formBuilder,
             'data' => &$data,
+            'options' => &$options,
             'id' => $id,
         ]);
 

@@ -1486,7 +1486,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $value = Tools::getValue($field, null);
 
             if ($value === null) {
-                $errors[$field] = $this->trans('The field %s is required.', [self::displayFieldName($field, get_class($this), $htmlentities)], 'Admin.Notifications.Error');
+                $errors[$field] = $this->trans('The %s field is required.', [self::displayFieldName($field, get_class($this), $htmlentities)], 'Admin.Notifications.Error');
             }
         }
 

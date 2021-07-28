@@ -41,15 +41,15 @@ class BasicInformationCommandsBuilder implements ProductCommandsBuilderInterface
      */
     public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['basic'])) {
+        if (!isset($formData['basic']) && !isset($formData['header']['name'])) {
             return [];
         }
 
-        $basicData = $formData['basic'];
+        $basicData = $formData['basic'] ?? [];
         $command = new UpdateProductBasicInformationCommand($productId->getValue());
 
-        if (isset($basicData['name'])) {
-            $command->setLocalizedNames($basicData['name']);
+        if (isset($formData['header']['name'])) {
+            $command->setLocalizedNames($formData['header']['name']);
         }
         if (isset($basicData['description'])) {
             $command->setLocalizedDescriptions($basicData['description']);

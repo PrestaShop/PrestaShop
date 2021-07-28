@@ -55,6 +55,7 @@ export default class SubmittableInput {
    */
   init() {
     const inputs = `${this.wrapperSelector} ${this.inputSelector}`;
+    const that = this;
 
     $(document).on('focus', inputs, (e) => {
       this.refreshButtonState(e.currentTarget, true);
@@ -62,13 +63,19 @@ export default class SubmittableInput {
     $(document).on('input blur', inputs, (e) => {
       this.refreshButtonState(e.currentTarget);
     });
-    $(document).on('click', `${this.wrapperSelector} ${this.buttonSelector}`, (e) => {
-      this.submitInput(e);
-    });
-    $(document).on('keyup', this.inputSelector, (e) => {
+    $(document).on(
+      'click',
+      `${this.wrapperSelector} ${this.buttonSelector}`,
+      function () {
+        that.submitInput(this);
+      },
+    );
+    $(document).on('keyup', inputs, (e) => {
       if (e.keyCode === 13) {
         e.preventDefault();
-        this.submitInput(e);
+        const button = this.findButton(e.target);
+
+        this.submitInput(button);
       }
     });
   }
@@ -76,22 +83,35 @@ export default class SubmittableInput {
   /**
    * @private
    */
-  submitInput(e) {
-    const input = this.findInput(e.currentTarget);
+  submitInput(button) {
+    const input = this.findInput(button);
 
-    this.callback(input).then(() => {
-      $(input).data('initial-value', input.value);
-      this.toggleButtonVisibility(e.currentTarget, false);
-    }).catch((error) => {
-      if (typeof error.responseJSON.errors === 'undefined') {
-        return;
-      }
+    this.toggleLoading(button, true);
 
-      const messages = error.responseJSON.errors;
-      Object.keys(messages).forEach((key) => {
-        showGrowl('error', messages[key]);
+    this.callback(input)
+      .then((response) => {
+        $(input).data('initial-value', input.value);
+        this.toggleButtonVisibility(button, false);
+
+        if (response.message) {
+          showGrowl('success', response.message);
+        }
+        this.toggleLoading(button, false);
+      })
+      .catch((error) => {
+        this.toggleError(button, true);
+        this.toggleButtonVisibility(button, false);
+        this.toggleLoading(button, false);
+
+        if (typeof error.responseJSON.errors === 'undefined') {
+          return;
+        }
+
+        const messages = error.responseJSON.errors;
+        Object.keys(messages).forEach((key) => {
+          showGrowl('error', messages[key]);
+        });
       });
-    });
   }
 
   /**
@@ -119,12 +139,7 @@ export default class SubmittableInput {
    * @private
    */
   toggleButtonActivity(button, active) {
-    if (active) {
-      $(button).removeClass('d-none');
-      $(button).addClass('active');
-    } else {
-      $(button).removeClass('active');
-    }
+    $(button).toggleClass('active', active);
   }
 
   /**
@@ -134,13 +149,33 @@ export default class SubmittableInput {
    * @private
    */
   toggleButtonVisibility(button, visible) {
-    const $button = $(button);
+    $(button).toggleClass('d-none', !visible);
+  }
 
-    if (visible) {
-      $(button).removeClass('d-none');
+  /**
+   * @param {HTMLElement} button
+   * @param {Boolean} visible
+   *
+   * @private
+   */
+  toggleLoading(button, loading) {
+    if (loading) {
+      $(button).html('<span class="spinner-border spinner-border-sm"></span>');
     } else {
-      $button.addClass('d-none');
+      $(button).html('<i class="material-icons">check</i>');
     }
+  }
+
+  /**
+   * @param {HTMLElement} button
+   * @param {Boolean} visible
+   *
+   * @private
+   */
+  toggleError(button, error) {
+    const input = this.findInput(button);
+
+    $(input).toggleClass('is-invalid', error);
   }
 
   /**
@@ -151,18 +186,22 @@ export default class SubmittableInput {
    * @private
    */
   findButton(input) {
-    return $(input).closest(this.wrapperSelector).find(this.buttonSelector)[0];
+    return $(input)
+      .closest(this.wrapperSelector)
+      .find(this.buttonSelector)[0];
   }
 
   /**
-   * @param {HTMLElement} button
+   * @param {HTMLElement} domElement
    *
    * @returns {HTMLElement}
    *
    * @private
    */
-  findInput(button) {
-    return $(button).closest(this.wrapperSelector).find(this.inputSelector)[0];
+  findInput(domElement) {
+    return $(domElement)
+      .closest(this.wrapperSelector)
+      .find(this.inputSelector)[0];
   }
 
   /**
@@ -175,6 +214,10 @@ export default class SubmittableInput {
   inputValueChanged(input) {
     const initialValue = $(input).data('initial-value');
     let newValue = $(input).val();
+
+    if ($(input).hasClass('is-invalid')) {
+      $(input).removeClass('is-invalid');
+    }
 
     if (typeof initialValue === 'number') {
       newValue = Number(newValue);

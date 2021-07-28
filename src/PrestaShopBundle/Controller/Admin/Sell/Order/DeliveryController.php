@@ -43,7 +43,10 @@ class DeliveryController extends FrameworkBundleAdminController
      * Main page for Delivery slips.
      *
      * @Template("@PrestaShop/Admin/Sell/Order/Delivery/slip.html.twig")
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="Access denied."
+     * )
      *
      * @param Request $request
      *
@@ -86,7 +89,10 @@ class DeliveryController extends FrameworkBundleAdminController
     /**
      * Delivery slips PDF generator.
      *
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="Access denied."
+     * )
      *
      * @param Request $request
      *

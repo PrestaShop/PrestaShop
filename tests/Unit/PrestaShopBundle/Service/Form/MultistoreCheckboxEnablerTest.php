@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
-use PrestaShopBundle\Form\Admin\Extension\MultistoreDropdownExtension;
+use PrestaShopBundle\Form\Admin\Extension\MultistoreExtension;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Symfony\Component\Form\FormInterface;
@@ -43,7 +43,7 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
 {
     public $mockedShopConfiguration;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mockedShopConfiguration = $this->createShopConfigurationMock();
         parent::setUp();
@@ -101,7 +101,8 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
 
         // the added multistore checkbox must have the correct `multistore_configuration_key` attribute
         $multistoreFirstFieldCheckboxOptions = $form->get(MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'first_field')->getConfig()->getOptions();
-        $this->assertEquals('TEST_CONFIGURATION_KEY', $multistoreFirstFieldCheckboxOptions['attr']['multistore_configuration_key']);
+        $this->assertEquals('TEST_CONFIGURATION_KEY', $multistoreFirstFieldCheckboxOptions['multistore_configuration_key']);
+        $this->assertArrayHasKey('multistore_dropdown', $multistoreFirstFieldCheckboxOptions);
     }
 
     /**
@@ -110,7 +111,7 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
     private function getFormToTest(): FormInterface
     {
         $formFactory = Forms::createFormFactoryBuilder()
-            ->addTypeExtension(new MultistoreDropdownExtension())
+            ->addTypeExtension(new MultistoreExtension())
             ->getFormFactory();
 
         $formBuilder = $formFactory->createBuilder();
@@ -122,9 +123,7 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
                 SwitchType::class,
                 [
                     'required' => true,
-                    'attr' => [
-                        'multistore_configuration_key' => 'TEST_CONFIGURATION_KEY',
-                    ],
+                    'multistore_configuration_key' => 'TEST_CONFIGURATION_KEY',
                 ]
             )
             // second field will not have a multistore checkbox (it doesn't have the `multistore_configuration_key` attribute)
@@ -154,16 +153,18 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
 
     /**
      * @param bool $isAllShopContext
+     * @param bool $isGroupShopContext
      *
      * @return MockObject
      */
-    private function createMultistoreContextMock(bool $isAllShopContext = false): MockObject
+    private function createMultistoreContextMock(bool $isAllShopContext = false, bool $isGroupShopContext = true): MockObject
     {
         $shopGroupObject = new stdClass();
         $shopGroupObject->id = 2;
         $stub = $this->createMock(ShopContext::class);
         $stub->method('getContextShopId')->willReturn(1);
         $stub->method('isAllShopContext')->willReturn($isAllShopContext);
+        $stub->method('isGroupShopContext')->willReturn($isGroupShopContext);
         $stub->method('getContextShopGroup')->willReturn($shopGroupObject);
 
         return $stub;

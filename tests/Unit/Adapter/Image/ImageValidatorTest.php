@@ -31,6 +31,7 @@ namespace Tests\Unit\Adapter\Image;
 use Generator;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
+use PrestaShop\PrestaShop\Core\Configuration\IniConfiguration;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
@@ -43,10 +44,11 @@ class ImageValidatorTest extends TestCase
      */
     private $imageValidator;
 
-    public function setUp()
+    public function setUp(): void
     {
         require_once __DIR__ . '/../../bootstrap.php';
-        $this->imageValidator = new ImageValidator();
+        $iniConfiguration = new IniConfiguration();
+        $this->imageValidator = new ImageValidator($iniConfiguration->getUploadMaxSizeInBytes());
     }
 
     /**

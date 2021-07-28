@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Groups page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Groups extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on groups page
+   */
   constructor() {
     super();
 
@@ -53,7 +62,7 @@ class Groups extends BOBasePage {
   /* Header methods */
   /**
    * Go to new group page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToNewGroupPage(page) {
@@ -63,8 +72,8 @@ class Groups extends BOBasePage {
   /* Filter methods */
 
   /**
-   * Get Number of groups
-   * @param page
+   * Get number of groups
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -73,7 +82,7 @@ class Groups extends BOBasePage {
 
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -85,7 +94,7 @@ class Groups extends BOBasePage {
 
   /**
    * Reset and get number of groups
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -95,10 +104,10 @@ class Groups extends BOBasePage {
 
   /**
    * Filter groups
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {string} Type of filter field( input/select)
+   * @param filterBy {string} Column to filter with
+   * @param value {string} Value to filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
@@ -124,9 +133,9 @@ class Groups extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Column name of the value to return
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -159,8 +168,8 @@ class Groups extends BOBasePage {
 
   /**
    * Go to edit group page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async gotoEditGroupPage(page, row) {
@@ -169,8 +178,8 @@ class Groups extends BOBasePage {
 
   /**
    * Delete group from row
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<string>}
    */
   async deleteGroup(page, row) {
@@ -192,7 +201,7 @@ class Groups extends BOBasePage {
 
   /**
    * Bulk delete groups
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async bulkDeleteGroups(page) {

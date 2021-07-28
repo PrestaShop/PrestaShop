@@ -175,6 +175,19 @@
       }
     }
 
+    .dropdown-menu {
+      padding: 0;
+
+      a {
+        width: 100%;
+        padding: 0.5rem 1rem;
+      }
+
+      .divider {
+        margin: 0;
+      }
+    }
+
     a {
       i {
         margin-right: 3px;

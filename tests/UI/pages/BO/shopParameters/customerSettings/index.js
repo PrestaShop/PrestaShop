@@ -2,7 +2,16 @@ require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 const {options} = require('@pages/BO/shopParameters/customerSettings/options.js');
 
+/**
+ * Customer settings page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class CustomerSettings extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on customer settings page
+   */
   constructor() {
     super();
 
@@ -28,7 +37,7 @@ class CustomerSettings extends BOBasePage {
 
   /**
    * Click on tab titles
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToTitlesPage(page) {
@@ -37,7 +46,7 @@ class CustomerSettings extends BOBasePage {
 
   /**
    * Click on tab groups
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToGroupsPage(page) {
@@ -46,9 +55,9 @@ class CustomerSettings extends BOBasePage {
 
   /**
    * Set option status
-   * @param page
-   * @param option, option to enable or disable
-   * @param toEnable, value wanted
+   * @param page {Page} Browser tab
+   * @param option {string} Option to enable or disable
+   * @param toEnable {boolean} True if we need to enable status
    * @return {Promise<string>}
    */
   async setOptionStatus(page, option, toEnable = true) {
@@ -75,6 +84,7 @@ class CustomerSettings extends BOBasePage {
     }
     await page.check(selector(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

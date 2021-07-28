@@ -85,16 +85,11 @@ class DbBackup extends BOBasePage {
 
   /**
    * Download backup
-   * @param page
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
    */
-  async downloadDbBackup(page) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      await page.click(this.downloadBackupButton),
-    ]);
-
-    return download.path();
+  downloadDbBackup(page) {
+    return this.clickAndWaitForDownload(page, this.downloadBackupButton);
   }
 
   /**

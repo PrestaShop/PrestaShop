@@ -117,6 +117,14 @@ CREATE TABLE `PREFIX_authorization_role` (
   UNIQUE KEY (`slug`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+/* Add missing access entries on certain installation */
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`)
+  SELECT 1, `id_tab`, 0, 0 ,0 ,0
+  FROM `PREFIX_tab` WHERE `id_tab` NOT IN (SELECT `id_tab` FROM `PREFIX_access` WHERE `id_profile` = 1);
+INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`)
+  SELECT 1, `id_module`, 1, 0, 0
+  FROM `PREFIX_module` WHERE `id_module` NOT IN (SELECT `id_module` FROM `PREFIX_module_access` WHERE `id_profile` = 1);
+
 /* Create a copy without indexes to make ID updates without conflict. */
 CREATE TABLE `PREFIX_access_old` AS SELECT * FROM `PREFIX_access`;
 DROP TABLE `PREFIX_access`;

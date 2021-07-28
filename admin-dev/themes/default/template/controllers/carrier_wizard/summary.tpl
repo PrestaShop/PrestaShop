@@ -23,18 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
 
-<script type="text/javascript">
-	var summary_translation_undefined = '{l s='[undefined]' js=1}';
-	var summary_translation_meta_informations = '{l s='This carrier is %1$s and the transit time is %2$s.' js=1 d='Admin.Shipping.Feature'}';
-	var summary_translation_free = '{l s='free' js=1 d='Admin.Shipping.Feature'}';
-	var summary_translation_paid = '{l s='not free' js=1 d='Admin.Shipping.Feature'}';
-	var summary_translation_range = '{l s='This carrier can deliver orders from %1$s to %2$s.' js=1 d='Admin.Shipping.Feature'}';
-	var summary_translation_range_limit =  '{l s='If the order is out of range, the behavior is to %3$s.' js=1 d='Admin.Shipping.Feature'}';
-	var summary_translation_shipping_cost = '{l s='The shipping cost is calculated %1$s and the tax rule %2$s will be applied.' js=1 d='Admin.Shipping.Feature'}';
-	var summary_translation_price = '{l s='according to the price' js=1 d='Admin.Shipping.Feature'}';
-	var summary_translation_weight = '{l s='according to the weight' js=1 d='Admin.Shipping.Feature'}';
-</script>
-
 <div class="defaultForm">
 	<div class="panel">
 		<div class="panel-heading">{l s='Carrier name:' d='Admin.Shipping.Feature'} <strong id="summary_name"></strong></div>
@@ -60,3 +48,15 @@
 	</div>
 	{$active_form}
 </div>
+
+<script type="text/javascript">
+	var summary_translation_undefined = '{l s='[undefined]' js=1}';
+	var summary_translation_meta_informations = '{l s='This carrier is %1$s and the transit time is %2$s.' js=1 d='Admin.Shipping.Feature'}';
+	var summary_translation_free = '{l s='free' js=1 d='Admin.Shipping.Feature'}';
+	var summary_translation_paid = '{l s='not free' js=1 d='Admin.Shipping.Feature'}';
+	var summary_translation_range = '{l s='This carrier can deliver orders from %1$s to %2$s.' js=1 d='Admin.Shipping.Feature'}';
+	var summary_translation_range_limit =  '{l s='If the order is out of range, the behavior is to %3$s.' js=1 d='Admin.Shipping.Feature'}';
+	var summary_translation_shipping_cost = '{l s='The shipping cost is calculated %1$s and the tax rule %2$s will be applied.' js=1 d='Admin.Shipping.Feature'}';
+	var summary_translation_price = '{l s='according to the price' js=1 d='Admin.Shipping.Feature'}';
+	var summary_translation_weight = '{l s='according to the weight' js=1 d='Admin.Shipping.Feature'}';
+</script>

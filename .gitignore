@@ -191,6 +191,7 @@ php-cs-fixer
 # Translations and emails templates
 
 translations/*
+!translations/default
 mails/*
 !mails/themes/
 !mails/_partials/
@@ -211,8 +212,6 @@ themes/default-bootstrap/modules/*/mails/*
 /bin/
 /.web-server-pid
 /app/Resources/geoip/GeoLite2-City.mmdb
-/app/Resources/translations/*
-!/app/Resources/translations/default
 /app/config/parameters.yml
 /app/config/parameters.php
 /build/

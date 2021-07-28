@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/xlftranslatedmodule/xlftranslatedmodule.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ffb7e666a70151215b4c55c6268d7d72">
+        <source>Newsletter</source>
+        <target>Newsletter</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="804a924e464fd21ed92f820224c4091d">
+        <source>Generates a .CSV file for mass mailings</source>
+        <target>Generates a .CSV file for mass mailings</target>
+        <note>Line: 47</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -24,10 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use Doctrine\Common\Inflector\Inflector;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Translation\TranslatorInterface;
-use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 
 /**
  * DataLang classes are used by Language
@@ -68,7 +67,9 @@ class DataLangCore
         $isAdminContext = defined('_PS_ADMIN_DIR_');
 
         if (!$this->translator->isLanguageLoaded($this->locale)) {
-            (new TranslatorLanguageLoader($isAdminContext))->loadLanguage($this->translator, $this->locale);
+            SymfonyContainer::getInstance()->get('prestashop.translation.translator_language_loader')
+                ->setIsAdminContext($isAdminContext)
+                ->loadLanguage($this->translator, $this->locale);
             $this->translator->getCatalogue($this->locale);
         }
     }
@@ -137,6 +138,6 @@ class DataLangCore
     {
         $shortClassName = substr(strrchr('\\' . get_class($this), '\\'), 1);
 
-        return Inflector::tableize($shortClassName);
+        return Inflector::getInflector()->tableize($shortClassName);
     }
 }

@@ -37,8 +37,18 @@ export default {
     error: 'error',
     success: 'success',
     languageSelected: 'languageSelected',
+    photoswipe: {
+      destroy: 'destroy',
+      closeGallery: 'closeGallery',
+    },
   },
   combinations: {
-    refreshList: 'refreshCombinationList',
+    refreshPage: 'refreshPage',
+    refreshCombinationList: 'refreshCombinationList',
+    updateAttributeGroups: 'updateAttributeGroups',
+    combinationGeneratorReady: 'combinationGeneratorReady',
+    openCombinationsGenerator: 'openCombinationsGenerator',
+    clearFilters: 'clearFilters',
+    selectCombination: 'selectCombination',
   },
 };

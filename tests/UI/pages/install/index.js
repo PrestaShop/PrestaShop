@@ -2,7 +2,16 @@ require('module-alias/register');
 // Using CommonPage
 const CommonPage = require('@pages/commonPage');
 
+/**
+ * Install page, contains functions used in different steps of the install
+ * @class
+ * @extends CommonPage
+ */
 class Install extends CommonPage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on install page
+   */
   constructor() {
     super();
 
@@ -58,17 +67,17 @@ class Install extends CommonPage {
     this.populateDatabaseStep = '#process_step_populateDatabase';
     this.configureShopStep = '#process_step_configureShop';
     this.installModulesStep = '#process_step_installModules';
-    this.installModulesAddons = '#process_step_installModulesAddons';
     this.installThemeStep = '#process_step_installTheme';
     this.installFixturesStep = '#process_step_installFixtures';
+    this.installPostInstall = '#process_step_postInstall';
     this.installationFinishedStepPageTitle = '#install_process_success h2';
     this.discoverFoButton = '#foBlock';
   }
 
   /**
    * Get step title
-   * @param page
-   * @param step
+   * @param page {Page} Browser tab
+   * @param step {string} Step to get title from
    * @returns {Promise<string>}
    */
   async getStepTitle(page, step) {
@@ -108,7 +117,7 @@ class Install extends CommonPage {
 
   /**
    * Change install language in step 1
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async setInstallLanguage(page) {
@@ -117,7 +126,7 @@ class Install extends CommonPage {
 
   /**
    * Go to next step
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async nextStep(page) {
@@ -127,7 +136,7 @@ class Install extends CommonPage {
 
   /**
    * Click on checkbox to agree on terms and conditions if its not checked already in step 2
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async agreeToTermsAndConditions(page) {
@@ -136,7 +145,7 @@ class Install extends CommonPage {
 
   /**
    * Fill Information and Account Forms in step 4
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async fillInformationForm(page) {
@@ -151,7 +160,7 @@ class Install extends CommonPage {
 
   /**
    * Fill Database Form in step 5
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async fillDatabaseForm(page) {
@@ -164,7 +173,7 @@ class Install extends CommonPage {
   /**
    * Check if database exist (if not, it will be created)
    * and check if all set properly to submit form
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
   async isDatabaseConnected(page) {
@@ -180,7 +189,7 @@ class Install extends CommonPage {
 
   /**
    * Check if progress bar is visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   isInstallationInProgress(page) {
@@ -189,9 +198,9 @@ class Install extends CommonPage {
 
   /**
    * Check if step installation is finished
-   * @param page
-   * @param step
-   * @param timeout
+   * @param page {Page} Browser tab
+   * @param step {string} The installation step
+   * @param timeout {number} Time to wait for step to finish
    * @returns {Promise<boolean>}
    */
   async isInstallationStepFinished(page, step, timeout = 30000) {
@@ -222,16 +231,16 @@ class Install extends CommonPage {
         selector = this.installModulesStep;
         break;
 
-      case 'Install addons modules':
-        selector = this.installModulesAddons;
-        break;
-
       case 'Install theme':
         selector = this.installThemeStep;
         break;
 
       case 'Install fixtures':
         selector = this.installFixturesStep;
+        break;
+
+      case 'Post installation scripts':
+        selector = this.installPostInstall;
         break;
 
       default:
@@ -243,7 +252,7 @@ class Install extends CommonPage {
 
   /**
    * Check if prestashop is installed properly
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
   isInstallationSuccessful(page) {
@@ -252,8 +261,8 @@ class Install extends CommonPage {
 
   /**
    * Go to FO after Installation and check that Prestashop logo exist
-   * @param page
-   * @return {Promise<*>}
+   * @param page {Page} Browser tab
+   * @return {Promise<Page>}
    */
   async goToFOAfterInstall(page) {
     await this.waitForVisibleSelector(page, this.discoverFoButton);

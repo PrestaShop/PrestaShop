@@ -1169,3 +1169,298 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_incl      | 0.00  |
       | total_paid               | 0.00  |
       | total_paid_real          | 0.00  |
+
+  Scenario: I have a cart rule that adds a free gift when delivery address is in the USA,
+            when I change this delivery address, the free gift is removed
+
+    Given country "US" is enabled
+    And country "FR" is enabled
+    And there is a product in the catalog named "Product 12345" with a price of 12.0 and 100 items in stock
+    And there is a product in the catalog named "Gift product" with a price of 13.0 and 100 items in stock
+    # Create a cart rule : No cade + no conditions + free gift = demo_6
+    And there is a cart rule named "cartRuleFreeGift" that applies no discount with priority 1, quantity of 100 and quantity per user 100
+    And cart rule "cartRuleFreeGift" has no discount code
+    And cart rule "cartRuleFreeGift" offers a gift product "Gift product"
+    And cart rule "cartRuleFreeGift" is restricted to country "US"
+    # Make an order
+    And I create an empty cart "dummy_cart" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
+    And I add 1 products "Product 12345" to the cart "dummy_cart"
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 25.00 |
+      | total_products_wt        | 26.50 |
+      | total_discounts_tax_excl | 13.00 |
+      | total_discounts_tax_incl | 13.78 |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 19.00 |
+      | total_paid_tax_incl      | 20.14 |
+      | total_paid               | 20.14 |
+      | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 12.00 |
+      | unit_price_tax_incl      | 12.72 |
+      | unit_price_tax_excl      | 12.00 |
+      | total_price_tax_incl     | 12.72 |
+      | total_price_tax_excl     | 12.00 |
+    And product "Gift product" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 13.00 |
+      | unit_price_tax_incl      | 13.78 |
+      | unit_price_tax_excl      | 13.00 |
+      | total_price_tax_incl     | 13.78 |
+      | total_price_tax_excl     | 13.00 |
+    When I add new address to customer "testCustomer" with following details:
+      | Address alias    | test-customer-france-address |
+      | First name       | testFirstName                |
+      | Last name        | testLastName                 |
+      | Address          | 36 Avenue des Champs Elysees |
+      | City             | Paris                        |
+      | Country          | France                       |
+      | Postal code      | 75008                        |
+    And I change order "bo_order1" shipping address to "test-customer-france-address"
+    Then order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have following details:
+    # There is not tax when a french address is used (in this test context)
+      | total_products           | 12.00 |
+      | total_products_wt        | 12.00 |
+      | total_discounts_tax_excl | 0.0   |
+      | total_discounts_tax_incl | 0.0   |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.0   |
+      | total_paid_tax_excl      | 19.00 |
+      | total_paid_tax_incl      | 19.00 |
+      | total_paid               | 19.00 |
+      | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 12.00 |
+      | unit_price_tax_incl      | 12.00 |
+      | unit_price_tax_excl      | 12.00 |
+      | total_price_tax_incl     | 12.00 |
+      | total_price_tax_excl     | 12.00 |
+    When I add new address to customer "testCustomer" with following details:
+      | Address alias    | test-customer-states-address |
+      | First name       | testFirstName                |
+      | Last name        | testLastName                 |
+      | Address          | 36 Avenue des Champs Elysees |
+      | City             | Miami                        |
+      | Country          | United States                |
+      | State            | Florida                      |
+      | Postal code      | 33133                        |
+    And I change order "bo_order1" shipping address to "test-customer-states-address"
+    Then order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 25.00 |
+      | total_products_wt        | 26.50 |
+      | total_discounts_tax_excl | 13.00 |
+      | total_discounts_tax_incl | 13.78 |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 19.00 |
+      | total_paid_tax_incl      | 20.14 |
+      | total_paid               | 20.14 |
+      | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 12.00 |
+      | unit_price_tax_incl      | 12.72 |
+      | unit_price_tax_excl      | 12.00 |
+      | total_price_tax_incl     | 12.72 |
+      | total_price_tax_excl     | 12.00 |
+    And product "Gift product" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 13.00 |
+      | unit_price_tax_incl      | 13.78 |
+      | unit_price_tax_excl      | 13.00 |
+      | total_price_tax_incl     | 13.78 |
+      | total_price_tax_excl     | 13.00 |
+
+
+  Scenario: I have a cart rule that adds a free gift when a certain amount is reached,
+            when the amount is not reached anymore (by reducing quantity), the free gift is removed
+
+    Given there is a product in the catalog named "Product 12345" with a price of 12.0 and 100 items in stock
+    And there is a product in the catalog named "Gift product" with a price of 13.0 and 100 items in stock
+    # Create a cart rule : No cade + no conditions + free gift = demo_6
+    And there is a cart rule named "cartRuleFreeGift" that applies no discount with priority 1, quantity of 100 and quantity per user 100
+    And cart rule "cartRuleFreeGift" has no discount code
+    And cart rule "cartRuleFreeGift" offers a gift product "Gift product"
+    And cart rule "cartRuleFreeGift" applies discount only when cart total is above 30.00
+    # Make an order
+    And I create an empty cart "dummy_cart" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
+    And I add 3 products "Product 12345" to the cart "dummy_cart"
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order1" should have 4 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 49.00 |
+      | total_products_wt        | 51.94 |
+      | total_discounts_tax_excl | 13.00 |
+      | total_discounts_tax_incl | 13.78 |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 43.00 |
+      | total_paid_tax_incl      | 45.58 |
+      | total_paid               | 45.58 |
+      | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 3     |
+      | product_price            | 12.00 |
+      | unit_price_tax_incl      | 12.72 |
+      | unit_price_tax_excl      | 12.00 |
+      | total_price_tax_incl     | 38.16 |
+      | total_price_tax_excl     | 36.00 |
+    And product "Gift product" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 13.00 |
+      | unit_price_tax_incl      | 13.78 |
+      | unit_price_tax_excl      | 13.00 |
+      | total_price_tax_incl     | 13.78 |
+      | total_price_tax_excl     | 13.00 |
+    When I edit product "Product 12345" to order "bo_order1" with following products details:
+      | amount | 1     |
+      | price  | 12.00 |
+    Then order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 12.00 |
+      | total_products_wt        | 12.72 |
+      | total_discounts_tax_excl | 0.0   |
+      | total_discounts_tax_incl | 0.0   |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 19.00 |
+      | total_paid_tax_incl      | 20.14 |
+      | total_paid               | 20.14 |
+      | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 12.00 |
+      | unit_price_tax_incl      | 12.72 |
+      | unit_price_tax_excl      | 12.00 |
+      | total_price_tax_incl     | 12.72 |
+      | total_price_tax_excl     | 12.00 |
+    When I edit product "Product 12345" to order "bo_order1" with following products details:
+      | amount | 3 |
+      | price  | 12.00 |
+    Then order "bo_order1" should have 4 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 49.00 |
+      | total_products_wt        | 51.94 |
+      | total_discounts_tax_excl | 13.00 |
+      | total_discounts_tax_incl | 13.78 |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 43.00 |
+      | total_paid_tax_incl      | 45.58 |
+      | total_paid               | 45.58 |
+      | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 3     |
+      | product_price            | 12.00 |
+      | unit_price_tax_incl      | 12.72 |
+      | unit_price_tax_excl      | 12.00 |
+      | total_price_tax_incl     | 38.16 |
+      | total_price_tax_excl     | 36.00 |
+    And product "Gift product" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 13.00 |
+      | unit_price_tax_incl      | 13.78 |
+      | unit_price_tax_excl      | 13.00 |
+      | total_price_tax_incl     | 13.78 |
+      | total_price_tax_excl     | 13.00 |
+
+  Scenario: I have a cart rule that adds a free gift when a certain amount is reached,
+  when the amount is not reached anymore (by reducing price), the free gift is removed
+
+    Given there is a product in the catalog named "Product 12345" with a price of 12.0 and 100 items in stock
+    And there is a product in the catalog named "Gift product" with a price of 13.0 and 100 items in stock
+    # Create a cart rule : No cade + no conditions + free gift = demo_6
+    And there is a cart rule named "cartRuleFreeGift" that applies no discount with priority 1, quantity of 100 and quantity per user 100
+    And cart rule "cartRuleFreeGift" has no discount code
+    And cart rule "cartRuleFreeGift" offers a gift product "Gift product"
+    And cart rule "cartRuleFreeGift" applies discount only when cart total is above 30.00
+    # Make an order
+    And I create an empty cart "dummy_cart" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
+    And I add 1 products "Product 12345" to the cart "dummy_cart"
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 12.00 |
+      | total_products_wt        | 12.72 |
+      | total_discounts_tax_excl | 0.00  |
+      | total_discounts_tax_incl | 0.00  |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 19.00 |
+      | total_paid_tax_incl      | 20.14 |
+      | total_paid               | 20.14 |
+      | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 12.00 |
+      | unit_price_tax_incl      | 12.72 |
+      | unit_price_tax_excl      | 12.00 |
+      | total_price_tax_incl     | 12.72 |
+      | total_price_tax_excl     | 12.00 |
+    When I edit product "Product 12345" to order "bo_order1" with following products details:
+      | amount | 1 |
+      | price  | 30.00 |
+    Then order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 43.00 |
+      | total_products_wt        | 45.58 |
+      | total_discounts_tax_excl | 13.00 |
+      | total_discounts_tax_incl | 13.78 |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 37.00 |
+      | total_paid_tax_incl      | 39.22 |
+      | total_paid               | 39.22 |
+      | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 30.00 |
+      | unit_price_tax_incl      | 31.80 |
+      | unit_price_tax_excl      | 30.00 |
+      | total_price_tax_incl     | 31.80 |
+      | total_price_tax_excl     | 30.00 |
+    And product "Gift product" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 13.00 |
+      | unit_price_tax_incl      | 13.78 |
+      | unit_price_tax_excl      | 13.00 |
+      | total_price_tax_incl     | 13.78 |
+      | total_price_tax_excl     | 13.00 |

@@ -82,7 +82,10 @@ class AdministrationController extends FrameworkBundleAdminController
     /**
      * Process the Administration general configuration form.
      *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this.",
+     *     redirectRoute="admin_administration")
      * @DemoRestricted(redirectRoute="admin_administration")
      *
      * @param Request $request
@@ -101,7 +104,10 @@ class AdministrationController extends FrameworkBundleAdminController
     /**
      * Process the Administration upload quota configuration form.
      *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this.",
+     *     redirectRoute="admin_administration")
      * @DemoRestricted(redirectRoute="admin_administration")
      *
      * @param Request $request
@@ -120,7 +126,11 @@ class AdministrationController extends FrameworkBundleAdminController
     /**
      * Process the Administration notifications configuration form.
      *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this.",
+     *     redirectRoute="admin_administration"
+     * )
      * @DemoRestricted(redirectRoute="admin_administration")
      *
      * @param Request $request
@@ -223,7 +233,7 @@ class AdministrationController extends FrameworkBundleAdminController
         switch ($error->getErrorCode()) {
             case FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO:
                 return $this->trans(
-                    '%s is invalid. Please enter an integer greater or equal to 0.',
+                    '%s is invalid. Please enter an integer greater than or equal to 0.',
                     'Admin.Notifications.Error',
                     [$this->getFieldLabel($error->getFieldName())]
                 );

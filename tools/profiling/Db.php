@@ -103,7 +103,7 @@ abstract class Db extends DbCore
         if (!$explain) {
             $end = microtime(true);
 
-            $stack = debug_backtrace(false);
+            $stack = debug_backtrace(0);
             while (preg_match('@[/\\\\]classes[/\\\\]db[/\\\\]@i', $stack[0]['file'])) {
                 array_shift($stack);
             }

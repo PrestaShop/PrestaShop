@@ -33,3 +33,7 @@ _order_states:
 _order_return_states:
   resource: "order_return_states.yml"
   prefix: /order-return-states/
+
+_search_engines:
+  resource: "search_engines.yml"
+  prefix: /search-engines/

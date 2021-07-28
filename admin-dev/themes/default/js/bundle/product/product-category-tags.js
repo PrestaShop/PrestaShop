@@ -202,6 +202,8 @@ const productCategoriesTags = (function () {
   };
 }());
 
+window.productCategoriesTags = productCategoriesTags;
+
 BOEvent.on('Product Categories Management started', () => {
   productCategoriesTags.init();
 }, 'Back office');

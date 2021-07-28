@@ -757,7 +757,7 @@ class ValidateCore
      *
      * @param string $way Keyword to validate
      *
-     * @return bool Validity is ok or not
+     * @return int Validity is ok or not
      */
     public static function isOrderWay($way)
     {
@@ -835,7 +835,7 @@ class ValidateCore
      */
     public static function isUnsignedInt($value)
     {
-        return (string) (int) $value === (string) $value && $value < 4294967296 && $value >= 0;
+        return (is_numeric($value) || is_string($value)) && (string) (int) $value === (string) $value && $value < 4294967296 && $value >= 0;
     }
 
     /**

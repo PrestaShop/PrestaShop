@@ -39,6 +39,9 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
     /** @var string */
     protected $filterId = '';
 
+    /** @var bool */
+    protected $needsToBePersisted = true;
+
     /**
      * @param array $filters
      * @param string $filterId
@@ -136,6 +139,26 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
     public function setFilterId($filterId)
     {
         $this->filterId = $filterId;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function needsToBePersisted(): bool
+    {
+        return $this->needsToBePersisted;
+    }
+
+    /**
+     * @param bool $needsToBePersisted
+     *
+     * @return static
+     */
+    public function setNeedsToBePersisted(bool $needsToBePersisted): self
+    {
+        $this->needsToBePersisted = $needsToBePersisted;
 
         return $this;
     }

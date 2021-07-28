@@ -1,0 +1,65 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+<tr id="editProductTableRowTemplate" class="d-none editProductRow">
+  <td class="cellProductImg"></td>
+  <td class="cellProductName"></td>
+  <td class="cellProductTaxes pr-5">
+    {{ form_row(editProductRowForm.price_tax_excluded, {
+      'attr': {
+        'data-modal-edit-price-title': 'Edit the price'|trans({}, 'Admin.Orderscustomers.Feature'),
+        'data-modal-edit-price-apply': 'Edit'|trans({}, 'Admin.Actions'),
+        'data-modal-edit-price-cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+        'data-modal-edit-price-body': 'Are you sure you want to edit this product price? It will be applied to all identical products in this order.'|trans({}, 'Admin.Orderscustomers.Notification'),
+      }})
+    }}
+    {{ form_row(editProductRowForm.price_tax_included) }}
+  </td>
+  <td class="cellProductQuantity pr-5">
+    {{ form_row(editProductRowForm.quantity, {'type':'number'}) }}
+  </td>
+  <td class="editProductLocation cellProductLocation"></td>
+  <td class="editProductRefunded cellProductRefunded"></td>
+  <td class="editProductAvailable{% if not isAvailableQuantityDisplayed %} d-none{% endif %}"></td>
+  <td class="editProductTotalPrice"></td>
+  {% if orderForViewing.hasInvoice() %}
+    <td class="cellProductInvoice">
+      {{ form_row(editProductRowForm.invoice, {
+        'attr': {
+          'data-modal-edit-price-title': 'Edit the price'|trans({}, 'Admin.Orderscustomers.Feature'),
+          'data-modal-edit-price-apply': 'Edit'|trans({}, 'Admin.Actions'),
+          'data-modal-edit-price-cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+          'data-modal-edit-price-body': 'Are you sure you want to edit this product price? It will be applied to all invoices of this order.'|trans({}, 'Admin.Orderscustomers.Notification'),
+        }})
+      }}
+    </td>
+  {% endif %}
+  <td class="editProductActions text-right">
+    <div class="editProductActions-container btn-group">
+      {{ form_row(editProductRowForm.cancel) }}
+      {{ form_row(editProductRowForm.save) }}
+    </div>
+  </td>
+</tr>

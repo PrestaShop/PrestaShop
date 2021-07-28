@@ -132,6 +132,11 @@ class MetaController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/create.html.twig', [
             'meta_form' => $metaForm->createView(),
+            'multistoreInfoTip' => $this->trans(
+                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Admin.Notifications.Info'
+            ),
+            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
         ]
         );
     }
@@ -338,7 +343,9 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Generates robots.txt file for Front Office.
      *
-     * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     * )
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @return RedirectResponse

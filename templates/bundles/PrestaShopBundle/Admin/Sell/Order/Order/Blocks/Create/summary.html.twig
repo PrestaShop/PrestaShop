@@ -1,0 +1,140 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+<div class="card d-none" id="summary-block">
+  <h3 class="card-header">
+    {{ 'Summary'|trans({}, 'Admin.Global') }}
+  </h3>
+  <div class="card-body">
+    <div class="alert alert-success d-none" id="js-summary-success-block">
+      <div class="alert-text"></div>
+    </div>
+    <div class="alert alert-danger d-none" id="js-summary-error-block">
+      <div class="alert-text"></div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col text-center">
+                <p class="mb-0 text-muted">
+                  <strong>{{ 'Total products'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+                </p>
+                <strong class="js-total-products"></strong>
+              </div>
+              <div class="col text-center">
+                <p class="mb-0 text-muted">
+                  <strong>{{ 'Total vouchers (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+                </p>
+                <strong class="js-total-discounts"></strong>
+              </div>
+              <div class="col text-center">
+                <p class="mb-0 text-muted">
+                  <strong>{{ 'Total shipping (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+                </p>
+                <strong class="js-total-shipping"></strong>
+              </div>
+              <div class="col text-center">
+                <p class="mb-0 text-muted">
+                  <strong>{{ 'Total taxes'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+                </p>
+                <strong class="js-total-taxes"></strong>
+              </div>
+              <div class="col text-center">
+                <p class="mb-0 text-muted">
+                  <strong>{{ 'Total (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+                </p>
+                <strong class="js-total-without-tax"></strong>
+              </div>
+              <div class="col text-center">
+                <p class="mb-0 text-muted">
+                  <strong>{{ 'Total (Tax incl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+                </p>
+                <span class="js-total-with-tax badge rounded badge-dark"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{ form_start(summaryForm, {'action': path('admin_orders_place')}) }}
+      <div class="row mt-3">
+        <div class="col col-11">
+
+          <div id="js-order-message-wrap">
+            {{ ps.form_group_row(summaryForm.order_message, {}, {
+              'label': 'Order message'|trans({}, 'Admin.Orderscustomers.Feature'),
+            }) }}
+          </div>
+
+          {{ ps.form_group_row(summaryForm.payment_module, {}, {
+            'label': 'Payment'|trans({}, 'Admin.Global'),
+          }) }}
+
+          {{ ps.form_group_row(summaryForm.order_state, {}, {
+            'label': 'Order status'|trans({}, 'Admin.Orderscustomers.Feature'),
+          }) }}
+
+          <div class="form-group row mt-4">
+            <div class="col-sm offset-sm-4">
+              <button class="btn btn-primary" type="submit" id="create-order-button">
+                {{ 'Create order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              </button>
+
+              <div class="btn-group">
+                <button
+                  class="btn btn-outline-primary dropdown-toggle"
+                  type="button"
+                  id="dropdown-menu-actions"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  {{ 'More actions'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                </button>
+
+                <div class="dropdown-menu" aria-labelledby="dropdown-menu-actions">
+                  <button type="button" class="dropdown-item" id="js-send-process-order-email-btn">
+                    {{ 'Send pre-filled order to the customer by email'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                  </button>
+                  <a class="dropdown-item" id="js-process-order-link" target="_blank">
+                    {{ 'Proceed to checkout in the front office'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                  </a>
+
+                  {{ renderhook('displayAdminOrderCreateExtraButtons') }}
+                </div>
+              </div>
+
+              {{ form_row(summaryForm.cart_id, {'attr': {'class': 'js-place-order-cart-id'}}) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    {{ form_end(summaryForm) }}
+
+  </div>
+</div>

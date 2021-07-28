@@ -38,7 +38,7 @@ class AttachementProductController extends FrameworkBundleAdminController
     /**
      * Manage form add product attachment.
      *
-     * @AdminSecurity("is_granted(['create', 'update'], 'ADMINPRODUCTS_')")
+     * @AdminSecurity("is_granted('create', 'ADMINPRODUCTS_') && is_granted('update', 'ADMINPRODUCTS_')")
      *
      * @param int $idProduct
      * @param Request $request

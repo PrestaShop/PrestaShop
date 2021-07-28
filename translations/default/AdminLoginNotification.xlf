@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/controllers/login/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7860cb5f5994f37f332dda3f250e035b">
+        <source>You will be redirected to the login page in a few seconds.</source>
+        <target>You will be redirected to the login page in a few seconds.</target>
+        <note>Line: 118</note>
+      </trans-unit>
+      <trans-unit id="d2bd0a6c92a4501d3459335139825d21">
+        <source>Please, check your mailbox.</source>
+        <target>Please, check your mailbox.</target>
+        <note>Line: 145</note>
+      </trans-unit>
+      <trans-unit id="95faaabab0eea73e0dddecfb101e9c59">
+        <source>A link to reset your password has been sent to you.</source>
+        <target>A link to reset your password has been sent to you.</target>
+        <note>Line: 145</note>
+      </trans-unit>
+      <trans-unit id="d84626aafd2ead966ff2f5c2e0bca73f">
+        <source>For security reasons, you cannot connect to the back office until you have:</source>
+        <target>For security reasons, you cannot connect to the back office until you have:</target>
+        <note>Line: 150</note>
+      </trans-unit>
+      <trans-unit id="362b56674d07160fab60725a927bbf13">
+        <source>deleted the /install folder</source>
+        <target>deleted the /install folder</target>
+        <note>Line: 153</note>
+      </trans-unit>
+      <trans-unit id="83c8a48abe6dd9b6fcc44986069b36dd">
+        <source>renamed the /admin folder (e.g. %s)</source>
+        <target>renamed the /admin folder (e.g. %s)</target>
+        <note>Line: 156</note>
+      </trans-unit>
+      <trans-unit id="1a728f70318152b93421d59a6f7b4110">
+        <source>Please then access this page by the new URL (e.g. %s)</source>
+        <target>Please then access this page by the new URL (e.g. %s)</target>
+        <note>Line: 161</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9ff082251dea737459c9f32e73ca7a62">
+        <source>For security reasons, you must also delete the /install folder.</source>
+        <target>For security reasons, you must also delete the /install folder.</target>
+        <note>Line: 399</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminLoginController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="64bebbfcf422901ff5898cd0d0f92ba4">
+        <source>SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.</source>
+        <target>SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.</target>
+        <note>Line: 86</note>
+      </trans-unit>
+      <trans-unit id="0c38dbc5d2689404ee34e0fc2da845cf">
+        <source>SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]</source>
+        <target>SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]</target>
+        <note>Line: 90</note>
+      </trans-unit>
+      <trans-unit id="1414e6b52fb36401e73871528bfb074d">
+        <source>The employee does not exist, or the password provided is incorrect.</source>
+        <target>The employee does not exist, or the password provided is incorrect.</target>
+        <note>Line: 233</note>
+      </trans-unit>
+      <trans-unit id="54a27a9a29b0e113daa86220ba7e7880">
+        <source>This employee does not manage the shop anymore (either the shop has been deleted or permissions have been revoked).</source>
+        <target>This employee does not manage the shop anymore (either the shop has been deleted or permissions have been revoked).</target>
+        <note>Line: 236</note>
+      </trans-unit>
+      <trans-unit id="f197511588fa1467e957bf6c48539e88">
+        <source>This account does not exist.</source>
+        <target>This account does not exist.</target>
+        <note>Line: 409
+Comment: check matching employee id with its email</note>
+      </trans-unit>
+      <trans-unit id="b2e73e907ab40d78981c8bbfd0e0881f">
+        <source>You can reset your password every %interval% minute(s) only. Please try again later.</source>
+        <target>You can reset your password every %interval% minute(s) only. Please try again later.</target>
+        <note>Line: 411</note>
+      </trans-unit>
+      <trans-unit id="70888a5d7f35d91f8085cba884f7298e">
+        <source>Please, check your mailbox. A link to reset your password has been sent to you.</source>
+        <target>Please, check your mailbox. A link to reset your password has been sent to you.</target>
+        <note>Line: 356</note>
+      </trans-unit>
+      <trans-unit id="61c79423624504f70ce7b16f76587aac">
+        <source>An error occurred while attempting to reset your password.</source>
+        <target>An error occurred while attempting to reset your password.</target>
+        <note>Line: 361</note>
+      </trans-unit>
+      <trans-unit id="eed80aefc5a34c94db6274505d68d151">
+        <source>Some identification information is missing.</source>
+        <target>Some identification information is missing.</target>
+        <note>Line: 396</note>
+      </trans-unit>
+      <trans-unit id="375dee52ced3330cd3496340b32098ca">
+        <source>The password is missing: please enter your new password.</source>
+        <target>The password is missing: please enter your new password.</target>
+        <note>Line: 399
+Comment: password (twice)</note>
+      </trans-unit>
+      <trans-unit id="f01fb987f60542e0bff1bf7bed42d142">
+        <source>The password is not in a valid format.</source>
+        <target>The password is not in a valid format.</target>
+        <note>Line: 401</note>
+      </trans-unit>
+      <trans-unit id="76e08a16ce116959f282955d33c51aa0">
+        <source>The confirmation is empty: please fill in the password confirmation as well.</source>
+        <target>The confirmation is empty: please fill in the password confirmation as well.</target>
+        <note>Line: 403</note>
+      </trans-unit>
+      <trans-unit id="3b065e732222a25050ced52f7fca85c0">
+        <source>The password and its confirmation do not match. Please double check both passwords.</source>
+        <target>The password and its confirmation do not match. Please double check both passwords.</target>
+        <note>Line: 405</note>
+      </trans-unit>
+      <trans-unit id="56f5aa17fc3a9c5d9827bb148f072cd2">
+        <source>Your password reset request expired. Please start again.</source>
+        <target>Your password reset request expired. Please start again.</target>
+        <note>Line: 414
+Comment: To update password, we must have the temporary reset token that matches.</note>
+      </trans-unit>
+      <trans-unit id="2a8fac0ed3799588798c1b531a2b65ef">
+        <source>An error occurred while attempting to change your password.</source>
+        <target>An error occurred while attempting to change your password.</target>
+        <note>Line: 470</note>
+      </trans-unit>
+      <trans-unit id="30d1a8e4c44146dcccec7b7a11db6d6e">
+        <source>The password has been changed successfully.</source>
+        <target>The password has been changed successfully.</target>
+        <note>Line: 464</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

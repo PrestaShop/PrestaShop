@@ -28,7 +28,7 @@
     <country id="PL" id_zone="Europe" iso_code="PL" call_prefix="48" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NN-NNN" display_tax_label="1"/>
     <country id="PT" id_zone="Europe" iso_code="PT" call_prefix="351" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNN-NNN" display_tax_label="1"/>
     <country id="CZ" id_zone="Europe" iso_code="CZ" call_prefix="420" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNN NN" display_tax_label="1"/>
-    <country id="GB" id_zone="Europe" iso_code="GB" call_prefix="44" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
+    <country id="GB" id_zone="Europe_out_E_U" iso_code="GB" call_prefix="44" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
     <country id="SE" id_zone="Europe" iso_code="SE" call_prefix="46" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNN NN" display_tax_label="1"/>
     <country id="CH" id_zone="Europe_out_E_U" iso_code="CH" call_prefix="41" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNN" display_tax_label="1"/>
     <country id="DK" id_zone="Europe" iso_code="DK" call_prefix="45" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNN" display_tax_label="1"/>

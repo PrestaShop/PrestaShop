@@ -39,7 +39,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
@@ -63,18 +66,26 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $mostUsedTaxRulesGroupId;
 
     /**
+     * @var int
+     */
+    private $defaultCategoryId;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
+     * @param int $defaultCategoryId
      */
     public function __construct(
         CommandBusInterface $queryBus,
         bool $defaultProductActivation,
-        int $mostUsedTaxRulesGroupId
+        int $mostUsedTaxRulesGroupId,
+        int $defaultCategoryId
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
+        $this->defaultCategoryId = $defaultCategoryId;
     }
 
     /**
@@ -88,17 +99,17 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         $productData = [
             'id' => $productId,
+            'header' => $this->extractHeaderData($productForEditing),
             'basic' => $this->extractBasicData($productForEditing),
-            'features' => $this->extractFeatureValues((int) $id),
-            'manufacturer' => $this->extractManufacturerValues($productForEditing),
             'stock' => $this->extractStockData($productForEditing),
-            'price' => $this->extractPriceData($productForEditing),
+            'pricing' => $this->extractPricingData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
-            'redirect_option' => $this->extractRedirectOptionData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
-            'suppliers' => $this->extractSuppliersData($productForEditing),
-            'customizations' => $this->extractCustomizationsData($productForEditing),
+            'categories' => $this->extractCategoriesData($productForEditing),
+            'footer' => [
+                'active' => $productForEditing->getOptions()->isActive(),
+            ],
         ];
 
         return $this->addShortcutData($productData);
@@ -109,28 +120,58 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return [
-            'basic' => [
+        return $this->addShortcutData([
+            'header' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
-            'manufacturer' => [
-                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
+            'basic' => [
+                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
-            'price' => [
-                'price_tax_excluded' => 0,
-                'price_tax_included' => 0,
+            'stock' => [
+                'quantities' => [
+                    'quantity' => 0,
+                    'minimal_quantity' => 0,
+                ],
+            ],
+            'pricing' => [
+                'retail_price' => [
+                    'price_tax_excluded' => 0,
+                    'price_tax_included' => 0,
+                ],
                 'tax_rules_group_id' => $this->mostUsedTaxRulesGroupId,
                 'wholesale_price' => 0,
-                'unit_price' => 0,
+                'unit_price' => [
+                    'price' => 0,
+                ],
             ],
             'shipping' => [
-                'width' => 0,
-                'height' => 0,
-                'depth' => 0,
-                'weight' => 0,
+                'dimensions' => [
+                    'width' => 0,
+                    'height' => 0,
+                    'depth' => 0,
+                    'weight' => 0,
+                ],
+                'additional_shipping_cost' => 0,
+                'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
             ],
-            'activate' => $this->defaultProductActivation,
-        ];
+            'options' => [
+                'visibility' => [
+                    'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                ],
+                'condition' => ProductCondition::NEW,
+            ],
+            'categories' => [
+                'product_categories' => [
+                    $this->defaultCategoryId => [
+                        'is_associated' => true,
+                        'is_default' => true,
+                    ],
+                ],
+            ],
+            'footer' => [
+                'active' => $this->defaultProductActivation,
+            ],
+        ]);
     }
 
     /**
@@ -143,17 +184,79 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private function addShortcutData(array $productData): array
     {
         $productData['shortcuts'] = [
-            'price' => [
-                'price_tax_excluded' => $productData['price']['price_tax_excluded'],
-                'price_tax_included' => $productData['price']['price_tax_included'],
-                'tax_rules_group_id' => $productData['price']['tax_rules_group_id'],
+            'retail_price' => [
+                'price_tax_excluded' => $productData['pricing']['retail_price']['price_tax_excluded'],
+                'price_tax_included' => $productData['pricing']['retail_price']['price_tax_included'],
+                'tax_rules_group_id' => $productData['pricing']['tax_rules_group_id'],
             ],
             'stock' => [
-                'quantity' => $productData['stock']['quantity'],
+                'quantity' => $productData['stock']['quantities']['quantity'],
             ],
         ];
 
         return $productData;
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array
+     */
+    private function extractCategoriesData(ProductForEditing $productForEditing): array
+    {
+        $categoriesInformation = $productForEditing->getCategoriesInformation();
+        $categories = [];
+        foreach ($categoriesInformation->getCategoryIds() as $categoryId) {
+            $categories[$categoryId] = [
+                'is_associated' => true,
+                'is_default' => $categoryId === $categoriesInformation->getDefaultCategoryId(),
+            ];
+        }
+
+        return [
+            'product_categories' => $categories,
+        ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, mixed>
+     */
+    private function extractVirtualProductFileData(ProductForEditing $productForEditing): array
+    {
+        $data = [
+            'has_file' => false,
+        ];
+        $virtualProductFile = $productForEditing->getVirtualProductFile();
+
+        if (null !== $virtualProductFile) {
+            $data = [
+                'has_file' => true,
+                'virtual_product_file_id' => $virtualProductFile->getId(),
+                'name' => $virtualProductFile->getDisplayName(),
+                'download_times_limit' => $virtualProductFile->getDownloadTimesLimit(),
+                'access_days_limit' => $virtualProductFile->getAccessDays(),
+                'expiration_date' => $virtualProductFile->getExpirationDate() ?
+                    $virtualProductFile->getExpirationDate()->format(DateTime::DEFAULT_DATE_FORMAT) :
+                    null,
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, mixed>
+     */
+    private function extractHeaderData(ProductForEditing $productForEditing): array
+    {
+        return [
+            'type' => $productForEditing->getType(),
+            'name' => $productForEditing->getBasicInformation()->getLocalizedNames(),
+        ];
     }
 
     /**
@@ -164,10 +267,10 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private function extractBasicData(ProductForEditing $productForEditing): array
     {
         return [
-            'type' => $productForEditing->getType(),
-            'name' => $productForEditing->getBasicInformation()->getLocalizedNames(),
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
+            'features' => $this->extractFeatureValues($productForEditing->getProductId()),
+            'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
         ];
     }
 
@@ -206,18 +309,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array
-     */
-    private function extractManufacturerValues(ProductForEditing $productForEditing): array
-    {
-        return [
-            'manufacturer_id' => $productForEditing->getOptions()->getManufacturerId(),
-        ];
-    }
-
-    /**
-     * @param ProductForEditing $productForEditing
-     *
      * @return array<string, mixed>
      */
     private function extractStockData(ProductForEditing $productForEditing): array
@@ -226,16 +317,23 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $availableDate = $stockInformation->getAvailableDate();
 
         return [
-            'quantity' => $stockInformation->getQuantity(),
-            'minimal_quantity' => $stockInformation->getMinimalQuantity(),
-            'stock_location' => $stockInformation->getLocation(),
-            'low_stock_threshold' => $stockInformation->getLowStockThreshold(),
-            'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
+            'quantities' => [
+                'quantity' => $stockInformation->getQuantity(),
+                'minimal_quantity' => $stockInformation->getMinimalQuantity(),
+            ],
+            'options' => [
+                'stock_location' => $stockInformation->getLocation(),
+                'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
+                'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
+            ],
+            'virtual_product_file' => $this->extractVirtualProductFileData($productForEditing),
             'pack_stock_type' => $stockInformation->getPackStockType(),
-            'out_of_stock_type' => $stockInformation->getOutOfStockType(),
-            'available_now_label' => $stockInformation->getLocalizedAvailableNowLabels(),
-            'available_later_label' => $stockInformation->getLocalizedAvailableLaterLabels(),
-            'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
+            'availability' => [
+                'out_of_stock_type' => $stockInformation->getOutOfStockType(),
+                'available_now_label' => $stockInformation->getLocalizedAvailableNowLabels(),
+                'available_later_label' => $stockInformation->getLocalizedAvailableLaterLabels(),
+                'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
+            ],
         ];
     }
 
@@ -244,24 +342,28 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      *
      * @return array<string, mixed>
      */
-    private function extractPriceData(ProductForEditing $productForEditing): array
+    private function extractPricingData(ProductForEditing $productForEditing): array
     {
         return [
-            'price_tax_excluded' => (float) (string) $productForEditing->getPricesInformation()->getPrice(),
-            'price_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getPriceTaxIncluded(),
-            'ecotax' => (float) (string) $productForEditing->getPricesInformation()->getEcotax(),
+            'retail_price' => [
+                'price_tax_excluded' => (float) (string) $productForEditing->getPricesInformation()->getPrice(),
+                'price_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getPriceTaxIncluded(),
+                'ecotax' => (float) (string) $productForEditing->getPricesInformation()->getEcotax(),
+            ],
             'tax_rules_group_id' => $productForEditing->getPricesInformation()->getTaxRulesGroupId(),
             'on_sale' => $productForEditing->getPricesInformation()->isOnSale(),
             'wholesale_price' => (float) (string) $productForEditing->getPricesInformation()->getWholesalePrice(),
-            'unit_price' => (float) (string) $productForEditing->getPricesInformation()->getUnitPrice(),
-            'unity' => $productForEditing->getPricesInformation()->getUnity(),
+            'unit_price' => [
+                'price' => (float) (string) $productForEditing->getPricesInformation()->getUnitPrice(),
+                'unity' => $productForEditing->getPricesInformation()->getUnity(),
+            ],
         ];
     }
 
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array<string, array<int, string>>
+     * @return array
      */
     private function extractSEOData(ProductForEditing $productForEditing): array
     {
@@ -271,21 +373,33 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'meta_title' => $seoOptions->getLocalizedMetaTitles(),
             'meta_description' => $seoOptions->getLocalizedMetaDescriptions(),
             'link_rewrite' => $seoOptions->getLocalizedLinkRewrites(),
+            'redirect_option' => $this->extractRedirectOptionData($productForEditing),
         ];
     }
 
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array<string, int|string>
+     * @return array{type: string, target: null|array}
      */
     private function extractRedirectOptionData(ProductForEditing $productForEditing): array
     {
         $seoOptions = $productForEditing->getProductSeoOptions();
 
+        // It is important to return null when nothing is selected this way the transformer and therefore
+        // the form field have no value to try and display
+        $redirectTarget = null;
+        if (null !== $seoOptions->getRedirectTarget()) {
+            $redirectTarget = [
+                'id' => $seoOptions->getRedirectTarget()->getId(),
+                'name' => $seoOptions->getRedirectTarget()->getName(),
+                'image' => $seoOptions->getRedirectTarget()->getImage(),
+            ];
+        }
+
         return [
             'type' => $seoOptions->getRedirectType(),
-            'target' => $seoOptions->getRedirectTargetId(),
+            'target' => $redirectTarget,
         ];
     }
 
@@ -299,14 +413,18 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $shipping = $productForEditing->getShippingInformation();
 
         return [
-            'width' => (string) $shipping->getWidth(),
-            'height' => (string) $shipping->getHeight(),
-            'depth' => (string) $shipping->getDepth(),
-            'weight' => (string) $shipping->getWeight(),
+            'dimensions' => [
+                'width' => (string) $shipping->getWidth(),
+                'height' => (string) $shipping->getHeight(),
+                'depth' => (string) $shipping->getDepth(),
+                'weight' => (string) $shipping->getWeight(),
+            ],
             'additional_shipping_cost' => (string) $shipping->getAdditionalShippingCost(),
             'delivery_time_note_type' => $shipping->getDeliveryTimeNoteType(),
-            'delivery_time_in_stock_note' => $shipping->getLocalizedDeliveryTimeInStockNotes(),
-            'delivery_time_out_stock_note' => $shipping->getLocalizedDeliveryTimeOutOfStockNotes(),
+            'delivery_time_notes' => [
+                'in_stock' => $shipping->getLocalizedDeliveryTimeInStockNotes(),
+                'out_of_stock' => $shipping->getLocalizedDeliveryTimeOutOfStockNotes(),
+            ],
             'carriers' => $shipping->getCarrierReferences(),
         ];
     }
@@ -322,19 +440,24 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $details = $productForEditing->getDetails();
 
         return [
-            'active' => $options->isActive(),
-            'visibility' => $options->getVisibility(),
-            'available_for_order' => $options->isAvailableForOrder(),
-            'show_price' => $options->showPrice(),
-            'online_only' => $options->isOnlineOnly(),
+            'visibility' => [
+                'visibility' => $options->getVisibility(),
+                'available_for_order' => $options->isAvailableForOrder(),
+                'show_price' => $options->showPrice(),
+                'online_only' => $options->isOnlineOnly(),
+            ],
+            'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
             'show_condition' => $options->showCondition(),
             'condition' => $options->getCondition(),
-            'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
-            'mpn' => $details->getMpn(),
-            'upc' => $details->getUpc(),
-            'ean_13' => $details->getEan13(),
-            'isbn' => $details->getIsbn(),
-            'reference' => $details->getReference(),
+            'references' => [
+                'mpn' => $details->getMpn(),
+                'upc' => $details->getUpc(),
+                'ean_13' => $details->getEan13(),
+                'isbn' => $details->getIsbn(),
+                'reference' => $details->getReference(),
+            ],
+            'customizations' => $this->extractCustomizationsData($productForEditing),
+            'suppliers' => $this->extractSuppliersData($productForEditing),
         ];
     }
 
@@ -408,7 +531,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $supplierId = $supplierOption->getSupplierId();
 
             $suppliersData['supplier_ids'][] = $supplierId;
-            $suppliersData['product_suppliers'][] = [
+            $suppliersData['product_suppliers'][$supplierId] = [
                 'supplier_id' => $supplierId,
                 'supplier_name' => $supplierOption->getSupplierName(),
                 'product_supplier_id' => $supplierForEditing->getProductSupplierId(),

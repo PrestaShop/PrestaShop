@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class AddressDniRequired extends Constraint
 {
-    public $message = 'This field cannot be empty';
+    public $message = 'This field cannot be empty.';
 
     public $id_country;
 

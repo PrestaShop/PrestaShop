@@ -21,7 +21,7 @@ class MyAccount extends FOBasePage {
 
   /**
    * Go to account information page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToInformationPage(page) {
@@ -30,7 +30,7 @@ class MyAccount extends FOBasePage {
 
   /**
    * Go to order history page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToHistoryAndDetailsPage(page) {
@@ -39,7 +39,7 @@ class MyAccount extends FOBasePage {
 
   /**
    * Go to addresses page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToAddressesPage(page) {
@@ -48,7 +48,7 @@ class MyAccount extends FOBasePage {
 
   /**
    * Go to add first address page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToAddFirstAddressPage(page) {
@@ -57,7 +57,7 @@ class MyAccount extends FOBasePage {
 
   /**
    * Go to vouchers page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToVouchersPage(page) {

@@ -129,7 +129,7 @@ class SupplierType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', 'Admin.Notifications.Error'
+                            'This field cannot be empty.', 'Admin.Notifications.Error'
                         ),
                     ]),
                     new Length([
@@ -202,7 +202,7 @@ class SupplierType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', 'Admin.Notifications.Error'
+                            'This field cannot be empty.', 'Admin.Notifications.Error'
                         ),
                     ]),
                     new TypedRegex([
@@ -225,7 +225,7 @@ class SupplierType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', 'Admin.Notifications.Error'
+                            'This field cannot be empty.', 'Admin.Notifications.Error'
                         ),
                     ]),
                 ],
@@ -351,7 +351,7 @@ class SupplierType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', 'Admin.Notifications.Error'
+                            'This field cannot be empty.', 'Admin.Notifications.Error'
                         ),
                     ]),
                 ],

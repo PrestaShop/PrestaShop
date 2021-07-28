@@ -369,21 +369,21 @@ class Categories extends BOBasePage {
   // Export methods
   /**
    * Click on lint to export categories to a csv file
-   * @param page
-   * @return {Promise<*>}
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
    */
   async exportDataToCsv(page) {
     await Promise.all([
       page.click(this.categoryGridActionsButton),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.gridActionExportLink),
+
+    const [downloadPath] = await Promise.all([
+      this.clickAndWaitForDownload(page, this.gridActionExportLink),
       this.waitForHiddenSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
 
-    return download.path();
+    return downloadPath;
   }
 
   /**

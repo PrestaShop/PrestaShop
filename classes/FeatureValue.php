@@ -139,8 +139,8 @@ class FeatureValueCore extends ObjectModel
      *
      * @param int $idFeature
      * @param string $value
-     * @param null $idProduct
-     * @param null $idLang
+     * @param int|null $idProduct
+     * @param int|null $idLang
      * @param bool $custom
      *
      * @return int

@@ -164,8 +164,8 @@ class ModuleZipManager
         );
         $this->eventDispatcher
             ->dispatch(
-                ModuleZipManagementEvent::DOWNLOAD,
-                new ModuleZipManagementEvent($this->getSource($source))
+                new ModuleZipManagementEvent($this->getSource($source)),
+                ModuleZipManagementEvent::DOWNLOAD
             );
 
         $this->filesystem->remove($sandboxPath);

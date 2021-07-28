@@ -34,13 +34,6 @@ use PrestaShopBundle\Entity\FeatureFlag;
 
 class FeatureFlagTest extends TestCase
 {
-    public function testConstructFeatureFlag()
-    {
-        $featureFlag = new FeatureFlag('PrestaShop');
-
-        // assert nothing, this test aims to validate we can construct the entity
-    }
-
     public function testFeatureFlagRequiresNotEmptyName()
     {
         $this->expectException(InvalidArgumentException::class);

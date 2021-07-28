@@ -1,4 +1,4 @@
-FROM prestashop/base:7.2-apache
+FROM prestashop/base:7.4-apache
 
 WORKDIR /tmp
 

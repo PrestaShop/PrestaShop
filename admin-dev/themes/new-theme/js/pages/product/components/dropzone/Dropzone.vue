@@ -85,9 +85,11 @@
     <modal
       v-if="isModalShown"
       :confirmation="true"
-      :modal-title="$tc('modal.title', this.selectedFiles.length, {
-        '%filesNb%': this.selectedFiles.length,
-      })"
+      :modal-title="
+        $tc('modal.title', this.selectedFiles.length, {
+          '%filesNb%': this.selectedFiles.length,
+        })
+      "
       :confirm-label="$t('modal.accept')"
       :cancel-label="$t('modal.close')"
       @confirm="removeSelection"
@@ -167,6 +169,9 @@
           url: router.generate('admin_products_v2_add_image'),
           clickable: DropzoneMap.configuration.fileManager,
           previewTemplate: null,
+          thumbnailWidth: 130,
+          thumbnailHeight: 130,
+          thumbnailMethod: 'crop',
         },
         files: [],
         selectedFiles: [],
@@ -223,7 +228,8 @@
                 this.selectedLocale = locale;
               }
             });
-          });
+          },
+        );
       },
       /**
        * This methods is used to initialize product images we already have uploaded
@@ -236,7 +242,7 @@
           this.initDropZone();
 
           images.forEach((image) => {
-            this.dropzone.displayExistingFile(image, image.path);
+            this.dropzone.displayExistingFile(image, image.image_url);
           });
         } catch (error) {
           window.$.growl.error({message: error});
@@ -248,7 +254,7 @@
        */
       initDropZone() {
         this.configuration.previewTemplate = document.querySelector(
-          '.dz-template',
+          DropzoneMap.dzTemplate,
         ).innerHTML;
         this.configuration.paramName = `${this.formName}[file]`;
         this.configuration.method = 'POST';
@@ -261,12 +267,12 @@
         this.sortableContainer = $('#product-images-dropzone');
 
         this.dropzone = new window.Dropzone(
-          '.dropzone-container',
+          DropzoneMap.dropzoneContainer,
           this.configuration,
         );
 
         this.sortableContainer.sortable({
-          items: 'div.dz-preview:not(.disabled)',
+          items: DropzoneMap.sortableItems,
           opacity: 0.9,
           containment: 'parent',
           distance: 32,
@@ -282,7 +288,7 @@
             this.updateImagePosition(ui.item.data('id'), movedPosition);
           },
           start: (event, ui) => {
-            this.sortableContainer.find('.dz-preview').css('zIndex', 1);
+            this.sortableContainer.find(DropzoneMap.dzPreview).css('zIndex', 1);
             ui.item.css('zIndex', 10);
           },
         });
@@ -293,8 +299,9 @@
           if (file.is_cover) {
             file.previewElement.classList.add('is-cover');
           }
+
           file.previewElement.addEventListener('click', () => {
-            const input = file.previewElement.querySelector('.md-checkbox input');
+            const input = file.previewElement.querySelector(DropzoneMap.checkbox);
             input.checked = !input.checked;
 
             if (input.checked) {
@@ -322,6 +329,10 @@
           file.legends = response.legends;
           // Update dataset so that it can be selected later
           file.previewElement.dataset.id = file.image_id;
+
+          if (file.is_cover) {
+            file.previewElement.classList.add('is-cover');
+          }
         });
       },
       /**
@@ -357,15 +368,15 @@
               this.dropzone.removeFile(file);
 
               this.files = this.files.filter((e) => file !== e);
-              this.selectedFiles = this.selectedFiles.filter(
-                (e) => file !== e,
-              );
+              this.selectedFiles = this.selectedFiles.filter((e) => file !== e);
 
               if (file.is_cover) {
                 isCoverImageRemoved = true;
               }
             } catch (error) {
-              errorMessage = error.responseJSON ? error.responseJSON.error : error;
+              errorMessage = error.responseJSON
+                ? error.responseJSON.error
+                : error;
             }
           }),
         );
@@ -393,7 +404,7 @@
        */
       editCheckboxes(checked) {
         this.selectedFiles.forEach((file) => {
-          const input = file.previewElement.querySelector('.md-checkbox input');
+          const input = file.previewElement.querySelector(DropzoneMap.checkbox);
           input.checked = typeof checked !== 'undefined' ? checked : !input.checked;
 
           file.previewElement.classList.toggle('selected', checked);
@@ -403,7 +414,7 @@
        * We sometime need to remove tooltip because Vue kick the markup of the component
        */
       removeTooltips() {
-        $('.tooltip.show').each((i, element) => {
+        $(DropzoneMap.shownTooltips).each((i, element) => {
           $(element).remove();
         });
       },
@@ -431,7 +442,7 @@
           );
 
           const savedImageElement = document.querySelector(
-            `.dz-preview[data-id="${savedImage.image_id}"]`,
+            DropzoneMap.savedImageContainer(savedImage.image_id),
           );
 
           /**
@@ -440,8 +451,14 @@
            */
           if (savedImage.is_cover) {
             if (!savedImageElement.classList.contains('is-cover')) {
-              const coverElement = document.querySelector('.dz-preview.is-cover');
-              coverElement.classList.remove('is-cover');
+              const coverElement = document.querySelector(
+                DropzoneMap.coveredPreview,
+              );
+
+              if (coverElement) {
+                coverElement.classList.remove('is-cover');
+              }
+
               savedImageElement.classList.add('is-cover');
 
               this.files = this.files.map((file) => {
@@ -475,9 +492,10 @@
             this.token,
           );
           const imageElement = document.querySelector(
-            `.dz-preview[data-id="${newImage.image_id}"] img`,
+            DropzoneMap.savedImage(newImage.image_id),
           );
-          imageElement.src = newImage.path;
+          const imageUpdateTime = new Date();
+          imageElement.src = `${newImage.image_url}?${imageUpdateTime.getTime()}`;
 
           $.growl({message: this.$t('window.imageReplaced')});
           this.buttonLoading = false;
@@ -488,7 +506,12 @@
       },
       async updateImagePosition(productImageId, newPosition) {
         try {
-          await saveImagePosition(productImageId, newPosition, this.formName, this.token);
+          await saveImagePosition(
+            productImageId,
+            newPosition,
+            this.formName,
+            this.token,
+          );
         } catch (error) {
           this.sortableContainer.sortable('cancel');
           $.growl.error({message: error.responseJSON.error});
@@ -524,7 +547,8 @@
 </script>
 
 <style lang="scss" type="text/scss">
-@import "~@scss/config/_settings.scss";
+@import '~@scss/config/_settings.scss';
+@import '~@scss/config/_bootstrap.scss';
 
 .product-page #product-images-dropzone {
   &.full {
@@ -547,6 +571,10 @@
 
       .iscover {
         display: none;
+        left: -2px;
+        bottom: -3px;
+        width: calc(100% + 4px);
+        padding: 9px;
       }
       &.is-cover {
         .iscover {
@@ -571,6 +599,7 @@
 
       &.openfilemanager {
         border-style: dashed;
+        min-width: 130px;
 
         &:hover {
           border-style: solid;
@@ -609,10 +638,10 @@
 
     .dz-hover {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: -3px;
+      left: -3px;
+      width: calc(100% + 6px);
+      height: calc(100% + 6px);
       background-color: rgba(0, 0, 0, 0);
       transition: 0.25s ease-out;
       pointer-events: none;
@@ -647,8 +676,43 @@
 }
 
 .product-page #product-images-container {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  @include media-breakpoint-down(xs) {
+    flex-wrap: wrap;
+  }
+
+  #product-images-dropzone.dropzone {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-radius: 4px;
+    flex-wrap: wrap;
+
+    @include media-breakpoint-down(xs) {
+      flex-wrap: wrap;
+      justify-content: space-around;
+      width: 100%;
+
+      .dz-preview {
+        width: 100px;
+        height: 100px;
+        min-height: 100px;
+        margin: 0.5rem;
+
+        &.openfilemanager {
+          min-width: 100px;
+        }
+
+        img {
+          max-width: 100%;
+          max-height: 100%;
+        }
+
+        .dz-image {
+          width: 100px;
+          height: 100px;
+        }
+      }
+    }
+  }
 }
 </style>

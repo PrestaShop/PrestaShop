@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Address;
 use AdminController;
+use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Configuration;
@@ -184,16 +185,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $productName = $data['name'];
         $product = $this->getProductByName($productName);
+        $productId = (int) $product->getProductId();
 
-        $productId = $product->getProductId();
-        if (isset($data['combination'])) {
-            $combinationId = $this->getProductCombinationId($product, $data['combination']);
-        } else {
-            $combinationId = 0;
-        }
+        $combinationId = isset($data['combination']) ? $this->getProductCombinationId($product, $data['combination']) : 0;
 
         if (empty($data['price_tax_incl'])) {
-            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, (int) $productId);
+            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, $productId);
             $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
         }
 
@@ -648,7 +645,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $invoiceId = (int) $invoice->id;
         }
 
-        // if tax included price is not given, it is calculated
+        // If tax included price is not given, it is calculated
         if (!isset($data['price_tax_incl'])) {
             $taxCalculator = $this->getProductTaxCalculator($orderId, (int) $productOrderDetail['product_id']);
             $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
@@ -1465,6 +1462,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             'phone' => $shippingAddress->getPhone(),
             'carrierName' => $shippingAddress->getCarrierName(),
             'trackingNumber' => $shippingAddress->getTrackingNumber(),
+            'trackingUrl' => $shippingAddress->getTrackingUrl(),
         ];
 
         $expectedDetails = $table->getRowsHash();
@@ -1474,6 +1472,36 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $address[$key]
             );
         }
+    }
+
+    /**
+     * @Then /^the order "(.+)" preview has the following formatted (shipping|invoice) address$/
+     */
+    public function getOrderPreviewFormattedAddress(
+        string $orderReference,
+        string $addressType,
+        PyStringNode $pyStringNode
+    ): void {
+        $orderId = $this->getSharedStorage()->get($orderReference);
+        /** @var OrderPreview $orderPreview */
+        $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
+
+        if ($addressType == 'shipping') {
+            $address = $orderPreview->getShippingAddressFormatted();
+        } elseif ($addressType == 'invoice') {
+            $address = $orderPreview->getInvoiceAddressFormatted();
+        }
+
+        Assert::assertEquals(
+            $address,
+            $pyStringNode->getRaw(),
+            sprintf(
+                'Invalid formatted address for preview order %s, expected %s instead of %s',
+                $orderReference,
+                $address,
+                $pyStringNode->getRaw()
+            )
+        );
     }
 
     /**
@@ -1784,13 +1812,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param int $orderId
+     * @param int $productId
      *
-     * @return TaxCalculator|null
+     * @return TaxCalculator
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    private function getProductTaxCalculator(int $orderId, int $productId)
+    private function getProductTaxCalculator(int $orderId, int $productId): TaxCalculator
     {
         $order = new Order($orderId);
         $taxAddress = new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
@@ -1855,17 +1884,13 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderId = SharedStorage::getStorage()->get($orderReference);
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        switch ($addressType) {
-            case 'shipping':
-                /** @var OrderShippingAddressForViewing $address */
-                $address = $orderForViewing->getShippingAddress();
-                break;
-            case 'invoice':
-                /** @var OrderInvoiceAddressForViewing $address */
-                $address = $orderForViewing->getInvoiceAddress();
-                break;
-            default:
-                throw new RuntimeException('Adress Type is invalid');
+
+        if ($addressType == 'shipping') {
+            /** @var OrderShippingAddressForViewing $address */
+            $address = $orderForViewing->getShippingAddress();
+        } elseif ($addressType == 'invoice') {
+            /** @var OrderInvoiceAddressForViewing $address */
+            $address = $orderForViewing->getInvoiceAddress();
         }
 
         $expectedDetails = $table->getRowsHash();
@@ -1897,7 +1922,41 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then /^the order "(.+)" has the following formatted (shipping|invoice) address$/
+     *
+     * @param string $orderReference
+     * @param string $addressType
+     * @param PyStringNode $pyStringNode
+     */
+    public function orderCheckAddressFormatted(string $orderReference, string $addressType, PyStringNode $pyStringNode): void
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        if ($addressType == 'shipping') {
+            /** @var OrderShippingAddressForViewing $address */
+            $address = $orderForViewing->getShippingAddressFormatted();
+        } elseif ($addressType == 'invoice') {
+            /** @var OrderInvoiceAddressForViewing $address */
+            $address = $orderForViewing->getInvoiceAddressFormatted();
+        }
+
+        Assert::assertEquals(
+            $address,
+            $pyStringNode->getRaw(),
+            sprintf(
+                'Invalid formatted address for order %s, expected %s instead of %s',
+                $orderReference,
+                $address,
+                $pyStringNode->getRaw()
+            )
+        );
+    }
+
+    /**
      * @Then /^the preview order "(.+)" has following (shipping|invoice) address$/
+     * @Then /^the preview order "(.+)" has following (shipping) details$/
      *
      * @param string $orderReference
      * @param string $addressType
@@ -1918,7 +1977,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $address = $orderPreview->getInvoiceDetails();
                 break;
             default:
-                throw new RuntimeException('Adress Type is invalid');
+                throw new RuntimeException('Address Type is invalid');
         }
 
         $expectedDetails = $table->getRowsHash();
@@ -1930,6 +1989,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             'Fullname' => $address->getFirstName() . ' ' . $address->getLastname(),
             'Postal code' => $address->getPostalCode(),
         ];
+        if ('shipping' === $addressType) {
+            $arrayActual += [
+                'Tracking number' => $address->getTrackingNumber(),
+                'Tracking URL' => $address->getTrackingUrl(),
+            ];
+        }
         foreach ($expectedDetails as $detailName => $expectedDetailValue) {
             if (!array_key_exists($detailName, $arrayActual)) {
                 throw new RuntimeException(sprintf('Invalid check for address field %s', $detailName));
@@ -1944,6 +2009,80 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     $orderReference,
                     $expectedDetailValue,
                     $arrayActual[$detailName]
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then /^the order "(.+)" should have (\d+) document(s?)$/
+     *
+     * @param string $orderReference
+     * @param int $numDocuments
+     */
+    public function orderHasNumDocuments(string $orderReference, int $numDocuments): void
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        Assert::assertEquals(
+            $numDocuments,
+            count($orderForViewing->getDocuments()->getDocuments()),
+            sprintf(
+                'Invalid number of order documents, expected %s but got %s instead',
+                $numDocuments,
+                count($orderForViewing->getDocuments()->getDocuments())
+            )
+        );
+    }
+
+    /**
+     * @Then /^the order "(.+)" should have following documents:$/
+     *
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function orderHasFollowingDocuments(string $orderReference, TableNode $table): void
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        $expectedDetails = $table->getHash();
+        foreach ($expectedDetails as $expectedDetail) {
+            $hasDocument = $document = false;
+            foreach ($orderForViewing->getDocuments()->getDocuments() as $document) {
+                if ($expectedDetail['referenceNumber'] === $document->getReferenceNumber()) {
+                    $hasDocument = true;
+                    break;
+                }
+            }
+            if (!$hasDocument) {
+                throw new RuntimeException(sprintf(
+                    'Document not found : %s',
+                    $expectedDetail['referenceNumber']
+                ));
+            }
+
+            Assert::assertEquals(
+                $expectedDetail['type'],
+                $document->getType(),
+                sprintf(
+                    'Invalid document type for order %s, expected %s instead of %s',
+                    $orderReference,
+                    $expectedDetail['type'],
+                    $document->getType()
+                )
+            );
+            Assert::assertEquals(
+                $expectedDetail['amount'],
+                $document->getAmount(),
+                sprintf(
+                    'Invalid document type for order %s, expected %s instead of %s',
+                    $orderReference,
+                    $expectedDetail['amount'],
+                    $document->getAmount()
                 )
             );
         }

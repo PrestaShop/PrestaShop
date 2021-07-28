@@ -48,11 +48,11 @@
         {/block}
       </header>
 
-      {block name='notifications'}
-        {include file='_partials/notifications.tpl'}
-      {/block}
-
       <section id="wrapper">
+        {block name='notifications'}
+          {include file='_partials/notifications.tpl'}
+        {/block}
+
         {hook h="displayWrapperTop"}
         <div class="container">
           {block name='breadcrumb'}
@@ -62,7 +62,7 @@
           {block name="left_column"}
             <div id="left-column" class="col-xs-12 col-sm-4 col-md-3">
               {if $page.page_name == 'product'}
-                {hook h='displayLeftColumnProduct'}
+                {hook h='displayLeftColumnProduct' product=$product category=$category}
               {else}
                 {hook h="displayLeftColumn"}
               {/if}

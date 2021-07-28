@@ -77,3 +77,9 @@ services:
           'es': 'http://doc.prestashop.com/display/PS17/Gestionar+Transportistas'
           'it': 'http://doc.prestashop.com/display/PS17/Corrieri'
           '_fallback': 'https://doc.prestashop.com/display/PS17/Carriers'
+        'combinations':
+            'en': 'http://doc.prestashop.com/display/PS17/Managing+Products#ManagingProducts-Creatingaproductwithcombinations'
+            'fr': "http://doc.prestashop.com/display/PS17/Gerer+les+produits#Gererlesproduits-Cr%%C3%%A9ationd'unproduitavecdesd%%C3%%A9clinaisons"
+            'es': 'http://doc.prestashop.com/display/PS17/Gestionar+los+productos#Gestionarlosproductos-Crearunproductoconcombinaciones'
+            'it': 'http://doc.prestashop.com/display/PS17/Gestire+Prodotti#GestireProdotti-Creareunprodottoconcombinazioni'
+            '_fallback': 'http://doc.prestashop.com/display/PS17/Managing+Products#ManagingProducts-Creatingaproductwithcombinations'

@@ -59,7 +59,7 @@ class GeneralConfiguration implements DataConfigurationInterface
     {
         $this->configuration = $configuration;
         $this->cookie = $cookie;
-        $this->isDebug = $isDebug === null ? (defined(_PS_MODE_DEV_) ? _PS_MODE_DEV_ : true) : $isDebug;
+        $this->isDebug = $isDebug === null ? (defined('_PS_MODE_DEV_') ? _PS_MODE_DEV_ : true) : $isDebug;
     }
 
     /**
@@ -94,7 +94,7 @@ class GeneralConfiguration implements DataConfigurationInterface
         if ($this->validateConfiguration($configuration)) {
             if (!$this->validateSameSite($configuration['cookie_samesite'])) {
                 $errors[] = [
-                    'key' => 'The SameSite=None is only available in Secure mode.',
+                    'key' => 'The SameSite=None is only available in secure mode.',
                     'domain' => 'Admin.Advparameters.Notification',
                     'parameters' => [],
                 ];

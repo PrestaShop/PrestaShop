@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageFileNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
-use Tools;
 
 /**
  * Responsible for validating image before upload
@@ -47,11 +46,11 @@ class ImageValidator
     private $maxUploadSize;
 
     /**
-     * @param int|null $maxUploadSize
+     * @param int $maxUploadSize
      */
-    public function __construct(?int $maxUploadSize = null)
+    public function __construct(int $maxUploadSize)
     {
-        $this->maxUploadSize = $maxUploadSize ?: Tools::getMaxUploadSize();
+        $this->maxUploadSize = $maxUploadSize;
     }
 
     /**

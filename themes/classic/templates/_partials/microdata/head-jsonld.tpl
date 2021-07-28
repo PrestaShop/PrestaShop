@@ -57,7 +57,7 @@
       "url" : "{$urls.pages.index}",
       "image": {
         "@type": "ImageObject",
-        "url":"{$urls.shop_domain_url}{$shop.logo}"
+        "url":"{$shop.logo}"
       },
       "potentialAction": {
         "@type": "SearchAction",

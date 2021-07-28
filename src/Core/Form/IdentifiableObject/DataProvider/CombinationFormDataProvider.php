@@ -30,7 +30,11 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
@@ -63,8 +67,13 @@ class CombinationFormDataProvider implements FormDataProviderInterface
 
         return [
             'id' => $combinationId,
+            'product_id' => $combinationForEditing->getProductId(),
             'name' => $combinationForEditing->getName(),
             'stock' => $this->extractStockData($combinationForEditing),
+            'price_impact' => $this->extractPriceImpactData($combinationForEditing),
+            'references' => $this->extractReferencesData($combinationForEditing),
+            'suppliers' => $this->extractSuppliersData($combinationForEditing),
+            'images' => $combinationForEditing->getImageIds(),
         ];
     }
 
@@ -79,13 +88,95 @@ class CombinationFormDataProvider implements FormDataProviderInterface
         $availableDate = $stockInformation->getAvailableDate();
 
         return [
-            'quantity' => $stockInformation->getQuantity(),
-            'minimal_quantity' => $stockInformation->getMinimalQuantity(),
-            'stock_location' => $stockInformation->getLocation(),
-            'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
-            'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
+            'quantities' => [
+                'quantity' => $stockInformation->getQuantity(),
+                'minimal_quantity' => $stockInformation->getMinimalQuantity(),
+            ],
+            'options' => [
+                'stock_location' => $stockInformation->getLocation(),
+                'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
+                'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
+            ],
             'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
         ];
+    }
+
+    /**
+     * @param CombinationForEditing $combinationForEditing
+     *
+     * @return array
+     */
+    private function extractPriceImpactData(CombinationForEditing $combinationForEditing): array
+    {
+        $priceImpactInformation = $combinationForEditing->getPrices();
+
+        return [
+            'wholesale_price' => (float) (string) $priceImpactInformation->getWholesalePrice(),
+            'price_tax_excluded' => (float) (string) $priceImpactInformation->getImpactOnPrice(),
+            'price_tax_included' => (float) (string) $priceImpactInformation->getImpactOnPriceTaxIncluded(),
+            'ecotax' => (float) (string) $priceImpactInformation->getEcoTax(),
+            'unit_price' => (float) (string) $priceImpactInformation->getImpactOnUnitPrice(),
+            'weight' => (float) (string) $combinationForEditing->getDetails()->getImpactOnWeight(),
+        ];
+    }
+
+    /**
+     * @param CombinationForEditing $combinationForEditing
+     *
+     * @return array
+     */
+    private function extractReferencesData(CombinationForEditing $combinationForEditing): array
+    {
+        $details = $combinationForEditing->getDetails();
+
+        return [
+            'reference' => $details->getReference(),
+            'isbn' => $details->getIsbn(),
+            'ean_13' => $details->getEan13(),
+            'upc' => $details->getUpc(),
+            'mpn' => $details->getMpn(),
+        ];
+    }
+
+    /**
+     * @param CombinationForEditing $combinationForEditing
+     *
+     * @return array<string, int|array<int, int|array<string, string|int>>>
+     */
+    private function extractSuppliersData(CombinationForEditing $combinationForEditing): array
+    {
+        /** @var ProductSupplierOptions $productSupplierOptions */
+        $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($combinationForEditing->getProductId()));
+
+        /** @var ProductSupplierInfo[] $combinationSupplierInfos */
+        $combinationSupplierInfos = $this->queryBus->handle(new GetCombinationSuppliers($combinationForEditing->getCombinationId()));
+
+        if (empty($combinationSupplierInfos)) {
+            return [];
+        }
+
+        $defaultSupplierId = $productSupplierOptions->getDefaultSupplierId();
+        $suppliersData = [
+            'default_supplier_id' => $defaultSupplierId,
+        ];
+
+        foreach ($combinationSupplierInfos as $supplierOption) {
+            $supplierForEditing = $supplierOption->getProductSupplierForEditing();
+            $supplierId = $supplierOption->getSupplierId();
+
+            $suppliersData['supplier_ids'][] = $supplierId;
+            $suppliersData['product_suppliers'][$supplierId] = [
+                'supplier_id' => $supplierId,
+                'supplier_name' => $supplierOption->getSupplierName(),
+                'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
+                'price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
+                'reference' => $supplierForEditing->getReference(),
+                'currency_id' => $supplierForEditing->getCurrencyId(),
+                'combination_id' => $supplierForEditing->getCombinationId(),
+            ];
+        }
+
+        return $suppliersData;
     }
 
     /**

@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_.'prestashop/smarty/');
 
 global $smarty;
 if (Configuration::get('PS_SMARTY_LOCAL')) {
@@ -34,10 +33,10 @@ if (Configuration::get('PS_SMARTY_LOCAL')) {
     $smarty = new Smarty();
 }
 
+$smarty->setConfigDir([]);
 $smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
 $smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
 $smarty->use_sub_dirs = true;
-$smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
 $smarty->caching = false;
 
 if (Configuration::get('PS_SMARTY_CACHING_TYPE') == 'mysql') {

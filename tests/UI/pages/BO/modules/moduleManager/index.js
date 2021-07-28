@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Module manager page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class ModuleManager extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on module manager page
+   */
   constructor() {
     super();
 
@@ -34,9 +43,9 @@ class ModuleManager extends BOBasePage {
 
   /**
    * Search Module in Page module Catalog
-   * @param page
-   * @param moduleTag, Tag of Module
-   * @param moduleName, Name of module
+   * @param page {Page} Browser tab
+   * @param moduleTag {string} Tag of the Module
+   * @param moduleName {string} Name of the module
    * @return {Promise<void>}
    */
   async searchModule(page, moduleTag, moduleName) {
@@ -47,8 +56,8 @@ class ModuleManager extends BOBasePage {
 
   /**
    * Click on button configure of a module
-   * @param page
-   * @param moduleName, Name of module
+   * @param page {Page} Browser tab
+   * @param moduleName {string} Name of the module
    * @return {Promise<void>}
    */
   async goToConfigurationPage(page, moduleName) {
@@ -63,24 +72,24 @@ class ModuleManager extends BOBasePage {
 
   /**
    * Filter modules by status
-   * @param page
-   * @param enabled
+   * @param page {Page} Browser tab
+   * @param status {boolean} Status to filter with
    * @return {Promise<void>}
    */
-  async filterByStatus(page, enabled) {
+  async filterByStatus(page, status) {
     // Open dropdown
     await page.click(this.statusDropdownDiv);
     await this.waitForVisibleSelector(page, `${this.statusDropdownDiv}[aria-expanded='true']`);
 
     // Select dropdown item
-    await page.click(this.statusDropdownItemLink(enabled ? 1 : 0));
+    await page.click(this.statusDropdownItemLink(status ? 1 : 0));
     await this.waitForVisibleSelector(page, `${this.statusDropdownDiv}[aria-expanded='false']`);
   }
 
   /**
    * Get status of module (enable/disable)
-   * @param page
-   * @param moduleName
+   * @param page {Page} Browser tab
+   * @param moduleName {string} Name of the module
    * @return {Promise<boolean>}
    */
   async isModuleEnabled(page, moduleName) {
@@ -89,8 +98,8 @@ class ModuleManager extends BOBasePage {
 
   /**
    * Get all modules status
-   * @param page
-   * @returns {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<Array<boolean>>}
    */
   async getAllModulesStatus(page) {
     const modulesStatus = [];
@@ -106,8 +115,8 @@ class ModuleManager extends BOBasePage {
 
   /**
    * Get All modules names
-   * @param page
-   * @return {Promise<table>}
+   * @param page {Page} Browser tab
+   * @return {Promise<<Array<string>>}
    */
   async getAllModulesNames(page) {
     return page.$$eval(
@@ -118,8 +127,8 @@ class ModuleManager extends BOBasePage {
 
   /**
    * Filter by category
-   * @param page
-   * @param category
+   * @param page {Page} Browser tab
+   * @param category {string} Name of module's category to filter with
    * @return {Promise<void>}
    */
   async filterByCategory(page, category) {
@@ -135,8 +144,8 @@ class ModuleManager extends BOBasePage {
 
   /**
    * Get modules block title (administration / payment ...)
-   * @param page
-   * @param position
+   * @param page {Page} Browser tab
+   * @param position {number} Position of the module on the list
    * @return {Promise<void>}
    */
   async getBlockModuleTitle(page, position) {

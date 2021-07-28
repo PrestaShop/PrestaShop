@@ -30,8 +30,20 @@ import CombinationModal from '@pages/product/components/combination-modal/Combin
 
 Vue.use(VueI18n);
 
-export default function initCombinationModal(combinationModalSelector, productId) {
+/**
+ * @param {string} combinationModalSelector
+ * @param {int} productId
+ * @param {Object} eventEmitter
+ *
+ * @returns {Vue|CombinedVueInstance<Vue, {eventEmitter, productId}, object, object, Record<never, any>>|null}
+ */
+export default function initCombinationModal(
+  combinationModalSelector,
+  productId,
+  eventEmitter,
+) {
   const container = document.querySelector(combinationModalSelector);
+  const {emptyImage} = container.dataset;
 
   if (!container) {
     return null;
@@ -46,11 +58,14 @@ export default function initCombinationModal(combinationModalSelector, productId
 
   return new Vue({
     el: combinationModalSelector,
-    template: '<combination-modal :productId=productId />',
+    template:
+      '<combination-modal :productId=productId :emptyImageUrl="emptyImage" :eventEmitter=eventEmitter />',
     components: {CombinationModal},
     i18n,
     data: {
       productId,
+      eventEmitter,
+      emptyImage,
     },
   });
 }

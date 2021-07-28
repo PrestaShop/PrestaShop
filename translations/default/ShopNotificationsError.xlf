@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/CartRule.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5a6448a8d8e77fa43df91db2eea79fb1">
+        <source>This voucher is disabled</source>
+        <target>This voucher is disabled</target>
+        <note>Line: 689</note>
+      </trans-unit>
+      <trans-unit id="8232b04735bff65500e6fcc378ba1f4a">
+        <source>This voucher has already been used</source>
+        <target>This voucher has already been used</target>
+        <note>Line: 692</note>
+      </trans-unit>
+      <trans-unit id="b38f15cfb6f5640c4ff55cd72c7575f6">
+        <source>This voucher is not valid yet</source>
+        <target>This voucher is not valid yet</target>
+        <note>Line: 695</note>
+      </trans-unit>
+      <trans-unit id="098eb45965b4097a844451b00737e89b">
+        <source>This voucher has expired</source>
+        <target>This voucher has expired</target>
+        <note>Line: 698</note>
+      </trans-unit>
+      <trans-unit id="6da9714ab9db11108de5b4a82bf7f59e">
+        <source>You cannot use this voucher anymore (usage limit reached)</source>
+        <target>You cannot use this voucher anymore (usage limit reached)</target>
+        <note>Line: 718</note>
+      </trans-unit>
+      <trans-unit id="097d067ff8635d1496467ce7dd236c07">
+        <source>You cannot use this voucher</source>
+        <target>You cannot use this voucher</target>
+        <note>Line: 808</note>
+      </trans-unit>
+      <trans-unit id="02b1546a6a121a54540f3755758a976b">
+        <source>You must choose a delivery address before applying this voucher to your order</source>
+        <target>You must choose a delivery address before applying this voucher to your order</target>
+        <note>Line: 737</note>
+      </trans-unit>
+      <trans-unit id="fd6034a1544218709264bfa5c70ffb69">
+        <source>You cannot use this voucher in your country of delivery</source>
+        <target>You cannot use this voucher in your country of delivery</target>
+        <note>Line: 745</note>
+      </trans-unit>
+      <trans-unit id="eb4a4722b2130dad0a240b2d49742be8">
+        <source>You must choose a carrier before applying this voucher to your order</source>
+        <target>You must choose a carrier before applying this voucher to your order</target>
+        <note>Line: 752</note>
+      </trans-unit>
+      <trans-unit id="1a7bdc2c01aaa7757d475e204f2bc6f9">
+        <source>You cannot use this voucher with this carrier</source>
+        <target>You cannot use this voucher with this carrier</target>
+        <note>Line: 761</note>
+      </trans-unit>
+      <trans-unit id="40869c38d826da9c21cc0359f905e5b3">
+        <source>You cannot use this voucher on products on sale</source>
+        <target>You cannot use this voucher on products on sale</target>
+        <note>Line: 776</note>
+      </trans-unit>
+      <trans-unit id="3fb396b59440efc171f576e02ecfa88a">
+        <source>Please log in first</source>
+        <target>Please log in first</target>
+        <note>Line: 805</note>
+      </trans-unit>
+      <trans-unit id="dc0c81278849e0f6a297e93c935e465d">
+        <source>You have not reached the minimum amount required to use this voucher</source>
+        <target>You have not reached the minimum amount required to use this voucher</target>
+        <note>Line: 850</note>
+      </trans-unit>
+      <trans-unit id="d0f1560c5d1b13b1e64fa87a301dd83b">
+        <source>This voucher is already in your cart</source>
+        <target>This voucher is already in your cart</target>
+        <note>Line: 868</note>
+      </trans-unit>
+      <trans-unit id="4837d38bc896f38c39d6f7024e466967">
+        <source>This voucher is not combinable with an other voucher already in your cart: %s</source>
+        <target>This voucher is not combinable with an other voucher already in your cart: %s</target>
+        <note>Line: 886</note>
+      </trans-unit>
+      <trans-unit id="e199546c0a1d80f1bf116b131ee02e22">
+        <source>Cart is empty</source>
+        <target>Cart is empty</target>
+        <note>Line: 897</note>
+      </trans-unit>
+      <trans-unit id="f6b43936fe8476614100c342b9c4750d">
+        <source>You cannot use this voucher in an empty cart</source>
+        <target>You cannot use this voucher in an empty cart</target>
+        <note>Line: 968</note>
+      </trans-unit>
+      <trans-unit id="f9330b1b2afa3c4dbc8e31e14a0b150a">
+        <source>You cannot use this voucher with these products</source>
+        <target>You cannot use this voucher with these products</target>
+        <note>Line: 1137</note>
+      </trans-unit>
+      <trans-unit id="1a0c8c4e381164295f1e06d777411d11">
+        <source>You cannot use this voucher because it has manually been removed.</source>
+        <target>You cannot use this voucher because it has manually been removed.</target>
+        <note>Line: 909</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/form/CustomerForm.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="eefb581d7c421334e62a68223c7a242a">
+        <source>The email is already used, please choose another one or sign in</source>
+        <target>The email is already used, please choose another one or sign in</target>
+        <note>Line: 124</note>
+      </trans-unit>
+      <trans-unit id="b09361692fc1f7636d9b8657b94a7bb4">
+        <source>Password must be between 5 and 72 characters long</source>
+        <target>Password must be between 5 and 72 characters long</target>
+        <note>Line: 147</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/form/CustomerLoginForm.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="90162cff1b4a1a5a765c542ddc499998">
+        <source>Your account isn't available at this time, please contact us</source>
+        <target>Your account isn't available at this time, please contact us</target>
+        <note>Line: 76</note>
+      </trans-unit>
+      <trans-unit id="802b207b05fe5cea22e11b9db804b33d">
+        <source>Authentication failed.</source>
+        <target>Authentication failed.</target>
+        <note>Line: 78</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/form/CustomerPersister.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="47be05698f8dd87bb445ceefce6abd0d">
+        <source>Password is required</source>
+        <target>Password is required</target>
+        <note>Line: 159</note>
+      </trans-unit>
+      <trans-unit id="d2f614cac7a0f970168f6d129860a1c0">
+        <source>Invalid email/password combination</source>
+        <target>Invalid email/password combination</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="5f377de6cd38d0577c9628eeaecb3d0f">
+        <source>There seems to be an issue with your account, please contact support</source>
+        <target>There seems to be an issue with your account, please contact support</target>
+        <note>Line: 101</note>
+      </trans-unit>
+      <trans-unit id="e3cf2c117615da59fb8930d299eb16f3">
+        <source>An account was already registered with this email address</source>
+        <target>An account was already registered with this email address</target>
+        <note>Line: 187</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/stock/SupplyOrderDetail.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1f597c6798d6a39dd2bde999d547331a">
+        <source>%s is required.</source>
+        <target>%s is required.</target>
+        <note>Line: 300</note>
+      </trans-unit>
+      <trans-unit id="8ae0cb74f9724518e1ce68c503377002">
+        <source>is invalid.</source>
+        <target>is invalid.</target>
+        <note>Line: 345</note>
+      </trans-unit>
+      <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
+        <source>The %1$s field is too long (%2$d chars max).</source>
+        <target>The %1$s field is too long (%2$d chars max).</target>
+        <note>Line: 314</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/AddressController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0adae640fffe5e6c0208e25f13aaa414">
+        <source>Please fix the error below.</source>
+        <target>Please fix the error below.</target>
+        <note>Line: 69</note>
+      </trans-unit>
+      <trans-unit id="2af64b8ece83492468fbc41f9b692556">
+        <source>Could not delete address.</source>
+        <target>Could not delete address.</target>
+        <note>Line: 109</note>
+      </trans-unit>
+      <trans-unit id="beb19eac775bc240590f89e361d2baab">
+        <source>Could not delete the address since it is used in the shopping cart.</source>
+        <target>Could not delete the address since it is used in the shopping cart.</target>
+        <note>Line: 93</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/AddressesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a3abb251955ac102dfda84c06e7e2e13">
+        <source>The customer could not be found.</source>
+        <target>The customer could not be found.</target>
+        <note>Line: 43</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/CartController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="897bbb78781eb767eee3a4ac3e820185">
+        <source>You must enter a voucher code.</source>
+        <target>You must enter a voucher code.</target>
+        <note>Line: 253</note>
+      </trans-unit>
+      <trans-unit id="417d63b1effb110e438d4b4b9f0fbd95">
+        <source>The voucher code is invalid.</source>
+        <target>The voucher code is invalid.</target>
+        <note>Line: 259</note>
+      </trans-unit>
+      <trans-unit id="d21c3bf7d25db04b73e7e269aef555fe">
+        <source>This voucher does not exist.</source>
+        <target>This voucher does not exist.</target>
+        <note>Line: 274</note>
+      </trans-unit>
+      <trans-unit id="8b84452c494aa9106d26b20c9df0e431">
+        <source>You must add %quantity% minimum quantity</source>
+        <target>You must add %quantity% minimum quantity</target>
+        <note>Line: 510</note>
+      </trans-unit>
+      <trans-unit id="9730e222894d4568ed4cd2de30cb233a">
+        <source>Null quantity.</source>
+        <target>Null quantity.</target>
+        <note>Line: 382</note>
+      </trans-unit>
+      <trans-unit id="dfbe69c6d9568ecb0e65e7b32ed92a3a">
+        <source>Product not found</source>
+        <target>Product not found</target>
+        <note>Line: 388</note>
+      </trans-unit>
+      <trans-unit id="cb0b5b032f2426b3fe341460320b5a8e">
+        <source>This product (%product%) is no longer available.</source>
+        <target>This product (%product%) is no longer available.</target>
+        <note>Line: 646</note>
+      </trans-unit>
+      <trans-unit id="9a7c79186c1ff1cd48b31ed6caf6ff48">
+        <source>The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.</source>
+        <target>The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.</target>
+        <note>Line: 639</note>
+      </trans-unit>
+      <trans-unit id="feb34b89eb5bf8066025f508b9b86ab2">
+        <source>The minimum purchase order quantity for the product %product% is %quantity%.</source>
+        <target>The minimum purchase order quantity for the product %product% is %quantity%.</target>
+        <note>Line: 663</note>
+      </trans-unit>
+      <trans-unit id="84a7c3aeebf09d169aca8555be640bbf">
+        <source>Please fill in all of the required fields, and then save your customizations.</source>
+        <target>Please fill in all of the required fields, and then save your customizations.</target>
+        <note>Line: 486</note>
+      </trans-unit>
+      <trans-unit id="de10fc28511b894f704c1a67fcff7b4f">
+        <source>You already have the maximum quantity available for this product.</source>
+        <target>You already have the maximum quantity available for this product.</target>
+        <note>Line: 516</note>
+      </trans-unit>
+      <trans-unit id="826a646b380b3eecb77bc4cec1b8fb9c">
+        <source>The product is no longer available in this quantity.</source>
+        <target>The product is no longer available in this quantity.</target>
+        <note>Line: 523</note>
+      </trans-unit>
+      <trans-unit id="9fa9fed2500d3834c9ab9ed7509eabd2">
+        <source>The item %product% in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.</source>
+        <target>The item %product% in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.</target>
+        <note>Line: 624</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/GetFileController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="456e77e04e2e26231ee352304627b26d">
+        <source>Invalid key.</source>
+        <target>Invalid key.</target>
+        <note>Line: 330</note>
+      </trans-unit>
+      <trans-unit id="1347119d36ae31564a89763f21476c1a">
+        <source>This product does not exist in our store.</source>
+        <target>This product does not exist in our store.</target>
+        <note>Line: 331</note>
+      </trans-unit>
+      <trans-unit id="38d5595927b80b331239ef904341b07c">
+        <source>This product has been deleted.</source>
+        <target>This product has been deleted.</target>
+        <note>Line: 332</note>
+      </trans-unit>
+      <trans-unit id="c9615dc36879116ef8c5f1ab08543191">
+        <source>This file no longer exists.</source>
+        <target>This file no longer exists.</target>
+        <note>Line: 333</note>
+      </trans-unit>
+      <trans-unit id="b1046eaca37cbbd3b53d17c33299bfab">
+        <source>This product has been refunded.</source>
+        <target>This product has been refunded.</target>
+        <note>Line: 334</note>
+      </trans-unit>
+      <trans-unit id="2d30f823fe8f59bbcbec1fec853e4549">
+        <source>The product deadline is in the past.</source>
+        <target>The product deadline is in the past.</target>
+        <note>Line: 335</note>
+      </trans-unit>
+      <trans-unit id="d5304279c07642327b2909efd15ff539">
+        <source>The product expiration date has passed, preventing you from download this product.</source>
+        <target>The product expiration date has passed, preventing you from download this product.</target>
+        <note>Line: 336</note>
+      </trans-unit>
+      <trans-unit id="cb3bf6b78b0297d94c00187dcafd77a3">
+        <source>Expiration date has passed, you cannot download this product.</source>
+        <target>Expiration date has passed, you cannot download this product.</target>
+        <note>Line: 337</note>
+      </trans-unit>
+      <trans-unit id="98bc3b9df6852d17661209b9c969128b">
+        <source>You have reached the maximum number of downloads allowed.</source>
+        <target>You have reached the maximum number of downloads allowed.</target>
+        <note>Line: 338</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/GuestTrackingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ddb329ec6521925a245fbe1334d2ce18">
+        <source>Please provide the required information</source>
+        <target>Please provide the required information</target>
+        <note>Line: 63</note>
+      </trans-unit>
+      <trans-unit id="ac68011e87111c9833dab09935bd88f3">
+        <source>We couldn't find your order with the information provided, please try again</source>
+        <target>We couldn't find your order with the information provided, please try again</target>
+        <note>Line: 74</note>
+      </trans-unit>
+      <trans-unit id="97f79d53b078e529949d5c3c8b676d52">
+        <source>An unexpected error occurred while creating your account.</source>
+        <target>An unexpected error occurred while creating your account.</target>
+        <note>Line: 98</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/IdentityController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7cee9e5fd53cf1d3d1677ef3edc4a613">
+        <source>Could not update your information, please check your data.</source>
+        <target>Could not update your information, please check your data.</target>
+        <note>Line: 59</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/OrderController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="56ca67fde405db4d75fb5fc3350db81b">
+        <source>Sorry. We cannot renew your order.</source>
+        <target>Sorry. We cannot renew your order.</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="b22604f6ddd3fb79ff38568a5a0141e0">
+        <source>Some items are no longer available, and we are unable to renew your order.</source>
+        <target>Some items are no longer available, and we are unable to renew your order.</target>
+        <note>Line: 87</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/OrderDetailController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ffabab221ec5c24fbdb4a70ad48bc985">
+        <source>The order is no longer valid.</source>
+        <target>The order is no longer valid.</target>
+        <note>Line: 51</note>
+      </trans-unit>
+      <trans-unit id="15efe0f18ecffd8e75556c5c60cb1cb6">
+        <source>This message is invalid (HTML is not allowed).</source>
+        <target>This message is invalid (HTML is not allowed).</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="8a6034d3379499b66d730aa17e007683">
+        <source>You do not have enough products to request an additional merchandise return.</source>
+        <target>You do not have enough products to request an additional merchandise return.</target>
+        <note>Line: 172</note>
+      </trans-unit>
+      <trans-unit id="229ca46a5d762e19a428f59449c916ad">
+        <source>Please provide an explanation for your RMA.</source>
+        <target>Please provide an explanation for your RMA.</target>
+        <note>Line: 174</note>
+      </trans-unit>
+      <trans-unit id="e6f6a5e58ee6d010f22e4b3dbd756213">
+        <source>Please check at least one product you would like to return.</source>
+        <target>Please check at least one product you would like to return.</target>
+        <note>Line: 176</note>
+      </trans-unit>
+      <trans-unit id="1819b587867a9c604a4d21c753756b4a">
+        <source>For each product you wish to add, please specify the desired quantity.</source>
+        <target>For each product you wish to add, please specify the desired quantity.</target>
+        <note>Line: 178</note>
+      </trans-unit>
+      <trans-unit id="a3c5d3c6953c588760d90657e4f0b790">
+        <source>This order cannot be returned</source>
+        <target>This order cannot be returned</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="3dc245110e1f3601860c20299d97c01d">
+        <source>The message cannot be blank.</source>
+        <target>The message cannot be blank.</target>
+        <note>Line: 53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/OrderFollowController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="15ef0f1f63c1e8a9fb8abad024939262">
+        <source>You have no merchandise return authorizations.</source>
+        <target>You have no merchandise return authorizations.</target>
+        <note>Line: 108</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="909179695703d6a048fab0bcc9af4758">
+        <source>We cannot regenerate your password with the data you've submitted</source>
+        <target>We cannot regenerate your password with the data you've submitted</target>
+        <note>Line: 224</note>
+      </trans-unit>
+      <trans-unit id="194496a52d41fba1c9e6140c4eb34f83">
+        <source>You cannot regenerate the password for this account.</source>
+        <target>You cannot regenerate the password for this account.</target>
+        <note>Line: 136</note>
+      </trans-unit>
+      <trans-unit id="922dc0515643fb69585b67281692644a">
+        <source>You can regenerate your password only every %d minute(s)</source>
+        <target>You can regenerate your password only every %d minute(s)</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="6e2fc94479ac0c63543886a235e3370c">
+        <source>An error occurred while sending the email.</source>
+        <target>An error occurred while sending the email.</target>
+        <note>Line: 216</note>
+      </trans-unit>
+      <trans-unit id="f7ae511276e04d42e9cfe2f714b5128e">
+        <source>Customer account not found</source>
+        <target>Customer account not found</target>
+        <note>Line: 134</note>
+      </trans-unit>
+      <trans-unit id="da9aa00ef0107af3e55d9ae1e8a1f361">
+        <source>The password and its confirmation do not match.</source>
+        <target>The password and its confirmation do not match.</target>
+        <note>Line: 157</note>
+      </trans-unit>
+      <trans-unit id="cf84bfe60dba837405db6f0a3cb9c086">
+        <source>The password change request expired. You should ask for a new one.</source>
+        <target>The password change request expired. You should ask for a new one.</target>
+        <note>Line: 138</note>
+      </trans-unit>
+      <trans-unit id="619469491be87d328254b6f41cd73770">
+        <source>An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.</source>
+        <target>An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.</target>
+        <note>Line: 219</note>
+      </trans-unit>
+      <trans-unit id="e267e2be02cf3e29f4ba53b5d97cf78a">
+        <source>Invalid email address.</source>
+        <target>Invalid email address.</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="375dee52ced3330cd3496340b32098ca">
+        <source>The password is missing: please enter your new password.</source>
+        <target>The password is missing: please enter your new password.</target>
+        <note>Line: 148</note>
+      </trans-unit>
+      <trans-unit id="f3e3f424a084383aa2931fae612b1ff1">
+        <source>The confirmation is empty: please fill in the password confirmation as well</source>
+        <target>The confirmation is empty: please fill in the password confirmation as well</target>
+        <note>Line: 152</note>
+      </trans-unit>
+      <trans-unit id="f01fb987f60542e0bff1bf7bed42d142">
+        <source>The password is not in a valid format.</source>
+        <target>The password is not in a valid format.</target>
+        <note>Line: 161</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/PdfInvoiceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6b9cc232bf4044274ec42062b60736fb">
+        <source>Invoices are disabled in this shop.</source>
+        <target>Invoices are disabled in this shop.</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="2ef90fa1b9369f1ad3ca66852ca464a2">
+        <source>The invoice was not found.</source>
+        <target>The invoice was not found.</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="8200c4097227159b14dd0669b8dfe22c">
+        <source>No invoice is available.</source>
+        <target>No invoice is available.</target>
+        <note>Line: 61</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/PdfOrderReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b430bfb9e8ec89ded934087889c2e845">
+        <source>Order return not found.</source>
+        <target>Order return not found.</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="b55e152dc0683c3d315b6baabb98495d">
+        <source>Order return not confirmed.</source>
+        <target>Order return not confirmed.</target>
+        <note>Line: 49</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
+        <source>Invalid message</source>
+        <target>Invalid message</target>
+        <note>Line: 911</note>
+      </trans-unit>
+      <trans-unit id="91e6cde963af2000218553722fc7a093">
+        <source>This product is no longer available.</source>
+        <target>This product is no longer available.</target>
+        <note>Line: 188</note>
+      </trans-unit>
+      <trans-unit id="a5df8bfce318a15ea55f18082b9b56c0">
+        <source>You do not have access to this product.</source>
+        <target>You do not have access to this product.</target>
+        <note>Line: 203</note>
+      </trans-unit>
+      <trans-unit id="636ae3559a19937ca8e53781d804a34d">
+        <source>An error occurred while deleting the selected picture.</source>
+        <target>An error occurred while deleting the selected picture.</target>
+        <note>Line: 285</note>
+      </trans-unit>
+      <trans-unit id="7cc92687130ea12abb80556681538001">
+        <source>An error occurred during the image upload process.</source>
+        <target>An error occurred during the image upload process.</target>
+        <note>Line: 883</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/StoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="046f5d51d8d0da00cba63d33299c2d66">
+        <source>PHP "Dom" extension has not been loaded.</source>
+        <target>PHP "Dom" extension has not been loaded.</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/listing/CategoryController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ba2bfa3216ea97ec1e454239610d089a">
+        <source>You do not have access to this category.</source>
+        <target>You do not have access to this category.</target>
+        <note>Line: 104</note>
+      </trans-unit>
+      <trans-unit id="0abf55fb5266e3585128f610a7894b9c">
+        <source>This category does not exist.</source>
+        <target>This category does not exist.</target>
+        <note>Line: 94</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/trackingfront/trackingfront.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a3de4dbbfe3bac5d271a16fb8a6f942e">
+        <source>Login is required</source>
+        <target>Login is required</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:84</note>
+      </trans-unit>
+      <trans-unit id="a6f2a48726b0d36107e00e20795d3d37">
+        <source>Invalid login</source>
+        <target>Invalid login</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:86</note>
+      </trans-unit>
+      <trans-unit id="cba0b206627d45fbf0ae707e20d4a38f">
+        <source>Invalid password</source>
+        <target>Invalid password</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:90</note>
+      </trans-unit>
+      <trans-unit id="d4e6d6c42bf3eb807b8778255a4ce415">
+        <source>Authentication failed</source>
+        <target>Authentication failed</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:99</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Presenter/Product/ProductLazyArray.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a923575984949608ce04c4984806ec2a">
+        <source>There are not enough products in stock</source>
+        <target>There are not enough products in stock</target>
+        <note>Line: 912</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/checkout/_partials/steps/addresses.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ea34b5c6cf6511c7c9e23cf7bf5d6792">
+        <source>Your address is incomplete, please update it.</source>
+        <target>Your address is incomplete, please update it.</target>
+        <note>Line: 114</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

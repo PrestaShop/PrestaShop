@@ -92,7 +92,7 @@ final class AddressZipCodeValidator extends ConstraintValidator
         }
 
         if (null !== $requirements->getPattern() && !(bool) preg_match($requirements->getPattern(), $value)) {
-            $message = $this->translator->trans('Your Zip/postal code is incorrect.', [], 'Admin.Notifications.Error') .
+            $message = $this->translator->trans('Your Zip/Postal code is incorrect.', [], 'Admin.Notifications.Error') .
                 ' ' .
                 $this->translator->trans('It must be entered as follows:', [], 'Admin.Notifications.Error') . ' ' .
                 $requirements->getHumanReadablePattern()

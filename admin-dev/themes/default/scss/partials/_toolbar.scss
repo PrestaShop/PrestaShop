@@ -21,6 +21,10 @@
 
   &.with-tabs {
     height: 140px;
+
+    @include media-breakpoint-down(md) {
+      height: auto;
+    }
   }
 
   > .wrapper {

@@ -29,10 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
 
 use Image;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetProductImagesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
 /**
  * Handles @see GetProductImages query
@@ -45,12 +47,20 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
     private $productImageRepository;
 
     /**
+     * @var ProductImagePathFactory
+     */
+    private $productImageUrlFactory;
+
+    /**
      * @param ProductImageRepository $productImageRepository
+     * @param ProductImagePathFactory $productImageUrlFactory
      */
     public function __construct(
-        ProductImageRepository $productImageRepository
+        ProductImageRepository $productImageRepository,
+        ProductImagePathFactory $productImageUrlFactory
     ) {
         $this->productImageRepository = $productImageRepository;
+        $this->productImageUrlFactory = $productImageUrlFactory;
     }
 
     /**
@@ -58,7 +68,6 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
      */
     public function handle(GetProductImages $query): array
     {
-        //@todo: optimize. add pagination options to query?
         $images = $this->productImageRepository->getImages($query->getProductId());
 
         return $this->formatImages($images);
@@ -74,12 +83,14 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
         $productImages = [];
 
         foreach ($images as $image) {
+            $imageId = new ImageId((int) $image->id);
             $productImages[] = new ProductImage(
                 (int) $image->id,
                 (bool) $image->cover,
                 (int) $image->position,
                 $image->legend,
-                sprintf('%s.%s', $image->getImgPath(), $image->image_format)
+                $this->productImageUrlFactory->getPath($imageId),
+                $this->productImageUrlFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT)
             );
         }
 

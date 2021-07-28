@@ -90,6 +90,9 @@ export default class FormObjectMapper {
     // This event is emitted each time an object field is updated (from both input change and external event)
     this.modelFieldUpdatedEventName = inputConfig.modelFieldUpdated || 'modelFieldUpdated';
 
+    // Contains callbacks identified by model keys
+    this.watchedProperties = {};
+
     this.initFormMapping();
     this.updateFullObject();
     this.watchUpdates();
@@ -150,6 +153,21 @@ export default class FormObjectMapper {
         this.updateInputValue(modelKey, value);
         this.updateObjectByKey(modelKey, value);
         this.eventEmitter.emit(this.modelUpdatedEventName, this.model);
+      },
+
+      /**
+       * Alternative to the event listening, you can watch a specific field of the model and assign a callback.
+       * When the specified model field is updated the event is still thrown but additionally any callback assigned
+       * to this specific value is also called, the parameter is the same event.
+       *
+       * @param {string} modelKey
+       * @param {function} callback
+       */
+      watch: (modelKey, callback) => {
+        if (!Object.prototype.hasOwnProperty.call(this.watchedProperties, modelKey)) {
+          this.watchedProperties[modelKey] = [];
+        }
+        this.watchedProperties[modelKey].push(callback);
       },
     };
   }
@@ -309,12 +327,20 @@ export default class FormObjectMapper {
 
     $.serializeJSON.deepSet(this.model, modelKeys, value);
 
-    this.eventEmitter.emit(this.modelFieldUpdatedEventName, {
+    const updateEvent = {
       object: this.model,
       modelKey,
       value,
       previousValue,
-    });
+    };
+    this.eventEmitter.emit(this.modelFieldUpdatedEventName, updateEvent);
+
+    if (Object.prototype.hasOwnProperty.call(this.watchedProperties, modelKey)) {
+      const propertyWatchers = this.watchedProperties[modelKey];
+      propertyWatchers.forEach((callback) => {
+        callback(updateEvent);
+      });
+    }
   }
 
   /**

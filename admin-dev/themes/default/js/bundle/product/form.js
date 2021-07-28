@@ -1335,9 +1335,12 @@ window.imagesProduct = (function () {
       dropZoneElem.css('height', '');
       const closedHeight = dropZoneElem.outerHeight();
       const realHeight = dropZoneElem[0].scrollHeight;
-      dropZoneElem.css('height', oldHeight);
 
-      return (realHeight > closedHeight);
+      if (oldHeight !== '0px') {
+        dropZoneElem.css('height', oldHeight);
+      }
+
+      return (realHeight > closedHeight) && dropZoneElem.find('.dz-preview:not(.openfilemanager)').length;
     },
     updateExpander() {
       if (this.shouldDisplayExpander()) {

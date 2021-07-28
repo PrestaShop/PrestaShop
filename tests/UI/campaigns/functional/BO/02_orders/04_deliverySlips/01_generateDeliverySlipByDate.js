@@ -87,8 +87,8 @@ describe('Generate Delivery slip file by date', async () => {
     it('should check the delivery slip document Name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentName', baseContext);
 
-      const documentName = await viewOrderPage.getDocumentName(page, 3);
-      await expect(documentName).to.be.equal('Delivery slip');
+      const documentType = await viewOrderPage.getDocumentType(page, 3);
+      await expect(documentType).to.be.equal('Delivery slip');
     });
   });
 

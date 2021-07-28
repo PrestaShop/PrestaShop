@@ -48,3 +48,15 @@ services:
     tags:
       - name: 'tactician.handler'
         command: PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops
+
+  prestashop.adapter.shop.url.product_image_folder_provider:
+      class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\ImageFolderProvider'
+      arguments:
+          - "@=service('prestashop.adapter.legacy.context').getContext().link"
+          - 'img/p'
+
+  prestashop.adapter.shop.url.category_image_folder_provider:
+      class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\ImageFolderProvider'
+      arguments:
+          - "@=service('prestashop.adapter.legacy.context').getContext().link"
+          - 'img/c'

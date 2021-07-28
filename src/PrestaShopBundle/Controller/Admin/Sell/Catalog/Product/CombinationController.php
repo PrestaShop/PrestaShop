@@ -29,10 +29,17 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -64,7 +71,13 @@ class CombinationController extends FrameworkBundleAdminController
     public function editAction(Request $request, int $combinationId): Response
     {
         $liteDisplaying = $request->query->has('liteDisplaying');
-        $combinationForm = $this->getCombinationFormBuilder()->getFormFor($combinationId);
+        try {
+            $combinationForm = $this->getCombinationFormBuilder()->getFormFor($combinationId);
+        } catch (CombinationNotFoundException $e) {
+            return $this->render('@PrestaShop/Admin/Exception/not_found.html.twig', [
+                'errorMessage' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ]);
+        }
 
         try {
             $combinationForm->handleRequest($request);
@@ -95,13 +108,15 @@ class CombinationController extends FrameworkBundleAdminController
      * _legacy_controller request parameter.
      *
      * Renders combinations list prototype (which contains form inputs submittable by ajax)
-     * It can only be embedded into another view (does not have a route)
+     * It can only be embedded into another view (does not have a route), it is included in this template:
+     *
+     * src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig
      *
      * @return Response
      */
-    public function listFormAction(): Response
+    public function paginatedListAction(): Response
     {
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/combinations.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/paginated_list.html.twig', [
             'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
             'combinationsLimit' => ProductCombinationFilters::LIST_LIMIT,
             'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),
@@ -120,6 +135,19 @@ class CombinationController extends FrameworkBundleAdminController
     {
         /** @var AttributeGroup[] $attributeGroups */
         $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups($productId, true));
+
+        return $this->json($this->formatAttributeGroupsForPresentation($attributeGroups));
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @return JsonResponse
+     */
+    public function getAllAttributeGroupsAction(): JsonResponse
+    {
+        /** @var AttributeGroup[] $attributeGroups */
+        $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(true));
 
         return $this->json($this->formatAttributeGroupsForPresentation($attributeGroups));
     }
@@ -169,6 +197,28 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param int $combinationId
+     *
+     * @return JsonResponse
+     */
+    public function removeAction(int $combinationId): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new RemoveCombinationCommand($combinationId));
+        } catch (Exception $e) {
+            return $this->json([
+                'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json([
+            'message' => $this->trans('Successful deletion', 'Admin.Notifications.Success'),
+        ]);
+    }
+
+    /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $combinationId
@@ -196,7 +246,43 @@ class CombinationController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->json([]);
+        return $this->json([
+            'message' => $this->trans('Update successful', 'Admin.Notifications.Success'),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))"
+     * )
+     *
+     * @param int $productId
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function generateCombinationsAction(int $productId, Request $request): JsonResponse
+    {
+        $requestAttributeGroups = $request->request->get('attributes');
+        $attributes = [];
+        foreach ($requestAttributeGroups as $attributeGroupId => $requestAttributes) {
+            $attributes[(int) $attributeGroupId] = array_map('intval', $requestAttributes);
+        }
+
+        try {
+            /** @var CombinationId[] $combinationsIds */
+            $combinationsIds = $this->getCommandBus()->handle(new GenerateProductCombinationsCommand($productId, $attributes));
+        } catch (Exception $e) {
+            return $this->json([
+                'error' => [
+                    $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+                ],
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json([
+            'combination_ids' => array_map(function (CombinationId $combinationId) { return $combinationId->getValue(); }, $combinationsIds),
+        ]);
     }
 
     /**
@@ -211,12 +297,17 @@ class CombinationController extends FrameworkBundleAdminController
         $formattedGroups = [];
         foreach ($attributeGroups as $attributeGroup) {
             $attributes = [];
+            /** @var Attribute $attribute */
             foreach ($attributeGroup->getAttributes() as $attribute) {
                 $attributeNames = $attribute->getLocalizedNames();
-                $attributes[] = [
+                $attributeData = [
                     'id' => $attribute->getAttributeId(),
                     'name' => $attributeNames[$contextLangId] ?? reset($attributeNames),
                 ];
+                if (null !== $attribute->getColor()) {
+                    $attributeData['color'] = $attribute->getColor();
+                }
+                $attributes[] = $attributeData;
             }
 
             $publicNames = $attributeGroup->getLocalizedPublicNames();
@@ -243,20 +334,32 @@ class CombinationController extends FrameworkBundleAdminController
             'combinations' => [],
             'total' => $combinationListForEditing->getTotalCombinationsCount(),
         ];
+
+        $fallbackImageUrl = $this->getFallbackImageUrl();
         foreach ($combinationListForEditing->getCombinations() as $combination) {
             $data['combinations'][] = [
                 'id' => $combination->getCombinationId(),
                 'isSelected' => false,
                 'name' => $combination->getCombinationName(),
                 'reference' => $combination->getReference(),
-                //@todo: don't forget image path when implemented in the query
                 'impactOnPrice' => (string) $combination->getImpactOnPrice(),
                 'quantity' => $combination->getQuantity(),
                 'isDefault' => $combination->isDefault(),
+                'imageUrl' => $combination->getImageUrl() ?: $fallbackImageUrl,
             ];
         }
 
         return $data;
+    }
+
+    /**
+     * @return string
+     */
+    private function getFallbackImageUrl(): string
+    {
+        $imageUrlFactory = $this->get('prestashop.adapter.product.image.product_image_url_factory');
+
+        return $imageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
     }
 
     /**

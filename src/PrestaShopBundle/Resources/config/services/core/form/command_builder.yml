@@ -30,24 +30,32 @@ services:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ShippingCommandsBuilder
         tags: ['core.product_command_builder']
 
-    prestashop.core.form.command_builder.product.options_command_builder:
+    prestashop.core.form.command_builder.product.options_commands_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\OptionsCommandsBuilder
         tags: ['core.product_command_builder']
 
-    prestashop.core.form.command_builder.product.stock_command_builder:
+    prestashop.core.form.command_builder.product.stock_commands_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\StockCommandsBuilder
         tags: ['core.product_command_builder']
 
-    prestashop.core.form.command_builder.product.product_suppliers_command_builder:
+    prestashop.core.form.command_builder.product.product_suppliers_commands_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandsBuilder
         tags: ['core.product_command_builder']
 
-    prestashop.core.form.command_builder.product.feature_values_command_builder:
+    prestashop.core.form.command_builder.product.feature_values_commands_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\FeatureValuesCommandsBuilder
         tags: ['core.product_command_builder']
 
-    prestashop.core.form.command_builder.product.customization_fields_command_builder:
+    prestashop.core.form.command_builder.product.customization_fields_commands_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandsBuilder
+        tags: ['core.product_command_builder']
+
+    prestashop.core.form.command_builder.product.virtual_product_file_commands_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\VirtualProductFileCommandsBuilder
+        tags: ['core.product_command_builder']
+
+    prestashop.core.form.command_builder.product.categories:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCategoriesCommandsBuilder
         tags: ['core.product_command_builder']
 
     # Combination builders
@@ -58,4 +66,20 @@ services:
 
     prestashop.core.form.command_builder.product.combination.stock_command_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationStockCommandsBuilder
+        tags: ['core.combination_command_builder']
+
+    prestashop.core.form.command_builder.product.combination.price_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationPriceCommandsBuilder
+        tags: ['core.combination_command_builder']
+
+    prestashop.core.form.command_builder.product.combination.details_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationDetailsCommandsBuilder
+        tags: ['core.combination_command_builder']
+
+    prestashop.core.form.command_builder.product.combination.suppliers_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationSuppliersCommandsBuilder
+        tags: ['core.combination_command_builder']
+
+    prestashop.core.form.command_builder.product.combination.images_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationImagesCommandsBuilder
         tags: ['core.combination_command_builder']

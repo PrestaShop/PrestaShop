@@ -18,7 +18,6 @@ services:
         - ['setStrippedFailures', [!php/const \PrestaShop\PrestaShop\Core\Currency\ExchangeRateProvider::OPEN_ALLOWED_FAILURES]]
         - ['setStrippedTimeout', [!php/const \PrestaShop\PrestaShop\Core\Currency\ExchangeRateProvider::OPEN_TIMEOUT_SECONDS]]
         - ['setStorage', ['@prestashop.core.circuit_breaker.storage']]
-        - ['setClientOptions', [{'method': 'GET', 'subscribers': ['@prestashop.core.circuit_breaker.guzzle.cache_subscriber']}]]
         # create a factory for cache_subscriber so that we can easily adapt the cache duration
 
     prestashop.core.currency.exchange_rate.circuit_breaker:

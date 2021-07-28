@@ -72,10 +72,10 @@ class DefaultCombinationUpdater
         $currentDefaultCombination = $this->combinationRepository->findDefaultCombination($productId);
 
         if ($currentDefaultCombination) {
-            $this->updateCombination($currentDefaultCombination, false);
+            $this->updateCombinationDefaultProperty($currentDefaultCombination, false);
         }
 
-        $this->updateCombination($newDefaultCombination, true);
+        $this->updateCombinationDefaultProperty($newDefaultCombination, true);
     }
 
     /**
@@ -84,7 +84,7 @@ class DefaultCombinationUpdater
      *
      * @throws CannotAddCombinationException
      */
-    private function updateCombination(Combination $combination, bool $isDefault): void
+    private function updateCombinationDefaultProperty(Combination $combination, bool $isDefault): void
     {
         $combination->default_on = $isDefault;
         $this->combinationRepository->partialUpdate(

@@ -392,6 +392,14 @@ services:
         - '@prestashop.core.grid.data.factory.credit_slip'
         - '@translator'
 
+    prestashop.core.grid.data.factory.product:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.product'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'product'
+
     prestashop.core.grid.data_provider.order_states:
       class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
       arguments:
@@ -450,3 +458,11 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\ZoneGridDataFactory'
       arguments:
         - '@prestashop.core.grid.data.factory.zone'
+
+    prestashop.core.grid.data_provider.search_engines:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.search_engine'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'search_engines'

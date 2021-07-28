@@ -40,6 +40,8 @@ const defaultCategory = (function () {
   };
 }());
 
+window.defaultCategory = defaultCategory;
+
 BOEvent.on('Product Default category Management started', () => {
   defaultCategory.init();
 }, 'Back office');

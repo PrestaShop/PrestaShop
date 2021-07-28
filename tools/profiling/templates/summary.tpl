@@ -29,7 +29,7 @@
         Load Time
       </td>
       <td>
-        {$summary.loadTime}
+        {load_time data=$summary.loadTime}
       </td>
     </tr>
     <tr>

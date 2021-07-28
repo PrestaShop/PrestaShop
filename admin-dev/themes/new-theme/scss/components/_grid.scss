@@ -64,6 +64,16 @@ table.grid-ordering-column tr.position-row-while-drag {
   }
 }
 
+.adminmailtheme {
+  .action-type {
+    .text-right {
+      .btn.tooltip-link {
+        justify-content: flex-end;
+      }
+    }
+  }
+}
+
 .btn-group-action {
   a.dropdown-toggle,
   button.dropdown-toggle,
@@ -285,6 +295,20 @@ table {
         input,
         select {
           min-width: 6rem;
+        }
+      }
+
+      td[data-column-id^="id_"] {
+        max-width: 8rem;
+
+        input:only-child {
+          max-width: 6rem;
+        }
+      }
+
+      td[data-column-id^="name"] {
+        input:only-child {
+          max-width: 8rem;
         }
       }
     }

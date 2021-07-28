@@ -44,6 +44,10 @@ final class RepositoryFiltersBuilder extends AbstractRepositoryFiltersBuilder
             return $filters;
         }
 
+        if (null !== $filters && !$filters->needsToBePersisted()) {
+            return $filters;
+        }
+
         $filterId = $this->getFilterId($filters);
         $parameters = $this->getParametersFromRepository($filterId);
 

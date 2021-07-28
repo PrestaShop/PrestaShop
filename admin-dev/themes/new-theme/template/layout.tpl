@@ -35,11 +35,11 @@
              data-toggle="pstooltip"
              data-placement="bottom"
              data-html="true"
-             title="<p class='text-left'><strong>{l s='Your shop is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
+             title="<p class=&quot;text-left&quot;><strong>{l|escape s='Your shop is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l|escape s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
              href="{$link->getAdminLink('AdminPerformance')|escape:'html':'UTF-8'}"
           >
             <i class="material-icons">bug_report</i>
-            <span>{l s='Debug mode' d='Admin.Navigation.Header'}</span>
+            <span>{l|escape s='Debug mode' d='Admin.Navigation.Header'}</span>
           </a>
         </div>
       {/if}
@@ -51,10 +51,10 @@
              data-toggle="pstooltip"
              data-placement="bottom"
              data-html="true"
-             title="<p class='text-left'><strong>{l s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
+             title="<p class=&quot;text-left&quot;><strong>{l|escape s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l|escape s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
           >
             <i class="material-icons">build</i>
-            <span>{l s='Maintenance mode' d='Admin.Navigation.Header'}</span>
+            <span>{l|escape s='Maintenance mode' d='Admin.Navigation.Header'}</span>
           </a>
         </div>
       {/if}
@@ -85,7 +85,7 @@
 <div id="main-div">
     {if $install_dir_exists}
       <div class="alert alert-warning">
-        {l s='For security reasons, you must also delete the /install folder.' d='Admin.Login.Notification'}
+        {l|escape s='For security reasons, you must also delete the /install folder.' d='Admin.Login.Notification'}
       </div>
     {else}
       {if isset($page_header_toolbar)}{$page_header_toolbar}{/if}

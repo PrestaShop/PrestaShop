@@ -4,3 +4,6 @@ services:
 
     form.form_cloner:
         class: PrestaShopBundle\Form\FormCloner
+
+    form.form_builder_modifier:
+        class: PrestaShopBundle\Form\FormBuilderModifier

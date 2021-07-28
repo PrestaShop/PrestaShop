@@ -59,6 +59,7 @@
 @import "components/submittable_input";
 @import "components/multishop-modal";
 @import "components/multistore-dropdown";
+@import "components/unavailable-feature";
 
 // Pages specifics SCSS files
 @import "pages/invoices";
@@ -76,6 +77,7 @@
 @import "pages/compromised";
 @import "pages/improve";
 @import "pages/payment";
+@import "pages/translation_page";
 
 // Main Layout
 @import "pages/modules";

@@ -30,11 +30,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
 use DateTime;
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
-use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
@@ -62,12 +63,17 @@ use Tag;
 /**
  * Handles the query GetEditableProduct using legacy ObjectModel
  */
-final class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
+final class GetProductForEditingHandler implements GetProductForEditingHandlerInterface
 {
     /**
      * @var NumberExtractor
      */
     private $numberExtractor;
+
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
 
     /**
      * @var StockAvailableRepository
@@ -80,9 +86,9 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private $virtualProductFileRepository;
 
     /**
-     * @var TaxRulesGroupRepository
+     * @var TaxComputer
      */
-    private $taxRulesGroupRepository;
+    private $taxComputer;
 
     /**
      * @var int
@@ -90,24 +96,35 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private $countryId;
 
     /**
+     * @var RedirectTargetProvider
+     */
+    private $targetProvider;
+
+    /**
      * @param NumberExtractor $numberExtractor
+     * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
-     * @param TaxRulesGroupRepository $taxRulesGroupRepository
+     * @param TaxComputer $taxComputer
      * @param int $countryId
+     * @param RedirectTargetProvider $targetProvider
      */
     public function __construct(
         NumberExtractor $numberExtractor,
+        ProductRepository $productRepository,
         StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
-        TaxRulesGroupRepository $taxRulesGroupRepository,
-        int $countryId
+        TaxComputer $taxComputer,
+        int $countryId,
+        RedirectTargetProvider $targetProvider
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->virtualProductFileRepository = $virtualProductFileRepository;
-        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
+        $this->taxComputer = $taxComputer;
         $this->countryId = $countryId;
+        $this->productRepository = $productRepository;
+        $this->targetProvider = $targetProvider;
     }
 
     /**
@@ -115,7 +132,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      */
     public function handle(GetProductForEditing $query): ProductForEditing
     {
-        $product = $this->getProduct($query->getProductId());
+        $product = $this->productRepository->get($query->getProductId());
 
         return new ProductForEditing(
             (int) $product->id,
@@ -170,15 +187,11 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private function getPricesInformation(Product $product): ProductPricesInformation
     {
         $priceTaxExcluded = $this->numberExtractor->extract($product, 'price');
-        $taxRulesGroup = $this->taxRulesGroupRepository->getTaxRulesGroupDetails(new TaxRulesGroupId((int) $product->id_tax_rules_group));
-        if (!empty($taxRulesGroup['rates'])) {
-            // Use the tax rate associated to context country, or the first one as fallback
-            $countryTaxRate = $taxRulesGroup['rates'][$this->countryId] ?? reset($taxRulesGroup['rates']);
-        } else {
-            $countryTaxRate = 0;
-        }
-        $taxRatio = new DecimalNumber((string) (1 + ($countryTaxRate / 100)));
-        $priceTaxIncluded = $priceTaxExcluded->times($taxRatio);
+        $priceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
+            $priceTaxExcluded,
+            new TaxRulesGroupId((int) $product->id_tax_rules_group),
+            new CountryId($this->countryId)
+        );
 
         return new ProductPricesInformation(
             $priceTaxExcluded,
@@ -311,12 +324,17 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      */
     private function getSeoOptions(Product $product): ProductSeoOptions
     {
+        $redirectTarget = $this->targetProvider->getRedirectTarget(
+            $product->redirect_type,
+            (int) $product->id_type_redirected
+        );
+
         return new ProductSeoOptions(
             $product->meta_title,
             $product->meta_description,
             $product->link_rewrite,
             $product->redirect_type,
-            (int) $product->id_type_redirected
+            $redirectTarget
         );
     }
 
@@ -370,7 +388,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $virtualProductFile->display_filename,
             (int) $virtualProductFile->nb_days_accessible,
             (int) $virtualProductFile->nb_downloadable,
-            $virtualProductFile->date_expiration === DateTimeUtil::NULL_VALUE ? null : new DateTime($virtualProductFile->date_expiration)
+            $virtualProductFile->date_expiration === DateTimeUtil::NULL_DATETIME ? null : new DateTime($virtualProductFile->date_expiration)
         );
     }
 }

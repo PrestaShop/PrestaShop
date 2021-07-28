@@ -283,10 +283,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                 ],
                 [
                     'type' => 'text',
-                    'label' => $this->trans('Zip/postal code range', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('Zip/Postal code range', [], 'Admin.International.Feature'),
                     'name' => 'zipcode',
                     'required' => false,
-                    'hint' => $this->trans('You can define a range of Zip/postal codes (e.g., 75000-75015) or simply use one Zip/postal code.', [], 'Admin.International.Help'),
+                    'hint' => $this->trans('You can define a range of Zip/Postal codes (e.g., 75000-75015) or simply use one Zip/Postal code.', [], 'Admin.International.Help'),
                 ],
                 [
                     'type' => 'select',
@@ -462,7 +462,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                             if ($zip_code) {
                                 if (!$country->checkZipCode($zip_code)) {
                                     $this->errors[] = $this->trans(
-                                        'The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.',
+                                        'The Zip/Postal code is invalid. It must be typed as follows: %format% for %country%.',
                                         [
                                             '%format%' => str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))),
                                             '%country%' => $country->name,

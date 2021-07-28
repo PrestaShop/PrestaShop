@@ -89,7 +89,7 @@ Feature: Duplicate product from Back Office (BO).
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
-    And I set product product1 default supplier to supplier1 and following suppliers:
+    When I set product product1 suppliers:
       | reference         | supplier reference | product supplier reference     | currency | price tax excluded |
       | product1supplier1 | supplier1          | my first supplier for product1 | USD      | 10                 |
     And I set following related products to product product1:
@@ -118,9 +118,9 @@ Feature: Duplicate product from Back Office (BO).
     And product "copy_of_product1" should be disabled
     And product "copy_of_product1" type should be standard
     And product "copy_of_product1" localized "name" should be:
-      | locale | value                      |
-      | en-US  | copy of smart sunglasses   |
-      | fr-FR  | copy of lunettes de soleil |
+      | locale | value                       |
+      | en-US  | copy of smart sunglasses    |
+      | fr-FR  | copie de lunettes de soleil |
     And product "copy_of_product1" localized "description" should be:
       | locale | value           |
       | en-US  | nice sunglasses |

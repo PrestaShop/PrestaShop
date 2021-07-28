@@ -63,9 +63,19 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     private $defaultCatalogueFinder;
 
     /**
+     * @var DefaultCatalogueFinder
+     */
+    private $builtInDefaultTranslatedCatalogueFinder;
+
+    /**
      * @var FileTranslatedCatalogueFinder
      */
     private $fileTranslatedCatalogueFinder;
+
+    /**
+     * @var FileTranslatedCatalogueFinder
+     */
+    private $builtInFileTranslatedCatalogueFinder;
 
     /**
      * @var UserTranslatedCatalogueFinder
@@ -170,9 +180,16 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      */
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogue
     {
-        try {
-            return $this->getFileTranslatedCatalogueFinder()->getCatalogue($locale);
+        try { // First we search in the module's translation directory
+            return $this->getModuleBuiltInFileTranslatedCatalogueFinder()->getCatalogue($locale);
         } catch (TranslationFilesNotFoundException $exception) {
+            // If no translation file was found in the module, No Exception
+            // we search in the Core's files
+        }
+        try {
+            return $this->getCoreFileTranslatedCatalogueFinder()->getCatalogue($locale);
+        } catch (TranslationFilesNotFoundException $exception) {
+            // And finally if no translation was found in the Core files, we search in the legacy files
             return $this->buildTranslationCatalogueFromLegacyFiles($locale);
         }
     }
@@ -207,7 +224,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      *
      * @throws TranslationFilesNotFoundException
      */
-    private function getFileTranslatedCatalogueFinder(): FileTranslatedCatalogueFinder
+    private function getCoreFileTranslatedCatalogueFinder(): FileTranslatedCatalogueFinder
     {
         if (null === $this->fileTranslatedCatalogueFinder) {
             $this->fileTranslatedCatalogueFinder = new FileTranslatedCatalogueFinder(
@@ -232,6 +249,27 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         }
 
         return $this->userTranslatedCatalogueFinder;
+    }
+
+    /**
+     * @return FileTranslatedCatalogueFinder
+     *
+     * @throws TranslationFilesNotFoundException
+     */
+    private function getModuleBuiltInFileTranslatedCatalogueFinder(): FileTranslatedCatalogueFinder
+    {
+        if (null === $this->builtInFileTranslatedCatalogueFinder) {
+            $this->builtInFileTranslatedCatalogueFinder = new FileTranslatedCatalogueFinder(
+                implode(DIRECTORY_SEPARATOR, [
+                    $this->modulesDirectory,
+                    $this->moduleName,
+                    'translations',
+                ]),
+                $this->filenameFilters
+            );
+        }
+
+        return $this->builtInFileTranslatedCatalogueFinder;
     }
 
     /**

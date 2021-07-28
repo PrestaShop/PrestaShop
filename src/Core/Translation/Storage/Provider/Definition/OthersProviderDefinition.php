@@ -32,6 +32,12 @@ namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition;
  */
 class OthersProviderDefinition extends AbstractCoreProviderDefinition
 {
+    public const OTHERS_DOMAIN_NAME = 'messages';
+
+    private const FILENAME_FILTERS_REGEX = ['#^' . self::OTHERS_DOMAIN_NAME . '*#'];
+
+    private const TRANSLATION_DOMAINS_REGEX = ['^' . self::OTHERS_DOMAIN_NAME . '*'];
+
     /**
      * {@inheritdoc}
      */
@@ -45,7 +51,7 @@ class OthersProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getFilenameFilters(): array
     {
-        return ['#^messages*#'];
+        return self::FILENAME_FILTERS_REGEX;
     }
 
     /**
@@ -53,6 +59,6 @@ class OthersProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getTranslationDomains(): array
     {
-        return ['^messages*'];
+        return self::TRANSLATION_DOMAINS_REGEX;
     }
 }

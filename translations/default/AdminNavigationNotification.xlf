@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a2b8ed9c305b8ea86116b603cca78a97">
+        <source>registered</source>
+        <target>registered</target>
+        <note>Line: 68</note>
+      </trans-unit>
+      <trans-unit id="91a52a2a855d5abd5597a481c20f3972">
+        <source>No new order for now :(</source>
+        <target>No new order for now :(</target>
+        <note>Line: 315</note>
+      </trans-unit>
+      <trans-unit id="235a11509f6bd6143ddf165affbf7dad">
+        <source>No new customer for now :(</source>
+        <target>No new customer for now :(</target>
+        <note>Line: 325</note>
+      </trans-unit>
+      <trans-unit id="b7c3bb1b80422ee7587d604b1a97ce3c">
+        <source>No new message for now.</source>
+        <target>No new message for now.</target>
+        <note>Line: 335</note>
+      </trans-unit>
+      <trans-unit id="c821206b336b401bccf058f664f8255d">
+        <source>Your shop is in debug mode.</source>
+        <target>Your shop is in debug mode.</target>
+        <note>Line: 225</note>
+      </trans-unit>
+      <trans-unit id="13886bc255a80b7c11e0585013feeb30">
+        <source>All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.</source>
+        <target>All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.</target>
+        <note>Line: 225</note>
+      </trans-unit>
+      <trans-unit id="67a33d40bef41c3b79d6b973bfcbc89a">
+        <source>Your shop is in maintenance.</source>
+        <target>Your shop is in maintenance.</target>
+        <note>Line: 241</note>
+      </trans-unit>
+      <trans-unit id="929f5283d0fa1e9eecf20cc294f981e5">
+        <source><![CDATA[Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.]]></source>
+        <target><![CDATA[Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.]]></target>
+        <note>Line: 241</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/new-theme/template/components/layout/notifications_center.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="00843f41bd87586508e233b4b4947cf2">
+        <source>Orders[1][/1]</source>
+        <target>Orders[1][/1]</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="6ff813b90fea117cb8981d26b0df548c">
+        <source>Customers[1][/1]</source>
+        <target>Customers[1][/1]</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="ced94ea851437be7264f84648dbe3c7d">
+        <source>Messages[1][/1]</source>
+        <target>Messages[1][/1]</target>
+        <note>Line: 74</note>
+      </trans-unit>
+      <trans-unit id="d98a07f84921b24ee30f86fd8cd85c3c">
+        <source>from</source>
+        <target>from</target>
+        <note>Line: 123</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7338d1654d0dd5e156c4ad6d2a6a80a5">
+        <source>Did you check your conversion rate lately?</source>
+        <target>Did you check your conversion rate lately?</target>
+        <note>Line: 2043</note>
+      </trans-unit>
+      <trans-unit id="2e93cdcdff918d01a48fa1f1fdd7d0cd">
+        <source>How about some seasonal discounts?</source>
+        <target>How about some seasonal discounts?</target>
+        <note>Line: 2044</note>
+      </trans-unit>
+      <trans-unit id="7c56f525288d680c6efa0c2d07d79d13">
+        <source>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</source>
+        <target>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</target>
+        <note>Line: 2076</note>
+      </trans-unit>
+      <trans-unit id="164458d092e10375ec3068e610fe5d10">
+        <source>Have you sent any acquisition email lately?</source>
+        <target>Have you sent any acquisition email lately?</target>
+        <note>Line: 2058</note>
+      </trans-unit>
+      <trans-unit id="70821661a53b31c40fdd6c9f3bbff741">
+        <source>Are you active on social media these days?</source>
+        <target>Are you active on social media these days?</target>
+        <note>Line: 2088</note>
+      </trans-unit>
+      <trans-unit id="f588a396cc917d42d3dc0dd61d9e339b">
+        <source>Have you considered selling on marketplaces?</source>
+        <target>Have you considered selling on marketplaces?</target>
+        <note>Line: 2060</note>
+      </trans-unit>
+      <trans-unit id="e0b6918caa922c992efb3343d11470c9">
+        <source>That's more time for something else!</source>
+        <target>That's more time for something else!</target>
+        <note>Line: 2063</note>
+      </trans-unit>
+      <trans-unit id="9a6493e17f94595cb54a16f60866d9fd">
+        <source>No news is good news, isn't it?</source>
+        <target>No news is good news, isn't it?</target>
+        <note>Line: 2064</note>
+      </trans-unit>
+      <trans-unit id="b5ffb1ab1fe4ad00831c65b8dab60c0c">
+        <source>Seems like all your customers are happy :)</source>
+        <target>Seems like all your customers are happy :)</target>
+        <note>Line: 2091</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c059561b30601ffaf8759ae84f2b44b9">
+        <source>An error occurred while updating new window property.</source>
+        <target>An error occurred while updating new window property.</target>
+        <note>Line: 231</note>
+      </trans-unit>
+      <trans-unit id="aeaf2891ec065451798dc21794358950">
+        <source>An error occurred while updating the new window property for this object.</source>
+        <target>An error occurred while updating the new window property for this object.</target>
+        <note>Line: 234</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

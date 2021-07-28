@@ -32,6 +32,8 @@ use Symfony\Component\Finder\Finder;
 /**
  * Before booting the PrestaShop application in Symfony context,
  * we register every installed modules.
+ *
+ * @deprecated Since 1.7.8. Use \PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository instead
  */
 final class ModuleRepository
 {

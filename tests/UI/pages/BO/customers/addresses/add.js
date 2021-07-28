@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add address page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddAddress extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add address page
+   */
   constructor() {
     super();
 
@@ -33,8 +42,9 @@ class AddAddress extends BOBasePage {
 
   /**
    * Fill form for add/edit address
-   * @param page
-   * @param addressData
+   * @param page {Page} Browser tab
+   * @param addressData {addressData} Data to set on new address form
+   * @param save {boolean} True if we need to save the new address, false if not
    * @returns {Promise<string>}
    */
   async createEditAddress(page, addressData, save = true) {
@@ -65,7 +75,7 @@ class AddAddress extends BOBasePage {
 
   /**
    * Save address
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async saveAddress(page) {
@@ -75,7 +85,7 @@ class AddAddress extends BOBasePage {
 
   /**
    * Get selected country by default in form
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getSelectedCountry(page) {
