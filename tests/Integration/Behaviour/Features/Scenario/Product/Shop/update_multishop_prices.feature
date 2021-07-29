@@ -67,3 +67,27 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | unit_price         | 10              |
       | unity              | bag of ten      |
       | unit_price_ratio   | 10.099          |
+    And product product1 is not associated to shop shop3
+    And product product1 is not associated to shop shop4
+
+  Scenario: I update product prices for all associated shop
+    When I update product "product1" prices for all shops with following information:
+      | price              | 200.99            |
+      | ecotax             | 2                 |
+      | tax rules group    | US-AZ Rate (6.6%) |
+      | on_sale            | false             |
+      | wholesale_price    | 60                |
+      | unit_price         | 20                |
+      | unity              | bag of twenty     |
+    Then product product1 should have following prices information for shops "shop1,shop2":
+      | price              | 200.99            |
+      | price_tax_included | 214.25534         |
+      | ecotax             | 2                 |
+      | tax rules group    | US-AZ Rate (6.6%) |
+      | on_sale            | false             |
+      | wholesale_price    | 60                |
+      | unit_price         | 20                |
+      | unity              | bag of twenty     |
+      | unit_price_ratio   | 10.0495           |
+    And product product1 is not associated to shop shop3
+    And product product1 is not associated to shop shop4
