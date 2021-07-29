@@ -43,11 +43,11 @@ abstract class MultistoreCommandsBuilder
     protected $multistoreEnabled;
 
     /**
-     * @param int $contextShopId
+     * @param int|null $contextShopId
      * @param bool $multistoreEnabled
      */
     public function __construct(
-        int $contextShopId,
+        ?int $contextShopId,
         bool $multistoreEnabled
     ) {
         $this->contextShopId = $contextShopId;
@@ -59,7 +59,7 @@ abstract class MultistoreCommandsBuilder
      */
     protected function getShopConstraint(): ?ShopConstraint
     {
-        if (!$this->multistoreEnabled) {
+        if (!$this->multistoreEnabled || null === $this->contextShopId) {
             return null;
         }
 
