@@ -144,7 +144,7 @@ class AdminProductWrapper
         // choice but to hard code this one to make sure enough precision is saved in the DB or it results in errors
         // of 1 cent in the shop
         $computingPrecision = CustomMoneyType::PRESTASHOP_DECIMALS;
-        if (!isset($combinationValues['attribute_ecotax'])) {
+        if (!isset($combinationValues['attribute_ecotax']) || 0 == (float) $combinationValues['attribute_ecotax']) {
             $combinationValues['attribute_ecotax'] = 0;
         } else {
             // Value is displayed tax included but must be saved tax excluded
