@@ -7,6 +7,13 @@ services:
     arguments:
       - !tagged core.product_command_builder
 
+  prestashop.core.form.command_builder.multistore_commands_builder:
+    abstract: true
+    public: true
+    arguments:
+      - "@=service('prestashop.adapter.shop.context').getContextShopID()"
+      - "@=service('prestashop.adapter.feature.multistore').isUsed()"
+
   # IMPORTANT these two builders update the product indexation, since the indexes are based on other product data
   # like names, references and so on they should be executed last for more up-to-date indexes, this can be done
   # before the product type though as it doesn't influence the indexes
@@ -34,6 +41,8 @@ services:
 
   prestashop.core.form.command_builder.product.prices:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PricesCommandsBuilder
+    parent: 'prestashop.core.form.command_builder.multistore_commands_builder'
+    public: true
     tags: [ 'core.product_command_builder' ]
 
   prestashop.core.form.command_builder.product.seo:
