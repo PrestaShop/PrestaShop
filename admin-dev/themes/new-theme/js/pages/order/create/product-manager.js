@@ -201,6 +201,7 @@ export default class ProductManager {
    * @private
    */
   search(searchPhrase) {
+    // Search only if the search phrase length is greater than 2 characters
     if (searchPhrase.length < 2) {
       return;
     }

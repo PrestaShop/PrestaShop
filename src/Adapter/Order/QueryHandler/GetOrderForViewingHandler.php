@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 
 use Address;
 use Carrier;
+use Cart;
 use ConnectionsSource;
 use Context;
 use Country;
@@ -186,6 +187,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             new ShopConstraint((int) $order->id_shop, (int) $order->id_shop_group)
         );
 
+        $orderInvoiceAddress = $this->getOrderInvoiceAddress($order);
+
         return new OrderForViewing(
             (int) $order->id,
             (int) $order->id_currency,
@@ -203,9 +206,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $order->hasBeenShipped(),
             $invoiceManagementIsEnabled,
             new DateTimeImmutable($order->date_add),
-            $this->getOrderCustomer($order),
+            $this->getOrderCustomer($order, $orderInvoiceAddress),
             $this->getOrderShippingAddress($order),
-            $this->getOrderInvoiceAddress($order),
+            $orderInvoiceAddress,
             $this->getOrderProducts($query->getOrderId(), $query->getProductsSorting()->getValue()),
             $this->getOrderHistory($order),
             $this->getOrderDocuments($order),
@@ -226,31 +229,32 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     /**
      * @param Order $order
      *
-     * @return OrderCustomerForViewing|null
+     * @return OrderCustomerForViewing
      */
-    private function getOrderCustomer(Order $order): ?OrderCustomerForViewing
+    private function getOrderCustomer(Order $order, OrderInvoiceAddressForViewing $invoiceAddress): OrderCustomerForViewing
     {
         $currency = new Currency($order->id_currency);
         $customer = new Customer($order->id_customer);
+        $genderName = '';
+        $totalSpentSinceRegistration = null;
 
         if (!Validate::isLoadedObject($customer)) {
-            return null;
+            $customer = $this->buildFakeCustomerObject($order, $invoiceAddress);
+            $customerStats = ['nb_orders' => 1]; // Count this current order as loaded
+        } else {
+            $gender = new Gender($customer->id_gender);
+            if (Validate::isLoadedObject($gender)) {
+                $genderName = $gender->name[(int) $order->getAssociatedLanguage()->getId()];
+            }
+
+            $customerStats = $customer->getStats();
+            $totalSpentSinceRegistration = Tools::convertPrice($customerStats['total_orders'], $order->id_currency);
         }
-
-        $gender = new Gender($customer->id_gender);
-        $genderName = '';
-
-        if (Validate::isLoadedObject($gender)) {
-            $genderName = $gender->name[(int) $order->getAssociatedLanguage()->getId()];
-        }
-
-        $customerStats = $customer->getStats();
-        $totalSpentSinceRegistration = Tools::convertPrice($customerStats['total_orders'], $order->id_currency);
 
         $isB2BEnabled = $this->configuration->getBoolean('PS_B2B_ENABLE');
 
         return new OrderCustomerForViewing(
-            $customer->id,
+            (int) $customer->id,
             $customer->firstname,
             $customer->lastname,
             $genderName,
@@ -260,7 +264,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $customerStats['nb_orders'],
             $customer->note,
             (bool) $customer->is_guest,
-            (int) $customer->id_lang,
+            (int) $order->getAssociatedLanguage()->getId(),
             $isB2BEnabled ? ($customer->ape ?: '') : '',
             $isB2BEnabled ? ($customer->siret ?: '') : ''
         );
@@ -843,5 +847,29 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         return $this->getOrderProductsForViewingHandler->handle(
             GetOrderProductsForViewing::all($orderId->getValue(), $productsOrder)
         );
+    }
+
+    /**
+     * If there is no valid customer attached to the order, the customer must have been deleted
+     * from the database. We then create a fake customer object, using the invoice address data
+     * and cart language.
+     *
+     * @param Order $order Order object
+     * @param OrderInvoiceAddressForViewing $invoiceAddress Invoice address information
+     *
+     * @return Customer The created customer
+     */
+    private function buildFakeCustomerObject(Order $order, OrderInvoiceAddressForViewing $invoiceAddress): Customer
+    {
+        $cart = new Cart($order->id_cart);
+
+        $customer = new Customer();
+        $customer->firstname = $invoiceAddress->getFirstName();
+        $customer->lastname = $invoiceAddress->getLastName();
+        $customer->email = '';
+        $customer->id_lang = $cart->getAssociatedLanguage()->getId();
+        $customer->is_guest = true;
+
+        return $customer;
     }
 }

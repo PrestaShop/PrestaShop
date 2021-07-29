@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -108,7 +109,7 @@ class OrderPaymentType extends AbstractType
             ->add('transaction_id', TextType::class, [
                 'required' => false,
             ])
-            ->add('amount', TextType::class, [
+            ->add('amount', NumberType::class, [
                 'constraints' => [
                     new GreaterThan([
                         'value' => 0,
