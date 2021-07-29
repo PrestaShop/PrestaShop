@@ -34,7 +34,6 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use Product;
@@ -79,13 +78,18 @@ class ProductShopUpdater
         $this->shopRepository = $shopRepository;
     }
 
+    /**
+     * @param ProductId $productId
+     * @param ShopId $sourceShopId
+     * @param ShopId $targetShopId
+     */
     public function copyToShop(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId): void
     {
         $this->shopRepository->assertShopExists($sourceShopId);
         $this->shopRepository->assertShopExists($targetShopId);
 
         /** @var Product $sourceProduct */
-        $sourceProduct = $this->productRepository->get($productId, $sourceShopId->getValue());
+        $sourceProduct = $this->productRepository->get($productId, $sourceShopId);
 
         $fields = [];
         $fields = $fields + $this->getAssociationFields($sourceProduct);
