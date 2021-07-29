@@ -120,6 +120,14 @@ class ShopConstraint
     /**
      * @return bool
      */
+    public function forAllShops(): bool
+    {
+        return null === $this->shopId && null === $this->shopGroupId;
+    }
+
+    /**
+     * @return bool
+     */
     public function isStrict(): bool
     {
         return $this->strict;
