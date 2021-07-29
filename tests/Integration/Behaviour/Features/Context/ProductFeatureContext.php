@@ -666,7 +666,8 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
             $combinationDetails[] = new CombinationDetails(
                 $combination['reference'],
                 (int) $combination['quantity'],
-                explode(';', $combination['attributes'])
+                explode(';', $combination['attributes']),
+                isset($combination['price']) ? (float) $combination['price'] : null
             );
         }
 
