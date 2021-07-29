@@ -701,8 +701,8 @@
         <note>Line: 77</note>
       </trans-unit>
       <trans-unit id="3f141565d26297ff4449250743dba137">
-        <source>Enable this option if you want to activate by default all your manually created new products.</source>
-        <target>Enable this option if you want to activate by default all your manually created new products.</target>
+        <source>When active, new products will be activated by default during creation.</source>
+        <target>When active, new products will be activated by default during creation.</target>
         <note>Line: 84</note>
       </trans-unit>
       <trans-unit id="bd92437d0543aa142ccea7c021c9efe9">
