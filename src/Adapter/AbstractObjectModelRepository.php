@@ -28,10 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Db;
+use DbQuery;
 use ObjectModel;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+use PrestaShopDatabaseException;
 use PrestaShopException;
+use Product;
 
 abstract class AbstractObjectModelRepository
 {
@@ -67,15 +74,27 @@ abstract class AbstractObjectModelRepository
      * @param int $id
      * @param string $objectModelClass
      * @param string $exceptionClass
+     * @param ShopConstraint|null $shopConstraint
      *
      * @return ObjectModel
      *
      * @throws CoreException
      */
-    protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass): ObjectModel
+    protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass, ?ShopConstraint $shopConstraint = null): ObjectModel
     {
         try {
-            $objectModel = new $objectModelClass($id);
+            $shopId = null;
+            if ($shopConstraint && $shopConstraint->getShopId()) {
+                $this->checkShopAssociation($id, $objectModelClass, $shopConstraint->getShopId());
+                $shopId = $shopConstraint->getShopId()->getValue();
+            }
+
+            // Special case for Product because it has an additional full parameter
+            if ($objectModelClass === Product::class) {
+                $objectModel = new Product($id, false, null, $shopId);
+            } else {
+                $objectModel = new $objectModelClass($id, null, $shopId);
+            }
 
             if ((int) $objectModel->id !== $id) {
                 throw new $exceptionClass(sprintf('%s #%d was not found', $objectModelClass, $id));
@@ -94,6 +113,43 @@ abstract class AbstractObjectModelRepository
         }
 
         return $objectModel;
+    }
+
+    /**
+     * @param int $id
+     * @param string $objectModelClass
+     * @param ShopId $shopId
+     *
+     * @throws ShopAssociationNotFound
+     */
+    protected function checkShopAssociation(int $id, string $objectModelClass, ShopId $shopId): void
+    {
+        $modelDefinition = $objectModelClass::$definition;
+        $objectTable = $modelDefinition['table'];
+        $primaryColumn = $modelDefinition['primary'];
+
+        $query = new DbQuery();
+        $query
+            ->select('e.`' . $primaryColumn . '` as id')
+            ->from($objectTable . '_shop', 'e')
+            ->where('e.`' . $primaryColumn . '` = ' . $id)
+            ->where('e.`id_shop` = ' . $shopId->getValue())
+        ;
+        $sql = $query->build();
+        try {
+            $row = Db::getInstance()->getRow($query, false);
+        } catch (PrestaShopDatabaseException $e) {
+            $row = false;
+        }
+
+        if (!isset($row['id'])) {
+            throw new ShopAssociationNotFound(sprintf(
+                'Could not find association between %s %d and Shop %d',
+                $objectModelClass,
+                $id,
+                $shopId->getValue()
+            ));
+        }
     }
 
     /**
