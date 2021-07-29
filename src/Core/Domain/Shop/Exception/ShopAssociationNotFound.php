@@ -24,53 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+namespace PrestaShop\PrestaShop\Core\Domain\Shop\Exception;
 
-/**
- * Get Product data necessary for editing
- */
-class GetProductForEditing
+class ShopAssociationNotFound extends ShopException
 {
-    /**
-     * @var ProductId
-     */
-    private $productId;
-
-    /**
-     * @var ShopConstraint|null
-     */
-    private $shopConstraint;
-
-    /**
-     * GetEditableProduct constructor.
-     *
-     * @param int $productId
-     * @param ShopConstraint|null $shopConstraint
-     */
-    public function __construct(
-        int $productId,
-        ?ShopConstraint $shopConstraint = null
-    ) {
-        $this->productId = new ProductId($productId);
-        $this->shopConstraint = $shopConstraint;
-    }
-
-    /**
-     * @return ProductId
-     */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @return ShopConstraint|null
-     */
-    public function getShopConstraint(): ?ShopConstraint
-    {
-        return $this->shopConstraint;
-    }
 }

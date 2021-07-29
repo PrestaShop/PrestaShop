@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCust
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -115,15 +116,17 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
 
     /**
      * @param string $reference
+     * @param ShopConstraint|null $shopConstraint
      *
      * @return ProductForEditing
      */
-    protected function getProductForEditing(string $reference): ProductForEditing
+    protected function getProductForEditing(string $reference, ?ShopConstraint $shopConstraint = null): ProductForEditing
     {
         $productId = $this->getSharedStorage()->get($reference);
 
         return $this->getQueryBus()->handle(new GetProductForEditing(
-            $productId
+            $productId,
+            $shopConstraint
         ));
     }
 
