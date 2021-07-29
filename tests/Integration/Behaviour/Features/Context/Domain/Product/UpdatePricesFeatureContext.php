@@ -58,6 +58,16 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @When I update product :productReference prices for all shops with following information:
+     *
+     * @param string $productReference
+     */
+    public function updateProductPricesForAllShops(string $productReference, TableNode $table): void
+    {
+        $this->updatePrices($productReference, $table, ShopConstraint::allShops());
+    }
+
+    /**
      * @When I update product :productReference prices with following information:
      *
      * @param string $productReference
