@@ -260,6 +260,36 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
+        $command = $this->getSingleShopCommand();
+        $command
+            ->setPrice('45.56')
+            ->setEcotax('45.56')
+            ->setTaxRulesGroupId(42)
+            ->setOnSale(true)
+            ->setWholesalePrice('45.56')
+            ->setUnitPrice('45.56')
+            ->setUnity('kg')
+        ;
+        yield [
+            [
+                'pricing' => [
+                    'retail_price' => [
+                        'price_tax_excluded' => 45.56,
+                        'multistore_override_all_price_tax_excluded' => false,
+                        'ecotax' => '45.56',
+                    ],
+                    'tax_rules_group_id' => '42',
+                    'on_sale' => true,
+                    'wholesale_price' => '45.56',
+                    'unit_price' => [
+                        'price' => '45.56',
+                        'unity' => 'kg',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
         $singleCommand = $this->getSingleShopCommand();
         $singleCommand
             ->setEcotax('45.56')
