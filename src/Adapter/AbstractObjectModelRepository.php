@@ -96,6 +96,11 @@ abstract class AbstractObjectModelRepository
                 $objectModel = new $objectModelClass($id, null, $shopId);
             }
 
+            // Force id_shop_list right away so that DB modification use the appropriate shop and not the one from context
+            if ($shopConstraint && $shopConstraint->getShopId()) {
+                $objectModel->id_shop_list = [$shopConstraint->getShopId()->getValue()];
+            }
+
             if ((int) $objectModel->id !== $id) {
                 throw new $exceptionClass(sprintf('%s #%d was not found', $objectModelClass, $id));
             }
