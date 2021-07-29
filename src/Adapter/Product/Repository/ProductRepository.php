@@ -51,7 +51,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstr
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -239,7 +238,7 @@ class ProductRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param int|null $shopId
+     * @param ShopId|null $shopId
      *
      * @return Product
      *
@@ -247,7 +246,7 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function get(
         ProductId $productId,
-        ?int $shopId = null
+        ?ShopId $shopId = null
     ): Product {
         /** @var Product $product */
         $product = $this->getObjectModel(
@@ -426,7 +425,7 @@ class ProductRepository extends AbstractObjectModelRepository
     public function isAssociatedToShop(ProductId $productId, ShopId $shopId): bool
     {
         try {
-            $this->checkShopAssociation($productId->getValue(), Product::class, $shopId->getValue());
+            $this->checkShopAssociation($productId->getValue(), Product::class, $shopId);
         } catch (ShopAssociationNotFound $e) {
             return false;
         }
