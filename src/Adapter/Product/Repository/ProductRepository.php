@@ -480,4 +480,32 @@ class ProductRepository extends AbstractObjectModelRepository
 
         return true;
     }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return ShopId[]
+     */
+    public function getAssociatedShopIds(ProductId $productId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('id_shop')
+            ->from($this->dbPrefix . 'product_shop')
+            ->where('id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAll();
+        if (empty($result)) {
+            return [];
+        }
+
+        $shops = [];
+        foreach ($result as $shop) {
+            $shops[] = new ShopId((int) $shop['id_shop']);
+        }
+
+        return $shops;
+    }
 }
