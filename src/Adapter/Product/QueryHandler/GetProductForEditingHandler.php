@@ -151,7 +151,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      */
     public function handle(GetProductForEditing $query): ProductForEditing
     {
-        $product = $this->productRepository->get($query->getProductId());
+        $product = $this->productRepository->get($query->getProductId(), $query->getShopConstraint());
 
         return new ProductForEditing(
             (int) $product->id,
