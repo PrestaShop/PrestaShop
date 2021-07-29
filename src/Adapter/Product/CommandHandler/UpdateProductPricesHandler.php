@@ -79,6 +79,7 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
      */
     public function handle(UpdateProductPricesCommand $command): void
     {
+        // @todo: this part will very likely be very similar in other multistore handlers, maybe we can share this via an abstract class later
         if (null === $command->getShopConstraint()) {
             $this->updatePriceByShop($command);
         } elseif ($command->getShopConstraint()->forAllShops()) {
