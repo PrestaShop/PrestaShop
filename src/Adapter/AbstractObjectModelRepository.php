@@ -74,19 +74,17 @@ abstract class AbstractObjectModelRepository
      * @param int $id
      * @param string $objectModelClass
      * @param string $exceptionClass
-     * @param ShopConstraint|null $shopConstraint
+     * @param int|null $shopId
      *
      * @return ObjectModel
      *
      * @throws CoreException
      */
-    protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass, ?ShopConstraint $shopConstraint = null): ObjectModel
+    protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass, ?int $shopId = null): ObjectModel
     {
         try {
-            $shopId = null;
-            if ($shopConstraint && $shopConstraint->getShopId()) {
-                $this->checkShopAssociation($id, $objectModelClass, $shopConstraint->getShopId());
-                $shopId = $shopConstraint->getShopId()->getValue();
+            if (null !== $shopId) {
+                $this->checkShopAssociation($id, $objectModelClass, $shopId);
             }
 
             // Special case for Product because it has an additional full parameter
@@ -97,8 +95,8 @@ abstract class AbstractObjectModelRepository
             }
 
             // Force id_shop_list right away so that DB modification use the appropriate shop and not the one from context
-            if ($shopConstraint && $shopConstraint->getShopId()) {
-                $objectModel->id_shop_list = [$shopConstraint->getShopId()->getValue()];
+            if (null !== $shopId) {
+                $objectModel->id_shop_list = [$shopId];
             }
 
             if ((int) $objectModel->id !== $id) {
@@ -123,11 +121,11 @@ abstract class AbstractObjectModelRepository
     /**
      * @param int $id
      * @param string $objectModelClass
-     * @param ShopId $shopId
+     * @param int $shopId
      *
      * @throws ShopAssociationNotFound
      */
-    protected function checkShopAssociation(int $id, string $objectModelClass, ShopId $shopId): void
+    protected function checkShopAssociation(int $id, string $objectModelClass, int $shopId): void
     {
         $modelDefinition = $objectModelClass::$definition;
         $objectTable = $modelDefinition['table'];
@@ -138,7 +136,7 @@ abstract class AbstractObjectModelRepository
             ->select('e.`' . $primaryColumn . '` as id')
             ->from($objectTable . '_shop', 'e')
             ->where('e.`' . $primaryColumn . '` = ' . $id)
-            ->where('e.`id_shop` = ' . $shopId->getValue())
+            ->where('e.`id_shop` = ' . $shopId)
         ;
         $sql = $query->build();
         try {
@@ -152,7 +150,7 @@ abstract class AbstractObjectModelRepository
                 'Could not find association between %s %d and Shop %d',
                 $objectModelClass,
                 $id,
-                $shopId->getValue()
+                $shopId
             ));
         }
     }

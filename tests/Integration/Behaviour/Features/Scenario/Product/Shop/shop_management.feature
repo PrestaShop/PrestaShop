@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-multi-shop-management
 @reset-database-before-feature
+@product-multi-shop
 @update-multi-shop-management
 Feature: Copy product from shop to shop.
   As a BO user I want to be able to copy product from shop to shop.
