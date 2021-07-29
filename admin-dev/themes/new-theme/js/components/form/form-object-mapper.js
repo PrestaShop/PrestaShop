@@ -216,7 +216,7 @@ export default class FormObjectMapper {
       return;
     }
 
-    const updatedValue = $(target).val();
+    const updatedValue = this.getInputValue($(target));
     const updatedModelKey = this.formMapping[target.name];
 
     // Update the mapped input fields
@@ -225,6 +225,19 @@ export default class FormObjectMapper {
     // Then update model and emit event
     this.updateObjectByKey(updatedModelKey, updatedValue);
     this.eventEmitter.emit(this.modelUpdatedEventName, this.model);
+  }
+
+  /**
+   * @param {jQuery} $input
+   *
+   * @returns {*}
+   */
+  getInputValue($input) {
+    if ($input.is(':checkbox')) {
+      return $input.is(':checked');
+    }
+
+    return $input.val();
   }
 
   /**
@@ -270,11 +283,18 @@ export default class FormObjectMapper {
       return;
     }
 
+    const inputValue = this.getInputValue($input);
+
     // This check is important to avoid infinite loops, we don't use strict equality on purpose because it would result
     // into a potential infinite loop if type don't match, which can easily happen with a number value and a text input.
     // eslint-disable-next-line eqeqeq
-    if ($input.val() != value) {
-      $input.val(value);
+    if (inputValue != value) {
+      if ($input.is(':checkbox')) {
+        $input.val(!!value);
+        $input.prop('checked', !!value);
+      } else {
+        $input.val(value);
+      }
 
       if ($input.data('toggle') === 'select2') {
         // This is required for select2, because only changing the val doesn't update the wrapping component
@@ -292,7 +312,10 @@ export default class FormObjectMapper {
    * @private
    */
   updateFullObject() {
-    const serializedForm = this.$form.serializeJSON();
+    const serializedForm = this.$form.serializeJSON({
+      checkboxUncheckedValue: '0',
+    });
+
     this.model = {};
     Object.keys(this.modelMapping).forEach((modelKey) => {
       const formMapping = this.modelMapping[modelKey];

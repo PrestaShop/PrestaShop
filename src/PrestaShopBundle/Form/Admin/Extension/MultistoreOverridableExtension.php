@@ -112,6 +112,9 @@ class MultistoreOverridableExtension extends AbstractTypeExtension
                 CheckboxType::class,
                 [
                     'label' => $this->getCheckboxLabel(),
+                    'attr' => [
+                        'data-value-type' => 'boolean',
+                    ],
                 ]
             );
         }
