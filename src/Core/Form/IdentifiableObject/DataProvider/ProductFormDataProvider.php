@@ -293,8 +293,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $details = $productForEditing->getDetails();
 
         return [
-            'features' => $this->extractFeatureValues($productForEditing->getProductId()),
-            'customizations' => $this->extractCustomizationsData($productForEditing),
             'references' => [
                 'mpn' => $details->getMpn(),
                 'upc' => $details->getUpc(),
@@ -302,6 +300,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'isbn' => $details->getIsbn(),
                 'reference' => $details->getReference(),
             ],
+            'features' => $this->extractFeatureValues($productForEditing->getProductId()),
+            'attachments' => $this->extractAttachmentsData($productForEditing),
+            'customizations' => $this->extractCustomizationsData($productForEditing),
         ];
     }
 
@@ -480,7 +481,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'show_condition' => $options->showCondition(),
             'condition' => $options->getCondition(),
             'suppliers' => $this->extractSuppliersData($productForEditing),
-            'attachments' => $this->extractAttachmentsData($productForEditing),
         ];
     }
 
