@@ -240,7 +240,7 @@ class ProductRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param ShopConstraint|null $shopConstraint
+     * @param int|null $shopId
      *
      * @return Product
      *
@@ -248,14 +248,14 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function get(
         ProductId $productId,
-        ?ShopConstraint $shopConstraint = null
+        ?int $shopId = null
     ): Product {
         /** @var Product $product */
         $product = $this->getObjectModel(
             $productId->getValue(),
             Product::class,
             ProductNotFoundException::class,
-            $shopConstraint
+            $shopId
         );
 
         try {
@@ -474,7 +474,7 @@ class ProductRepository extends AbstractObjectModelRepository
     public function isAssociatedToShop(ProductId $productId, ShopId $shopId): bool
     {
         try {
-            $this->checkShopAssociation($productId->getValue(), Product::class, $shopId);
+            $this->checkShopAssociation($productId->getValue(), Product::class, $shopId->getValue());
         } catch (ShopAssociationNotFound $e) {
             return false;
         }
