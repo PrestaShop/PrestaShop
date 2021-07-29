@@ -32,7 +32,6 @@ use Db;
 use DbQuery;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
@@ -74,13 +73,13 @@ abstract class AbstractObjectModelRepository
      * @param int $id
      * @param string $objectModelClass
      * @param string $exceptionClass
-     * @param int|null $shopId
+     * @param ShopId|null $shopId
      *
      * @return ObjectModel
      *
      * @throws CoreException
      */
-    protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass, ?int $shopId = null): ObjectModel
+    protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass, ?ShopId $shopId = null): ObjectModel
     {
         try {
             if (null !== $shopId) {
@@ -89,14 +88,14 @@ abstract class AbstractObjectModelRepository
 
             // Special case for Product because it has an additional full parameter
             if ($objectModelClass === Product::class) {
-                $objectModel = new Product($id, false, null, $shopId);
+                $objectModel = new Product($id, false, null, $shopId ? $shopId->getValue() : null);
             } else {
-                $objectModel = new $objectModelClass($id, null, $shopId);
+                $objectModel = new $objectModelClass($id, null, $shopId ? $shopId->getValue() : null);
             }
 
             // Force id_shop_list right away so that DB modification use the appropriate shop and not the one from context
             if (null !== $shopId) {
-                $objectModel->id_shop_list = [$shopId];
+                $objectModel->id_shop_list = [$shopId->getValue()];
             }
 
             if ((int) $objectModel->id !== $id) {
@@ -121,11 +120,11 @@ abstract class AbstractObjectModelRepository
     /**
      * @param int $id
      * @param string $objectModelClass
-     * @param int $shopId
+     * @param ShopId $shopId
      *
      * @throws ShopAssociationNotFound
      */
-    protected function checkShopAssociation(int $id, string $objectModelClass, int $shopId): void
+    protected function checkShopAssociation(int $id, string $objectModelClass, ShopId $shopId): void
     {
         $modelDefinition = $objectModelClass::$definition;
         $objectTable = $modelDefinition['table'];
@@ -136,7 +135,7 @@ abstract class AbstractObjectModelRepository
             ->select('e.`' . $primaryColumn . '` as id')
             ->from($objectTable . '_shop', 'e')
             ->where('e.`' . $primaryColumn . '` = ' . $id)
-            ->where('e.`id_shop` = ' . $shopId)
+            ->where('e.`id_shop` = ' . $shopId->getValue())
         ;
         $sql = $query->build();
         try {
@@ -150,7 +149,7 @@ abstract class AbstractObjectModelRepository
                 'Could not find association between %s %d and Shop %d',
                 $objectModelClass,
                 $id,
-                $shopId
+                $shopId->getValue()
             ));
         }
     }
