@@ -29,10 +29,13 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PricesCommandsBuilder;
 
 class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
+    private const SHOP_ID = 1;
+
     /**
      * @dataProvider getExpectedCommands
      *
@@ -41,7 +44,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommand(array $formData, array $expectedCommands)
     {
-        $builder = new PricesCommandsBuilder();
+        $builder = new PricesCommandsBuilder(static::SHOP_ID, false);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -55,14 +58,13 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [],
         ];
 
-        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
         yield [
             [
                 'pricing' => [
                     'not_handled' => 0,
                 ],
             ],
-            [$command],
+            [],
         ];
 
         $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
@@ -183,5 +185,122 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ],
             [$command],
         ];
+    }
+
+    /**
+     * @dataProvider getExpectedCommandsMultistore
+     *
+     * @param array $formData
+     * @param array $expectedCommands
+     */
+    public function testBuildCommandMultistore(array $formData, array $expectedCommands)
+    {
+        $builder = new PricesCommandsBuilder(static::SHOP_ID, true);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $this->assertEquals($expectedCommands, $builtCommands);
+    }
+
+    public function getExpectedCommandsMultistore(): iterable
+    {
+        $command = $this->getSingleShopCommand();
+        $command->setPrice('45.56');
+        yield [
+            [
+                'pricing' => [
+                    'not_handled' => 0,
+                    'retail_price' => [
+                        'price_tax_excluded' => 45.56,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand();
+        $command->setPrice('45.56');
+        yield [
+            [
+                'pricing' => [
+                    'not_handled' => 0,
+                    'retail_price' => [
+                        'price_tax_excluded' => 45.56,
+                        'multistore_override_all_price_tax_excluded' => true,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command
+            ->setPrice('45.56')
+            ->setEcotax('45.56')
+            ->setTaxRulesGroupId(42)
+            ->setOnSale(true)
+            ->setWholesalePrice('45.56')
+            ->setUnitPrice('45.56')
+            ->setUnity('kg')
+        ;
+        yield [
+            [
+                'pricing' => [
+                    'retail_price' => [
+                        'price_tax_excluded' => 45.56,
+                        'ecotax' => '45.56',
+                    ],
+                    'tax_rules_group_id' => '42',
+                    'on_sale' => true,
+                    'wholesale_price' => '45.56',
+                    'unit_price' => [
+                        'price' => '45.56',
+                        'unity' => 'kg',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $singleCommand = $this->getSingleShopCommand();
+        $singleCommand
+            ->setEcotax('45.56')
+            ->setTaxRulesGroupId(42)
+            ->setOnSale(true)
+            ->setWholesalePrice('45.56')
+            ->setUnitPrice('45.56')
+            ->setUnity('kg')
+        ;
+        $allShopsCommand = $this->getAllShopsCommand();
+        $allShopsCommand
+            ->setPrice('45.56')
+        ;
+        yield [
+            [
+                'pricing' => [
+                    'retail_price' => [
+                        'price_tax_excluded' => 45.56,
+                        'multistore_override_all_price_tax_excluded' => true,
+                        'ecotax' => '45.56',
+                    ],
+                    'tax_rules_group_id' => '42',
+                    'on_sale' => true,
+                    'wholesale_price' => '45.56',
+                    'unit_price' => [
+                        'price' => '45.56',
+                        'unity' => 'kg',
+                    ],
+                ],
+            ],
+            [$singleCommand, $allShopsCommand],
+        ];
+    }
+
+    private function getSingleShopCommand(): UpdateProductPricesCommand
+    {
+        return new UpdateProductPricesCommand($this->getProductId()->getValue(), ShopConstraint::shop(static::SHOP_ID));
+    }
+
+    private function getAllShopsCommand(): UpdateProductPricesCommand
+    {
+        return new UpdateProductPricesCommand($this->getProductId()->getValue(), ShopConstraint::allShops());
     }
 }
