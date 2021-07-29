@@ -83,6 +83,9 @@ class MultistoreOverridableExtension extends AbstractTypeExtension
             // To add the option on all form types
             FormType::class,
             // This is the container that includes the overridable fields
+            // @todo: this is hardcoded for now but this extension needs to be improved so that the activation
+            // of the extension is more automatic, maybe relying on a parent form type like MultistoreConfigurationTypeExtension
+            // but it's not ideal
             RetailPriceType::class,
         ];
     }
