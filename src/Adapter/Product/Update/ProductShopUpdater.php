@@ -206,7 +206,7 @@ class ProductShopUpdater
     {
         $stockFields = [];
         $stockFields['minimal_quantity'] = (int) $product->minimal_quantity;
-        $stockFields['low_stock_threshold'] = (int) $product->low_stock_threshold;
+        $stockFields['low_stock_threshold'] = $product->low_stock_threshold;
         $stockFields['low_stock_alert'] = (int) $product->low_stock_alert;
         $stockFields['advanced_stock_management'] = $product->advanced_stock_management;
         $stockFields['pack_stock_type'] = (int) $product->pack_stock_type;
