@@ -98,6 +98,7 @@ class RetailPriceType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0.0,
+                'overridable_for_all' => true,
             ])
         ;
 
