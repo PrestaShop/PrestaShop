@@ -7,6 +7,13 @@ services:
         arguments:
             - !tagged core.product_command_builder
 
+    prestashop.core.form.command_builder.multistore_commands_builder:
+        abstract: true
+        public: true
+        arguments:
+            - "@=service('prestashop.adapter.shop.context').getContextShopID()"
+            - "@=service('prestashop.adapter.feature.multistore').isUsed()"
+
     # VERY IMPORTANT this builder must be the last one, it will avoid conflicts with previous commands
     # that may not be compatible with the updated type, its priority musk be kept lower than others
     prestashop.core.form.command_builder.product.type:
@@ -20,6 +27,8 @@ services:
 
     prestashop.core.form.command_builder.product.prices:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PricesCommandsBuilder
+        parent: 'prestashop.core.form.command_builder.multistore_commands_builder'
+        public: true
         tags: ['core.product_command_builder']
 
     prestashop.core.form.command_builder.product.seo:

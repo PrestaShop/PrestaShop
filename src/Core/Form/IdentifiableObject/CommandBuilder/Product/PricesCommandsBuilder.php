@@ -30,12 +30,23 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Builder used to build UpdateProductPricesCommand
  */
-class PricesCommandsBuilder implements ProductCommandsBuilderInterface
+class PricesCommandsBuilder extends MultistoreCommandsBuilder implements ProductCommandsBuilderInterface
 {
+    /**
+     * @var UpdateProductPricesCommand
+     */
+    private $singleShopCommand;
+
+    /**
+     * @var UpdateProductPricesCommand
+     */
+    private $allShopsCommand;
+
     /**
      * {@inheritdoc}
      */
@@ -46,30 +57,77 @@ class PricesCommandsBuilder implements ProductCommandsBuilderInterface
         }
 
         $priceData = $formData['pricing'];
-        $command = new UpdateProductPricesCommand($productId->getValue());
 
         if (isset($priceData['retail_price']['price_tax_excluded'])) {
-            $command->setPrice((string) $priceData['retail_price']['price_tax_excluded']);
+            if (isset($priceData['retail_price']['multistore_override_all_price_tax_excluded'])) {
+                $this->getAllShopsCommand($productId)->setPrice((string) $priceData['retail_price']['price_tax_excluded']);
+            } else {
+                $this->getSingleCommand($productId)->setPrice((string) $priceData['retail_price']['price_tax_excluded']);
+            }
         }
         if (isset($priceData['retail_price']['ecotax'])) {
-            $command->setEcotax((string) $priceData['retail_price']['ecotax']);
+            $this->getSingleCommand($productId)->setEcotax((string) $priceData['retail_price']['ecotax']);
         }
         if (isset($priceData['tax_rules_group_id'])) {
-            $command->setTaxRulesGroupId((int) $priceData['tax_rules_group_id']);
+            $this->getSingleCommand($productId)->setTaxRulesGroupId((int) $priceData['tax_rules_group_id']);
         }
         if (isset($priceData['on_sale'])) {
-            $command->setOnSale((bool) $priceData['on_sale']);
+            $this->getSingleCommand($productId)->setOnSale((bool) $priceData['on_sale']);
         }
         if (isset($priceData['wholesale_price'])) {
-            $command->setWholesalePrice((string) $priceData['wholesale_price']);
+            $this->getSingleCommand($productId)->setWholesalePrice((string) $priceData['wholesale_price']);
         }
         if (isset($priceData['unit_price']['price'])) {
-            $command->setUnitPrice((string) $priceData['unit_price']['price']);
+            $this->getSingleCommand($productId)->setUnitPrice((string) $priceData['unit_price']['price']);
         }
         if (isset($priceData['unit_price']['unity'])) {
-            $command->setUnity((string) $priceData['unit_price']['unity']);
+            $this->getSingleCommand($productId)->setUnity((string) $priceData['unit_price']['unity']);
         }
 
-        return [$command];
+        return $this->getCommands();
+    }
+
+    /**
+     * @return UpdateProductPricesCommand[]
+     */
+    private function getCommands(): array
+    {
+        $commands = [];
+        if (null !== $this->singleShopCommand) {
+            $commands[] = $this->singleShopCommand;
+        }
+        if (null !== $this->allShopsCommand) {
+            $commands[] = $this->allShopsCommand;
+        }
+
+        return $commands;
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return UpdateProductPricesCommand
+     */
+    private function getSingleCommand(ProductId $productId): UpdateProductPricesCommand
+    {
+        if (null === $this->singleShopCommand) {
+            $this->singleShopCommand = new UpdateProductPricesCommand($productId->getValue(), $this->getShopConstraint());
+        }
+
+        return $this->singleShopCommand;
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return UpdateProductPricesCommand
+     */
+    private function getAllShopsCommand(ProductId $productId): UpdateProductPricesCommand
+    {
+        if (null === $this->allShopsCommand) {
+            $this->allShopsCommand = new UpdateProductPricesCommand($productId->getValue(), ShopConstraint::allShops());
+        }
+
+        return $this->allShopsCommand;
     }
 }

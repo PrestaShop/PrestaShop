@@ -95,6 +95,7 @@ class RetailPriceType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                 ],
                 'default_empty_data' => 0.0,
+                'overridable_for_all' => true,
             ])
         ;
 
