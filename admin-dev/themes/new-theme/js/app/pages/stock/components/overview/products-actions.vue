@@ -99,6 +99,7 @@
         const {selectedProductsLng} = this;
         const productsLng = this.$store.state.products.length;
         const isIndeterminate = (selectedProductsLng > 0 && selectedProductsLng < productsLng);
+
         if (isIndeterminate) {
           this.$refs['bulk-action'].checked = true;
         }

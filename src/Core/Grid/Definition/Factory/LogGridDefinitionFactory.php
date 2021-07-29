@@ -37,11 +37,9 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee\EmployeeNameWithAvatarC
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Status\SeverityLevelColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
+use PrestaShopBundle\Form\Admin\Type\LogSeverityChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
-use PrestaShopLogger;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
@@ -49,39 +47,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    /**
-     * @var string the URL to reset Grid filters
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string the URL for redirection
-     */
-    private $redirectionUrl;
-
-    /**
-     * LogGridDefinitionFactory constructor.
-     *
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param string $resetActionUrl
-     * @param string $redirectionUrl
-     */
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        $resetActionUrl,
-        $redirectionUrl
-    ) {
-        parent::__construct($hookDispatcher);
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectionUrl = $redirectionUrl;
-    }
+    public const GRID_ID = 'logs';
 
     /**
      * {@inheritdoc}
      */
     protected function getId()
     {
-        return 'logs';
+        return self::GRID_ID;
     }
 
     /**
@@ -97,7 +70,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
-        return (new ColumnCollection())
+        $columns = (new ColumnCollection())
             ->add(
                 (new DataColumn('id_log'))
                     ->setName($this->trans('ID', [], 'Admin.Global'))
@@ -142,6 +115,20 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
+                (new DataColumn('shop_name'))
+                    ->setName($this->trans('Shop context', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'shop_name',
+                    ])
+            )
+            ->add(
+                (new DataColumn('language'))
+                    ->setName($this->trans('Language', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'language',
+                    ])
+            )
+            ->add(
                 (new DataColumn('error_code'))
                     ->setName($this->trans('Error code', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
@@ -160,6 +147,8 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new ActionColumn('actions'))
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
             );
+
+        return $columns;
     }
 
     /**
@@ -183,12 +172,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('employee')
             )
             ->add(
-                (new Filter('severity', ChoiceType::class))
-                    ->setTypeOptions([
-                        'required' => false,
-                        'choices' => $this->getSeveritysChoices(),
-                        'translation_domain' => false,
-                    ])
+                (new Filter('severity', LogSeverityChoiceType::class))
                     ->setAssociatedColumn('severity')
             )
             ->add(
@@ -229,10 +213,11 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'attr' => [
-                            'data-url' => $this->resetActionUrl,
-                            'data-redirect' => $this->redirectionUrl,
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
                         ],
+                        'redirect_route' => 'admin_logs_index',
                     ])
                     ->setAssociatedColumn('actions')
             );
@@ -268,15 +253,5 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                     ->setIcon('storage')
             );
-    }
-
-    private function getSeveritysChoices()
-    {
-        return [
-            $this->trans('Informative only', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_INFORMATIVE,
-            $this->trans('Warning', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_WARNING,
-            $this->trans('Error', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_ERROR,
-            $this->trans('Major issue (crash)!', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_MAJOR,
-        ];
     }
 }

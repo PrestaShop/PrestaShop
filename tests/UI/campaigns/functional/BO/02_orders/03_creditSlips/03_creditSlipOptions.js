@@ -1,29 +1,32 @@
 require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
+
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Importing pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 const ordersPage = require('@pages/BO/orders/index');
 const viewOrderPage = require('@pages/BO/orders/view');
 
-// Importing data
+// Import data
 const {Statuses} = require('@data/demo/orderStatuses');
 
-// Importing test context
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_creditSlips_creditSlipOptions';
 
+// Import expect from chai
+const {expect} = require('chai');
 
 let browserContext;
 let page;
 
 let fileName;
-
 const prefixToEdit = 'CreSlip';
 
 /*
@@ -33,7 +36,7 @@ Check the credit slip file name
 Delete the slip prefix value
 Check the credit slip file name
  */
-describe('Edit credit slip prefix and check the generated file name', async () => {
+describe('BO - Orders - Credit slips : Credit slip options', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -49,7 +52,7 @@ describe('Edit credit slip prefix and check the generated file name', async () =
   });
 
   describe(`Change the credit slip prefix to '${prefixToEdit}'`, async () => {
-    it('should go to Credit slips page', async function () {
+    it('should go to \'Orders > Credit slips\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -73,7 +76,7 @@ describe('Edit credit slip prefix and check the generated file name', async () =
     });
   });
 
-  describe(`Change the order status to '${Statuses.shipped.status}' and check the credit slip file name`, async () => {
+  describe('Check the new credit slip prefix', async () => {
     it('should go to the orders page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
@@ -87,10 +90,11 @@ describe('Edit credit slip prefix and check the generated file name', async () =
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it('should go to the first order page', async function () {
+    it('should go to the last order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
 
       await ordersPage.goToOrder(page, 1);
+
       const pageTitle = await viewOrderPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
     });
@@ -112,7 +116,7 @@ describe('Edit credit slip prefix and check the generated file name', async () =
   });
 
   describe(`Back to the default credit slip prefix value '${prefixToEdit}'`, async () => {
-    it('should go to Credit slips page', async function () {
+    it('should go to \'Orders > Credit slips\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPageToResetPrefix', baseContext);
 
       await viewOrderPage.goToSubMenu(
@@ -120,8 +124,6 @@ describe('Edit credit slip prefix and check the generated file name', async () =
         viewOrderPage.ordersParentLink,
         viewOrderPage.creditSlipsLink,
       );
-
-      await creditSlipsPage.closeSfToolBar(page);
 
       const pageTitle = await creditSlipsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
@@ -131,13 +133,14 @@ describe('Edit credit slip prefix and check the generated file name', async () =
       await testContext.addContextItem(this, 'testIdentifier', 'deletePrefix', baseContext);
 
       await creditSlipsPage.changePrefix(page, ' ');
+
       const textMessage = await creditSlipsPage.saveCreditSlipOptions(page);
       await expect(textMessage).to.contains(creditSlipsPage.successfulUpdateMessage);
     });
   });
 
-  describe('Check that the edited prefix does not exist in the credit slip file name', async () => {
-    it('should go to the orders page', async function () {
+  describe('Check that the new prefix does not exist in the credit slip file name', async () => {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageToCheckDeletedPrefix', baseContext);
 
       await creditSlipsPage.goToSubMenu(
@@ -154,6 +157,7 @@ describe('Edit credit slip prefix and check the generated file name', async () =
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderToCheckDeletedPrefix', baseContext);
 
       await ordersPage.goToOrder(page, 1);
+
       const pageTitle = await viewOrderPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
     });

@@ -97,15 +97,15 @@
 	</div>
 </div>
 <div class="panel">
+	<h3 id="reply-form-title">{l s="Your answer to" d='Admin.Orderscustomers.Feature'} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email}{/if}</h3>
 	<form action="{$link->getAdminLink('AdminCustomerThreads', true, [], ['id_customer_thread' => $thread->id|intval, 'viewcustomer_thread' => 1])|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
-	<h3>{l s="Your answer to" d='Admin.Orderscustomers.Feature'} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email}{/if}</h3>
 	<div class="row">
 		<div class="media">
 			<div class="pull-left">
 				<span class="avatar-md">{if isset($current_employee->firstname)}<img src="{$current_employee->getImage()}" alt="">{/if}</span>
 			</div>
 			<div class="media-body">
-				<textarea cols="30" rows="7" name="reply_message">{$PS_CUSTOMER_SERVICE_SIGNATURE|escape:'html':'UTF-8'}</textarea>
+				<textarea id="reply_message" cols="30" rows="7" name="reply_message">{$PS_CUSTOMER_SERVICE_SIGNATURE|escape:'html':'UTF-8'}</textarea>
 			</div>
 		</div>
 	</div>
@@ -124,7 +124,7 @@
 </div>
 
 {if count($timeline_items)}
-<div class="panel">
+<div class="panel" id="orders-and-messages-block">
 	<h3>
 		<i class="icon-clock-o"></i>
 		{l s="Orders and messages timeline" d='Admin.Orderscustomers.Feature'}

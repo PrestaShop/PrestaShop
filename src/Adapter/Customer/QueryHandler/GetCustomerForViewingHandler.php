@@ -222,7 +222,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
      *
      * @return int|null customer rank or null if customer is not ranked
      */
-    private function getCustomerRankBySales($customerId)
+    private function getCustomerRankBySales($customerId): ?int
     {
         $sql = 'SELECT SUM(total_paid_real) FROM ' . _DB_PREFIX_ . 'orders WHERE id_customer = ' . (int) $customerId . ' AND valid = 1';
 
@@ -248,7 +248,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
      *
      * @return OrdersInformation
      */
-    private function getCustomerOrders(Customer $customer)
+    private function getCustomerOrders(Customer $customer): OrdersInformation
     {
         $validOrders = [];
         $invalidOrders = [];

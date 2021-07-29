@@ -78,6 +78,8 @@ describe('Pagination and sort suppliers', async () => {
     describe(`Create supplier n°${index + 1} in BO`, async () => {
       const createSupplierData = new SupplierFaker({name: `todelete${index}`});
 
+      before(() => files.generateImage(createSupplierData.logo));
+
       it('should go to add new supplier page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewSupplierPage${index}`, baseContext);
 

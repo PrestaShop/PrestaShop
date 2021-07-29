@@ -53,6 +53,7 @@ class HelperOptionsCore extends Helper
             $languages = Language::getLanguages(false);
         }
 
+        $has_color_field = false;
         $use_multishop = false;
         $hide_multishop_checkbox = (Shop::getTotalShops(false, null) < 2) ? true : false;
         foreach ($option_list as $category => $category_data) {
@@ -101,6 +102,7 @@ class HelperOptionsCore extends Helper
                 $field['required'] = isset($field['required']) ? $field['required'] : $this->required;
 
                 if ($field['type'] == 'color') {
+                    $has_color_field = true;
                     $this->context->controller->addJqueryPlugin('colorpicker');
                 }
 
@@ -246,6 +248,7 @@ class HelperOptionsCore extends Helper
             'currency_left_sign' => $this->context->currency->getSign('left'),
             'currency_right_sign' => $this->context->currency->getSign('right'),
             'use_multishop' => $use_multishop,
+            'has_color_field' => $has_color_field,
         ]);
 
         return parent::generate();

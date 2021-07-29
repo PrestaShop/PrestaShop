@@ -50,6 +50,9 @@ final class AttributeGroupId
     }
 
     /**
+     * @deprecated
+     * @see getValue()
+     *
      * @return int
      */
     public function getAttributeGroupId()

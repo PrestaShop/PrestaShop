@@ -77,7 +77,7 @@ class Step {
   }
 
   enableAllBefore() {
-    const $nextSteps = this.$step.nextAll(prestashop.selectors.checkout.step + '.-clickable');
+    const $nextSteps = this.$step.nextAll(`${prestashop.selectors.checkout.step}.-clickable`);
     $nextSteps.removeClass('-unreachable').addClass('-complete');
     $(prestashop.selectors.checkout.stepTitle, $nextSteps).removeClass('not-allowed');
   }

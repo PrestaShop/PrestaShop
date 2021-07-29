@@ -30,18 +30,18 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @When I update product :productReference options with following information:
+     * @When I update product :productReference options with following values:
      *
      * @param string $productReference
      * @param TableNode $table
@@ -53,42 +53,95 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
 
         try {
             $command = new UpdateProductOptionsCommand($productId);
-            $this->setUpdateOptionsCommandData($data, $command);
+            $this->fillCommand($data, $command);
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I assign non existing manufacturer to product :productReference
+     *
+     * @param string $productReference
+     */
+    public function updateOptionsWithNonExistingManufacturer(string $productReference): void
+    {
+        // intentional. Mimics id of non-existing manufacturer
+        $nonExistingId = 50000;
+
+        try {
+            $command = new UpdateProductOptionsCommand($this->getSharedStorage()->get($productReference));
+            $command->setManufacturerId($nonExistingId);
+            $this->getCommandBus()->handle($command);
         } catch (ManufacturerException $e) {
             $this->setLastException($e);
         }
     }
 
     /**
-     * @Then I should get error that assigned manufacturer is invalid
+     * @Transform table:product option,value
+     *
+     * @param TableNode $tableNode
+     *
+     * @return ProductOptions
      */
-    public function assertInvalidManufacturerError(): void
+    public function transformOptions(TableNode $tableNode): ProductOptions
     {
-        $this->assertLastErrorIs(
-            ManufacturerConstraintException::class,
-            ManufacturerConstraintException::INVALID_ID
+        $dataRows = $tableNode->getRowsHash();
+
+        return new ProductOptions(
+            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['active']),
+            $dataRows['visibility'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['available_for_order']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['online_only']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['show_price']),
+            $dataRows['condition'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['show_condition']),
+            $this->getManufacturerId($dataRows['manufacturer'])
         );
     }
 
     /**
-     * @Then I should get error that assigned manufacturer does not exist
+     * @Then product :productReference should have following options:
+     *
+     * @param string $productReference
+     * @param ProductOptions $expectedOptions
      */
-    public function assertManufacturerDoesNotExistError(): void
+    public function assertOptions(string $productReference, ProductOptions $expectedOptions): void
     {
-        $this->assertLastErrorIs(
-            ManufacturerNotFoundException::class
-        );
+        $properties = [
+            'active',
+            'availableForOrder',
+            'onlineOnly',
+            'showPrice',
+            'visibility',
+            'condition',
+            'showCondition',
+            'manufacturerId',
+        ];
+        $actualOptions = $this->getProductForEditing($productReference)->getOptions();
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+        foreach ($properties as $property) {
+            Assert::assertSame(
+                $propertyAccessor->getValue($expectedOptions, $property),
+                $propertyAccessor->getValue($actualOptions, $property),
+                sprintf('Unexpected %s of product "%s"', $property, $productReference)
+            );
+        }
     }
 
     /**
      * @param array $data
      * @param UpdateProductOptionsCommand $command
      */
-    private function setUpdateOptionsCommandData(array $data, UpdateProductOptionsCommand $command): void
+    private function fillCommand(array $data, UpdateProductOptionsCommand $command): void
     {
+        if (isset($data['active'])) {
+            $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
+        }
+
         if (isset($data['visibility'])) {
             $command->setVisibility($data['visibility']);
         }
@@ -109,99 +162,26 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
             $command->setCondition($data['condition']);
         }
 
-        if (isset($data['isbn'])) {
-            $command->setIsbn($data['isbn']);
-        }
-
-        if (isset($data['upc'])) {
-            $command->setUpc($data['upc']);
-        }
-
-        if (isset($data['ean13'])) {
-            $command->setEan13($data['ean13']);
-        }
-
-        if (isset($data['mpn'])) {
-            $command->setMpn($data['mpn']);
-        }
-
-        if (isset($data['reference'])) {
-            $command->setReference($data['reference']);
-        }
-
-        if (isset($data['mpn'])) {
-            $command->setMpn($data['mpn']);
+        if (isset($data['show_condition'])) {
+            $command->setShowCondition(PrimitiveUtils::castStringBooleanIntoBoolean($data['show_condition']));
         }
 
         if (isset($data['manufacturer'])) {
-            switch ($data['manufacturer']) {
-                case 'invalid':
-                    $manufacturerId = -1;
-                    break;
-                case 'non-existent':
-                    $manufacturerId = 42;
-                    break;
-                case '':
-                    $manufacturerId = NoManufacturerId::NO_MANUFACTURER_ID;
-                    break;
-                default:
-                    $manufacturerId = $this->getSharedStorage()->get($data['manufacturer']);
-                    break;
-            }
-            $command->setManufacturerId($manufacturerId);
+            $command->setManufacturerId($this->getManufacturerId($data['manufacturer']));
         }
     }
 
     /**
-     * @Then product :productReference should have following options information:
-     *
-     * @param string $productReference
-     * @param TableNode $table
-     */
-    public function assertOptionsInformation(string $productReference, TableNode $table)
-    {
-        $productForEditing = $this->getProductForEditing($productReference);
-        $data = $table->getRowsHash();
-
-        $this->assertBoolProperty($productForEditing, $data, 'available_for_order');
-        $this->assertBoolProperty($productForEditing, $data, 'online_only');
-        $this->assertBoolProperty($productForEditing, $data, 'show_price');
-        $this->assertStringProperty($productForEditing, $data, 'visibility');
-        $this->assertStringProperty($productForEditing, $data, 'condition');
-        $this->assertStringProperty($productForEditing, $data, 'isbn');
-        $this->assertStringProperty($productForEditing, $data, 'upc');
-        $this->assertStringProperty($productForEditing, $data, 'ean13');
-        $this->assertStringProperty($productForEditing, $data, 'mpn');
-        $this->assertStringProperty($productForEditing, $data, 'reference');
-
-        // Assertions checking isset() can hide some errors if it doesn't find array key,
-        // to make sure all provided fields were checked we need to unset every asserted field
-        // and finally, if provided data is not empty, it means there are some unnasserted values left
-        Assert::assertEmpty($data, sprintf('Some provided product options fields haven\'t been asserted: %s', var_export($data, true)));
-    }
-
-    /**
-     * @Then manufacturer :manufacturerReference should be assigned to product :productReference
-     *
      * @param string $manufacturerReference
-     * @param string $productReference
-     */
-    public function assertManufacturerId(string $manufacturerReference, string $productReference): void
-    {
-        $expectedId = $this->getSharedStorage()->get($manufacturerReference);
-        $actualId = $this->getProductForEditing($productReference)->getOptions()->getManufacturerId();
-
-        Assert::assertEquals($expectedId, $actualId, 'Unexpected product manufacturer id');
-    }
-
-    /**
-     * @Then product :productReference should have no manufacturer assigned
      *
-     * @param string $productReference
+     * @return int
      */
-    public function assertProductHasNoManufacturer(string $productReference): void
+    private function getManufacturerId(string $manufacturerReference): int
     {
-        $manufacturerId = $this->getProductForEditing($productReference)->getOptions()->getManufacturerId();
-        Assert::assertEmpty($manufacturerId, sprintf('Expected product "%s" to have no manufacturer assigned', $productReference));
+        if ('' === $manufacturerReference) {
+            return NoManufacturerId::NO_MANUFACTURER_ID;
+        }
+
+        return $this->getSharedStorage()->get($manufacturerReference);
     }
 }

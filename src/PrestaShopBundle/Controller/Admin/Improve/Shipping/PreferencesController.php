@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Shipping;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -49,70 +49,65 @@ class PreferencesController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
         $handlingForm = $this->getHandlingFormHandler()->getForm();
         $carrierOptionsForm = $this->getCarrierOptionsFormHandler()->getForm();
 
-        return $this->render('@PrestaShop/Admin/Improve/Shipping/Preferences/preferences.html.twig', [
-            'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($legacyController),
-            'handlingForm' => $handlingForm->createView(),
-            'carrierOptionsForm' => $carrierOptionsForm->createView(),
-        ]);
+        return $this->renderForm($handlingForm, $carrierOptionsForm, $request);
     }
 
     /**
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_shipping_preferences")
      *
      * @param Request $request
      *
-     * @return RedirectResponse
-     */
-    public function processHandlingFormAction(Request $request)
-    {
-        return $this->processForm(
-            $request,
-            $this->getHandlingFormHandler(),
-            'Handling'
-        );
-    }
-
-    /**
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_shipping_preferences")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
+     * @return Response
      */
     public function processCarrierOptionsFormAction(Request $request)
     {
-        return $this->processForm(
-            $request,
-            $this->getCarrierOptionsFormHandler(),
-            'CarrierOptions'
+        $formHandler = $this->getCarrierOptionsFormHandler();
+        $this->dispatchHook(
+            'actionAdminShippingPreferencesControllerPostProcessCarrierOptionsBefore',
+                ['controller' => $this]
         );
+
+        $this->dispatchHook('actionAdminShippingPreferencesControllerPostProcessBefore', ['controller' => $this]);
+
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $saveErrors = $formHandler->save($data);
+
+            if (0 === count($saveErrors)) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_shipping_preferences');
+            }
+            $this->flashErrors($saveErrors);
+        }
+
+        return $this->renderForm($this->getHandlingFormHandler()->getForm(), $form, $request);
     }
 
     /**
-     * Process the Shipping Preferences configuration form.
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_shipping_preferences")
      *
      * @param Request $request
-     * @param FormHandlerInterface $formHandler
-     * @param string $hookName
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
+    public function processHandlingFormAction(Request $request)
     {
+        $formHandler = $this->getHandlingFormHandler();
         $this->dispatchHook(
-            'actionAdminShippingPreferencesControllerPostProcess' . $hookName . 'Before',
+            'actionAdminShippingPreferencesControllerPostProcessHandlingBefore',
             ['controller' => $this]
         );
 
@@ -121,18 +116,18 @@ class PreferencesController extends FrameworkBundleAdminController
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $saveErrors = $formHandler->save($data);
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-            } else {
-                $this->flashErrors($saveErrors);
+
+                return $this->redirectToRoute('admin_shipping_preferences');
             }
         }
 
-        return $this->redirectToRoute('admin_shipping_preferences');
+        return $this->renderForm($form, $this->getCarrierOptionsFormHandler()->getForm(), $request);
     }
 
     /**
@@ -149,5 +144,26 @@ class PreferencesController extends FrameworkBundleAdminController
     protected function getCarrierOptionsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.shipping_preferences.carrier_options.form_handler');
+    }
+
+    /**
+     * @param FormInterface $handlingForm
+     * @param FormInterface $carrierOptionsForm
+     * @param Request $request
+     *
+     * @return Response|null
+     */
+    protected function renderForm($handlingForm, $carrierOptionsForm, $request)
+    {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        return $this->render('@PrestaShop/Admin/Improve/Shipping/Preferences/preferences.html.twig', [
+            'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
+            'requireAddonsSearch' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
+            'handlingForm' => $handlingForm->createView(),
+            'carrierOptionsForm' => $carrierOptionsForm->createView(),
+        ]);
     }
 }

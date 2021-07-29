@@ -134,9 +134,12 @@ define('_PS_SWIFT_DIR_', _PS_TOOL_DIR_.'swift/');
 define('_PS_TAASC_PATH_', _PS_TOOL_DIR_.'taasc/');
 define('_PS_TCPDF_PATH_', _PS_TOOL_DIR_.'tcpdf/');
 
+define('_PS_IMG_SOURCE_DIR_', _PS_ROOT_DIR_.'/img/');
 if (!defined('_PS_IMG_DIR_')) {
-    define('_PS_IMG_DIR_', _PS_ROOT_DIR_.'/img/');
+    $dir = (defined('_PS_IN_TEST_') && _PS_IN_TEST_) ? '/tests/Resources/img/' : '/img/';
+    define('_PS_IMG_DIR_', _PS_ROOT_DIR_.$dir);
 }
+
 if (!defined('_PS_HOST_MODE_')) {
     define('_PS_CORE_IMG_DIR_', _PS_CORE_DIR_.'/img/');
 } else {
@@ -151,6 +154,7 @@ define('_PS_LANG_IMG_DIR_', _PS_IMG_DIR_.'l/');
 define('_PS_MANU_IMG_DIR_', _PS_IMG_DIR_.'m/');
 define('_PS_ORDER_STATE_IMG_DIR_', _PS_IMG_DIR_.'os/');
 define('_PS_PROD_IMG_DIR_', _PS_IMG_DIR_.'p/');
+define('_PS_PROFILE_IMG_DIR_', _PS_IMG_DIR_.'pr/');
 define('_PS_SHIP_IMG_DIR_', _PS_IMG_DIR_.'s/');
 define('_PS_STORE_IMG_DIR_', _PS_IMG_DIR_.'st/');
 define('_PS_SUPP_IMG_DIR_', _PS_IMG_DIR_.'su/');
@@ -196,7 +200,7 @@ define('PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE', 4);
 define('ALL_CARRIERS', 5);
 
 /* SQL Replication management */
-define('_PS_USE_SQL_SLAVE_', 0);
+define('_PS_USE_SQL_SLAVE_', false);
 
 /* PS Technical configuration */
 define('_PS_ADMIN_PROFILE_', 1);

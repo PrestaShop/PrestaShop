@@ -25,10 +25,10 @@
  */
 class OrderStateCore extends ObjectModel
 {
-    /** @var array<string> Name */
+    /** @var string|array<int, string> Name */
     public $name;
 
-    /** @var array<string> Template name if there is any e-mail to send */
+    /** @var string|array<int, string> Template name if there is any e-mail to send */
     public $template;
 
     /** @var bool Send an e-mail to customer ? */
@@ -161,5 +161,27 @@ class OrderStateCore extends ObjectModel
     public function isRemovable()
     {
         return !($this->unremovable);
+    }
+
+    /**
+     * Check if a localized name in database for a specific lang (and excluding some IDs)
+     *
+     * @param string $name
+     * @param int $idLang
+     * @param int|null $excludeIdOrderState ID of the order state excluded for the search
+     *
+     * @return bool
+     */
+    public static function existsLocalizedNameInDatabase(string $name, int $idLang, ?int $excludeIdOrderState): bool
+    {
+        return (bool) DB::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT COUNT(*) AS count' .
+            ' FROM ' . _DB_PREFIX_ . 'order_state_lang osl' .
+            ' INNER JOIN ' . _DB_PREFIX_ . 'order_state os ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . $idLang . ')' .
+            ' WHERE osl.id_lang = ' . $idLang .
+            ' AND osl.name =  \'' . pSQL($name) . '\'' .
+            ' AND os.deleted = 0' .
+            ($excludeIdOrderState ? ' AND osl.id_order_state != ' . $excludeIdOrderState : '')
+        );
     }
 }

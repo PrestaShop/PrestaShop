@@ -108,9 +108,9 @@ namespace PrestaShopBundle\Install {
         // used for translations
         public static $l_cache;
 
-        const FILE_PREFIX = 'PREFIX_';
-        const ENGINE_TYPE = 'ENGINE_TYPE';
-        const DB_NAME = 'DB_NAME';
+        public const FILE_PREFIX = 'PREFIX_';
+        public const ENGINE_TYPE = 'ENGINE_TYPE';
+        public const DB_NAME = 'DB_NAME';
 
         private static $classes14 = ['Cache', 'CacheFS', 'CarrierModule', 'Db', 'FrontController', 'Helper', 'ImportModule',
             'MCached', 'Module', 'ModuleGraph', 'ModuleGraphEngine', 'ModuleGrid', 'ModuleGridEngine',
@@ -164,7 +164,6 @@ namespace PrestaShopBundle\Install {
             'blockpaymentlogo',
             'blockstore',
             'blocktags',
-            'blockwishlist',
             'productpaymentlogos',
             'sendtoafriend',
             'themeconfigurator',
@@ -280,8 +279,8 @@ namespace PrestaShopBundle\Install {
             if (!defined('_PS_TRANSLATIONS_DIR_')) {
                 define('_PS_TRANSLATIONS_DIR_', _PS_ROOT_DIR_ . '/translations/');
             }
-            if (!defined('_PS_MODULES_DIR_')) {
-                define('_PS_MODULES_DIR_', _PS_ROOT_DIR_ . '/modules/');
+            if (!defined('_PS_MODULE_DIR_')) {
+                define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/modules/');
             }
             if (!defined('_PS_MAILS_DIR_')) {
                 define('_PS_MAILS_DIR_', _PS_ROOT_DIR_ . '/mails/');
@@ -326,22 +325,18 @@ namespace PrestaShopBundle\Install {
 
         private function getConfValue($name)
         {
-            $full = version_compare('1.5.0.10', AppKernel::VERSION) < 0;
-
             $sql = 'SELECT IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value
 			FROM `' . _DB_PREFIX_ . 'configuration` c
 			LEFT JOIN `' . _DB_PREFIX_ . 'configuration_lang` cl ON (c.`id_configuration` = cl.`id_configuration`)
 			WHERE c.`name`=\'' . pSQL($name) . '\'';
 
-            if ($full) {
-                $id_shop = Shop::getContextShopID(true);
-                $id_shop_group = Shop::getContextShopGroupID(true);
-                if ($id_shop) {
-                    $sql .= ' AND c.`id_shop` = ' . (int) $id_shop;
-                }
-                if ($id_shop_group) {
-                    $sql .= ' AND c.`id_shop_group` = ' . (int) $id_shop_group;
-                }
+            $id_shop = Shop::getContextShopID(true);
+            $id_shop_group = Shop::getContextShopGroupID(true);
+            if ($id_shop) {
+                $sql .= ' AND c.`id_shop` = ' . (int) $id_shop;
+            }
+            if ($id_shop_group) {
+                $sql .= ' AND c.`id_shop_group` = ' . (int) $id_shop_group;
             }
 
             return $this->db->getValue($sql);
@@ -362,8 +357,6 @@ namespace PrestaShopBundle\Install {
                 $this->logError('Current version: %current%. Version to install: %future%.', 27, ['%current%' => $this->oldVersion, '%future%' => _PS_INSTALL_VERSION_]);
             } elseif ($versionCompare == 0) {
                 $this->logError('You already have the %future% version.', 28, ['%future%' => _PS_INSTALL_VERSION_]);
-            } elseif ($versionCompare === false) {
-                $this->logError('There is no older version. Did you delete or rename the app/config/parameters.php file?', 29);
             }
 
             if (strpos(_PS_INSTALL_VERSION_, '.') === false) {
@@ -771,8 +764,8 @@ namespace PrestaShopBundle\Install {
                 $mailTheme,
                 $locale,
                 false,
-                !empty($coreOutputFolder) ? $coreOutputFolder : '',
-                !empty($modulesOutputFolder) ? $modulesOutputFolder : ''
+                '',
+                ''
             );
             /** @var CommandBusInterface $commandBus */
             $commandBus = $sfContainer->get('prestashop.core.command_bus');
@@ -793,6 +786,7 @@ namespace PrestaShopBundle\Install {
                 eval('class Tools2 extends \ToolsCore{}');
             }
 
+            /* @phpstan-ignore-next-line */
             if (class_exists('\Tools2') && method_exists('\Tools2', 'generateHtaccess')) {
                 $url_rewrite = (bool) $this->db->getValue('SELECT `value` FROM `' . _DB_PREFIX_ . 'configuration` WHERE name=\'PS_REWRITING_SETTINGS\'');
 
@@ -1095,7 +1089,7 @@ namespace PrestaShopBundle\Install {
             return !empty($this->failureList);
         }
 
-        const SETTINGS_FILE = 'config/settings.inc.php';
+        public const SETTINGS_FILE = 'config/settings.inc.php';
 
         /* @phpstan-ignore-next-line */
         public static function migrateSettingsFile(Event $event = null)
@@ -1205,13 +1199,13 @@ namespace PrestaShopBundle\Install {
                         'database_password' => _LEGACY_DB_PASSWD_,
                         'database_name' => _LEGACY_DB_NAME_,
                         'database_prefix' => _LEGACY_DB_PREFIX_,
-                        'database_engine' => defined(_LEGACY_MYSQL_ENGINE_) ? _LEGACY_MYSQL_ENGINE_ : 'InnoDB',
+                        'database_engine' => defined('_LEGACY_MYSQL_ENGINE_') ? _LEGACY_MYSQL_ENGINE_ : 'InnoDB',
                         'cookie_key' => _LEGACY_COOKIE_KEY_,
                         'cookie_iv' => _LEGACY_COOKIE_IV_,
                         'new_cookie_key' => _LEGACY_NEW_COOKIE_KEY_,
-                        'ps_caching' => defined(_LEGACY_PS_CACHING_SYSTEM_) ? _LEGACY_PS_CACHING_SYSTEM_ : 'CacheMemcache',
-                        'ps_cache_enable' => defined(_LEGACY_PS_CACHE_ENABLED_) ? _LEGACY_PS_CACHE_ENABLED_ : false,
-                        'ps_creation_date' => defined(_LEGACY_PS_CREATION_DATE_) ? _LEGACY_PS_CREATION_DATE_ : date('Y-m-d H:i:s'),
+                        'ps_caching' => defined('_LEGACY_PS_CACHING_SYSTEM_') ? _LEGACY_PS_CACHING_SYSTEM_ : 'CacheMemcache',
+                        'ps_cache_enable' => defined('_LEGACY_PS_CACHE_ENABLED_') ? _LEGACY_PS_CACHE_ENABLED_ : false,
+                        'ps_creation_date' => defined('_LEGACY_PS_CREATION_DATE_') ? _LEGACY_PS_CREATION_DATE_ : date('Y-m-d H:i:s'),
                         'secret' => $secret,
                         'mailer_transport' => 'smtp',
                         'mailer_host' => '127.0.0.1',

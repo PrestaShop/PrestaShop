@@ -107,7 +107,7 @@ class Factory
             $this->getNegativePattern($currencyPattern),
             $this->computeNumberSymbolLists($numbersSymbols),
             $maxFractionDigits ?? $this->getMaxFractionDigits($positivePattern),
-            $this->getMinFractionDigits($positivePattern),
+            $currency->getDecimalPrecision() ?: $this->getMinFractionDigits($positivePattern),
             $numberGroupingUsed && $this->getPrimaryGroupSize($positivePattern) > 1,
             $this->getPrimaryGroupSize($positivePattern),
             $this->getSecondaryGroupSize($positivePattern),

@@ -61,7 +61,7 @@ class PricesDropControllerCore extends ProductListingFrontController
     public function getListingLabel()
     {
         return $this->trans(
-            'On sale',
+            'Prices drop',
             [],
             'Shop.Theme.Catalog'
         );
@@ -72,7 +72,7 @@ class PricesDropControllerCore extends ProductListingFrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         $breadcrumb['links'][] = [
-            'title' => $this->trans('On sale', [], 'Shop.Theme.Catalog'),
+            'title' => $this->trans('Prices drop', [], 'Shop.Theme.Catalog'),
             'url' => $this->context->link->getPageLink('prices-drop', true),
         ];
 

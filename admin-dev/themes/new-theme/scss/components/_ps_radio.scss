@@ -18,7 +18,7 @@
         width: 18px;
         height: 18px;
         content: "";
-        background: #fff;
+        background: $white;
         border: 2px solid $gray-medium;
         @include border-radius(100%);
       }
@@ -32,7 +32,7 @@
         content: "";
         background: $primary;
         @include border-radius(100%);
-        @include transition(all .2s ease);
+        @include transition(all 0.2s ease);
       }
     }
 

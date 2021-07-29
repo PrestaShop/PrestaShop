@@ -16,7 +16,7 @@ const foAddressesPage = require('@pages/FO/myAccount/addresses');
 
 // Import data
 const CountryFaker = require('@data/faker/country');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -135,7 +135,7 @@ describe('CRUD country', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO_1', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -143,6 +143,7 @@ describe('CRUD country', async () => {
     it('should go to addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_1', baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToAddressesPage(page);
 
       const pageTitle = await foAddressesPage.getPageTitle(page);
@@ -233,7 +234,7 @@ describe('CRUD country', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO_2', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -241,6 +242,7 @@ describe('CRUD country', async () => {
     it('should go to addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_2', baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToAddressesPage(page);
 
       const pageTitle = await foAddressesPage.getPageTitle(page);

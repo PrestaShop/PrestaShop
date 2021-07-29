@@ -68,49 +68,6 @@ class PreferencesHandlingFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        if ($errors = $this->validate($data)) {
-            return $errors;
-        }
-
         return $this->dataConfiguration->updateConfiguration($data);
-    }
-
-    /**
-     * Perform validation on form data before saving it.
-     *
-     * @param array $data
-     *
-     * @return array Returns array of errors
-     */
-    protected function validate(array $data)
-    {
-        $errors = [];
-        $numericFields = [
-            [
-                'value' => $data['shipping_handling_charges'],
-                'name' => $this->translator->trans('Handling charges', [], 'Admin.Shipping.Feature'),
-            ],
-            [
-                'value' => $data['free_shipping_price'],
-                'name' => $this->translator->trans('Free shipping starts at', [], 'Admin.Shipping.Feature'),
-            ],
-            [
-                'value' => $data['free_shipping_weight'],
-                'name' => $this->translator->trans('Free shipping starts at', [], 'Admin.Shipping.Feature'),
-            ],
-        ];
-
-        // Check if all numeric fields are positive numbers
-        foreach ($numericFields as $field) {
-            if (!is_numeric($field['value']) || $field['value'] < 0) {
-                $errors[] = [
-                    'key' => 'The %s field is invalid.',
-                    'domain' => 'Admin.Notifications.Error',
-                    'parameters' => [$field['name']],
-                ];
-            }
-        }
-
-        return $errors;
     }
 }

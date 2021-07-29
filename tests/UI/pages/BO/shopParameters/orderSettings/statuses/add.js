@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add order status page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddOrderStatus extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on add order status page
+   */
   constructor() {
     super();
 
@@ -28,15 +37,15 @@ class AddOrderStatus extends BOBasePage {
 
   /**
    * Fill order status form in create or edit page and save
-   * @param page
-   * @param orderStatusData
+   * @param page {Page} Browser tab
+   * @param orderStatusData {orderStatusData} Data to set on order status form
    * @return {Promise<string>}
    */
   async setOrderStatus(page, orderStatusData) {
     await this.setValue(page, this.nameInput, orderStatusData.name);
 
     // Set icon for order status
-    await this.generateAndUploadImage(page, this.iconInput, `${orderStatusData.name}.jpg`);
+    await this.uploadFile(page, this.iconInput, `${orderStatusData.name}.jpg`);
 
     // Set color
     await this.setValue(page, this.colorInput, orderStatusData.color);
@@ -55,7 +64,7 @@ class AddOrderStatus extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 

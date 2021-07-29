@@ -20,11 +20,11 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
  */
 interface CurrencyInterface
 {
-    const SYMBOL_TYPE_NARROW = 'narrow';
-    const DISPLAY_NAME_COUNT_DEFAULT = 'default';
-    const SYMBOL_TYPE_DEFAULT = 'default';
-    const DISPLAY_NAME_COUNT_ONE = 'one';
-    const DISPLAY_NAME_COUNT_OTHER = 'other';
+    public const SYMBOL_TYPE_NARROW = 'narrow';
+    public const DISPLAY_NAME_COUNT_DEFAULT = 'default';
+    public const SYMBOL_TYPE_DEFAULT = 'default';
+    public const DISPLAY_NAME_COUNT_ONE = 'one';
+    public const DISPLAY_NAME_COUNT_OTHER = 'other';
 
     /**
      * Get the ISO code of this currency.

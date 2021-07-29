@@ -22,6 +22,11 @@ services:
       tags:
         - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
 
+    form.extension.default_empty_data:
+      class: 'PrestaShopBundle\Form\Admin\Extension\DefaultEmptyDataExtension'
+      tags:
+        - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
     form.extension.data_list:
         class: 'PrestaShopBundle\Form\Extension\DataListExtension'
         tags:
@@ -32,3 +37,47 @@ services:
       tags:
         - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
 
+    form.extension.external_link:
+      class: 'PrestaShopBundle\Form\Admin\Extension\ExternalLinkExtension'
+      tags:
+        - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
+    form.extension.alert:
+        class: 'PrestaShopBundle\Form\Admin\Extension\AlertExtension'
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
+    form.extension.label_options:
+        class: 'PrestaShopBundle\Form\Admin\Extension\LabelOptionsExtension'
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
+    form.extension.columns_number:
+        class: 'PrestaShopBundle\Form\Admin\Extension\ColumnsNumberExtension'
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
+    form.extension.multistore_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Extension\MultistoreConfigurationTypeExtension'
+        arguments:
+            - '@prestashop.multistore_checkbox_enabler'
+        tags:
+            - { name: form.type_extension, extended_type: PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType }
+
+    form.extension.multistore_dropdown:
+        class: 'PrestaShopBundle\Form\Admin\Extension\MultistoreExtension'
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
+    prestashop.multistore_checkbox_enabler:
+        class: PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler
+        arguments:
+            - '@prestashop.adapter.feature.multistore'
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.shop.context'
+            - '@prestashop.core.admin.multistore'
+
+    form.extension.downloadable_file:
+        class: 'PrestaShopBundle\Form\Admin\Extension\DownloadFileExtension'
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FileType }

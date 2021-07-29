@@ -40,7 +40,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PerformanceController extends FrameworkBundleAdminController
 {
-    const CONTROLLER_NAME = 'AdminAdvancedParametersPerformance';
+    public const CONTROLLER_NAME = 'AdminAdvancedParametersPerformance';
 
     /**
      * Displays the Performance main page.
@@ -84,13 +84,21 @@ class PerformanceController extends FrameworkBundleAdminController
             'cachingForm' => $cachingForm->createView(),
             'memcacheForm' => $memcacheForm->createView(),
             'servers' => $this->get('prestashop.adapter.memcache_server.manager')->getServers(),
+            'multistoreInfoTip' => $this->trans(
+                'Note that this page is available in all shops context only, this is why your context has just switched.',
+                'Admin.Notifications.Info'
+            ),
+            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
         ]);
     }
 
     /**
      * Process the Performance Smarty configuration form.
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
      * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @param Request $request
@@ -109,7 +117,10 @@ class PerformanceController extends FrameworkBundleAdminController
     /**
      * Process the Performance Debug Mode configuration form.
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
      * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @param Request $request
@@ -128,7 +139,10 @@ class PerformanceController extends FrameworkBundleAdminController
     /**
      * Process the Performance Optional Features configuration form.
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
      * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @param Request $request
@@ -147,7 +161,10 @@ class PerformanceController extends FrameworkBundleAdminController
     /**
      * Process the Performance Combine Compress Cache configuration form.
      *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
      * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @param Request $request
@@ -166,7 +183,10 @@ class PerformanceController extends FrameworkBundleAdminController
     /**
      * Process the Performance Media Servers configuration form.
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
      * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @param Request $request
@@ -185,7 +205,10 @@ class PerformanceController extends FrameworkBundleAdminController
     /**
      * Process the Performance Caching configuration form.
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
      * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @param Request $request
@@ -237,7 +260,7 @@ class PerformanceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))",
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_performance"
      * )

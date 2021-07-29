@@ -22,9 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
-{block name='footer'}
-
-<div class="modal fade" id="modal">
+<div class="modal fade js-checkout-modal" id="modal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <button type="button" class="close" data-dismiss="modal" aria-label="{l s='Close' d='Shop.Theme.Global'}">
@@ -41,4 +39,3 @@
   {/if}
   {l s='%copyright% %year% - Ecommerce software by %prestashop%' sprintf=['%prestashop%' => 'PrestaShop™', '%year%' => 'Y'|date, '%copyright%' => '©'] d='Shop.Theme.Global'}
 </div>
-{/block}

@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring;
  */
 final class ProductWithoutDescriptionGridDefinitionFactory extends AbstractProductGridDefinitionFactory
 {
-    const GRID_ID = 'product_without_description';
+    public const GRID_ID = 'product_without_description';
 
     /**
      * {@inheritdoc}

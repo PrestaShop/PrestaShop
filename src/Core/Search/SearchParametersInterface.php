@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 interface SearchParametersInterface
 {
-    const FILTER_TYPES = [
+    public const FILTER_TYPES = [
         'limit',
         'offset',
         'orderBy',

@@ -1,0 +1,54 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain "Admin.Shopparameters.Feature" %}
+
+{% block content %}
+  {# Product preferences General block #}
+  {{ form_start(generalForm, {attr : {class: 'form', id: 'product_general_form'}, action: path('admin_product_preferences_general_save') }) }}
+    {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_general.html.twig' %}
+  {{ form_end(generalForm) }}
+
+  {# Product preferences Page block #}
+  {{ form_start(pageForm, {attr : {class: 'form', id: 'product_page_form'}, action: path('admin_product_preferences_page_save') }) }}
+    {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_page.html.twig' %}
+  {{ form_end(pageForm) }}
+
+  {# Product preferences Stock block #}
+  {{ form_start(stockForm, {attr : {class: 'form', id: 'product_stock_form'}, action: path('admin_product_preferences_stock_save') }) }}
+    {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_stock.html.twig' %}
+  {{ form_end(stockForm) }}
+
+  {# Product preferences Pagination block #}
+  {{ form_start(paginationForm, {attr : {class: 'form', id: 'product_pagination_form'}, action: path('admin_product_preferences_pagination_save') }) }}
+    {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_pagination.html.twig' %}
+  {{ form_end(paginationForm) }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/product_preferences.bundle.js') }}"></script>
+{% endblock %}

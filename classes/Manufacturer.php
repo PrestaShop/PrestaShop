@@ -34,10 +34,10 @@ class ManufacturerCore extends ObjectModel
     /** @var string Name */
     public $name;
 
-    /** @var array<string> Description */
+    /** @var string|array<int, string> Description */
     public $description;
 
-    /** @var array<string> Short description */
+    /** @var string|array<int, string> Short description */
     public $short_description;
 
     /** @var int Address */
@@ -52,13 +52,13 @@ class ManufacturerCore extends ObjectModel
     /** @var string Friendly URL */
     public $link_rewrite;
 
-    /** @var array<string> Meta title */
+    /** @var string|array<int, string> Meta title */
     public $meta_title;
 
-    /** @var array<string> Meta keywords */
+    /** @var string|array<int, string> Meta keywords */
     public $meta_keywords;
 
-    /** @var array<string> Meta description */
+    /** @var string|array<int, string> Meta description */
     public $meta_description;
 
     /** @var bool active */
@@ -179,8 +179,8 @@ class ManufacturerCore extends ObjectModel
      * @param bool $getNbProducts [optional] return products numbers for each
      * @param int $idLang Language ID
      * @param bool $active
-     * @param int $p
-     * @param int $n
+     * @param int|bool $p
+     * @param int|bool $n
      * @param bool $allGroup
      *
      * @return array Manufacturers
@@ -484,9 +484,13 @@ class ManufacturerCore extends ObjectModel
 				WHERE p.`id_manufacturer` = ' . (int) $idManufacturer . '
 				' . ($active ? ' AND product_shop.`active` = 1' : '') . '
 				' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
-				GROUP BY p.id_product
+				GROUP BY p.id_product';
+
+        if ($orderBy !== 'price') {
+            $sql .= '
 				ORDER BY ' . $alias . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
 				LIMIT ' . (((int) $p - 1) * (int) $n) . ',' . (int) $n;
+        }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -494,8 +498,9 @@ class ManufacturerCore extends ObjectModel
             return false;
         }
 
-        if ($orderBy == 'price') {
+        if ($orderBy === 'price') {
             Tools::orderbyPrice($result, $orderWay);
+            $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);
         }
 
         return Product::getProductsProperties($idLang, $result);
@@ -542,7 +547,8 @@ class ManufacturerCore extends ObjectModel
             '
 			SELECT `id_manufacturer`
 			FROM ' . _DB_PREFIX_ . 'manufacturer m
-			WHERE m.`id_manufacturer` = ' . (int) $idManufacturer
+			WHERE m.`id_manufacturer` = ' . (int) $idManufacturer,
+            false
         );
 
         return isset($row['id_manufacturer']);

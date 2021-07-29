@@ -26,11 +26,13 @@
 
 namespace LegacyTests\PrestaShopBundle\Utils;
 
+use Category;
 use Context;
 use Doctrine\DBAL\DBALException;
 use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Install\Install;
-use Symfony\Component\Process\Process;
+use Tests\Resources\ResourceResetter;
+use Tab;
 
 class DatabaseCreator
 {
@@ -42,7 +44,7 @@ class DatabaseCreator
         define('_PS_IN_TEST_', true);
         define('__PS_BASE_URI__', '/');
         define('_PS_ROOT_DIR_', __DIR__ . '/../../..');
-        define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests-legacy/resources/modules/');
+        define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/modules/');
         require_once __DIR__ . '/../../../install-dev/init.php';
 
         $install = new Install();
@@ -54,8 +56,6 @@ class DatabaseCreator
             exit(1);
         }
 
-        $process = new Process(PHP_BINARY . ' bin/console prestashop:schema:update-without-foreign --env=test');
-        $process->run();
         $install->initializeTestContext();
         $install->installDefaultData('test_shop', false, false, false);
         $install->populateDatabase();
@@ -68,10 +68,16 @@ class DatabaseCreator
             'configuration_agrement' => true,
         ));
         $install->installFixtures();
+        Category::regenerateEntireNtree();
+        Tab::resetStaticCache();
         $install->installTheme();
         $install->installModules();
 
         DatabaseDump::create();
+
+        $resourceResetter = new ResourceResetter();
+        $resourceResetter->backupImages();
+        $resourceResetter->backupDownloads();
     }
 
     /**

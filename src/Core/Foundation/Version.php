@@ -381,7 +381,7 @@ class Version
      * @param string $version
      * @param string $majorVersionString
      *
-     * @return bool|string
+     * @return string
      */
     private function removeLegacyPrefix($version, $majorVersionString)
     {

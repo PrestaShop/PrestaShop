@@ -8,7 +8,7 @@
 
 set -x
 
-BRANCH=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/TRAVIS_BRANCH -H "Metadata-Flavor: Google")
+BRANCH=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/GH_BRANCH -H "Metadata-Flavor: Google")
 TOKEN=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/NIGHTLY_TOKEN -H "Metadata-Flavor: Google")
 CURRENT_DATE=$([ -z "$1" ] && date +%Y-%m-%d || echo $1)
 NO_SHUTDOWN=$([ -z "$2" ] && echo "" || echo "yes")

@@ -70,9 +70,9 @@ class Files extends BOBasePage {
 
   /**
    * View (download) file
-   * @param page
-   * @param row
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param row {number} File row on table
+   * @return {Promise<string>}
    */
   async viewFile(page, row = 1) {
     await Promise.all([
@@ -80,12 +80,7 @@ class Files extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
 
-    const [download] = await Promise.all([
-      page.waitForEvent('download'), // wait for download to start
-      page.click(this.viewRowLink(row)),
-    ]);
-
-    return download.path();
+    return this.clickAndWaitForDownload(page, this.viewRowLink(row));
   }
 
   /**
@@ -108,7 +103,7 @@ class Files extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteFiles(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -189,7 +184,7 @@ class Files extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteFiles(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -211,13 +206,12 @@ class Files extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
-      let rowContent = await this.getTextContent(page, this.tableColumn(i, column));
-      if (column === 'active') {
-        rowContent = await this.getToggleColumnValue(page, i).toString();
-      }
+      const rowContent = await this.getTextContent(page, this.tableColumn(i, column));
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 

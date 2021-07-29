@@ -1,0 +1,312 @@
+// helpers class for fixing input width
+.fixed-width-xs {
+  width: 48px !important;
+}
+
+.fixed-width-sm {
+  width: 80px !important;
+}
+
+.fixed-width-md {
+  width: 120px !important;
+}
+
+.fixed-width-lg {
+  width: 160px !important;
+}
+
+.fixed-width-xl {
+  width: 200px !important;
+}
+
+.fixed-width-xxl {
+  width: 250px !important;
+}
+//quick fix for inline hidden content on device width - waiting for bootstrap update https://github.com/twbs/bootstrap/issues/8869
+.hidden-inline-xs {
+  @media (max-width: $screen-xs) {
+    display: none !important;
+  }
+}
+
+.row-margin-bottom {
+  margin-bottom: 15px;
+}
+
+.row-margin-top {
+  margin-top: 15px;
+}
+
+.row-padding-top {
+  padding-top: 15px;
+}
+
+.thumbnail,
+.img-thumbnail {
+  background-color: #fff;
+  border-color: #ccc !important;
+}
+
+.highlight {
+  background-color: #f7e69f;
+}
+
+.text-orange {
+  color: $amber;
+}
+
+.badge {
+  padding: 1px 5px;
+  font-size: 1em;
+  font-weight: 500;
+  line-height: inherit;
+  letter-spacing: 0.0625em;
+  background-color: $brand-primary;
+
+  &.badge-info {
+    background-color: $brand-info;
+  }
+
+  &.badge-success {
+    background-color: $brand-success;
+  }
+
+  &.badge-warning {
+    background-color: $brand-warning;
+  }
+
+  &.badge-danger {
+    background-color: $brand-danger;
+  }
+
+  &.badge-critical {
+    background-color: darken($brand-danger, 15%);
+  }
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 400;
+
+  &.label-inactive {
+    background-color: #999;
+  }//tabs
+}
+
+.nav-tabs {
+  border-bottom: none;
+
+  li .badge {
+    color: #666;
+    background-color: #fff;
+    border: solid 2px #eee;
+  }
+
+  li a {
+    font-family: $headings-font-family;
+    font-size: 1.1em;
+    font-weight: 300;
+    text-transform: uppercase;
+  }
+
+  li.active {
+    a,
+    a:hover,
+    a:focus {
+      background-color: #fff;
+    }
+  }
+}
+
+.table tr.parent td {
+  background-color: #eee !important;
+  border-bottom: solid 1px #ccc !important;
+}
+//alert boxs
+@mixin alert-panel($icon, $color, $border-color: $color) {
+  position: relative;
+  padding: 16px 15px 16px 56px;
+  font-size: 14px;
+  border: none;
+  border: solid 1px $border-color;
+  border-radius: 8px;
+
+  &::before {
+    position: absolute;
+    top: 13px;
+    display: block;
+    width: 25px;
+    height: 25px;
+    font-size: 24px;
+    color: $border-color;
+    @include left(15px);
+    @extend .icon;
+    @extend .#{$icon};
+  }
+}
+
+.alert.alert-warning {
+  @include alert-panel(icon-exclamation-circle, $brand-warning, $alert-warning-border);
+}
+
+.alert.alert-danger {
+  @include alert-panel(icon-exclamation-triangle, $brand-danger, $alert-danger-border);
+}
+
+.alert.alert-success {
+  @include alert-panel(icon-check-circle, $brand-success, $alert-success-border);
+}
+
+.alert.alert-info {
+  @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
+}
+
+.alert.alert-addons {
+  @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
+  background-color: $alert-info-bg;
+
+  a,
+  p {
+    color: #363a41;
+  }
+}
+
+.alert.alert-onboarding {
+  @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
+  padding: 20px 20px 20px 160px;
+  background-color: $alert-info-bg;
+  border: solid 2px $brand-info;
+  box-shadow: inset 140px 0 0 $brand-info;
+
+  a,
+  p {
+    color: #363a41;
+  }
+
+  &::before {
+    top: 40px;
+    left: 25px;
+    font-size: 98px;
+  }
+
+  .onboarding-step {
+    width: 100%;
+    height: 2em;
+
+    &.step-success {
+      background-color: $brand-info;
+    }
+
+    &.step-in-progress {
+      @include gradient-striped(lighten($brand-info,20%));
+      @include animation(progress-bar-stripes 2s linear infinite);
+      background-color: $brand-info;
+    }
+
+    &.step-todo {
+      background-color: #eee;
+    }
+
+    &.step-first {
+      @include border-radius(3em 0 0 3em);
+    }
+
+    &.step-final {
+      @include border-radius(0 3em 3em 0);
+    }
+  }
+
+  h4 {
+    margin-bottom: 0.4em;
+    font-size: 2.1em;
+    font-weight: 100;
+    color: #383f50;
+  }
+
+  p {
+    margin-bottom: 1em;
+    font-size: 1.1em;
+    color: lighten(#383f50, 30%);
+  }
+
+  .onboarding-action-container {
+    padding-top: 3em;
+  }
+
+  hr {
+    border-color: lighten($brand-info, 30%);
+  }
+
+  .progress {
+    @include border-radius(3em);
+    height: 2em;
+    box-shadow: none;
+  }
+
+  .progress-bar {
+    box-shadow: none;
+  }
+}
+
+.alert.alert-message {
+  @include alert-panel(icon-comment, $brand-warning);
+  background-color: #fff;
+  border: solid 2px $brand-warning;
+}
+
+.alert h4 {
+  margin-bottom: 1em;
+  font-size: 1.45em;
+}
+
+.overflow-y {
+  max-height: 200px;
+  margin-bottom: 15px;
+  overflow-y: auto;
+}
+
+.input[type="password"] {
+  font-size: 2em !important;
+}
+
+.pagination {
+  @include margin(17px, 0, 0, 0);
+}
+
+.list-detail {
+  dd:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}
+
+.attributes-color-container {
+  display: block;
+  width: 40px;
+  height: 25px;
+  border: solid 1px #000;
+}
+
+#mColorPickerInput {
+  color: #000;
+}
+
+.modal-content-overflow {
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.multiple-checkboxes {
+  padding-left: 25px;
+}
+
+select[multiple] {
+  overflow: auto;
+
+  option {
+    width: max-content;
+  }
+}

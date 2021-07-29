@@ -309,19 +309,22 @@ Feature: Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
+    And I add discount to order "bo_order1" with following details:
+      | name        | FreeShippingAndAmount |
+      | type        | free_shipping         |
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should have 0 invoices
-    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have 1 cart rule
     # Carrier less expensive is chosen by default
     And order "bo_order1" should have "weight_carrier" as a carrier
     And order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 25.800 |
-      | total_paid_tax_incl      | 27.350 |
-      | total_paid               | 27.350 |
+      | total_discounts_tax_excl | 2.0    |
+      | total_discounts_tax_incl | 2.12   |
+      | total_paid_tax_excl      | 23.800 |
+      | total_paid_tax_incl      | 25.230 |
+      | total_paid               | 25.230 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
@@ -340,11 +343,11 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have following details:
       | total_products           | 53.800 |
       | total_products_wt        | 57.030 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 55.8   |
-      | total_paid_tax_incl      | 59.150 |
-      | total_paid               | 59.150 |
+      | total_discounts_tax_excl | 2.0000 |
+      | total_discounts_tax_incl | 2.1200 |
+      | total_paid_tax_excl      | 53.8   |
+      | total_paid_tax_incl      | 57.030 |
+      | total_paid               | 57.030 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
@@ -360,11 +363,11 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have following details:
       | total_products           | 53.80  |
       | total_products_wt        | 57.03  |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 55.80  |
-      | total_paid_tax_incl      | 59.15  |
-      | total_paid               | 59.15  |
+      | total_discounts_tax_excl | 2.0000 |
+      | total_discounts_tax_incl | 2.1200 |
+      | total_paid_tax_excl      | 53.80  |
+      | total_paid_tax_incl      | 57.03  |
+      | total_paid               | 57.03  |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
@@ -378,11 +381,11 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have following details:
       | total_products           | 53.80  |
       | total_products_wt        | 57.03  |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 55.80  |
-      | total_paid_tax_incl      | 59.15  |
-      | total_paid               | 59.15  |
+      | total_discounts_tax_excl | 2.0000 |
+      | total_discounts_tax_incl | 2.1200 |
+      | total_paid_tax_excl      | 53.80  |
+      | total_paid_tax_incl      | 57.03  |
+      | total_paid               | 57.03  |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
@@ -396,11 +399,11 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have following details:
       | total_products           | 53.80  |
       | total_products_wt        | 57.03  |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 55.80  |
-      | total_paid_tax_incl      | 59.15  |
-      | total_paid               | 59.15  |
+      | total_discounts_tax_excl | 2.0000 |
+      | total_discounts_tax_incl | 2.1200 |
+      | total_paid_tax_excl      | 53.80  |
+      | total_paid_tax_incl      | 57.03  |
+      | total_paid               | 57.03  |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
@@ -428,6 +431,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have 1 cart rule
     Then order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$6.00"
     And order "bo_order1" should have "price_carrier" as a carrier
+    # Shipping cost is 4 (for US zone) + 2 (general fee)
     And order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
@@ -462,6 +466,7 @@ Feature: Order from Back Office (BO)
     And I change order "bo_order1" shipping address to "test-customer-france-address"
     Then order "bo_order1" shipping address should be "test-customer-france-address"
     # Shipping cost changes because we are not in the same zone but the tax is still the one from invoice address
+    # Shipping cost is 3 (for Europe zone) + 2 (general fee)
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
@@ -713,7 +718,7 @@ Feature: Order from Back Office (BO)
 
   Scenario: I use and address without taxes (no order_detail_tax created), then I change to a country with taxes all is correctly computed
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_delivery
-    Given I enable carrier "price_carrier"
+    And I enable carrier "price_carrier"
     And I select carrier "price_carrier" for cart "dummy_cart"
     Then cart "dummy_cart" should have "price_carrier" as a carrier
     Then I add new address to customer "testCustomer" with following details:
@@ -845,6 +850,147 @@ Feature: Order from Back Office (BO)
       | unit_price_tax_incl         | 11.900 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 23.800 |
+      | total_price_tax_excl        | 23.800 |
+    And order "bo_order1" should have no tax details
+    And the first invoice from order "bo_order1" should have following shipping tax details:
+      | total_tax_excl | rate | total_amount |
+      | 5.0            | 0.00 | 0.00         |
+
+  Scenario: In rounding per item mode, I use an address without taxes (no order_detail_tax created), then I change to a country with taxes all is correctly computed
+    Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_delivery
+    Given specific shop configuration for "rounding type" is set to round each article
+    And I enable carrier "price_carrier"
+    And I select carrier "price_carrier" for cart "dummy_cart"
+    Then cart "dummy_cart" should have "price_carrier" as a carrier
+    Then I add new address to customer "testCustomer" with following details:
+      | Address alias    | test-customer-france-address |
+      | First name       | testFirstName                |
+      | Last name        | testLastName                 |
+      | Address          | 36 Avenue des Champs Elysees |
+      | City             | Paris                        |
+      | Country          | France                       |
+      | Postal code      | 75008                        |
+    And I select "FR" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    And I update order "bo_order1" status to "Payment accepted"
+    Then order "bo_order1" should have 1 invoice
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have "price_carrier" as a carrier
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 23.800 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.00   |
+      | total_paid_tax_excl      | 28.800 |
+      | total_paid_tax_incl      | 28.800 |
+      | total_paid               | 28.800 |
+      | total_paid_real          | 28.800 |
+      | total_shipping_tax_excl  | 5.0    |
+      | total_shipping_tax_incl  | 5.0    |
+      | carrier_tax_rate         | 0.0    |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 5.00  |
+      | shipping_cost_tax_incl | 5.00  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.900 |
+      | unit_price_tax_incl         | 11.900 |
+      | unit_price_tax_excl         | 11.900 |
+      | total_price_tax_incl        | 23.800 |
+      | total_price_tax_excl        | 23.800 |
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products          | 23.800 |
+      | total_products_wt       | 23.800 |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
+      | total_paid_tax_excl     | 28.800 |
+      | total_paid_tax_incl     | 28.800 |
+      | total_shipping_tax_excl | 5.0    |
+      | total_shipping_tax_incl | 5.00   |
+    And order "bo_order1" should have no tax details
+    And the first invoice from order "bo_order1" should have following shipping tax details:
+      | total_tax_excl | rate | total_amount |
+      | 5.0            | 0.00 | 0.0          |
+    Given I add new address to customer "testCustomer" with following details:
+      | Address alias    | test-customer-states-address |
+      | First name       | testFirstName                |
+      | Last name        | testLastName                 |
+      | Address          | 36 Avenue des Champs Elysees |
+      | City             | Miami                        |
+      | Country          | United States                |
+      | State            | Florida                      |
+      | Postal code      | 33133                        |
+    And I change order "bo_order1" shipping address to "test-customer-states-address"
+    Then order "bo_order1" shipping address should be "test-customer-states-address"
+    # Shipping cost changes because we are not in the same zone but the tax is still the one from invoice address
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.220000 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 29.800 |
+      | total_paid_tax_incl      | 31.580000 |
+      | total_paid               | 31.580000 |
+      | total_paid_real          | 28.800 |
+      | total_shipping_tax_excl  | 6.0    |
+      | total_shipping_tax_incl  | 6.36   |
+      | carrier_tax_rate         | 6.0    |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 6.00  |
+      | shipping_cost_tax_incl | 6.36  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.900 |
+      | unit_price_tax_incl         | 12.610000 |
+      | unit_price_tax_excl         | 11.900 |
+      | total_price_tax_incl        | 25.220000 |
+      | total_price_tax_excl        | 23.800 |
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products          | 23.800 |
+      | total_products_wt       | 25.220000 |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
+      | total_paid_tax_excl     | 29.800 |
+      | total_paid_tax_incl     | 31.580000 |
+      | total_shipping_tax_excl | 6.0    |
+      | total_shipping_tax_incl | 6.36   |
+    And order "bo_order1" should have following tax details:
+      | unit_tax_base | total_tax_base | unit_amount | total_amount |
+      | 11.900        | 23.800         | 0.714       | 1.42        |
+    And the first invoice from order "bo_order1" should have following shipping tax details:
+      | total_tax_excl | rate | total_amount |
+      | 6.0            | 6.00 | 0.36         |
+    # If I switch back the order_detail_tax are cleaned
+    And I change order "bo_order1" shipping address to "test-customer-france-address"
+    Then order "bo_order1" shipping address should be "test-customer-france-address"
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800000 |
+      | total_products_wt        | 23.800000 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.00   |
+      | total_paid_tax_excl      | 28.800 |
+      | total_paid_tax_incl      | 28.800 |
+      | total_paid               | 28.800 |
+      | total_paid_real          | 28.800 |
+      | total_shipping_tax_excl  | 5.0    |
+      | total_shipping_tax_incl  | 5.0    |
+      | carrier_tax_rate         | 0.0    |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 5.00  |
+      | shipping_cost_tax_incl | 5.00  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.900 |
+      | unit_price_tax_incl         | 11.900 |
+      | unit_price_tax_excl         | 11.900 |
+      | total_price_tax_incl        | 23.800000 |
       | total_price_tax_excl        | 23.800 |
     And order "bo_order1" should have no tax details
     And the first invoice from order "bo_order1" should have following shipping tax details:

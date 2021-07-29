@@ -46,7 +46,7 @@ class AddCatalogPriceRule extends BOBasePage {
     await this.selectByVisibleText(page, this.reductionTaxSelect, priceRuleData.reductionTax);
     await this.setValue(page, this.reductionInput, priceRuleData.reduction.toString());
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 

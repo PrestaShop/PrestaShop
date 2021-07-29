@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
  */
 class ExchangeRate
 {
-    const DEFAULT_RATE = 1.0;
+    public const DEFAULT_RATE = 1.0;
 
     /**
      * Get the default exchange rate as a DecimalNumber
@@ -71,7 +71,7 @@ class ExchangeRate
     }
 
     /**
-     * @param float|int $exchangeRate
+     * @param mixed $exchangeRate
      *
      * @throws CurrencyConstraintException
      */

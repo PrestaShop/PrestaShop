@@ -19,8 +19,8 @@ class SiteMap extends FOBasePage {
    */
   /**
    * Get category name
-   * @param page
-   * @param categoryID
+   * @param page {Page} Browser tab
+   * @param categoryID {number} ID of the category
    * @return {Promise<string>}
    */
   async getCategoryName(page, categoryID) {
@@ -29,8 +29,8 @@ class SiteMap extends FOBasePage {
 
   /**
    * Check if category is visible
-   * @param page
-   * @param categoryID
+   * @param page {Page} Browser tab
+   * @param categoryID {number} ID of the category
    * @return {Promise<boolean>}
    */
   async isVisibleCategory(page, categoryID) {
@@ -39,8 +39,8 @@ class SiteMap extends FOBasePage {
 
   /**
    * Get page category name
-   * @param page
-   * @param pageCategoryID
+   * @param page {Page} Browser tab
+   * @param pageCategoryID {number} Id of the page category
    * @return {Promise<string>}
    */
   async getPageCategoryName(page, pageCategoryID) {
@@ -49,7 +49,7 @@ class SiteMap extends FOBasePage {
 
   /**
    * Is suppliers link visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isSuppliersLinkVisible(page) {
@@ -58,7 +58,7 @@ class SiteMap extends FOBasePage {
 
   /**
    * Is brands link visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isBrandsLinkVisible(page) {

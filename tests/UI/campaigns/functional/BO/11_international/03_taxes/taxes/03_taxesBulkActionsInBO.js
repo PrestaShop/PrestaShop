@@ -106,15 +106,15 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
     });
 
     const tests = [
-      {args: {action: 'disable', enabledValue: false}, expected: 'clear'},
-      {args: {action: 'enable', enabledValue: true}, expected: 'check'},
+      {args: {action: 'disable', enabledValue: false}},
+      {args: {action: 'enable', enabledValue: true}},
     ];
 
     tests.forEach((test) => {
       it(`should ${test.args.action} taxes with bulk actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}`, baseContext);
 
-        const textResult = await taxesPage.changeTaxesEnabledColumnBulkActions(
+        const textResult = await taxesPage.bulkSetStatus(
           page,
           test.args.enabledValue,
         );
@@ -125,8 +125,8 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
         await expect(numberOfTaxesInGrid).to.be.at.most(numberOfTaxes);
 
         for (let i = 1; i <= numberOfTaxesInGrid; i++) {
-          const textColumn = await taxesPage.getTextColumnFromTableTaxes(page, 1, 'active');
-          await expect(textColumn).to.contains(test.expected);
+          const taxStatus = await taxesPage.getStatus(page, i);
+          await expect(taxStatus).to.equal(test.args.enabledValue);
         }
       });
     });

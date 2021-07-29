@@ -133,19 +133,6 @@ class DispatcherCore
                 'tags' => ['regexp' => '[a-zA-Z0-9-\pL]*'],
             ],
         ],
-        /* Must be after the product and category rules in order to avoid conflict */
-        'layered_rule' => [
-            'controller' => 'category',
-            'rule' => '{id}-{rewrite}{/:selected_filters}',
-            'keywords' => [
-                'id' => ['regexp' => '[0-9]+', 'param' => 'id_category'],
-                /* Selected filters is used by the module blocklayered */
-                'selected_filters' => ['regexp' => '.*', 'param' => 'selected_filters'],
-                'rewrite' => ['regexp' => self::REWRITE_PATTERN],
-                'meta_keywords' => ['regexp' => '[_a-zA-Z0-9-\pL]*'],
-                'meta_title' => ['regexp' => '[_a-zA-Z0-9-\pL]*'],
-            ],
-        ],
     ];
 
     /**

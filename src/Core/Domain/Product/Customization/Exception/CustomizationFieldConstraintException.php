@@ -36,15 +36,15 @@ class CustomizationFieldConstraintException extends CustomizationFieldException
     /**
      * When Customization field id is invalid
      */
-    const INVALID_ID = 1;
+    public const INVALID_ID = 1;
 
     /**
      * When customization type is invalid
      */
-    const INVALID_TYPE = 2;
+    public const INVALID_TYPE = 2;
 
     /**
      * When customization field name is invalid
      */
-    const INVALID_NAME = 3;
+    public const INVALID_NAME = 3;
 }

@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepositor
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -46,9 +46,9 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
  */
-class FrameworkBundleAdminController extends Controller
+class FrameworkBundleAdminController extends AbstractController
 {
-    const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
+    public const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
 
     /**
      * @var Configuration
@@ -86,13 +86,13 @@ class FrameworkBundleAdminController extends Controller
      *
      * Parse all errors mapped by id html field
      *
-     * @param Form $form
+     * @param FormInterface $form
      *
-     * @return array[array[string]] Errors
+     * @return array<array<string>> Errors
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
-    public function getFormErrorsForJS(Form $form)
+    public function getFormErrorsForJS(FormInterface $form)
     {
         $errors = [];
 

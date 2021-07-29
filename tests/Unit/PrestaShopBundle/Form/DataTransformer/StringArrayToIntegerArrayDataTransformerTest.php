@@ -40,7 +40,7 @@ class StringArrayToIntegerArrayDataTransformerTest extends TestCase
      */
     private $dataTransformer;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

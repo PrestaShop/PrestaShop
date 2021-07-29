@@ -1,0 +1,216 @@
+#carrier_wizard {
+  position: relative;
+  display: block;
+
+  .translatable-field {
+    color: $main-color;
+
+    li {
+      a {
+        color: $main-color;
+      }
+    }
+  }
+
+  .stepContainer {
+    position: relative;
+    display: block;
+    clear: both;
+
+    div.content {
+      position: absolute;
+      display: block;
+      width: 100%;
+      clear: both;
+    }
+
+    .StepTitle {
+      position: relative;
+      display: block;
+      clear: both;
+    }
+  }
+
+  ul.anchor {
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 0;
+    margin: 0 0 10px;
+    clear: both;
+    list-style: none;
+
+    &.nbr_steps_4 {
+      li {
+        float: left;
+        width: 25%;
+      }
+    }
+
+    &.nbr_steps_5 {
+      li {
+        float: left;
+        width: 25%;
+      }
+    }
+  }
+
+  li {
+    position: relative;
+    display: block;
+    overflow: hidden;
+
+    a {
+      position: relative;
+      display: block;
+      height: 32px;
+      margin: 0 16px 0 0;
+      color: #ccc;
+      text-decoration: none;
+      outline-style: none;
+
+      .stepNumber {
+        position: relative;
+        float: left;
+        width: 24px;
+        height: 32px;
+        padding: 0 5px;
+        margin-right: 3px;
+        font-size: 30px;
+        line-height: 32px;
+        color: #fff;
+        text-align: center;
+      }
+
+      .stepDesc {
+        position: relative;
+        display: table-cell;
+        height: 32px;
+        font-size: 13px;
+        line-height: 13px;
+        text-align: left;
+        vertical-align: middle;
+      }
+
+      .chevron {
+        position: absolute;
+        top: 0;
+        right: -16px;
+        border: 16px solid transparent;
+        border-right: 0;
+        border-left: 14px solid #fff;
+
+        &::after {
+          position: absolute;
+          top: -16px;
+          right: 2px;
+          content: "";
+          border: 16px solid transparent;
+          border-right: 0;
+          border-left: 14px solid #ccc;
+        }
+      }
+    }
+
+    a.disabled {
+      color: #777;
+      background-color: #ccc;
+
+      .chevron::after {
+        border-left: 14px solid #ccc;
+      }
+    }
+
+    a.selected {
+      color: #f8f8f8;
+      cursor: text;
+      background-color: $main-color;
+
+      .chevron::after {
+        border-left: 14px solid $main-color;
+      }
+    }
+
+    a.done {
+      color: #fff;
+      background-color: $brand-success;
+
+      .chevron::after {
+        border-left: 14px solid $brand-success;
+      }
+    }
+  }
+
+  .loader {
+    display: none;
+  }
+
+  .msgBox {
+    position: relative;
+    display: none;
+    float: left;
+    padding: 5px;
+    margin: 4px 0 0 5px;
+    color: #5a5655;
+    background-color: #ffd;
+    border: 1px solid #ffd700;
+    @include border-radius(5px);
+  }
+
+  .msgBox .content {
+    float: left;
+    padding: 0;
+  }
+
+  #carrier_logo_block {
+    right: 10px;
+  }
+
+  .wizard_error {
+    @extend .alert;
+    @extend .alert-danger;
+  }
+
+  .range_inf td,
+  .range_sup td {
+    background-color: #ccc;
+  }
+
+  .range_type {
+    width: 220px;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .range_data {
+    width: 110px;
+  }
+
+  .range_sign {
+    width: 18px;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .range_data_new {
+    width: 110px;
+  }
+
+  table#zones_table {
+    width: auto;
+  }
+
+  .field_error {
+    border-color: $brand-danger;
+  }
+
+  .actionBar {
+    height: 30px;
+  }
+
+  .actionBar a {
+    float: right;
+    margin-right: 10px;
+  }
+}

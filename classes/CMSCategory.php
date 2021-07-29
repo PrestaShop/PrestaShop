@@ -30,13 +30,13 @@ class CMSCategoryCore extends ObjectModel
     /** @var int CMSCategory ID */
     public $id_cms_category;
 
-    /** @var array<string> Name */
+    /** @var string|array<int, string> Name */
     public $name;
 
     /** @var bool Status for display */
     public $active = 1;
 
-    /** @var array<string> Description */
+    /** @var string|array<int, string> Description */
     public $description;
 
     /** @var int Parent CMSCategory ID */
@@ -48,16 +48,16 @@ class CMSCategoryCore extends ObjectModel
     /** @var int Parents number */
     public $level_depth;
 
-    /** @var array<string> string used in rewrited URL */
+    /** @var string|array<int, string> string used in rewrited URL */
     public $link_rewrite;
 
-    /** @var array<string> Meta title */
+    /** @var string|array<int, string> Meta title */
     public $meta_title;
 
-    /** @var array<string> Meta keywords */
+    /** @var string|array<int, string> Meta keywords */
     public $meta_keywords;
 
-    /** @var array<string> Meta description */
+    /** @var string|array<int, string> Meta description */
     public $meta_description;
 
     /** @var string Object creation date */
@@ -185,7 +185,9 @@ class CMSCategoryCore extends ObjectModel
 				FROM `' . _DB_PREFIX_ . 'cms_category` c
 				' . Shop::addSqlAssociation('cms_category', 'c') . '
 				WHERE c.`id_parent` = ' . (int) $current .
-                    ($active ? ' AND c.`active` = 1' : '');
+                    ($active ? ' AND c.`active` = 1' : '') .
+        ' ORDER BY c.`position`';
+
         $result = Db::getInstance()->executeS($sql);
         foreach ($result as $row) {
             $category['children'][] = CMSCategory::getRecurseCategory($id_lang, $row['id_cms_category'], $active, $links);
@@ -394,7 +396,7 @@ class CMSCategoryCore extends ObjectModel
 		WHERE `id_parent` = ' . (int) $this->id . '
 		' . ($active ? 'AND `active` = 1' : '') . '
 		GROUP BY c.`id_cms_category`
-		ORDER BY `name` ASC');
+		ORDER BY `position` ASC');
 
         // Modify SQL result
         foreach ($result as &$row) {

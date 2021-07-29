@@ -199,7 +199,8 @@ class StoreCore extends ObjectModel
             '
             SELECT `id_store`
             FROM ' . _DB_PREFIX_ . 'store a
-            WHERE a.`id_store` = ' . (int) $idStore
+            WHERE a.`id_store` = ' . (int) $idStore,
+            false
         );
 
         return isset($row['id_store']);

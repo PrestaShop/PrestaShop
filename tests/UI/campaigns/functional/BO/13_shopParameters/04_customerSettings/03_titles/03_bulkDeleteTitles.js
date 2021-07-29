@@ -45,6 +45,9 @@ describe('Create titles then delete with Bulk actions', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create images
+    titlesToCreate.forEach(titleToCreate => files.generateImage(titleToCreate.imageName));
   });
 
   after(async () => {

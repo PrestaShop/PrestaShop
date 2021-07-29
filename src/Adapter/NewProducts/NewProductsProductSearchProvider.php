@@ -62,21 +62,24 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
      * @param ProductSearchQuery $query
      * @param string $type
      *
-     * @return array
+     * @return array|int
      */
     private function getProductsOrCount(
         ProductSearchContext $context,
         ProductSearchQuery $query,
         $type = 'products'
     ) {
-        return Product::getNewProducts(
+        $isTypeProducts = $type === 'products';
+        $result = Product::getNewProducts(
             $context->getIdLang(),
             $query->getPage(),
             $query->getResultsPerPage(),
-            $type !== 'products',
+            !$isTypeProducts,
             $query->getSortOrder()->toLegacyOrderBy(),
             $query->getSortOrder()->toLegacyOrderWay()
         );
+
+        return $isTypeProducts ? $result : (int) $result;
     }
 
     /**

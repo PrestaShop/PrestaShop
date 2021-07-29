@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -51,6 +53,13 @@ class ShopGroup
      * @ORM\Column(name="name", type="string", length=64)
      */
     private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="color", type="string", length=50)
+     */
+    private $color;
 
     /**
      * @var bool
@@ -88,6 +97,19 @@ class ShopGroup
     private $deleted;
 
     /**
+     * @var Collection
+     *
+     * One group shop has many shops. This is the inverse side.
+     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\Shop", mappedBy="shopGroup")
+     */
+    private $shops;
+
+    public function __construct()
+    {
+        $this->shops = new ArrayCollection();
+    }
+
+    /**
      * Get id.
      *
      * @return int
@@ -119,6 +141,30 @@ class ShopGroup
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set color
+     *
+     * @param string $color
+     *
+     * @return ShopGroup
+     */
+    public function setColor(string $color): ShopGroup
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * Get color
+     *
+     * @return string|null
+     */
+    public function getColor(): ?string
+    {
+        return $this->color;
     }
 
     /**
@@ -239,5 +285,13 @@ class ShopGroup
     public function getDeleted()
     {
         return $this->deleted;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getShops(): Collection
+    {
+        return $this->shops;
     }
 }

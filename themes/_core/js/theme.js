@@ -1,20 +1,13 @@
 import $ from 'jquery';
-/* expose jQuery for modules */
-window.$ = $;
-window.jQuery = $;
 
 import prestashop from 'prestashop';
-import EventEmitter from 'events';
+// eslint-disable-next-line
+import EventEmitter from "events";
 
-import './migrate-mute'
+import './migrate-mute';
 import 'jquery-migrate';
 import 'jquery.browser';
 import '@prestashop-core/jquery.live-polyfill';
-
-// "inherit" EventEmitter
-for (var i in EventEmitter.prototype) {
-  prestashop[i] = EventEmitter.prototype[i];
-}
 
 import './selectors';
 import './cart';
@@ -26,6 +19,16 @@ import './address';
 
 import {psShowHide} from './common';
 import initEmailFields from './email-idn';
+
+/* eslint-disable */
+// "inherit" EventEmitter
+for (const i in EventEmitter.prototype) {
+  prestashop[i] = EventEmitter.prototype[i];
+}
+/* expose jQuery for modules */
+/* eslint-enable */
+window.$ = $;
+window.jQuery = $;
 
 $(document).ready(() => {
   psShowHide();

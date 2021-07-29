@@ -74,10 +74,16 @@ class EmailConfigurationType extends TranslatorAwareType
     {
         $builder
             ->add('send_emails_to', ChoiceType::class, [
+                'label' => $this->trans('Send emails to', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Where customers send messages from the order page.', 'Admin.Advparameters.Help'),
                 'choices' => $this->contactsChoiceProvider->getChoices(),
                 'choice_translation_domain' => false,
             ])
             ->add('mail_method', ChoiceType::class, [
+                'attr' => [
+                    'class' => 'js-email-method',
+                    'data-smtp-mail-method' => MailOption::METHOD_SMTP,
+                ],
                 'expanded' => true,
                 'multiple' => false,
                 'choices' => $this->mailMethodChoiceProvider->getChoices(),
@@ -91,7 +97,19 @@ class EmailConfigurationType extends TranslatorAwareType
                     $this->trans('Both', 'Admin.Advparameters.Feature') => MailOption::TYPE_BOTH,
                 ],
             ])
-            ->add('log_emails', SwitchType::class)
-            ->add('smtp_config', SmtpConfigurationType::class);
+            ->add('log_emails', SwitchType::class, [
+                'label' => $this->trans('Log Emails', 'Admin.Advparameters.Feature'),
+            ])
+            ->add('dkim_enable', SwitchType::class, [
+                'attr' => ['class' => 'js-dkim-enable'],
+                'choices' => [
+                    'Disabled' => false,
+                    'Enabled' => true,
+                ],
+                'label' => $this->trans('DKIM signing', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Enable DKIM, fill in the fields and give it a try. If no email is sent, check logs.', 'Admin.Advparameters.Help'),
+            ])
+            ->add('smtp_config', SmtpConfigurationType::class)
+            ->add('dkim_config', DkimConfigurationType::class);
     }
 }

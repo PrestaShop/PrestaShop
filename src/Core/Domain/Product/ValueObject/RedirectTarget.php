@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
  */
 class RedirectTarget
 {
-    const NO_TARGET = 0;
+    public const NO_TARGET = 0;
 
     /**
      * @var int

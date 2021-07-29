@@ -35,7 +35,7 @@ class Monitoring extends BOBasePage {
     this.deleteCategoryRowLink = row => `${this.dropdownToggleMenu('empty_category', row)
     } a.grid-delete-row-link`;
     this.deleteModeCategoryModal = '#empty_category_grid_delete_categories_modal';
-    this.deleteModeInput = position => `#delete_categories_delete_mode_${position}`;
+    this.deleteModeInput = position => `#delete_categories_delete_mode_${position} + i`;
     this.deleteModeCategoryModalDiv = '#delete_categories_delete_mode';
     this.submitDeleteCategoryButton = `${this.deleteModeCategoryModal} button.js-submit-delete-categories`;
     // Sort Selectors
@@ -47,6 +47,12 @@ class Monitoring extends BOBasePage {
     // Modal products list
     this.deleteProductModal = table => `#${table}-grid-confirm-modal`;
     this.submitDeleteProductButton = table => `${this.deleteProductModal(table)} button.btn-confirm-submit`;
+
+    // Pagination selectors
+    this.paginationLimitSelect = table => `${this.gridPanel(table)} #paginator_select_page_limit`;
+    this.paginationLabel = table => `${this.gridPanel(table)} .col-form-label`;
+    this.paginationNextLink = table => `${this.gridPanel(table)} #pagination_next_url`;
+    this.paginationPreviousLink = table => `${this.gridPanel(table)} [aria-label='Previous']`;
   }
 
   /* Reset Methods */
@@ -153,7 +159,7 @@ class Monitoring extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.submitDeleteProductButton(table));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Categories methods */
@@ -199,17 +205,17 @@ class Monitoring extends BOBasePage {
     // choose deletion mode
     await page.click(this.deleteModeInput(deletionModePosition));
     await this.clickAndWaitForNavigation(page, this.submitDeleteCategoryButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
-   * Get toggle column value for a row
+   * Get status
    * @param page
    * @param table
    * @param row
    * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, table, row = 1) {
+  async getStatus(page, table, row = 1) {
     return this.elementVisible(page, this.enableColumnValidIcon(table, row), 100);
   }
 
@@ -224,13 +230,16 @@ class Monitoring extends BOBasePage {
   async getAllRowsColumnContent(page, table, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page, table);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       let rowContent = await this.getTextContent(page, this.tableColumn(table, i, column));
+
       if (column === 'active') {
-        rowContent = await this.getToggleColumnValue(page, table, i).toString();
+        rowContent = await this.getStatus(page, table, i).toString();
       }
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -253,6 +262,51 @@ class Monitoring extends BOBasePage {
     }
 
     await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  // Methods for pagination
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page, table) {
+    return this.getTextContent(page, this.paginationLabel(table));
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, table, number) {
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect(table), number),
+      page.waitForNavigation({waitUntil: 'networkidle'}),
+    ]);
+
+    return this.getPaginationLabel(page, table);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page, table) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink(table));
+    return this.getPaginationLabel(page, table);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page, table) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink(table));
+    return this.getPaginationLabel(page, table);
   }
 }
 

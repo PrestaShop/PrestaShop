@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_shoppingcart/ps_shoppingcart.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f373b403975d367491574fb2c739fef7">
+        <source>Shopping cart</source>
+        <target>Shopping cart</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="32114c6d4529db62a4703c4b04a3f214">
+        <source>Adds a block containing the customer's shopping cart.</source>
+        <target>Adds a block containing the customer's shopping cart.</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="a21e5718d2a196280b729438933501c7">
+        <source>Ajax: Invalid choice.</source>
+        <target>Ajax: Invalid choice.</target>
+        <note>Line: 160</note>
+      </trans-unit>
+      <trans-unit id="614a8820aa4ac08ce2ee398a41b10778">
+        <source>Ajax cart</source>
+        <target>Ajax cart</target>
+        <note>Line: 222</note>
+      </trans-unit>
+      <trans-unit id="eefd19ecf1f6d94a308dcfc95981bbf9">
+        <source>Activate Ajax mode for the cart (compatible with the default theme).</source>
+        <target>Activate Ajax mode for the cart (compatible with the default theme).</target>
+        <note>Line: 225</note>
+      </trans-unit>
+      <trans-unit id="43041578d56a73cbb8692b81ed5f0147">
+        <source>Display a shopping cart icon on your pages and the number of items it contains.</source>
+        <target>Display a shopping cart icon on your pages and the number of items it contains.</target>
+        <note>Line: 48</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

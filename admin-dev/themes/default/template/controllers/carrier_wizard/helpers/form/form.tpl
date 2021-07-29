@@ -41,7 +41,7 @@
 		</div>
 	{/if}
 	{if $input.name == 'logo'}
-		<div class="col-lg-9">
+		<div class="col-lg-8">
 			<input id="carrier_logo_input" class="hide" type="file" onchange="uploadCarrierLogo();" name="carrier_logo_input" />
 			<input type="hidden" id="logo" name="logo" value="" />
 			<div class="dummyfile input-group">

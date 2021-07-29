@@ -59,6 +59,7 @@ class StockConfiguration implements DataConfigurationInterface
             'delivery_time' => (array) $this->configuration->get('PS_LABEL_DELIVERY_TIME_AVAILABLE'),
             'oos_delivery_time' => (array) $this->configuration->get('PS_LABEL_DELIVERY_TIME_OOSBOA'),
             'pack_stock_management' => $this->configuration->get('PS_PACK_STOCK_TYPE'),
+            'oos_show_label_listing_pages' => $this->configuration->getBoolean('PS_SHOW_LABEL_OOS_LISTING_PAGES'),
         ];
     }
 
@@ -78,6 +79,7 @@ class StockConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_LABEL_DELIVERY_TIME_AVAILABLE', $config['delivery_time']);
             $this->configuration->set('PS_LABEL_DELIVERY_TIME_OOSBOA', $config['oos_delivery_time']);
             $this->configuration->set('PS_PACK_STOCK_TYPE', $config['pack_stock_management']);
+            $this->configuration->set('PS_SHOW_LABEL_OOS_LISTING_PAGES', $config['oos_show_label_listing_pages']);
         }
 
         return $errors;
@@ -98,6 +100,7 @@ class StockConfiguration implements DataConfigurationInterface
             'oos_delivery_time',
             'oos_denied_backorders',
             'pack_stock_management',
+            'oos_show_label_listing_pages',
         ]);
 
         $resolver->resolve($configuration);

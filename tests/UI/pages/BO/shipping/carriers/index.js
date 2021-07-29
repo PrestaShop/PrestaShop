@@ -9,6 +9,8 @@ class Carriers extends BOBasePage {
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors
+    this.growlMessageBlock = '#growls .growl-message:last-of-type';
+
     // Header links
     this.addNewCarrierLink = '#page-header-desc-carrier-new_carrier';
 
@@ -37,6 +39,7 @@ class Carriers extends BOBasePage {
     this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnDelay = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
     this.tableColumnActive = row => `${this.tableBodyColumn(row)}:nth-child(6) a`;
+    this.enableColumnValidIcon = row => `${this.tableColumnActive(row)} i.icon-check`;
     this.tableColumnIsFree = row => `${this.tableBodyColumn(row)}:nth-child(7) a`;
     this.tableColumnPosition = row => `${this.tableBodyColumn(row)}:nth-child(8)`;
 
@@ -68,6 +71,8 @@ class Carriers extends BOBasePage {
     this.bulkActionMenuButton = '#bulk_action_menu_carrier';
     this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
     this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkEnableLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.bulkDisableLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
   }
 
@@ -76,7 +81,7 @@ class Carriers extends BOBasePage {
    */
   /**
    * Go to add new carrier page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToAddNewCarrierPage(page) {
@@ -87,7 +92,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Get Number of carriers
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -96,7 +101,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -108,7 +113,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Reset and get number of image types
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -118,10 +123,10 @@ class Carriers extends BOBasePage {
 
   /**
    * Filter carriers table
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {String} Type of the filter (input or select)
+   * @param filterBy {String} Value to use for the select type filter
+   * @param value {String} Value for the select filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
@@ -147,8 +152,8 @@ class Carriers extends BOBasePage {
 
   /**
    * Go to edit carrier page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {Number} Row index in the table
    * @return {Promise<void>}
    */
   async gotoEditCarrierPage(page, row) {
@@ -157,9 +162,9 @@ class Carriers extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {Number} Row index in the table
+   * @param columnName {String} Column name in the table
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -202,8 +207,8 @@ class Carriers extends BOBasePage {
 
   /**
    * Delete carrier from row
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {Number} Row index in the table
    * @return {Promise<string>}
    */
   async deleteCarrier(page, row) {
@@ -218,31 +223,33 @@ class Carriers extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   // Sort methods
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param columnName {String} Column name in the table
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {String} column to sort with
+   * @param sortDirection {String} asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -264,6 +271,7 @@ class Carriers extends BOBasePage {
       default:
         throw new Error(`Column ${sortBy} was not found`);
     }
+
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
@@ -271,7 +279,7 @@ class Carriers extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -280,8 +288,8 @@ class Carriers extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {Number} The pagination number value
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -292,7 +300,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -302,7 +310,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -313,12 +321,12 @@ class Carriers extends BOBasePage {
   /* Bulk actions methods */
   /**
    * Bulk delete carriers
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async bulkDeleteCarriers(page) {
     // To confirm bulk delete action with dialog
-    this.dialogListener(page, true);
+    await this.dialogListener(page, true);
 
     // Select all rows
     await Promise.all([
@@ -328,7 +336,7 @@ class Carriers extends BOBasePage {
 
     await Promise.all([
       page.click(this.selectAllLink),
-      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
 
     // Perform delete
@@ -340,7 +348,87 @@ class Carriers extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Bulk set carriers status
+   * @param page {Page} Browser tab
+   * @param action {String} The action to perform in bulk
+   * @returns {Promise<void>}
+   */
+  async bulkSetStatus(page, action) {
+    // Select all rows
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.selectAllLink),
+    ]);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      this.waitForHiddenSelector(page, this.selectAllLink),
+    ]);
+
+    // Perform delete
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkDeleteLink),
+    ]);
+
+    if (action === 'Enable') {
+      await this.clickAndWaitForNavigation(page, this.bulkEnableLink);
+    } else {
+      await this.clickAndWaitForNavigation(page, this.bulkDisableLink);
+    }
+
+    // not working, skipping it
+    // Return successful message
+    // return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Get carrier status
+   * @param page {Page} Browser tab
+   * @param row {Number} Row index in the table
+   * @returns {Promise<boolean>}
+   */
+  async getStatus(page, row = 1) {
+    return this.elementVisible(page, this.enableColumnValidIcon(row), 100);
+  }
+
+  /**
+   * Set carriers status
+   * @param page {Page} Browser tab
+   * @param row {Number} Row index in the table
+   * @param valueWanted {Boolean} The carrier status value
+   * @return {Promise<boolean>}, true if click has been performed
+   */
+  async setStatus(page, row = 1, valueWanted = true) {
+    await this.waitForVisibleSelector(page, this.tableColumnActive(row), 2000);
+
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.tableColumnActive(row));
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Change carrier position
+   * @param page {Page} Browser tab
+   * @param actualPosition {Number} The actual row position
+   * @param newPosition {Number} The new position for the row
+   * @return {Promise<string>}
+   */
+  async changePosition(page, actualPosition, newPosition) {
+    await this.dragAndDrop(
+      page,
+      this.tableColumnPosition(actualPosition),
+      this.tableColumnPosition(newPosition),
+    );
+
+    return this.getGrowlMessageContent(page);
   }
 }
 

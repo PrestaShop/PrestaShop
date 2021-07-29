@@ -239,7 +239,7 @@ class CommonController extends FrameworkBundleAdminController
 
         $modules = $recommendedModules->filterInstalledAndBadModules($modules);
         $collection = AddonsCollection::createFrom($modules);
-        $modules = $modulesProvider->generateAddonsUrls($collection);
+        $modules = $modulesProvider->generateAddonsUrls($collection)->toArray();
 
         return [
             'domain' => $domain,
@@ -351,7 +351,7 @@ class CommonController extends FrameworkBundleAdminController
      * @param string $redirectRoute
      * @param array $redirectQueryParamsToKeep
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @return RedirectResponse
      */

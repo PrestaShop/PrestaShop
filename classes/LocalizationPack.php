@@ -300,7 +300,7 @@ class LocalizationPackCore
                     $tr->id_county = $id_county;
                     $tr->zipcode_from = $zipcode_from;
                     $tr->zipcode_to = $zipcode_to;
-                    $tr->behavior = $behavior;
+                    $tr->behavior = (string) $behavior;
                     $tr->description = '';
                     $tr->id_tax = $assoc_taxes[(string) ($rule_attributes['id_tax'])];
                     $tr->save();

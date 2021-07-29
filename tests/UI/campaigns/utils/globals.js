@@ -1,4 +1,4 @@
-const {DefaultAccount} = require('@data/demo/employees');
+const {DefaultEmployee} = require('@data/demo/employees');
 
 
 global.FO = {
@@ -7,10 +7,10 @@ global.FO = {
 
 global.BO = {
   URL: process.env.URL_BO || `${global.FO.URL}admin-dev/`,
-  EMAIL: process.env.LOGIN || DefaultAccount.email,
-  PASSWD: process.env.PASSWD || DefaultAccount.password,
-  FIRSTNAME: process.env.FIRSTNAME || DefaultAccount.firstName,
-  LASTNAME: process.env.LASTNAME || DefaultAccount.lastName,
+  EMAIL: process.env.LOGIN || DefaultEmployee.email,
+  PASSWD: process.env.PASSWD || DefaultEmployee.password,
+  FIRSTNAME: process.env.FIRSTNAME || DefaultEmployee.firstName,
+  LASTNAME: process.env.LASTNAME || DefaultEmployee.lastName,
 };
 
 global.INSTALL = {
@@ -21,7 +21,7 @@ global.INSTALL = {
   DB_NAME: process.env.DB_NAME || 'prestashopdb',
   DB_USER: process.env.DB_USER || 'root',
   DB_PASSWD: process.env.DB_PASSWD || '',
-  SHOPNAME: process.env.SHOPNAME || 'PrestaShop',
+  SHOP_NAME: process.env.SHOP_NAME || 'PrestaShop',
   PS_VERSION: process.env.PS_VERSION || '1.7.6.0',
 };
 
@@ -35,9 +35,16 @@ global.BROWSER = {
   config: {
     headless: JSON.parse(process.env.HEADLESS || true),
     timeout: 0,
-    slowMo: parseInt(process.env.SLOWMO, 10) || 5,
+    slowMo: parseInt(process.env.SLOW_MO, 10) || 5,
   },
   interceptErrors: JSON.parse(process.env.INTERCEPT_ERRORS || false),
 };
 
 global.GENERATE_FAILED_STEPS = process.env.GENERATE_FAILED_STEPS || false;
+
+global.TAKE_SCREENSHOT_AFTER_FAIL = process.env.TAKE_SCREENSHOT_AFTER_FAIL || false;
+
+global.maildevConfig = {
+  smtpPort: process.env.SMTP_PORT || '1025',
+  smtpServer: process.env.SMTP_SERVER || '172.20.0.4',
+};

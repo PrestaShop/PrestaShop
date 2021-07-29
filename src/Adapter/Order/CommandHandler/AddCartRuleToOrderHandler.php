@@ -41,8 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopException;
+use Shop;
 use Validate;
 
 /**
@@ -79,12 +79,14 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
 
         $this->contextStateManager
             ->setCurrency(new Currency($order->id_currency))
-            ->setCustomer(new Customer($order->id_customer));
+            ->setCustomer(new Customer($order->id_customer))
+            ->setShop(new Shop($order->id_shop))
+        ;
 
         try {
             $this->addCartRuleAndUpdateOrder($command, $order);
         } finally {
-            $this->contextStateManager->restoreContext();
+            $this->contextStateManager->restorePreviousContext();
         }
     }
 
@@ -101,10 +103,6 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      */
     private function addCartRuleAndUpdateOrder(AddCartRuleToOrderCommand $command, Order $order): void
     {
-        $computingPrecision = new ComputingPrecision();
-        $currency = new Currency((int) $order->id_currency);
-        $precision = $computingPrecision->getPrecision($currency->precision);
-
         // If the discount is for only one invoice
         $orderInvoice = null;
         if ($order->hasInvoice() && null !== $command->getOrderInvoiceId()) {
@@ -249,7 +247,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         }
         if (!empty($orderInvoices)) {
             foreach ($orderInvoices as $invoice) {
-                if ($invoice->total_paid_tax_incl <= $invoice->total_shipping_tax_incl) {
+                if ($invoice->total_paid_tax_incl < $invoice->total_shipping_tax_incl) {
                     throw new InvalidCartRuleDiscountValueException(
                         'Discount amount specified is too high',
                         InvalidCartRuleDiscountValueException::INVALID_FREE_SHIPPING
@@ -257,7 +255,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                 }
             }
         } else {
-            if ($order->total_paid_tax_incl <= $order->total_shipping_tax_incl) {
+            if ($order->total_paid_tax_incl < $order->total_shipping_tax_incl) {
                 throw new InvalidCartRuleDiscountValueException(
                     'Discount amount specified is too high',
                     InvalidCartRuleDiscountValueException::INVALID_FREE_SHIPPING

@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Customer\EditCustomerDiscoun
 use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\StatusColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 
 /**
@@ -42,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
  */
 final class CustomerDiscountGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'customer_discount';
+    public const GRID_ID = 'customer_discount';
 
     /**
      * {@inheritdoc}
@@ -88,7 +89,7 @@ final class CustomerDiscountGridDefinitionFactory extends AbstractGridDefinition
                     ])
             )
             ->add(
-                (new DataColumn('active'))
+                (new StatusColumn('active'))
                     ->setName($this->trans('Status', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'active',

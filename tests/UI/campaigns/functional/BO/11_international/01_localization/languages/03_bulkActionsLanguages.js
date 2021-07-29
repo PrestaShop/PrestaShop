@@ -38,6 +38,14 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create images
+    await Promise.all([
+      files.generateImage(firstLanguageData.flag),
+      files.generateImage(firstLanguageData.noPicture),
+      files.generateImage(secondLanguageData.flag),
+      files.generateImage(secondLanguageData.noPicture),
+    ]);
   });
 
   after(async () => {
@@ -108,8 +116,8 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
 
   describe('Enable, disable and delete with bulk actions', async () => {
     const tests = [
-      {args: {action: 'disable', toEnable: false}, expected: 'clear'},
-      {args: {action: 'enable', toEnable: true}, expected: 'check'},
+      {args: {action: 'disable', toEnable: false}},
+      {args: {action: 'enable', toEnable: true}},
     ];
 
     it('should filter language by name \'languageToDelete\'', async function () {
@@ -126,7 +134,7 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
       it(`should ${test.args.action} with bulk actions`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}`, baseContext);
 
-        const disableTextResult = await languagesPage.bulkEditEnabledColumn(
+        const disableTextResult = await languagesPage.bulkSetStatus(
           page,
           test.args.toEnable,
         );
@@ -138,8 +146,8 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
         await expect(numberOfLanguagesInGrid).to.be.at.most(numberOfLanguages);
 
         for (let i = 1; i <= numberOfLanguagesInGrid; i++) {
-          const textColumn = await languagesPage.getTextColumnFromTable(page, i, 'active');
-          await expect(textColumn).to.contains(test.expected);
+          const textColumn = await languagesPage.getStatus(page, i);
+          await expect(textColumn).to.equal(test.args.toEnable);
         }
       });
     });

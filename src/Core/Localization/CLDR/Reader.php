@@ -38,25 +38,25 @@ use SimpleXMLElement;
  */
 class Reader implements ReaderInterface
 {
-    const CLDR_ROOT = 'localization/CLDR/';
-    const CLDR_MAIN = 'localization/CLDR/core/common/main/';
-    const CLDR_SUPPLEMENTAL = 'localization/CLDR/core/common/supplemental/';
+    public const CLDR_ROOT = 'localization/CLDR/';
+    public const CLDR_MAIN = 'localization/CLDR/core/common/main/';
+    public const CLDR_SUPPLEMENTAL = 'localization/CLDR/core/common/supplemental/';
 
-    const CLDR_ROOT_LOCALE = 'root';
+    public const CLDR_ROOT_LOCALE = 'root';
 
-    const SUPPL_DATA_CURRENCY = 'currencyData';
-    const SUPPL_DATA_LANGUAGE = 'languageData';
-    const SUPPL_DATA_NUMBERING = 'numberingSystems';
-    const SUPPL_DATA_PARENT_LOCALES = 'parentLocales'; // For specific locales hierarchy
+    public const SUPPL_DATA_CURRENCY = 'currencyData';
+    public const SUPPL_DATA_LANGUAGE = 'languageData';
+    public const SUPPL_DATA_NUMBERING = 'numberingSystems';
+    public const SUPPL_DATA_PARENT_LOCALES = 'parentLocales'; // For specific locales hierarchy
 
-    const DEFAULT_CURRENCY_DIGITS = 2;
+    public const DEFAULT_CURRENCY_DIGITS = 2;
 
-    const CURRENCY_CODE_TEST = 'XTS';
+    public const CURRENCY_CODE_TEST = 'XTS';
 
     /**
      * delay after currency deactivation to prevent currency add by list
      */
-    const CURRENCY_ACTIVE_DELAY = 365;
+    public const CURRENCY_ACTIVE_DELAY = 365;
 
     protected $mainXml = [];
 
@@ -205,12 +205,7 @@ class Reader implements ReaderInterface
         // The common case with truncation
         $pos = strrpos($localeCode, '_');
         if (false !== $pos) {
-            $parent = substr($localeCode, 0, $pos);
-            if (false === $parent) {
-                throw new LocalizationException(sprintf('Invalid locale code: "%s"', $localeCode));
-            }
-
-            return $parent;
+            return substr($localeCode, 0, $pos);
         }
 
         // The "top level" case. When only language code is left in $localeCode: 'en', 'fr'... then parent is "root".
@@ -410,8 +405,7 @@ class Reader implements ReaderInterface
                 $numberSystem = (string) $format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
-                if ($alias
-                    && preg_match(
+                if (isset($alias['path']) && preg_match(
                         "#^\.\.\/decimalFormats\[@numberSystem='([^)]+)'\]$#",
                         (string) $alias['path'],
                         $matches
@@ -443,8 +437,7 @@ class Reader implements ReaderInterface
                 $numberSystem = (string) $format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
-                if ($alias
-                    && preg_match(
+                if (isset($alias['path']) && preg_match(
                         "#^\.\.\/percentFormats\[@numberSystem='([^)]+)'\]$#",
                         (string) $alias['path'],
                         $matches
@@ -479,8 +472,7 @@ class Reader implements ReaderInterface
                 $numberSystem = (string) $format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
-                if ($alias
-                    && preg_match(
+                if (isset($alias['path']) && preg_match(
                         "#^\.\.\/currencyFormats\[@numberSystem='([^)]+)'\]$#",
                         (string) $alias['path'],
                         $matches
@@ -511,7 +503,7 @@ class Reader implements ReaderInterface
                 $currencyData->setIsoCode($currencyCode);
 
                 // check if currency is still active in one territory
-                $currencyDates = $this->supplementalXml->supplementalData->xpath('//region/currency[@iso4217="' . $currencyCode . '"]');
+                $currencyDates = $this->supplementalXml->currencyData->xpath('//region/currency[@iso4217="' . $currencyCode . '"]');
                 if (!empty($currencyDates) && $this->isCurrencyActiveSomewhere($currencyDates, $currencyActiveDateThreshold)) {
                     $currencyData->setActive(true);
                 } else {
@@ -542,7 +534,7 @@ class Reader implements ReaderInterface
                 $currencyData->setDisplayNames($displayNames);
 
                 // Supplemental (fraction digits and numeric iso code)
-                $codesMapping = $this->supplementalXml->supplementalData->xpath(
+                $codesMapping = $this->supplementalXml->xpath(
                     '//codeMappings/currencyCodes[@type="' . $currencyCode . '"]'
                 );
 
@@ -556,12 +548,12 @@ class Reader implements ReaderInterface
                     $currencyData->setNumericIsoCode($numericIsoCode);
                 }
 
-                $fractionsData = $this->supplementalXml->supplementalData->xpath(
+                $fractionsData = $this->supplementalXml->xpath(
                     '//currencyData/fractions/info[@iso4217="' . $currencyCode . '"]'
                 );
 
                 if (empty($fractionsData)) {
-                    $fractionsData = $this->supplementalXml->supplementalData->xpath(
+                    $fractionsData = $this->supplementalXml->xpath(
                         '//currencyData/fractions/info[@iso4217="DEFAULT"]'
                     );
                 }

@@ -1,8 +1,9 @@
 About PrestaShop
 --------
 
-[![Travis build Status](https://travis-ci.com/PrestaShop/PrestaShop.svg?branch=develop)](https://travis-ci.com/PrestaShop/PrestaShop)
-![PHPStan status](https://github.com/PrestaShop/PrestaShop/workflows/PHP%20Static%20Analysis/badge.svg)
+[![PHP checks and unit tests](https://github.com/PrestaShop/PrestaShop/actions/workflows/php.yml/badge.svg)](https://github.com/PrestaShop/PrestaShop/actions/workflows/php.yml)
+[![Integration tests](https://github.com/PrestaShop/PrestaShop/actions/workflows/integration.yml/badge.svg)](https://github.com/PrestaShop/PrestaShop/actions/workflows/integration.yml)
+[![UI tests - PHP 7.4](https://github.com/PrestaShop/PrestaShop/actions/workflows/sanity-74.yml/badge.svg)](https://github.com/PrestaShop/PrestaShop/actions/workflows/sanity-74.yml)
 [![Nightly Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi-nightly.prestashop.com%2Fdata%2Fbadge&label=Nightly%20Status&cacheSeconds=3600)](https://nightly.prestashop.com/)
 
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.1-8892BF.svg?style=flat-square)](https://php.net/)
@@ -108,7 +109,7 @@ Responsible (and private) disclosure is a standard practice when someone encount
 
 The PrestaShop team tries to be very proactive when preventing security problems. Even so, critical issues might surface without notice.
 
-This is why we have set up the [security@prestashop.com](mailto:security@prestashop.com) email address: anyone can privately contact us with all the details about issues that affect the security of PrestaShop merchants or customers. Our security team will answer you, and discuss of a timeframe for your publication of the details.
+This is why we have set up a [Bug Bounty Program](https://yeswehack.com/programs/prestashop) where anyone can privately contact us with all the details about issues that affect the security of PrestaShop merchants or customers. Our security team will answer you, and discuss of a timeframe for your publication of the details.
 
 Understanding a security issue means knowing how the attacker got in and hacked the site. If you have those details, then please do contact us privately about it (and please do not publish those details before we answer). If you do not know how the attacker got in, please ask for help on the support forums.
 
@@ -124,13 +125,14 @@ Themes and modules can be obtained (and sold!) on [PrestaShop Addons][addons], t
 Community forums
 --------
 
-You can discuss about e-commerce, help other merchants and get help, and contribute to improving PrestaShop together with the PrestaShop community on [the PrestaShop forums][forums].
+You can discuss about e-commerce, help other merchants and get help, and contribute to improving PrestaShop together with the PrestaShop community on [the PrestaShop forums][forums] or on the [PrestaShop Slack channel][chat].
 
 Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
 
 [available-features]: https://www.prestashop.com/en/online-store-builder
 [download]: https://www.prestashop.com/en/download
 [forums]: https://www.prestashop.com/forums/
+[chat]: https://github.com/PrestaShop/open-source/blob/master/slack/readme.md
 [user-doc]: https://doc.prestashop.com
 [contributing-md]: CONTRIBUTING.md
 [contributing-tutorial]: https://devdocs.prestashop.com/1.7/contribute/
@@ -139,7 +141,7 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [user-guide]: https://doc.prestashop.com/display/PS17/User+Guide
 [updating-guide]: https://doc.prestashop.com/display/PS16/Updating+PrestaShop
 [merchant-guide]: https://doc.prestashop.com/display/PS16/Merchant%27s+Guide
-[faq-17]: https://build.prestashop.com/news/prestashop-1-7-faq/
+[faq-17]: https://devdocs.prestashop.com/1.7/faq/
 [troubleshooting]: https://doc.prestashop.com/display/PS16/Troubleshooting
 [sysadmin-guide]: https://doc.prestashop.com/display/PS16/System+Administrator+Guide
 [addons]: https://addons.prestashop.com/

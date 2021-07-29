@@ -34,15 +34,15 @@ class FailedToDeleteProfileException extends ProfileException
     /**
      * Code is used when cannot delete profile because it is assigned to employee.
      */
-    const PROFILE_IS_ASSIGNED_TO_EMPLOYEE = 1;
+    public const PROFILE_IS_ASSIGNED_TO_EMPLOYEE = 1;
 
     /**
      * Code is used when unexpected error (e.g. lost db connection) occures while deleting profile.
      */
-    const UNEXPECTED_ERROR = 2;
+    public const UNEXPECTED_ERROR = 2;
 
     /**
      * Code is used when logged in employee attempts to delete its own profile.
      */
-    const PROFILE_IS_ASSIGNED_TO_CONTEXT_EMPLOYEE = 3;
+    public const PROFILE_IS_ASSIGNED_TO_CONTEXT_EMPLOYEE = 3;
 }

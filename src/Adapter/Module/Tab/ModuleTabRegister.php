@@ -44,7 +44,7 @@ use TabCore as Tab;
  */
 class ModuleTabRegister
 {
-    const SUFFIX = '_MTR';
+    public const SUFFIX = '_MTR';
 
     /**
      * @var string
@@ -251,8 +251,7 @@ class ModuleTabRegister
      */
     protected function getModuleAdminControllers($moduleName)
     {
-        $modulePath = _PS_ROOT_DIR_ . '/' . basename(_PS_MODULE_DIR_) .
-                '/' . $moduleName . '/controllers/admin/';
+        $modulePath = rtrim(_PS_MODULE_DIR_, '/') . '/' . $moduleName . '/controllers/admin/';
 
         if (!$this->filesystem->exists($modulePath)) {
             return [];
@@ -280,9 +279,7 @@ class ModuleTabRegister
      */
     protected function getModuleControllersFromRouting(string $moduleName): array
     {
-        $routingFile = _PS_ROOT_DIR_ . '/' . basename(_PS_MODULE_DIR_) .
-            '/' . $moduleName . '/config/routes.yml';
-
+        $routingFile = rtrim(_PS_MODULE_DIR_, '/') . '/' . $moduleName . '/config/routes.yml';
         if (!$this->filesystem->exists($routingFile)) {
             return [];
         }
@@ -370,6 +367,8 @@ class ModuleTabRegister
         $tab->name = $this->getTabNames($tabDetails->get('name', $tab->class_name));
         $tab->icon = $tabDetails->get('icon');
         $tab->id_parent = $this->findParentId($tabDetails);
+        $tab->wording = $tabDetails->get('wording');
+        $tab->wording_domain = $tabDetails->get('wording_domain');
 
         if (!$tab->save()) {
             throw new Exception($this->translator->trans('Failed to install admin tab "%name%".', ['%name%' => $tab->name], 'Admin.Modules.Notification'));

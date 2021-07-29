@@ -214,7 +214,7 @@ abstract class StockManagementRepository
     /**
      * @param string $andWhereClause
      * @param string $having
-     * @param null $orderByClause
+     * @param string|null $orderByClause
      *
      * @return mixed
      */
@@ -412,6 +412,35 @@ abstract class StockManagementRepository
         $statement->closeCursor();
 
         return $rowCount;
+    }
+
+    /**
+     * Get the attribute name subquery to be used in the select field of the main query.
+     *
+     * @return string
+     */
+    protected function getAttributeNameSubquery()
+    {
+        return '(SELECT GROUP_CONCAT(
+                        DISTINCT CONCAT(agl.name)
+                        SEPARATOR ", "
+                    )
+                    FROM ' . $this->tablePrefix . 'product_attribute pa2
+                    JOIN ' . $this->tablePrefix . 'product_attribute_combination pac ON (
+                        pac.id_product_attribute = pa2.id_product_attribute
+                    )
+                    JOIN ' . $this->tablePrefix . 'attribute a ON (
+                        a.id_attribute = pac.id_attribute
+                    )
+                    JOIN ' . $this->tablePrefix . 'attribute_group ag ON (
+                        ag.id_attribute_group = a.id_attribute_group
+                    )
+                    JOIN ' . $this->tablePrefix . 'attribute_group_lang agl ON (
+                        ag.id_attribute_group = agl.id_attribute_group
+                        AND agl.id_lang = :language_id
+                    )
+                    WHERE pa2.id_product=p.id_product AND pa2.id_product_attribute=pa.id_product_attribute)
+                    AS attribute_name';
     }
 
     /**

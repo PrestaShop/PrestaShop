@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Twig\Extension;
 
 use PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface;
 use Twig\Extension\AbstractExtension;
-use Twig_SimpleFunction;
+use Twig\TwigFunction;
 
 /**
  * Adds "documentation_link" function to Twig so documentation links can be generated in templates
@@ -54,7 +54,7 @@ class DocumentationLinkExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction(
+            new TwigFunction(
                 'documentation_link',
                 [$this->documentationLinkProvider, 'getLink']
             ),

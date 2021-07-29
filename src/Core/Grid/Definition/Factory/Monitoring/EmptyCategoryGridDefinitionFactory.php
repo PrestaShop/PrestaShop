@@ -49,7 +49,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'empty_category';
+    public const GRID_ID = 'empty_category';
 
     /**
      * {@inheritdoc}

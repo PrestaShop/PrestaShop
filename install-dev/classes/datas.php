@@ -32,7 +32,7 @@ class Datas
             'name' => 'step',
             'default' => 'all',
             'validate' => 'isGenericName',
-            'help' => 'all / database,fixtures,theme,modules,addons_modules',
+            'help' => 'all / database,fixtures,theme,modules,postInstall',
         ),
         'language' => array(
             'default' => 'en',

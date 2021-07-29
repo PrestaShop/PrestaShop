@@ -33,6 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -44,9 +45,9 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function updateSeo(string $productReference, TableNode $tableNode)
+    public function updateSeo(string $productReference, TableNode $tableNode): void
     {
-        $dataRows = $tableNode->getRowsHash();
+        $dataRows = $this->localizeByRows($tableNode);
         $productId = $this->getSharedStorage()->get($productReference);
 
         try {
@@ -73,6 +74,7 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
         $productSeoOptions = $this->getProductForEditing($productReference)->getProductSeoOptions();
         $dataRows = $tableNode->getRowsHash();
 
+        $redirectType = $dataRows['redirect_type'] ?? RedirectType::TYPE_PRODUCT_PERMANENT;
         if (isset($dataRows['redirect_type'])) {
             Assert::assertEquals(
                 $dataRows['redirect_type'],
@@ -82,14 +84,56 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
             unset($dataRows['redirect_type']);
         }
 
-        if (isset($dataRows['redirect_target'])) {
-            $targetId = $this->getSharedStorage()->get($dataRows['redirect_target']);
+        $expectedRedirectTarget = isset($dataRows['redirect_target']) ?
+            $this->getSharedStorage()->get($dataRows['redirect_target']) :
+            RedirectTarget::NO_TARGET
+        ;
+
+        Assert::assertEquals(
+            $expectedRedirectTarget,
+            $productSeoOptions->getRedirectTargetId(),
+            'Unexpected redirect target'
+        );
+        if ($expectedRedirectTarget) {
             Assert::assertEquals(
-                $targetId,
-                $productSeoOptions->getRedirectTargetId(),
+                $expectedRedirectTarget,
+                $productSeoOptions->getRedirectTarget()->getId(),
                 'Unexpected redirect target'
             );
-            unset($dataRows['redirect_target']);
+        } else {
+            Assert::assertNull(
+                $productSeoOptions->getRedirectTarget(),
+                'Unexpected redirect target'
+            );
+        }
+        unset($dataRows['redirect_target']);
+
+        if (isset($dataRows['redirect_name'])) {
+            Assert::assertEquals(
+                $dataRows['redirect_name'],
+                $productSeoOptions->getRedirectTarget()->getName(),
+                'Unexpected redirect_name'
+            );
+            unset($dataRows['redirect_name']);
+        }
+
+        if (isset($dataRows['redirect_image'])) {
+            switch ($redirectType) {
+                case RedirectType::TYPE_CATEGORY_TEMPORARY:
+                case RedirectType::TYPE_CATEGORY_PERMANENT:
+                    $realImageUrl = $this->getRealCategoryImageUrl($dataRows['redirect_image']);
+                    break;
+                default:
+                    $realImageUrl = $this->getRealImageUrl($dataRows['redirect_image']);
+                    break;
+            }
+
+            Assert::assertEquals(
+                $realImageUrl,
+                $productSeoOptions->getRedirectTarget()->getImage(),
+                'Unexpected redirect_image'
+            );
+            unset($dataRows['redirect_image']);
         }
     }
 
@@ -143,20 +187,7 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
             $productForEditing->getProductSeoOptions()->getRedirectTargetId(),
             'Product "%s" expected to have no redirect target'
         );
-    }
-
-    /**
-     * @Then product :productReference redirect target should be :targetReference
-     *
-     * @param string $productReference
-     * @param string $targetReference
-     */
-    public function assertRedirectTarget(string $productReference, string $targetReference)
-    {
-        $productSeo = $this->getProductForEditing($productReference)->getProductSeoOptions();
-        $targetId = $this->getSharedStorage()->get($targetReference);
-
-        Assert::assertEquals($targetId, $productSeo->getRedirectTargetId(), 'Unexpected product redirect target');
+        Assert::assertNull($productForEditing->getProductSeoOptions()->getRedirectTarget());
     }
 
     /**
@@ -170,17 +201,17 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
     private function fillUpdateSeoCommand(array $dataRows, UpdateProductSeoCommand $command): array
     {
         if (isset($dataRows['meta_title'])) {
-            $command->setLocalizedMetaTitles($this->parseLocalizedArray($dataRows['meta_title']));
+            $command->setLocalizedMetaTitles($dataRows['meta_title']);
             unset($dataRows['meta_title']);
         }
 
         if (isset($dataRows['meta_description'])) {
-            $command->setLocalizedMetaDescriptions($this->parseLocalizedArray($dataRows['meta_description']));
+            $command->setLocalizedMetaDescriptions($dataRows['meta_description']);
             unset($dataRows['meta_description']);
         }
 
         if (isset($dataRows['link_rewrite'])) {
-            $command->setLocalizedLinkRewrites($this->parseLocalizedArray($dataRows['link_rewrite']));
+            $command->setLocalizedLinkRewrites($dataRows['link_rewrite']);
             unset($dataRows['link_rewrite']);
         }
 

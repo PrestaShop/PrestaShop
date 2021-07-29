@@ -262,7 +262,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         if ($id) {
             /** @var \PrestaShop\PrestaShop\Adapter\EntityMapper $entity_mapper */
             $entity_mapper = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper');
-            $entity_mapper->load($id, $id_lang, $this, $this->def, $this->id_shop, self::$cache_objects);
+            $entity_mapper->load($id, $this->id_lang, $this, $this->def, $this->id_shop, self::$cache_objects);
         }
     }
 
@@ -362,6 +362,24 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         return $fields;
+    }
+
+    /**
+     * Returns the language related to the object or the default one if it doesn't exists
+     *
+     * @return Language
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function getAssociatedLanguage(): Language
+    {
+        $language = new Language($this->id_lang);
+        if (null === $language->id) {
+            $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+        }
+
+        return $language;
     }
 
     /**
@@ -1095,7 +1113,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param array $skip array of fields to skip
      * @param bool $human_errors if true, uses more descriptive, translatable error strings
      *
-     * @return true|string true or error message string
+     * @return bool|string true or error message string
      *
      * @throws PrestaShopException
      */
@@ -1468,7 +1486,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $value = Tools::getValue($field, null);
 
             if ($value === null) {
-                $errors[$field] = $this->trans('The field %s is required.', [self::displayFieldName($field, get_class($this), $htmlentities)], 'Admin.Notifications.Error');
+                $errors[$field] = $this->trans('The %s field is required.', [self::displayFieldName($field, get_class($this), $htmlentities)], 'Admin.Notifications.Error');
             }
         }
 
@@ -2155,7 +2173,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
-     * @return array|null
+     * @return array<string, bool|array<int, bool>>|null
      */
     public function getFieldsToUpdate(): ?array
     {

@@ -26,19 +26,20 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 import ProductSelect from './components/product-select';
 
-$(document).ready(function () {
+$(document).ready(() => {
   createProductSpin();
   createInputFile();
   coverImage();
   imageScrollBox();
+  addJsProductTabActiveSelector();
 
-  prestashop.on('updatedProduct', function (event) {
+  prestashop.on('updatedProduct', (event) => {
     createInputFile();
     coverImage();
     if (event && event.product_minimal_quantity) {
       const minimalProductQuantity = parseInt(event.product_minimal_quantity, 10);
       const quantityInputSelector = prestashop.selectors.quantityWanted;
-      let quantityInput = $(quantityInputSelector);
+      const quantityInput = $(quantityInputSelector);
 
       // @see http://www.virtuosoft.eu/code/bootstrap-touchspin/ about Bootstrap TouchSpin
       quantityInput.trigger('touchspin.updatesettings', {
@@ -49,16 +50,47 @@ $(document).ready(function () {
     $($(prestashop.themeSelectors.product.activeTabs).attr('href')).addClass('active').removeClass('fade');
     $(prestashop.themeSelectors.product.imagesModal).replaceWith(event.product_images_modal);
 
-    let productSelect = new ProductSelect();
+    const productSelect = new ProductSelect();
     productSelect.init();
   });
 
   function coverImage() {
+    const productCover = $(prestashop.themeSelectors.product.cover);
+    let thumbSelected = $(prestashop.themeSelectors.product.selected);
+
+    const swipe = (selectedThumb, thumbParent) => {
+      const newSelectedThumb = thumbParent.find(prestashop.themeSelectors.product.thumb);
+
+      $(prestashop.themeSelectors.product.modalProductCover).attr('src', newSelectedThumb.data('image-large-src'));
+      selectedThumb.removeClass('selected');
+      newSelectedThumb.addClass('selected');
+      productCover.prop('src', newSelectedThumb.data('image-large-src'));
+    };
+
     $(prestashop.themeSelectors.product.thumb).on('click', (event) => {
-      $(prestashop.themeSelectors.product.modalProductCover).attr('src', $(event.target).data('image-large-src'));
-      $(prestashop.themeSelectors.product.selected).removeClass('selected');
-      $(event.target).addClass('selected');
-      $(prestashop.themeSelectors.product.cover).prop('src', $(event.currentTarget).data('image-large-src'));
+      thumbSelected = $(prestashop.themeSelectors.product.selected);
+      swipe(thumbSelected, $(event.target).closest(prestashop.themeSelectors.product.thumbContainer));
+    });
+
+    productCover.swipe({
+      swipe: (event, direction) => {
+        thumbSelected = $(prestashop.themeSelectors.product.selected);
+        const parentThumb = thumbSelected.closest(prestashop.themeSelectors.product.thumbContainer);
+
+        if (direction === 'right') {
+          if (parentThumb.prev().length > 0) {
+            swipe(thumbSelected, parentThumb.prev());
+          } else if (parentThumb.next().length > 0) {
+            swipe(thumbSelected, parentThumb.next());
+          }
+        } else if (direction === 'left') {
+          if (parentThumb.next().length > 0) {
+            swipe(thumbSelected, parentThumb.next());
+          } else if (parentThumb.prev().length > 0) {
+            swipe(thumbSelected, parentThumb.prev());
+          }
+        }
+      },
     });
   }
 
@@ -71,10 +103,10 @@ $(document).ready(function () {
         distance: 113,
         autoPlay: false,
       });
-      $('.scroll-box-arrows .left').click(function () {
+      $('.scroll-box-arrows .left').click(() => {
         $('#main .js-qv-mask').trigger('backward');
       });
-      $('.scroll-box-arrows .right').click(function () {
+      $('.scroll-box-arrows .right').click(() => {
         $('#main .js-qv-mask').trigger('forward');
       });
     } else {
@@ -85,8 +117,10 @@ $(document).ready(function () {
 
   function createInputFile() {
     $(prestashop.themeSelectors.fileInput).on('change', (event) => {
-      let target, file;
+      let target;
+      let file;
 
+      // eslint-disable-next-line
       if ((target = $(event.currentTarget)[0]) && (file = target.files[0])) {
         $(target).prev().text(file.name);
       }
@@ -106,6 +140,8 @@ $(document).ready(function () {
       max: 1000000,
     });
 
+    $(prestashop.themeSelectors.touchspin).off('touchstart.touchspin');
+
     $quantityInput.focusout(() => {
       if ($quantityInput.val() === '' || $quantityInput.val() < $quantityInput.attr('min')) {
         $quantityInput.val($quantityInput.attr('min'));
@@ -121,6 +157,20 @@ $(document).ready(function () {
           event: e,
         });
       }
+    });
+  }
+
+  function addJsProductTabActiveSelector() {
+    const nav = $(prestashop.themeSelectors.product.tabs);
+    nav.on('show.bs.tab', (e) => {
+      const target = $(e.target);
+      target.addClass(prestashop.themeSelectors.product.activeNavClass);
+      $(target.attr('href')).addClass(prestashop.themeSelectors.product.activeTabClass);
+    });
+    nav.on('hide.bs.tab', (e) => {
+      const target = $(e.target);
+      target.removeClass(prestashop.themeSelectors.product.activeNavClass);
+      $(target.attr('href')).removeClass(prestashop.themeSelectors.product.activeTabClass);
     });
   }
 });

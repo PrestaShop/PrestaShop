@@ -111,6 +111,40 @@
     }
   }
 
+  #prestashop-profiling .col-5 {
+    float: left;
+    padding: 0 10px;
+    width: 40%;
+  }
+
+  @media (max-width: 1200px) {
+    #prestashop-profiling .col-5 {
+      width: 50%;
+    }
+  }
+  @media (max-width: 600px) {
+    #prestashop-profiling .col-5 {
+      width: 100%;
+    }
+  }
+
+  #prestashop-profiling .col-2 {
+    float: left;
+    padding: 0 10px;
+    width: 20%;
+  }
+
+  @media (max-width: 1200px) {
+    #prestashop-profiling .col-2 {
+      width: 20%;
+    }
+  }
+  @media (max-width: 600px) {
+    #prestashop-profiling .col-2 {
+      width: 100%;
+    }
+  }
+
   .success {
     color: green;
   }

@@ -1,0 +1,101 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{% block generateMailsFormBlock %}
+<div class="row justify-content-center">
+  <div class="col-xl-12">
+    {{ form_start(generateMailsForm, {'action': path('admin_mail_theme_generate')}) }}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">email</i> {{ 'Generate emails'|trans({}, 'Admin.Design.Feature') }}
+      </h3>
+
+      <div class="card-block row">
+        <div class="card-text">
+
+          <div class="form-group row">
+            <label class="form-control-label">
+              {{ 'Select your email theme'|trans({}, 'Admin.Design.Feature') }}
+            </label>
+            <div class="col-sm">
+              {{ form_errors(generateMailsForm.mailTheme) }}
+              {{ form_widget(generateMailsForm.mailTheme) }}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="form-control-label">
+              {{ 'Select your language'|trans({}, 'Admin.International.Feature') }}
+            </label>
+            <div class="col-sm">
+              {{ form_errors(generateMailsForm.language) }}
+              {{ form_widget(generateMailsForm.language) }}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="form-control-label">
+              {{ ps.label_with_help(
+                ('Select the theme you want to overwrite'|trans({}, 'Admin.Design.Feature')),
+              ('PrestaShop\'s email templates are stored in the "mails" folder, but they can be overridden by your current theme\'s own "mails" folder. Using this option enables to overwrite emails from your current theme.'|trans({}, 'Admin.Design.Help'))
+              ) }}
+            </label>
+            <div class="col-sm">
+              {{ form_errors(generateMailsForm.theme) }}
+              {{ form_widget(generateMailsForm.theme) }}
+              {% if generateMailsForm.theme.vars.disabled %}
+              <small class="form-text">{{ 'No emails were detected in any theme folder so this field is disabled.'|trans({}, 'Admin.Design.Help') }}</small>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            {{ ps.label_with_help(
+              ('Overwrite templates'|trans({}, 'Admin.Design.Feature')),
+            ('By default, existing email template files are not modified to avoid deleting any modification you may have done. Enable this option to force the overwrite.'|trans({}, 'Admin.Design.Help'))
+            ) }}
+            <div class="col-sm">
+              {{ form_errors(generateMailsForm.overwrite) }}
+              {{ form_widget(generateMailsForm.overwrite) }}
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">
+            <i class="material-icons">email</i>
+            <span>{{ 'Generate emails'|trans({}, 'Admin.Actions') }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    {{ form_end(generateMailsForm) }}
+  </div>
+</div>
+{% endblock %}

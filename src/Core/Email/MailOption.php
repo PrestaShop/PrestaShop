@@ -34,32 +34,32 @@ final class MailOption
     /**
      * @var int Option defines that emails should be sent using native mail() function
      */
-    const METHOD_NATIVE = 1;
+    public const METHOD_NATIVE = 1;
 
     /**
      *  @var int Option defines that emails should be sent using configured SMTP settings
      */
-    const METHOD_SMTP = 2;
+    public const METHOD_SMTP = 2;
 
     /**
      * @var int Option defines that emails should not be sent
      */
-    const METHOD_NONE = 3;
+    public const METHOD_NONE = 3;
 
     /**
      * @var int Option defines that emails should be sent in HTML format only
      */
-    const TYPE_HTML = 1;
+    public const TYPE_HTML = 1;
 
     /**
      * @var int Option defines that emails should be sent in TXT format only
      */
-    const TYPE_TXT = 2;
+    public const TYPE_TXT = 2;
 
     /**
      * @var int Option defines that emails should be sent in both HTML and TXT formats
      */
-    const TYPE_BOTH = 3;
+    public const TYPE_BOTH = 3;
 
     /**
      * Class should not be initialized as its responsibility is to hold mail method options.

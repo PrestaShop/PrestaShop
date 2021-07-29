@@ -27,17 +27,17 @@ import prestashop from 'prestashop';
 import {refreshCheckoutPage} from './common';
 
 export default function () {
-  let $body = $('body');
-  let deliveryFormSelector = prestashop.selectors.checkout.deliveryFormSelector;
-  let summarySelector = prestashop.selectors.checkout.summarySelector;
-  let deliveryStepSelector = prestashop.selectors.checkout.deliveryStepSelector;
-  let editDeliveryButtonSelector = prestashop.selectors.checkout.editDeliveryButtonSelector;
+  const $body = $('body');
+  const {deliveryFormSelector} = prestashop.selectors.checkout;
+  const {summarySelector} = prestashop.selectors.checkout;
+  const {deliveryStepSelector} = prestashop.selectors.checkout;
+  const {editDeliveryButtonSelector} = prestashop.selectors.checkout;
 
-  let updateDeliveryForm = (event) => {
-    let $deliveryMethodForm = $(deliveryFormSelector);
-    let requestData = $deliveryMethodForm.serialize();
-    let $inputChecked = $(event.currentTarget);
-    let $newDeliveryOption = $inputChecked.parents(prestashop.selectors.checkout.deliveryOption);
+  const updateDeliveryForm = (event) => {
+    const $deliveryMethodForm = $(deliveryFormSelector);
+    const requestData = $deliveryMethodForm.serialize();
+    const $inputChecked = $(event.currentTarget);
+    const $newDeliveryOption = $inputChecked.parents(prestashop.selectors.checkout.deliveryOption);
 
     $.post($deliveryMethodForm.data('url-update'), requestData)
       .then((resp) => {
@@ -52,18 +52,18 @@ export default function () {
         prestashop.emit('updatedDeliveryForm', {
           dataForm: $deliveryMethodForm.serializeArray(),
           deliveryOption: $newDeliveryOption,
-          resp: resp,
+          resp,
         });
       })
       .fail((resp) => {
         prestashop.trigger('handleError', {
           eventType: 'updateDeliveryOptions',
-          resp: resp,
+          resp,
         });
       });
   };
 
-  $body.on('change', deliveryFormSelector + ' input', updateDeliveryForm);
+  $body.on('change', `${deliveryFormSelector} input`, updateDeliveryForm);
 
   $body.on('click', editDeliveryButtonSelector, (event) => {
     event.stopPropagation();

@@ -30,9 +30,9 @@ use ArrayAccess;
 use ArrayIterator;
 use ArrayObject;
 use Countable;
-use Doctrine\Common\Util\Inflector;
 use Iterator;
 use JsonSerializable;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -423,6 +423,6 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         // remove "get" prefix from the function name
         $strippedMethodName = substr($methodName, 3);
 
-        return Inflector::tableize($strippedMethodName);
+        return Inflector::getInflector()->tableize($strippedMethodName);
     }
 }

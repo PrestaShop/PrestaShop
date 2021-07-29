@@ -38,17 +38,17 @@ class CustomizationFieldType
     /**
      * Value representing customization file type
      */
-    const TYPE_FILE = 0;
+    public const TYPE_FILE = 0;
 
     /**
      * Value representing customization text type
      */
-    const TYPE_TEXT = 1;
+    public const TYPE_TEXT = 1;
 
     /**
      * Available customization types
      */
-    const AVAILABLE_TYPES = [
+    public const AVAILABLE_TYPES = [
         'file' => self::TYPE_FILE,
         'text' => self::TYPE_TEXT,
     ];

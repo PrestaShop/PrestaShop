@@ -34,6 +34,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 class ProductOptions
 {
     /**
+     * @var bool
+     */
+    private $active;
+
+    /**
      * @var string
      */
     private $visibility;
@@ -54,39 +59,14 @@ class ProductOptions
     private $showPrice;
 
     /**
-     * @var LocalizedTags[]
-     */
-    private $localizedTags;
-
-    /**
      * @var string
      */
     private $condition;
 
     /**
-     * @var string
+     * @var bool
      */
-    private $isbn;
-
-    /**
-     * @var string
-     */
-    private $upc;
-
-    /**
-     * @var string
-     */
-    private $ean13;
-
-    /**
-     * @var string
-     */
-    private $mpn;
-
-    /**
-     * @var string
-     */
-    private $reference;
+    private $showCondition;
 
     /**
      * @var int
@@ -94,45 +74,41 @@ class ProductOptions
     private $manufacturerId;
 
     /**
+     * @param bool $active
      * @param string $visibility
      * @param bool $availableForOrder
      * @param bool $onlineOnly
      * @param bool $showPrice
-     * @param LocalizedTags[] $localizedTags
      * @param string $condition
-     * @param string $isbn
-     * @param string $upc
-     * @param string $ean13
-     * @param string $mpn
-     * @param string $reference
+     * @param bool $showCondition
      * @param int $manufacturerId
      */
     public function __construct(
+        bool $active,
         string $visibility,
         bool $availableForOrder,
         bool $onlineOnly,
         bool $showPrice,
-        array $localizedTags,
         string $condition,
-        string $isbn,
-        string $upc,
-        string $ean13,
-        string $mpn,
-        string $reference,
+        bool $showCondition,
         int $manufacturerId
     ) {
+        $this->active = $active;
         $this->visibility = $visibility;
         $this->availableForOrder = $availableForOrder;
         $this->onlineOnly = $onlineOnly;
         $this->showPrice = $showPrice;
-        $this->localizedTags = $localizedTags;
         $this->condition = $condition;
-        $this->isbn = $isbn;
-        $this->upc = $upc;
-        $this->ean13 = $ean13;
-        $this->mpn = $mpn;
-        $this->reference = $reference;
+        $this->showCondition = $showCondition;
         $this->manufacturerId = $manufacturerId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->active;
     }
 
     /**
@@ -168,14 +144,6 @@ class ProductOptions
     }
 
     /**
-     * @return LocalizedTags[]
-     */
-    public function getLocalizedTags(): array
-    {
-        return $this->localizedTags;
-    }
-
-    /**
      * @return string
      */
     public function getCondition(): string
@@ -184,43 +152,11 @@ class ProductOptions
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getIsbn(): string
+    public function showCondition(): bool
     {
-        return $this->isbn;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUpc(): string
-    {
-        return $this->upc;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEan13(): string
-    {
-        return $this->ean13;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMpn(): string
-    {
-        return $this->mpn;
-    }
-
-    /**
-     * @return string
-     */
-    public function getReference(): string
-    {
-        return $this->reference;
+        return $this->showCondition;
     }
 
     /**

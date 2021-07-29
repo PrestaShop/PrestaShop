@@ -32,7 +32,7 @@ class FeatureValueCore extends ObjectModel
     /** @var int Group id which attribute belongs */
     public $id_feature;
 
-    /** @var string Name */
+    /** @var string|array Name */
     public $value;
 
     /** @var bool Custom */
@@ -139,8 +139,8 @@ class FeatureValueCore extends ObjectModel
      *
      * @param int $idFeature
      * @param string $value
-     * @param null $idProduct
-     * @param null $idLang
+     * @param int|null $idProduct
+     * @param int|null $idLang
      * @param bool $custom
      *
      * @return int

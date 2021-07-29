@@ -67,7 +67,7 @@ class AddCartRuleToOrderCommand
      * @param string $cartRuleName
      * @param string $cartRuleType
      * @param string|null $value
-     * @param null $orderInvoiceId
+     * @param int|null $orderInvoiceId
      */
     public function __construct(
         int $orderId,
@@ -141,7 +141,15 @@ class AddCartRuleToOrderCommand
         $isNullValueAllowed = OrderDiscountType::FREE_SHIPPING === $cartRuleType;
 
         if (!$isNullValueAllowed && null === $value) {
-            throw new OrderConstraintException(sprintf('Null values are not allowed for "%s" discount types.', [OrderDiscountType::DISCOUNT_AMOUNT, OrderDiscountType::DISCOUNT_PERCENT]));
+            throw new OrderConstraintException(
+                sprintf(
+                    'Null values are not allowed for "%s" discount types.',
+                    implode(',', [
+                        OrderDiscountType::DISCOUNT_AMOUNT,
+                        OrderDiscountType::DISCOUNT_PERCENT,
+                    ])
+                )
+            );
         }
     }
 }

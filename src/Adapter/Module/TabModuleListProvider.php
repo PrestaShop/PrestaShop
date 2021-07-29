@@ -29,8 +29,18 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 use PrestaShop\PrestaShop\Adapter\Entity\Tab;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\TabModuleListProviderInterface;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.8.0 and will be removed in the next major version.',
+        TabModuleListProvider::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
  * Class TabModuleListProvider is responsible for providing tab modules.
+ *
+ * @deprecated since 1.7.8.0
  */
 final class TabModuleListProvider implements TabModuleListProviderInterface
 {

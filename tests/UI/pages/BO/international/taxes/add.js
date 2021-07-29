@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add tax page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddTax extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add tax page
+   */
   constructor() {
     super();
 
@@ -15,17 +24,18 @@ class AddTax extends BOBasePage {
     this.inputLangDropdownButton = 'button#tax_name';
     this.inputLangChoiceSpan = lang => `div.dropdown-menu span[data-locale='${lang}']`;
     this.rateInput = '#tax_rate';
-    this.enabledSwitchLabel = id => `label[for='tax_is_enabled_${id}']`;
+    this.statusToggleInput = toggle => `#tax_is_enabled_${toggle}`;
     this.saveTaxButton = '#save-button';
   }
+
   /*
   Methods
    */
 
   /**
    * Change language for input name
-   * @param page
-   * @param lang
+   * @param page {Page} Browser tab
+   * @param lang {string} Value of language to change
    * @return {Promise<void>}
    */
   async changeInputLanguage(page, lang) {
@@ -41,8 +51,8 @@ class AddTax extends BOBasePage {
 
   /**
    * Fill form for add/edit tax
-   * @param page
-   * @param taxData
+   * @param page {Page} Browser tab
+   * @param taxData {taxData} Data to set on new/edit tax page
    * @returns {Promise<string>}
    */
   async createEditTax(page, taxData) {
@@ -51,10 +61,12 @@ class AddTax extends BOBasePage {
     await this.changeInputLanguage(page, 'fr');
     await this.setValue(page, this.nameFrInput, taxData.frName);
     await this.setValue(page, this.rateInput, taxData.rate);
-    await page.click(this.enabledSwitchLabel(taxData.enabled ? 1 : 0));
+    await page.check(this.statusToggleInput(taxData.enabled ? 1 : 0));
     // Save Tax
     await this.clickAndWaitForNavigation(page, this.saveTaxButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
+
 module.exports = new AddTax();

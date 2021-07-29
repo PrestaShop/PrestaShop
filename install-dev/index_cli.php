@@ -28,10 +28,18 @@ require_once 'install_version.php';
 
 // Check PHP version
 if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_) {
-    die('You need at least PHP '._PS_INSTALL_MINIMUM_PHP_VERSION_.' to install PrestaShop. Your current PHP version is '.PHP_VERSION);
+    echo 'Your server is running PHP ' . PHP_VERSION . ', but PrestaShop requires PHP ' . _PS_INSTALL_MINIMUM_PHP_VERSION_ . ' or newer.';
+    echo PHP_EOL;
+    echo 'To install PrestaShop ' . _PS_INSTALL_VERSION_ . ' you need to update your server\'s PHP version.';
+    echo PHP_EOL;
+    die();
 }
 if (PHP_VERSION_ID > _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_) {
-    die('You need at most PHP '._PS_INSTALL_MAXIMUM_PHP_VERSION_.' to install PrestaShop. Your current PHP version is '.PHP_VERSION);
+    echo 'Your server is running PHP ' . PHP_VERSION . ', but PrestaShop requires PHP ' . _PS_INSTALL_MAXIMUM_PHP_VERSION_ . ' or lower.';
+    echo PHP_EOL;
+    echo 'To install PrestaShop ' . _PS_INSTALL_VERSION_ . ' you need to downgrade your server\'s PHP version.';
+    echo PHP_EOL;
+    die();
 }
 
 /* Redefine REQUEST_URI */

@@ -42,8 +42,8 @@ const productWithCombinations = new ProductFaker(
   },
 );
 
-const firstAttributeToChoose = {color: 'White'};
-const secondAttributeToChoose = {color: 'Black'};
+const firstAttributeToChoose = {color: 'White', size: 'S'};
+const secondAttributeToChoose = {color: 'Black', size: 'S'};
 
 const firstCartTotalATI = 30;
 const secondCartTotalATI = 40;
@@ -195,5 +195,12 @@ describe('Choose quantity discount based on', async () => {
 
     const numberOfProductsAfterDelete = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProductsAfterDelete).to.equal(numberOfProducts);
+  });
+
+  it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+
+    const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfProducts).to.be.above(0);
   });
 });

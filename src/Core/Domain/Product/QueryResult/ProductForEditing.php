@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+
 /**
  * Product information for editing
  */
@@ -39,9 +41,9 @@ class ProductForEditing
     private $productId;
 
     /**
-     * @var bool
+     * @var string
      */
-    private $active;
+    private $type;
 
     /**
      * @var ProductBasicInformation
@@ -64,6 +66,11 @@ class ProductForEditing
     private $options;
 
     /**
+     * @var ProductDetails
+     */
+    private $details;
+
+    /**
      * @var ProductCustomizationOptions
      */
     private $customizationOptions;
@@ -84,39 +91,58 @@ class ProductForEditing
     private $associatedAttachmentIds;
 
     /**
+     * @var ProductStockInformation
+     */
+    private $stockInformation;
+
+    /**
+     * @var VirtualProductFileForEditing|null
+     */
+    private $virtualProductFile;
+
+    /**
      * @param int $productId
-     * @param bool $active
+     * @param string $type
      * @param ProductCustomizationOptions $customizationOptions
      * @param ProductBasicInformation $basicInformation
      * @param ProductCategoriesInformation $categoriesInformation
      * @param ProductPricesInformation $pricesInformation
      * @param ProductOptions $options
+     * @param ProductDetails $details
      * @param ProductShippingInformation $shippingInformation
      * @param ProductSeoOptions $productSeoOptions
      * @param array $associatedAttachmentIds
+     * @param ProductStockInformation $stockInformation
+     * @param VirtualProductFileForEditing|null $virtualProductFile
      */
     public function __construct(
         int $productId,
-        bool $active,
+        string $type,
         ProductCustomizationOptions $customizationOptions,
         ProductBasicInformation $basicInformation,
         ProductCategoriesInformation $categoriesInformation,
         ProductPricesInformation $pricesInformation,
         ProductOptions $options,
+        ProductDetails $details,
         ProductShippingInformation $shippingInformation,
         ProductSeoOptions $productSeoOptions,
-        array $associatedAttachmentIds
+        array $associatedAttachmentIds,
+        ProductStockInformation $stockInformation,
+        ?VirtualProductFileForEditing $virtualProductFile
     ) {
         $this->productId = $productId;
-        $this->active = $active;
+        $this->type = $type;
         $this->customizationOptions = $customizationOptions;
         $this->basicInformation = $basicInformation;
         $this->categoriesInformation = $categoriesInformation;
         $this->pricesInformation = $pricesInformation;
         $this->options = $options;
+        $this->details = $details;
         $this->shippingInformation = $shippingInformation;
         $this->productSeoOptions = $productSeoOptions;
         $this->associatedAttachmentIds = $associatedAttachmentIds;
+        $this->stockInformation = $stockInformation;
+        $this->virtualProductFile = $virtualProductFile;
     }
 
     /**
@@ -128,11 +154,11 @@ class ProductForEditing
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isActive(): bool
+    public function getType(): string
     {
-        return $this->active;
+        return $this->type;
     }
 
     /**
@@ -176,6 +202,14 @@ class ProductForEditing
     }
 
     /**
+     * @return ProductDetails
+     */
+    public function getDetails(): ProductDetails
+    {
+        return $this->details;
+    }
+
+    /**
      * @return ProductShippingInformation
      */
     public function getShippingInformation(): ProductShippingInformation
@@ -197,5 +231,21 @@ class ProductForEditing
     public function getAssociatedAttachmentIds(): array
     {
         return $this->associatedAttachmentIds;
+    }
+
+    /**
+     * @return ProductStockInformation
+     */
+    public function getStockInformation(): ProductStockInformation
+    {
+        return $this->stockInformation;
+    }
+
+    /**
+     * @return VirtualProductFileForEditing|null
+     */
+    public function getVirtualProductFile(): ?VirtualProductFileForEditing
+    {
+        return $this->virtualProductFile;
     }
 }

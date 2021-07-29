@@ -52,7 +52,7 @@ class RedirectOption
     public function __construct(string $redirectType, int $redirectTarget)
     {
         $this->redirectType = new RedirectType($redirectType);
-        $this->redirectTarget = new RedirectTarget($redirectTarget);
+        $this->setRedirectTarget($redirectTarget);
         $this->assertTypeAndTargetIntegrity();
     }
 
@@ -70,6 +70,20 @@ class RedirectOption
     public function getRedirectTarget(): RedirectTarget
     {
         return $this->redirectTarget;
+    }
+
+    /**
+     * @param int $value
+     *
+     * @throws ProductConstraintException
+     */
+    private function setRedirectTarget(int $value): void
+    {
+        if ($this->redirectType->isTypeNotFound()) {
+            $value = RedirectTarget::NO_TARGET;
+        }
+
+        $this->redirectTarget = new RedirectTarget($value);
     }
 
     /**

@@ -31,7 +31,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateBasicInformationFeatureContext extends AbstractProductFeatureContext
 {
@@ -43,24 +42,20 @@ class UpdateBasicInformationFeatureContext extends AbstractProductFeatureContext
      */
     public function updateProductBasicInfo(string $productReference, TableNode $table): void
     {
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
         $productId = $this->getSharedStorage()->get($productReference);
         $command = new UpdateProductBasicInformationCommand($productId);
 
         if (isset($data['name'])) {
-            $command->setLocalizedNames($this->parseLocalizedArray($data['name']));
-        }
-
-        if (isset($data['is_virtual'])) {
-            $command->setVirtual(PrimitiveUtils::castStringBooleanIntoBoolean($data['is_virtual']));
+            $command->setLocalizedNames($data['name']);
         }
 
         if (isset($data['description'])) {
-            $command->setLocalizedDescriptions($this->parseLocalizedArray($data['description']));
+            $command->setLocalizedDescriptions($data['description']);
         }
 
         if (isset($data['description_short'])) {
-            $command->setLocalizedShortDescriptions($this->parseLocalizedArray($data['description_short']));
+            $command->setLocalizedShortDescriptions($data['description_short']);
         }
 
         try {

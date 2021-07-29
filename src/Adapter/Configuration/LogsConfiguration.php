@@ -50,7 +50,10 @@ class LogsConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return ['logs_by_email' => $this->configuration->get('PS_LOGS_BY_EMAIL')];
+        return [
+            'logs_by_email' => $this->configuration->get('PS_LOGS_BY_EMAIL'),
+            'logs_email_receivers' => $this->configuration->get('PS_LOGS_EMAIL_RECEIVERS'),
+        ];
     }
 
     /**
@@ -60,6 +63,7 @@ class LogsConfiguration implements DataConfigurationInterface
     {
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_LOGS_BY_EMAIL', $configuration['logs_by_email']);
+            $this->configuration->set('PS_LOGS_EMAIL_RECEIVERS', $configuration['logs_email_receivers']);
         }
 
         return [];
@@ -72,7 +76,7 @@ class LogsConfiguration implements DataConfigurationInterface
     {
         $resolver = new OptionsResolver();
         $resolver
-            ->setRequired(['logs_by_email'])
+            ->setRequired(['logs_by_email', 'logs_email_receivers'])
             ->resolve($configuration);
 
         return true;

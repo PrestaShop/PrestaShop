@@ -2,7 +2,7 @@
 
 set -x
 
-BRANCH=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/TRAVIS_BRANCH -H "Metadata-Flavor: Google")
+BRANCH=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/GH_BRANCH -H "Metadata-Flavor: Google")
 CURRENT_DATE=$([ -z "$1" ] && date +%Y-%m-%d || echo $1)
 DIR_PATH="/var/ps-reports/${CURRENT_DATE}"
 REPORT_NAME="${CURRENT_DATE}-${BRANCH}"
@@ -33,7 +33,7 @@ docker volume prune -f
 
 cd "${TESTS_DIR}"
 
-for command in "sanity-tests" "functional-tests"; do
+for command in "sanity-tests" "functional-BO" "functional-FO" "regression-tests"; do
   if [ -z "$(docker ps -qa)" ]; then
     # Make sure all containers are stopped
     docker stop $(docker ps -qa)

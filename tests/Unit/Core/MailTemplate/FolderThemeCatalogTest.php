@@ -70,7 +70,7 @@ class FolderThemeCatalogTest extends TestCase
      */
     private $moduleLayouts;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'mail_layouts';
@@ -114,7 +114,7 @@ class FolderThemeCatalogTest extends TestCase
         $layout = $coreLayouts[0];
         $this->assertInstanceOf(LayoutInterface::class, $layout);
         $coreFolder = implode(DIRECTORY_SEPARATOR, [
-            realpath($this->tempDir),
+            '@MailThemes',
             'classic',
             MailTemplateInterface::CORE_CATEGORY,
         ]);
@@ -202,8 +202,8 @@ class FolderThemeCatalogTest extends TestCase
             $caughtException = $e;
         }
         $this->assertNotNull($caughtException);
-        $this->assertContains('Invalid mail themes folder', $caughtException->getMessage());
-        $this->assertContains(': no such directory', $caughtException->getMessage());
+        $this->assertStringContainsString('Invalid mail themes folder', $caughtException->getMessage());
+        $this->assertStringContainsString(': no such directory', $caughtException->getMessage());
     }
 
     public function testListThemesWithoutCoreFolder()

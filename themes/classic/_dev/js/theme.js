@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
+/* eslint-disable */
 import 'expose-loader?Tether!tether';
 import 'bootstrap/dist/js/bootstrap.min';
 import 'flexibility';
@@ -49,8 +50,10 @@ import './lib/jquery.scrollbox.min';
 
 import './components/block-cart';
 import $ from 'jquery';
+/* eslint-enable */
 
 // "inherit" EventEmitter
+// eslint-disable-next-line
 for (const i in EventEmitter.prototype) {
   prestashop[i] = EventEmitter.prototype[i];
 }
@@ -70,11 +73,11 @@ $(document).ready(() => {
   productSelect.init();
 
   $('.carousel[data-touch="true"]').swipe({
-    swipe(event, direction, distance, duration, fingerCount, fingerData) {
-      if (direction == 'left') {
+    swipe(event, direction) {
+      if (direction === 'left') {
         $(this).carousel('next');
       }
-      if (direction == 'right') {
+      if (direction === 'right') {
         $(this).carousel('prev');
       }
     },

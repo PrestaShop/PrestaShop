@@ -25,10 +25,12 @@
  */
 define('_PS_IN_TEST_', true);
 define('_PS_ROOT_DIR_', __DIR__ . '/../..');
-define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests-legacy/resources/modules/');
+define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests/Resources/modules/');
 require_once __DIR__ . '/../../config/defines.inc.php';
 require_once _PS_CONFIG_DIR_ . 'autoload.php';
 
 if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
     define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../../vendor/autoload.php');
 }
+
+define('_NEW_COOKIE_KEY_', PhpEncryption::createNewRandomKey());

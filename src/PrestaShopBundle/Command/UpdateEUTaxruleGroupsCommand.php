@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Command;
 
 use DOMDocument;
 use SimpleXMLElement;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -61,12 +61,23 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * Clean things up by removing all the previous taxes that had the attributes eu-tax-group="virtual" and auto-generated="1"
  */
-class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
+class UpdateEUTaxruleGroupsCommand extends Command
 {
     /**
      * @var OutputInterface
      */
     private $output;
+
+    /**
+     * @var string
+     */
+    private $localizationPath;
+
+    public function __construct(string $localizationPath)
+    {
+        parent::__construct();
+        $this->localizationPath = $localizationPath;
+    }
 
     protected function configure()
     {
@@ -80,9 +91,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
         /* Tweak */
         $this->output = $output;
 
-        $localizationPacksRoot = $this->getContainer()->getParameter('kernel.root_dir') . '/../localization';
-
-        if (!$localizationPacksRoot) {
+        if (!file_exists($this->localizationPath)) {
             $output->writeln(
                 "<error>Could not find the folder containing the localization files (should be 'localization' at the root of the PrestaShop folder)</error>"
             );
@@ -92,17 +101,17 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
 
         $euLocalizationFiles = [];
 
-        foreach (scandir($localizationPacksRoot, SCANDIR_SORT_ASCENDING) as $entry) {
+        foreach (scandir($this->localizationPath, SCANDIR_SORT_ASCENDING) as $entry) {
             if (!preg_match('/\.xml$/', $entry)) {
                 continue;
             }
 
-            $localizationPackFile = $localizationPacksRoot . DIRECTORY_SEPARATOR . $entry;
+            $localizationPackFile = $this->localizationPath . DIRECTORY_SEPARATOR . $entry;
 
             $localizationPack = @simplexml_load_file($localizationPackFile);
 
             // Some packs do not have taxes
-            if (!$localizationPack || !$localizationPack->taxes->tax) {
+            if (!($localizationPack instanceof SimpleXMLElement) || !isset($localizationPack->taxes->tax)) {
                 continue;
             }
 
@@ -195,7 +204,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
         $newTax = new SimpleXMLElement('<tax/>');
 
         $taxRulesGroups = $taxes->xpath('//taxRulesGroup[1]');
-        $insertBefore = $taxRulesGroups[0];
+        $insertBefore = $taxRulesGroups[0] ?? false;
 
         if (!$insertBefore) {
             return $this->output->writeln("<error>Could not find any `taxRulesGroup`, don't know where to append the tax.");

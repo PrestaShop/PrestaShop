@@ -70,6 +70,8 @@ describe('Pagination and sort Categories', async () => {
   const creationTests = new Array(10).fill(0, 0, 10);
   creationTests.forEach((test, index) => {
     describe(`Create category n°${index + 1} in BO`, async () => {
+      before(() => files.generateImage(`${createCategoryData.name}.jpg`));
+
       const createCategoryData = new CategoryFaker({name: `todelete${index}`});
 
       it('should go to add new category page', async function () {
@@ -174,12 +176,14 @@ describe('Pagination and sort Categories', async () => {
         await categoriesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
         let sortedTable = await categoriesPage.getAllRowsColumnContent(page, test.args.sortBy);
+
         if (test.args.isFloat) {
           nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
         const expectedResult = await categoriesPage.sortArray(nonSortedTable, test.args.isFloat);
+
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
         } else {

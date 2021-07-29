@@ -44,7 +44,7 @@ const secondCartRule = new CartRuleFaker(
 let browserContext;
 let page;
 
-const numberOfCartRules = 0;
+let numberOfCartRules = 0;
 
 /*
 Create 2 cart rules
@@ -78,6 +78,13 @@ describe('Filter, quick edit and bulk actions cart rules', async () => {
 
     const pageTitle = await cartRulesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+  });
+
+  it('should reset and get number of cart rules', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
+
+    numberOfCartRules = await cartRulesPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfCartRules).to.be.at.least(0);
   });
 
   describe('Create 2 cart rules', async () => {
@@ -219,6 +226,30 @@ describe('Filter, quick edit and bulk actions cart rules', async () => {
   });
 
   describe('Bulk actions cart rules', async () => {
+    it('should filter by name \'todelete\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkActions', baseContext);
+
+      await cartRulesPage.filterCartRules(
+        page,
+        'input',
+        'name',
+        'todelete',
+      );
+
+      const numberOfCartRulesAfterFilter = await cartRulesPage.getNumberOfElementInGrid(page);
+      await expect(numberOfCartRulesAfterFilter).to.be.at.most(numberOfCartRules + 2);
+
+      for (let row = 1; row <= numberOfCartRulesAfterFilter; row++) {
+        const textColumn = await cartRulesPage.getTextColumn(
+          page,
+          row,
+          'name',
+        );
+
+        await expect(textColumn).to.contains('todelete');
+      }
+    });
+
     [
       {action: 'enable', wantedStatus: true},
       {action: 'disable', wantedStatus: false},

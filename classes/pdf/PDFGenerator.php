@@ -90,6 +90,7 @@ class PDFGeneratorCore extends TCPDF
         'zh' => 'cid0cs',
         'tw' => 'cid0cs',
         'th' => 'freeserif',
+        'hy' => 'freeserif',
     ];
 
     /**
@@ -221,7 +222,7 @@ class PDFGeneratorCore extends TCPDF
             $output = 'I';
         }
 
-        return $this->output($filename, $output);
+        return $this->Output($filename, $output);
     }
 
     /**

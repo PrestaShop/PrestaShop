@@ -33,8 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryC
  */
 abstract class AbstractCmsPageCategoryCommand
 {
-    const CATEGORY_NAME_REGEX_PATTERN = '/^[^<>;=#{}]*$/u';
-    const GENERIC_NAME_REGEX_PATTERN = '/^[^<>={}]*$/u';
+    public const CATEGORY_NAME_REGEX_PATTERN = '/^[^<>;=#{}]*$/u';
+    public const GENERIC_NAME_REGEX_PATTERN = '/^[^<>={}]*$/u';
 
     /**
      * Checks if given names matches pattern.

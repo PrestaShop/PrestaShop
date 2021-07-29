@@ -16,6 +16,7 @@ class Attributes extends BOBasePage {
 
     // Header selectors
     this.addNewAttributeLink = '#page-header-desc-attribute_group-new_attribute_group';
+    this.addNewValueLink = '#page-header-desc-attribute_group-new_value';
     this.featuresSubtabLink = '#subtab-AdminFeatures';
 
     // Form selectors
@@ -95,6 +96,15 @@ class Attributes extends BOBasePage {
    */
   async goToAddAttributePage(page) {
     await this.clickAndWaitForNavigation(page, this.addNewAttributeLink);
+  }
+
+  /**
+   * Go to add new value page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToAddNewValuePage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewValueLink);
   }
 
   /* Filter methods */
@@ -226,7 +236,7 @@ class Attributes extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -243,7 +253,7 @@ class Attributes extends BOBasePage {
       this.tableColumnPosition(newPosition),
     );
 
-    return this.getTextContent(page, this.growlMessageBlock);
+    return this.getGrowlMessageContent(page);
   }
 
   /* Bulk actions methods */
@@ -264,7 +274,7 @@ class Attributes extends BOBasePage {
 
     await Promise.all([
       page.click(this.selectAllLink),
-      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
 
     // Perform delete
@@ -276,7 +286,7 @@ class Attributes extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Pagination methods */

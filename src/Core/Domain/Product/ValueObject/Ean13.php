@@ -38,12 +38,12 @@ class Ean13
     /**
      * Valid ean regex pattern
      */
-    const VALID_PATTERN = '/^[0-9]{0,13}$/';
+    public const VALID_PATTERN = '/^[0-9]{0,13}$/';
 
     /**
      * Maximum allowed symbols
      */
-    const MAX_LENGTH = 13;
+    public const MAX_LENGTH = 13;
 
     /**
      * @var string

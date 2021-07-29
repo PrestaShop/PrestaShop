@@ -103,9 +103,11 @@ $context = Context::getContext();
 if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
     $import = new AdminImportController();
 
+    /** @var array $fields */
+    $fields = $import->getAvailableFields(true);
     $fields = array_map(function ($elem) {
         return ['field' => $elem];
-    }, $import->getAvailableFields(true));
+    }, $fields);
     echo json_encode($fields);
 }
 

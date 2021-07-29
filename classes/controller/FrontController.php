@@ -171,6 +171,30 @@ class FrontControllerCore extends Controller
     protected $cccReducer;
 
     /**
+     * @var array Contains the result of getTemplateVarUrls method
+     */
+    protected $urls;
+
+    /**
+     * Set this parameter to false if you don't want cart's invoice address
+     * to be set automatically (this behavior is kept for legacy and BC purpose)
+     *
+     * @var bool automaticallyAllocateInvoiceAddress
+     */
+    protected $automaticallyAllocateInvoiceAddress = true;
+
+    /**
+     * Set this parameter to false if you don't want cart's delivery address
+     * to be set automatically (this behavior is kept for legacy and BC purpose)
+     *
+     * @var bool automaticallyAllocateDeliveryAddress
+     */
+    protected $automaticallyAllocateDeliveryAddress = true;
+
+    /** @var string Page name */
+    public $page_name;
+
+    /**
      * Controller constructor.
      *
      * @global bool $useSSL SSL connection flag
@@ -399,13 +423,13 @@ class FrontControllerCore extends Controller
             }
             /* Select an address if not set */
             if (isset($cart) && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 ||
-                !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
+                    !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
                 $to_update = false;
-                if (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0) {
+                if ($this->automaticallyAllocateDeliveryAddress && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0)) {
                     $to_update = true;
                     $cart->id_address_delivery = (int) Address::getFirstCustomerAddressId($cart->id_customer);
                 }
-                if (!isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) {
+                if ($this->automaticallyAllocateInvoiceAddress && (!isset($cart->id_address_invoice) || $cart->id_address_invoice == 0)) {
                     $to_update = true;
                     $cart->id_address_invoice = (int) Address::getFirstCustomerAddressId($cart->id_customer);
                 }
@@ -1053,6 +1077,8 @@ class FrontControllerCore extends Controller
             'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
             'inline' => false,
             'server' => 'local',
+            'version' => null,
+            'needRtl' => true,
         ];
         $params = array_merge($default_params, $params);
 
@@ -1061,7 +1087,8 @@ class FrontControllerCore extends Controller
                 . ($this->stylesheetManager->getFullPath($relativePath) ?? $relativePath);
             $params['server'] = 'remote';
         }
-        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server']);
+
+        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server'], $params['needRtl'], $params['version']);
     }
 
     public function unregisterStylesheet($id)
@@ -1081,6 +1108,7 @@ class FrontControllerCore extends Controller
             'inline' => false,
             'attributes' => null,
             'server' => 'local',
+            'version' => null,
         ];
         $params = array_merge($default_params, $params);
 
@@ -1089,7 +1117,7 @@ class FrontControllerCore extends Controller
                 . ($this->javascriptManager->getFullPath($relativePath) ?? $relativePath);
             $params['server'] = 'remote';
         }
-        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes'], $params['server']);
+        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes'], $params['server'], $params['version']);
     }
 
     public function unregisterJavascript($id)
@@ -1280,7 +1308,7 @@ class FrontControllerCore extends Controller
     /**
      * Sets template file for page content output.
      *
-     * @param string $default_template
+     * @param string $template
      */
     public function setTemplate($template, $params = [], $locale = null)
     {
@@ -1450,67 +1478,71 @@ class FrontControllerCore extends Controller
 
     public function getTemplateVarUrls()
     {
-        $http = Tools::getCurrentUrlProtocolPrefix();
-        $base_url = $this->context->shop->getBaseURL(true, true);
+        if ($this->urls === null) {
+            $http = Tools::getCurrentUrlProtocolPrefix();
+            $base_url = $this->context->shop->getBaseURL(true, true);
 
-        $urls = [
-            'base_url' => $base_url,
-            'current_url' => $this->context->shop->getBaseURL(true, false) . $_SERVER['REQUEST_URI'],
-            'shop_domain_url' => $this->context->shop->getBaseURL(true, false),
-        ];
+            $urls = [
+                'base_url' => $base_url,
+                'current_url' => $this->context->shop->getBaseURL(true, false) . $_SERVER['REQUEST_URI'],
+                'shop_domain_url' => $this->context->shop->getBaseURL(true, false),
+            ];
 
-        $assign_array = [
-            'img_ps_url' => _PS_IMG_,
-            'img_cat_url' => _THEME_CAT_DIR_,
-            'img_lang_url' => _THEME_LANG_DIR_,
-            'img_prod_url' => _THEME_PROD_DIR_,
-            'img_manu_url' => _THEME_MANU_DIR_,
-            'img_sup_url' => _THEME_SUP_DIR_,
-            'img_ship_url' => _THEME_SHIP_DIR_,
-            'img_store_url' => _THEME_STORE_DIR_,
-            'img_col_url' => _THEME_COL_DIR_,
-            'img_url' => _THEME_IMG_DIR_,
-            'css_url' => _THEME_CSS_DIR_,
-            'js_url' => _THEME_JS_DIR_,
-            'pic_url' => _THEME_PROD_PIC_DIR_,
-        ];
+            $assign_array = [
+                'img_ps_url' => _PS_IMG_,
+                'img_cat_url' => _THEME_CAT_DIR_,
+                'img_lang_url' => _THEME_LANG_DIR_,
+                'img_prod_url' => _THEME_PROD_DIR_,
+                'img_manu_url' => _THEME_MANU_DIR_,
+                'img_sup_url' => _THEME_SUP_DIR_,
+                'img_ship_url' => _THEME_SHIP_DIR_,
+                'img_store_url' => _THEME_STORE_DIR_,
+                'img_col_url' => _THEME_COL_DIR_,
+                'img_url' => _THEME_IMG_DIR_,
+                'css_url' => _THEME_CSS_DIR_,
+                'js_url' => _THEME_JS_DIR_,
+                'pic_url' => _THEME_PROD_PIC_DIR_,
+            ];
 
-        foreach ($assign_array as $assign_key => $assign_value) {
-            if (substr($assign_value, 0, 1) == '/' || $this->ssl) {
-                $urls[$assign_key] = $http . Tools::getMediaServer($assign_value) . $assign_value;
-            } else {
-                $urls[$assign_key] = $assign_value;
+            foreach ($assign_array as $assign_key => $assign_value) {
+                if (substr($assign_value, 0, 1) == '/' || $this->ssl) {
+                    $urls[$assign_key] = $http . Tools::getMediaServer($assign_value) . $assign_value;
+                } else {
+                    $urls[$assign_key] = $assign_value;
+                }
             }
+
+            $pages = [];
+            $p = [
+                'address', 'addresses', 'authentication', 'cart', 'category', 'cms', 'contact',
+                'discount', 'guest-tracking', 'history', 'identity', 'index', 'my-account',
+                'order-confirmation', 'order-detail', 'order-follow', 'order', 'order-return',
+                'order-slip', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
+                'prices-drop', 'product', 'search', 'sitemap', 'stores', 'supplier',
+            ];
+            foreach ($p as $page_name) {
+                $index = str_replace('-', '_', $page_name);
+                $pages[$index] = $this->context->link->getPageLink($page_name, $this->ssl);
+            }
+            $pages['register'] = $this->context->link->getPageLink('authentication', true, null, ['create_account' => '1']);
+            $pages['order_login'] = $this->context->link->getPageLink('order', true, null, ['login' => '1']);
+            $urls['pages'] = $pages;
+
+            $urls['alternative_langs'] = $this->getAlternativeLangsUrl();
+
+            $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->shop->theme->getName() . '/assets/';
+
+            $urls['actions'] = [
+                'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
+            ];
+
+            $imageRetriever = new ImageRetriever($this->context->link);
+            $urls['no_picture_image'] = $imageRetriever->getNoPictureImage($this->context->language);
+
+            $this->urls = $urls;
         }
 
-        $pages = [];
-        $p = [
-            'address', 'addresses', 'authentication', 'cart', 'category', 'cms', 'contact',
-            'discount', 'guest-tracking', 'history', 'identity', 'index', 'my-account',
-            'order-confirmation', 'order-detail', 'order-follow', 'order', 'order-return',
-            'order-slip', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
-            'prices-drop', 'product', 'search', 'sitemap', 'stores', 'supplier',
-        ];
-        foreach ($p as $page_name) {
-            $index = str_replace('-', '_', $page_name);
-            $pages[$index] = $this->context->link->getPageLink($page_name, $this->ssl);
-        }
-        $pages['register'] = $this->context->link->getPageLink('authentication', true, null, ['create_account' => '1']);
-        $pages['order_login'] = $this->context->link->getPageLink('order', true, null, ['login' => '1']);
-        $urls['pages'] = $pages;
-
-        $urls['alternative_langs'] = $this->getAlternativeLangsUrl();
-
-        $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->shop->theme->getName() . '/assets/';
-
-        $urls['actions'] = [
-            'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
-        ];
-
-        $imageRetriever = new ImageRetriever($this->context->link);
-        $urls['no_picture_image'] = $imageRetriever->getNoPictureImage($this->context->language);
-
-        return $urls;
+        return $this->urls;
     }
 
     public function getTemplateVarConfiguration()
@@ -1548,7 +1580,7 @@ class FrontControllerCore extends Controller
     public function getTemplateVarCurrency()
     {
         $curr = [];
-        $fields = ['name', 'iso_code', 'iso_code_num', 'sign'];
+        $fields = ['id', 'name', 'iso_code', 'iso_code_num', 'sign'];
         foreach ($fields as $field_name) {
             $curr[$field_name] = $this->context->currency->{$field_name};
         }
@@ -1572,6 +1604,7 @@ class FrontControllerCore extends Controller
             $cust['id_lang']
         );
 
+        $cust['id'] = $this->context->customer->id;
         $cust['is_logged'] = $this->context->customer->isLogged(true);
 
         $cust['gender'] = $this->objectPresenter->present(new Gender($cust['id_gender']));
@@ -1593,7 +1626,11 @@ class FrontControllerCore extends Controller
     {
         $address = $this->context->shop->getAddress();
 
+        $urls = $this->getTemplateVarUrls();
+        $psImageUrl = $urls['img_ps_url'] ?? _PS_IMG_;
+
         $shop = [
+            'id' => $this->context->shop->id,
             'name' => Configuration::get('PS_SHOP_NAME'),
             'email' => Configuration::get('PS_SHOP_EMAIL'),
             'registration_number' => Configuration::get('PS_SHOP_DETAILS'),
@@ -1601,9 +1638,9 @@ class FrontControllerCore extends Controller
             'long' => Configuration::get('PS_STORES_CENTER_LONG'),
             'lat' => Configuration::get('PS_STORES_CENTER_LAT'),
 
-            'logo' => (Configuration::get('PS_LOGO')) ? Configuration::get('PS_LOGO') : '',
-            'stores_icon' => (Configuration::get('PS_STORES_ICON')) ? Configuration::get('PS_STORES_ICON') : '',
-            'favicon' => (Configuration::get('PS_FAVICON')) ? Configuration::get('PS_FAVICON') : '',
+            'logo' => Configuration::hasKey('PS_LOGO') ? $psImageUrl . Configuration::get('PS_LOGO') : '',
+            'stores_icon' => Configuration::hasKey('PS_STORES_ICON') ? $psImageUrl . Configuration::get('PS_STORES_ICON') : '',
+            'favicon' => Configuration::hasKey('PS_FAVICON') ? $psImageUrl . Configuration::get('PS_FAVICON') : '',
             'favicon_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 
             'address' => [
@@ -1708,6 +1745,14 @@ class FrontControllerCore extends Controller
         ];
     }
 
+    /**
+     * Generate the canonical URL of the current page
+     *
+     * Mainly used for ProductController and CategoryController
+     * but can be implemented by other classes inheriting from FrontController
+     *
+     * @return string|void
+     */
     public function getCanonicalURL()
     {
     }
@@ -1996,9 +2041,7 @@ class FrontControllerCore extends Controller
 
         if (!empty($url_details['query'])) {
             parse_str($url_details['query'], $query);
-            foreach ($query as $key => $value) {
-                $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
-            }
+            $params = $this->sanitizeQueryOutput($query);
         }
 
         $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
@@ -2018,6 +2061,27 @@ class FrontControllerCore extends Controller
         $sanitizedUrl = preg_replace('/^([^?]*)?.*$/', '$1', $url) . (!empty($str_params) ? '?' . $str_params : '');
 
         return $sanitizedUrl;
+    }
+
+    /**
+     * Recursively sanitize output query
+     *
+     * @param array $query URL query
+     *
+     * @return array
+     */
+    protected function sanitizeQueryOutput(array $query): array
+    {
+        $params = [];
+        foreach ($query as $key => $value) {
+            if (is_array($value)) {
+                $params[Tools::safeOutput($key)] = $this->sanitizeQueryOutput($value);
+            } else {
+                $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
+            }
+        }
+
+        return $params;
     }
 
     /**

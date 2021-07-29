@@ -134,6 +134,15 @@ class AdminStatesControllerCore extends AdminController
 
     public function renderForm()
     {
+        // display multistore information message if multistore is used
+        if ($this->container->get('prestashop.adapter.multistore_feature')->isUsed()) {
+            $this->informations[] = $this->trans(
+                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                [],
+                'Admin.Notifications.Info'
+            );
+        }
+
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('States', [], 'Admin.International.Feature'),

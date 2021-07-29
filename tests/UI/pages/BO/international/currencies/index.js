@@ -1,7 +1,16 @@
 require('module-alias/register');
 const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
 
+/**
+ * Currencies page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Currencies extends LocalizationBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on currencies page
+   */
   constructor() {
     super();
 
@@ -27,26 +36,39 @@ class Currencies extends LocalizationBasePage {
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // enable column
-    this.enableColumn = row => this.tableColumn(row, 'active');
-    this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
+    this.statusColumn = row => `${this.tableColumn(row, 'active')} .ps-switch`;
+    this.statusColumnToggleInput = row => `${this.statusColumn(row)} input`;
+
     // Actions buttons in row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
     this.editRowLink = row => `${this.actionsColumn(row)} a[href*='/edit']`;
+
     // Delete modal
     this.confirmDeleteModal = '#currency-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
     // Exchange rate form
     this.updateExchangeRatesButton = '#update-exchange-rates-button';
+
+    // Pagination selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.gridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /* Header Methods */
   /**
    * Go to add new currency page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewCurrencyPage(page) {
@@ -56,10 +78,10 @@ class Currencies extends LocalizationBasePage {
   /* filter Method */
   /**
    * Filter Table
-   * @param page
-   * @param filterType, input / Select
-   * @param filterBy, which column
-   * @param value, value to put in filter
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to put on filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
@@ -80,7 +102,7 @@ class Currencies extends LocalizationBasePage {
   /* Reset Methods */
   /**
    * Reset filters in table
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -90,8 +112,8 @@ class Currencies extends LocalizationBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @param page
+   * Get number of elements in grid
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -100,20 +122,21 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 
   /* Table methods */
   /**
-   * get text from a column
-   * @param page
-   * @param row, row in table
-   * @param column, which column
+   * Get text from a column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column to get text value
    * @returns {Promise<string>}
    */
   async getTextColumnFromTableCurrency(page, row, column) {
@@ -122,8 +145,8 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Get exchange rate value
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<number>}
    */
   async getExchangeRateValue(page, row) {
@@ -132,8 +155,8 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Get currency row from table
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<{symbol: string, isoCode: string, exchangeRate: number, name: string, enabled: string}>}
    */
   async getCurrencyFromTable(page, row) {
@@ -142,40 +165,48 @@ class Currencies extends LocalizationBasePage {
       symbol: await this.getTextColumnFromTableCurrency(page, row, 'symbol'),
       isoCode: await this.getTextColumnFromTableCurrency(page, row, 'iso_code'),
       exchangeRate: await this.getExchangeRateValue(page, row),
-      enabled: await this.getToggleColumnValue(page, row),
+      enabled: await this.getStatus(page, row),
     };
   }
 
   /**
    * Get toggle column value for a row
-   * @param page
-   * @param row
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row = 1) {
-    return this.elementVisible(page, this.enableColumnValidIcon(row), 100);
+  async getStatus(page, row = 1) {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.statusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
    * Update Enable column for the value wanted in currency list
-   * @param page
-   * @param row
-   * @param valueWanted
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param valueWanted {boolean} True if we need to enable status
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(page, row = 1, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.enableColumn(row), 2000);
-    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.enableColumn(row));
+  async setStatus(page, row = 1, valueWanted = true) {
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.statusColumn(row));
       return true;
     }
+
     return false;
   }
 
   /**
    * Delete Row in table
-   * @param page
-   * @param row, row to delete
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table to delete
    * @returns {Promise<string>}
    */
   async deleteCurrency(page, row = 1) {
@@ -192,12 +223,13 @@ class Currencies extends LocalizationBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteCurrency(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Confirm delete in modal
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async confirmDeleteCurrency(page) {
@@ -206,8 +238,8 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Go to edit currency page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table to edit
    * @returns {Promise<void>}
    */
   async goToEditCurrencyPage(page, row = 1) {
@@ -216,12 +248,100 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Click on update exchange rates
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async updateExchangeRate(page) {
     await this.clickAndWaitForNavigation(page, this.updateExchangeRatesButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination number to select
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect, number),
+      page.waitForNavigation({waitUntil: 'networkidle'}),
+    ]);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table
+   * @param page {Page} Browser tab
+   * @param sortBy {string} column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await page.hover(this.sortColumnDiv(sortBy));
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  /**
+   * Get content from all rows
+   * @param page {Page} Browser tab
+   * @param column {string} Column to get all rows content
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTableCurrency(page, i, column);
+      await allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
   }
 }
 

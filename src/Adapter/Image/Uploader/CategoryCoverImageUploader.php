@@ -29,10 +29,11 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 use Category;
 use ImageManager;
 use ImageType;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -40,7 +41,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * @internal
  */
-final class CategoryCoverImageUploader extends AbstractImageUploader
+final class CategoryCoverImageUploader extends AbstractImageUploader implements ImageUploaderInterface
 {
     /**
      * {@inheritdoc}

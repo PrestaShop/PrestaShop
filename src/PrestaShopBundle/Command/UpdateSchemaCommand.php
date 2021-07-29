@@ -26,13 +26,15 @@
 
 namespace PrestaShopBundle\Command;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use PDO;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpdateSchemaCommand extends ContainerAwareCommand
+class UpdateSchemaCommand extends Command
 {
     /**
      * @var EntityManagerInterface
@@ -44,6 +46,15 @@ class UpdateSchemaCommand extends ContainerAwareCommand
     private $dbName;
 
     private $dbPrefix;
+
+    public function __construct(string $databaseName, string $databasePrefix, EntityManager $manager)
+    {
+        parent::__construct();
+        $this->dbName = $databaseName;
+        $this->dbPrefix = $databasePrefix;
+        $this->em = $manager;
+        $this->metadata = $manager->getMetadataFactory()->getAllMetadata();
+    }
 
     protected function configure()
     {
@@ -58,14 +69,6 @@ class UpdateSchemaCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer();
-
-        $this->dbName = $container->getParameter('database_name');
-        $this->dbPrefix = $container->getParameter('database_prefix');
-
-        $this->em = $container->get('doctrine')->getManager();
-        $this->metadata = $this->em->getMetadataFactory()->getAllMetadata();
-
         $conn = $this->em->getConnection();
         $conn->beginTransaction();
 
@@ -213,10 +216,12 @@ class UpdateSchemaCommand extends ContainerAwareCommand
             } catch (\Exception $e) {
                 $conn->rollBack();
 
-                throw($e);
+                throw ($e);
             }
         }
-        $conn->commit();
+        if (!$conn->getWrappedConnection() instanceof PDO || $conn->getWrappedConnection()->inTransaction()) {
+            $conn->commit();
+        }
 
         $pluralization = (1 > $sqls) ? 'query was' : 'queries were';
         $output->writeln(sprintf('Database schema updated successfully! "<info>%s</info>" %s executed', $sqls, $pluralization));

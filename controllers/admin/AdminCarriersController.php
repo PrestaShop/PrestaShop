@@ -530,7 +530,7 @@ class AdminCarriersControllerCore extends AdminController
         if (!$carrier->update()) {
             $this->errors[] = $this->trans('An error occurred while updating carrier information.', [], 'Admin.Shipping.Notification');
         }
-        Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token);
+        Tools::redirectAdmin(self::$currentIndex . '&conf=5&token=' . $this->token);
     }
 
     /**

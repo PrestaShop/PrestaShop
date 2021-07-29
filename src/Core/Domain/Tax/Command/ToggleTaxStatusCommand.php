@@ -77,7 +77,7 @@ class ToggleTaxStatusCommand
     /**
      * Validates that value is of type boolean
      *
-     * @param string $value
+     * @param mixed $value
      *
      * @throws TaxConstraintException
      */

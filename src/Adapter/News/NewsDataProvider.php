@@ -39,14 +39,14 @@ use stdClass;
  */
 class NewsDataProvider
 {
-    const NUM_ARTICLES = 2;
+    public const NUM_ARTICLES = 2;
 
-    const CLOSED_ALLOWED_FAILURES = 3;
-    const CLOSED_TIMEOUT_SECONDS = 3;
+    public const CLOSED_ALLOWED_FAILURES = 3;
+    public const CLOSED_TIMEOUT_SECONDS = 3;
 
-    const OPEN_ALLOWED_FAILURES = 3;
-    const OPEN_TIMEOUT_SECONDS = 3;
-    const OPEN_THRESHOLD_SECONDS = 86400; // 24 hours
+    public const OPEN_ALLOWED_FAILURES = 3;
+    public const OPEN_TIMEOUT_SECONDS = 3;
+    public const OPEN_THRESHOLD_SECONDS = 86400; // 24 hours
 
     /**
      * @var CircuitBreakerInterface

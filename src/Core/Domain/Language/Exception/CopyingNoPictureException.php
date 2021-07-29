@@ -34,15 +34,15 @@ class CopyingNoPictureException extends LanguageException
     /**
      * @var int Code is used when error occurs while copying "No picture" image to products directory
      */
-    const PRODUCT_IMAGE_COPY_ERROR = 1;
+    public const PRODUCT_IMAGE_COPY_ERROR = 1;
 
     /**
      * @var int Code is used when error occurs while copying "No picture" image to categories directory
      */
-    const CATEGORY_IMAGE_COPY_ERROR = 2;
+    public const CATEGORY_IMAGE_COPY_ERROR = 2;
 
     /**
      * @var int Code is used when error occurs while copying "No picture" image to brands (manufacturers) directory
      */
-    const BRAND_IMAGE_COPY_ERROR = 3;
+    public const BRAND_IMAGE_COPY_ERROR = 3;
 }

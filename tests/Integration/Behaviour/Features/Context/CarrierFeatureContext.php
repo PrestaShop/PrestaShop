@@ -147,7 +147,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a state named "(.+)" with iso code "(.+)" in country"(.+)" and zone "(.+)"$/
+     * @Given /^there is a state named "(.+)" with iso code "(.+)" in country "(.+)" and zone "(.+)"$/
      */
     public function createState($stateName, $stateIsoCode, $countryName, $zoneName)
     {
@@ -256,6 +256,17 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
             $groupIds[] = $group['id_group'];
         }
         $carrier->setGroups($groupIds);
+    }
+
+    /**
+     * @Given /^the carrier "(.+)" uses "(.+)" as tracking url$/
+     */
+    public function setCarrierTrackingUrl(string $carrierName, string $url): void
+    {
+        $this->checkCarrierWithNameExists($carrierName);
+        $carrier = $this->carriers[$carrierName];
+        $carrier->url = $url;
+        $carrier->save();
     }
 
     /**

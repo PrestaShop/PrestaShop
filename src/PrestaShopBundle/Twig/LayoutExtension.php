@@ -31,12 +31,16 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * This class is used by Twig_Environment and provide layout methods callable from a twig template.
  */
-class LayoutExtension extends \Twig_Extension implements GlobalsInterface
+class LayoutExtension extends AbstractExtension implements GlobalsInterface
 {
     /** @var LegacyContext */
     private $context;
@@ -77,7 +81,7 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
      *
      * @return array the base globals available in twig templates
      */
-    public function getGlobals()
+    public function getGlobals(): array
     {
         /*
          * As this is a twig extension we need to be very resilient and prevent it from crashing
@@ -112,7 +116,7 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('configuration', [$this, 'getConfiguration']),
+            new TwigFilter('configuration', [$this, 'getConfiguration'], ['deprecated' => true]),
         ];
     }
 
@@ -124,9 +128,10 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('getLegacyLayout', [$this, 'getLegacyLayout']),
-            new \Twig_SimpleFunction('getAdminLink', [$this, 'getAdminLink']),
-            new \Twig_SimpleFunction('youtube_link', [$this, 'getYoutubeLink']),
+            new TwigFunction('getLegacyLayout', [$this, 'getLegacyLayout']),
+            new TwigFunction('getAdminLink', [$this, 'getAdminLink']),
+            new TwigFunction('youtube_link', [$this, 'getYoutubeLink']),
+            new TwigFunction('configuration', [$this, 'getConfiguration']),
         ];
     }
 
@@ -134,12 +139,14 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
      * Returns a legacy configuration key.
      *
      * @param string $key
+     * @param mixed $default Default value is null
+     * @param ShopConstraint $shopConstraint Default value is null
      *
-     * @return array An array of functions
+     * @return mixed
      */
-    public function getConfiguration($key)
+    public function getConfiguration($key, $default = null, ShopConstraint $shopConstraint = null)
     {
-        return $this->configuration->get($key);
+        return $this->configuration->get($key, $default, $shopConstraint);
     }
 
     /**
@@ -156,6 +163,7 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
      * @param array|string $headerTabContent Tabs labels
      * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
      * @param string $helpLink If specified, will be used instead of legacy one
+     * @param string[] $jsRouterMetadata JS Router needed configuration settings: base_url and security token
      * @param string $metaTitle
      * @param bool $useRegularH1Structure allows complex <h1> structure if set to false
      *
@@ -251,7 +259,7 @@ EOF;
     }
 
     /**
-     * KISS function to get an embeded iframe from Youtube.
+     * KISS function to get an embedded iframe from Youtube.
      */
     public function getYoutubeLink($watchUrl)
     {

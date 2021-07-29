@@ -10,7 +10,7 @@ const testContext = require('@utils/testContext');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const {psEmailSubscription} = require('@data/demo/modules');
 
 // Import pages
@@ -63,14 +63,14 @@ describe('Check customer subscription to newsletter from BO', async () => {
     await expect(numberOfCustomers).to.be.above(0);
   });
 
-  it(`should filter by email ${DefaultAccount.email}`, async function () {
+  it(`should filter by email ${DefaultCustomer.email}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByEmail', baseContext);
 
     await customersPage.filterCustomers(
       page,
       'input',
       'email',
-      DefaultAccount.email,
+      DefaultCustomer.email,
     );
 
     const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
@@ -86,9 +86,9 @@ describe('Check customer subscription to newsletter from BO', async () => {
     it(`should ${test.args.action} newsletters`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}NewsLetters`, baseContext);
 
-      await customersPage.updateToggleColumnValue(page, 1, 'newsletter', test.args.value);
+      await customersPage.setNewsletterStatus(page, 1, test.args.value);
 
-      const newsletterStatus = await customersPage.getToggleColumnValue(page, 1, 'newsletter');
+      const newsletterStatus = await customersPage.getNewsletterStatus(page, 1);
       await expect(newsletterStatus).to.be.equal(test.args.value);
     });
 
@@ -138,9 +138,9 @@ describe('Check customer subscription to newsletter from BO', async () => {
       const listOfEmails = await psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails(page);
 
       if (test.args.value) {
-        await expect(listOfEmails).to.include(DefaultAccount.email);
+        await expect(listOfEmails).to.include(DefaultCustomer.email);
       } else {
-        await expect(listOfEmails).to.not.include(DefaultAccount.email);
+        await expect(listOfEmails).to.not.include(DefaultCustomer.email);
       }
     });
 

@@ -342,7 +342,7 @@ class EditManufacturerAddressCommand
     }
 
     /**
-     * @param int $value
+     * @param mixed $value
      *
      * @throws AddressConstraintException
      */

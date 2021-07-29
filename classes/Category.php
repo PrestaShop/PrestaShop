@@ -381,7 +381,7 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * Deletes current CartRule from the database.
+     * Deletes current Category from the database.
      *
      * @return bool `true` if successfully deleted
      *
@@ -864,18 +864,29 @@ class CategoryCore extends ObjectModel
             'SELECT c.`nleft`, c.`nright` FROM `' . _DB_PREFIX_ . 'category` c ' .
             'WHERE c.`id_category` = ' . (int) $idCategoryRoot
         );
+        if (empty($rootTreeInfo)) {
+            return [];
+        }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.`id_category`, cl.`name`, c.id_parent
-		FROM `' . _DB_PREFIX_ . 'category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
-		ON (c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . ')
-		' . Shop::addSqlAssociation('category', 'c') . '
-		WHERE cl.`id_lang` = ' . (int) $idLang . '
-        AND c.`nleft` >= ' . (int) $rootTreeInfo['nleft'] . '
-        AND c.`nright` <= ' . (int) $rootTreeInfo['nright'] . '
+        $sql = 'SELECT c.`id_category`, cl.`name`, c.id_parent
+		FROM `%scategory` c
+		LEFT JOIN `%scategory_lang` cl ON (c.`id_category` = cl.`id_category`%s) %s
+		WHERE cl.`id_lang` = %d AND c.`nleft` >= %d AND c.`nright` <= %d
 		GROUP BY c.id_category
-		ORDER BY c.`id_category`, category_shop.`position`');
+		ORDER BY c.`id_category`, category_shop.`position`';
+
+        $sql = sprintf(
+            $sql,
+            _DB_PREFIX_,
+            _DB_PREFIX_,
+            Shop::addSqlRestrictionOnLang('cl'),
+            Shop::addSqlAssociation('category', 'c'),
+            (int) $idLang,
+            (int) $rootTreeInfo['nleft'],
+            (int) $rootTreeInfo['nright']
+        );
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
     /**
@@ -932,9 +943,9 @@ class CategoryCore extends ObjectModel
      * Returns category products.
      *
      * @param int $idLang Language ID
-     * @param int $p Page number
-     * @param int $n Number of products per page
-     * @param string|null $orderyBy ORDER BY column
+     * @param int $pageNumber Page number
+     * @param int $productPerPage Number of products per page
+     * @param string|null $orderBy ORDER BY column
      * @param string|null $orderWay Order way
      * @param bool $getTotal If set to true, returns the total number of results only
      * @param bool $active If set to true, finds only active products
@@ -950,9 +961,9 @@ class CategoryCore extends ObjectModel
      */
     public function getProducts(
         $idLang,
-        $p,
-        $n,
-        $orderyBy = null,
+        $pageNumber,
+        $productPerPage,
+        $orderBy = null,
         $orderWay = null,
         $getTotal = false,
         $active = true,
@@ -986,28 +997,28 @@ class CategoryCore extends ObjectModel
             return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
         }
 
-        if ($p < 1) {
-            $p = 1;
+        if ($pageNumber < 1) {
+            $pageNumber = 1;
         }
 
         /** Tools::strtolower is a fix for all modules which are now using lowercase values for 'orderBy' parameter */
-        $orderyBy = Validate::isOrderBy($orderyBy) ? Tools::strtolower($orderyBy) : 'position';
+        $orderBy = Validate::isOrderBy($orderBy) ? Tools::strtolower($orderBy) : 'position';
         $orderWay = Validate::isOrderWay($orderWay) ? Tools::strtoupper($orderWay) : 'ASC';
 
         $orderByPrefix = false;
-        if ($orderyBy == 'id_product' || $orderyBy == 'date_add' || $orderyBy == 'date_upd') {
+        if ($orderBy === 'id_product' || $orderBy === 'date_add' || $orderBy === 'date_upd') {
             $orderByPrefix = 'p';
-        } elseif ($orderyBy == 'name') {
+        } elseif ($orderBy === 'name') {
             $orderByPrefix = 'pl';
-        } elseif ($orderyBy == 'manufacturer' || $orderyBy == 'manufacturer_name') {
+        } elseif ($orderBy === 'manufacturer' || $orderBy === 'manufacturer_name') {
             $orderByPrefix = 'm';
-            $orderyBy = 'name';
-        } elseif ($orderyBy == 'position') {
+            $orderBy = 'name';
+        } elseif ($orderBy === 'position') {
             $orderByPrefix = 'cp';
         }
 
-        if ($orderyBy == 'price') {
-            $orderyBy = 'orderprice';
+        if ($orderBy === 'price') {
+            $orderBy = 'orderprice';
         }
 
         $nbDaysNewProduct = Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
@@ -1049,9 +1060,9 @@ class CategoryCore extends ObjectModel
 
         if ($random === true) {
             $sql .= ' ORDER BY RAND() LIMIT ' . (int) $randomNumberProducts;
-        } else {
-            $sql .= ' ORDER BY ' . (!empty($orderByPrefix) ? $orderByPrefix . '.' : '') . '`' . bqSQL($orderyBy) . '` ' . pSQL($orderWay) . '
-			LIMIT ' . (((int) $p - 1) * (int) $n) . ',' . (int) $n;
+        } elseif ($orderBy !== 'orderprice') {
+            $sql .= ' ORDER BY ' . (!empty($orderByPrefix) ? $orderByPrefix . '.' : '') . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
+			LIMIT ' . (((int) $pageNumber - 1) * (int) $productPerPage) . ',' . (int) $productPerPage;
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
@@ -1060,8 +1071,9 @@ class CategoryCore extends ObjectModel
             return [];
         }
 
-        if ($orderyBy == 'orderprice') {
+        if ($orderBy === 'orderprice') {
             Tools::orderbyPrice($result, $orderWay);
+            $result = array_slice($result, (int) (($pageNumber - 1) * $productPerPage), (int) $productPerPage);
         }
 
         // Modify SQL result
@@ -1280,7 +1292,7 @@ class CategoryCore extends ObjectModel
      * Copy products from a category to another.
      *
      * @param int $idOld Source category ID
-     * @param bool $idNew Destination category ID
+     * @param int $idNew Destination category ID
      *
      * @return bool Duplication result
      */
@@ -1488,8 +1500,8 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idLang Language ID
      * @param string $path Path of category
-     * @param bool $objectToCreate a category
-     * @param bool $methodToCreate a category
+     * @param object|bool $objectToCreate a category
+     * @param string|bool $methodToCreate a category
      *
      * @return array Corresponding categories
      */
@@ -1601,7 +1613,7 @@ class CategoryCore extends ObjectModel
         $row = Db::getInstance()->getRow('
 		SELECT `id_category`
 		FROM ' . _DB_PREFIX_ . 'category c
-		WHERE c.`id_category` = ' . (int) $idCategory);
+		WHERE c.`id_category` = ' . (int) $idCategory, false);
 
         return isset($row['id_category']);
     }
@@ -2438,6 +2450,17 @@ class CategoryCore extends ObjectModel
 		SELECT `id_category`
 		FROM `' . _DB_PREFIX_ . 'category_shop`
 		WHERE `id_category` = ' . (int) $this->id . '
-		AND `id_shop` = ' . (int) $idShop);
+		AND `id_shop` = ' . (int) $idShop, false);
+    }
+
+    /**
+     * Indicates whether a category is ROOT for the shop.
+     * The root category is the one with no parent. It's a virtual category.
+     *
+     * @return bool
+     */
+    public function isRootCategory(): bool
+    {
+        return 0 === (int) $this->id_parent;
     }
 }

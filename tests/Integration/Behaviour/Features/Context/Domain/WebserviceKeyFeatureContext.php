@@ -24,11 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Command\AddWebserviceKeyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Webservice\Command\EditWebserviceKeyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\DuplicateWebserviceKeyException;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject\WebserviceKeyId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -40,7 +43,7 @@ class WebserviceKeyFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given I specify following properties for new webservice key :reference:
      */
-    public function specifyPropertiesForWebserviceKey($reference, TableNode $node)
+    public function specifyPropertiesForWebserviceKey(string $reference, TableNode $node): void
     {
         $data = $node->getRowsHash();
 
@@ -55,7 +58,7 @@ class WebserviceKeyFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then /^I specify "(View|Add|Modify|Delete|Fast view)" permission for "([^"]*)" resources for new webservice key "(.*)"$/
      */
-    public function specifyResourcePermissions($permission, $resources, $reference)
+    public function specifyResourcePermissions(string $permission, string $resources, string $reference): void
     {
         $propertiesKey = sprintf('%s_properties', $reference);
 
@@ -77,7 +80,7 @@ class WebserviceKeyFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I add webservice key :reference with specified properties
      */
-    public function addWebserviceKeyFromSpecifiedProperties($reference)
+    public function addWebserviceKeyFromSpecifiedProperties(string $reference): void
     {
         $propertiesKey = sprintf('%s_properties', $reference);
 
@@ -104,9 +107,38 @@ class WebserviceKeyFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I edit webservice key :reference with specified properties:
+     */
+    public function editWebserviceKeyFromSpecifiedProperties(string $reference, TableNode $node): void
+    {
+        $webserviceKey = SharedStorage::getStorage()->get($reference);
+
+        $data = $node->getRowsHash();
+
+        $command = new EditWebserviceKeyCommand($webserviceKey->id);
+        if (isset($data['key'])) {
+            $command->setKey($data['key']);
+        }
+        if (isset($data['description'])) {
+            $command->setDescription($data['description']);
+        }
+        if (isset($data['is_enabled'])) {
+            $command->setStatus((bool) $data['is_enabled']);
+        }
+
+        try {
+            $this->getCommandBus()->handle($command);
+
+            SharedStorage::getStorage()->set($reference, new WebserviceKey($webserviceKey->id));
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
      * @Then I should get error that webservice key is duplicate
      */
-    public function assertLastErrorIsDuplicateWebserviceKey()
+    public function assertLastErrorIsDuplicateWebserviceKey(): void
     {
         $this->assertLastErrorIs(DuplicateWebserviceKeyException::class);
     }

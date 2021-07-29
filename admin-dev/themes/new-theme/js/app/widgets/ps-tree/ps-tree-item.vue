@@ -189,6 +189,7 @@
     mounted() {
       EventBus.$on('toggleCheckbox', (tag) => {
         const checkbox = this.$refs[tag];
+
         if (checkbox) {
           checkbox.$data.checked = !checkbox.$data.checked;
         }

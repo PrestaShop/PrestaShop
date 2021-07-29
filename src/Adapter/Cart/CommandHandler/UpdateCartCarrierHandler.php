@@ -27,9 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use Carrier;
-use Currency;
-use Customer;
-use Language;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
@@ -63,19 +60,17 @@ final class UpdateCartCarrierHandler extends AbstractCartHandler implements Upda
         $this->assertActiveCarrier($command->getNewCarrierId());
 
         $cart = $this->getCart($command->getCartId());
-        $this->contextStateManager
-            ->setCart($cart)
-            ->setCurrency(new Currency($cart->id_currency))
-            ->setLanguage(new Language($cart->id_lang))
-            ->setCustomer(new Customer($cart->id_customer))
-        ;
+        $this->setCartContext($this->contextStateManager, $cart);
 
-        $cart->setDeliveryOption([
-            (int) $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($command->getNewCarrierId()),
-        ]);
+        try {
+            $cart->setDeliveryOption([
+                (int) $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($command->getNewCarrierId()),
+            ]);
 
-        $cart->update();
-        $this->contextStateManager->restoreContext();
+            $cart->update();
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
+        }
     }
 
     /**

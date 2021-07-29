@@ -47,9 +47,10 @@ function tinySetup(config) {
 
   var default_config = {
     selector: '.rte',
-    plugins: 'align colorpicker link image filemanager table media placeholder advlist code table autoresize',
+    plugins: 'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize',
     browser_spellcheck: true,
-    toolbar1: 'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
+    toolbar1:
+      'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
     toolbar2: '',
     external_filemanager_path: baseAdminDir + 'filemanager/',
     filemanager_title: 'File manager',
@@ -59,6 +60,12 @@ function tinySetup(config) {
     language: iso_user,
     content_style: lang_is_rtl === '1' ? 'body {direction:rtl;}' : '',
     skin: 'prestashop',
+    mobile: {
+      theme: 'mobile',
+      plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code'],
+      toolbar:
+        'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect',
+    },
     menubar: false,
     statusbar: false,
     relative_urls: false,
@@ -70,6 +77,10 @@ function tinySetup(config) {
     init_instance_callback: 'changeToMaterial',
     rel_list: [{title: 'nofollow', value: 'nofollow'}]
   };
+
+  if (typeof window.defaultTinyMceConfig !== 'undefined') {
+    Object.assign(default_config, window.defaultTinyMceConfig);
+  }
 
   $.each(default_config, function(index, el) {
     if (config[index] === undefined) config[index] = el;

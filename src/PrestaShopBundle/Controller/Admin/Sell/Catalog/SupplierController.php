@@ -44,7 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
@@ -401,7 +401,7 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Exports to csv visible suppliers list data.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param SupplierFilters $filters
      *

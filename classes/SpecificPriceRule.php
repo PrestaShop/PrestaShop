@@ -73,12 +73,17 @@ class SpecificPriceRuleCore extends ObjectModel
         ],
     ];
 
+    /**
+     * @return bool
+     *
+     * @throws PrestaShopException
+     */
     public function delete()
     {
         $this->deleteConditions();
         Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'specific_price WHERE id_specific_price_rule=' . (int) $this->id);
 
-        return parent::delete();
+        return (bool) parent::delete();
     }
 
     public function deleteConditions()

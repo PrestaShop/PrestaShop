@@ -23,12 +23,35 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+/**
+ * Translates content from the tab entity
+ */
 class TabLangCore extends DataLangCore
 {
-    // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.Navigation.Menu';
 
     protected $keys = ['id_tab'];
 
     protected $fieldsToUpdate = ['name'];
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFieldValue($field, $value)
+    {
+        $domain = '';
+        if (is_array($value)) {
+            list($message, $domain) = $value;
+        } else {
+            $message = $value;
+        }
+
+        return $this->translator->trans(
+            $message,
+            [],
+            (!empty($domain)) ? $domain : $this->domain,
+            $this->locale
+        );
+    }
 }

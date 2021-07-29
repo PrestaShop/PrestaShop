@@ -16,6 +16,11 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'TE')
 
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+
       - name: Checkout the repository
         uses: actions/checkout@v2
 
@@ -31,6 +36,11 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'TE')
 
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+
       - name: Checkout the repository
         uses: actions/checkout@v2
 
@@ -38,8 +48,8 @@ jobs:
         run: npm install
 
       - name: Generate mocha reports with failed steps
-        run: GENERATE_FAILED_STEPS=true npm run functional-tests
+        run: GENERATE_FAILED_STEPS=true npm run all-tests
         continue-on-error: true
 
       - name: Checking doubles in steps identifiers
-        run: npm run step-idenfiers-checker
+        run: npm run step-identifiers-checker

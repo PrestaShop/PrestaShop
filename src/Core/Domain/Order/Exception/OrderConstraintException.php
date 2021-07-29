@@ -34,10 +34,15 @@ class OrderConstraintException extends OrderException
     /**
      * Used in create order from BO when the customer message is invalid.
      */
-    const INVALID_CUSTOMER_MESSAGE = 1;
+    public const INVALID_CUSTOMER_MESSAGE = 1;
 
     /**
      * @var int Is used when invalid (not string) internal note provided
      */
-    const INVALID_INTERNAL_NOTE = 2;
+    public const INVALID_INTERNAL_NOTE = 2;
+
+    /**
+     * Used in add payment from BO when the payment method is invalid.
+     */
+    public const INVALID_PAYMENT_METHOD = 3;
 }

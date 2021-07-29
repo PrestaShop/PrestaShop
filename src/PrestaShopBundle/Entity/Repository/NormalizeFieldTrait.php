@@ -66,7 +66,7 @@ trait NormalizeFieldTrait
 
     /**
      * @param string $columnName
-     * @param string $columnValue
+     * @param string|null $columnValue
      *
      * @return bool
      */

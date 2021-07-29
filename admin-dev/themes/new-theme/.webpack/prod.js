@@ -14,7 +14,7 @@ function prodConfig() {
     optimization: {
       minimizer: [
         new UglifyJsPlugin({
-          sourceMap: true,
+          sourceMap: false,
           uglifyOptions: {
             compress: {
               drop_console: true,

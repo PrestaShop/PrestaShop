@@ -1,0 +1,177 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.product.combination.command_handler.generate_product_combinations_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\GenerateProductCombinationsHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.create.combination_creator'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand
+
+    prestashop.adapter.product.command.update_combination_details_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationDetailsHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationDetailsCommand
+
+    prestashop.adapter.product.combination.command_handler.update_combination_prices_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationPricesHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationPricesCommand
+
+    prestashop.adapter.product.command.update_combination_stock_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationStockHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.update.combination_stock_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand
+
+    prestashop.adapter.product.combination.query_handler.get_combination_for_editing_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationForEditingHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
+            - '@prestashop.adapter.product.stock.repository.stock_available_repository'
+            - '@prestashop.adapter.attribute.repository.attribute_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.image.repository.product_image_repository'
+            - '@prestashop.core.util.number.number_extractor'
+            - '@prestashop.adapter.tax.tax_computer'
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_COUNTRY_DEFAULT')"
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing
+
+    prestashop.adapter.product.combination.query_handler.get_editable_combinations_list_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetEditableCombinationsListHandler
+        arguments:
+            - '@prestashop.adapter.product.stock.repository.stock_available_repository'
+            - '@prestashop.core.grid.query_builder.product_combination'
+            - '@prestashop.adapter.attribute.repository.attribute_repository'
+            - '@prestashop.adapter.product.image.repository.product_image_repository'
+            - '@prestashop.adapter.product.image.product_image_url_factory'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList
+
+    prestashop.adapter.product.combination.validate.combination_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator
+
+    prestashop.adapter.product.combination.repository.combination_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+            - '@prestashop.adapter.attribute.repository.attribute_repository'
+            - '@prestashop.adapter.product.combination.validate.combination_validator'
+
+    prestashop.adapter.product.combination.update.combination_stock_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater
+        arguments:
+            - '@prestashop.adapter.product.stock.repository.stock_available_repository'
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
+            - '@prestashop.core.stock.stock_manager'
+
+    prestashop.adapter.product.combination.create.combination_creator:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\Create\CombinationCreator
+        arguments:
+            - '@prestashop.core.product.combination.generator.combination_generator'
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
+
+    prestashop.adapter.product.combination.update.default_combination_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater
+        arguments:
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
+
+    prestashop.adapter.product.combination.update.combination_remover:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationRemover
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
+            - '@prestashop.adapter.product.combination.update.default_combination_updater'
+
+    prestashop.adapter.product.combination.update.combination_images_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationImagesUpdater
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+
+    prestashop.adapter.product.combination.command_handler.update_combination_from_listing_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationFromListingHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
+            - '@prestashop.adapter.product.combination.update.default_combination_updater'
+            - '@prestashop.adapter.product.combination.update.combination_stock_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand
+
+    prestashop.adapter.product.combination.command_handler.set_combination_suppliers_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\SetCombinationSuppliersHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
+            - '@prestashop.adapter.product.repository.product_supplier_repository'
+            - '@prestashop.adapter.product.update.product_supplier_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand
+
+    prestashop.adapter.product.combination.command_handler.set_combination_default_supplier_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\SetCombinationDefaultSupplierHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
+            - '@prestashop.adapter.product.update.product_supplier_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationDefaultSupplierCommand
+
+    prestashop.adapter.product.combination.query_handler.get_combination_suppliers_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationSuppliersHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_supplier_repository'
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers
+
+    prestashop.adapter.product.combination.command_handler.remove_all_associated_combination_suppliers_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\RemoveAllAssociatedCombinationSuppliersHandler
+        arguments:
+            - '@prestashop.adapter.product.update.product_supplier_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand
+
+    prestashop.adapter.product.combination.command_handler.set_combination_images_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\SetCombinationImagesHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.update.combination_images_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationImagesCommand
+
+    prestashop.adapter.product.combination.command_handler.remove_all_combination_images_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\RemoveAllCombinationImagesHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.update.combination_images_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllCombinationImagesCommand
+
+    prestashop.adapter.product.combination.command_handler.remove_combination_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\RemoveCombinationCommandHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.update.combination_remover'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand

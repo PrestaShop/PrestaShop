@@ -1,0 +1,308 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain "Admin.Advparameters.Feature" %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">info_outline</i> {{ 'Configuration information'|trans }}
+      </h3>
+      <div class="card-block">
+        <div class="card-text">
+          <p>{{ 'This information must be provided when you report an issue on GitHub or on the forum.'|trans }}</p>
+        </div>
+      </div>
+    </div>
+    {% if system.notHostMode %}
+      <div class="card">
+        <h3 class="card-header">
+          <i class="material-icons">info_outline</i> {{ 'Server information'|trans }}
+        </h3>
+        <div class="card-block">
+          <div class="card-text">
+            {% if system.uname is not empty %}
+              <p>
+                <strong>{{ 'Server information:'|trans }}</strong> {{ system.uname }}
+              </p>
+            {% endif %}
+            <p>
+              <strong>{{ 'Server software version:'|trans }}</strong> {{ system.server.version }}
+            </p>
+            <p>
+              <strong>{{ 'PHP version:'|trans }}</strong> {{ system.server.php.version }}
+            </p>
+            <p>
+              <strong>{{ 'Memory limit:'|trans }}</strong> {{ system.server.php.memoryLimit }}
+            </p>
+            <p>
+              <strong>{{ 'Max execution time:'|trans }}</strong> {{ system.server.php.maxExecutionTime }}
+            </p>
+            <p>
+              <strong>{{ 'Upload Max File size:'|trans }}</strong> {{ system.server.php.maxFileSizeUpload }}
+            </p>
+            {% if system.instaWebInstalled %}
+              <p>{{ 'PageSpeed module for Apache installed (mod_instaweb)'|trans }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-header">
+          <i class="material-icons">info_outline</i> {{ 'Database information'|trans({}, 'Admin.Advparameters.Feature') }}
+        </h3>
+        <div class="card-block">
+          <div class="card-text">
+            <p>
+              <strong>{{ 'MySQL version:'|trans }}</strong> {{ system.database.version }}
+            </p>
+            <p>
+              <strong>{{ 'MySQL server:'|trans }}</strong> {{ system.database.server }}
+            </p>
+            <p>
+              <strong>{{ 'MySQL name:'|trans }}</strong> {{ system.database.name }}
+            </p>
+            <p>
+              <strong>{{ 'MySQL user:'|trans }}</strong> {{ system.database.user }}
+            </p>
+            <p>
+              <strong>{{ 'Tables prefix:'|trans }}</strong> {{ system.database.prefix }}
+            </p>
+            <p>
+              <strong>{{ 'MySQL engine:'|trans }}</strong> {{ system.database.engine }}
+            </p>
+            <p>
+              <strong>{{ 'MySQL driver:'|trans }}</strong> {{ system.database.driver }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">info_outline</i> {{ 'List of overrides'|trans({}, 'Admin.Advparameters.Feature') }}
+      </h3>
+      <div class="card-block">
+        <div class="card-text">
+          <ul>
+            {% for override in system.overrides %}
+              <li>{{ override }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  <div class="col-lg-6">
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">info_outline</i> {{ 'Store information'|trans }}
+      </h3>
+      <div class="card-block">
+        <div class="card-text">
+          <p>
+            <strong>{{ 'PrestaShop version:'|trans }}</strong> {{ system.shop.version }}
+          </p>
+          <p>
+            <strong>{{ 'Shop URL:'|trans }}</strong> {{ system.shop.url }}
+          </p>
+          <p>
+            <strong>{{ 'Shop path:'|trans }}</strong> {{ system.shop.path }}
+          </p>
+          <p>
+            <strong>{{ 'Current theme in use:'|trans }}</strong> {{ system.shop.theme }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">info_outline</i> {{ 'Mail configuration'|trans }}
+      </h3>
+      <div class="card-block">
+        <div class="card-text">
+          {% if system.isNativePHPmail %}
+            <p>
+              <strong>{{ 'Mail method:'|trans }}</strong> {{ 'You are using /usr/sbin/sendmail'|trans }}
+            </p>
+          {% else %}
+            <p>
+              <strong>{{ 'Mail method:'|trans }}</strong> {{ 'You are using your own SMTP parameters.'|trans }}
+            </p>
+            <p>
+              <strong>{{ 'SMTP server:'|trans }}</strong> {{ system.smtp.server }}
+            </p>
+            <p>
+              <strong>{{ 'SMTP username:'|trans }}</strong>
+              {% if system.smtp.user is not empty %}
+                {{ 'Defined'|trans }}
+              {% else %}
+                <span style="color:red;">{{ 'Not defined'|trans }}</span>
+              {% endif %}
+            </p>
+            <p>
+              <strong>{{ 'SMTP password:'|trans }}</strong>
+              {% if system.smtp.password is not empty %}
+                {{ 'Defined'|trans }}
+              {% else %}
+                <span style="color:red;">{{ 'Not defined'|trans }}</span>
+              {% endif %}
+            </p>
+            <p>
+              <strong>{{ 'Encryption:'|trans }}</strong> {{ system.smtp.encryption }}
+            </p>
+            <p>
+              <strong>{{ 'SMTP port:'|trans }}</strong> {{ system.smtp.port }}
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">info_outline</i> {{ 'Your information'|trans }}
+      </h3>
+      <div class="card-block">
+        <div class="card-text">
+          <p>
+            <strong>{{ 'Your web browser:'|trans }}</strong> {{ userAgent }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="checkConfiguration">
+      <h3 class="card-header">
+        <i class="material-icons">info_outline</i> {{ 'Check your configuration'|trans }}
+      </h3>
+      <div class="card-block">
+        <div class="card-text">
+          {% if requirements.failRequired == false %}
+            <p>
+              <strong>{{ 'Required parameters:'|trans }}</strong>
+              <span class="text-success">{{ 'OK'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+            </p>
+          {% else %}
+            <p>
+              <strong>{{ 'Required parameters:'|trans }}</strong>
+              <span class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+            </p>
+            <ul>
+              {% for key, value in requirements.testsRequired %}
+                {% if 'fail' == value %}
+                  <li>{{ requirements.testsErrors[key] }}</li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+          {% if requirements.failOptional is defined %}
+            {% if requirements.failOptional == false %}
+              <p>
+                <strong>{{ 'Optional parameters:'|trans }}</strong>
+                <span class="text-success">{{ 'OK'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+              </p>
+            {% else %}
+              <p>
+                <strong>{{ 'Optional parameters:'|trans }}</strong>
+                <span class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+              </p>
+              <ul>
+                {% for key, value in requirements.testsOptional %}
+                  {% if 'fail' == value %}
+                    <li>{{ requirements.testsErrors[key] }}</li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% if system.notHostMode %}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">info_outline</i> {{ 'List of changed files'|trans }}
+    </h3>
+    <div class="card-block">
+      <div class="card-text" id="changedFiles">
+        <i class="material-icons">loop</i> {{ 'Checking files...'|trans({}, 'Admin.Advparameters.Notification') }}
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% if system.notHostMode %}
+  <script>
+    $(document).ready(function()
+    {
+      var translations = {
+        missing: '{{ 'Missing files'|trans({}, 'Admin.Advparameters.Notification')|e('js') }}',
+        updated: '{{ 'Updated files'|trans({}, 'Admin.Advparameters.Notification')|e('js') }}',
+        changesDetected: '{{ 'Changed/missing files have been detected.'|trans({}, 'Admin.Advparameters.Notification')|e('js') }}',
+        noChangeDetected: '{{ 'No change has been detected in your files.'|trans({}, 'Admin.Advparameters.Notification')|e('js') }}'
+      };
+
+      $.ajax({
+        type: 'POST',
+        url: '{{ path("admin_system_information_check_files") }}',
+        data: {},
+        dataType: 'json',
+        success: function(json)
+        {
+          var tab = {
+            'missing': translations.missing,
+            'updated': translations.updated,
+          };
+
+          if (json.missing.length || json.updated.length) {
+            $('#changedFiles').html('<div class="alert alert-warning" role="alert"><p class="alert-text">' + translations.changesDetected + '</p></div>');
+          } else {
+            $('#changedFiles').html('<div class="alert alert-success" role="alert"><p class="alert-text">' + translations.noChangeDetected + '</p></div>');
+          }
+
+          $.each(tab, function(key, lang) {
+            if (json[key].length) {
+              var html = $('<ul>').attr('id', key+'_files');
+              $(json[key]).each(function(key, file) {
+                html.append($('<li>').html(file))
+              });
+              $('#changedFiles')
+                .append($('<h4>').html(lang+' ('+json[key].length+')'))
+                .append(html);
+            }
+          });
+        }
+      });
+    });
+  </script>
+{% endif %}
+{% endblock %}

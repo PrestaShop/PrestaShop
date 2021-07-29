@@ -26,12 +26,12 @@
 <template>
   <div
     class="ps-number"
-    :class="{'hover-buttons': hoverButtons}"
+    :class="{ 'hover-buttons': hoverButtons }"
   >
     <input
       type="number"
       class="form-control"
-      :class="{'danger': danger}"
+      :class="{ danger }"
       :value="value"
       placeholder="0"
       @keyup="onKeyup($event)"

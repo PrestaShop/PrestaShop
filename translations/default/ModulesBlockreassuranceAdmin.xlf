@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/blockreassurance/blockreassurance.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="659e8e7501bea2ab8c35659fc321525d">
+        <source>Customer reassurance</source>
+        <target>Customer reassurance</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="7e7f70db3c75e428db8e2d0a1765c4e9">
+        <source>Adds an information block aimed at offering helpful information to reassure customers that your store is trustworthy.</source>
+        <target>Adds an information block aimed at offering helpful information to reassure customers that your store is trustworthy.</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="0366c7b2ea1bb228cd44aec7e3e26a3e">
+        <source>The block configuration has been updated.</source>
+        <target>The block configuration has been updated.</target>
+        <note>Line: 224</note>
+      </trans-unit>
+      <trans-unit id="8363eee01f4da190a4cef9d26a36750c">
+        <source>New reassurance block</source>
+        <target>New reassurance block</target>
+        <note>Line: 246</note>
+      </trans-unit>
+      <trans-unit id="23498d91b6017e5d7f4ddde70daba286">
+        <source>ID Shop</source>
+        <target>ID Shop</target>
+        <note>Line: 326</note>
+      </trans-unit>
+      <trans-unit id="338ff4d33d460df0bf7643c3e0a706bc">
+        <source>blockreassurance</source>
+        <target>blockreassurance</target>
+        <note>Line: 76</note>
+      </trans-unit>
+      <trans-unit id="aaf4c38c28ee16f82b3084a836c5afb5">
+        <source>Connect with your customers and reassure them by highlighting your services: secure payment, free shipping, returns, etc.</source>
+        <target>Connect with your customers and reassure them by highlighting your services: secure payment, free shipping, returns, etc.</target>
+        <note>Line: 116</note>
+      </trans-unit>
+      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
+        <source>Are you sure you want to uninstall this module?</source>
+        <target>Are you sure you want to uninstall this module?</target>
+        <note>Line: 134
+Comment: Confirm uninstall</note>
+      </trans-unit>
+      <trans-unit id="b910df7ea2e47820d60286ba15a8b9d0">
+        <source>There was an error during the installation. Please contact us through Addons website.</source>
+        <target>There was an error during the installation. Please contact us through Addons website.</target>
+        <note>Line: 209</note>
+      </trans-unit>
+      <trans-unit id="e9415612c1d72517733c98e6877a6b46">
+        <source>There was an error during the uninstallation. Please contact us through Addons website.</source>
+        <target>There was an error during the uninstallation. Please contact us through Addons website.</target>
+        <note>Line: 239</note>
+      </trans-unit>
+      <trans-unit id="a596edf2f0e5ae9c2372c93e1c8fcc24">
+        <source>Block updated</source>
+        <target>Block updated</target>
+        <note>Line: 540</note>
+      </trans-unit>
+      <trans-unit id="f2f5589389027c1c6d63d2cec51afde5">
+        <source>Oops... looks like an error occurred</source>
+        <target>Oops... looks like an error occurred</target>
+        <note>Line: 541</note>
+      </trans-unit>
+      <trans-unit id="da755c5b9609e21d2f7c0e542fa02cf0">
+        <source>Configuration updated successfully!</source>
+        <target>Configuration updated successfully!</target>
+        <note>Line: 543</note>
+      </trans-unit>
+      <trans-unit id="81f6a0f1aaedeb8d2c35617f53c90aaa">
+        <source>Position changed successfully!</source>
+        <target>Position changed successfully!</target>
+        <note>Line: 544</note>
+      </trans-unit>
+      <trans-unit id="939d7906a02e747900bc9a6e06109e06">
+        <source>An error occurred when switching position</source>
+        <target>An error occurred when switching position</target>
+        <note>Line: 545</note>
+      </trans-unit>
+      <trans-unit id="70b2e27535936ea2fa3ce0c4304c79e8">
+        <source>Customer Reassurance</source>
+        <target>Customer Reassurance</target>
+        <note>Line: 115</note>
+      </trans-unit>
+      <trans-unit id="061843bf9a4b68c61f7e089864b1fe9e">
+        <source>An error occurred when removing block</source>
+        <target>An error occurred when removing block</target>
+        <note>Line: 547</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/alert_folder_writable.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="059e9861e0400dfbe05c98a841f3f96b">
+        <source>WARNING</source>
+        <target>WARNING</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="83ece74ba9fcdbc64cf8769f23e304ee">
+        <source>Your folder %s is not readable or executable</source>
+        <target>Your folder %s is not readable or executable</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="68d58d95ef2703e0eaa82c81ae543b06">
+        <source>This folder needs these rights so you can upload your own images for the reassurances blocks.</source>
+        <target>This folder needs these rights so you can upload your own images for the reassurances blocks.</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/configure.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f15c1cae7882448b3fb0404682e17e61">
+        <source>Content</source>
+        <target>Content</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="b9987a246a537f4fe86f1f2e3d10dbdb">
+        <source>Display</source>
+        <target>Display</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="a1c58e94227389415de133efdf78ea6e">
+        <source>Appearance</source>
+        <target>Appearance</target>
+        <note>Line: 37</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/appearance.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
+        <source>Save</source>
+        <target>Save</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="156f728d597d7b34b3c4b9d567ebb328">
+        <source>Customize Module Design</source>
+        <target>Customize Module Design</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="534b7c706186028f1b4f51344bbca176">
+        <source>Icon color</source>
+        <target>Icon color</target>
+        <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="5f111ae4c490902059da2004cbc8b424">
+        <source>Text color</source>
+        <target>Text color</target>
+        <note>Line: 55</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/content/config.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c177d75d997a0273d1cc5be2dc4ea701">
+        <source>Reassurance Block</source>
+        <target>Reassurance Block</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="988fd738de9c6d177440c5dcf69e73ce">
+        <source>Return</source>
+        <target>Return</target>
+        <note>Line: 76</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/content/config_elements/cms.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="87d49200bfc48e0bcfd3bae27d5616f3">
+        <source>CMS Page</source>
+        <target>CMS Page</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/content/config_elements/description.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0ba3309bf076bf416d0bb498fdfcb77f">
+        <source>Description (optional)</source>
+        <target>Description (optional)</target>
+        <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/content/config_elements/icon.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="be53a0541a6d36f6ecb879fa2c584b08">
+        <source>Image</source>
+        <target>Image</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="f09299c751aafaae3a6afdcdb782c4f0">
+        <source>Modify icon</source>
+        <target>Modify icon</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="48f8f4314de3ef7ee18d352fcaec22f8">
+        <source>or upload file</source>
+        <target>or upload file</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="3802717a7a0a4552fa6da61712da155b">
+        <source>Choose SVG for best customization. Other accepted file formats: jpg, png, gif</source>
+        <target>Choose SVG for best customization. Other accepted file formats: jpg, png, gif</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="a9578a2a3ded5e3632f575d897087492">
+        <source>Choose SVG for better customization. Other allowed formats are: .gif, .jpg, .png</source>
+        <target>Choose SVG for better customization. Other allowed formats are: .gif, .jpg, .png</target>
+        <note>Line: 55</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/content/config_elements/language.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3a08e2e340ab29fd9263af48193cbf8e">
+        <source>Languages</source>
+        <target>Languages</target>
+        <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/content/config_elements/reassurance_block.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6a1854f62e217911db9a2a437d219212">
+        <source>Select none</source>
+        <target>Select none</target>
+        <note>Line: 100</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/content/config_elements/redirection.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1b6498e23a3c43775699129e7ebfcfeb">
+        <source>Redirection</source>
+        <target>Redirection</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="e6b391a8d2c4d45902a23a8b6585703d">
+        <source>URL</source>
+        <target>URL</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="622f3c75de9f3481ffc58c1f292c1c2b">
+        <source>CMS page</source>
+        <target>CMS page</target>
+        <note>Line: 51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/content/config_elements/title.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b78a3223503896721cca1303f776159b">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/content/listing.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2fbc962c5748d8e3fb7ada6598049a67">
+        <source>Block Content</source>
+        <target>Block Content</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="52f5e0bc3859bc5f5e25130b6c7e8881">
+        <source>Position</source>
+        <target>Position</target>
+        <note>Line: 35</note>
+      </trans-unit>
+      <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
+        <source>Description</source>
+        <target>Description</target>
+        <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="06df33001c1d7187fdd81ea1f5b277aa">
+        <source>Actions</source>
+        <target>Actions</target>
+        <note>Line: 40</note>
+      </trans-unit>
+      <trans-unit id="6f048a3dd9fc703eca6c05c7cdfb90ec">
+        <source>Url link</source>
+        <target>Url link</target>
+        <note>Line: 68</note>
+      </trans-unit>
+      <trans-unit id="cb456215c3333db0551bd0788bc258c7">
+        <source>Activated</source>
+        <target>Activated</target>
+        <note>Line: 83</note>
+      </trans-unit>
+      <trans-unit id="43c7582c40594c3fe32a6634ef9dcb07">
+        <source>Deactivated</source>
+        <target>Deactivated</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="4aa4ae23dfbd6b0941b3749079107b48">
+        <source>We recommend 3 blocks at maximum.</source>
+        <target>We recommend 3 blocks at maximum.</target>
+        <note>Line: 104</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/display.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="108490afa8365531d5eade07c3cc38f4">
+        <source>Global settings</source>
+        <target>Global settings</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="f4e01b4c717593dd98723eaa3c68b423">
+        <source>Product pages</source>
+        <target>Product pages</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="1ae67ff3f20df5d496ed195359b04b30">
+        <source>Checkout pages</source>
+        <target>Checkout pages</target>
+        <note>Line: 35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/display/checkout.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="334c4a4c42fdb79d7ebc3e73b517e6f8">
+        <source>none</source>
+        <target>none</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="3f01481a13daed04a03caaa1a28ab49f">
+        <source>Main column</source>
+        <target>Main column</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="e624b27335fc068f4fd8b0bb06cfd47c">
+        <source>Specific position for cart page</source>
+        <target>Specific position for cart page</target>
+        <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/display/global.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
+        <source>None</source>
+        <target>None</target>
+        <note>Line: 99</note>
+      </trans-unit>
+      <trans-unit id="23b5440c1d192315a80d4c47a0a6a777">
+        <source>Header position on all pages</source>
+        <target>Header position on all pages</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="99f4ac3cb518c5f2f96cf151dd7ada54">
+        <source>Above header</source>
+        <target>Above header</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="466e044ac4a5c806e2822e4f56731064">
+        <source>Below header</source>
+        <target>Below header</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="16dd8ad1a19a74d5f57ce0d651b5f9b0">
+        <source>Footer position on all pages</source>
+        <target>Footer position on all pages</target>
+        <note>Line: 69</note>
+      </trans-unit>
+      <trans-unit id="4d8b46f6f765dc0fdbe459376752e37c">
+        <source>Above footer</source>
+        <target>Above footer</target>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="9f84867d3ac107f21870cdb7cf4da735">
+        <source>Below footer</source>
+        <target>Below footer</target>
+        <note>Line: 88</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/display/product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="56e152954e91d1d5caf567ec1ea12577">
+        <source>Specific position for product page</source>
+        <target>Specific position for product page</target>
+        <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

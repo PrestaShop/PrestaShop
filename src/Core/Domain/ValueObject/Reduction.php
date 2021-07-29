@@ -37,17 +37,17 @@ class Reduction
     /**
      * For reducing concrete amount of money from price
      */
-    const TYPE_AMOUNT = 'amount';
+    public const TYPE_AMOUNT = 'amount';
 
     /**
      * For reducing certain percentage calculated from price
      */
-    const TYPE_PERCENTAGE = 'percentage';
+    public const TYPE_PERCENTAGE = 'percentage';
 
     /**
      * Allowed reduction types
      */
-    const ALLOWED_TYPES = [
+    public const ALLOWED_TYPES = [
         self::TYPE_AMOUNT,
         self::TYPE_PERCENTAGE,
     ];
@@ -55,7 +55,7 @@ class Reduction
     /**
      * Maximum allowed value for percentage type reduction
      */
-    const MAX_ALLOWED_PERCENTAGE = 100;
+    public const MAX_ALLOWED_PERCENTAGE = 100;
 
     /**
      * @var string

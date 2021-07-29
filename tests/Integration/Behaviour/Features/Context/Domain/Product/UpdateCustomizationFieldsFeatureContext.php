@@ -34,7 +34,6 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
@@ -52,15 +51,14 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      */
     public function updateCustomizationFields(string $productReference, TableNode $table)
     {
-        $customizationFields = $table->getColumnsHash();
+        $customizationFields = $this->localizeByColumns($table);
         $fieldsForUpdate = [];
         $fieldReferences = [];
 
         foreach ($customizationFields as $customizationField) {
             $addedByModule = isset($customizationField['added by module']) ?
                 PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['added by module']) :
-                false
-            ;
+                false;
             $fieldReference = $customizationField['reference'];
             $id = $this->getSharedStorage()->exists($fieldReference) ? $this->getSharedStorage()->get($fieldReference) : null;
 
@@ -68,7 +66,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
             $fieldsForUpdate[] = [
                 'id' => $id,
                 'type' => $customizationField['type'] === 'file' ? CustomizationFieldType::TYPE_FILE : CustomizationFieldType::TYPE_TEXT,
-                'localized_names' => $this->parseLocalizedArray($customizationField['name']),
+                'localized_names' => $customizationField['name'],
                 'is_required' => PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['is required']),
                 'added_by_module' => $addedByModule,
             ];
@@ -171,7 +169,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      */
     public function assertCustomizationFields(string $productReference, TableNode $table)
     {
-        $data = $table->getColumnsHash();
+        $data = $this->localizeByColumns($table);
         /** @var CustomizationField[] $actualFields */
         $actualFields = $this->getProductCustomizationFields($productReference);
         $notFoundExpectedFields = [];
@@ -184,11 +182,10 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
                 if ($expectedId === $actualField->getCustomizationFieldId()) {
                     $foundExpectedField = true;
                     $expectedType = $expectedField['type'] === 'file' ? CustomizationFieldType::TYPE_FILE : CustomizationFieldType::TYPE_TEXT;
-                    $expectedLocalizedNames = $this->parseLocalizedArray($expectedField['name']);
                     $expectedRequired = PrimitiveUtils::castStringBooleanIntoBoolean($expectedField['is required']);
                     Assert::assertEquals($expectedType, $actualField->getType(), 'Unexpected customization type');
                     Assert::assertEquals(
-                        $expectedLocalizedNames,
+                        $expectedField['name'],
                         $actualField->getLocalizedNames(),
                         sprintf('Unexpected product "%s" customization field name', $productReference)
                     );
@@ -283,18 +280,6 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
             CustomizationFieldConstraintException::class,
             CustomizationFieldConstraintException::INVALID_NAME
         );
-    }
-
-    /**
-     * @param string $productReference
-     *
-     * @return CustomizationField[]
-     */
-    private function getProductCustomizationFields(string $productReference): array
-    {
-        return $this->getQueryBus()->handle(new GetProductCustomizationFields(
-            $this->getSharedStorage()->get($productReference)
-        ));
     }
 
     /**

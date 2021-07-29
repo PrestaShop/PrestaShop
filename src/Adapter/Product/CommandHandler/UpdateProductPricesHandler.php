@@ -28,41 +28,39 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\Entity\TaxRulesGroup;
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPricePropertiesFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPricesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
-use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
-use PrestaShopException;
 use Product;
 
 /**
  * Updates product price information using legacy object models
  */
-final class UpdateProductPricesHandler extends AbstractProductHandler implements UpdateProductPricesHandlerInterface
+final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInterface
 {
     /**
-     * @var NumberExtractor
+     * @var ProductRepository
      */
-    private $numberExtractor;
+    private $productRepository;
 
     /**
-     * @var Product the product being updated
+     * @var ProductPricePropertiesFiller
      */
-    private $product;
+    private $productPricePropertiesFiller;
 
     /**
-     * @param NumberExtractor $numberExtractor
+     * @param ProductRepository $productRepository
+     * @param ProductPricePropertiesFiller $productPricePropertiesFiller
      */
     public function __construct(
-        NumberExtractor $numberExtractor
+        ProductRepository $productRepository,
+        ProductPricePropertiesFiller $productPricePropertiesFiller
     ) {
-        $this->numberExtractor = $numberExtractor;
+        $this->productRepository = $productRepository;
+        $this->productPricePropertiesFiller = $productPricePropertiesFiller;
     }
 
     /**
@@ -70,181 +68,51 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
      */
     public function handle(UpdateProductPricesCommand $command): void
     {
-        $product = $this->getProduct($command->getProductId());
-        $this->product = $product;
-        $this->fillUpdatableFieldsWithCommandData($product, $command);
-        $product->setFieldsToUpdate($this->fieldsToUpdate);
+        $product = $this->productRepository->get($command->getProductId());
+        $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
-        if (empty($this->fieldsToUpdate)) {
-            return;
-        }
-
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_PRICES);
+        $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_PRICES);
     }
 
     /**
      * @param Product $product
      * @param UpdateProductPricesCommand $command
      *
+     * @return string[] updatable properties
+     *
      * @throws ProductConstraintException
      */
-    private function fillUpdatableFieldsWithCommandData(Product $product, UpdateProductPricesCommand $command): void
+    private function fillUpdatableProperties(Product $product, UpdateProductPricesCommand $command): array
     {
-        if (null !== $command->getPrice()) {
-            $product->price = (float) (string) $command->getPrice();
-            $this->validateField($product, 'price', ProductConstraintException::INVALID_PRICE);
-            $this->fieldsToUpdate['price'] = true;
-        }
-
-        $this->handleUnitPriceInfo($command);
+        $updatableProperties = $this->productPricePropertiesFiller->fillWithPrices(
+            $product,
+            $command->getPrice(),
+            $command->getUnitPrice(),
+            $command->getWholesalePrice()
+        );
 
         if (null !== $command->getUnity()) {
             $product->unity = $command->getUnity();
-            $this->fieldsToUpdate['unity'] = true;
+            $updatableProperties[] = 'unity';
         }
 
         if (null !== $command->getEcotax()) {
             $product->ecotax = (float) (string) $command->getEcotax();
-            $this->validateField($product, 'ecotax', ProductConstraintException::INVALID_ECOTAX);
-            $this->fieldsToUpdate['ecotax'] = true;
+            $updatableProperties[] = 'ecotax';
         }
 
         $taxRulesGroupId = $command->getTaxRulesGroupId();
 
         if (null !== $taxRulesGroupId) {
             $product->id_tax_rules_group = $taxRulesGroupId;
-            $this->validateField($product, 'id_tax_rules_group', ProductConstraintException::INVALID_TAX_RULES_GROUP_ID);
-            $this->assertTaxRulesGroupExists($taxRulesGroupId);
-            $this->fieldsToUpdate['id_tax_rules_group'] = true;
+            $updatableProperties[] = 'id_tax_rules_group';
         }
 
         if (null !== $command->isOnSale()) {
             $product->on_sale = $command->isOnSale();
-            $this->fieldsToUpdate['on_sale'] = true;
+            $updatableProperties[] = 'on_sale';
         }
 
-        if (null !== $command->getWholesalePrice()) {
-            $product->wholesale_price = (string) $command->getWholesalePrice();
-            $this->validateField($product, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
-            $this->fieldsToUpdate['wholesale_price'] = true;
-        }
-    }
-
-    /**
-     * Update unit_price and unit_price ration depending on price
-     *
-     * @param UpdateProductPricesCommand $command
-     *
-     * @throws ProductConstraintException
-     */
-    private function handleUnitPriceInfo(UpdateProductPricesCommand $command): void
-    {
-        $price = $command->getPrice();
-        $unitPrice = $command->getUnitPrice();
-
-        // if price was reset then also reset unit_price and unit_price_ratio
-        $priceWasReset = null !== $price && $price->equalsZero();
-        if ($priceWasReset) {
-            $this->resetUnitPriceInfo();
-        }
-
-        //if price was not reset then allow setting new unit_price and unit_price_ratio
-        if (!$priceWasReset && null !== $unitPrice) {
-            $this->setUnitPriceInfo($this->product, $unitPrice, $price);
-        }
-    }
-
-    /**
-     * @throws ProductConstraintException
-     */
-    private function resetUnitPriceInfo(): void
-    {
-        $zero = new DecimalNumber('0');
-        $this->setUnitPriceInfo($this->product, $zero, $zero);
-    }
-
-    /**
-     * @param int $taxRulesGroupId
-     *
-     * @throws ProductConstraintException
-     * @throws ProductException
-     */
-    private function assertTaxRulesGroupExists(int $taxRulesGroupId): void
-    {
-        if (ProductTaxRulesGroupSettings::NONE_APPLIED === $taxRulesGroupId) {
-            return;
-        }
-
-        try {
-            $taxRulesGroup = new TaxRulesGroup($taxRulesGroupId);
-            if (!$taxRulesGroup->id) {
-                throw new ProductConstraintException(
-                    sprintf(
-                        'Invalid tax rules group id "%d". Group doesn\'t exist',
-                        $taxRulesGroupId
-                    ),
-                    ProductConstraintException::INVALID_TAX_RULES_GROUP_ID
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new ProductException(
-                sprintf(
-                    'Error occurred when trying to load tax rules group #%d for product',
-                    $taxRulesGroupId
-                ),
-                0,
-                $e
-            );
-        }
-    }
-
-    /**
-     * @param Product $product
-     * @param DecimalNumber $unitPrice
-     * @param DecimalNumber $price
-     *
-     * @throws ProductConstraintException
-     */
-    private function setUnitPriceInfo(Product $product, DecimalNumber $unitPrice, ?DecimalNumber $price): void
-    {
-        $this->validateUnitPrice($unitPrice);
-
-        if (null === $price) {
-            $price = $this->numberExtractor->extract($product, 'price');
-        }
-
-        // If unit price or price is zero, then reset ratio to zero too
-        if ($unitPrice->equalsZero() || $price->equalsZero()) {
-            $ratio = new DecimalNumber('0');
-        } else {
-            $ratio = $price->dividedBy($unitPrice);
-        }
-
-        $product->unit_price_ratio = (float) (string) $ratio;
-        //unit_price is not saved to database, it is only calculated depending on price and unit_price_ratio
-        $product->unit_price = (float) (string) $unitPrice;
-
-        $this->fieldsToUpdate['unit_price_ratio'] = true;
-        $this->fieldsToUpdate['unit_price'] = true;
-    }
-
-    /**
-     * Unit price validation is not involved in legacy validation, so it is checked manually to have unsigned int value
-     *
-     * @param DecimalNumber $unitPrice
-     *
-     * @throws ProductConstraintException
-     */
-    private function validateUnitPrice(DecimalNumber $unitPrice): void
-    {
-        if ($unitPrice->isLowerThanZero()) {
-            throw new ProductConstraintException(
-                sprintf(
-                    'Invalid product unit_price. Got "%s"',
-                    $unitPrice
-                ),
-                ProductConstraintException::INVALID_UNIT_PRICE
-            );
-        }
+        return $updatableProperties;
     }
 }

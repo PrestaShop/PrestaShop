@@ -1634,7 +1634,7 @@ CREATE TABLE `PREFIX_product` (
   `additional_shipping_cost` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `reference` varchar(64) DEFAULT NULL,
   `supplier_reference` varchar(64) DEFAULT NULL,
-  `location` varchar(64) DEFAULT NULL,
+  `location` varchar(255) NOT NULL DEFAULT '',
   `width` DECIMAL(20, 6) NOT NULL DEFAULT '0',
   `height` DECIMAL(20, 6) NOT NULL DEFAULT '0',
   `depth` DECIMAL(20, 6) NOT NULL DEFAULT '0',
@@ -1647,9 +1647,9 @@ CREATE TABLE `PREFIX_product` (
   `text_fields` tinyint(4) NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `redirect_type` ENUM(
-    '', '404', '301-product', '302-product',
+    '404', '301-product', '302-product',
     '301-category', '302-category'
-  ) NOT NULL DEFAULT '',
+  ) NOT NULL DEFAULT '404',
   `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date DEFAULT NULL,
@@ -1669,6 +1669,9 @@ CREATE TABLE `PREFIX_product` (
   `advanced_stock_management` tinyint(1) DEFAULT '0' NOT NULL,
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   `state` int(11) unsigned NOT NULL DEFAULT '1',
+  `product_type` ENUM(
+    'standard', 'pack', 'virtual', 'combinations', ''
+  ) NOT NULL DEFAULT '',
   PRIMARY KEY (`id_product`),
   INDEX reference_idx(`reference`),
   INDEX supplier_reference_idx(`supplier_reference`),
@@ -1736,7 +1739,7 @@ CREATE TABLE `PREFIX_product_attribute` (
   `id_product` int(10) unsigned NOT NULL,
   `reference` varchar(64) DEFAULT NULL,
   `supplier_reference` varchar(64) DEFAULT NULL,
-  `location` varchar(64) DEFAULT NULL,
+  `location` varchar(255) NOT NULL DEFAULT '',
   `ean13` varchar(13) DEFAULT NULL,
   `isbn` varchar(32) DEFAULT NULL,
   `upc` varchar(12) DEFAULT NULL,
@@ -2273,6 +2276,10 @@ CREATE TABLE `PREFIX_log` (
   `message` text NOT NULL,
   `object_type` varchar(32) DEFAULT NULL,
   `object_id` int(10) unsigned DEFAULT NULL,
+  `id_shop` int(10) unsigned DEFAULT NULL,
+  `id_shop_group` int(10) unsigned DEFAULT NULL,
+  `id_lang` int(10) unsigned DEFAULT NULL,
+  `in_all_shops` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `id_employee` int(10) unsigned DEFAULT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
@@ -2787,15 +2794,6 @@ CREATE TABLE `PREFIX_smarty_cache` (
   KEY `name` (`name`),
   KEY `cache_id` (`cache_id`),
   KEY `modified` (`modified`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
-
-CREATE TABLE IF NOT EXISTS `PREFIX_order_slip_detail_tax` (
-  `id_order_slip_detail` int(11) unsigned NOT NULL,
-  `id_tax` int(11) unsigned NOT NULL,
-  `unit_amount` decimal(16, 6) NOT NULL DEFAULT '0.000000',
-  `total_amount` decimal(16, 6) NOT NULL DEFAULT '0.000000',
-  KEY (`id_order_slip_detail`),
-  KEY `id_tax` (`id_tax`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_mail` (

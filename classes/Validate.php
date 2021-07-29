@@ -757,7 +757,7 @@ class ValidateCore
      *
      * @param string $way Keyword to validate
      *
-     * @return bool Validity is ok or not
+     * @return int Validity is ok or not
      */
     public static function isOrderWay($way)
     {
@@ -835,7 +835,7 @@ class ValidateCore
      */
     public static function isUnsignedInt($value)
     {
-        return (string) (int) $value === (string) $value && $value < 4294967296 && $value >= 0;
+        return (is_numeric($value) || is_string($value)) && (string) (int) $value === (string) $value && $value < 4294967296 && $value >= 0;
     }
 
     /**
@@ -1187,15 +1187,17 @@ class ValidateCore
     /**
      * @param array $ids
      *
-     * @return bool return true if the array contain only unsigned int value
+     * @return bool return true if the array contain only unsigned int value and not empty
      */
     public static function isArrayWithIds($ids)
     {
-        if (count($ids)) {
-            foreach ($ids as $id) {
-                if ($id == 0 || !Validate::isUnsignedInt($id)) {
-                    return false;
-                }
+        if (!is_array($ids) || count($ids) < 1) {
+            return false;
+        }
+
+        foreach ($ids as $id) {
+            if ($id == 0 || !Validate::isUnsignedInt($id)) {
+                return false;
             }
         }
 

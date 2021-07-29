@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Translations;
 
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,6 +38,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class ModifyTranslationsType extends TranslatorAwareType
 {
+    public const CORE_TRANSLATIONS_CHOICE_INDEX = '0';
     /**
      * @var array
      */
@@ -87,31 +89,62 @@ class ModifyTranslationsType extends TranslatorAwareType
     {
         $noTheme = $this->trans('Core (no theme selected)', 'Admin.International.Feature');
 
+        $themeChoiceAttributes = [
+            $noTheme => [
+                'class' => 'js-no-theme',
+            ],
+        ];
+
+        if (isset($this->themeChoices[ThemeProviderDefinition::DEFAULT_THEME_NAME])) {
+            $themeChoiceAttributes[ThemeProviderDefinition::DEFAULT_THEME_NAME] = [
+                'class' => 'js-default-theme',
+            ];
+        }
+
         $builder
             ->add('translation_type', ChoiceType::class, [
+                'label' => $this->trans('Type of translation', 'Admin.International.Feature'),
+                'attr' => [
+                    'class' => 'js-translation-type',
+                ],
                 'choices' => $this->translationTypeChoices,
                 'choice_translation_domain' => false,
             ])
             ->add('email_content_type', ChoiceType::class, [
+                'label' => $this->trans('Select the type of email content', 'Admin.International.Feature'),
+                'row_attr' => [
+                    'class' => 'js-email-form-group d-none',
+                ],
+                'attr' => [
+                    'class' => 'js-email-content-type',
+                ],
                 'choices' => $this->emailContentTypeChoices,
                 'choice_translation_domain' => false,
             ])
             ->add('theme', ChoiceType::class, [
-                'choices' => [$noTheme => 0] +
-                $this->themeChoices,
-                'choice_attr' => [
-                    $noTheme => [
-                        'class' => 'js-no-theme',
-                    ],
+                'label' => $this->trans('Select your theme', 'Admin.International.Feature'),
+                'row_attr' => [
+                    'class' => 'js-theme-form-group d-none',
                 ],
+                'choices' => [$noTheme => self::CORE_TRANSLATIONS_CHOICE_INDEX] + $this->themeChoices,
+                'choice_attr' => $themeChoiceAttributes,
                 'choice_translation_domain' => false,
             ])
             ->add('module', ChoiceType::class, [
+                'label' => $this->trans('Select your module', 'Admin.International.Feature'),
+                'row_attr' => [
+                    'class' => 'js-module-form-group d-none',
+                ],
                 'placeholder' => '---',
+                'attr' => [
+                    'data-minimumResultsForSearch' => '7',
+                    'data-toggle' => 'select2',
+                ],
                 'choices' => $this->moduleChoices,
                 'choice_translation_domain' => false,
             ])
             ->add('language', ChoiceType::class, [
+                'label' => $this->trans('Select your language', 'Admin.International.Feature'),
                 'placeholder' => $this->trans('Language', 'Admin.Global'),
                 'choices' => $this->getLocaleChoices(),
                 'choice_translation_domain' => false,

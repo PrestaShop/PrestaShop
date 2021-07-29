@@ -115,6 +115,7 @@ class AdminLoginControllerCore extends AdminController
         $this->context->smarty->assign([
             'randomNb' => $rand,
             'adminUrl' => Tools::getCurrentUrlProtocolPrefix() . Tools::getShopDomain() . __PS_BASE_URI__ . $rand,
+            'homeUrl' => Tools::getCurrentUrlProtocolPrefix() . Tools::getShopDomain() . __PS_BASE_URI__,
         ]);
 
         // Redirect to admin panel

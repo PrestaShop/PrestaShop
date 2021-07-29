@@ -48,14 +48,14 @@ use Tools;
  */
 class AdminModuleDataProvider implements ModuleInterface
 {
-    const _CACHEKEY_MODULES_ = '_addons_modules';
+    public const _CACHEKEY_MODULES_ = '_addons_modules';
 
-    const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
+    public const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 
     /**
      * @const array giving a translation domain key for each module action
      */
-    const _ACTIONS_TRANSLATION_DOMAINS_ = [
+    public const _ACTIONS_TRANSLATION_DOMAINS_ = [
         'install' => 'Admin.Actions',
         'uninstall' => 'Admin.Actions',
         'enable' => 'Admin.Actions',
@@ -103,12 +103,12 @@ class AdminModuleDataProvider implements ModuleInterface
     private $moduleProvider;
 
     /**
-     * @var CacheProvider
+     * @var CacheProvider|null
      */
     private $cacheProvider;
 
     /**
-     * @var Employee
+     * @var Employee|null
      */
     private $employee;
 
@@ -492,7 +492,7 @@ class AdminModuleDataProvider implements ModuleInterface
                 }
             } catch (\Exception $e) {
                 if (!$this->fallbackOnCatalogCache()) {
-                    $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache. ', ['exception' => $e->getMessage()]);
+                    $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache.');
                 }
             }
         }

@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Category;
 
 use Category;
 use Context;
+use LogicException;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Shop;
@@ -60,25 +61,22 @@ class CategoryDataProvider
     /**
      * Get a category.
      *
-     * @param null $idCategory
-     * @param null $idLang
-     * @param null $idShop
+     * @param int|null $idCategory
+     * @param int|null $idLang
+     * @param int|null $idShop
      *
-     * @throws \LogicException If the category id is not set
+     * @throws LogicException If the category id is not set
      *
      * @return Category
      */
     public function getCategory($idCategory = null, $idLang = null, $idShop = null)
     {
         if (!$idCategory) {
-            throw new \LogicException('You need to provide a category id', 5002);
+            throw new LogicException('You need to provide a category id', 5002);
         }
 
         $category = new Category($idCategory, $idLang, $idShop);
-
-        if ($category) {
-            $category->image = Context::getContext()->link->getCatImageLink($category->name, $category->id);
-        }
+        $category->image = Context::getContext()->link->getCatImageLink($category->name, $category->id);
 
         return $category;
     }
@@ -229,10 +227,9 @@ class CategoryDataProvider
             $query = "AND cl.name LIKE '%" . pSQL($query) . "%'";
         }
 
+        $limitParam = '';
         if (is_int($limit)) {
-            $limit = 'LIMIT ' . $limit;
-        } else {
-            $limit = '';
+            $limitParam = 'LIMIT ' . $limit;
         }
 
         $searchCategories = Category::getAllCategoriesName(
@@ -243,7 +240,7 @@ class CategoryDataProvider
             true,
             $query,
             '',
-            $limit
+            $limitParam
         );
 
         $results = [];

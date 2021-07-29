@@ -31,17 +31,20 @@ class UploaderCore
 {
     const DEFAULT_MAX_SIZE = 10485760;
 
+    /** @var bool */
     private $_check_file_size;
     private $_accept_types;
+    /** @var array */
     private $_files;
     private $_max_size;
+    /** @var string|null */
     private $_name;
     private $_save_path;
 
     /**
      * UploaderCore constructor.
      *
-     * @param null $name
+     * @param string|null $name
      */
     public function __construct($name = null)
     {
@@ -71,7 +74,7 @@ class UploaderCore
     }
 
     /**
-     * @param $value
+     * @param bool $value
      *
      * @return $this
      */

@@ -45,6 +45,11 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     protected $cartRules = [];
 
     /**
+     * @var CountryFeatureContext
+     */
+    protected $countryFeatureContext;
+
+    /**
      * @var ProductFeatureContext
      */
     protected $productFeatureContext;
@@ -80,6 +85,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
+        $this->countryFeatureContext = $scope->getEnvironment()->getContext(CountryFeatureContext::class);
         $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
         $this->carrierFeatureContext = $scope->getEnvironment()->getContext(CarrierFeatureContext::class);
         $this->customerFeatureContext = $scope->getEnvironment()->getContext(CustomerFeatureContext::class);
@@ -139,7 +145,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Given /^cart rule "(.+?)" is restricted to the category "(.+?)" with a quantity of (\d+)$/
      */
-    public function cartRuleWithProductRuleRestriction($cartRuleName, $categoryName)
+    public function cartRuleWithProductRuleRestriction(string $cartRuleName, string $categoryName, int $quantity)
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->categoryFeatureContext->checkCategoryWithNameExists($categoryName);
@@ -147,7 +153,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 
         Db::getInstance()->execute(
             'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`) ' .
-            'VALUES (' . (int) $this->cartRules[$cartRuleName]->id . ', 1)'
+            'VALUES (' . (int) $this->cartRules[$cartRuleName]->id . ', ' . $quantity . ')'
         );
         $idProductRuleGroup = Db::getInstance()->Insert_ID();
 
@@ -185,9 +191,13 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 
     /**
      * @Given /^cart rule "(.+)" is restricted to product "(.+)"$/
+     * @Given /^cart rule "(.+)" is restricted to product "(.+)" with a quantity of (\d+)$/
      */
-    public function cartRuleNamedIsRestrictedToProductNamed($cartRuleName, $productName)
-    {
+    public function cartRuleNamedIsRestrictedToProductNamed(
+        string $cartRuleName,
+        string $productName,
+        int $quantity = 1
+    ): void {
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->productFeatureContext->checkProductWithNameExists($productName);
 
@@ -197,11 +207,20 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->cartRules[$cartRuleName]->save();
 
         // The reduction_product is not enough, we need to define product rules for condition (this is done by the controller usually)
-        Db::getInstance()->insert('cart_rule_product_rule_group', ['id_cart_rule' => $this->cartRules[$cartRuleName]->id, 'quantity' => 1]);
+        Db::getInstance()->insert(
+            'cart_rule_product_rule_group',
+            ['id_cart_rule' => $this->cartRules[$cartRuleName]->id, 'quantity' => $quantity]
+        );
         $productRuleGroupId = Db::getInstance()->Insert_ID();
-        Db::getInstance()->insert('cart_rule_product_rule', ['id_product_rule_group' => $productRuleGroupId, 'type' => 'products']);
+        Db::getInstance()->insert(
+            'cart_rule_product_rule',
+            ['id_product_rule_group' => $productRuleGroupId, 'type' => 'products']
+        );
         $productRuleId = Db::getInstance()->Insert_ID();
-        Db::getInstance()->insert('cart_rule_product_rule_value', ['id_product_rule' => $productRuleId, 'id_item' => $restrictedProduct->id]);
+        Db::getInstance()->insert(
+            'cart_rule_product_rule_value',
+            ['id_product_rule' => $productRuleId, 'id_item' => $restrictedProduct->id]
+        );
     }
 
     /**
@@ -218,6 +237,25 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
           VALUES('" . (int) $this->cartRules[$cartRuleName]->id . "',
           '" . (int) $this->carrierFeatureContext->getCarrierWithName($carrierName)->id . "')
         ");
+        Cache::clear();
+    }
+
+    /**
+     * @Given /^cart rule "(.+)" is restricted to country "(.+)"$/
+     */
+    public function cartRuleNamedIsRestrictedToCountryNamed(string $cartRuleName, string $country)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->countryFeatureContext->checkCountryWithIsoCodeExists($country);
+        $this->cartRules[$cartRuleName]->country_restriction = 1;
+        $this->cartRules[$cartRuleName]->save();
+
+        $idCartRule = (int) $this->cartRules[$cartRuleName]->id;
+        $idCountry = (int) $this->countryFeatureContext->getCountryWithIsoCode($country);
+        Db::getInstance()->execute(
+            'INSERT INTO ' . _DB_PREFIX_ . 'cart_rule_country(`id_cart_rule`, `id_country`) ' .
+            'VALUES(' . $idCartRule . ', ' . $idCountry . ')'
+        );
         Cache::clear();
     }
 

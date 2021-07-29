@@ -1,0 +1,62 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+<div class="row module-selection d-none">
+  <div class="col-md-12 col-lg-7">
+    {% for module in extraModules %}
+      <div class="module-render-container module-{{ module.attributes.name }}">
+        <div>
+          <img class="top-logo" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}">
+          <h2 class="text-ellipsis module-name-grid">
+            {{ module.attributes.displayName }}
+          </h2>
+          <div class="text-ellipsis small-text module-version">
+            {{ module.attributes.version }} by {{ module.attributes.author }}
+          </div>
+        </div>
+        <div class="small no-padding">
+          {{ module.attributes.description }}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="col-md-12 col-lg-5">
+    <h2>{{ 'Module to configure'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+    <select class="modules-list-select" data-toggle="select2">
+      {% for module in extraModules %}
+        <option value="module-{{ module.attributes.name }}">{{ module.attributes.displayName }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+
+<div class="module-contents d-none">
+  {% for module in extraModules %}
+    <div id="module_{{ module.id }}" class="module-render-container module-{{ module.attributes.name }}">
+      {{ module.content|raw }}
+    </div>
+  {% endfor %}
+</div>

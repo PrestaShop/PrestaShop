@@ -56,37 +56,42 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <h4 class="h4">
-      {l s='Shipping Method' d='Shop.Theme.Checkout'}
-        <span class="step-edit step-to-delivery js-edit-delivery"><i class="material-icons edit">mode_edit</i> {l s='edit' d='Shop.Theme.Actions'}</span>
-      </h4>
+  {if !$cart.is_virtual}
+    <div class="row">
+      <div class="col-md-12">
+        <h4 class="h4">
+          {l s='Shipping Method' d='Shop.Theme.Checkout'}
+          <span class="step-edit step-to-delivery js-edit-delivery"><i class="material-icons edit">mode_edit</i> {l s='edit' d='Shop.Theme.Actions'}</span>
+        </h4>
 
-      <div class="col-md-12 summary-selected-carrier">
-        <div class="row">
-          <div class="col-md-2">
-            <div class="logo-container">
-              {if $selected_delivery_option.logo}
-                <img src="{$selected_delivery_option.logo}" alt="{$selected_delivery_option.name}" loading="lazy">
-              {else}
-                &nbsp;
-              {/if}
+        <div class="col-md-12 summary-selected-carrier">
+          <div class="row">
+            <div class="col-md-2">
+              <div class="logo-container">
+                {if $selected_delivery_option.logo}
+                  <img src="{$selected_delivery_option.logo}" alt="{$selected_delivery_option.name}" loading="lazy">
+                {else}
+                  &nbsp;
+                {/if}
+              </div>
+            </div>
+            <div class="col-md-4">
+              <span class="carrier-name">{$selected_delivery_option.name}</span>
+            </div>
+            <div class="col-md-4">
+              <span class="carrier-delay">{$selected_delivery_option.delay}</span>
+            </div>
+            <div class="col-md-2">
+              <span class="carrier-price">{$selected_delivery_option.price}</span>
             </div>
           </div>
-          <div class="col-md-4">
-            <span class="carrier-name">{$selected_delivery_option.name}</span>
-          </div>
-          <div class="col-md-4">
-            <span class="carrier-delay">{$selected_delivery_option.delay}</span>
-          </div>
-          <div class="col-md-2">
-            <span class="carrier-price">{$selected_delivery_option.price}</span>
-          </div>
         </div>
+        {if $is_recyclable_packaging}
+          <em>{l s='You have given permission to receive your order in recycled packaging.' d="Shop.Theme.Customeraccount"}</em>
+        {/if}
       </div>
     </div>
-  </div>
+  {/if}
 
   <div class="row">
     {block name='order_confirmation_table'}

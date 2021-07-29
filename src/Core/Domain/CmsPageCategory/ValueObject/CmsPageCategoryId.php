@@ -36,7 +36,7 @@ class CmsPageCategoryId
     /**
      * ID for the topmost Cms Page category
      */
-    const ROOT_CMS_PAGE_CATEGORY_ID = 1;
+    public const ROOT_CMS_PAGE_CATEGORY_ID = 1;
 
     /**
      * @var int

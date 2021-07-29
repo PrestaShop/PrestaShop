@@ -46,6 +46,20 @@ class OrderControllerCore extends FrontController
     protected $cartChecksum;
 
     /**
+     * Overrides the same parameter in FrontController
+     *
+     * @var bool automaticallyAllocateInvoiceAddress
+     */
+    protected $automaticallyAllocateInvoiceAddress = false;
+
+    /**
+     * Overrides the same parameter in FrontController
+     *
+     * @var bool
+     */
+    protected $automaticallyAllocateDeliveryAddress = false;
+
+    /**
      * Initialize order controller.
      *
      * @see FrontController::init()
@@ -60,7 +74,10 @@ class OrderControllerCore extends FrontController
     {
         parent::postProcess();
 
-        if (Tools::isSubmit('submitReorder') && $id_order = (int) Tools::getValue('id_order')) {
+        if (Tools::isSubmit('submitReorder')
+            && $this->context->customer->isLogged()
+            && $id_order = (int) Tools::getValue('id_order')
+        ) {
             $oldCart = new Cart(Order::getCartIdStatic($id_order, $this->context->customer->id));
             $duplication = $oldCart->duplicate();
             if (!$duplication || !Validate::isLoadedObject($duplication['cart'])) {
@@ -206,7 +223,8 @@ class OrderControllerCore extends FrontController
     public function displayAjaxselectDeliveryOption()
     {
         $cart = $this->cart_presenter->present(
-            $this->context->cart
+            $this->context->cart,
+            true
         );
 
         ob_end_clean();
@@ -230,7 +248,7 @@ class OrderControllerCore extends FrontController
             Tools::getAllValues()
         );
 
-        $presentedCart = $this->cart_presenter->present($this->context->cart);
+        $presentedCart = $this->cart_presenter->present($this->context->cart, true);
 
         if (count($presentedCart['products']) <= 0 || $presentedCart['minimalPurchaseRequired']) {
             // if there is no product in current cart, redirect to cart page

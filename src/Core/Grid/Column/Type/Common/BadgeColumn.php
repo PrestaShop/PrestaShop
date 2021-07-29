@@ -57,10 +57,11 @@ final class BadgeColumn extends AbstractColumn
                 'badge_type' => 'success',
                 'empty_value' => '',
                 'clickable' => true,
+                'color_field' => '',
             ])
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('empty_value', 'string')
             ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedValues('badge_type', ['success', 'info', 'danger', 'warning']);
+            ->setAllowedValues('badge_type', ['success', 'info', 'danger', 'warning', '']);
     }
 }

@@ -23,12 +23,16 @@ services:
 
   prestashop.adapter.language.command_handler.add_language_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\AddLanguageHandler'
+    arguments:
+      - '@prestashop.adapter.image.image_validator'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand'
 
   prestashop.adapter.language.command_handler.edit_language_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\EditLanguageHandler'
+    arguments:
+        - '@prestashop.adapter.image.image_validator'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\EditLanguageCommand'

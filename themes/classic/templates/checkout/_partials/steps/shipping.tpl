@@ -41,7 +41,7 @@
           {block name='delivery_options'}
             <div class="delivery-options">
               {foreach from=$delivery_options item=carrier key=carrier_id}
-                  <div class="row delivery-option">
+                  <div class="row delivery-option js-delivery-option">
                     <div class="col-sm-1">
                       <span class="custom-radio float-xs-left">
                         <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if}>
@@ -71,7 +71,7 @@
                       </div>
                     </label>
                   </div>
-                  <div class="row carrier-extra-content"{if $delivery_option != $carrier_id} style="display:none;"{/if}>
+                  <div class="row carrier-extra-content js-carrier-extra-content"{if $delivery_option != $carrier_id} style="display:none;"{/if}>
                     {$carrier.extraContent nofilter}
                   </div>
                   <div class="clearfix"></div>

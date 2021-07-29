@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Cart;
 use CartRule;
 use Configuration;
@@ -39,6 +40,7 @@ use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
@@ -49,21 +51,35 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCom
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use Product;
 use RuntimeException;
+use SpecificPrice;
 use State;
+use Tests\Integration\Behaviour\Features\Context\ProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
-use Tests\Integration\Behaviour\Features\Transform\StringToBooleanTransform;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
 {
-    use StringToBooleanTransform;
+    /**
+     * @var ProductFeatureContext
+     */
+    protected $productFeatureContext;
+
+    /** @BeforeScenario */
+    public function before(BeforeScenarioScope $scope)
+    {
+        $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
+    }
 
     /**
      * @Given the current currency is :currencyIsoCode
@@ -136,7 +152,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add :quantity products :productName to the cart :cartReference
+     * @When /^I add (\d+) product(?:s)? "(.+)" to the cart "(.+)"$/
      *
      * @param int $quantity
      * @param string $productName
@@ -146,53 +162,221 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         $productId = $this->getProductIdByName($productName);
 
-        $this->getCommandBus()->handle(
-            new UpdateProductQuantityInCartCommand(
-                SharedStorage::getStorage()->get($cartReference),
-                $productId,
-                $quantity
-            )
-        );
-        SharedStorage::getStorage()->set($productName, $productId);
+        $this->cleanLastException();
+        try {
+            $this->getCommandBus()->handle(
+                new AddProductToCartCommand(
+                    SharedStorage::getStorage()->get($cartReference),
+                    $productId,
+                    $quantity
+                )
+            );
+            SharedStorage::getStorage()->set($productName, $productId);
 
-        // Clear cart static cache or it will have no products in next calls
-        Cart::resetStaticCache();
+            // Clear cart static cache or it will have no products in next calls
+            Cart::resetStaticCache();
+        } catch (MinimalQuantityException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
-     * @When I add :quantity customized products with reference :productReference to the cart :reference
+     * @When I update product :productName in the cart :cartReference to :price
+     *
+     * @param string $productName
+     * @param string $cartReference
+     * @param float $price
      */
-    public function addCustomizedProductToCarts(int $quantity, $productReference, $reference)
+    public function updateProductPriceInCart(string $productName, string $cartReference, float $price): void
     {
+        $productId = $this->getProductIdByName($productName);
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+        $cart = new Cart($cartId);
+
+        $command = new AddSpecificPriceCommand(
+            $productId,
+            Reduction::TYPE_AMOUNT,
+            0,
+            true,
+            $price,
+            1
+        );
+        $command->setCartId($cartId);
+        $command->setCustomerId((int) $cart->id_customer);
+
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @Then product :productName in cart :cartReference should have specific price :price
+     *
+     * @param string $productName
+     * @param string $cartReference
+     * @param float $price
+     */
+    public function checkCartProductSpecificPrice(string $productName, string $cartReference, float $price): void
+    {
+        $productId = $this->getProductIdByName($productName);
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+        $cart = new Cart($cartId);
+
+        $specificPriceId = SpecificPrice::exists(
+            $productId,
+            0,
+            0,
+            0,
+            0,
+            0,
+            $cart->id_customer,
+            SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            false,
+            $cartId
+        );
+
+        if (!$specificPriceId) {
+            throw new RuntimeException(sprintf(
+                'Could not find specific price for product %s in car %s',
+                $productName,
+                $cartReference
+            ));
+        }
+
+        $specificPrice = new SpecificPrice($specificPriceId);
+        Assert::assertEquals(
+            $price,
+            $specificPrice->price
+        );
+        Assert::assertEquals('amount', $specificPrice->reduction_type);
+        Assert::assertTrue((bool) $specificPrice->reduction_tax);
+    }
+
+    /**
+     * @When I update quantity of product :productName in the cart :cartReference to :quantity
+     *
+     * @param int $quantity
+     * @param string $productName
+     * @param string $cartReference
+     */
+    public function updateProductQuantityInCart(int $quantity, string $productName, string $cartReference)
+    {
+        $productId = $this->getProductIdByName($productName);
+
+        $this->cleanLastException();
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductQuantityInCartCommand(
+                    SharedStorage::getStorage()->get($cartReference),
+                    $productId,
+                    $quantity
+                )
+            );
+            SharedStorage::getStorage()->set($productName, $productId);
+
+            // Clear cart static cache or it will have no products in next calls
+            Cart::resetStaticCache();
+        } catch (MinimalQuantityException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When /^(?:I )?add (\d+) customized products? with reference "(.+)" (with|without)? all its customizations to the cart "(.+)"$/
+     */
+    public function addCustomizedProductToCartsWithCustomization(
+        int $quantity,
+        string $productReference,
+        string $withCombinations,
+        string $reference
+    ) {
+        $hasCombinations = ($withCombinations === 'with');
+        $cartId = (int) SharedStorage::getStorage()->get($reference);
         $productId = (int) Product::getIdByReference($productReference);
         $product = new Product($productId);
         $customizationFields = $product->getCustomizationFieldIds();
-        $customizations = [];
-        foreach ($customizationFields as $customizationField) {
-            $customizationFieldId = (int) $customizationField['id_customization_field'];
-            if (Product::CUSTOMIZE_TEXTFIELD == $customizationField['type']) {
-                $customizations[$customizationFieldId] = 'Toto';
-            }
+        if (empty($customizationFields)) {
+            throw new Exception('The product has no customizables fields');
         }
 
-        $cartId = (int) SharedStorage::getStorage()->get($reference);
+        $customizationId = null;
+        if ($hasCombinations) {
+            $customizations = [];
+            foreach ($customizationFields as $customizationField) {
+                $customizationFieldId = (int) $customizationField['id_customization_field'];
+                if (Product::CUSTOMIZE_TEXTFIELD == $customizationField['type']) {
+                    $customizations[$customizationFieldId] = 'Toto';
+                }
+            }
 
-        /** @var CustomizationId $customizationId */
-        $customizationId = $this->getCommandBus()->handle(new AddCustomizationCommand(
-            $cartId,
-            $productId,
-            $customizations
-        ));
-
-        $this->getCommandBus()->handle(
-            new UpdateProductQuantityInCartCommand(
+            /** @var CustomizationId $customizationId */
+            $customizationId = $this->getCommandBus()->handle(new AddCustomizationCommand(
                 $cartId,
                 $productId,
-                $quantity,
-                null,
-                $customizationId->getValue()
-            )
-        );
+                $customizations
+            ));
+            $customizationId = $customizationId->getValue();
+        }
+
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductQuantityInCartCommand(
+                    $cartId,
+                    $productId,
+                    $quantity,
+                    null,
+                    $customizationId
+                )
+            );
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get an error that the product is customizable and the customization is not provided
+     */
+    public function assertLastErrorIsProductCustomizationNotFoundException()
+    {
+        $this->assertLastErrorIs(ProductCustomizationNotFoundException::class);
+    }
+
+    /**
+     * @When I add :quantity items of combination :combinationName of the product :productName to the cart :cartReference
+     *
+     * @param int $quantity
+     * @param string $combinationName
+     * @param string $productName
+     * @param string $cartReference
+     */
+    public function addProductsCombinationsToCart(
+        int $quantity,
+        string $combinationName,
+        string $productName,
+        string $cartReference
+    ) {
+        $this->productFeatureContext->checkProductWithNameExists($productName);
+        $this->productFeatureContext->checkCombinationWithNameExists($productName, $combinationName);
+        $productId = (int) $this->productFeatureContext->getProductWithName($productName)->id;
+        $combinationId = (int) $this->productFeatureContext->getCombinationWithName($productName, $combinationName)->id;
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+
+        $this->cleanLastException();
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductQuantityInCartCommand(
+                    $cartId,
+                    $productId,
+                    $quantity,
+                    $combinationId
+                )
+            );
+
+            // Clear cart static cache or it will have no products in next calls
+            Cart::resetStaticCache();
+        } catch (MinimalQuantityException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -395,6 +579,25 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I use a voucher :voucherCode on the cart :cartReference
+     *
+     * @param string $voucherCode
+     * @param string $cartReference
+     */
+    public function useDiscountByCodeOnCart(string $voucherCode, string $cartReference)
+    {
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+        $cartRuleId = SharedStorage::getStorage()->get($voucherCode);
+
+        $this->getCommandBus()->handle(
+            new AddCartRuleToCartCommand(
+                $cartId,
+                $cartRuleId
+            )
+        );
+    }
+
+    /**
      * @When I use a voucher :voucherCode which provides a gift product :productName on the cart :cartReference
      *
      * @param string $voucherCode
@@ -475,7 +678,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function assertCartContainsOnlyGiftProduct(string $cartReference, string $productName)
     {
         $productId = (int) $this->getSharedStorage()->get($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         foreach ($cartInfo->getProducts() as $cartProduct) {
             if ($cartProduct->getProductId() !== $productId) {
@@ -484,7 +687,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
             if (!$cartProduct->isGift()) {
                 throw new RuntimeException(sprintf(
-                    'Cart contains product #%s, but it is not a gift',
+                    'Cart contains product "%s", but it is not a gift',
                     $productName
                 ));
             }
@@ -496,7 +699,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartRuleIsNotAppliedToCart(string $voucherCode, string $cartReference)
     {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
         $cartRuleId = $this->getSharedStorage()->get($voucherCode);
 
         foreach ($cartInfo->getCartRules() as $cartRule) {
@@ -514,7 +717,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartRuleIsAppliedToCart(string $voucherCode, string $cartReference)
     {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
         $cartRuleId = $this->getSharedStorage()->get($voucherCode);
 
         foreach ($cartInfo->getCartRules() as $cartRule) {
@@ -579,7 +782,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function assertProductQuantity(string $cartReference, string $productName, int $quantity, bool $isGift)
     {
         $productId = $this->getProductIdByName($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         foreach ($cartInfo->getProducts() as $product) {
             if ($productId === $product->getProductId() && (bool) $product->isGift() === $isGift) {
@@ -602,11 +805,10 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function assertCartContainsGiftProduct(string $cartReference, string $productName)
     {
         $productId = (int) $this->getSharedStorage()->get($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         $matchingProducts = [];
 
-        /** @var CartInformation\CartProduct $cartProduct */
         foreach ($cartInfo->getProducts() as $cartProduct) {
             if ($cartProduct->getProductId() !== $productId) {
                 continue;
@@ -616,7 +818,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (!empty($matchingProducts)) {
-            /** @var CartInformation\CartProduct $cartProduct */
+            /** @var CartForOrderCreation\CartProduct $cartProduct */
             foreach ($matchingProducts as $cartProduct) {
                 if ($cartProduct->isGift()) {
                     return;
@@ -640,11 +842,10 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function assertCartDoesNotContainGiftProduct(string $cartReference, string $productName)
     {
         $productId = (int) $this->getSharedStorage()->get($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         $matchingProducts = [];
 
-        /** @var CartInformation\CartProduct $cartProduct */
         foreach ($cartInfo->getProducts() as $cartProduct) {
             if ($cartProduct->getProductId() === $productId) {
                 $matchingProducts[] = $cartProduct;
@@ -652,7 +853,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (!empty($matchingProducts)) {
-            /** @var CartInformation\CartProduct $cartProduct */
+            /** @var CartForOrderCreation\CartProduct $cartProduct */
             foreach ($matchingProducts as $cartProduct) {
                 if ($cartProduct->isGift()) {
                     throw new RuntimeException(sprintf(
@@ -669,7 +870,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartShippingIsFree(string $cartReference)
     {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
         Assert::assertTrue($cartInfo->getShipping()->isFreeShipping());
         Assert::assertEquals('0', $cartInfo->getShipping()->getShippingPrice());
     }
@@ -706,7 +907,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         string $cartReference,
         string $value
     ) {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
         $cartRuleId = $this->getSharedStorage()->get($voucherCode);
 
         foreach ($cartInfo->getCartRules() as $cartRule) {
@@ -718,6 +919,53 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         throw new RuntimeException(sprintf('Voucher was %s not found in cart', $voucherCode));
+    }
+
+    /**
+     * @Then cart :cartReference should contain :quantity products
+     *
+     * @param string $cartReference
+     * @param int $quantity
+     */
+    public function assertCartNumberOfProducts(string $cartReference, int $quantity)
+    {
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
+
+        $cartProductsQuantity = \count($cartInfo->getProducts());
+
+        if ($quantity !== $cartProductsQuantity) {
+            throw new RuntimeException(sprintf(
+                'Cart contains %d products instead of %d',
+                $cartProductsQuantity,
+                $quantity
+            ));
+        }
+    }
+
+    /**
+     * @Then cart :cartReference should contain :quantity products excluding gifts
+     *
+     * @param string $cartReference
+     * @param int $quantity
+     */
+    public function assertCartNumberOfProductsExcludingGifts(string $cartReference, int $quantity)
+    {
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
+
+        $cartProductsQuantity = 0;
+        foreach ($cartInfo->getProducts() as $product) {
+            if (false === (bool) $product->isGift()) {
+                ++$cartProductsQuantity;
+            }
+        }
+
+        if ($quantity !== $cartProductsQuantity) {
+            throw new RuntimeException(sprintf(
+                'Cart contains %d products instead of %d',
+                $cartProductsQuantity,
+                $quantity
+            ));
+        }
     }
 
     /**
@@ -740,7 +988,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     private function productIsInCart(string $cartReference, string $productName): bool
     {
         $productId = (int) $this->getSharedStorage()->get($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         foreach ($cartInfo->getProducts() as $cartProduct) {
             if ($cartProduct->getProductId() === $productId) {
@@ -754,13 +1002,16 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param string $cartReference
      *
-     * @return CartInformation
+     * @return CartForOrderCreation
      */
-    private function getCartInformationByReference(string $cartReference): CartInformation
+    private function getCartForOrderCreationByReference(string $cartReference): CartForOrderCreation
     {
         $cartId = $this->getSharedStorage()->get($cartReference);
 
-        return $this->getQueryBus()->handle(new GetCartInformation($cartId));
+        return $this->getQueryBus()->handle(
+            (new GetCartForOrderCreation($cartId))
+                ->setHideDiscounts(true)
+        );
     }
 
     /**
@@ -794,7 +1045,13 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     private function getProductIdByName(string $productName)
     {
-        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
+        $products = $this->getQueryBus()->handle(
+            new SearchProducts(
+                $productName,
+                1,
+                Context::getContext()->currency->iso_code
+            )
+        );
 
         if (empty($products)) {
             throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));
@@ -813,6 +1070,37 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         if (!$cartRule->add()) {
             throw new RuntimeException('Cannot add cart rule to database');
+        }
+    }
+
+    /**
+     * @Then I should get error that minimum quantity of :minQuantity must be added to cart
+     *
+     * @param int $minQuantity
+     */
+    public function assertLastErrorIsMinimumQuantityWhichMustBeAddedToCart(int $minQuantity)
+    {
+        $this->assertLastErrorIs(
+            MinimalQuantityException::class
+        );
+        if ($minQuantity !== $this->getLastException()->getMinimalQuantity()) {
+            throw new RuntimeException(sprintf(
+                'Minimal quantity in exception, expected %s but got %s',
+                $minQuantity,
+                $this->getLastException()->getMinimalQuantity()
+            ));
+        }
+    }
+
+    /**
+     * @Then cart :cartReference total with tax included should be :expectedTotal
+     */
+    public function totalCartWithTaxShouldBe(string $cartReference, string $expectedTotal)
+    {
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
+        $cartTotal = $cartInfo->getSummary()->getTotalPriceWithTaxes();
+        if ($cartTotal !== $expectedTotal) {
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $cartTotal));
         }
     }
 }

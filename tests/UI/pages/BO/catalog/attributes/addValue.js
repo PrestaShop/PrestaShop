@@ -51,7 +51,7 @@ class AddValue extends BOBasePage {
     }
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

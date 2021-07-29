@@ -1,5 +1,6 @@
 .dropdown {
   color: $gray;
+
   &:hover .expand-more {
     color: $brand-primary;
   }
@@ -18,7 +19,7 @@
 
   select {
     color: $gray-darker;
-    background: #fff;
+    background: $white;
     border: 0 none;
     outline: 0 none;
     // stylelint-disable-next-line

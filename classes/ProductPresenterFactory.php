@@ -23,6 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
+use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter;
@@ -66,6 +69,7 @@ class ProductPresenterFactoryCore
         $settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
         $settings->showPrices = Configuration::showPrices();
         $settings->lastRemainingItems = Configuration::get('PS_LAST_QTIES');
+        $settings->showLabelOOSListingPages = (bool) Configuration::get('PS_SHOW_LABEL_OOS_LISTING_PAGES');
 
         return $settings;
     }
@@ -96,7 +100,9 @@ class ProductPresenterFactoryCore
             $this->context->link,
             new PriceFormatter(),
             new ProductColorsRetriever(),
-            $this->context->getTranslator()
+            $this->context->getTranslator(),
+            new HookManager(),
+            new AdapterConfiguration()
         );
     }
 }

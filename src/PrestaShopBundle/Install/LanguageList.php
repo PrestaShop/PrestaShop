@@ -31,7 +31,7 @@ use Symfony\Component\Finder\Finder;
 
 class LanguageList
 {
-    const DEFAULT_ISO = 'en';
+    public const DEFAULT_ISO = 'en';
 
     /**
      * @var array List of available languages
@@ -119,7 +119,7 @@ class LanguageList
      */
     public function getLanguage($iso = null)
     {
-        if (!$iso) {
+        if (!isset($this->languages[$iso])) {
             $iso = $this->language;
         }
 
@@ -151,20 +151,32 @@ class LanguageList
         static $countries = null;
 
         if (null === $countries) {
-            $countries = [];
-            $countries_lang = $this->getLanguage()->getCountries();
-            $countries_default = $this->getLanguage(self::DEFAULT_ISO)->getCountries();
-            $xml = @simplexml_load_file(_PS_INSTALL_DATA_PATH_ . 'xml/country.xml');
-            if ($xml) {
-                foreach ($xml->entities->country as $country) {
-                    $iso = strtolower((string) $country['iso_code']);
-                    $countries[$iso] = isset($countries_lang[$iso]) ? $countries_lang[$iso] : $countries_default[$iso];
-                }
-            }
-            asort($countries);
+            $countries = $this->getCountriesByLanguage();
         }
 
         return $countries;
+    }
+
+    /**
+     * @param string|null $iso
+     *
+     * @return array
+     */
+    public function getCountriesByLanguage(?string $iso = null): array
+    {
+        $countryList = [];
+        $langCountries = $this->getLanguage($iso)->getCountries();
+        $defaultCountries = $this->getLanguage(self::DEFAULT_ISO)->getCountries();
+        $xml = @simplexml_load_file(_PS_INSTALL_DATA_PATH_ . 'xml/country.xml');
+        if ($xml) {
+            foreach ($xml->entities->country as $country) {
+                $iso = strtolower((string) $country['iso_code']);
+                $countryList[$iso] = isset($langCountries[$iso]) ? $langCountries[$iso] : $defaultCountries[$iso];
+            }
+        }
+        asort($countryList);
+
+        return $countryList;
     }
 
     /**

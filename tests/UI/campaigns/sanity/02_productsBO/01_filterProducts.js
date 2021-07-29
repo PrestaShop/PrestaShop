@@ -39,6 +39,7 @@ describe('Filter in Products Page', async () => {
   it('should go to Products page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
+    await dashboardPage.closeOnboardingModal(page, 3000);
     await dashboardPage.goToSubMenu(
       page,
       dashboardPage.catalogParentLink,
@@ -92,6 +93,7 @@ describe('Filter in Products Page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `resetFilters_${test.args.identifier}`, baseContext);
 
       let numberOfProductsAfterReset;
+
       if (test.args.filterBy === 'category') {
         await productsPage.resetFilterCategory(page);
         numberOfProductsAfterReset = await productsPage.getNumberOfProductsFromList(page);

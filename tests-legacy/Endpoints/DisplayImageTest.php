@@ -36,8 +36,8 @@ class DisplayImageTest extends AbstractEndpointAdminTest
     private $filename;
     private $path;
     private $content;
-    
-    protected function setUp()
+
+    protected function setUp(): void
     {
         parent::setUp();
         $this->employeeLogin();
@@ -47,10 +47,10 @@ class DisplayImageTest extends AbstractEndpointAdminTest
         $this->filename = md5('wololo.png');
         $this->path = _PS_ROOT_DIR_ . '/upload/' . $this->filename;
         file_put_contents($this->path, $this->content);
-        
+
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         unlink($this->path);

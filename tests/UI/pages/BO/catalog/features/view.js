@@ -1,12 +1,23 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * View feature page, contains functions that can be used on view feature page
+ * @class
+ * @extends BOBasePage
+ */
 class ViewFeature extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on feature page
+   */
   constructor() {
     super();
 
     this.pageTitle = 'Features >';
 
+    // Header selectors
+    this.addNewValueLink = '#page-header-desc-feature_value-new_feature_value';
 
     // Form selectors
     this.gridForm = '#form-feature_value';
@@ -29,16 +40,54 @@ class ViewFeature extends BOBasePage {
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnSelectRowCheckbox = row => `${this.tableBodyColumn(row)} input[name='feature_valueBox[]']`;
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnValue = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
+
+    // Row actions selectors
+    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_feature_value';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+
+    // Pagination selectors
+    this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
+    this.paginationDiv = `${this.gridForm} .pagination`;
+    this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
+    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
+    this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
+
+    // Confirmation modal
+    this.deleteModalButtonYes = '#popup_ok';
   }
 
+  /* Header methods */
+
+  /**
+   * Go to add new value page
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToAddNewValuePage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewValueLink);
+  }
 
   /* Filter methods */
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -50,7 +99,7 @@ class ViewFeature extends BOBasePage {
 
   /**
    * Get Number of feature values
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -59,7 +108,7 @@ class ViewFeature extends BOBasePage {
 
   /**
    * Reset and get number of feature values
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -69,9 +118,9 @@ class ViewFeature extends BOBasePage {
 
   /**
    * Filter table
-   * @param page
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterBy {string} Column to filter with
+   * @param value {string} value to filter with
    * @return {Promise<void>}
    */
   async filterTable(page, filterBy, value) {
@@ -82,9 +131,9 @@ class ViewFeature extends BOBasePage {
   /* Column methods */
   /**
    * Get text column from table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Feature value row on table
+   * @param columnName Column name of the value to return
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -104,6 +153,130 @@ class ViewFeature extends BOBasePage {
     }
 
     return this.getTextContent(page, columnSelector);
+  }
+
+  /* Bulk actions methods */
+  /**
+   * Bulk delete attributes
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async bulkDeleteValues(page) {
+    // To confirm bulk delete action with dialog
+    await this.dialogListener(page, true);
+
+    // Select all rows
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.selectAllLink),
+    ]);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      this.waitForHiddenSelector(page, this.selectAllLink),
+    ]);
+
+    // Perform delete
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkDeleteLink),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+
+    // Return successful message
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationActiveLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination number to select
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
+    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column name to sort with
+   * @param sortDirection {string} Sort direction by asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    let columnSelector;
+
+    switch (sortBy) {
+      case 'id_feature_value':
+        columnSelector = this.sortColumnDiv(2);
+        break;
+
+      case 'value':
+        columnSelector = this.sortColumnDiv(3);
+        break;
+
+      default:
+        throw new Error(`Column ${sortBy} was not found`);
+    }
+
+    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
+    await this.clickAndWaitForNavigation(page, sortColumnButton);
+  }
+
+  /**
+   * Get content from all rows
+   * @param page {Page} Browser tab
+   * @param columnName Column name on table
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, columnName) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, columnName);
+      await allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
   }
 }
 

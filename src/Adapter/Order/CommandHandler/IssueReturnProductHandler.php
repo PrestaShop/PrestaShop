@@ -31,6 +31,7 @@ use Hook;
 use Order;
 use OrderCarrier;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundSummary;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundUpdater;
@@ -75,24 +76,32 @@ class IssueReturnProductHandler extends AbstractOrderCommandHandler implements I
     private $refundUpdater;
 
     /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
      * @param ConfigurationInterface $configuration
      * @param OrderRefundCalculator $orderRefundCalculator
      * @param OrderSlipCreator $orderSlipCreator
      * @param VoucherGenerator $voucherGenerator
      * @param OrderRefundUpdater $refundUpdater
+     * @param ContextStateManager $contextStateManager
      */
     public function __construct(
         ConfigurationInterface $configuration,
         OrderRefundCalculator $orderRefundCalculator,
         OrderSlipCreator $orderSlipCreator,
         VoucherGenerator $voucherGenerator,
-        OrderRefundUpdater $refundUpdater
+        OrderRefundUpdater $refundUpdater,
+        ContextStateManager $contextStateManager
     ) {
         $this->configuration = $configuration;
         $this->orderRefundCalculator = $orderRefundCalculator;
         $this->orderSlipCreator = $orderSlipCreator;
         $this->voucherGenerator = $voucherGenerator;
         $this->refundUpdater = $refundUpdater;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -104,7 +113,6 @@ class IssueReturnProductHandler extends AbstractOrderCommandHandler implements I
             throw new ReturnProductDisabledException();
         }
 
-        /** @var Order $order */
         $order = $this->getOrder($command->getOrderId());
         if (!$order->hasBeenDelivered()) {
             throw new InvalidOrderStateException(
@@ -112,7 +120,17 @@ class IssueReturnProductHandler extends AbstractOrderCommandHandler implements I
                 'Can not perform return product on order with not delivered yet'
             );
         }
+        $this->setOrderContext($this->contextStateManager, $order);
 
+        try {
+            $this->issueReturn($command, $order);
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
+        }
+    }
+
+    private function issueReturn(IssueReturnProductCommand $command, Order $order): void
+    {
         $shippingRefundAmount = new DecimalNumber((string) ($command->refundShippingCost() ? $order->total_shipping_tax_incl : 0));
         /** @var OrderRefundSummary $orderRefundSummary */
         $orderRefundSummary = $this->orderRefundCalculator->computeOrderRefund(
@@ -129,7 +147,7 @@ class IssueReturnProductHandler extends AbstractOrderCommandHandler implements I
             if ($command->restockRefundedProducts()) {
                 $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
             }
-            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId, 'action' => CancellationActionType::RETURN_PRODUCT], null, false, true, false, $order->id_shop);
+            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId, 'cancel_quantity' => $productRefund['quantity'], 'action' => CancellationActionType::RETURN_PRODUCT], null, false, true, false, $order->id_shop);
         }
 
         // Update order carrier weight

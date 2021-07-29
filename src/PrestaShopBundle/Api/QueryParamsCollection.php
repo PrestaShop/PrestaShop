@@ -26,19 +26,19 @@
 
 namespace PrestaShopBundle\Api;
 
-use Doctrine\Common\Util\Inflector;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Exception\InvalidPaginationParamsException;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class QueryParamsCollection
 {
-    const SQL_PARAM_FIRST_RESULT = 'first_result';
+    public const SQL_PARAM_FIRST_RESULT = 'first_result';
 
-    const SQL_PARAM_MAX_RESULTS = 'max_results';
+    public const SQL_PARAM_MAX_RESULTS = 'max_results';
 
-    const SQL_CLAUSE_WHERE = 'where';
+    public const SQL_CLAUSE_WHERE = 'where';
 
-    const SQL_CLAUSE_HAVING = 'having';
+    public const SQL_CLAUSE_HAVING = 'having';
 
     /**
      * @var array
@@ -116,6 +116,26 @@ abstract class QueryParamsCollection
 
     /**
      * @param array $queryParams
+     * @param array $allParams
+     *
+     * @return $this
+     */
+    public function fromArray(array $queryParams, array $allParams = []): QueryParamsCollection
+    {
+        $queryParams = $this->excludeUnknownParams($queryParams);
+        $queryParams = $this->parsePaginationParams($queryParams);
+        $queryParams = $this->parseOrderParams($queryParams);
+
+        if (empty($allParams)) {
+            $allParams = $queryParams;
+        }
+        $this->queryParams = $this->parseFilterParamsArray($queryParams, $allParams);
+
+        return $this;
+    }
+
+    /**
+     * @param array $queryParams
      *
      * @return mixed
      */
@@ -150,6 +170,17 @@ abstract class QueryParamsCollection
             $request->query->all()
         );
 
+        return $this->parseFilterParamsArray($queryParams, $allParameters);
+    }
+
+    /**
+     * @param array $queryParams
+     * @param array $allParameters
+     *
+     * @return array
+     */
+    protected function parseFilterParamsArray(array $queryParams, array $allParameters): array
+    {
         $filters = array_filter(array_keys($allParameters), function ($filter) {
             return in_array($filter, $this->getValidFilterParams());
         });
@@ -337,7 +368,7 @@ abstract class QueryParamsCollection
      */
     protected function appendSqlFilter($value, $column, array $filters)
     {
-        $column = Inflector::tableize($column);
+        $column = Inflector::getInflector()->tableize($column);
 
         if ('attributes' === $column) {
             return $this->appendSqlAttributesFilter($filters, $value);
@@ -424,14 +455,14 @@ abstract class QueryParamsCollection
 
     /**
      * @param string $column
-     * @param array $value
+     * @param array|int|string $value
      * @param int|array<int> $sqlParams
      *
      * @return mixed
      */
     protected function appendSqlFilterParams($column, $value, $sqlParams)
     {
-        $column = Inflector::tableize($column);
+        $column = Inflector::getInflector()->tableize($column);
 
         if ('attributes' === $column) {
             return $this->appendSqlAttributesFilterParam($value, $sqlParams);
@@ -733,7 +764,7 @@ abstract class QueryParamsCollection
     {
         $check = (is_int($timestamp) || is_float($timestamp)) ? $timestamp : (string) (int) $timestamp;
 
-        return  ($check === $timestamp)
+        return ($check === $timestamp)
             && ((int) $timestamp <= PHP_INT_MAX)
             && ((int) $timestamp >= ~PHP_INT_MAX);
     }

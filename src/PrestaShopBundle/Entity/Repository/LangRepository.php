@@ -32,8 +32,8 @@ use PrestaShopBundle\Entity\Lang;
 
 class LangRepository extends EntityRepository implements LanguageRepositoryInterface
 {
-    const ISO_CODE = 'isoCode';
-    const LOCALE = 'locale';
+    public const ISO_CODE = 'isoCode';
+    public const LOCALE = 'locale';
 
     /**
      * Stores language instances in different arrays to match them quickly
@@ -59,7 +59,9 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $locale
+     *
+     * @return Lang|null
      */
     public function getOneByLocale($locale)
     {
@@ -67,7 +69,9 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $isoCode
+     *
+     * @return Lang|null
      */
     public function getOneByIsoCode($isoCode)
     {
@@ -75,7 +79,9 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $locale
+     *
+     * @return Lang|null
      */
     public function getOneByLocaleOrIsoCode($locale)
     {
@@ -93,7 +99,7 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
      * @param string $key
      * @param string $value
      *
-     * @return Lang
+     * @return Lang|null
      */
     private function searchLanguage($key, $value)
     {
@@ -101,7 +107,6 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
             return $this->matches[$key][$value];
         }
 
-        /** @var Lang $language */
         $language = $this->findOneBy([$key => $value]);
         if ($language) {
             $this->matches[self::ISO_CODE][$language->getIsoCode()] = $language;

@@ -7,14 +7,14 @@
       padding-top: 0;
 
       .product-customization-line {
+        padding-top: 0.9375rem;
+        padding-bottom: 0.9375rem;
+        border-bottom: 1px solid $gray-lighter;
+
         .label {
           font-weight: 600;
           text-align: right;
         }
-
-        padding-top: 0.9375rem;
-        padding-bottom: 0.9375rem;
-        border-bottom: 1px solid $gray-lighter;
 
         &:last-child {
           padding-bottom: 0;

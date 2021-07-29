@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
  */
 interface LayoutVariablesBuilderInterface
 {
-    const BUILD_MAIL_LAYOUT_VARIABLES_HOOK = 'actionBuildMailLayoutVariables';
+    public const BUILD_MAIL_LAYOUT_VARIABLES_HOOK = 'actionBuildMailLayoutVariables';
 
     /**
      * @param LayoutInterface $layout

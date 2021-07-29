@@ -412,13 +412,13 @@ services:
             - 'PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType'
             - 'TranslationSettingsPageAddUpdateLanguage'
 
-    prestashop.admin.translations_settings.export_language.form_handler:
+    prestashop.admin.translations_settings.export_catalogues.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\TranslationsSettingsFormHandler'
         arguments:
             - '@form.factory'
             - '@prestashop.core.hook.dispatcher'
-            - 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType'
-            - 'TranslationSettingsPageExportLanguage'
+            - 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportCataloguesType'
+            - 'TranslationSettingsPageExportCatalogues'
 
     prestashop.admin.translations_settings.copy_language.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\TranslationsSettingsFormHandler'
@@ -495,20 +495,6 @@ services:
             - 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType'
             - 'ShopLogo'
 
-  # Entity form handler
-    prestashop.admin.request_sql.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormHandler'
-        arguments:
-            - '@form.factory'
-            - '@prestashop.adapter.sql_manager.request_sql_form_data_validator'
-            - '@prestashop.bundle.form.admin.configure.advanced_parameters.request_sql.form_data_provider'
-
-    prestashop.bundle.form.admin.configure.advanced_parameters.request_sql.form_data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormDataProvider'
-        arguments:
-            - '@prestashop.core.command_bus'
-            - '@prestashop.core.query_bus'
-
     prestashop.admin.tax_options.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\Handler'
         arguments:
@@ -544,3 +530,12 @@ services:
             - '@prestashop.admin.sell.order.credit_slip.credit_slip_options_form_data_provider'
             - 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsType'
             - 'CreditSlip'
+
+    prestashop.admin.feature_flags.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.configure.advanced_parameters.feature_flags_form_data_provider'
+            - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagsType'
+            - 'FeatureFlag'

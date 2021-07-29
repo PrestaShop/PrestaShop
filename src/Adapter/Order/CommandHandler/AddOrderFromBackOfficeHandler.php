@@ -31,12 +31,10 @@ use BoOrderCore;
 use Cart;
 use Configuration;
 use Context;
-use Country;
 use Currency;
 use Customer;
 use Employee;
 use Exception;
-use Language;
 use Message;
 use Module;
 use PaymentModule;
@@ -51,7 +49,7 @@ use Validate;
 /**
  * @internal
  */
-final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandlerInterface
+final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler implements AddOrderFromBackOfficeHandlerInterface
 {
     /**
      * @var ContextStateManager
@@ -71,7 +69,6 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
      */
     public function handle(AddOrderFromBackOfficeCommand $command)
     {
-        /** @var PaymentModule $paymentModule */
         $paymentModule = !Configuration::get('PS_CATALOG_MODE') ?
             Module::getInstanceByName($command->getPaymentModuleName()) :
             new BoOrderCore();
@@ -79,19 +76,13 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         if (false === $paymentModule) {
             throw new OrderException(sprintf('Payment method "%s" does not exist.', $paymentModule));
         }
-
+        /** @var PaymentModule $paymentModule */
         $cart = new Cart($command->getCartId()->getValue());
 
         $this->assertAddressesAreNotDisabled($cart);
 
         //Context country, language and currency is used in PaymentModule::validateOrder (it should rely on cart address country instead)
-        $this->contextStateManager
-            ->setCart($cart)
-            ->setCurrency(new Currency($cart->id_currency))
-            ->setCustomer(new Customer($cart->id_customer))
-            ->setLanguage(new Language($cart->id_lang))
-            ->setCountry($this->getTaxCountry($cart))
-        ;
+        $this->setCartContext($this->contextStateManager, $cart);
 
         $translator = Context::getContext()->getTranslator();
         $employee = new Employee($command->getEmployeeId()->getValue());
@@ -122,7 +113,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         } catch (Exception $e) {
             throw new OrderException('Failed to add order. ' . $e->getMessage(), 0, $e);
         } finally {
-            $this->contextStateManager->restoreContext();
+            $this->contextStateManager->restorePreviousContext();
         }
 
         if (!$paymentModule->currentOrder) {
@@ -174,22 +165,5 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         if ($isInvoiceCountryDisabled) {
             throw new OrderException(sprintf('Invoice country for cart with id "%d" is disabled.', $cart->id));
         }
-    }
-
-    /**
-     * @param Cart $cart
-     *
-     * @return Country
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function getTaxCountry(Cart $cart)
-    {
-        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
-        $taxAddressId = property_exists($cart, $taxAddressType) ? $cart->{$taxAddressType} : $cart->id_address_delivery;
-        $taxAddress = new Address($taxAddressId);
-
-        return new Country($taxAddress->id_country);
     }
 }

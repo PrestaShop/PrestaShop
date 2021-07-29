@@ -28,14 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductCategoriesAssociationHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllAssociatedProductCategoriesHandlerInterface;
 
 /**
  * Handles @see RemoveAllAssociatedProductCategoriesCommand using legacy object model
  */
-final class RemoveAllAssociatedProductCategoriesHandler extends AbstractProductCategoriesAssociationHandler implements RemoveAllAssociatedProductCategoriesHandlerInterface
+final class RemoveAllAssociatedProductCategoriesHandler implements RemoveAllAssociatedProductCategoriesHandlerInterface
 {
     /**
      * @var int
@@ -43,11 +45,28 @@ final class RemoveAllAssociatedProductCategoriesHandler extends AbstractProductC
     private $homeCategoryId;
 
     /**
-     * @param int $homeCategoryId
+     * @var ProductCategoryUpdater
      */
-    public function __construct(int $homeCategoryId)
-    {
+    private $productCategoryUpdater;
+
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @param int $homeCategoryId
+     * @param ProductCategoryUpdater $productCategoryUpdater
+     * @param ProductRepository $productRepository
+     */
+    public function __construct(
+        int $homeCategoryId,
+        ProductCategoryUpdater $productCategoryUpdater,
+        ProductRepository $productRepository
+    ) {
         $this->homeCategoryId = $homeCategoryId;
+        $this->productCategoryUpdater = $productCategoryUpdater;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -55,11 +74,11 @@ final class RemoveAllAssociatedProductCategoriesHandler extends AbstractProductC
      */
     public function handle(RemoveAllAssociatedProductCategoriesCommand $command): void
     {
-        $product = $this->getProduct($command->getProductId());
+        $product = $this->productRepository->get($command->getProductId());
+        $categoryId = new CategoryId($this->homeCategoryId);
 
         // remove all categories associated with this product, keep only home Category
         // @todo: this is likely to break with multishop
-        $this->updateCategories($product, [$this->homeCategoryId]);
-        $this->updateDefaultCategory($product, $this->homeCategoryId);
+        $this->productCategoryUpdater->updateCategories($product, [$categoryId], $categoryId);
     }
 }

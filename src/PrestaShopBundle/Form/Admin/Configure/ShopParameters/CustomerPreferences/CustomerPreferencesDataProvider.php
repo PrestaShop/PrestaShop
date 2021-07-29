@@ -67,35 +67,6 @@ final class CustomerPreferencesDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        if ($errors = $this->validate($data)) {
-            return $errors;
-        }
-
         return $this->generalDataConfiguration->updateConfiguration($data);
-    }
-
-    /**
-     * Perform validations on form data.
-     *
-     * @param array $data
-     *
-     * @return array Array of errors if any
-     */
-    private function validate(array $data)
-    {
-        $errors = [];
-
-        $passwordResetDelay = $data['password_reset_delay'];
-        if (!is_numeric($passwordResetDelay) || $passwordResetDelay < 0) {
-            $fieldName = $this->translator->trans('Password reset delay', [], 'Admin.Shopparameters.Feature');
-
-            $errors[] = [
-                'key' => 'The %s field is invalid.',
-                'domain' => 'Admin.Notifications.Error',
-                'parameters' => [$fieldName],
-            ];
-        }
-
-        return $errors;
     }
 }

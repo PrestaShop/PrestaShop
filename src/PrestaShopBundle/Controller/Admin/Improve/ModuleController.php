@@ -43,6 +43,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Profile;
+use Symfony\Component\Form\Util\ServerParams;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,10 +55,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ModuleController extends ModuleAbstractController
 {
-    const CONTROLLER_NAME = 'ADMINMODULESSF';
+    public const CONTROLLER_NAME = 'ADMINMODULESSF';
+
+    public const MAX_MODULES_DISPLAYED = 6;
 
     /**
-     * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted('read', 'ADMINMODULESSF_')")
      *
      * @return Response
      */
@@ -86,7 +89,7 @@ class ModuleController extends ModuleAbstractController
     /**
      * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
      *
-     * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted('read', 'ADMINMODULESSF_')")
      *
      * @return Response
      */
@@ -125,6 +128,7 @@ class ModuleController extends ModuleAbstractController
         return $this->render(
             '@PrestaShop/Admin/Module/manage.html.twig',
             [
+                'maxModulesDisplayed' => self::MAX_MODULES_DISPLAYED,
                 'bulkActions' => $bulkActions,
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $this->trans('Module manager', 'Admin.Modules.Feature'),
@@ -142,7 +146,7 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted('read', 'ADMINMODULESSF_')")
      *
      * @param Request $request
      *
@@ -203,7 +207,9 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
+     * @AdminSecurity(
+     *     "is_granted('read', 'ADMINMODULESSF_') && is_granted('create', 'ADMINMODULESSF_') && is_granted('update', 'ADMINMODULESSF_') && is_granted('delete', 'ADMINMODULESSF_')"
+     * )
      *
      * @param Request $module_name
      *
@@ -226,7 +232,7 @@ class ModuleController extends ModuleAbstractController
 
         // Save history for this module
         $moduleHistory = $this->getDoctrine()
-            ->getRepository('PrestaShopBundle:ModuleHistory')
+            ->getRepository(ModuleHistory::class)
             ->findOneBy(
                 [
                     'idEmployee' => $currentEmployeeId,
@@ -258,7 +264,7 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted('read', 'ADMINMODULESSF_')")
      *
      * @param int $moduleId
      *
@@ -526,11 +532,27 @@ class ModuleController extends ModuleAbstractController
 
         $moduleManager = $this->get('prestashop.module.manager');
         $moduleZipManager = $this->get('prestashop.module.zip.manager');
+        $serverParams = new ServerParams();
+        $moduleName = '';
 
         try {
+            if ($serverParams->hasPostMaxSizeBeenExceeded()) {
+                throw new Exception($this->trans(
+                    'The uploaded file exceeds the post_max_size directive in php.ini',
+                    'Admin.Notifications.Error'
+                ));
+            }
+
             $fileUploaded = $request->files->get('file_uploaded');
             $constraints = [
-                new Assert\NotNull(),
+                new Assert\NotNull(
+                    [
+                        'message' => $this->trans(
+                            'The file is missing.',
+                            'Admin.Notifications.Error'
+                        ),
+                    ]
+                ),
                 new Assert\File(
                     [
                         'maxSize' => ini_get('upload_max_filesize'),
@@ -611,14 +633,12 @@ class ModuleController extends ModuleAbstractController
                 ),
             ];
         } catch (Exception $e) {
-            if (isset($moduleName)) {
+            try {
                 $moduleManager->disable($moduleName);
+            } catch (Exception $subE) {
             }
 
-            $installationResponse = [
-                'status' => false,
-                'msg' => $e->getMessage(),
-            ];
+            throw $e;
         }
 
         return new JsonResponse($installationResponse);
@@ -768,7 +788,7 @@ class ModuleController extends ModuleAbstractController
      *
      * @param array $pageVoter
      *
-     * @return void|JsonResponse
+     * @return JsonResponse|null
      */
     private function checkPermissions(array $pageVoter)
     {
@@ -784,12 +804,14 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
         }
+
+        return null;
     }
 
     /**
      * @param string $pageVoter
      *
-     * @return JsonResponse|void
+     * @return JsonResponse|null
      */
     private function checkPermission($pageVoter)
     {
@@ -801,6 +823,8 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
         }
+
+        return null;
     }
 
     /**

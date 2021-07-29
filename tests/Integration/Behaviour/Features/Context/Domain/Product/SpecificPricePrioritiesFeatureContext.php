@@ -31,8 +31,8 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
 use SpecificPrice;
 
 class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContext

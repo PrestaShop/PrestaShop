@@ -152,7 +152,7 @@ class HashMapWhitelistFilter implements FilterInterface
     /**
      * Filters the subject.
      *
-     * @param array $subject
+     * @param array|AbstractLazyArray $subject
      *
      * @return array The filtered subject
      *

@@ -1,0 +1,109 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% extends(template_from_string(
+  getLegacyLayout(
+    app.request.attributes.get('_legacy_controller'),
+    layoutTitle is defined ? layoutTitle : '',
+    layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : [],
+    layoutDisplayType is defined ? layoutDisplayType : '',
+    showContentHeader is defined ? showContentHeader : true,
+    headerTabContent is defined ? headerTabContent : '',
+    enableSidebar is defined ? enableSidebar : false,
+    help_link is defined ? help_link : '',
+    js_router_metadata(),
+    meta_title is defined ? meta_title : '',
+    use_regular_h1_structure is defined ? use_regular_h1_structure : true
+  )
+  )) %}
+
+{% block javascripts %}
+  <script src="{{ asset('themes/default/js/bundle/default.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/right-sidebar.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/form_popover_error.bundle.js') }}"></script>
+{% endblock %}
+
+{% block translate_javascripts %}
+  <script>
+    var translate_javascripts = {{ js_translatable|json_encode()|raw }};
+    var PS_ALLOW_ACCENTED_CHARS_URL = {{ configuration('PS_ALLOW_ACCENTED_CHARS_URL')|intCast }};
+  </script>
+{% endblock %}
+
+{% block content_header %}
+  {{ block('session_alert') }}
+{% endblock %}
+
+{% block session_alert %}
+  {% macro alert(type, flashbagContent) %}
+    <div class="alert alert-{{ type }} d-print-none" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true"><i class="material-icons">close</i></span>
+      </button>
+      {% if flashbagContent|length > 1 %}
+        <ul class="alert-text">
+          {% for flashMessage in flashbagContent %}
+            <li>{{ flashMessage|raw }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="alert-text">
+          {% for flashMessage in flashbagContent %}
+            <p>{{ flashMessage|raw }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  {% endmacro %}
+  {% import _self as layout %}
+
+  {% if app.session.flashbag.peek('error')|length() > 0 %}
+    {{ layout.alert('danger', app.session.flashbag.get('error')) }}
+  {% endif %}
+  {% if app.session.flashbag.peek('failure')|length() > 0 %}
+    {{ layout.alert('danger', app.session.flashbag.get('failure')) }}
+  {% endif %}
+  {% if app.session.flashbag.peek('success')|length() > 0 %}
+    {{ layout.alert('success', app.session.flashbag.get('success')) }}
+  {% endif %}
+  {% if app.session.flashbag.peek('warning')|length() > 0 %}
+    {{ layout.alert('warning', app.session.flashbag.get('warning')) }}
+  {% endif %}
+  {% if app.session.flashbag.peek('info')|length() > 0 %}
+    {{ layout.alert('info', app.session.flashbag.get('info')) }}
+  {% endif %}
+{% endblock %}
+
+{% block sidebar_right %}
+  <nav
+    id="right-sidebar"
+    role="navigation"
+    class="col-lg-3 sidebar sidebar-right sidebar-animate text-sm-center"
+  >
+    <img
+      src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}"
+      style="margin-top: 10em;" alt="{{ 'Loading...'|trans({}, 'Admin.Global') }}"
+    />
+  </nav>
+{% endblock %}

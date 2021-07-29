@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1c623b291d95f4f1b1d0c03d0dc0ffa1">
+        <source>This email address is not registered.</source>
+        <target>This email address is not registered.</target>
+        <note>Line: 426</note>
+      </trans-unit>
+      <trans-unit id="3b1f17a6fd92e35bc744e986b8e7a61c">
+        <source>An error occurred while attempting to unsubscribe.</source>
+        <target>An error occurred while attempting to unsubscribe.</target>
+        <note>Line: 430</note>
+      </trans-unit>
+      <trans-unit id="d4197f3e8e8b4b5d06b599bc45d683bb">
+        <source>Unsubscription successful.</source>
+        <target>Unsubscription successful.</target>
+        <note>Line: 433</note>
+      </trans-unit>
+      <trans-unit id="f6618fce0acbfca15e1f2b0991ddbcd0">
+        <source>This email address is already registered.</source>
+        <target>This email address is already registered.</target>
+        <note>Line: 439</note>
+      </trans-unit>
+      <trans-unit id="e172cb581e84f43a3bd8ee4e3b512197">
+        <source>An error occurred during the subscription process.</source>
+        <target>An error occurred during the subscription process.</target>
+        <note>Line: 463</note>
+      </trans-unit>
+      <trans-unit id="ebc069b1b9a2c48edfa39e344103be1e">
+        <source>A verification email has been sent. Please check your inbox.</source>
+        <target>A verification email has been sent. Please check your inbox.</target>
+        <note>Line: 457</note>
+      </trans-unit>
+      <trans-unit id="77c576a354d5d6f5e2c1ba50167addf8">
+        <source>You have successfully subscribed to this newsletter.</source>
+        <target>You have successfully subscribed to this newsletter.</target>
+        <note>Line: 461</note>
+      </trans-unit>
+      <trans-unit id="99c8b8e5e51bf8f00f1d66820684be9a">
+        <source>This email is already registered and/or invalid.</source>
+        <target>This email is already registered and/or invalid.</target>
+        <note>Line: 711</note>
+      </trans-unit>
+      <trans-unit id="4e1c51e233f1ed368c58db9ef09010ba">
+        <source>Thank you for subscribing to our newsletter.</source>
+        <target>Thank you for subscribing to our newsletter.</target>
+        <note>Line: 722</note>
+      </trans-unit>
+      <trans-unit id="b65736001bfe3cc53a665b2e077e5653">
+        <source>Sign up for our newsletter[1][2]%conditions%[/2]</source>
+        <target>Sign up for our newsletter[1][2]%conditions%[/2]</target>
+        <note>Line: 976</note>
+      </trans-unit>
+      <trans-unit id="c3d67cba349c7ecb5465ae92bdb38970">
+        <source>You may unsubscribe at any moment. For that purpose, please find our contact info in the legal notice.</source>
+        <target>You may unsubscribe at any moment. For that purpose, please find our contact info in the legal notice.</target>
+        <note>Line: 1390</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailsubscription/views/templates/front/subscription_execution.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7bf7f18afabb5122fa68fbab617e509b">
+        <source>Newsletter subscription</source>
+        <target>Newsletter subscription</target>
+        <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription-column.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ffb7e666a70151215b4c55c6268d7d72">
+        <source>Newsletter</source>
+        <target>Newsletter</target>
+        <note>Line: 27</note>
+      </trans-unit>
+      <trans-unit id="625f93a63da35ee7150341160460f31e">
+        <source>Your e-mail</source>
+        <target>Your e-mail</target>
+        <note>Line: 32</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

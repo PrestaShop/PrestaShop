@@ -34,17 +34,17 @@ class RequiredField
     /**
      * Partner offers field name
      */
-    const PARTNER_OFFERS = 'optin';
+    public const PARTNER_OFFERS = 'optin';
 
     /**
      * Newsletter field name
      */
-    const NEWSLETTER = 'newsletter';
+    public const NEWSLETTER = 'newsletter';
 
     /**
      * All allowed required fields for customer
      */
-    const ALLOWED_REQUIRED_FIELDS = [
+    public const ALLOWED_REQUIRED_FIELDS = [
         self::PARTNER_OFFERS,
         self::NEWSLETTER,
     ];

@@ -10,7 +10,7 @@ class AddSQLQuery extends BOBasePage {
     // Selectors
     this.sqlQueryNameInput = '#sql_request_name';
     this.sqlQueryTextArea = '#sql_request_sql';
-    this.saveButton = '#main-div button.btn-primary';
+    this.saveButton = '#sql-query-save-btn';
   }
 
   /*
@@ -27,7 +27,7 @@ class AddSQLQuery extends BOBasePage {
     await this.setValue(page, this.sqlQueryNameInput, sqlQueryData.name);
     await this.setValue(page, this.sqlQueryTextArea, sqlQueryData.sqlQuery);
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

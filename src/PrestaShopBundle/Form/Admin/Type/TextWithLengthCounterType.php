@@ -44,6 +44,7 @@ class TextWithLengthCounterType extends AbstractType
         $view->vars['max_length'] = $options['max_length'];
         $view->vars['position'] = $options['position'];
         $view->vars['input'] = $options['input'];
+        $view->vars['input_attr'] = $options['input_attr'];
     }
 
     /**
@@ -58,11 +59,14 @@ class TextWithLengthCounterType extends AbstractType
             ->setDefaults([
                 'position' => 'before',
                 'input' => 'text',
+                'input_attr' => [],
                 'compound' => false,
             ])
             ->setAllowedTypes('max_length', 'int')
+            ->setAllowedTypes('input_attr', ['array'])
             ->setAllowedValues('position', ['before', 'after'])
-            ->setAllowedValues('input', ['text', 'textarea']);
+            ->setAllowedValues('input', ['text', 'textarea'])
+        ;
     }
 
     /**

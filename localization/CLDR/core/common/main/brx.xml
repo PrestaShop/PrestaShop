@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2019 Unicode, Inc.
+<!-- Copyright © 1991-2020 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
@@ -2047,9 +2047,6 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<zone type="Europe/Kaliningrad">
 				<exemplarCity>कालिलीनग्राड</exemplarCity>
 			</zone>
-			<zone type="Europe/Simferopol">
-				<exemplarCity>सिम्फेरोपोल</exemplarCity>
-			</zone>
 			<zone type="Europe/Moscow">
 				<exemplarCity>मॉस्को</exemplarCity>
 			</zone>
@@ -2193,6 +2190,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			</zone>
 			<zone type="Europe/Kiev">
 				<exemplarCity>कीव</exemplarCity>
+			</zone>
+			<zone type="Europe/Simferopol">
+				<exemplarCity>सिम्फेरोपोल</exemplarCity>
 			</zone>
 			<zone type="Europe/Zaporozhye">
 				<exemplarCity>झापरोझ्य</exemplarCity>
@@ -2984,7 +2984,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			</metazone>
 			<metazone type="Norfolk">
 				<long>
-					<standard>नॉरफोक स्टैंडर्ड टाईम</standard>
+					<generic draft="contributed">नॉरफोक टाईम</generic>
+					<standard draft="contributed">नॉरफोक स्टैंडर्ड टाईम</standard>
+					<daylight draft="contributed">नॉरफोक डेलाईट टाईम</daylight>
 				</long>
 			</metazone>
 			<metazone type="Noronha">

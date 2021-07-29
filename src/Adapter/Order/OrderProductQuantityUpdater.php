@@ -28,20 +28,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
-use Address;
 use Cart;
 use Configuration;
 use Context;
-use Country;
 use Currency;
 use Customer;
 use Customization;
 use Db;
-use Language;
 use Order;
 use OrderDetail;
 use OrderInvoice;
 use Pack;
+use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
+use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover;
 use PrestaShop\PrestaShop\Adapter\StockManager;
@@ -108,11 +107,13 @@ class OrderProductQuantityUpdater
         $cart = new Cart($order->id_cart);
 
         $this->contextStateManager
+            ->saveCurrentContext()
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
             ->setCustomer(new Customer($cart->id_customer))
-            ->setLanguage(new Language($cart->id_lang))
-            ->setCountry($this->getTaxCountry($cart))
+            ->setLanguage($cart->getAssociatedLanguage())
+            ->setCountry($cart->getTaxCountry())
+            ->setShop(new Shop($cart->id_shop))
         ;
 
         try {
@@ -121,7 +122,7 @@ class OrderProductQuantityUpdater
             // Update prices on the order after cart rules are recomputed
             $this->orderAmountUpdater->update($order, $cart, null !== $orderInvoice ? (int) $orderInvoice->id : null);
         } finally {
-            $this->contextStateManager->restoreContext();
+            $this->contextStateManager->restorePreviousContext();
         }
 
         return $order;
@@ -153,36 +154,13 @@ class OrderProductQuantityUpdater
         // Perform deletion first, we don't want the OrderDetail to be saved with a quantity 0, this could lead to bugs
         if (0 === $newQuantity) {
             // Product deletion
-            $updatedProducts = $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $updateCart);
+            $cartComparator = $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $updateCart);
             $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
-
-            // Some products have been affected by the removal of the initial product (probably related to a CartRule)
-            // So we detect the changes that happened in the cart and apply them on the OrderDetail
-            $orderDetails = $order->getOrderDetailList();
-            foreach ($updatedProducts as $updatedProduct) {
-                $updatedOrderDetail = null;
-                foreach ($orderDetails as $orderDetailData) {
-                    if ((int) $orderDetailData['product_id'] === $updatedProduct['id_product']
-                        && (int) $orderDetailData['product_attribute_id'] === $updatedProduct['id_product_attribute']) {
-                        $updatedOrderDetail = new OrderDetail($orderDetailData['id_order_detail']);
-                        break;
-                    }
-                }
-
-                if (null !== $updatedOrderDetail) {
-                    $newUpdatedQuantity = (int) $updatedOrderDetail->product_quantity + $updatedProduct['delta_quantity'];
-                    $this->updateOrderDetail(
-                        $order,
-                        $cart,
-                        $updatedOrderDetail,
-                        $newUpdatedQuantity,
-                        $orderInvoice,
-                        false
-                    );
-                }
-            }
+            $this->applyOtherProductUpdates($order, $cart, $orderInvoice, $cartComparator->getUpdatedProducts());
+            $this->applyOtherProductCreation($order, $cart, $orderInvoice, $cartComparator->getAdditionalProducts());
         } else {
             $this->assertValidProductQuantity($orderDetail, $newQuantity);
+            // It's important to override the invoice, this is what allows to switch an OrderDetail from an invoice to another
             if (null !== $orderInvoice) {
                 $orderDetail->id_order_invoice = $orderInvoice->id;
             }
@@ -191,15 +169,15 @@ class OrderProductQuantityUpdater
             $orderDetail->reduction_percent = 0;
             $orderDetail->update();
 
-            if ($orderDetail->id_customization > 0) {
+            // Update quantity on the cart and stock
+            if ($updateCart) {
+                $cartComparator = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
+                $this->applyOtherProductUpdates($order, $cart, $orderInvoice, $cartComparator->getUpdatedProducts());
+                $this->applyOtherProductCreation($order, $cart, $orderInvoice, $cartComparator->getAdditionalProducts());
+            } elseif ($orderDetail->id_customization > 0) {
                 $customization = new Customization($orderDetail->id_customization);
                 $customization->quantity = $newQuantity;
                 $customization->save();
-            }
-
-            // Update quantity on the cart and stock
-            if ($updateCart) {
-                $cart = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
             }
         }
 
@@ -208,24 +186,116 @@ class OrderProductQuantityUpdater
     }
 
     /**
+     * @param Order $order
+     * @param Cart $cart
+     * @param OrderInvoice|null $orderInvoice
+     * @param CartProductUpdate[] $updatedProducts
+     */
+    private function applyOtherProductUpdates(
+        Order $order,
+        Cart $cart,
+        ?OrderInvoice $orderInvoice,
+        array $updatedProducts
+    ): void {
+        // Some products have been affected by the removal of the initial product (probably related to a CartRule)
+        // So we detect the changes that happened in the cart and apply them on the OrderDetail
+        $orderDetails = $order->getOrderDetailList();
+        foreach ($updatedProducts as $updatedProduct) {
+            $updatedCombinationId = $updatedProduct->getCombinationId() !== null
+                ? $updatedProduct->getCombinationId()->getValue()
+                : 0;
+            $updatedOrderDetail = null;
+            foreach ($orderDetails as $orderDetailData) {
+                if ((int) $orderDetailData['product_id'] === $updatedProduct->getProductId()->getValue()
+                    && (int) $orderDetailData['product_attribute_id'] === $updatedCombinationId) {
+                    $updatedOrderDetail = new OrderDetail($orderDetailData['id_order_detail']);
+                    break;
+                }
+            }
+
+            if (null !== $updatedOrderDetail) {
+                $newUpdatedQuantity = (int) $updatedOrderDetail->product_quantity + $updatedProduct->getDeltaQuantity();
+                // Important: we update the OrderDetail but not the cart (it is already updated) to avoid infinite loop
+                $this->updateOrderDetail(
+                    $order,
+                    $cart,
+                    $updatedOrderDetail,
+                    $newUpdatedQuantity,
+                    $orderInvoice,
+                    false
+                );
+            }
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param Cart $cart
+     * @param OrderInvoice|null $orderInvoice
+     * @param array $createdProducts
+     */
+    private function applyOtherProductCreation(
+        Order $order,
+        Cart $cart,
+        ?OrderInvoice $orderInvoice,
+        array $createdProducts
+    ): void {
+        $productsToAdd = [];
+        foreach ($createdProducts as $createdProduct) {
+            $updatedCombinationId = $createdProduct->getCombinationId() !== null
+                ? $createdProduct->getCombinationId()->getValue()
+                : 0;
+            foreach ($cart->getProducts() as $product) {
+                if ((int) $product['id_product'] === $createdProduct->getProductId()->getValue()
+                    && (int) $product['id_product_attribute'] === $updatedCombinationId) {
+                    $productsToAdd[] = $product;
+                    break;
+                }
+            }
+        }
+        if (count($productsToAdd) > 0) {
+            $orderDetail = new OrderDetail();
+            $orderDetail->createList(
+                $order,
+                $cart,
+                $order->getCurrentState(),
+                $productsToAdd,
+                $orderInvoice ? $orderInvoice->id : 0
+            );
+        }
+    }
+
+    /**
      * @param Cart $cart
      * @param OrderDetail $orderDetail
      * @param int $oldQuantity
      * @param int $newQuantity
      *
-     * @return Cart
+     * @return CartProductsComparator
      */
     private function updateProductQuantity(
         Cart $cart,
         OrderDetail $orderDetail,
         int $oldQuantity,
         int $newQuantity
-    ): Cart {
-        $deltaQuantity = $oldQuantity - $newQuantity;
+    ): CartProductsComparator {
+        $cartComparator = new CartProductsComparator($cart);
 
+        $deltaQuantity = $newQuantity - $oldQuantity;
         if (0 === $deltaQuantity) {
-            return $cart;
+            return $cartComparator;
         }
+
+        $knownUpdates = [
+            new CartProductUpdate(
+                (int) $orderDetail->product_id,
+                (int) $orderDetail->product_attribute_id,
+                $deltaQuantity,
+                false,
+                (int) $orderDetail->id_customization
+            ),
+        ];
+        $cartComparator->setKnownUpdates($knownUpdates);
 
         /**
          * Here we update product and customization in the cart.
@@ -244,8 +314,8 @@ class OrderProductQuantityUpdater
             abs($deltaQuantity),
             $orderDetail->product_id,
             $orderDetail->product_attribute_id,
-            false,
-            $deltaQuantity > 0 ? 'down' : 'up',
+            $orderDetail->id_customization,
+            $deltaQuantity < 0 ? 'down' : 'up',
             0,
             new Shop($cart->id_shop),
             true,
@@ -258,7 +328,7 @@ class OrderProductQuantityUpdater
             throw new \LogicException('Something went wrong');
         }
 
-        return $cart;
+        return $cartComparator;
     }
 
     /**
@@ -288,7 +358,12 @@ class OrderProductQuantityUpdater
                 $orderDetail->product_id,
                 $orderDetail->product_attribute_id,
                 $deltaQuantity,
-                $cart->id_shop
+                $cart->id_shop,
+                true,
+                [
+                    'id_order' => $orderDetail->id_order,
+                    'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_RETURN_REASON'),
+                ]
             );
         } else {
             // Decrease product quantity. Reinject quantity in stock
@@ -452,23 +527,6 @@ class OrderProductQuantityUpdater
     }
 
     /**
-     * @param Cart $cart
-     *
-     * @return Country
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function getTaxCountry(Cart $cart): Country
-    {
-        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
-        $taxAddressId = property_exists($cart, $taxAddressType) ? $cart->{$taxAddressType} : $cart->id_address_delivery;
-        $taxAddress = new Address($taxAddressId);
-
-        return new Country($taxAddress->id_country);
-    }
-
-    /**
      * @param OrderDetail $orderDetail
      * @param int $newQuantity
      *
@@ -478,7 +536,11 @@ class OrderProductQuantityUpdater
     {
         //check if product is available in stock
         if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
-            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($orderDetail->product_id, $orderDetail->product_attribute_id);
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct(
+                $orderDetail->product_id,
+                $orderDetail->product_attribute_id,
+                $orderDetail->id_shop
+            );
             $quantityDiff = $newQuantity - (int) $orderDetail->product_quantity;
 
             if ($quantityDiff > $availableQuantity) {

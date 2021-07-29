@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\DeleteCartRuleFromOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use Shop;
 use Validate;
 
 /**
@@ -96,7 +97,9 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
 
         $this->contextStateManager
             ->setCurrency(new Currency($order->id_currency))
-            ->setCustomer(new Customer($order->id_customer));
+            ->setCustomer(new Customer($order->id_customer))
+            ->setShop(new Shop($order->id_shop))
+        ;
 
         try {
             // Delete Order Cart Rule and update Order
@@ -126,7 +129,7 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
                 $this->orderAmountUpdater->update($order, $cart, $orderCartRule->id_order_invoice);
             }
         } finally {
-            $this->contextStateManager->restoreContext();
+            $this->contextStateManager->restorePreviousContext();
         }
     }
 

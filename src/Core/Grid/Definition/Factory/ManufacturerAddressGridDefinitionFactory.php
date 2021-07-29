@@ -51,7 +51,7 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    const GRID_ID = 'manufacturer_address';
+    public const GRID_ID = 'manufacturer_address';
 
     /**
      * {@inheritdoc}

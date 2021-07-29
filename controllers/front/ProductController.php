@@ -25,12 +25,13 @@
  */
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\ProductExtraContentFinder;
-use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
 class ProductControllerCore extends ProductPresentingFrontControllerCore
 {
@@ -84,6 +85,20 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL(): string
+    {
+        $product = $this->context->smarty->getTemplateVars('product');
+
+        if (!($product instanceof ProductLazyArray)) {
+            return '';
+        }
+
+        return $product->getCanonicalUrl();
+    }
+
+    /**
      * Initialize product controller.
      *
      * @see FrontController::init()
@@ -133,43 +148,43 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     ];
                 } else {
                     if (!$this->product->id_type_redirected) {
-                        if (in_array($this->product->redirect_type, [ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY, ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND])) {
+                        if (in_array($this->product->redirect_type, [RedirectType::TYPE_CATEGORY_PERMANENT, RedirectType::TYPE_CATEGORY_TEMPORARY])) {
                             $this->product->id_type_redirected = $this->product->id_category_default;
                         } else {
-                            $this->product->redirect_type = ProductInterface::REDIRECT_TYPE_NOT_FOUND;
+                            $this->product->redirect_type = RedirectType::TYPE_NOT_FOUND;
                         }
-                    } elseif (in_array($this->product->redirect_type, [ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY, ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND]) && $this->product->id_type_redirected == $this->product->id) {
-                        $this->product->redirect_type = ProductInterface::REDIRECT_TYPE_NOT_FOUND;
+                    } elseif (in_array($this->product->redirect_type, [RedirectType::TYPE_PRODUCT_PERMANENT, RedirectType::TYPE_PRODUCT_TEMPORARY]) && $this->product->id_type_redirected == $this->product->id) {
+                        $this->product->redirect_type = RedirectType::TYPE_NOT_FOUND;
                     }
 
                     switch ($this->product->redirect_type) {
-                        case ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY:
+                        case RedirectType::TYPE_PRODUCT_PERMANENT:
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
 
                         break;
-                        case ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND:
+                        case RedirectType::TYPE_PRODUCT_TEMPORARY:
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
 
                         break;
-                        case ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY:
+                        case RedirectType::TYPE_CATEGORY_PERMANENT:
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
 
                             break;
-                        case ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND:
+                        case RedirectType::TYPE_CATEGORY_TEMPORARY:
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
 
                             break;
-                        case ProductInterface::REDIRECT_TYPE_NOT_FOUND:
+                        case RedirectType::TYPE_NOT_FOUND:
                         default:
                             header('HTTP/1.1 404 Not Found');
                             header('Status: 404 Not Found');
@@ -339,7 +354,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             $this->context->smarty->assign('packItems', $presentedPackItems);
             $this->context->smarty->assign('noPackPrice', $this->product->getNoPackPrice());
-            $this->context->smarty->assign('displayPackPrice', ($pack_items && $productPrice < $this->product->getNoPackPrice()) ? true : false);
+            $this->context->smarty->assign('displayPackPrice', ($pack_items && $productPrice < Pack::noPackPrice((int) $this->product->id)));
             $this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
 
             $accessories = $this->product->getAccessories($this->context->language->id);
@@ -468,8 +483,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_minimal_quantity' => $minimalProductQuantity,
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
-            // We use the meta_title key because product_title is used for the title of the page
-            'product_title' => $product['meta_title'],
+            'product_title' => $this->getProductPageTitle(
+                $this->getTemplateVarPage()['meta'] ?? []
+            ),
             'is_quick_view' => $isQuickView,
         ]));
     }
@@ -614,6 +630,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->combinations[$row['id_product_attribute']]['weight'] = (float) $row['weight'];
                 $this->combinations[$row['id_product_attribute']]['quantity'] = (int) $row['quantity'];
                 $this->combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
+                $this->combinations[$row['id_product_attribute']]['ean13'] = $row['ean13'];
+                $this->combinations[$row['id_product_attribute']]['mpn'] = $row['mpn'];
+                $this->combinations[$row['id_product_attribute']]['upc'] = $row['upc'];
+                $this->combinations[$row['id_product_attribute']]['isbn'] = $row['isbn'];
                 $this->combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
                 $this->combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
                 if ($row['available_date'] != '0000-00-00' && Validate::isDate($row['available_date'])) {
@@ -694,9 +714,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             $id_product_attributes[] = $row['id_product_attribute'];
                         }
                     }
-                    $id_attributes = Db::getInstance()->executeS('SELECT `id_attribute` FROM `' . _DB_PREFIX_ . 'product_attribute_combination` pac2
-                        WHERE `id_product_attribute` IN (' . implode(',', array_map('intval', $id_product_attributes)) . ')
-                        AND id_attribute NOT IN (' . implode(',', array_map('intval', $current_selected_attributes)) . ')');
+                    $id_attributes = Db::getInstance()->executeS('SELECT pac2.`id_attribute` FROM `' . _DB_PREFIX_ . 'product_attribute_combination` pac2' .
+                        ((!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && 0 == Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) ?
+                        ' INNER JOIN `' . _DB_PREFIX_ . 'stock_available` pa ON pa.id_product_attribute = pac2.id_product_attribute
+                        WHERE pa.quantity > 0 AND ' :
+                        ' WHERE ') .
+                        'pac2.`id_product_attribute` IN (' . implode(',', array_map('intval', $id_product_attributes)) . ')
+                        AND pac2.id_attribute NOT IN (' . implode(',', array_map('intval', $current_selected_attributes)) . ')');
                     foreach ($id_attributes as $k => $row) {
                         $id_attributes[$k] = (int) $row['id_attribute'];
                     }
@@ -987,15 +1011,18 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     private function tryToGetAvailableIdProductAttribute($checkedIdProductAttribute)
     {
         if (!Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
-            $availableProductAttributes = $this->product->getAttributeCombinations();
+            $productCombinations = $this->product->getAttributeCombinations();
             if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock)) {
                 $availableProductAttributes = array_filter(
-                    $availableProductAttributes,
+                    $productCombinations,
                     function ($elem) {
                         return $elem['quantity'] > 0;
                     }
                 );
+            } else {
+                $availableProductAttributes = $productCombinations;
             }
+
             $availableProductAttribute = array_filter(
                 $availableProductAttributes,
                 function ($elem) use ($checkedIdProductAttribute) {
@@ -1004,6 +1031,45 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             );
 
             if (empty($availableProductAttribute) && count($availableProductAttributes)) {
+                // if selected combination is NOT available ($availableProductAttribute) but they are other alternatives ($availableProductAttributes), then we'll try to get the closest.
+                if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock)) {
+                    // first lets get information of the selected combination.
+                    $checkProductAttribute = array_filter(
+                        $productCombinations,
+                        function ($elem) use ($checkedIdProductAttribute) {
+                            return $elem['id_product_attribute'] == $checkedIdProductAttribute || (!$checkedIdProductAttribute && $elem['default_on']);
+                        }
+                    );
+                    if (count($checkProductAttribute)) {
+                        // now lets find other combinations for the selected attributes.
+                        $alternativeProductAttribute = [];
+                        foreach ($checkProductAttribute as $key => $attribute) {
+                            $alternativeAttribute = array_filter(
+                                $availableProductAttributes,
+                                function ($elem) use ($attribute) {
+                                    return $elem['id_attribute'] == $attribute['id_attribute'] && !$elem['is_color_group'];
+                                }
+                            );
+                            foreach ($alternativeAttribute as $key => $value) {
+                                $alternativeProductAttribute[$key] = $value;
+                            }
+                        }
+
+                        if (count($alternativeProductAttribute)) {
+                            // if alternative combination is found, order the list by quantity to use the one with more stock.
+                            usort($alternativeProductAttribute, function ($a, $b) {
+                                if ($a['quantity'] == $b['quantity']) {
+                                    return 0;
+                                }
+
+                                return ($a['quantity'] > $b['quantity']) ? -1 : 1;
+                            });
+
+                            return (int) array_shift($alternativeProductAttribute)['id_product_attribute'];
+                        }
+                    }
+                }
+
                 return (int) array_shift($availableProductAttributes)['id_product_attribute'];
             }
         }
@@ -1047,7 +1113,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(['product' => $this->product])->present();
         $product['ecotax'] = Tools::convertPrice((float) $product['ecotax'], $this->context->currency, true, $this->context);
-        $product['ecotax_tax_inc'] = $product['ecotax_tax_inc'];
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 
@@ -1118,17 +1183,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function findProductCombinationById($combinationId)
     {
-        $foundCombination = null;
-        $combinations = $this->product->getAttributesGroups($this->context->language->id);
-        foreach ($combinations as $combination) {
-            if ((int) ($combination['id_product_attribute']) === $combinationId) {
-                $foundCombination = $combination;
+        $combinations = $this->product->getAttributesGroups($this->context->language->id, $combinationId);
 
-                break;
-            }
+        if ($combinations === false || !is_array($combinations) || empty($combinations)) {
+            return null;
         }
 
-        return $foundCombination;
+        return reset($combinations);
     }
 
     /**
@@ -1153,13 +1214,19 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $categoryDefault = new Category($this->product->id_category_default, $this->context->language->id);
 
         foreach ($categoryDefault->getAllParents() as $category) {
-            if ($category->id_parent != 0 && !$category->is_root_category) {
-                $breadcrumb['links'][] = $this->getCategoryPath($category);
+            if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {
+                $breadcrumb['links'][] = [
+                    'title' => $category->name,
+                    'url' => $this->context->link->getCategoryLink($category),
+                ];
             }
         }
 
-        if (!$categoryDefault->is_root_category) {
-            $breadcrumb['links'][] = $this->getCategoryPath($categoryDefault);
+        if ($categoryDefault->id_parent != 0 && !$categoryDefault->is_root_category && $categoryDefault->active) {
+            $breadcrumb['links'][] = [
+                'title' => $categoryDefault->name,
+                'url' => $this->context->link->getCategoryLink($categoryDefault),
+            ];
         }
 
         $breadcrumb['links'][] = [
