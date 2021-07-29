@@ -91,7 +91,10 @@ class ProductShopUpdater
         /** @var Product $sourceProduct */
         $sourceProduct = $this->productRepository->get($productId, $sourceShopId);
 
+        // @todo: for now only fields from product_shop table ar handed, we still need to handle multilang, stock_available, and probably other things (in another PR)
         $fields = [];
+        // The fields are fetched separately for more clarity, and it could also allow to configure which parts are copied
+        // (e.g copy only prices but not stock)
         $fields = $fields + $this->getAssociationFields($sourceProduct);
         $fields = $fields + $this->getPricesFields($sourceProduct);
         $fields = $fields + $this->getStockFields($sourceProduct);
