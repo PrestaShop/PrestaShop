@@ -24,7 +24,7 @@
  */
 
 const combinationListId = '#combination_list';
-const attachmentsBlockId = '#product_options_attachments';
+const attachmentsBlockId = '#product_specifications_attachments';
 
 export default {
   productForm: 'form[name=product]',

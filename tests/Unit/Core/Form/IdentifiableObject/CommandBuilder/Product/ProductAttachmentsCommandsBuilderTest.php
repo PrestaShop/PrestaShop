@@ -68,14 +68,14 @@ class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilde
 
         yield [
             [
-                'options' => null,
+                'specifications' => null,
             ],
             [],
         ];
 
         yield [
             [
-                'options' => [
+                'specifications' => [
                     'attachments' => null,
                 ],
             ],
@@ -84,7 +84,7 @@ class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilde
 
         yield [
             [
-                'options' => [
+                'specifications' => [
                     'attachments' => [],
                 ],
             ],
@@ -93,7 +93,7 @@ class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilde
 
         yield [
             [
-                'options' => [
+                'specifications' => [
                     'attachments' => [
                         'attached_files' => [],
                     ],
@@ -104,7 +104,7 @@ class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilde
 
         yield [
             [
-                'options' => [
+                'specifications' => [
                     'attachments' => [
                         'attached_files' => [
                             [

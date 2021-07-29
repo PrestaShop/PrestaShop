@@ -602,9 +602,13 @@ class ProductFormDataProviderTest extends TestCase
             $expectedOutputData,
         ];
 
-        $localizedValues = [
-            1 => 'english',
-            2 => 'french',
+        $localizedNames = [
+            1 => 'english name',
+            2 => 'french name',
+        ];
+        $localizedDescriptions = [
+            1 => 'english description',
+            2 => 'french description',
         ];
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
@@ -621,8 +625,14 @@ class ProductFormDataProviderTest extends TestCase
             'mpn' => 'mpn_2',
             'reference' => 'reference_2',
             'attachments' => [
-                new AttachmentInformation(1, $localizedValues, 'test1', 'image/jpeg'),
-                new AttachmentInformation(2, [2 => 'russian'], 'test2', 'image/png'),
+                new AttachmentInformation(
+                    1,
+                    $localizedNames,
+                    $localizedDescriptions,
+                    'test1',
+                    'image/jpeg',
+                    1042
+                ),
             ],
         ];
         $expectedOutputData['footer']['active'] = false;
@@ -639,18 +649,12 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['specifications']['references']['mpn'] = 'mpn_2';
         $expectedOutputData['specifications']['references']['reference'] = 'reference_2';
 
-        $expectedOutputData['options']['attachments']['attached_files'] = [
+        $expectedOutputData['specifications']['attachments']['attached_files'] = [
             [
                 'attachment_id' => 1,
-                'name' => 'english',
+                'name' => 'english name',
                 'file_name' => 'test1',
                 'mime_type' => 'image/jpeg',
-            ],
-            [
-                'attachment_id' => 2,
-                'name' => 'russian',
-                'file_name' => 'test2',
-                'mime_type' => 'image/png',
             ],
         ];
 
@@ -1233,8 +1237,6 @@ class ProductFormDataProviderTest extends TestCase
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'specifications' => [
-                'features' => [],
-                'customizations' => [],
                 'references' => [
                     'mpn' => 'mpn',
                     'upc' => 'upc',
@@ -1242,6 +1244,9 @@ class ProductFormDataProviderTest extends TestCase
                     'isbn' => 'isbn',
                     'reference' => 'reference',
                 ],
+                'features' => [],
+                'attachments' => [],
+                'customizations' => [],
             ],
             'stock' => [
                 'quantities' => [
@@ -1313,7 +1318,6 @@ class ProductFormDataProviderTest extends TestCase
                 'show_condition' => false,
                 'condition' => ProductCondition::NEW,
                 'suppliers' => [],
-                'attachments' => [],
             ],
             'footer' => [
                 'active' => true,
