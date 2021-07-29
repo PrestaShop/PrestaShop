@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-multi-shop-prices
 @reset-database-before-feature
+@product-multi-shop
 @update-multi-shop-prices
 Feature: Update product price fields from Back Office (BO) for multiple shops.
   As a BO user I want to be able to update product fields associated with price for multiple shops.

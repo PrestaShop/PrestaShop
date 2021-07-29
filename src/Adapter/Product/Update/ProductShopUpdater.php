@@ -85,7 +85,7 @@ class ProductShopUpdater
         $this->shopRepository->assertShopExists($targetShopId);
 
         /** @var Product $sourceProduct */
-        $sourceProduct = $this->productRepository->get($productId, ShopConstraint::shop($sourceShopId->getValue()));
+        $sourceProduct = $this->productRepository->get($productId, $sourceShopId->getValue());
 
         $fields = [];
         $fields = $fields + $this->getAssociationFields($sourceProduct);
