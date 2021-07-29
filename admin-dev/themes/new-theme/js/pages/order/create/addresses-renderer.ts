@@ -84,7 +84,6 @@ export default class AddressesRenderer {
     if (address.delivery) {
       $(createOrderMap.deliveryAddressDetails).html(address.formattedAddress);
       deliveryAddressOption.selected = true;
-
       $(createOrderMap.deliveryAddressEditBtn).prop(
         'href',
         this.router.generate('admin_cart_addresses_edit', {
