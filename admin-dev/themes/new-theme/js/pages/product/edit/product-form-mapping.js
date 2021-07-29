@@ -36,6 +36,10 @@ export default {
     'product[pricing][retail_price][price_tax_included]',
     // 'product[shortcuts][retail_price][price_tax_included]',
   ],
+  'product.price.overrideAllPriceTaxExcluded': [
+    'product[pricing][retail_price][multistore_override_all_price_tax_excluded]',
+    'product[pricing][retail_price][multistore_override_all_price_tax_included]',
+  ],
   'product.price.taxRulesGroupId': [
     'product[pricing][tax_rules_group_id]',
     // 'product[shortcuts][retail_price][tax_rules_group_id]',
