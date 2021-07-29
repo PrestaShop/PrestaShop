@@ -150,8 +150,36 @@ $product-page-padding-bottom: 80px !default;
         flex-direction: row;
         margin: 0 -1rem;
 
-        > .form-group {
+        .image_preview-widget {
+          width: 98px;
+
+          img {
+            display: block;
+            width: auto;
+            max-width: 98px;
+            height: auto;
+            max-height: 98px;
+            margin: 0 auto;
+          }
+        }
+
+        .header-name {
           flex-grow: 1;
+        }
+
+        .references-display {
+          margin: 1rem 0;
+
+          label {
+            font-weight: 600;
+
+            &::after {
+              content: ":";
+            }
+          }
+        }
+
+        > .form-group {
           margin: 0 1rem;
 
           &.select-widget {
@@ -1039,6 +1067,13 @@ $product-page-padding-bottom: 80px !default;
     max-width: 100%;
     padding: 0;
     list-style: none;
+  }
+
+  #product_stock_options,
+  #product_specifications_references {
+    input {
+      max-width: 415px;
+    }
   }
 }
 

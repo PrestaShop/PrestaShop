@@ -23,34 +23,31 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Specification;
 
-use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CustomizationsType extends TranslatorAwareType
+class SpecificationsType extends TranslatorAwareType
 {
+    /**
+     * {@inheritDoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('customization_fields', CollectionType::class, [
-                'entry_type' => CustomizationFieldType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype_name' => '__CUSTOMIZATION_FIELD_INDEX__',
+            ->add('references', ReferencesType::class)
+            ->add('features', FeaturesType::class)
+            ->add('attached_files', UnavailableType::class, [
+                'label' => $this->trans('Attached files', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
             ])
-            ->add('add_customization_field', IconButtonType::class, [
-                'label' => $this->trans('Add a customization field', 'Admin.Catalog.Feature'),
-                'icon' => 'add_circle',
-                'attr' => [
-                    'class' => 'btn-outline-secondary add-customization-btn',
-                ],
-            ])
+            ->add('customizations', CustomizationsType::class)
         ;
     }
 
@@ -60,13 +57,11 @@ class CustomizationsType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'label' => $this->trans('Customization', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
-            'label_subtitle' => $this->trans('Customers can personalize the product by entering some text or by providing custom image files.', 'Admin.Catalog.Feature'),
-            'attr' => [
-                'class' => 'product-customizations-collection',
-            ],
-        ]);
+        $resolver
+            ->setDefaults([
+                'required' => false,
+                'label' => false,
+            ])
+        ;
     }
 }

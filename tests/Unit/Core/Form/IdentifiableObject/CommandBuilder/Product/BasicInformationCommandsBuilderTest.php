@@ -31,7 +31,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandsBuilder;
 
-class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTest
+class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
@@ -58,7 +58,7 @@ class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTe
         $command = new UpdateProductBasicInformationCommand($this->getProductId()->getValue());
         yield [
             [
-                'basic' => [
+                'description' => [
                     'not_handled' => 0,
                 ],
             ],
@@ -88,7 +88,7 @@ class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTe
         $command->setLocalizedDescriptions($localizedDescriptions);
         yield [
             [
-                'basic' => [
+                'description' => [
                     'description' => $localizedDescriptions,
                 ],
             ],
@@ -103,7 +103,7 @@ class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTe
         $command->setLocalizedShortDescriptions($localizedShortDescriptions);
         yield [
             [
-                'basic' => [
+                'description' => [
                     'description_short' => $localizedShortDescriptions,
                 ],
             ],

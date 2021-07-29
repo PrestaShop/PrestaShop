@@ -26,9 +26,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Basic;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Description;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
+use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ProductImageType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
@@ -39,7 +40,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 
-class BasicType extends TranslatorAwareType
+class DescriptionType extends TranslatorAwareType
 {
     /**
      * {@inheritDoc}
@@ -103,7 +104,7 @@ class BasicType extends TranslatorAwareType
                 ],
                 'label_tag_name' => 'h2',
             ])
-            ->add('features', FeaturesType::class)
+            ->add('categories', CategoriesType::class)
             ->add('manufacturer', ManufacturerType::class)
             ->add('related_products', UnavailableType::class, [
                 'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),

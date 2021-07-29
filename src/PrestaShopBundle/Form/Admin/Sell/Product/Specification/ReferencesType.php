@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Specification;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
@@ -99,7 +99,6 @@ class ReferencesType extends TranslatorAwareType
             'label' => $this->trans('References', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h2',
             'required' => false,
-            'columns_number' => 3,
         ]);
     }
 }

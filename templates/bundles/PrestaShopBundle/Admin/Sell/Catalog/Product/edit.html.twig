@@ -82,8 +82,14 @@
     {% endblock %}
 
     <div id="form_content" class="product-tabs tab-content">
-      {% block product_tab_basic %}
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/basic.html.twig', {
+      {% block product_tab_description %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/description.html.twig', {
+          'productForm': productForm,
+        }) }}
+      {% endblock %}
+
+      {% block product_tab_specifications %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/specifications.html.twig', {
           'productForm': productForm,
         }) }}
       {% endblock %}

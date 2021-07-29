@@ -28,34 +28,40 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-/**
- * Builder used to build UpdateProductBasicInformationCommand
- */
-class BasicInformationCommandsBuilder implements ProductCommandsBuilderInterface
+class DetailsCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
-     * {@inheritdoc}
+     * @param ProductId $productId
+     * @param array $formData
+     *
+     * @return array|UpdateProductDetailsCommand[]
      */
     public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (empty($formData['description']) && empty($formData['header']['name'])) {
+        if (empty($formData['specifications']['references'])) {
             return [];
         }
 
-        $descriptionData = $formData['description'] ?? [];
-        $command = new UpdateProductBasicInformationCommand($productId->getValue());
+        $referencesData = $formData['specifications']['references'];
+        $command = new UpdateProductDetailsCommand($productId->getValue());
 
-        if (isset($formData['header']['name'])) {
-            $command->setLocalizedNames($formData['header']['name']);
+        if (isset($referencesData['reference'])) {
+            $command->setReference($referencesData['reference']);
         }
-        if (isset($descriptionData['description'])) {
-            $command->setLocalizedDescriptions($descriptionData['description']);
+        if (isset($referencesData['mpn'])) {
+            $command->setMpn($referencesData['mpn']);
         }
-        if (isset($descriptionData['description_short'])) {
-            $command->setLocalizedShortDescriptions($descriptionData['description_short']);
+        if (isset($referencesData['upc'])) {
+            $command->setUpc($referencesData['upc']);
+        }
+        if (isset($referencesData['ean_13'])) {
+            $command->setEan13($referencesData['ean_13']);
+        }
+        if (isset($referencesData['isbn'])) {
+            $command->setIsbn($referencesData['isbn']);
         }
 
         return [$command];
