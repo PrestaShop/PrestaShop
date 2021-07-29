@@ -40,10 +40,8 @@ export type FormUpdateEvent = {
  * mapping. Each field from the model is mapped to a form input, or several, each input is watched
  * to keep the model consistent.
  *
- * The model mapping used for this component is an object
- * which uses the modelKey as a key (it represents
- * the property path in the object, separated by a dot) and
- * the input names as value (they follow Symfony
+ * The model mapping used for this component is an object which uses the modelKey as a key (it represents
+ * the property path in the object, separated by a dot) and the input names as value (they follow Symfony
  * convention naming using brackets). Here is an example of mapping:
  *
  * const modelMapping = {
@@ -292,7 +290,7 @@ export default class FormObjectMapper {
       return;
     }
 
-    const updatedValue = $(target).val();
+    const updatedValue = this.getInputValue($(target));
     const updatedModelKey = this.formMapping[target.name];
 
     // Update the mapped input fields
@@ -301,6 +299,19 @@ export default class FormObjectMapper {
     // Then update model and emit event
     this.updateObjectByKey(updatedModelKey, updatedValue);
     this.eventEmitter.emit(this.modelUpdatedEventName, this.model);
+  }
+
+  /**
+   * @param {jQuery} $input
+   *
+   * @returns {*}
+   */
+  getInputValue($input) {
+    if ($input.is(':checkbox')) {
+      return $input.is(':checked');
+    }
+
+    return $input.val();
   }
 
   /**
@@ -353,13 +364,18 @@ export default class FormObjectMapper {
       return;
     }
 
-    // This check is important to avoid infinite loops,
-    // we don't use strict equality on purpose because it would result
-    // into a potential infinite loop if type don't match,
-    // which can easily happen with a number value and a text input.
+    const inputValue = this.getInputValue($input);
+
+    // This check is important to avoid infinite loops, we don't use strict equality on purpose because it would result
+    // into a potential infinite loop if type don't match, which can easily happen with a number value and a text input.
     // eslint-disable-next-line eqeqeq
-    if ($input.val() != value) {
-      $input.val(<string>value);
+    if (inputValue != value) {
+      if ($input.is(':checkbox')) {
+        $input.val(!!value);
+        $input.prop('checked', !!value);
+      } else {
+        $input.val(<string>value);
+      }
 
       if ($input.data('toggle') === 'select2') {
         // This is required for select2, because only changing the val doesn't update
@@ -377,8 +393,11 @@ export default class FormObjectMapper {
    *
    * @private
    */
-  private updateFullObject(): void {
-    const serializedForm = this.$form.serializeJSON();
+  updateFullObject():void {
+    const serializedForm = this.$form.serializeJSON({
+      checkboxUncheckedValue: '0',
+    });
+
     this.model = {};
     Object.keys(this.modelMapping).forEach((modelKey) => {
       const formMapping = this.modelMapping[modelKey];
