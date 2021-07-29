@@ -59,7 +59,7 @@ class PricesCommandsBuilder extends MultistoreCommandsBuilder implements Product
         $priceData = $formData['pricing'];
 
         if (isset($priceData['retail_price']['price_tax_excluded'])) {
-            if (isset($priceData['retail_price']['multistore_override_all_price_tax_excluded'])) {
+            if (!empty($priceData['retail_price']['multistore_override_all_price_tax_excluded'])) {
                 $this->getAllShopsCommand($productId)->setPrice((string) $priceData['retail_price']['price_tax_excluded']);
             } else {
                 $this->getSingleCommand($productId)->setPrice((string) $priceData['retail_price']['price_tax_excluded']);
