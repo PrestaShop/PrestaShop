@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPrices
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use Product;
 
 /**
@@ -78,7 +79,24 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
      */
     public function handle(UpdateProductPricesCommand $command): void
     {
-        $shopId = $command->getShopConstraint() && $command->getShopConstraint()->getShopId() ? $command->getShopConstraint()->getShopId()->getValue() : null;
+        if (null === $command->getShopConstraint()) {
+            $this->updatePriceByShop($command);
+        } elseif ($command->getShopConstraint()->forAllShops()) {
+            $shops = $this->productRepository->getAssociatedShopIds($command->getProductId());
+            foreach ($shops as $shopId) {
+                $this->updatePriceByShop($command, $shopId);
+            }
+        } else {
+            $this->updatePriceByShop($command, $command->getShopConstraint()->getShopId());
+        }
+    }
+
+    /**
+     * @param UpdateProductPricesCommand $command
+     * @param ShopId|null $shopId
+     */
+    private function updatePriceByShop(UpdateProductPricesCommand $command, ?ShopId $shopId = null): void
+    {
         $product = $this->productRepository->get($command->getProductId(), $shopId);
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
