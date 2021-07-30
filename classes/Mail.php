@@ -656,7 +656,7 @@ class MailCore extends ObjectModel
                 'Swift Error: ' . $e->getMessage(),
                 3,
                 null,
-                'SwiftMessage'
+                'Swift_Message'
             );
 
             return false;

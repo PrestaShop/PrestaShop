@@ -144,7 +144,7 @@ class PrestaShopLoggerCore extends ObjectModel
         $log = new PrestaShopLogger();
         $log->severity = (int) $severity;
         $log->error_code = (int) $errorCode;
-        $log->message = pSQL($message);
+        $log->message = $message;
         $log->date_add = date('Y-m-d H:i:s');
         $log->date_upd = date('Y-m-d H:i:s');
 
@@ -158,12 +158,11 @@ class PrestaShopLoggerCore extends ObjectModel
             $log->id_employee = (int) $idEmployee;
         }
 
-        if (!empty($object_type)) {
-            $log->object_type = pSQL($object_type);
-        }
-
-        if (!empty($object_id)) {
-            $log->object_id = (int) $object_id;
+        if (!empty($objectType)) {
+            $log->object_type = $objectType;
+            if (!empty($objectId)) {
+                $log->object_id = (int) $objectId;
+            }
         }
 
         $log->id_lang = (int) $context->language->id ?? null;
