@@ -487,7 +487,8 @@ class ModuleController extends ModuleAbstractController
         }
 
         if ($response[$module]['status'] === true && $action != 'uninstall') {
-            $moduleInstance = $moduleRepository->getModule($module);
+            $moduleInstance = $moduleRepository->getModule($module, false, true);
+
             $collection = AddonsCollection::createFrom([$moduleInstance]);
             $response[$module]['action_menu_html'] = $this->container->get('twig')->render(
                 '@PrestaShop/Admin/Module/Includes/action_menu.html.twig',
