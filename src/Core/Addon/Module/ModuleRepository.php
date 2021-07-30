@@ -178,6 +178,8 @@ class ModuleRepository implements ModuleRepositoryInterface
             $this->cacheProvider->delete($this->cacheFilePath);
         }
         $this->cache = [];
+
+        $this->loadedModules->deleteAll();
     }
 
     /**
@@ -422,9 +424,9 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @return Module
      */
-    public function getModule($name, $skip_main_class_attributes = false)
+    public function getModule($name, $skip_main_class_attributes = false, $force = false)
     {
-        if ($this->loadedModules->contains($name)) {
+        if ($this->loadedModules->contains($name) && !$force) {
             return $this->loadedModules->fetch($name);
         }
 
