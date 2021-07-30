@@ -33,8 +33,8 @@ class OrderConfirmationControllerCore extends FrontController
     public $id_module;
     public $id_order;
     public $secure_key;
-    public $order;
-    public $customer;
+    protected $order;
+    protected $customer;
     public $reference; // Deprecated
     public $id_cart; // Deprecated
     public $order_presenter; // Deprecated
@@ -53,19 +53,18 @@ class OrderConfirmationControllerCore extends FrontController
             $this->checkFreeOrder();
         }
 
-        // We get the required data from URL
         $this->id_module = (int) (Tools::getValue('id_module', 0));
         $this->id_order = (int) (Tools::getValue('id_order', 0));
         $this->secure_key = Tools::getValue('key', false);
         $this->order = new Order((int) ($this->id_order));
 
-        // We run all the required checks and if something is smelly, we redirect him to order history
-        // The confirmation link must contain a unique secure key matching the order key,
-        // it prevents user to view other customer's order confirmations
+        // This data is kept only for backward compatibility purposes
+        $this->id_cart = (int) $this->order->reference;
+        $this->reference = (string) $this->order->reference;
+
+        // The confirmation link must contain a unique order secure key matching the key saved in database,
+        // this prevents user to view other customer's order confirmations
         $redirectLink = 'index.php?controller=history';
-        if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
-            Tools::redirect($redirectLink . (Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
-        }
         if (!Validate::isLoadedObject($this->order) || $this->secure_key != $this->order->secure_key) {
             Tools::redirect($redirectLink);
         }
@@ -85,28 +84,23 @@ class OrderConfirmationControllerCore extends FrontController
      */
     public function postProcess()
     {
-        // If user filled the password and submitted the form to convert his account on the bottom of screen
         if (Tools::isSubmit('submitTransformGuestToCustomer')) {
             // Only variable we need is the password
             // There is no need to check other variables, because hacker would be kicked out in init(), if he tried to convert another customer
             $password = Tools::getValue('password');
 
-            // If no password was entered
             if (empty($password)) {
                 $this->errors[] = $this->trans(
                     'To convert your account, you must enter a password.',
                     [],
                     'Shop.Forms.Help'
                 );
-
-            // If the password is short
             } elseif (strlen($password) < Validate::PASSWORD_LENGTH) {
                 $this->errors[] = $this->trans(
                     'Your password must be at least %min% characters long.',
                     ['%min%' => Validate::PASSWORD_LENGTH],
                     'Shop.Forms.Help'
                 );
-
             // Prevent error
             // A) either on page refresh
             // B) if we already transformed him in other window or through backoffice
@@ -116,7 +110,6 @@ class OrderConfirmationControllerCore extends FrontController
                     [],
                     'Shop.Notifications.Success'
                 );
-
             // Attempt to convert the customer
             } elseif ($this->customer->transformToCustomer($this->context->language->id, $password)) {
                 $this->success[] = $this->trans(
@@ -124,8 +117,6 @@ class OrderConfirmationControllerCore extends FrontController
                     [],
                     'Shop.Notifications.Success'
                 );
-
-            // Show general error if something unexpected happened
             } else {
                 $this->success[] = $this->trans(
                     'An unexpected error occurred while creating your account.',
@@ -159,7 +150,7 @@ class OrderConfirmationControllerCore extends FrontController
         ]);
         $this->setTemplate('checkout/order-confirmation');
 
-        // If logged in guest we clear the cookie for security reason
+        // If logged in guest we clear the cookie for security reasons
         if ($this->context->customer->is_guest) {
             $this->context->customer->mylogout();
         }
