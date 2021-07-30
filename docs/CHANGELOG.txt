@@ -54,8 +54,6 @@ Release Notes for PrestaShop 1.7
     - #24320: Bug fix for number of decimals in product price (by @samberrry)
 - Core:
   - Improvement:
-    - #25449: Build assets on 1.7.7.x  (by @matthieu-rolland)
-    - #25447: Update prestashop modules on 1.7.7.x (by @matthieu-rolland)
     - #24957: Bump modules Welcome to 6.0.5 & ProductComments to 4.2.2 (by @Progi1984)
   - Bug fix:
     - #25413: Fix performance issue on Smarty template caching (by @lukaslau)
