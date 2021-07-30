@@ -407,6 +407,7 @@ GitHub contributors:
 - LucasC
 - Ludovic CHEVRAUX
 - Luis David de la Fuente
+- Lukas Laurinaitis
 - Lyo Nick
 - LyoNick
 - M-Mommsen
@@ -527,6 +528,7 @@ GitHub contributors:
 - oleacorner
 - Oleg Rumyancev
 - Olivier Bonvalet
+- Olivier Le Corre
 - Olivier Monaco
 - OneDotIT
 - Oskar Andersson
@@ -636,6 +638,7 @@ GitHub contributors:
 - sadlyblue
 - sagaradonis
 - sallemiines
+- Sam
 - Sam Sanchez
 - Samir Shah
 - Samuel
@@ -648,6 +651,7 @@ GitHub contributors:
 - Seb
 - Sebastian Madejski
 - Sebastien
+- Sébastien ALFAIATE
 - Sébastien Bareyre
 - Sebastien Bocahu
 - Sébastien LE BRUCHEC
