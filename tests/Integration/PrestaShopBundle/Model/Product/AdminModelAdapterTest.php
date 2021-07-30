@@ -145,6 +145,8 @@ class AdminModelAdapterTest extends KernelTestCase
             'wholesale_price' => '0.000000',
             'price' => '0.000000',
             'ecotax' => '0.000000',
+            'ecotax_tax_excluded' => '0.000000',
+            'ecotax_tax_included' => '0.000000',
             'quantity' => 300,
             'weight' => '0.000000',
             'unit_price_impact' => '0.000000',
@@ -196,8 +198,8 @@ class AdminModelAdapterTest extends KernelTestCase
 
     protected function tearDown(): void
     {
+        parent::tearDown();
         unset($this->product, $this->adminModelAdapter);
-        self::$kernel = null;
     }
 
     /**
@@ -210,7 +212,7 @@ class AdminModelAdapterTest extends KernelTestCase
 
     public function testGetFormData(): void
     {
-        self::assertIsArray($this->adminModelAdapter->getFormData($this->product));
+        $this->assertIsArray($this->adminModelAdapter->getFormData($this->product));
         $expectedArrayStructure = $this->fakeFormData();
 
         foreach ($expectedArrayStructure as $property => $value) {
@@ -224,7 +226,7 @@ class AdminModelAdapterTest extends KernelTestCase
 
     public function testGetModelData(): void
     {
-        self::assertIsArray($this->adminModelAdapter->getModelData($this->fakeFormData()));
+        $this->assertIsArray($this->adminModelAdapter->getModelData($this->fakeFormData()));
     }
 
     /**
@@ -242,8 +244,11 @@ class AdminModelAdapterTest extends KernelTestCase
             'attribute_wholesale_price' => '0.000000',
             'attribute_price_impact' => 0,
             'attribute_price' => '0.000000',
-            'final_price' => 0,
+            'attribute_price_display' => '$0.00',
+            'final_price' => '0.000000',
+            'final_price_tax_included' => '0.000000',
             'attribute_priceTI' => '',
+            'product_ecotax' => '0.000000',
             'attribute_ecotax' => '0.000000',
             'attribute_weight_impact' => 0,
             'attribute_weight' => '0.000000',
@@ -254,8 +259,10 @@ class AdminModelAdapterTest extends KernelTestCase
             'attribute_low_stock_alert' => '1',
             'available_date_attribute' => '0000-00-00',
             'attribute_default' => false,
+            'attribute_location' => false,
             'attribute_quantity' => 300,
             'name' => 'Taille - L',
+            'id_product' => null,
         ];
         $combinationDataProvider = self::$kernel->getContainer()->get('prestashop.adapter.data_provider.combination');
         $actualReturn = $combinationDataProvider->completeCombination($this->fakeCombination(), $this->product);
@@ -268,5 +275,8 @@ class AdminModelAdapterTest extends KernelTestCase
                 sprintf('The expected value for property %s is wrong', $property)
             );
         }
+
+        // Test full equals to check if there are additional unexpected fields
+        $this->assertEquals($expectedStructureReturn, $actualReturn);
     }
 }

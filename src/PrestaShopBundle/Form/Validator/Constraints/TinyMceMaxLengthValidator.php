@@ -81,9 +81,8 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
             "\r\n",
         ];
         $str = str_replace($replaceArray, [''], strip_tags($value));
-        $length = iconv_strlen($str);
 
-        if ($length > $constraint->max) {
+        if (iconv_strlen($str) > $constraint->max) {
             $message = $constraint->message ?? $this->translator->trans(
                 'This value is too long. It should have %limit% characters or less.',
                 ['%limit%' => $constraint->max],

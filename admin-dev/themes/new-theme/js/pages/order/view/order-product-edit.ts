@@ -58,6 +58,8 @@ export default class OrderProductEdit {
 
   priceTaxIncludedInput: JQuery | null;
 
+  taxExcluded: number | null;
+
   taxIncluded: number | null;
 
   taxRate: number | null;
@@ -80,6 +82,8 @@ export default class OrderProductEdit {
 
   locationText: JQuery | null;
 
+  isOrderTaxIncluded: boolean | null;
+
   constructor(orderDetailId: number) {
     this.router = new Router();
     this.orderDetailId = orderDetailId;
@@ -91,9 +95,10 @@ export default class OrderProductEdit {
     this.quantityInput = $(OrderViewPageMap.productEditQuantityInput);
     this.orderPricesRefresher = new OrderPricesRefresher();
     this.availableText = null;
-
+    this.isOrderTaxIncluded = null;
     this.productEditInvoiceSelect = null;
     this.priceTaxIncludedInput = null;
+    this.taxExcluded = null;
     this.taxIncluded = null;
     this.taxRate = null;
     this.priceTaxExcludedInput = null;

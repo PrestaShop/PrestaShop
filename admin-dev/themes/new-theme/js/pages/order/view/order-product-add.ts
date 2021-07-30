@@ -77,6 +77,12 @@ export default class OrderProductAdd {
 
   orderPricesRefresher: OrderPricesRefresher;
 
+  isOrderTaxIncluded: boolean;
+
+  taxExcluded: number | null;
+
+  taxIncluded: number | null;
+
   constructor() {
     this.router = new Router();
     this.productAddActionBtn = $(OrderViewPageMap.productAddActionBtn);
@@ -106,7 +112,7 @@ export default class OrderProductAdd {
     this.priceTaxCalculator = new OrderPrices();
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
-    this.isOrderTaxIncluded = $(OrderViewPageMap.addProductTableRow).data('isOrderTaxIncluded');
+    this.isOrderTaxIncluded = $(OrderViewPageMap.productAddRow).data('isOrderTaxIncluded');
     this.taxExcluded = null;
     this.taxIncluded = null;
   }
@@ -175,7 +181,7 @@ export default class OrderProductAdd {
             (<unknown>(
               this.priceTaxCalculator.calculateTotalPrice(
                 newQuantity,
-                this.isOrderTaxIncluded ? this.taxIncluded : this.taxExcluded,
+                this.isOrderTaxIncluded ? <number> this.taxIncluded : <number> this.taxExcluded,
                 this.currencyPrecision,
               )
             ))
