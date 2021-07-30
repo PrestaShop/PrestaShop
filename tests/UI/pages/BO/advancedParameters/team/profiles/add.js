@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add profile page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddProfile extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add profile page
+   */
   constructor() {
     super();
 
@@ -19,8 +28,8 @@ class AddProfile extends BOBasePage {
 
   /**
    * Fill form for add/edit page profile
-   * @param page
-   * @param profileData
+   * @param page {Page} Browser tab
+   * @param profileData {profileData} Data to set on add/edit profile form
    * @return {Promise<string>}
    */
   async createEditProfile(page, profileData) {

@@ -315,17 +315,15 @@ class OrderAmountUpdater
                 $order->total_discounts = $order->total_discounts - $order->total_shipping_tax_incl + $totalShippingTaxIncluded;
                 $order->total_discounts_tax_excl = $order->total_discounts_tax_excl - $order->total_shipping_tax_excl + $totalShippingTaxExcluded;
                 $order->total_discounts_tax_incl = $order->total_discounts_tax_incl - $order->total_shipping_tax_incl + $totalShippingTaxIncluded;
+            } else {
+                $order->total_paid -= ($order->total_shipping_tax_incl - $totalShippingTaxIncluded);
+                $order->total_paid_tax_incl -= ($order->total_shipping_tax_incl - $totalShippingTaxIncluded);
+                $order->total_paid_tax_excl -= ($order->total_shipping_tax_excl - $totalShippingTaxExcluded);
             }
 
             $order->total_shipping = $totalShippingTaxIncluded;
             $order->total_shipping_tax_incl = $totalShippingTaxIncluded;
             $order->total_shipping_tax_excl = $totalShippingTaxExcluded;
-
-            if (!$freeShipping) {
-                $order->total_paid -= ($order->total_shipping_tax_incl - $totalShippingTaxIncluded);
-                $order->total_paid_tax_incl -= ($order->total_shipping_tax_incl - $totalShippingTaxIncluded);
-                $order->total_paid_tax_excl -= ($order->total_shipping_tax_excl - $totalShippingTaxExcluded);
-            }
         }
     }
 

@@ -49,15 +49,22 @@ class CombinationDetails
     private $attributes;
 
     /**
+     * @var float|null
+     */
+    private $price;
+
+    /**
      * @param string $reference
      * @param int $quantity
      * @param string[] $attributes
+     * @param float|null $price
      */
-    public function __construct(string $reference, int $quantity, array $attributes)
+    public function __construct(string $reference, int $quantity, array $attributes, ?float $price = null)
     {
         $this->reference = $reference;
         $this->quantity = $quantity;
         $this->attributes = $attributes;
+        $this->price = $price;
     }
 
     /**
@@ -82,5 +89,13 @@ class CombinationDetails
     public function getAttributes(): array
     {
         return $this->attributes;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getPrice(): ?float
+    {
+        return $this->price;
     }
 }

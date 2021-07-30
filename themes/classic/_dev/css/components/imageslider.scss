@@ -54,6 +54,13 @@
 
     .icon-next,
     .icon-prev {
+
+      @at-root .lang-rtl & {
+        .material-icons {
+          transform: rotate(-180deg);
+        }
+      }
+
       &::before {
         content: "";
       }

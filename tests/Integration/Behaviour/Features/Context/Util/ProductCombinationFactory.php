@@ -57,6 +57,9 @@ class ProductCombinationFactory
             $combination->reference = $combinationName;
             $combination->id_product = $productId;
             $combination->quantity = $combinationDetails->getQuantity();
+            if ($combinationDetails->getPrice()) {
+                $combination->price = $combinationDetails->getPrice();
+            }
             $combination->add();
             StockAvailable::setQuantity($productId, $combination->id, (int) $combination->quantity);
             $combinations[] = $combination;

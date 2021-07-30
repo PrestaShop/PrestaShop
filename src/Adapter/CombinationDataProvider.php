@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Product;
+use Tax;
 
 /**
  * This class will provide data from DB / ORM about product combination.
@@ -146,8 +147,30 @@ class CombinationDataProvider
             $attribute_unity_price_impact = -1;
         }
 
-        $finalPrice = (new DecimalNumber((string) $product->price))
-            ->plus(new DecimalNumber((string) $combination['price']))
+        $productTaxRate = $product->getTaxesRate();
+
+        // Get product basic prices
+        $productPrice = new DecimalNumber((string) $product->price);
+        $productPriceIncluded = $productPrice->times(new DecimalNumber((string) (1 + ($productTaxRate / 100))));
+        $productEcotax = new DecimalNumber((string) $product->ecotax);
+        $productEcotaxIncluded = $productEcotax->times(new DecimalNumber((string) (1 + (Tax::getProductEcotaxRate() / 100))));
+
+        // Get combination prices and impacts
+        $combinationEcotax = new DecimalNumber((string) $combination['ecotax_tax_excluded']);
+        $combinationEcotaxIncluded = new DecimalNumber((string) $combination['ecotax_tax_included']);
+        $combinationImpactTaxExcluded = new DecimalNumber((string) $combination['price']);
+        $combinationImpactTaxIncluded = $combinationImpactTaxExcluded->times(new DecimalNumber((string) (1 + ($productTaxRate / 100))));
+
+        $ecotax = $combinationEcotax->equalsZero() ? $productEcotax : $combinationEcotax;
+        $finalPrice = $productPrice
+            ->plus($ecotax)
+            ->plus($combinationImpactTaxExcluded)
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+
+        $ecotaxIncluded = $combinationEcotaxIncluded->equalsZero() ? $productEcotaxIncluded : $combinationEcotaxIncluded;
+        $finalPriceIncluded = $productPriceIncluded
+            ->plus($ecotaxIncluded)
+            ->plus($combinationImpactTaxIncluded)
             ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
 
         return [
@@ -159,11 +182,14 @@ class CombinationDataProvider
             'attribute_mpn' => $combination['mpn'],
             'attribute_wholesale_price' => $combination['wholesale_price'],
             'attribute_price_impact' => $attribute_price_impact,
-            'attribute_price' => $combination['price'],
-            'attribute_price_display' => $this->locale->formatPrice($combination['price'], $this->context->getContext()->currency->iso_code),
-            'final_price' => (string) $finalPrice,
+            'attribute_price' => $combinationImpactTaxExcluded->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS),
+            'attribute_price_display' => $this->locale->formatPrice((string) $combinationImpactTaxExcluded, $this->context->getContext()->currency->iso_code),
+            'final_price' => $finalPrice,
+            'final_price_tax_included' => $finalPriceIncluded,
             'attribute_priceTI' => '',
-            'attribute_ecotax' => $combination['ecotax'],
+            // The value is displayed with tax included
+            'product_ecotax' => $productEcotaxIncluded->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS),
+            'attribute_ecotax' => $combination['ecotax_tax_included'],
             'attribute_weight_impact' => $attribute_weight_impact,
             'attribute_weight' => $combination['weight'],
             'attribute_unit_impact' => $attribute_unity_price_impact,

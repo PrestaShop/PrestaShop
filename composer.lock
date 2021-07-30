@@ -6442,20 +6442,20 @@
         },
         {
             "name": "prestashop/ps_socialfollow",
-            "version": "v2.1.0",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_socialfollow.git",
-                "reference": "2a1bb73cbcdcf929b876b624f033d87c8b101133"
+                "reference": "3b537198d70f935e8c658d57f3e0c98306125838"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_socialfollow/zipball/2a1bb73cbcdcf929b876b624f033d87c8b101133",
-                "reference": "2a1bb73cbcdcf929b876b624f033d87c8b101133",
+                "url": "https://api.github.com/repos/PrestaShop/ps_socialfollow/zipball/3b537198d70f935e8c658d57f3e0c98306125838",
+                "reference": "3b537198d70f935e8c658d57f3e0c98306125838",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "php": ">=5.6"
             },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
@@ -6472,9 +6472,9 @@
             "homepage": "https://github.com/PrestaShop/ps_socialfollow",
             "support": {
                 "issues": "https://github.com/PrestaShop/ps_socialfollow/issues",
-                "source": "https://github.com/PrestaShop/ps_socialfollow/tree/v2.1.0"
+                "source": "https://github.com/PrestaShop/ps_socialfollow/tree/v2.2.0"
             },
-            "time": "2020-04-15T15:03:48+00:00"
+            "time": "2021-07-28T07:38:05+00:00"
         },
         {
             "name": "prestashop/ps_themecusto",

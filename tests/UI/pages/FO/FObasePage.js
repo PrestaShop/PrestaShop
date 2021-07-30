@@ -257,7 +257,7 @@ class FOBasePage extends CommonPage {
    * @returns {Promise<number>}
    */
   async getCartNotificationsNumber(page) {
-    return this.getNumberFromText(page, this.cartProductsCount);
+    return this.getNumberFromText(page, this.cartProductsCount, 2000);
   }
 
   /**

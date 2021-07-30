@@ -17,6 +17,7 @@ class AddCategory extends BOBasePage {
     this.metaDescriptionTextarea = '#category_meta_description_1';
     this.selectAllGroupAccessCheckbox = '.choice-table .table-bordered label';
     this.saveCategoryButton = '#save-button';
+
     // Selectors fo root category
     this.rootCategoryNameInput = '#root_category_name_1';
     this.rootCategoryDisplayedToggleInput = toggle => `#root_category_active_${toggle}`;
@@ -32,8 +33,8 @@ class AddCategory extends BOBasePage {
 
   /**
    * Fill form for add/edit category
-   * @param page
-   * @param categoryData
+   * @param page {Page} Browser tab
+   * @param categoryData {categoryData} Data to set on new/edit category form
    * @returns {Promise<string>}
    */
   async createEditCategory(page, categoryData) {
@@ -44,6 +45,7 @@ class AddCategory extends BOBasePage {
     await this.setValue(page, this.metaTitleInput, categoryData.metaTitle);
     await this.setValue(page, this.metaDescriptionTextarea, categoryData.metaDescription);
     await page.click(this.selectAllGroupAccessCheckbox);
+
     // Save Category
     await this.clickAndWaitForNavigation(page, this.saveCategoryButton);
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -51,8 +53,8 @@ class AddCategory extends BOBasePage {
 
   /**
    * Edit home category
-   * @param page
-   * @param categoryData
+   * @param page {Page} Browser tab
+   * @param categoryData {categoryData} Data to set on edit home category form
    * @returns {Promise<string>}
    */
   async editHomeCategory(page, categoryData) {

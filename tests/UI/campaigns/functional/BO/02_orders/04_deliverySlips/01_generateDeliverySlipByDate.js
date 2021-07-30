@@ -1,26 +1,28 @@
 require('module-alias/register');
 
-// Using chai
-const {expect} = require('chai');
-
+// Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
 const files = require('@utils/files');
 
-// Importing pages
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
+
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const deliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
 const ordersPage = require('@pages/BO/orders/index');
 const viewOrderPage = require('@pages/BO/orders/view');
 
-// Importing data
+// Import data
 const {Statuses} = require('@data/demo/orderStatuses');
 
-// Importing test context
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_deliverSlips_generateDeliverySlipByDate';
 
+// Using chai
+const {expect} = require('chai');
 
 let browserContext;
 let page;
@@ -32,13 +34,12 @@ const today = new Date();
 today.setFullYear(today.getFullYear() + 1);
 const futureDate = today.toISOString().slice(0, 10);
 
-
 /*
-Change the last order status to shipped
+Update the last order status to shipped
 Create delivery slip
 Generate delivery slip file by date
  */
-describe('Generate Delivery slip file by date', async () => {
+describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -54,7 +55,7 @@ describe('Generate Delivery slip file by date', async () => {
   });
 
   describe('Create delivery slip', async () => {
-    it('should go to the orders page', async function () {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -69,7 +70,7 @@ describe('Generate Delivery slip file by date', async () => {
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it('should go to the order page', async function () {
+    it('should go to the last order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
 
       await ordersPage.goToOrder(page, 1);
@@ -84,7 +85,7 @@ describe('Generate Delivery slip file by date', async () => {
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
-    it('should check the delivery slip document Name', async function () {
+    it('should check the delivery slip document name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentName', baseContext);
 
       const documentType = await viewOrderPage.getDocumentType(page, 3);
@@ -93,7 +94,7 @@ describe('Generate Delivery slip file by date', async () => {
   });
 
   describe('Generate delivery slip by date', async () => {
-    it('should go to delivery slips page', async function () {
+    it('should go to \'Orders > Delivery slips\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliverySlipsPage', baseContext);
 
       await viewOrderPage.goToSubMenu(
@@ -116,7 +117,7 @@ describe('Generate Delivery slip file by date', async () => {
       await expect(exist).to.be.true;
     });
 
-    it('should check the error message when there is no delivery slip in the entered date', async function () {
+    it('should check the error message when there is no delivery slip at the entered date', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoDeliverySlipsErrorMessage', baseContext);
 
       // Generate delivery slips and get error message

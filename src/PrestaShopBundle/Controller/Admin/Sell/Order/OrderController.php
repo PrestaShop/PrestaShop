@@ -78,6 +78,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductSearchEmptyPhraseException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
@@ -447,7 +448,9 @@ class OrderController extends FrameworkBundleAdminController
             'id_order' => $orderId,
         ]);
 
-        $orderMessageForm = $this->createForm(OrderMessageType::class, [], [
+        $orderMessageForm = $this->createForm(OrderMessageType::class, [
+            'lang_id' => $orderForViewing->getCustomer()->getLanguageId(),
+        ], [
             'action' => $this->generateUrl('admin_orders_send_message', ['orderId' => $orderId]),
         ]);
         $orderMessageForm->handleRequest($request);
@@ -459,7 +462,7 @@ class OrderController extends FrameworkBundleAdminController
         $changeOrderAddressForm = null;
         $privateNoteForm = null;
 
-        if (null !== $orderForViewing->getCustomer()) {
+        if (null !== $orderForViewing->getCustomer() && $orderForViewing->getCustomer()->getId() !== 0) {
             $changeOrderAddressForm = $this->createForm(ChangeOrderAddressType::class, [], [
                 'customer_id' => $orderForViewing->getCustomer()->getId(),
             ]);
@@ -526,11 +529,26 @@ class OrderController extends FrameworkBundleAdminController
         }
         sort($paginationNumOptions);
 
+        $metatitle = sprintf(
+            '%s %s %s',
+            $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
+            $this->configuration->get('PS_NAVIGATION_PIPE', '>'),
+            $this->trans(
+                'Order %reference% from %firstname% %lastname%',
+                'Admin.Orderscustomers.Feature',
+                [
+                    '%reference%' => $orderForViewing->getReference(),
+                    '%firstname%' => $orderForViewing->getCustomer()->getFirstName(),
+                    '%lastname%' => $orderForViewing->getCustomer()->getLastName(),
+                ]
+            )
+        );
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'enableSidebar' => true,
             'orderCurrency' => $orderCurrency,
-            'meta_title' => $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
+            'meta_title' => $metatitle,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'orderForViewing' => $orderForViewing,
             'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
@@ -1825,6 +1843,11 @@ class OrderController extends FrameworkBundleAdminController
             return $this->json([
                 'products' => $foundProducts,
             ]);
+        } catch (ProductSearchEmptyPhraseException $e) {
+            return $this->json(
+                [$e, 'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
         } catch (Exception $e) {
             return $this->json(
                 [$e, 'message' => $this->getErrorMessageForException($e, [])],

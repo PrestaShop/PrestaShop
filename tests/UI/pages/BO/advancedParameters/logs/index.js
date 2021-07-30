@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-class LogsSettings extends BOBasePage {
+/**
+ * Logs page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
+class Logs extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on logs page
+   */
   constructor() {
     super();
 
@@ -38,7 +47,7 @@ class LogsSettings extends BOBasePage {
    */
   /**
    * Reset input filters
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
@@ -49,7 +58,7 @@ class LogsSettings extends BOBasePage {
 
   /**
    * Get number of elements in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -57,8 +66,8 @@ class LogsSettings extends BOBasePage {
   }
 
   /**
-   * Reset Filter And get number of elements in list
-   * @param page
+   * Reset filter and get number of elements in list
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -69,10 +78,10 @@ class LogsSettings extends BOBasePage {
 
   /**
    * Filter list of logs
-   * @param page
-   * @param filterType, input or select to choose method of filter
-   * @param filterBy, column to filter
-   * @param value, value to filter with
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
   async filterLogs(page, filterType, filterBy, value = '') {
@@ -95,10 +104,10 @@ class LogsSettings extends BOBasePage {
   }
 
   /**
-   * get text from a column
-   * @param page
-   * @param row, row in table
-   * @param column, which column
+   * Get text from a column
+   * @param page {Page} Browser tab
+   * @param row {number} Row in table
+   * @param column {string} Column name to get text content
    * @returns {Promise<string>}
    */
   async getTextColumn(page, row, column) {
@@ -107,7 +116,7 @@ class LogsSettings extends BOBasePage {
 
   /**
    * Erase all logs
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async eraseAllLogs(page) {
@@ -122,8 +131,8 @@ class LogsSettings extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param column
+   * @param page {Page} Browser tab
+   * @param column {string} Column name to get all rows content
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, column) {
@@ -144,9 +153,9 @@ class LogsSettings extends BOBasePage {
   /* Sort methods */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -166,7 +175,7 @@ class LogsSettings extends BOBasePage {
   // Pagination methods
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -175,8 +184,8 @@ class LogsSettings extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -190,7 +199,7 @@ class LogsSettings extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -201,7 +210,7 @@ class LogsSettings extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -212,9 +221,9 @@ class LogsSettings extends BOBasePage {
 
   /**
    * Filter logs by date
-   * @param page
-   * @param dateFrom
-   * @param dateTo
+   * @param page {Page} Browser tab
+   * @param dateFrom {string} Value of date from to set on filter input
+   * @param dateTo {string} Value of date to to set on filter input
    * @returns {Promise<void>}
    */
   async filterLogsByDate(page, dateFrom, dateTo) {
@@ -225,4 +234,4 @@ class LogsSettings extends BOBasePage {
   }
 }
 
-module.exports = new LogsSettings();
+module.exports = new Logs();
