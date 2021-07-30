@@ -77,7 +77,8 @@ module.exports = {
     main: './js/theme',
     maintenance: './js/pages/maintenance',
     manufacturer: './js/pages/manufacturer',
-    manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form',
+    manufacturer_address_form:
+      './js/pages/manufacturer/manufacturer_address_form',
     merchandise_return: './js/pages/merchandise-return',
     meta: './js/pages/meta',
     module: './js/pages/module',
@@ -159,7 +160,10 @@ module.exports = {
       },
       {
         test: /\.ts?$/,
-        use: 'ts-loader',
+        loader: 'ts-loader',
+        options: {
+          appendTsSuffixTo: [/\.vue$/],
+        },
         exclude: /node_modules/,
       },
       {

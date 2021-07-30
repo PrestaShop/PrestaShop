@@ -20,6 +20,9 @@ interface Window {
   modalConfirmation: any;
   // eslint-disable-next-line
   ps_round: any;
+  Dropzone: any;
+  data: any;
+  pstooltip: any;
 }
 
 /* eslint-disable */
@@ -78,3 +81,21 @@ interface RegExpPositions extends RegExpExecArray {
 type FetchResponse = Record<string, any>;
 
 type OptionsObject = FetchResponse;
+
+
+type VTags = Vue & { 
+  add: (tag: any) => void;
+  tag: any;
+};
+
+type VTagsInput = Vue & { 
+  value: any;
+};
+
+type VCheckbox = Vue & { 
+  $data: VCheckboxDatas;
+};
+
+type VCheckboxDatas = Vue & { 
+  checked: boolean;
+};

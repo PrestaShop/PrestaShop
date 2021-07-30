@@ -57,14 +57,23 @@ module.exports = {
   },
   overrides: [
     {
+      parser: 'vue-eslint-parser',
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
+        project: './tsconfig.json',
+        ecmaFeatures: {
+          jsx: false,
+        },
+      },
       files: ['*.vue'],
       rules: {
         indent: 0,
         'vue/no-mutating-props': 0,
+        'no-undef': 0,
         'vue/no-template-shadow': 0,
       },
-      extends: ['plugin:vue/strongly-recommended'],
-      plugins: ['vue'],
+      extends: ['plugin:vue/strongly-recommended', '@vue/typescript'],
+      plugins: ['vue', '@typescript-eslint'],
     },
     {
       files: ['*.ts'],
