@@ -143,6 +143,6 @@ abstract class Cache extends CacheCore
         if (class_exists('Profiling', false)) {
             Profiling::queryStat('memcached', 'cmd_purge', [$table]);
         }
-        $this->table_expiry_dates[$table] = time();
+        $this->table_expiry_dates[$table] = time() + 1;
     }
 }
