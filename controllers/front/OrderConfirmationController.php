@@ -67,7 +67,7 @@ class OrderConfirmationControllerCore extends FrontController
         if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
             Tools::redirect($redirectLink . (Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
         }
-        $redirectLink = 'index.php?controller=history';
+        $redirectLink = $this->context->link->getPageLink('history', $this->ssl);
         if (!Validate::isLoadedObject($this->order) || $this->secure_key != $this->order->secure_key) {
             Tools::redirect($redirectLink);
         }
@@ -121,7 +121,7 @@ class OrderConfirmationControllerCore extends FrontController
                     'Shop.Notifications.Success'
                 );
             } else {
-                $this->success[] = $this->trans(
+                $this->errors[] = $this->trans(
                     'An unexpected error occurred while creating your account.',
                     [],
                     'Shop.Notifications.Error'
