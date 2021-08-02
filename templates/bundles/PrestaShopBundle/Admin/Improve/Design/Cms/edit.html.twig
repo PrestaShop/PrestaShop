@@ -28,8 +28,17 @@
 {% block content %}
   <div class="row justify-content-center">
     <div class="col">
+      {% if forceEditUrl is empty %}
       {{ include('@PrestaShop/Admin/Improve/Design/Cms/Blocks/form.html.twig', {}) }}
       <span class="js-preview-url" data-preview-url="{{ previewUrl }}"></span>
+      {% else %}
+        <div class="card">
+          <div class="card-body">
+            {{ 'Please be careful, things might go wrong. Proceed only if you know all the implications.'|trans({}, 'Admin.Cms.Notification') }}
+            <a href="{{ forceEditUrl }}">{{ forceEditMessage }}</a>
+          </div>
+        </div>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

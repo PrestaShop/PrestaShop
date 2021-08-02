@@ -31,4 +31,23 @@ namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception;
  */
 class CannotEditCmsPageException extends CmsPageException
 {
+    /**
+     * A CMS page that is the same everywhere must be edited in all shop context
+     */
+    const EDIT_IN_ALL_SHOPS = 1;
+
+    /**
+     * A CMS page that is different from shop to shop must be edited in specific shop context
+     */
+    const EDIT_IN_ONE_SHOP = 2;
+
+    /**
+     * To edit a page in all shop context, one must have edit permissions in all shops where the page is used.
+     */
+    const INSUFFICIENT_PERMISSION_ALL_SHOPS = 3;
+
+    /**
+     * To edit a page in all shop context, one must have edit permissions in all shops where the page is used.
+     */
+    const INSUFFICIENT_PERMISSION_ASSOCIATIONS = 4;
 }

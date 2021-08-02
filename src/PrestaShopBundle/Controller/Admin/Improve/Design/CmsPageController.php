@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use Db;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand;
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DeleteCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\ToggleCmsPageStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotDeleteCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotDisableCmsPageException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotEditCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotEnableCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotToggleCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
@@ -61,12 +63,14 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinition
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
+use PrestaShop\PrestaShop\Core\Grid\Query\CmsPageQueryBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Shop;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -249,11 +253,77 @@ class CmsPageController extends FrameworkBundleAdminController
     public function editAction(Request $request, $cmsPageId)
     {
         $cmsPageId = (int) $cmsPageId;
-
+        $context = $this->getContext();
+        $shopContext = $context->shop->getContextType();
+        $db = Db::getInstance();
+        $prefix = $db->getPrefix();
+        $isSame = $db->getRow('select ' . CmsPageQueryBuilder::getIsSameQuery($prefix)  . ' from ' . $prefix . 'cms c where c.id_cms = ' . $cmsPageId);
         try {
+            $forceEditUrl = $forceEditMessage = '';
+            if (Shop::isFeatureActive()) {
+                if ($shopContext == Shop::CONTEXT_GROUP) {
+                    if ($isSame['is_same']) {
+                        throw new CannotEditCmsPageException('Please edit this page in All shops context.', CannotEditCmsPageException::EDIT_IN_ALL_SHOPS);
+                    } else {
+                        throw new CannotEditCmsPageException('Please edit this page in a specific shop.', CannotEditCmsPageException::EDIT_IN_ONE_SHOP);
+                    }
+                }
+                if ($shopContext == Shop::CONTEXT_ALL) {
+                    if (!$this->employeeHasAccessAssociatedShops($cmsPageId)) {
+                        throw new CannotEditCmsPageException('You don\'t have permissions to edit this page in all shops it belongs to.', CannotEditCmsPageException::INSUFFICIENT_PERMISSION_ALL_SHOPS);
+                    }
+                    if (!$isSame['is_same'] && !$request->request->has('forceEdit')) {
+                        $this->addFlash(
+                            'error',
+                            $this->trans('This page has been customized in some shops.', 'Admin.Cms.Notification') . ' ' .
+                            $this->trans('Please edit this page in a specific shop.', 'Admin.Cms.Notification')
+                        );
+                        $forceEditUrl = $this->generateUrl('admin_cms_pages_edit', [
+                            'cmsPageId' => $cmsPageId,
+                            'forceEdit' => true,
+                        ]);
+                        $forceEditMessage = $this->trans('Replace all shop specific content with content from shop 1.', 'Admin.Cms.Notification');
+                    }
+                }
+                if ($shopContext == Shop::CONTEXT_SHOP) {
+                    if ($isSame['is_same'] && !$request->request->has('forceEdit')) {
+                        if (!$this->employeeHasAccessAssociatedShops($cmsPageId)) {
+                            throw new CannotEditCmsPageException('You don\'t have permissions to edit this page in all shops it belongs to.', CannotEditCmsPageException::INSUFFICIENT_PERMISSION_ALL_SHOPS);
+                        }
+                        $this->addFlash(
+                            'error',
+                            $this->trans('This page is the same in all shops.', 'Admin.Cms.Notification') . ' ' .
+                            $this->trans('Please edit this page in \'All shops\' context.', 'Admin.Cms.Notification')
+                        );
+                        $forceEditUrl = $this->generateUrl('admin_cms_pages_edit', [
+                            'cmsPageId' => $cmsPageId,
+                            'forceEdit' => true,
+                        ]);
+                        $forceEditMessage = $this->trans('Edit the content only for this shop.', 'Admin.Cms.Notification');
+                    }
+                }
+            }
             /** @var EditableCmsPage $editableCmsPage */
             $editableCmsPage = $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
             $previewUrl = $editableCmsPage->getPreviewUrl();
+
+            $submittedData = $request->request->get('cms_page');
+            $addedAssociations = [];
+            if (!empty($submittedData)) {
+                $newShopAssociations = $submittedData['shop_association'] ?? null;
+                if($newShopAssociations) {
+                    $oldShopAssociations = $editableCmsPage->getShopAssociation();
+                    $employeeAssociations = array_column(
+                        $db->executeS('select id_shop from ' . $prefix . 'employee_shop where id_employee = ' . $context->employee->id),
+                        'id_shop');
+                    $addedAssociations = array_diff($newShopAssociations, $oldShopAssociations);
+                    $removedAssociations =  array_diff($oldShopAssociations, $newShopAssociations);
+                    var_dump($employeeAssociations, $addedAssociations, $removedAssociations);
+                    if(!empty(array_diff($addedAssociations, $employeeAssociations)) || !empty(array_diff($removedAssociations, $employeeAssociations))) {
+                        throw new CannotEditCmsPageException('You can only change shop associations for shops you have permissions for.', CannotEditCmsPageException::INSUFFICIENT_PERMISSION_ASSOCIATIONS);
+                    }
+                }
+            }
 
             $form = $this->getCmsPageFormBuilder()->getFormFor($cmsPageId, [], [
                 'action' => $this->generateUrl('admin_cms_pages_edit', [
@@ -263,6 +333,12 @@ class CmsPageController extends FrameworkBundleAdminController
                     ->getUrl($cmsPageId, '{friendly-url}'),
             ]);
             $form->handleRequest($request);
+
+            if ($shopContext == Shop::CONTEXT_SHOP && !empty($addedAssociations)) {
+                foreach ($addedAssociations as $addedShop) {
+                    $this->copyPageContent($cmsPageId, Shop::getContextShopID(), $addedShop);
+                }
+            }
         } catch (Exception $e) {
             $this->addFlash(
                 'error',
@@ -305,6 +381,8 @@ class CmsPageController extends FrameworkBundleAdminController
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'previewUrl' => $previewUrl,
+                'forceEditUrl' => $forceEditUrl,
+                'forceEditMessage' => $forceEditMessage,
             ]
         );
     }
@@ -1212,6 +1290,36 @@ class CmsPageController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            CannotEditCmsPageException::class => [
+                CannotEditCmsPageException::INSUFFICIENT_PERMISSION_ALL_SHOPS => $this->trans(
+                    'You don\'t have permissions to edit this page in all shops it belongs to.',
+                    'Admin.Cms.Notification'
+                ),
+                CannotEditCmsPageException::INSUFFICIENT_PERMISSION_ASSOCIATIONS => $this->trans(
+                    'You can only change the association for shops you have permissions for.',
+                    'Admin.Cms.Notification'
+                ),
+            ],
         ];
+    }
+    protected function employeeHasAccessAssociatedShops($cmsPageId)
+    {
+        $employeeId = $this->getContext()->employee->id;
+        $db = Db::getInstance();
+        $prefix = $db->getPrefix();
+        $missing_permissions = $db->executeS('select cs.id_cms, cs.id_shop, es.id_employee from ' . $prefix . 'cms_shop cs
+            left join ' . $prefix . 'employee_shop es on es.id_shop = cs.id_shop and es.id_employee = ' . $employeeId .'
+            where cs.id_cms = ' . (int) $cmsPageId . ' and es.id_employee is null');
+
+        return empty($missing_permissions);
+    }
+    protected function copyPageContent ($cmsPageId, $id_shop_source, $id_shop_destination)
+    {
+        $db = Db::getInstance();
+        $prefix = $db->getPrefix();
+        $db->query('insert into ' . $prefix . 'cms_lang (`id_cms`, `id_lang`, `id_shop`, `meta_title`, `head_seo_title`, `meta_description`, `meta_keywords`, `content`, `link_rewrite`)
+            select `id_cms`, `id_lang`, ' . $id_shop_destination . ', `meta_title`, `head_seo_title`, `meta_description`, `meta_keywords`, `content`, `link_rewrite`
+            from ' . $prefix . 'cms_lang where id_cms = ' . $cmsPageId . ' and id_shop = ' . $id_shop_source .
+            ' on dupicate key update `meta_title` = values(`meta_title`), `head_seo_title` = values(`head_seo_title`), `meta_description` = values(`meta_description`), `meta_keywords` = values(`meta_keywords`), `content` = values(`content`), `link_rewrite` = values(`link_rewrite`)');
     }
 }
