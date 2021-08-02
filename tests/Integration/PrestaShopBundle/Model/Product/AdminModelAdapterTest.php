@@ -207,7 +207,7 @@ class AdminModelAdapterTest extends KernelTestCase
      */
     public function testConstruct(): void
     {
-        $this->assertInstanceOf('PrestaShopBundle\Model\Product\AdminModelAdapter', $this->adminModelAdapter);
+        $this->assertInstanceOf(AdminModelAdapter::class, $this->adminModelAdapter);
     }
 
     public function testGetFormData(): void
@@ -234,6 +234,8 @@ class AdminModelAdapterTest extends KernelTestCase
      */
     public function testGetFormCombination(): void
     {
+        Context::getContext()->currency = new Currency(1);
+
         $expectedStructureReturn = [
             'id_product_attribute' => '6',
             'attribute_reference' => '',
