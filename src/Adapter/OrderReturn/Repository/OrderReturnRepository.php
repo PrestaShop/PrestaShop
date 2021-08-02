@@ -59,7 +59,7 @@ class OrderReturnRepository extends AbstractObjectModelRepository
      */
     public function get(OrderReturnId $orderReturnId): OrderReturn
     {
-        /** @var OrderReturn $orderReturn */
+        /* @var OrderReturn $orderReturn */
         return $this->getObjectModel($orderReturnId->getValue(), OrderReturn::class, OrderReturnNotFoundException::class);
     }
 
