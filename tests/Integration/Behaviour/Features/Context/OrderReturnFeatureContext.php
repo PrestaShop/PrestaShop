@@ -35,7 +35,7 @@ use OrderReturnState;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 
-class OrderReturnContext extends AbstractPrestaShopFeatureContext
+class OrderReturnFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
      * @When I add order return state :orderReturnStateReference
