@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\BooleanColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
@@ -210,6 +211,19 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
                             ],
                         ])
                 );
+        }
+        if ($this->isMultiStoreFeatureUsed) {
+            $columnCollection
+                ->addAfter(
+                    'active',
+                    (new BooleanColumn('is_same'))
+                        ->setName($this->trans('Content', [], 'Admin.Global'))
+                        ->setOptions([
+                            'field' => 'is_same',
+                            'true_name' => $this->trans('Same everywhere', [], 'Admin.Global'),
+                            'false_name' => $this->trans('Content differs', [], 'Admin.Global'),
+                        ])
+            );
         }
 
         return $columnCollection;

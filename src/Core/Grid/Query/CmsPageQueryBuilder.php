@@ -80,6 +80,14 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb
             ->select('c.`id_cms`, cl.`link_rewrite`, c.`active`, c.`position`, cl.`meta_title`, cl.`head_seo_title`')
             ->addSelect('c.`id_cms_category`')
+            ->addSelect('(select case when max(v.versions) > 1 then 0 else 1 end from (
+                select count(distinct cl2.`meta_title`, cl2.`head_seo_title`, cl2.`meta_description`, cl2.`meta_keywords`, cl2.`content`, cl2.`link_rewrite`) as versions, cl2.id_lang, cl2.id_cms from
+                ' . $this->dbPrefix . 'cms_shop cs2
+                inner join ' . $this->dbPrefix . 'lang_shop ls2 on ls2.id_shop = cs2.id_shop
+                inner join ' . $this->dbPrefix . 'cms_lang cl2 on cs2.id_shop = cl2.id_shop and ls2.id_lang = cl2.id_lang and cs2.id_cms = cl2.id_cms
+                group by  cl2.id_cms, cl2.id_lang) as v
+                where v.id_cms = c.id_cms group by v.id_cms
+                ) as is_same')
             ->groupBy('c.`id_cms`')
         ;
 
