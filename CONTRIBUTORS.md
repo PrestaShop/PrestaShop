@@ -438,6 +438,8 @@ GitHub contributors:
 - Lucas CERDAN
 - Lucas Rolff
 - LucasC
+- Lukas
+- Lukas Laurinaitis
 - Ludovic CHEVRAUX
 - Luis David de la Fuente
 - Lyo Nick
@@ -700,6 +702,7 @@ GitHub contributors:
 - Seb33300
 - Sebastian Madejski
 - Sebastien
+- Sébastien ALFAIATE
 - Sébastien Bareyre
 - Sebastien Bocahu
 - Sébastien LE BRUCHEC

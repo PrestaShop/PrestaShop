@@ -24,7 +24,7 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
-#   v1.7.8.0-rc.1 - (2021-06-25)
+#   v1.7.8.0-rc.1 - (2021-08-08)
 ####################################
 
 - Back Office:
@@ -32,6 +32,7 @@ Release Notes for PrestaShop 1.7
     - #23948: Add history feature of edit combination of product page v2 (by @NeOMakinG)
     - #24745: Form builder modifier (by @jolelievre)
   - Improvement:
+    - #25038: [BC Break] Fix TinyMCE max length computing in BO (by @jolelievre)
     - #25121: Update translations catalogue with Welcome module wordings (by @sowbiba)
     - #25039: Disable product V2 page when multistore is used (by @matthieu-rolland)
     - #24025: Add SubmittableInput successfull and error states (by @NeOMakinG)
@@ -41,6 +42,20 @@ Release Notes for PrestaShop 1.7
     - #24661: Display tab for extra modules in product page (by @jolelievre)
     - #24876: Add classes for sort links on legacy pages (by @boubkerbribri)
   - Bug fix:
+    - #25428: Don't recalculate total when PS_ORDER_RECALCULATE_SHIPPING is 0 and editing a carrier (by @Progi1984)
+    - #24991: Fix combination ecotax display and edition (by @jolelievre)
+    - #25364: Fix inputs prefilling bug when a combination is added to an order (by @jolelievre)
+    - #25378: Order Product Search: Limit only if the search phrase length is greater than 2 characters and HTTP Code Error become a 400 (by @Progi1984)
+    - #25375: In Order view, set the lang of the order for order messages (by @Progi1984)
+    - #25326: Create empty Customer when the customer or the guest has been deleted (by @PierreRambaud)
+    - #24620: [BC Break] No email check in  BO > Advanced Parameters > Logs page (by @okom3pom)
+    - #25286: Fix cart rule that can be used more than once per user when it shouldn't (by @matthieu-rolland)
+    - #24339: Add number comma formatter (by @PierreRambaud)
+    - #25107: Fixed meta title in BO - Order View (by @Progi1984)
+    - #25200: In Invoice PDF, escape customization name (by @Progi1984)
+    - #24324: Orders View : Display right price depending configuration (by @Progi1984)
+    - #25106: Fixed management of INNER JOIN & GROUP BY in SqlQueryValidator (by @Progi1984)
+    - #25059: [BC Break] Fixed translated order messages in Order View (by @Progi1984)
     - #25034: Fix checkbox direction on RTL (by @NeOMakinG)
     - #25035: Fix product footer direction using RTL language (by @NeOMakinG)
     - #24052: Open confirm modal only when eligible for feature flag form (by @matks)
@@ -48,6 +63,7 @@ Release Notes for PrestaShop 1.7
     - #24869: Fix no active payment module displayed in Payment Methods (by @atomiix)
     - #25004: Fix help sidebar on Experimental Features BO Page (by @matks)
     - #24890: Fix top buttons on order view on mobile (by @NeOMakinG)
+    - #24657: BO - New Order - Warn when product's stock of a pack are empty (by @Progi1984)
     - #24851: Twig extension for multistore shop context URLs (by @PierreRambaud)
     - #24918: Fix table responsive of multistore page (by @NeOMakinG)
     - #24882: Restore ability to disable translations tree item (by @sowbiba)
@@ -76,7 +92,12 @@ Release Notes for PrestaShop 1.7
   - Improvement:
     - #23480: Improve accessibility of classic theme forms by adding for and ids (by @NeOMakinG)
   - Bug fix:
+    - #25316: Fix blocking add to cart button (by @kpodemski)
+    - #25216: Fix brands links not clickable inside description (by @NeOMakinG)
+    - #24868: Fixed cart rule on selected product with product with ecotax (by @Progi1984)
     - #25101: Fix RTL issues on material icons on FO (by @NeOMakinG)
+    - #24754: Removed free shipping from cumulative reduction (by @Progi1984)
+    - #24320: Bug fix for number of decimals in product price (by @samberrry)
     - #24323: Update classic webpack and fix watch issue by adding webpack-cli locally (by @NeOMakinG)
     - #24600: FO - Validate field values when creating customer account (by @sowbiba)
     - #24852: Fix 404 layout for wrong category (by @atomiix)
@@ -85,6 +106,7 @@ Release Notes for PrestaShop 1.7
     - #24680: Fix unclosed div in product-list.tpl (by @kpodemski)
 - Core:
   - Improvement:
+    - #25447: Update prestashop modules on 1.7.7.x (by @matthieu-rolland)
     - #25141: Upgrade ps_linklist to 5.0.3 (by @sowbiba)
     - #25131: Bump module ps_linklist to 5.0.2 (by @sowbiba)
     - #25120: Update Welcome module to 6.0.6 (by @sowbiba)
@@ -94,6 +116,7 @@ Release Notes for PrestaShop 1.7
     - #24729: Update linklist to v4 (by @atomiix)
     - #24717: Update native modules (by @atomiix)
   - Bug fix:
+    - #25413: Fix performance issue on Smarty template caching (by @lukaslau)
     - #25111: Fix compiled legacy container (by @atomiix)
     - #25098: Remove precision type for currency (by @sowbiba)
     - #24774: Fix missing product indexation after creation on product page V2 (by @matthieu-rolland)
@@ -103,13 +126,33 @@ Release Notes for PrestaShop 1.7
     - #24829: Show formatted Load time in Profiler (by @kpodemski)
 - Installer:
   - Bug fix:
+    - #25306: Fix 1.7.7.2 upgrade (by @Seb33300)
+    - #24908: Fixed default value for Currency after upgrade (by @Progi1984)
     - #24924: Add missing supplier for product pack in fixtures (by @PierreRambaud)
     - #24847: Fix hook wording (by @PululuK)
 - Localization:
   - Bug fix:
     - #24902: Wording corrections before RC (by @jolelievre)
 - Tests:
+  - Improvement:
+    - #25365: Re-enable Behat test about product duplicate translation (by @matks)
+  - Bug fix:
+    - #25320: Fix languages test install (by @jolelievre)
+    - #25344: Disable failing Behat test about product duplicate translation (by @matks)
+    - #25292: Fix 1.7.8.x test for product duplicate (by @okom3pom)
+    - #25281: Rise Apache Travis timeout to workaround addons module install issues (by @matks)
   - Refactoring:
+    - #25201: Functional tests - (Refacto) Delete 'uppercaseFirstCharacter()' method (by @nesrineabdmouleh)
+    - #25167: Functional tests - CRUD cart rule with/without code (by @nesrineabdmouleh)
+    - #25233: Functional tests - Refacto categories tests (by @nesrineabdmouleh)
+    - #25259: Functional tests - Refacto attributes and features tests (by @nesrineabdmouleh)
+    - #25341: Functional tests - Refacto modules and design tests (by @nesrineabdmouleh)
+    - #25249: Create more order statuses to allow pagination (by @boubkerbribri)
+    - #25150: Fix pagination condition on shopping cart test (by @boubkerbribri)
+    - #25171: Functional tests - Refacto login tests (by @nesrineabdmouleh)
+    - #25250: Functional tests - Refacto monitoring tests (by @nesrineabdmouleh)
+    - #25219: Functional tests - Refacto products tests (by @nesrineabdmouleh)
+    - #25333: Caching playwright browsers on github workflows (by @boubkerbribri)
     - #24995: Functional tests - Add Js doc for catalog pages (by @nesrineabdmouleh)
     - #25104: Functional tests - Refacto 'Orders > Delivery slips' tests (by @nesrineabdmouleh)
     - #25128: Functional tests - Add js doc for 'Advanced parameters' pages (by @nesrineabdmouleh)
