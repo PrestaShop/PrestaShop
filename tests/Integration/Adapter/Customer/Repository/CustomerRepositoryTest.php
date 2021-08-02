@@ -47,7 +47,7 @@ class CustomerRepositoryTest extends KernelTestCase
         $this->customerRepository = self::$container->get('prestashop.adapter.customer.repository.customer_repository');
     }
 
-    public function testGetThrowsException()
+    public function testGetThrowsException(): void
     {
         $this->expectException(CustomerNotFoundException::class);
         $this->customerRepository->get(new CustomerId(9999));

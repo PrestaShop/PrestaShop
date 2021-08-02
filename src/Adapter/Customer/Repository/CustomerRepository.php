@@ -44,6 +44,7 @@ class CustomerRepository extends AbstractObjectModelRepository
      *
      * @return Customer
      *
+     * @throws CustomerNotFoundException
      * @throws CoreException
      */
     public function get(CustomerId $customerId): Customer

@@ -47,7 +47,7 @@ class OrderRepositoryTest extends KernelTestCase
         $this->orderRepository = self::$container->get('prestashop.adapter.order.repository.order_repository');
     }
 
-    public function testGetThrowsException()
+    public function testGetThrowsException(): void
     {
         $this->expectException(OrderNotFoundException::class);
         $this->orderRepository->get(new OrderId(9999));
