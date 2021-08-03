@@ -549,7 +549,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public function add($auto_date = true, $null_values = false)
     {
         if (isset($this->id) && !$this->force_id) {
-            unset($this->id);
+            $this->id = null;
         }
 
         // @hook actionObject<ObjectClassName>AddBefore
