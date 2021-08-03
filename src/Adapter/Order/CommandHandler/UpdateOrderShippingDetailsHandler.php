@@ -117,7 +117,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
                 'customer' => $customer,
                 'carrier' => $carrier,
             ], null, false, true, false, $order->id_shop);
-            
+
             if (!$orderCarrier->sendInTransitEmail($order)) {
                 throw new TransistEmailSendingException('An error occurred while sending an email to the customer.');
             }
