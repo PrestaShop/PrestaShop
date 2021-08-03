@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -13,18 +17,14 @@ const {Categories} = require('@data/demo/categories');
 const dashboardPage = require('@pages/BO/dashboard');
 const categoriesPage = require('@pages/BO/catalog/categories');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_catalog_categories_filterAndQuickEditCategories';
-
 
 let browserContext;
 let page;
 let numberOfCategories = 0;
 
-// Filter And Quick Edit Categories
-describe('Filter And Quick Edit Categories', async () => {
+// Filter and quick edit Categories
+describe('BO - Catalog - Categories : Filter and quick edit Categories table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -39,7 +39,7 @@ describe('Filter And Quick Edit Categories', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to "Catalog>Categories" page', async function () {
+  it('should go to \'Catalog > Categories\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -54,7 +54,7 @@ describe('Filter And Quick Edit Categories', async () => {
     await expect(pageTitle).to.contains(categoriesPage.pageTitle);
   });
 
-  it('should reset all filters and get Number of Categories in BO', async function () {
+  it('should reset all filters and get number of Categories in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
     numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
@@ -62,7 +62,7 @@ describe('Filter And Quick Edit Categories', async () => {
   });
 
   // 1 : Filter Categories with all inputs and selects in grid table
-  describe('Filter Categories', async () => {
+  describe('Filter Categories table', async () => {
     const tests = [
       {
         args:
@@ -154,7 +154,7 @@ describe('Filter And Quick Edit Categories', async () => {
   });
 
   // 2 : Editing categories from grid table
-  describe('Quick Edit Categories', async () => {
+  describe('Quick edit Categories', async () => {
     // Steps
     it('should filter by Name \'Art\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);

@@ -1,18 +1,19 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const emailThemesPage = require('@pages/BO/design/emailThemes');
 const previewEmailThemesPage = require('@pages/BO/design/emailThemes/preview');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_design_emailThemes_viewRawHtmlAndText';
 
@@ -27,7 +28,7 @@ Preview classic theme
 View email as raw html
 View email as text
  */
-describe('View raw html and text and check result', async () => {
+describe('BO - Design - Email Theme : View raw html and text', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -42,7 +43,7 @@ describe('View raw html and text and check result', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to design > email themes page', async function () {
+  it('should go to \'Design > Email Theme\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemesPage', baseContext);
 
     await dashboardPage.goToSubMenu(

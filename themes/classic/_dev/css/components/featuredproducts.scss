@@ -190,6 +190,12 @@ $product-description-height: 70px;
     clear: both;
     font-weight: 500;
     color: $gray;
+
+    @at-root .lang-rtl & {
+      .material-icons {
+        transform: rotate(-180deg);
+      }
+    }
   }
 }
 

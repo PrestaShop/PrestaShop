@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add employee page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddEmployee extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add employee page
+   */
   constructor() {
     super();
 
@@ -27,8 +36,8 @@ class AddEmployee extends BOBasePage {
 
   /**
    * Fill form for add/edit page Employee
-   * @param page
-   * @param employeeData
+   * @param page {Page} Browser tab
+   * @param employeeData {employeeData} Data to set on add/edit employee form
    * @returns {Promise<string>}
    */
   async createEditEmployee(page, employeeData) {
@@ -42,13 +51,14 @@ class AddEmployee extends BOBasePage {
     // replace toggle by 1 in the selector if active = YES / 0 if active = NO
     await page.check(this.statusToggleInput(employeeData.active ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Select default Page
-   * @param page
-   * @param defaultPage
+   * @param page {Page} Browser tab
+   * @param defaultPage {string} Page name to set on input
    * @returns {Promise<void>}
    */
   async selectDefaultPage(page, defaultPage) {
@@ -61,7 +71,8 @@ class AddEmployee extends BOBasePage {
   }
 
   /**
-   * Cancel page
+   * Cancel the creation or the update and return to the listing page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async cancel(page) {

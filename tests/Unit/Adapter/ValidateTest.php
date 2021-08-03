@@ -40,6 +40,7 @@ class ValidateTest extends TestCase
 
     /**
      * @param string $name
+     * @param array $data
      * @param string $dataName
      */
     public function __construct($name = null, array $data = [], $dataName = '')
@@ -66,6 +67,33 @@ class ValidateTest extends TestCase
         yield [1, 'DESC'];
         yield [1, 'asc'];
         yield [1, 'desc'];
+    }
+
+    /**
+     * @dataProvider isEmailDataProvider
+     */
+    public function testIsEmail(bool $expected, string $email): void
+    {
+        $this->assertSame($expected, $this->validate->isEmail($email));
+    }
+
+    public function isEmailDataProvider(): array
+    {
+        return [
+            [true, 'john.doe@prestashop.com'],
+            [true, 'john.doe+alias@prestshop.com'],
+            [true, 'john.doe+alias@pr.e.sta.shop.com'],
+            [true, 'j@p.com'],
+            [true, 'john#doe@prestashop.com'],
+            [false, ''],
+            [false, 'john.doe@prestashop,com'],
+            [true, 'john.doe@prestashop'],
+            [true, 'john.doe@сайт.рф'],
+            [true, 'john.doe@xn--80aswg.xn--p1ai'],
+            [false, 'иван@prestashop.com'], // rfc6531 valid but not swift mailer compatible
+            [true, 'xn--80adrw@prestashop.com'],
+            [true, 'xn--80adrw@xn--80aswg.xn--p1ai'],
+        ];
     }
 
     /**

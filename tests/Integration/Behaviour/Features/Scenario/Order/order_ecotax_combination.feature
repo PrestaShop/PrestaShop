@@ -25,11 +25,11 @@ Feature: Ecotax for Order in Back Office (BO)
     ## Create Product
     And there is a product in the catalog named "Test Ecotax Product Combination" with a price of 15.0 and 100 items in stock
     And I set tax rule group "fr-tax-6-group" to product "Test Ecotax Product Combination"
-    ## Create combination
+    ## Create combination (remember that price column is actually the impact on price)
     And product "Test Ecotax Product Combination" has combinations with following details:
       | reference    | quantity | price | attributes |
-      | combination1 | 100      | 16.0  | Size:L     |
-      | combination2 | 100      | 17.0  | Size:M     |
+      | combination1 | 100      | 1.0   | Size:L     |
+      | combination2 | 100      | 2.0   | Size:M     |
     Then the available stock for combination "combination1" of product "Test Ecotax Product Combination" should be 100
     And the available stock for combination "combination2" of product "Test Ecotax Product Combination" should be 100
     ## Enable payment
@@ -73,6 +73,7 @@ Feature: Ecotax for Order in Back Office (BO)
     And product "Test Ecotax Product Combination" in order "bo_order1" has following details:
       | product_quantity            | 2     |
       | ecotax                      | 0.00  |
+      | original_product_price      | 16.00 |
       | product_price               | 16.00 |
       | unit_price_tax_excl         | 16.00 |
       | unit_price_tax_incl         | 16.96 |
@@ -114,6 +115,8 @@ Feature: Ecotax for Order in Back Office (BO)
       | product_quantity            | 2     |
       | ecotax                      | 5.12  |
       | product_price               | 21.12 |
+      # 21.12 = 16 + 5.12
+      | original_product_price      | 21.12 |
       # 21.12 = 16 + 5.12
       | unit_price_tax_excl         | 21.12 |
       # 21.12 = 16 + 5.12
@@ -163,6 +166,8 @@ Feature: Ecotax for Order in Back Office (BO)
       | ecotax                      | 5.12      |
       | product_price               | 20.83     |
       # 20.83 = 15.71 + 5.12
+      | original_product_price      | 21.12     |
+      # 21.12 = 16 + 5.12
       | unit_price_tax_excl         | 20.83     |
       # 20.83 = 15.71 + 5.12
       | unit_price_tax_incl         | 21.7726   |
@@ -226,6 +231,8 @@ Feature: Ecotax for Order in Back Office (BO)
       | ecotax                      | 5.12      |
       | product_price               | 24.99     |
       # 24.99 = 19.87 + 5.12
+      | original_product_price      | 21.12     |
+      # 21.12 = 16 + 5.12
       | unit_price_tax_excl         | 24.99     |
       # 24.99 = 19.87 + 5.12
       | unit_price_tax_incl         | 26.1822   |
@@ -288,6 +295,8 @@ Feature: Ecotax for Order in Back Office (BO)
       | ecotax                      | 5.12       |
       | product_price               | 20.12      |
       # 20.12 = 15 + 5.12
+      | original_product_price      | 21.12      |
+      # 21.12 = 16 + 5.12
       | unit_price_tax_excl         | 20.12      |
       # 20.12 = 15 + 5.12
       | unit_price_tax_incl         | 21.02      |

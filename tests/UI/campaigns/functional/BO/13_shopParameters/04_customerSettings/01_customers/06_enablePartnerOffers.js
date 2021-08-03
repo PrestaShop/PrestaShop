@@ -57,9 +57,9 @@ describe('Enable partner offer', async () => {
     {args: {action: 'enable', enable: true}},
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it(`should ${test.args.action} partner offer`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}PartnerOffer`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `partnerOffer${index}`, baseContext);
 
       const result = await customerSettingsPage.setOptionStatus(
         page,
@@ -71,12 +71,7 @@ describe('Enable partner offer', async () => {
     });
 
     it('should go to create customer account in FO and check partner offer checkbox', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkIsPartnerOffer${customerSettingsPage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkIsPartnerOffer${index}`, baseContext);
 
       // Go to FO
       page = await customerSettingsPage.viewMyShop(page);

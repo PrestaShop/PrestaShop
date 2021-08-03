@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add shop page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddShop extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add shop page
+   */
   constructor() {
     super();
 
@@ -22,8 +31,8 @@ class AddShop extends BOBasePage {
 
   /**
    * Fill form for add/edit shop
-   * @param page
-   * @param shopData
+   * @param page {Page} Browser tab
+   * @param shopData {shopData} Data to set on create/edit shop form
    * @returns {Promise<string>}
    */
   async setShop(page, shopData) {
@@ -32,6 +41,7 @@ class AddShop extends BOBasePage {
     await this.selectByVisibleText(page, this.categoryRootSelect, shopData.categoryRoot);
 
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 }

@@ -90,10 +90,10 @@ let browserContext;
 let page;
 
 /*
-Change euro decimal to 3
 Create 2 cart rules
   1. 15% discount
   2. Product 'Mug today is a good day' as a gift product
+Change euro decimal to 3
 Place an order in FO with the cart rules created
   1. Check discount value after first cart rule added
   2. Check discount value after second cart rule added
@@ -115,6 +115,55 @@ describe('Change currency precision and check orders total price in FO, BO and d
 
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);
+  });
+
+  describe('Create cart rules', async () => {
+    it('should go to cart rule page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCartRulesPageToCreate', baseContext);
+
+      await addCurrencyPage.goToSubMenu(
+        page,
+        addCurrencyPage.catalogParentLink,
+        addCurrencyPage.discountsLink,
+      );
+
+      const pageTitle = await cartRulesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+    });
+
+    describe('Create a percentage cart rule', async () => {
+      it('should go to new cart rule page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage1', baseContext);
+
+        await cartRulesPage.goToAddNewCartRulesPage(page);
+        const pageTitle = await addCartRulePage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      });
+
+      it('should create new cart rule', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'createPercentCartRule', baseContext);
+
+        const validationMessage = await addCartRulePage.createEditCartRules(page, percentCartRule);
+        await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      });
+    });
+
+    describe('Create a gift cart rule', async () => {
+      it('should go to new cart rule page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage2', baseContext);
+
+        await cartRulesPage.goToAddNewCartRulesPage(page);
+        const pageTitle = await addCartRulePage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      });
+
+      it('should create new cart rule', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'createGiftCartRule', baseContext);
+
+        const validationMessage = await addCartRulePage.createEditCartRules(page, giftCartRule);
+        await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      });
+    });
   });
 
   describe('Change currency precision', async () => {
@@ -167,55 +216,6 @@ describe('Change currency precision and check orders total price in FO, BO and d
       // Set currency precision to 3 and check successful update message
       const textResult = await addCurrencyPage.setCurrencyPrecision(page, 3);
       await expect(textResult).to.contains(currenciesPage.successfulUpdateMessage);
-    });
-  });
-
-  describe('Create cart rules', async () => {
-    it('should go to cart rule page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCartRulesPageToCreate', baseContext);
-
-      await addCurrencyPage.goToSubMenu(
-        page,
-        addCurrencyPage.catalogParentLink,
-        addCurrencyPage.discountsLink,
-      );
-
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
-    });
-
-    describe('Create a percentage cart rule', async () => {
-      it('should go to new cart rule page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage1', baseContext);
-
-        await cartRulesPage.goToAddNewCartRulesPage(page);
-        const pageTitle = await addCartRulePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
-      });
-
-      it('should create new cart rule', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'createPercentCartRule', baseContext);
-
-        const validationMessage = await addCartRulePage.createEditCartRules(page, percentCartRule);
-        await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
-      });
-    });
-
-    describe('Create a gift cart rule', async () => {
-      it('should go to new cart rule page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage2', baseContext);
-
-        await cartRulesPage.goToAddNewCartRulesPage(page);
-        const pageTitle = await addCartRulePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
-      });
-
-      it('should create new cart rule', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'createGiftCartRule', baseContext);
-
-        const validationMessage = await addCartRulePage.createEditCartRules(page, giftCartRule);
-        await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
-      });
     });
   });
 
@@ -322,8 +322,8 @@ describe('Change currency precision and check orders total price in FO, BO and d
       // Close tab and init other page objects with new current tab
       page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      const pageTitle = await currenciesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(currenciesPage.pageTitle);
     });
 
     it('should go to orders page', async function () {

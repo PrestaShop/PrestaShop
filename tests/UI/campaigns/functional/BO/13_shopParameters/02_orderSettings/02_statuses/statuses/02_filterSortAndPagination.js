@@ -33,7 +33,7 @@ const tableName = 'order';
 /*
 Filter order status by : Id, Name, Send email to customer, Delivery, Invoice, email template
 Sort order status by : Id, Name, Email template
-Create 2 order statuses
+Create 8 order statuses
 Pagination next and previous
 Delete by bulk actions
  */

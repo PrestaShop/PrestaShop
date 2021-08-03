@@ -29,6 +29,7 @@ class AddBrand extends BOBasePage {
     this.metaDescriptionInput = id => `#manufacturer_meta_description_${id}`;
     this.metaKeywordsInput = id => `#manufacturer_meta_keyword_${id}-tokenfield`;
     this.statusToggleInput = toggle => `#manufacturer_is_enabled_${toggle}`;
+
     // Selectors for Meta keywords
     this.taggableFieldDiv = lang => `div.input-group div.js-locale-${lang}`;
     this.deleteKeywordLink = lang => `${this.taggableFieldDiv(lang)} a.close`;
@@ -71,6 +72,7 @@ class AddBrand extends BOBasePage {
 
     // Set Enabled value
     await page.check(this.statusToggleInput(brandData.enabled ? 1 : 0));
+
     // Save Created brand
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);

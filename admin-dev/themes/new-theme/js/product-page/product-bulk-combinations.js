@@ -10,8 +10,7 @@ export default function () {
   const finalPriceIT = $('#form_step2_price_ttc');
   const finalPriceBasics = $('#form_step1_price_shortcut');
   const finalPriceBasicsIT = $('#form_step1_price_ttc_shortcut');
-  const impactOnPriceSelector = 'input.attribute_priceTE';
-  const finalPriceSelector = '.attribute-finalprice span';
+  const ecotaxTI = $('#form_step2_ecotax');
 
   return {
     init: function init() {
@@ -46,6 +45,10 @@ export default function () {
       });
 
       finalPriceBasicsIT.on('blur', () => {
+        this.syncToPricingTab();
+      });
+
+      ecotaxTI.on('blur', () => {
         this.syncToPricingTab();
       });
 
@@ -174,17 +177,26 @@ export default function () {
       globalProductSubmitButton.submit();
     },
     syncToPricingTab: function syncToPricingTab() {
-      const newPrice = finalPrice.val();
       $('tr.combination').toArray().forEach((item) => {
-        const jQueryRow = $(`#${item.id}`);
-        const jQueryFinalPriceEl = jQueryRow.find(finalPriceSelector);
-        const impactOnPriceEl = jQueryRow.find(impactOnPriceSelector);
-        const impactOnPrice = impactOnPriceEl.val();
+        const tableRow = $(`#${item.id}`);
+        // We need this because there is a specific data="smthg" attribute so we can't use data() function
+        const attributeId = tableRow.attr('data');
 
-        jQueryFinalPriceEl.data('price', newPrice);
-        // calculate new price
-        const newFinalPrice = Number(newPrice) + Number(impactOnPrice);
-        jQueryFinalPriceEl.text(window.ps_round(newFinalPrice, 6));
+        // Get combination final price value from combination form
+        const combinationFinalPrice = window.priceCalculation.getCombinationFinalPriceTaxExcludedById(attributeId);
+        const combinationFinalPriceLabel = tableRow.find('.attribute-finalprice span.final-price');
+        combinationFinalPriceLabel.html(combinationFinalPrice);
+
+        // Update ecotax preview (tax included)
+        let combinationEcotaxTI = window.priceCalculation.getCombinationEcotaxTaxIncludedById(attributeId);
+
+        if (combinationEcotaxTI === 0) {
+          combinationEcotaxTI = window.priceCalculation.getProductEcotaxTaxIncluded();
+        }
+        const ecoTaxLabel = tableRow.find('.attribute-finalprice span.attribute-ecotax');
+        ecoTaxLabel.html(Number(window.ps_round(combinationEcotaxTI, 2)).toFixed(2)); // 2 digits for short
+        const ecoTaxPreview = tableRow.find('.attribute-finalprice .attribute-ecotax-preview');
+        ecoTaxPreview.toggleClass('d-none', Number(combinationEcotaxTI) === 0);
       });
     },
   };

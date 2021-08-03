@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Suppliers page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Suppliers extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on suppliers page
+   */
   constructor() {
     super();
 
@@ -15,6 +24,7 @@ class Suppliers extends BOBasePage {
     this.gridPanel = '#supplier_grid_panel';
     this.gridTable = '#supplier_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
+
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
@@ -23,15 +33,18 @@ class Suppliers extends BOBasePage {
     this.bulkActionsDeleteButton = `${this.gridPanel} #supplier_grid_bulk_action_delete_selection`;
     this.confirmDeleteModal = '#supplier-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
+
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #supplier_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
+
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
+
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
     this.viewRowLink = row => `${this.actionsColumn(row)} a.grid-view-row-link`;
@@ -39,13 +52,16 @@ class Suppliers extends BOBasePage {
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.editRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-edit-row-link`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
+
     // Column status
     this.statusColumn = row => `${this.tableColumn(row, 'active')} .ps-switch`;
     this.statusColumnToggleInput = row => `${this.statusColumn(row)} input`;
+
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.gridPanel} .col-form-label`;
@@ -59,8 +75,8 @@ class Suppliers extends BOBasePage {
 
   /* Header Methods */
   /**
-   * Go to New Supplier Page
-   * @param page
+   * Go to new supplier page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewSupplierPage(page) {
@@ -70,8 +86,8 @@ class Suppliers extends BOBasePage {
   /* Column Methods */
   /**
    * View Supplier
-   * @param page
-   * @param row, Which row of the list
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async viewSupplier(page, row = 1) {
@@ -80,8 +96,8 @@ class Suppliers extends BOBasePage {
 
   /**
    * Edit Supplier
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async goToEditSupplierPage(page, row = 1) {
@@ -93,9 +109,9 @@ class Suppliers extends BOBasePage {
   }
 
   /**
-   * Delete Row in table
-   * @param page
-   * @param row, row to delete
+   * Delete row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table to delete
    * @return {Promise<string>}
    */
   async deleteSupplier(page, row = 1) {
@@ -108,13 +124,14 @@ class Suppliers extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteSuppliers(page);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Get toggle column value for a row
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
   async getStatus(page, row = 1) {
@@ -131,9 +148,9 @@ class Suppliers extends BOBasePage {
 
   /**
    * Update Enable column for the value wanted in Brands list
-   * @param page
-   * @param row
-   * @param valueWanted
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param valueWanted {boolean} True if we want to enable status, false if not
    * @return {Promise<boolean>}, true if click has been performed
    */
   async setStatus(page, row = 1, valueWanted = true) {
@@ -147,9 +164,9 @@ class Suppliers extends BOBasePage {
 
   /**
    * get text from a column
-   * @param page
-   * @param row, row in table
-   * @param column, which column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column to get text value
    * @return {Promise<string>}
    */
   async getTextColumnFromTableSupplier(page, row, column) {
@@ -159,7 +176,7 @@ class Suppliers extends BOBasePage {
   /* Reset Methods */
   /**
    * Reset filters in table
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -170,7 +187,7 @@ class Suppliers extends BOBasePage {
 
   /**
    * Get number of elements in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -178,8 +195,8 @@ class Suppliers extends BOBasePage {
   }
 
   /**
-   * Reset Filter And get number of elements in list
-   * @param page
+   * Reset filter and get number of elements in list
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -190,10 +207,10 @@ class Suppliers extends BOBasePage {
   /* filter Methods */
   /**
    * Filter Table
-   * @param page
-   * @param filterType, input / Select
-   * @param filterBy, which column
-   * @param value, value to put in filter
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value{ string} Value to put on filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value = '') {
@@ -213,8 +230,8 @@ class Suppliers extends BOBasePage {
 
   /**
    * Filter Supplier column active
-   * @param page
-   * @param value
+   * @param page {Page} Browser tab
+   * @param value {boolean} True if we need to filter by supplier enabled, false if not
    * @return {Promise<void>}
    */
   async filterSupplierEnabled(page, value) {
@@ -224,8 +241,8 @@ class Suppliers extends BOBasePage {
   /* Bulk Actions Methods */
   /**
    * Enable / disable Suppliers by Bulk Actions
-   * @param page
-   * @param enable
+   * @param page {Page} Browser tab
+   * @param enable {boolean} True if we need to bulk enable status, false if not
    * @return {Promise<string>}
    */
   async bulkSetStatus(page, enable = true) {
@@ -234,11 +251,13 @@ class Suppliers extends BOBasePage {
       page.$eval(this.selectAllRowsLabel, el => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
+
     // Click on Button Bulk actions
     await Promise.all([
       page.click(this.bulkActionsToggleButton),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
+
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -246,7 +265,7 @@ class Suppliers extends BOBasePage {
 
   /**
    * Delete with bulk actions
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async deleteWithBulkActions(page) {
@@ -255,11 +274,13 @@ class Suppliers extends BOBasePage {
       page.$eval(this.selectAllRowsLabel, el => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
+
     // Click on Button Bulk actions
     await Promise.all([
       page.click(this.bulkActionsToggleButton),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
+
     // Click on delete and wait for modal
     await Promise.all([
       page.click(this.bulkActionsDeleteButton),
@@ -271,19 +292,18 @@ class Suppliers extends BOBasePage {
 
   /**
    * Confirm delete with modal
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async confirmDeleteSuppliers(page) {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
-
   // Sort methods
   /**
    * Get content from all rows
-   * @param page
-   * @param column
+   * @param page {Page} Browser tab
+   * @param column {string} Column name to get text content
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, column) {
@@ -304,9 +324,9 @@ class Suppliers extends BOBasePage {
 
   /**
    * Sort table
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection = 'asc') {
@@ -325,7 +345,7 @@ class Suppliers extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -334,32 +354,35 @@ class Suppliers extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+
     return this.getPaginationLabel(page);
   }
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
     return this.getPaginationLabel(page);
   }
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
     return this.getPaginationLabel(page);
   }
 }

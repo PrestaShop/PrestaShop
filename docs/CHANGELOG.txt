@@ -24,6 +24,117 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.8.0-rc.1 - (2021-06-25)
+####################################
+
+- Back Office:
+  - New feature:
+    - #23948: Add history feature of edit combination of product page v2 (by @NeOMakinG)
+    - #24745: Form builder modifier (by @jolelievre)
+  - Improvement:
+    - #25121: Update translations catalogue with Welcome module wordings (by @sowbiba)
+    - #25039: Disable product V2 page when multistore is used (by @matthieu-rolland)
+    - #24025: Add SubmittableInput successfull and error states (by @NeOMakinG)
+    - #24713: Fix missing scrollbar on multistore dropdowns (by @micka-fdz)
+    - #24811: Fix invalid html attribute on multistore fields (by @matthieu-rolland)
+    - #24469: Multistore header on product pages (by @matthieu-rolland)
+    - #24661: Display tab for extra modules in product page (by @jolelievre)
+    - #24876: Add classes for sort links on legacy pages (by @boubkerbribri)
+  - Bug fix:
+    - #25034: Fix checkbox direction on RTL (by @NeOMakinG)
+    - #25035: Fix product footer direction using RTL language (by @NeOMakinG)
+    - #24052: Open confirm modal only when eligible for feature flag form (by @matks)
+    - #25082: Fix category create in product page (by @zuk3975)
+    - #24869: Fix no active payment module displayed in Payment Methods (by @atomiix)
+    - #25004: Fix help sidebar on Experimental Features BO Page (by @matks)
+    - #24890: Fix top buttons on order view on mobile (by @NeOMakinG)
+    - #24851: Twig extension for multistore shop context URLs (by @PierreRambaud)
+    - #24918: Fix table responsive of multistore page (by @NeOMakinG)
+    - #24882: Restore ability to disable translations tree item (by @sowbiba)
+    - #24899: Avoid errors display when Emails translations lang.php does not exist (by @sowbiba)
+    - #24762: Fixed adding a free shipping cart rule on a 0.00 order (by @Progi1984)
+    - #24765: Fix edit price modal showed when adding same product in multi-invoices (by @atomiix)
+    - #24770: Added currency BYN TO CLDR dataset (by @olecorre)
+    - #24773: BO - Order Preview : Added email (by @Progi1984)
+    - #24892: Fix experimental product page creation link (by @matthieu-rolland)
+    - #24848: Avoid setting height to 0 if height isn't defined on product dropzone (by @NeOMakinG)
+    - #24837: Fix zoom on theme email grid and legacy dropdowns (by @NeOMakinG)
+    - #24794: Fix js error when adding voucher in create order (by @atomiix)
+    - #24728: Remove unwanted bundle.js call (by @PierreRambaud)
+    - #24867: Fix order notes not being saved  (by @matthieu-rolland)
+    - #24813: Fix header toolbar getting over content on mobile and table (by @NeOMakinG)
+    - #24665: Fix dropzone component design on product page v2 (by @NeOMakinG)
+    - #24282: Remove unwanted margins on order page cards (by @NeOMakinG)
+    - #24330: Disable Menus tab and deny access (by @sowbiba)
+    - #24771: Build assets (by @Progi1984)
+    - #24736: Fix create-test-db (by @zuk3975)
+    - #24696: Fix delete modal translation (by @jolelievre)
+    - #24594: Fix order create page on product qty update (by @NeOMakinG)
+    - #24718: The addProductNewInvoiceInfo is not displayed when creating new invoice (by @PierreRambaud)
+    - #24679: Fix free shipping cart rule should not be recalculate when PS_ORDER_RECALCULATE_SHIPPING is false (by @atomiix)
+- Front Office:
+  - Improvement:
+    - #23480: Improve accessibility of classic theme forms by adding for and ids (by @NeOMakinG)
+  - Bug fix:
+    - #25101: Fix RTL issues on material icons on FO (by @NeOMakinG)
+    - #24323: Update classic webpack and fix watch issue by adding webpack-cli locally (by @NeOMakinG)
+    - #24600: FO - Validate field values when creating customer account (by @sowbiba)
+    - #24852: Fix 404 layout for wrong category (by @atomiix)
+    - #24795: Fix checkout page details removed and wrong price when adding/removing voucher (by @atomiix)
+    - #24849: Fix wrong tab selected after changing a product combination on the FO (by @atomiix)
+    - #24680: Fix unclosed div in product-list.tpl (by @kpodemski)
+- Core:
+  - Improvement:
+    - #25141: Upgrade ps_linklist to 5.0.3 (by @sowbiba)
+    - #25131: Bump module ps_linklist to 5.0.2 (by @sowbiba)
+    - #25120: Update Welcome module to 6.0.6 (by @sowbiba)
+    - #25102: Update ps_linklist module to v5.0.1 (by @sowbiba)
+    - #24957: Bump modules Welcome to 6.0.5 & ProductComments to 4.2.2 (by @Progi1984)
+    - #24885: Register new hooks for 1.7.8.0 (by @matks)
+    - #24729: Update linklist to v4 (by @atomiix)
+    - #24717: Update native modules (by @atomiix)
+  - Bug fix:
+    - #25111: Fix compiled legacy container (by @atomiix)
+    - #25098: Remove precision type for currency (by @sowbiba)
+    - #24774: Fix missing product indexation after creation on product page V2 (by @matthieu-rolland)
+    - #24866: Set country GB to non-EU country (by @juraj1000)
+    - #24682: Add missing Grid and Router JS components (by @kpodemski)
+    - #24821: Handle CustomerAddressGridDefinitionFactory in CLI context (by @atomiix)
+    - #24829: Show formatted Load time in Profiler (by @kpodemski)
+- Installer:
+  - Bug fix:
+    - #24924: Add missing supplier for product pack in fixtures (by @PierreRambaud)
+    - #24847: Fix hook wording (by @PululuK)
+- Localization:
+  - Bug fix:
+    - #24902: Wording corrections before RC (by @jolelievre)
+- Tests:
+  - Refactoring:
+    - #24995: Functional tests - Add Js doc for catalog pages (by @nesrineabdmouleh)
+    - #25104: Functional tests - Refacto 'Orders > Delivery slips' tests (by @nesrineabdmouleh)
+    - #25128: Functional tests - Add js doc for 'Advanced parameters' pages (by @nesrineabdmouleh)
+    - #25108: Functional tests - Refacto 'Orders > Shopping carts' tests (by @nesrineabdmouleh)
+    - #25126: Fix currency precision regression test (by @boubkerbribri)
+    - #25088: Functional tests - Add some refacto to Orders>Invoices tests (by @nesrineabdmouleh)
+    - #25047: Fix nightly tests for 21-06-2021 (by @boubkerbribri)
+    - #25057: Fix menu check on regression test (by @boubkerbribri)
+    - #24996: Fix nightly 17-06-2021 (by @nesrineabdmouleh)
+    - #24972: Functional tests - Add some refacto to orders and credit slips (by @nesrineabdmouleh)
+    - #24951: Change attribute name to something more specific to fix filter (by @boubkerbribri)
+    - #24783: Fix pages name for link list module (by @boubkerbribri)
+    - #24894: Update Js doc for design pages (by @nesrineabdmouleh)
+    - #24699: Functional test - Add quick access test (by @nesrineabdmouleh)
+    - #24904: Wait for navigation after click on FO menu (by @boubkerbribri)
+    - #24870: Improve selectors and functions on statuses page (by @boubkerbribri)
+    - #24862: Improve orders selectors for UI tests (by @boubkerbribri)
+    - #24787: Add regression test 'Access to Menu tab on Bo should be denied' (by @boubkerbribri)
+    - #24789: Add jsdoc for classes: imageType, invoice, language, orderMessage, orderReturnStatus, orderStatus, product, profile (by @boubkerbribri)
+    - #24775: Add class for columns on legacy tables to be able to target them on tests (by @boubkerbribri)
+    - #24737: Add ids for link to download sample file on import page (by @boubkerbribri)
+    - #24660: Update Js documentation for customers pages (by @nesrineabdmouleh)
+    - #24720: Add selectors for view customer service page and fix autocomplete test (by @boubkerbribri)
+
+####################################
 #   v1.7.8.0-beta.1 - (2021-05-31)
 ####################################
 

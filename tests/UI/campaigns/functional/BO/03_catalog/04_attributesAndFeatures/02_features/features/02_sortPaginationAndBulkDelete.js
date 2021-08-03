@@ -37,7 +37,7 @@ Pagination next and previous
 Sort features table by ID, Name and Position
 Delete the created features by bulk actions
  */
-describe('Sort, pagination and delete by bulk actions features', async () => {
+describe('BO - Catalog - Attributes & Features : Sort, pagination and delete by bulk actions features', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -104,8 +104,8 @@ describe('Sort, pagination and delete by bulk actions features', async () => {
 
   // 2 : Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 20 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+    it('should change the items number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
       const paginationNumber = await featuresPage.selectPaginationLimit(page, '20');
       expect(paginationNumber).to.equal('1');
@@ -125,8 +125,8 @@ describe('Sort, pagination and delete by bulk actions features', async () => {
       expect(paginationNumber).to.equal('1');
     });
 
-    it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+    it('should change the items number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await featuresPage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.equal('1');
@@ -205,7 +205,7 @@ describe('Sort, pagination and delete by bulk actions features', async () => {
       await expect(numberOfFeaturesAfterFilter).to.be.equal(19);
     });
 
-    it('should delete features with Bulk Actions and check result', async function () {
+    it('should delete features by Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteFeatures', baseContext);
 
       const deleteTextResult = await featuresPage.bulkDeleteFeatures(page);

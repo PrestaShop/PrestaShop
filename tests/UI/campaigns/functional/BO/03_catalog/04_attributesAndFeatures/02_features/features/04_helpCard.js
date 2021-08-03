@@ -9,21 +9,22 @@ const loginCommon = require('@commonTests/loginBO');
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const attributesPage = require('@pages/BO/catalog/attributes');
+const featuresPage = require('@pages/BO/catalog/features');
 
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_attributes_helperCard';
+const baseContext = 'functional_BO_catalog_attributesAndFeatures_features_helpCard';
 
 let browserContext;
 let page;
 
 /*
-Go to attributes page
-Open help card and check language
-Close help card
+Go to features page
+Open helper card and check language
+Close helper card
  */
-describe('Helper card on attributes page', async () => {
+describe('BO - Catalog - Attributes & Features : Help card on features page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -53,20 +54,28 @@ describe('Helper card on attributes page', async () => {
     await expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
+  it('should go to Features page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToFeaturesPage', baseContext);
+
+    await attributesPage.goToFeaturesPage(page);
+    const pageTitle = await featuresPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(featuresPage.pageTitle);
+  });
+
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
-    const isHelpSidebarVisible = await attributesPage.openHelpSideBar(page);
+    const isHelpSidebarVisible = await featuresPage.openHelpSideBar(page);
     await expect(isHelpSidebarVisible).to.be.true;
 
-    const documentURL = await attributesPage.getHelpDocumentURL(page);
+    const documentURL = await featuresPage.getHelpDocumentURL(page);
     await expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
-    const isHelpSidebarClosed = await attributesPage.closeHelpSideBar(page);
+    const isHelpSidebarClosed = await featuresPage.closeHelpSideBar(page);
     await expect(isHelpSidebarClosed).to.be.true;
   });
 });

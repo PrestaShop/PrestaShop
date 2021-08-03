@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add value page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddValue extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add value page
+   */
   constructor() {
     super();
 
@@ -21,11 +30,15 @@ class AddValue extends BOBasePage {
     this.saveAndStayButton = 'button[name=\'submitAddattributeAndStay\']';
   }
 
+  /*
+  Methods
+   */
+
   /**
    * Fill value form and save it
-   * @param page
-   * @param valueData
-   * @param saveAndStay
+   * @param page {Page} Browser tab
+   * @param valueData {valueData} Data to set on add/edit value form
+   * @param saveAndStay {boolean} True if we need to save and stay, false if not
    * @return {Promise<string>}
    */
   async addEditValue(page, valueData, saveAndStay = false) {

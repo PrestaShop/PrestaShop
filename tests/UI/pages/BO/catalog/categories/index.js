@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Categories page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Categories extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on categories page
+   */
   constructor() {
     super();
 
@@ -10,8 +19,10 @@ class Categories extends BOBasePage {
 
     // Selectors
     this.editHomeCategoryButton = '#main-div .breadcrumb a[href*=\'edit\']';
+
     // Header links
     this.addNewCategoryLink = '#page-header-desc-configuration-add[title=\'Add new category\']';
+
     // List of categories
     this.categoryGridPanel = '#category_grid_panel';
     this.categoryGridTitle = `${this.categoryGridPanel} h3.card-header-title`;
@@ -36,24 +47,29 @@ class Categories extends BOBasePage {
     this.categoryFilterInput = filterBy => `${this.categoriesListForm} #category_${filterBy}`;
     this.filterSearchButton = `${this.categoriesListForm} .grid-search-button`;
     this.filterResetButton = `${this.categoriesListForm} .grid-reset-button`;
+
     // Bulk Actions
     this.selectAllRowsDiv = `${this.categoriesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.categoriesListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.categoriesListForm} #category_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.categoriesListForm} #category_grid_bulk_action_disable_selection`;
     this.bulkActionsDeleteButton = `${this.categoriesListForm} #category_grid_bulk_action_delete_selection`;
+
     // Sort Selectors
     this.tableHead = `${this.categoriesListForm} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
     // Modal Dialog
     this.deleteCategoryModal = '#category_grid_delete_categories_modal.show';
     this.deleteCategoryModalDeleteButton = `${this.deleteCategoryModal} button.js-submit-delete-categories`;
     this.deleteCategoryModalModeInput = id => `${this.deleteCategoryModal} #delete_categories_delete_mode_${id}`;
+
     // Grid Actions
     this.categoryGridActionsButton = '#category-grid-actions-button';
     this.gridActionDropDownMenu = '#category-grid-actions-dropdown-menu';
     this.gridActionExportLink = '#category-grid-action-export';
+
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.categoryGridPanel} .col-form-label`;
@@ -66,7 +82,7 @@ class Categories extends BOBasePage {
    */
   /**
    * Go to add new category page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewCategoryPage(page) {
@@ -75,7 +91,7 @@ class Categories extends BOBasePage {
 
   /**
    * Reset input filters
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
@@ -86,7 +102,7 @@ class Categories extends BOBasePage {
 
   /**
    * Get number of elements in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -94,8 +110,8 @@ class Categories extends BOBasePage {
   }
 
   /**
-   * Reset Filter And get number of elements in list
-   * @param page
+   * Reset Filter and get number of elements in list
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -105,10 +121,10 @@ class Categories extends BOBasePage {
 
   /**
    * Filter list of categories
-   * @param page
-   * @param filterType, input or select to choose method of filter
-   * @param filterBy, column to filter
-   * @param value, value to filter with
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
   async filterCategories(page, filterType, filterBy, value = '') {
@@ -128,8 +144,8 @@ class Categories extends BOBasePage {
 
   /**
    * Get Value of column Displayed
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
   async getStatus(page, row) {
@@ -146,9 +162,9 @@ class Categories extends BOBasePage {
 
   /**
    * Quick edit toggle column value
-   * @param page
-   * @param row, row in table
-   * @param valueWanted, Value wanted in column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param valueWanted {boolean} True if we need to enable status, false if not
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async setStatus(page, row, valueWanted = true) {
@@ -168,9 +184,9 @@ class Categories extends BOBasePage {
 
   /**
    * Get text from a column
-   * @param page
-   * @param row, row in table
-   * @param column, which column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column to get text value
    * @returns {Promise<string>}
    */
   async getTextColumnFromTableCategories(page, row, column) {
@@ -179,8 +195,8 @@ class Categories extends BOBasePage {
 
   /**
    * Get all information from categories table
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<{name: string, description: string, id: string, position: *, status: boolean}>}
    */
   async getCategoryFromTable(page, row) {
@@ -195,8 +211,8 @@ class Categories extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param column
+   * @param page {Page} Browser tab
+   * @param column {string} Column to get all rows column
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, column) {
@@ -213,8 +229,8 @@ class Categories extends BOBasePage {
 
   /**
    * Go to Edit Category page
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async goToEditCategoryPage(page, row) {
@@ -229,8 +245,8 @@ class Categories extends BOBasePage {
 
   /**
    * View subcategories in list
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async goToViewSubCategoriesPage(page, row) {
@@ -245,12 +261,12 @@ class Categories extends BOBasePage {
 
   /**
    * Delete Category
-   * @param page
-   * @param row, row in table
-   * @param modeID, Deletion method to choose in modal
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param modeID {number} Deletion method to choose in modal
    * @returns {Promise<string>}
    */
-  async deleteCategory(page, row, modeID = '0') {
+  async deleteCategory(page, row, modeID = 0) {
     // Click on dropDown
     await Promise.all([
       page.click(this.categoriesListTableToggleDropDown(row, 'actions')),
@@ -265,13 +281,14 @@ class Categories extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCategoryModal),
     ]);
     await this.chooseOptionAndDelete(page, modeID);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Choose the option and delete
-   * @param page
-   * @param modeID, Deletion mode ID to choose in modal
+   * @param page {Page} Browser tab
+   * @param modeID {number} Deletion mode ID to choose in modal
    * @return {Promise<void>}
    */
   async chooseOptionAndDelete(page, modeID) {
@@ -282,8 +299,8 @@ class Categories extends BOBasePage {
 
   /**
    * Enable / disable categories by Bulk Actions
-   * @param page
-   * @param enable
+   * @param page {Page} Browser tab
+   * @param enable {boolean} True if we need to enable status, false if not
    * @returns {Promise<string>}
    */
   async bulkSetStatus(page, enable = true) {
@@ -292,11 +309,13 @@ class Categories extends BOBasePage {
       page.$eval(this.selectAllRowsDiv, el => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
+
     // Click on Button Bulk actions
     await Promise.all([
       page.click(this.bulkActionsToggleButton),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
+
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -304,52 +323,56 @@ class Categories extends BOBasePage {
 
   /**
    * Delete all Categories with Bulk Actions
-   * @param page
-   * @param modeID, Deletion mode ID to choose in modal
+   * @param page {Page} Browser tab
+   * @param modeID {number} Deletion mode ID to choose in modal
    * @returns {Promise<string>}
    */
-  async deleteCategoriesBulkActions(page, modeID = '0') {
+  async deleteCategoriesBulkActions(page, modeID = 0) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsDiv, el => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
+
     // Click on Button Bulk actions
     await Promise.all([
       page.click(this.bulkActionsToggleButton),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
+
     // Click on delete and wait for modal
     await Promise.all([
       page.click(this.bulkActionsDeleteButton),
       this.waitForVisibleSelector(page, this.deleteCategoryModal),
     ]);
     await this.chooseOptionAndDelete(page, modeID);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Change category position
-   * @param page
-   * @param categoryRow
-   * @param position
+   * @param page {Page} Browser tab
+   * @param actualPosition {number} Value of actual position
+   * @param newPosition {number} Value of new position
    * @return {Promise<string>}
    */
-  async changeCategoryPosition(page, categoryRow, position) {
+  async changeCategoryPosition(page, actualPosition, newPosition) {
     await this.dragAndDrop(
       page,
-      this.categoriesListTableDraggableColumn(categoryRow),
-      this.categoriesListTableDraggableColumn(position),
+      this.categoriesListTableDraggableColumn(actualPosition),
+      this.categoriesListTableDraggableColumn(newPosition),
     );
+
     return this.getGrowlMessageContent(page);
   }
 
   /* Sort methods */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -388,8 +411,8 @@ class Categories extends BOBasePage {
 
   /**
    * Get category from table in csv format
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<string>}
    */
   async getCategoryInCsvFormat(page, row) {
@@ -404,7 +427,7 @@ class Categories extends BOBasePage {
 
   /**
    * Go to edit category page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToEditHomeCategoryPage(page) {
@@ -414,7 +437,7 @@ class Categories extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -423,8 +446,8 @@ class Categories extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -438,7 +461,7 @@ class Categories extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -448,7 +471,7 @@ class Categories extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
