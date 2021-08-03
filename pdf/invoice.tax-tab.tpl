@@ -48,7 +48,7 @@
         {assign var=label_printed value=false}
 
 			{foreach $bd as $line}
-				{if $line.rate == 0 and $label != 'ecotax_tax'}
+				{if $line.rate == 0}
 					{continue}
 				{/if}
 				{assign var=has_line value=true}
