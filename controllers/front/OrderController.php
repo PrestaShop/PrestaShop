@@ -237,11 +237,11 @@ class OrderControllerCore extends FrontController
         ]));
     }
 
-    public function displayAjaxcheckCustomerInformation()
+    public function displayAjaxcheckCustomerInformation(): void
     {
         $email = Tools::getValue('email');
         $isEmailValid = Validate::isEmail($email);
-        $isGuestAllowed = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
+        $isGuestAllowed = (bool) Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
         $customerExists = false;
         $responseData = [];
         $alert = [];
@@ -253,7 +253,7 @@ class OrderControllerCore extends FrontController
         if ($customerExists) {
             $alert['type'] = $isGuestAllowed ? 'info' : 'danger';
             $alert['message'] = $isGuestAllowed ?
-            $this->translator->trans(
+                $this->translator->trans(
                     'You already have an account, don\'t hesitate to log in!',
                     [],
                     'Shop.Theme.Checkout'
@@ -267,7 +267,7 @@ class OrderControllerCore extends FrontController
         }
 
         $responseData = array_merge($responseData, [
-            'guestAllowed' => (bool) $isGuestAllowed,
+            'guestAllowed' => $isGuestAllowed,
             'alert' => $alert,
             'customerExists' => $customerExists,
         ]);

@@ -37,11 +37,7 @@ export default function () {
   let timeout;
 
   const handleBlockDisplay = ({customerExists}) => {
-    if (customerExists) {
-      $checkoutNewCustomerRelatedBlock.hide();
-    } else {
-      $checkoutNewCustomerRelatedBlock.show();
-    }
+    $checkoutNewCustomerRelatedBlock.toggleClass('hidden-xs-up', customerExists);
   };
 
   const handleAlertMessage = ({alert}) => {
