@@ -58,12 +58,12 @@ final class DeleteCategoryHandler extends AbstractDeleteCategoryHandler implemen
             throw new CannotDeleteRootCategoryForShopException(sprintf('Shop\'s root category with id %s cannot be deleted.', var_export($categoryIdValue, true)));
         }
 
-        $categoryProducts = $category->getProductsBeforeDeletion();
+        $categoryProducts = is_array($category->getCategoryProducts()) ? $category->getCategoryProducts() : [];
 
         if (!$category->delete()) {
             throw new FailedToDeleteCategoryException(sprintf('Failed to delete category with id %s', var_export($categoryIdValue, true)));
         }
 
-        $this->handleProductsUpdate($categoryProducts, (int) $category->id_parent, $command->getDeleteMode());
+        $this->handleProductsUpdate((int) $category->id_parent, $command->getDeleteMode(), $categoryProducts);
     }
 }

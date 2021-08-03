@@ -37,11 +37,11 @@ abstract class AbstractDeleteCategoryHandler
     /**
      * Handle products update after category deletion.
      *
-     * @param array $categoryProducts products that belong to the category before deletion
      * @param int $parentCategoryId parent category of the category to be deleted
      * @param CategoryDeleteMode $mode deletion mode
+     * @param array $categoryProducts products of the category to be deleted
      */
-    protected function handleProductsUpdate(array $categoryProducts, $parentCategoryId, CategoryDeleteMode $mode)
+    protected function handleProductsUpdate($parentCategoryId, CategoryDeleteMode $mode, array $categoryProducts)
     {
         foreach ($categoryProducts as $categoryProduct) {
             $product = new Product((int) $categoryProduct['id_product']);
