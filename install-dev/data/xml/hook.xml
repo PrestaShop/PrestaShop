@@ -3495,5 +3495,10 @@
       <title>Modify back office order data after creating it</title>
       <description>This hook allows to modify order created from back office data after it is created</description>
     </hook>
+    <hook id="actionAdminOrdersTrackingNumberUpdate">
+      <name>actionAdminOrdersTrackingNumberUpdate</name>
+      <title>After setting the tracking number for the order</title>
+      <description>This hook allows you to execute code after the unique tracking number for the order was added</description>
+    </hook>
   </entities>
 </entity_hook>
