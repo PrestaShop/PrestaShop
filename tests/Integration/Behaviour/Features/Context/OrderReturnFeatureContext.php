@@ -50,7 +50,7 @@ class OrderReturnFeatureContext extends AbstractPrestaShopFeatureContext
         $orderReturnState = new OrderReturnState(null, Configuration::get('PS_LANG_DEFAULT'));
         $orderReturnState->name = 'New order return state';
         $orderReturnState->add();
-        SharedStorage::getStorage()->set($orderReturnStateReference, $orderReturnState->id);
+        SharedStorage::getStorage()->set($orderReturnStateReference, (int) $orderReturnState->id);
     }
 
     /**
