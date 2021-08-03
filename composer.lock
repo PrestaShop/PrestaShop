@@ -5400,16 +5400,16 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "v5.0.3",
+            "version": "v5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "77ce9006cad60fdcb0e5a7066e7cda9bcf053794"
+                "reference": "5cbfe0566d7273cb15e199915cdf2a7c912ebcda"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/77ce9006cad60fdcb0e5a7066e7cda9bcf053794",
-                "reference": "77ce9006cad60fdcb0e5a7066e7cda9bcf053794",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/5cbfe0566d7273cb15e199915cdf2a7c912ebcda",
+                "reference": "5cbfe0566d7273cb15e199915cdf2a7c912ebcda",
                 "shasum": ""
             },
             "require": {
@@ -5441,9 +5441,9 @@
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_linklist/tree/v5.0.3"
+                "source": "https://github.com/PrestaShop/ps_linklist/tree/v5.0.4"
             },
-            "time": "2021-06-28T09:34:03+00:00"
+            "time": "2021-07-27T09:07:29+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
@@ -5490,16 +5490,16 @@
         },
         {
             "name": "prestashop/ps_searchbar",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_searchbar.git",
-                "reference": "61bff70e5ed4e3f0df61419446fe5fc7a5cac8bf"
+                "reference": "70c2d952946aba108b8610c092e267f94fd512b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_searchbar/zipball/61bff70e5ed4e3f0df61419446fe5fc7a5cac8bf",
-                "reference": "61bff70e5ed4e3f0df61419446fe5fc7a5cac8bf",
+                "url": "https://api.github.com/repos/PrestaShop/ps_searchbar/zipball/70c2d952946aba108b8610c092e267f94fd512b9",
+                "reference": "70c2d952946aba108b8610c092e267f94fd512b9",
                 "shasum": ""
             },
             "require": {
@@ -5522,9 +5522,9 @@
             "description": "PrestaShop module ps_searchbar",
             "homepage": "https://github.com/PrestaShop/ps_searchbar",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_searchbar/tree/v2.1.0"
+                "source": "https://github.com/PrestaShop/ps_searchbar/tree/v2.1.1"
             },
-            "time": "2021-01-15T14:08:18+00:00"
+            "time": "2021-06-23T08:35:21+00:00"
         },
         {
             "name": "prestashop/ps_sharebuttons",
