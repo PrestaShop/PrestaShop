@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
 use OrderReturnState;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateException;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 final class OrderReturnStateChoiceProvider implements FormChoiceProviderInterface
@@ -50,6 +51,8 @@ final class OrderReturnStateChoiceProvider implements FormChoiceProviderInterfac
      * Get available order return states.
      *
      * @return array
+     *
+     * @throws OrderReturnStateException
      */
     public function getChoices(): array
     {
@@ -57,6 +60,9 @@ final class OrderReturnStateChoiceProvider implements FormChoiceProviderInterfac
         $orderStates = OrderReturnState::getOrderReturnStates($this->contextLangId);
 
         foreach ($orderStates as $orderState) {
+            if (array_key_exists($orderState['name'], $choices)) {
+                throw new OrderReturnStateException('Duplicate order state names');
+            }
             $choices[$orderState['name']] = (int) $orderState['id_order_return_state'];
         }
 
