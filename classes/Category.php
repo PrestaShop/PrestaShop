@@ -2055,20 +2055,20 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * Get products of the category that will be deleted
+     * Get products of the category
+     * The returned list of products is used during category deletion to re-assign them to main category
+     *
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
-    public function getProductsBeforeDeletion(): array
+    public function getCategoryProducts()
     {
-        $products = Db::getInstance()->executeS('
-                    SELECT p.`id_product`
-                    FROM `' . _DB_PREFIX_ . 'product` p
-                    ' . Shop::addSqlAssociation('product', 'p') . '
-                    LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp
-                    ON cp.`id_product` = p.`id_product`
-                    WHERE cp.`id_category` = ' . (int) $this->id . '
-                ');
-
-        return $products;
+        return Db::getInstance()->executeS('
+        SELECT p.`id_product`
+        FROM `' . _DB_PREFIX_ . 'product` p
+        ' . Shop::addSqlAssociation('product', 'p') . '
+        LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp
+        ON cp.`id_product` = p.`id_product`
+        WHERE cp.`id_category` = ' . (int) $this->id);
     }
 
     /*
