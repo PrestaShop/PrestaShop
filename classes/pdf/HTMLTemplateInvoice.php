@@ -423,14 +423,14 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     /**
      * Returns different tax breakdown elements.
      *
-     * @return array Different tax breakdown elements
+     * @return array|bool Different tax breakdown elements
      */
     protected function getTaxBreakdown()
     {
         $breakdowns = [
             'product_tax' => $this->order_invoice->getProductTaxesBreakdown($this->order),
             'shipping_tax' => $this->order_invoice->getShippingTaxesBreakdown($this->order),
-            'ecotax_tax' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
+            'ecotax_tax' => Configuration::get('PS_USE_ECOTAX') ? $this->order_invoice->getEcoTaxTaxesBreakdown() : [],
             'wrapping_tax' => $this->order_invoice->getWrappingTaxesBreakdown(),
         ];
 
@@ -441,7 +441,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         }
 
         if (empty($breakdowns)) {
-            $breakdowns = false;
+            return false;
         }
 
         if (isset($breakdowns['product_tax'])) {
