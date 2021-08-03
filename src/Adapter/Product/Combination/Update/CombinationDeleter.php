@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
-class CombinationRemover
+class CombinationDeleter
 {
     /**
      * @var ProductRepository
@@ -80,16 +80,26 @@ class CombinationRemover
      * @throws CombinationNotFoundException
      * @throws ProductConstraintException
      */
-    public function removeCombination(CombinationId $combinationId): void
+    public function deleteCombination(CombinationId $combinationId): void
     {
         $combination = $this->combinationRepository->get($combinationId);
         $this->combinationRepository->delete($combinationId);
         if ($combination->default_on) {
             $productId = new ProductId((int) $combination->id_product);
-            $defaultCombination = $this->combinationRepository->findDefaultCombination($productId);
-            if (null !== $defaultCombination) {
-                $this->defaultCombinationUpdater->setDefaultCombination(new CombinationId((int) $defaultCombination->id));
-            }
+            $this->updateDefaultCombination($productId);
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param CombinationId[] $combinationIds
+     */
+    public function bulkDeleteProductCombinations(ProductId $productId, array $combinationIds): void
+    {
+        try {
+            $this->combinationRepository->bulkDelete($combinationIds);
+        } finally {
+            $this->updateDefaultCombination($productId);
         }
     }
 
@@ -100,7 +110,7 @@ class CombinationRemover
      * @throws CannotDeleteCombinationException
      * @throws CoreException
      */
-    public function removeAllProductCombinations(ProductId $productId): void
+    public function deleteAllProductCombinations(ProductId $productId): void
     {
         $product = $this->productRepository->get($productId);
         if ($product->product_type !== ProductType::TYPE_COMBINATIONS) {
@@ -108,5 +118,16 @@ class CombinationRemover
         }
 
         $this->combinationRepository->deleteByProductId($productId);
+    }
+
+    /**
+     * @param ProductId $productId
+     */
+    private function updateDefaultCombination(ProductId $productId): void
+    {
+        $defaultCombination = $this->combinationRepository->findDefaultCombination($productId);
+        if (null !== $defaultCombination) {
+            $this->defaultCombinationUpdater->setDefaultCombination(new CombinationId((int) $defaultCombination->id));
+        }
     }
 }

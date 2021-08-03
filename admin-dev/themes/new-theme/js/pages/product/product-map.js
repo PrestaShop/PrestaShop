@@ -69,7 +69,7 @@ export default {
     combinationsTableBody: `${combinationListId} table tbody`,
     combinationIdInputsSelector: '.combination-id-input',
     isDefaultInputsSelector: '.combination-is-default-input',
-    removeCombinationSelector: '.remove-combination-item',
+    deleteCombinationSelector: '.delete-combination-item',
     combinationName: 'form .card-header span',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
