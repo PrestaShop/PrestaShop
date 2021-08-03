@@ -257,7 +257,7 @@ class CmsPageController extends FrameworkBundleAdminController
         $shopContext = $context->shop->getContextType();
         $db = Db::getInstance();
         $prefix = $db->getPrefix();
-        $isSame = $db->getRow('select ' . CmsPageQueryBuilder::getIsSameQuery($prefix)  . ' from ' . $prefix . 'cms c where c.id_cms = ' . $cmsPageId);
+        $isSame = $db->getRow('select ' . CmsPageQueryBuilder::getIsSameQuery($prefix) . ' from ' . $prefix . 'cms c where c.id_cms = ' . $cmsPageId);
         try {
             $forceEditUrl = $forceEditMessage = '';
             if (Shop::isFeatureActive()) {
@@ -311,15 +311,15 @@ class CmsPageController extends FrameworkBundleAdminController
             $addedAssociations = [];
             if (!empty($submittedData)) {
                 $newShopAssociations = $submittedData['shop_association'] ?? null;
-                if($newShopAssociations) {
+                if ($newShopAssociations) {
                     $oldShopAssociations = $editableCmsPage->getShopAssociation();
                     $employeeAssociations = array_column(
                         $db->executeS('select id_shop from ' . $prefix . 'employee_shop where id_employee = ' . $context->employee->id),
                         'id_shop');
                     $addedAssociations = array_diff($newShopAssociations, $oldShopAssociations);
-                    $removedAssociations =  array_diff($oldShopAssociations, $newShopAssociations);
+                    $removedAssociations = array_diff($oldShopAssociations, $newShopAssociations);
                     var_dump($employeeAssociations, $addedAssociations, $removedAssociations);
-                    if(!empty(array_diff($addedAssociations, $employeeAssociations)) || !empty(array_diff($removedAssociations, $employeeAssociations))) {
+                    if (!empty(array_diff($addedAssociations, $employeeAssociations)) || !empty(array_diff($removedAssociations, $employeeAssociations))) {
                         throw new CannotEditCmsPageException('You can only change shop associations for shops you have permissions for.', CannotEditCmsPageException::INSUFFICIENT_PERMISSION_ASSOCIATIONS);
                     }
                 }
@@ -1302,18 +1302,20 @@ class CmsPageController extends FrameworkBundleAdminController
             ],
         ];
     }
+
     protected function employeeHasAccessAssociatedShops($cmsPageId)
     {
         $employeeId = $this->getContext()->employee->id;
         $db = Db::getInstance();
         $prefix = $db->getPrefix();
         $missing_permissions = $db->executeS('select cs.id_cms, cs.id_shop, es.id_employee from ' . $prefix . 'cms_shop cs
-            left join ' . $prefix . 'employee_shop es on es.id_shop = cs.id_shop and es.id_employee = ' . $employeeId .'
+            left join ' . $prefix . 'employee_shop es on es.id_shop = cs.id_shop and es.id_employee = ' . $employeeId . '
             where cs.id_cms = ' . (int) $cmsPageId . ' and es.id_employee is null');
 
         return empty($missing_permissions);
     }
-    protected function copyPageContent ($cmsPageId, $id_shop_source, $id_shop_destination)
+
+    protected function copyPageContent($cmsPageId, $id_shop_source, $id_shop_destination)
     {
         $db = Db::getInstance();
         $prefix = $db->getPrefix();

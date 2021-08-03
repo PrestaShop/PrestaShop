@@ -203,16 +203,7 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
     }
 
     /**
-     *
-     */
-    public function getIsSameQueryBuilder($idCms)
-    {
-        $qb = $this->getQueryBuilder(['id_cms' => $idCms])
-            ->select(GetCmsPageForEditing::getIsSameQuery($this->dbPrefix));
-        return $qb;
-    }
-    /**
-     * @return $string Query to get is_same property
+     * @return string Query to get is_same property
      */
     public static function getIsSameQuery($dbPrefix)
     {

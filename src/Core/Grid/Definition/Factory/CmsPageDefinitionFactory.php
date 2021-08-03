@@ -217,11 +217,11 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
                 ->addAfter(
                     'active',
                     (new BooleanColumn('is_same'))
-                        ->setName($this->trans('Content', [], 'Admin.Global'))
+                        ->setName($this->trans('Content', [], 'Admin.Cms.Feature'))
                         ->setOptions([
                             'field' => 'is_same',
-                            'true_name' => $this->trans('Same everywhere', [], 'Admin.Global'),
-                            'false_name' => $this->trans('Content differs', [], 'Admin.Global'),
+                            'true_name' => $this->trans('Same everywhere', [], 'Admin.Cms.Feature'),
+                            'false_name' => $this->trans('Content differs', [], 'Admin.Cms.Feature'),
                         ])
             );
         }
