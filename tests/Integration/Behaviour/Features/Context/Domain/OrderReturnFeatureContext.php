@@ -75,7 +75,7 @@ class OrderReturnFeatureContext extends AbstractDomainFeatureContext
         /**
          * @var $orderReturn OrderReturnForEditing
          */
-        $orderReturn = $this->getCommandBus()->handle(new GetOrderReturnForEditing($orderReturnId));
+        $orderReturn = $this->getCommandBus()->handle(new GetOrderReturnForEditing((int) $orderReturnId));
         $orderReturnStateId = SharedStorage::getStorage()->get($orderReturnStateReference);
         if ($orderReturn->getOrderReturnStateId() !== $orderReturnStateId) {
             $errorMessage = sprintf('Invalid order state for  %s, expected %s but got %s', $orderReturnReference, $orderReturnStateReference, $orderReturn->getOrderReturnStateId());
