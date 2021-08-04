@@ -29,6 +29,8 @@ Release Notes for PrestaShop 1.7
 
 - Back Office:
   - Bug fix:
+    - #25489: Fixed selector for fetching if the tax is included  (by @Progi1984)
+    - #25495: Check variable before using it (by @Progi1984)
     - #25428: Don't recalculate total when PS_ORDER_RECALCULATE_SHIPPING is 0 and editing a carrier (by @Progi1984)
     - #24991: Fix combination ecotax display and edition (by @jolelievre)
     - #25378: Order Product Search: Limit only if the search phrase length is greater than 2 characters and HTTP Code Error become a 400 (by @Progi1984)
@@ -54,6 +56,8 @@ Release Notes for PrestaShop 1.7
     - #24320: Bug fix for number of decimals in product price (by @samberrry)
 - Core:
   - Improvement:
+    - #25449: Build assets on 1.7.7.x  (by @matthieu-rolland)
+    - #25447: Update prestashop modules on 1.7.7.x (by @matthieu-rolland)
     - #24957: Bump modules Welcome to 6.0.5 & ProductComments to 4.2.2 (by @Progi1984)
   - Bug fix:
     - #25413: Fix performance issue on Smarty template caching (by @lukaslau)
@@ -67,7 +71,6 @@ Release Notes for PrestaShop 1.7
   - Refactoring:
     - #24951: Change attribute name to something more specific to fix filter (by @boubkerbribri)
     - #24783: Fix pages name for link list module (by @boubkerbribri)
-
 
 ####################################
 #   v1.7.7.5 - (2021-06-01)
