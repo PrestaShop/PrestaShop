@@ -2730,7 +2730,7 @@ class ProductCore extends ObjectModel
         //Convert designations to an indexed array by id
         $id_product_attribute_keys = array_column($lang, null, 'id_product_attribute');
         //Loop through the combinations
-        $combinations = array_map(function($combination) use($id_product_attribute_keys){
+        $combinations = array_map(function ($combination) use ($id_product_attribute_keys) {
             $combination_id_product_attribute = $combination['id_product_attribute'];
             //Grab the designation of the current id and add it to the result element.
             $combination['attribute_designation'] = $id_product_attribute_keys[$combination_id_product_attribute]['attribute_designation'];
