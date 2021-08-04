@@ -221,12 +221,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                     $name = 'product_mini_' . (int) $order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int) $order_detail['product_attribute_id'] : '') . '.jpg';
                     $path = _PS_PROD_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
 
-                    $order_detail['image_tag'] = preg_replace(
-                        '/\.*' . preg_quote(__PS_BASE_URI__, '/') . '/',
-                        _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR,
-                        ImageManager::thumbnail($path, $name, 45, 'jpg', false),
-                        1
-                    );
+                    $order_detail['image_tag'] = ImageManager::thumbnail($path, $name, 45, 'jpg', false);
 
                     if (file_exists(_PS_TMP_IMG_DIR_ . $name)) {
                         $order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_ . $name);
