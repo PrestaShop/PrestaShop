@@ -254,7 +254,7 @@ class OrderControllerCore extends FrontController
             $alert['type'] = $isGuestAllowed ? 'info' : 'danger';
             $alert['message'] = $isGuestAllowed ?
                 $this->translator->trans(
-                    'You already have an account, don\'t hesitate to log in!',
+                    'You already have an account, don\'t hesitate to sign in!',
                     [],
                     'Shop.Theme.Checkout'
                 )
