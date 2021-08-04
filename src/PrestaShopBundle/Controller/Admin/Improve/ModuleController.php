@@ -487,7 +487,7 @@ class ModuleController extends ModuleAbstractController
         }
 
         if ($response[$module]['status'] === true && $action != 'uninstall') {
-            $moduleInstance = $moduleRepository->getModule($module, false, true);
+            $moduleInstance = $moduleRepository->getModule($module, false, false);
 
             $collection = AddonsCollection::createFrom([$moduleInstance]);
             $response[$module]['action_menu_html'] = $this->container->get('twig')->render(
