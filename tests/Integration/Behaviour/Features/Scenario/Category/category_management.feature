@@ -21,16 +21,11 @@ Feature: Category Management
       | Displayed            | false            |
       | Parent category      | Accessories      |
       | Friendly URL         | category3        |
-#    And I add new category "category4" with following details:
-#      | Name                 | Category 4       |
-#      | Displayed            | false            |
-#      | Parent category      | Accessories      |
-#      | Friendly URL         | category4        |
-    And I add new category "category5" with following details:
+    And I add new category "category4" with following details:
       | Name                 | Category 5       |
       | Displayed            | false            |
       | Parent category      | Home             |
-      | Friendly URL         | category5        |
+      | Friendly URL         | category4        |
 
     And category "accessories" in default language named "Accessories" exists
 
@@ -79,28 +74,13 @@ Feature: Category Management
       | name[en-US] | eastern european tracksuit             |
       | type        | standard                               |
     And I set product "product3" to following categories:
-      | categories       | [ category3, category5 ]          |
+      | categories       | [ category3, category4 ]          |
       | default category | category3                         |
     And I delete category "category3" choosing mode "associate_and_disable"
     Then category "category3" does not exist
     And the product product3 should be assigned to following categories:
-      | categories       | [ accessories, category5 ]        |
+      | categories       | [ accessories, category4 ]        |
       | default category | accessories                       |
-
-#  Scenario: Delete category
-#            Product associated to this category and other categories
-#            Deleted category is not default category
-#    When I create product "product4" with following information:
-#      | name[en-US] | eastern asian tracksuit                |
-#      | type        | standard                               |
-#    And I set product "product4" to following categories:
-#      | categories       | [ category4, category5 ]          |
-#      | default category | category5                         |
-#    And I delete category "category4" choosing mode "associate_and_disable"
-#    Then category "category4" does not exist
-#    And the product product4 should be assigned to following categories:
-#      | categories       | [ accessories, category5 ]        |
-#      | default category | category5                         |
 
   Scenario: Bulk delete categories
     When I add new category "category2" with following details:
