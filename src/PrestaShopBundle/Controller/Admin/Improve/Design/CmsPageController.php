@@ -318,7 +318,6 @@ class CmsPageController extends FrameworkBundleAdminController
                         'id_shop');
                     $addedAssociations = array_diff($newShopAssociations, $oldShopAssociations);
                     $removedAssociations = array_diff($oldShopAssociations, $newShopAssociations);
-                    var_dump($employeeAssociations, $addedAssociations, $removedAssociations);
                     if (!empty(array_diff($addedAssociations, $employeeAssociations)) || !empty(array_diff($removedAssociations, $employeeAssociations))) {
                         throw new CannotEditCmsPageException('You can only change shop associations for shops you have permissions for.', CannotEditCmsPageException::INSUFFICIENT_PERMISSION_ASSOCIATIONS);
                     }
@@ -1303,7 +1302,7 @@ class CmsPageController extends FrameworkBundleAdminController
         ];
     }
 
-    protected function employeeHasAccessAssociatedShops($cmsPageId)
+    protected function employeeHasAccessAssociatedShops(int $cmsPageId): bool
     {
         $employeeId = $this->getContext()->employee->id;
         $db = Db::getInstance();
@@ -1315,7 +1314,7 @@ class CmsPageController extends FrameworkBundleAdminController
         return empty($missing_permissions);
     }
 
-    protected function copyPageContent($cmsPageId, $id_shop_source, $id_shop_destination)
+    protected function copyPageContent(int $cmsPageId, int $id_shop_source, int $id_shop_destination): void
     {
         $db = Db::getInstance();
         $prefix = $db->getPrefix();

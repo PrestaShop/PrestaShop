@@ -204,10 +204,10 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * @return string Query to get is_same property
      */
-    public static function getIsSameQuery($dbPrefix)
+    public static function getIsSameQuery(string $dbPrefix): string
     {
         return '(select case when max(v.versions) > 1 then 0 else 1 end from (
-            select count(distinct cl2.`meta_title`, cl2.`head_seo_title`, cl2.`meta_description`, cl2.`meta_keywords`, cl2.`content`, cl2.`link_rewrite`) as versions, cl2.id_lang, cl2.id_cms from
+            select count(distinct md5(concat_ws(\'\', cl2.`meta_title`, cl2.`head_seo_title`, cl2.`meta_description`, cl2.`meta_keywords`, cl2.`content`, cl2.`link_rewrite`))) as versions, cl2.id_lang, cl2.id_cms from
             ' . $dbPrefix . 'cms_shop cs2
             inner join ' . $dbPrefix . 'lang_shop ls2 on ls2.id_shop = cs2.id_shop
             inner join ' . $dbPrefix . 'cms_lang cl2 on cs2.id_shop = cl2.id_shop and ls2.id_lang = cl2.id_lang and cs2.id_cms = cl2.id_cms
