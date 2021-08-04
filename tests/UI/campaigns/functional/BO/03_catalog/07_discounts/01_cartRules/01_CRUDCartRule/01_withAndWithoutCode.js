@@ -33,19 +33,19 @@ let browserContext;
 let page;
 
 // Today date
-const today = new Date();
+const now = new Date();
 // Day before
-const yesterday = (`0${today.getDate() - 1}`).slice(-2);
+const today = (`0${now.getDate()}`).slice(-2);
 // Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
+const month = (`0${now.getMonth() + 1}`).slice(-2);
 // Current year
-const year = today.getFullYear();
+const year = now.getFullYear();
 // Date yesterday format (yyyy-mm-dd)
-const yesterdayDate = `${year}-${month}-${yesterday} 15:00:00`;
+const dateFrom = `${year}-${month}-${today} 01:00:00`;
 
 const cartRuleWithoutCode = new CartRuleFaker(
   {
-    dateFrom: yesterdayDate,
+    dateFrom,
     name: 'withoutCode',
     discountType: 'Percent',
     discountPercent: 20,
