@@ -2726,9 +2726,16 @@ class ProductCore extends ObjectModel
                 GROUP BY pac.id_product_attribute
                 ORDER BY pac.id_product_attribute');
 
-        foreach ($lang as $k => $row) {
-            $combinations[$k]['attribute_designation'] = $row['attribute_designation'];
-        }
+        //Append the attribute designation label to the combinations array by the id of the product attribute
+        //Convert designations to an indexed array by id
+        $id_product_attribute_keys = array_column($lang, null, 'id_product_attribute');
+        //Loop through the combinations
+        $combinations = array_map(function($combination) use($id_product_attribute_keys){
+            $combination_id_product_attribute = $combination['id_product_attribute'];
+            //Grab the designation of the current id and add it to the result element.
+            $combination['attribute_designation'] = $id_product_attribute_keys[$combination_id_product_attribute]['attribute_designation'];
+            return $combination;
+        }, $combinations);
 
         $computingPrecision = Context::getContext()->getComputingPrecision();
         //Get quantity of each variations
