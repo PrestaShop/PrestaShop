@@ -87,9 +87,9 @@ abstract class DbCore
     protected $last_query_hash;
 
     /**
-     * Last cached query.
+     * Was last query cached?
      *
-     * @var string
+     * @var bool
      */
     protected $last_cached;
 
@@ -132,6 +132,8 @@ abstract class DbCore
 
     /**
      * Get number of affected rows in previous database operation.
+     *
+     * @throws Exception if previous query failed silently
      *
      * @return int
      */
@@ -704,6 +706,11 @@ abstract class DbCore
 
     /**
      * Get number of rows for last result.
+     * Must be used solely with select queries.
+     * Results are unreliable with DbPDO (https://www.php.net/manual/en/pdostatement.rowcount.php)
+     * With Db Caching enabled, it works only after `executeS()` and `getRow()`
+     *
+     * @deprecated Never used throughout current codebase
      *
      * @return int
      */
