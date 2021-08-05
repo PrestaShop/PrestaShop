@@ -2062,13 +2062,21 @@ class CategoryCore extends ObjectModel
      */
     public function getCategoryProducts()
     {
-        return Db::getInstance()->executeS('
-        SELECT p.`id_product`
-        FROM `' . _DB_PREFIX_ . 'product` p
-        ' . Shop::addSqlAssociation('product', 'p') . '
-        LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp
-        ON cp.`id_product` = p.`id_product`
-        WHERE cp.`id_category` = ' . (int) $this->id);
+        $sql = 'SELECT p.`id_product`
+                FROM `%sproduct` p %s
+                LEFT JOIN `%scategory_product` cp
+                ON cp.`id_product` = p.`id_product`
+                WHERE cp.`id_category` = %d';
+
+        $sql = sprintf(
+            $sql,
+            _DB_PREFIX_,
+            Shop::addSqlAssociation('product', 'p'),
+            _DB_PREFIX_,
+            (int) $this->id_category
+        );
+
+        return Db::getInstance()->executeS($sql);
     }
 
     /*
