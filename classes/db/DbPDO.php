@@ -240,7 +240,7 @@ class DbPDOCore extends Db
      *
      * @see DbCore::Affected_Rows()
      *
-     * @throws Exception if previous query failed silently (`$this->result` is not a `PDOStatement`)
+     * @throws Error if previous query failed silently (`$this->result` is not a `PDOStatement`)
      *
      * @return int
      */
