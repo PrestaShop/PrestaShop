@@ -546,7 +546,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertProductCategories(string $productReference, TableNode $table)
+    public function assertProductCategories(string $productReference, TableNode $table): void
     {
         $updateCategoriesContext = new UpdateCategoriesFeatureContext();
         $updateCategoriesContext->assertProductCategories($productReference, $table);
