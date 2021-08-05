@@ -451,7 +451,7 @@ class CartRow
      *
      * @return AmountImmutable
      */
-    public function applyPercentageDiscount($percent, $onUnitPrice = false)
+    public function applyPercentageDiscount($percent, bool $onUnitPrice = false)
     {
         $percent = (float) $percent;
         if ($percent < 0 || $percent > 100) {
