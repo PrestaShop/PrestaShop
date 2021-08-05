@@ -22,7 +22,7 @@ Feature: Category Management
       | Parent category      | Accessories      |
       | Friendly URL         | category3        |
     And I add new category "category4" with following details:
-      | Name                 | Category 5       |
+      | Name                 | Category 4       |
       | Displayed            | false            |
       | Parent category      | Home             |
       | Friendly URL         | category4        |
