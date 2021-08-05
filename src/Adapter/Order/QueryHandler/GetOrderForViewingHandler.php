@@ -584,7 +584,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 isset($orderReturn['id_carrier']) ? (int) $orderReturn['id_carrier'] : 0,
                 new DateTimeImmutable($orderReturn['date_add']),
                 $orderReturn['type'],
-                $orderReturn['state_name'],
+                $orderReturn['state_name'] ?? '',
                 $trackingUrl,
                 $trackingNumber
             );
