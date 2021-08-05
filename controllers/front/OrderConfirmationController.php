@@ -59,7 +59,7 @@ class OrderConfirmationControllerCore extends FrontController
         $this->order = new Order((int) ($this->id_order));
 
         // This data is kept only for backward compatibility purposes
-        $this->id_cart = (int) $this->order->reference;
+        $this->id_cart = (int) $this->order->id_cart;
         $this->reference = (string) $this->order->reference;
 
         // The confirmation link must contain a unique order secure key matching the key saved in database,
