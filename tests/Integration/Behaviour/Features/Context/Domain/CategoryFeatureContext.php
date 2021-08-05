@@ -534,7 +534,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      * @param string $productReference
      * @param TableNode $table
      */
-    public function iAssignProductProductToFollowingCategories(string $productReference, TableNode $table)
+    public function iAssignProductProductToFollowingCategories(string $productReference, TableNode $table): void
     {
         $updateCategoriesContext = new UpdateCategoriesFeatureContext();
         $updateCategoriesContext->assignToCategoriesIncludingNonExistingOnes($productReference, $table);
