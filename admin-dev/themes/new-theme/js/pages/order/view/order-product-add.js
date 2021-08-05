@@ -58,7 +58,7 @@ export default class OrderProductAdd {
     this.priceTaxCalculator = new OrderPrices();
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
-    this.isOrderTaxIncluded = $(OrderViewPageMap.addProductTableRow).data('isOrderTaxIncluded');
+    this.isOrderTaxIncluded = $(OrderViewPageMap.productAddRow).data('isOrderTaxIncluded');
     this.taxExcluded = null;
     this.taxIncluded = null;
   }
