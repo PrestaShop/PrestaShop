@@ -46,7 +46,7 @@ class AddCartRule extends BOBasePage {
 
     // Valid date selectors
     this.dateFromInput = 'input[name=date_from]';
-    this.dateToInput = 'input[name=date_To]';
+    this.dateToInput = 'input[name=date_to]';
 
     // Minimum amount selectors
     this.minimumAmountInput = 'input[name=minimum_amount]';
