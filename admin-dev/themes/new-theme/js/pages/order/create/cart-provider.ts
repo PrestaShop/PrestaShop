@@ -39,7 +39,6 @@ export default class CartProvider {
   router: Router;
 
   showLoader: boolean;
-  
   loaderSpeed: number;
 
   constructor() {
@@ -62,7 +61,7 @@ export default class CartProvider {
       (cartInfo) => {
         EventEmitter.emit(eventMap.cartLoaded, cartInfo);
       },
-    ).always(() => (this.showLoader ? this.$container.fadeTo(this.loaderSpeed, 1) : true));;
+    ).always(() => (this.showLoader ? this.$container.fadeTo(this.loaderSpeed, 1) : true));
   }
 
   /**

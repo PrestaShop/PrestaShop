@@ -322,9 +322,8 @@ export default class CreateOrderPage {
       ) {
         this.changeCartAddresses();
       }
-      
       if (cartInfo.customerId) {
-        if (cartInfo.addresses.length == 0) {
+        if (cartInfo.addresses.length === 0) {
           this.customerManager.search(<string>cartInfo.customerId);
         } else {
           $(createOrderMap.customerSearchBlock).hide();
