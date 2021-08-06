@@ -39,6 +39,7 @@ export default class CartProvider {
   router: Router;
 
   showLoader: boolean;
+
   loaderSpeed: number;
 
   constructor() {
