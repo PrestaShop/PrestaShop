@@ -522,7 +522,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I create product :arg1 with following information:
      */
-    public function iAddProductWithFollowingInformation($arg1, TableNode $table)
+    public function iAddProductWithFollowingInformation(string $arg1, TableNode $table): void
     {
         $addProductFeatureContext = new AddProductFeatureContext();
         $addProductFeatureContext->addProduct($arg1, $table);
