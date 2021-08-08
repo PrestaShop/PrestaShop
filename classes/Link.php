@@ -1530,14 +1530,14 @@ class LinkCore
                 break;
             case 'manufacturerImage':
                 $link = $context->link->getManufacturerImageLink(
-                    (int)$params['id'],
+                    (int) $params['id'],
                     $params['type'] = (isset($params['type']) ? $params['type'] : null)
                 );
 
                 break;
             case 'supplierImageLink':
                 $link = $context->link->getSupplierImageLink(
-                    (int)$params['id'],
+                    (int) $params['id'],
                     $params['type'] = (isset($params['type']) ? $params['type'] : null)
                 );
 
