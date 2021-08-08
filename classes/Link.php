@@ -1528,6 +1528,13 @@ class LinkCore
                 );
 
                 break;
+            case 'manufacturerImage':
+                $link = $context->link->getManufacturerImageLink(
+                    (int)$params['id'],
+                    $params['type'] = (isset($params['type']) ? $params['type'] : null)
+                );
+
+                break;
             case 'cms':
                 $link = $context->link->getCMSLink(
                     new CMS($params['id'], $params['id_lang']),
