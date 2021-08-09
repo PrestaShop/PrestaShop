@@ -28,10 +28,16 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Session\SessionInterface;
 
 /**
+ * @property bool $detect_language
+ * @property int $id_customer
+ * @property int $id_employee
+ * @property int $id_lang
+ * @property bool $is_guest
+ * @property bool $logged
  * @property string $passwd
- * @property string $shopContext
  * @property int $session_id
  * @property string $session_token
+ * @property string $shopContext
  */
 class CookieCore
 {

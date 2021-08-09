@@ -56,6 +56,10 @@ class AliasCore extends ObjectModel
      */
     public function __construct($id = null, $alias = null, $search = null, $idLang = null)
     {
+        if ($idLang !== null) {
+            Tools::displayParameterAsDeprecated('idLang');
+        }
+
         $this->def = Alias::getDefinition($this);
         $this->setDefinitionRetrocompatibility();
 

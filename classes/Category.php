@@ -655,15 +655,13 @@ class CategoryCore extends ObjectModel
 
     /**
      * @param int $idRootCategory ID of root Category
-     * @param int|bool $idLang Language ID
-     *                         `false` if language filter should not be applied
+     * @param int|bool $idLang Language ID `false` if language filter should not be applied
      * @param bool $active Only return active categories
      * @param array|null $groups
      * @param bool $useShopRestriction Restrict to current Shop
      * @param string $sqlFilter Additional SQL clause(s) to filter results
      * @param string $orderBy Change the default order by
-     * @param string $limit Set the limit
-     *                      Both the offset and limit can be given
+     * @param string $limit Set the limit Both the offset and limit can be given
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null Array with `id_category` and `name`
      */
@@ -695,9 +693,9 @@ class CategoryCore extends ObjectModel
             (int) $active .
             (int) $useShopRestriction .
             (isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '') .
-            (isset($sqlFilter) ? $sqlFilter : '') .
-            (isset($orderBy) ? $orderBy : '') .
-            (isset($limit) ? $limit : '')
+            $sqlFilter .
+            $orderBy .
+            $limit
         );
 
         if (!Cache::isStored($cacheId)) {
@@ -733,7 +731,7 @@ class CategoryCore extends ObjectModel
      * @param int|bool $idLang Language ID
      *                         `false` if language filter should not be used
      * @param bool $active Whether the category must be active
-     * @param null $groups
+     * @param array|null $groups
      * @param bool $useShopRestriction Restrict to current Shop
      * @param string $sqlFilter Additional SQL clause(s) to filter results
      * @param string $orderBy Change the default order by
@@ -770,9 +768,9 @@ class CategoryCore extends ObjectModel
                 (int) $active .
                 (int) $useShopRestriction .
                 (isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '') .
-                (isset($sqlFilter) ? $sqlFilter : '') .
-                (isset($orderBy) ? $orderBy : '') .
-                (isset($limit) ? $limit : '')
+                $sqlFilter .
+                $orderBy .
+                $limit
             );
 
         if (!Cache::isStored($cacheId)) {
