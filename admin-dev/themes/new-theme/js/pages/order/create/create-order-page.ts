@@ -86,7 +86,7 @@ export default class CreateOrderPage {
     this.$container = $(createOrderMap.orderCreationContainer);
 
     this.cartProvider = new CartProvider();
-    this.cartProvider.showLoader = true;
+    this.cartProvider.isLoaderVisible = true;
 
     this.customerManager = new CustomerManager();
     this.shippingRenderer = new ShippingRenderer();
