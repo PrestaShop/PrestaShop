@@ -2580,7 +2580,7 @@ class OrderCore extends ObjectModel
             }
 
             foreach ($tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $unit_amount) {
-                $total_tax_base = 0;
+                $total_tax_base = $total_amount = 0;
                 switch ($round_type) {
                     case Order::ROUND_ITEM:
                         $total_tax_base = $quantity * Tools::ps_round($discounted_price_tax_excl, Context::getContext()->getComputingPrecision(), $this->round_mode);

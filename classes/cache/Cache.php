@@ -479,7 +479,7 @@ abstract class CacheCore
      * Remove the first less used query results from the cache.
      *
      * @param string $table
-     * @param string $keyToKeep the keep we want to keep inside the table cache
+     * @param string|null $keyToKeep the keep we want to keep inside the table cache
      */
     protected function adjustTableCacheSize($table, $keyToKeep = null)
     {
@@ -514,7 +514,7 @@ abstract class CacheCore
             $this->_deleteMulti($invalidKeys);
 
             if ($keyToKeep) {
-                $this->sql_tables_cached[$table][$keyToKeep] = $toKeep;
+                $this->sql_tables_cached[$table][$keyToKeep] = $toKeep ?? null;
             }
         }
         $this->adjustTableCacheSize = false;

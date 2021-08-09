@@ -413,6 +413,7 @@ class OrderDetailCore extends ObjectModel
 
         $values = '';
         foreach ($this->tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $amount) {
+            $unit_amount = $total_amount = 0;
             switch (Configuration::get('PS_ROUND_TYPE')) {
                 case Order::ROUND_ITEM:
                     $unit_amount = (float) Tools::ps_round($amount, Context::getContext()->getComputingPrecision());
@@ -676,12 +677,7 @@ class OrderDetailCore extends ObjectModel
             (int) $this->customer->id_default_group,
             (int) $product['cart_quantity'],
             false,
-            null,
-            null,
-            $null,
-            true,
-            true,
-            $this->context
+            null
         );
 
         $unit_price = Product::getPriceStatic(

@@ -1009,7 +1009,7 @@ class AdminControllerCore extends Controller
                     $this->processFilter();
                 }
 
-                if (isset($_POST) && count($_POST) && (int) Tools::getValue('submitFilter' . $this->list_id) || Tools::isSubmit('submitReset' . $this->list_id)) {
+                if (count($_POST) && (int) Tools::getValue('submitFilter' . $this->list_id) || Tools::isSubmit('submitReset' . $this->list_id)) {
                     $this->setRedirectAfter(self::$currentIndex . '&token=' . $this->token . (Tools::isSubmit('submitFilter' . $this->list_id) ? '&submitFilter' . $this->list_id . '=' . (int) Tools::getValue('submitFilter' . $this->list_id) : ''));
                 }
 
@@ -1271,10 +1271,11 @@ class AdminControllerCore extends Controller
             $id = (int) Tools::getValue($this->identifier);
 
             /* Object update */
-            if (isset($id) && !empty($id)) {
+            if (!empty($id)) {
                 /** @var ObjectModel $object */
                 $object = new $this->className($id);
                 if (Validate::isLoadedObject($object)) {
+                    $result = false;
                     /* Specific to objects which must not be deleted */
                     if ($this->deleted && $this->beforeDelete($object)) {
                         // Create new one with old objet values
@@ -2111,7 +2112,7 @@ class AdminControllerCore extends Controller
     private function getTabs($parentId = 0, $level = 0)
     {
         $tabs = Tab::getTabs($this->context->language->id, $parentId);
-        $current_id = Tab::getCurrentParentId($this->controller_name ? $this->controller_name : '');
+        $current_id = Tab::getCurrentParentId();
 
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
@@ -2471,7 +2472,7 @@ class AdminControllerCore extends Controller
      */
     public function renderView()
     {
-        $helper = new HelperView($this);
+        $helper = new HelperView();
         $this->setHelperDisplay($helper);
         $helper->tpl_vars = $this->getTemplateViewVars();
         if (null !== $this->base_tpl_view) {
@@ -2534,7 +2535,7 @@ class AdminControllerCore extends Controller
                 'form_vars' => &$this->tpl_form_vars,
             ]);
 
-            $helper = new HelperForm($this);
+            $helper = new HelperForm();
             $this->setHelperDisplay($helper);
             $helper->fields_value = $fields_value;
             $helper->submit_action = $this->submit_action;
@@ -2594,7 +2595,7 @@ class AdminControllerCore extends Controller
 
             unset($this->toolbar_btn);
             $this->initToolbar();
-            $helper = new HelperOptions($this);
+            $helper = new HelperOptions();
             $this->setHelperDisplay($helper);
             $helper->id = $this->id;
             $helper->tpl_vars = $this->tpl_option_vars;
@@ -3366,7 +3367,7 @@ class AdminControllerCore extends Controller
     {
         $whereShop = '';
         if ($this->shopLinkType) {
-            $whereShop = Shop::addSqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
+            $whereShop = Shop::addSqlRestriction($this->shopShareDatas, 'a');
         }
         $whereClause = ' WHERE 1 ' . (isset($this->_where) ? $this->_where . ' ' : '') .
             ($this->deleted ? 'AND a.`deleted` = 0 ' : '') .
@@ -4649,26 +4650,27 @@ class AdminControllerCore extends Controller
                 break;
             }
         }
+        if (isset($module) && is_object($module) && $module instanceof Module) {
+            $url = $module->url;
 
-        $url = $module->url;
+            if (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')) {
+                $url = $this->context->link->getAdminLink('AdminModules') . '&install=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name);
+            }
 
-        if (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')) {
-            $url = $this->context->link->getAdminLink('AdminModules') . '&install=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name);
+            $this->context->smarty->assign([
+                'displayName' => $module->displayName,
+                'image' => $module->image,
+                'nb_rates' => (int) $module->nb_rates[0],
+                'avg_rate' => (int) $module->avg_rate[0],
+                'badges' => $module->badges,
+                'compatibility' => $module->compatibility,
+                'description_full' => $module->description_full,
+                'additional_description' => $module->additional_description,
+                'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
+                'url' => $url,
+                'price' => $module->price,
+            ]);
         }
-
-        $this->context->smarty->assign([
-            'displayName' => $module->displayName,
-            'image' => $module->image,
-            'nb_rates' => (int) $module->nb_rates[0],
-            'avg_rate' => (int) $module->avg_rate[0],
-            'badges' => $module->badges,
-            'compatibility' => $module->compatibility,
-            'description_full' => $module->description_full,
-            'additional_description' => $module->additional_description,
-            'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
-            'url' => $url,
-            'price' => $module->price,
-        ]);
         // Fetch the translations in the right place - they are not defined by our current controller!
         Context::getContext()->override_controller_name_for_translations = 'AdminModules';
         $this->smartyOutputContent('controllers/modules/quickview.tpl');

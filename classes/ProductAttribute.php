@@ -326,7 +326,7 @@ class ProductAttributeCore extends ObjectModel
             }
         }
 
-        if (!isset($movedAttribute) || !isset($position)) {
+        if (!isset($movedAttribute)) {
             return false;
         }
 

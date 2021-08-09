@@ -306,6 +306,7 @@ class SupplierCore extends ObjectModel
         }
 
         $sqlGroups = '';
+        $groups = [];
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             $sqlGroups = 'WHERE cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
