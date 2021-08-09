@@ -152,9 +152,11 @@
 {% endset %}
 
 <script id="js-product-custom-text-template" type="text/template">
-      {{ requiredFieldMarkTemplate }}
-      <label for="" class="js-product-custom-input-label"></label>
-      <input name="" type="text" class="form-control js-product-custom-input">
+  <div>
+    {{ requiredFieldMarkTemplate }}
+    <label for="" class="js-product-custom-input-label"></label>
+    <input name="" type="text" class="form-control js-product-custom-input">
+  </div>
 </script>
 
 <script id="js-product-custom-file-template" type="text/template">
@@ -182,7 +184,7 @@
     <td>
       <input type="number" min="1" class="form-control js-product-qty-input" style="max-width: 100px;{% if not stockManagementEnabled %}margin-top:0px;{% endif %}">
       {% if stockManagementEnabled %}
-        <small class="form-text">  
+        <small class="form-text">
           {{ 'In stock'|trans({}, 'Admin.Orderscustomers.Feature') }}
           <span class="js-product-qty-stock"></span>
         </small>
