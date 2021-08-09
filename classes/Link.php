@@ -1447,7 +1447,7 @@ class LinkCore
     {
         $quickLink = $this->getQuickLink($url);
 
-        return isset($quickLink) && $quickLink === ($this->getQuickLink($_SERVER['REQUEST_URI']));
+        return $quickLink === ($this->getQuickLink($_SERVER['REQUEST_URI']));
     }
 
     /**

@@ -3037,8 +3037,8 @@ class CartCore extends ObjectModel
         $context = Context::getContext();
         foreach ($cart_rules as $cart_rule) {
             $total_price = $cart_rule['minimum_amount_tax'] ? $total_products_wt : $total_products;
-            $total_price += $cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price : 0;
-            $total_price += !$cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price_wt : 0;
+            $total_price += ($cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] && isset($real_best_price)) ? $real_best_price : 0;
+            $total_price += (!$cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] && isset($real_best_price_wt)) ? $real_best_price_wt : 0;
             if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction']
                 && in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)
                 && $cart_rule['minimum_amount'] <= $total_price) {
@@ -3065,6 +3065,7 @@ class CartCore extends ObjectModel
             foreach ($delivery_option as $key => $value) {
                 $total_price_with_tax = 0;
                 $total_price_without_tax = 0;
+                $total_price_without_tax_with_rules = 0;
                 $position = 0;
                 foreach ($value['carrier_list'] as $id_carrier => $data) {
                     $total_price_with_tax += $data['price_with_tax'];
@@ -3769,17 +3770,6 @@ class CartCore extends ObjectModel
 
         // Get shipping cost using correct method
         if ($carrier->range_behavior) {
-            if (!isset($id_zone)) {
-                // Get id zone
-                if (isset($this->id_address_delivery)
-                    && $this->id_address_delivery
-                    && Customer::customerHasAddress($this->id_customer, $this->id_address_delivery)) {
-                    $id_zone = Address::getZoneById((int) $this->id_address_delivery);
-                } else {
-                    $id_zone = (int) $default_country->id_zone;
-                }
-            }
-
             if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && !Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int) $id_zone))
                 || (
                     $shipping_method == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $order_total, $id_zone, (int) $this->id_currency)

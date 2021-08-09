@@ -280,6 +280,7 @@ class WebserviceOutputBuilderCore
      */
     public function getErrors($errors)
     {
+        $str_output = '';
         if (!empty($errors)) {
             if (isset($this->objectRender)) {
                 $str_output = $this->objectRender->renderErrorsHeader();
@@ -813,7 +814,9 @@ class WebserviceOutputBuilderCore
                 $object = $this->specificFields[$field_name]['object'];
             }
 
-            $field = $object->{$this->specificFields[$field_name]['method']}($field, $entity_object, $ws_params);
+            if (isset($object) && is_object($object)) {
+                $field = $object->{$this->specificFields[$field_name]['method']}($field, $entity_object, $ws_params);
+            }
         }
 
         return $field;
@@ -847,12 +850,14 @@ class WebserviceOutputBuilderCore
                     $object = $function_infos['object'];
                 }
 
-                $return_fields = $object->{$function_infos['method']}($entity_object, $function_infos['parameters']);
-                foreach ($return_fields as $field_name => $value) {
-                    if (Validate::isConfigName($field_name)) {
-                        $arr_return[$field_name] = $value;
-                    } else {
-                        throw new WebserviceException('Name for the virtual field is not allow', [128, 400]);
+                if (isset($object) && is_object($object)) {
+                    $return_fields = $object->{$function_infos['method']}($entity_object, $function_infos['parameters']);
+                    foreach ($return_fields as $field_name => $value) {
+                        if (Validate::isConfigName($field_name)) {
+                            $arr_return[$field_name] = $value;
+                        } else {
+                            throw new WebserviceException('Name for the virtual field is not allow', [128, 400]);
+                        }
                     }
                 }
             }

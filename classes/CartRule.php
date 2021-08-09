@@ -970,7 +970,7 @@ class CartRuleCore extends ObjectModel
             $product_rule_groups = $this->getProductRuleGroups();
             foreach ($product_rule_groups as $id_product_rule_group => $product_rule_group) {
                 $eligible_products_list = [];
-                if (isset($cart) && is_object($cart) && is_array($products = $cart->getProducts())) {
+                if (is_array($products = $cart->getProducts())) {
                     foreach ($products as $product) {
                         $eligible_products_list[] = (int) $product['id_product'] . '-' . (int) $product['id_product_attribute'];
                     }
@@ -1248,7 +1248,7 @@ class CartRuleCore extends ObjectModel
                 $basePriceContainsDiscount = isset($basePriceForPercentReduction) && $order_total === $basePriceForPercentReduction;
                 foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cart_rule) {
                     $freeProductsPrice = Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), Context::getContext()->getComputingPrecision());
-                    if ($basePriceContainsDiscount) {
+                    if ($basePriceContainsDiscount && isset($basePriceForPercentReduction)) {
                         // Gifts haven't been excluded yet, we need to do it
                         $basePriceForPercentReduction -= $freeProductsPrice;
                     }
@@ -1265,7 +1265,7 @@ class CartRuleCore extends ObjectModel
                                 $excludedReduction = Tools::ps_round($product['total'], Context::getContext()->getComputingPrecision());
                             }
                             $order_total -= $excludedReduction;
-                            if ($basePriceContainsDiscount) {
+                            if ($basePriceContainsDiscount && isset($basePriceForPercentReduction)) {
                                 $basePriceForPercentReduction -= $excludedReduction;
                             }
                         }
