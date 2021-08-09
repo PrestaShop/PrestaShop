@@ -132,6 +132,8 @@ class TranslationFinder
                 $messageCatalogue->addCatalogue(
                     $this->removeTrailingLocaleFromDomains($fileCatalogue)
                 );
+
+                $messageCatalogue = $this->updateCatalogueMetadata($messageCatalogue, $fileCatalogue);
             }
         }
 
@@ -154,5 +156,80 @@ class TranslationFinder
         }
 
         return $domain;
+    }
+
+    /**
+     * Get metadata from original catalogue, parse them to extract filename and line and add them to the updated catalogue
+     *
+     * @param MessageCatalogue $catalogue
+     * @param MessageCatalogue $originalCatalogue
+     *
+     * @return MessageCatalogue
+     */
+    private function updateCatalogueMetadata(MessageCatalogue $catalogue, MessageCatalogue $originalCatalogue): MessageCatalogue
+    {
+        $locale = $originalCatalogue->getLocale();
+        $localeSuffix = '.' . $locale;
+        $suffixLength = strlen($localeSuffix);
+
+        foreach ($originalCatalogue->all() as $domain => $messages) {
+            $originalDomain = $domain;
+            // Remove locale suffix from domain name
+            if (substr($domain, -$suffixLength) === $localeSuffix) {
+                $domain = substr($domain, 0, -$suffixLength);
+            }
+            foreach (array_keys($messages) as $translationKey) {
+                $metadata = $originalCatalogue->getMetadata($translationKey, $originalDomain);
+                if ($this->shouldAddFileMetadata($metadata) && $this->metadataContainNotes($metadata)) {
+                    $catalogue->setMetadata($translationKey, $this->parseMetadataNotes($metadata), $domain);
+                }
+            }
+        }
+
+        return $catalogue;
+    }
+
+    /**
+     * @param array|null $metadata
+     *
+     * @return bool
+     */
+    private function metadataContainNotes(array $metadata = null): bool
+    {
+        return isset($metadata['notes'][0]['content']);
+    }
+
+    /**
+     * @param array|null $metadata
+     *
+     * @return bool
+     */
+    private function shouldAddFileMetadata(array $metadata = null): bool
+    {
+        return null === $metadata || !isset($metadata['file']) || !isset($metadata['line']);
+    }
+
+    /**
+     * @param array|null $metadata
+     *
+     * @return array
+     */
+    private function parseMetadataNotes(array $metadata = null): array
+    {
+        $defaultMetadata = ['file' => '', 'line' => ''];
+
+        if (!isset($metadata['file']['original'])) {
+            return $defaultMetadata;
+        }
+
+        $notes = $metadata['notes'][0]['content'];
+        if (1 !== preg_match('/Line: (?<line>\d+)/', $notes, $matches)) {
+            return $defaultMetadata;
+        }
+
+        return [
+            'file' => $metadata['file']['original'],
+            'line' => (int) $matches['line'],
+        ];
     }
 }

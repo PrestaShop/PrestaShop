@@ -90,10 +90,8 @@ class TranslationCatalogueBuilderTest extends TestCase
             foreach ($messages as $messageKey => $messageValue) {
                 $catalogue->setMetadata($messageKey, [
                     'file' => 'someFakeFile.xlf',
-                    'line' => $i,
+                    'line' => $i++,
                 ], $domain);
-
-                ++$i;
             }
         }
         $provider->method('getDefaultCatalogue')->willReturn($catalogue);

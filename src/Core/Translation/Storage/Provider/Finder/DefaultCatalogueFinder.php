@@ -90,9 +90,7 @@ class DefaultCatalogueFinder extends AbstractCatalogueFinder
             $defaultCatalogue->addCatalogue($filteredCatalogue);
         }
 
-        $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
-
-        return $defaultCatalogue;
+        return $this->emptyCatalogue($defaultCatalogue);
     }
 
     /**
