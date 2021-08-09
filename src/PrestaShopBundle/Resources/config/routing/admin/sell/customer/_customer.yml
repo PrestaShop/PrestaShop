@@ -5,3 +5,7 @@ _catalog:
 _addresses:
   resource: "addresses.yml"
   prefix: /addresses/
+
+_outstandings:
+  resource: "outstanding.yml"
+  prefix: /outstanding/

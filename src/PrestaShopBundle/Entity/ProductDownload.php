@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -65,14 +66,14 @@ class ProductDownload
     private $filename;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="date_add", type="datetime")
      */
     private $dateAdd;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="date_expiration", type="datetime", nullable=true)
      */
@@ -149,7 +150,7 @@ class ProductDownload
     /**
      * Date when the download was added.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateAdd()
     {
@@ -159,7 +160,7 @@ class ProductDownload
     /**
      * Date until the product can be downloaded.
      *
-     * @return string
+     * @return DateTime
      */
     public function getDateExpiration()
     {
@@ -227,14 +228,14 @@ class ProductDownload
         return $this;
     }
 
-    public function setDateAdd(\DateTime $dateAdd)
+    public function setDateAdd(DateTime $dateAdd)
     {
         $this->dateAdd = $dateAdd;
 
         return $this;
     }
 
-    public function setDateExpiration(\DateTime $dateExpiration)
+    public function setDateExpiration(DateTime $dateExpiration)
     {
         $this->dateExpiration = $dateExpiration;
 

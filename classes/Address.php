@@ -303,7 +303,13 @@ class AddressCore extends ObjectModel
 			LEFT JOIN `' . _DB_PREFIX_ . 'state` s ON s.`id_state` = a.`id_state`
 			WHERE a.`id_address` = ' . (int) $id_address);
 
-        self::$_idZones[$id_address] = (int) ((int) $result['id_zone_state'] ? $result['id_zone_state'] : $result['id_zone']);
+        if (empty($result['id_zone_state']) && empty($result['id_zone'])) {
+            return false;
+        }
+
+        self::$_idZones[$id_address] = !empty($result['id_zone_state'])
+            ? (int) $result['id_zone_state']
+            : (int) $result['id_zone'];
 
         return self::$_idZones[$id_address];
     }
@@ -436,15 +442,12 @@ class AddressCore extends ObjectModel
      */
     public static function addressExists($id_address)
     {
-        $key = 'address_exists_' . (int) $id_address;
-        if (!Cache::isStored($key)) {
-            $id_address = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_address` FROM ' . _DB_PREFIX_ . 'address a WHERE a.`id_address` = ' . (int) $id_address);
-            Cache::store($key, (bool) $id_address);
-
-            return (bool) $id_address;
-        }
-
-        return Cache::retrieve($key);
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT `id_address` 
+            FROM ' . _DB_PREFIX_ . 'address a 
+            WHERE a.`id_address` = ' . (int) $id_address,
+            false
+        );
     }
 
     /**
@@ -602,7 +605,7 @@ class AddressCore extends ObjectModel
         $query->where('id_customer = ' . (int) $id_customer);
         $query->where('deleted = 0');
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query, false);
     }
 
     /**

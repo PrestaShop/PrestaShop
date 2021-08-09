@@ -43,7 +43,7 @@ class Fees
     protected $shippingFees;
 
     /**
-     * @var AmountImmutable
+     * @var AmountImmutable|null
      */
     protected $finalShippingFees;
 
@@ -82,7 +82,7 @@ class Fees
      * @param Cart $cart
      * @param CartRowCollection $cartRowCollection
      * @param int $computePrecision
-     * @param int $id_carrier
+     * @param int|null $id_carrier
      */
     public function processCalculation(
         Cart $cart,
@@ -164,7 +164,7 @@ class Fees
     }
 
     /**
-     * @return AmountImmutable
+     * @return AmountImmutable|null
      */
     public function getFinalShippingFees()
     {

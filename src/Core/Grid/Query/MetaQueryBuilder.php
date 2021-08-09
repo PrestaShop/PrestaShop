@@ -43,6 +43,7 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
      * @var int
      */
     private $contextIdShop;
+
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
      */
@@ -52,7 +53,7 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
      * MetaQueryBuilder constructor.
      *
      * @param Connection $connection
-     * @param $dbPrefix
+     * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param int $contextIdLang
      * @param int $contextIdShop

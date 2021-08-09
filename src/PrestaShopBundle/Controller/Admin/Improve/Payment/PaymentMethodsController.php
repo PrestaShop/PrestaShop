@@ -54,7 +54,7 @@ class PaymentMethodsController extends FrameworkBundleAdminController
         $paymentModules = [];
 
         if ($isSingleShopContext) {
-            $paymentMethodsPresenter = $this->get('prestashop.adapter.module.presenter.payment');
+            $paymentMethodsPresenter = $this->get('prestashop.adapter.presenter.module.payment');
             $paymentModules = $paymentMethodsPresenter->present();
         }
 

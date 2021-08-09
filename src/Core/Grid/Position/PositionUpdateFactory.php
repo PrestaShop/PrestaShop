@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
  */
 final class PositionUpdateFactory implements PositionUpdateFactoryInterface
 {
-    const POSITION_KEY = 'Invalid position %i data, missing %s field.';
+    public const POSITION_KEY = 'Invalid position %i data, missing %s field.';
 
     /**
      * @var string

@@ -88,3 +88,6 @@ services:
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\EditSupplierCommand'
+
+  prestashop.adapter.supplier.repository.supplier_repository:
+      class: 'PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository'

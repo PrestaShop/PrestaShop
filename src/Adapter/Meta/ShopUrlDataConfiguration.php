@@ -89,12 +89,18 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
 
         try {
             if ($this->validateConfiguration($configuration)) {
+                if (!$this->isValidUri($configuration['physical_uri'])) {
+                    return [
+                        [
+                            'key' => 'The Base URI is not valid.',
+                            'domain' => 'Admin.Shopparameters.Notification',
+                            'parameters' => [],
+                        ],
+                    ];
+                }
                 $this->mainShopUrl->domain = $configuration['domain'];
                 $this->mainShopUrl->domain_ssl = $configuration['domain_ssl'];
-
-                if (is_string($configuration['physical_uri'])) {
-                    $this->mainShopUrl->physical_uri = $configuration['physical_uri'];
-                }
+                $this->mainShopUrl->physical_uri = $configuration['physical_uri'];
 
                 $this->mainShopUrl->update();
 
@@ -116,8 +122,9 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
     {
         return isset(
             $configuration['domain'],
-            $configuration['domain_ssl']
-        ) && $this->isValidUri($configuration['physical_uri']);
+            $configuration['domain_ssl'],
+            $configuration['physical_uri']
+        );
     }
 
     /**
@@ -129,6 +136,6 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
      */
     private function isValidUri($uri)
     {
-        return preg_match('#^(?:[~\-_\/&\.]|\w|%\d+|\s)+$#', $uri);
+        return is_string($uri) && preg_match('#^(?:[~\-_\/&\.\+]|\w|%\d+|\s)+$#', $uri);
     }
 }

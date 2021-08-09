@@ -36,10 +36,10 @@ class CurrencyException extends DomainException
     /**
      * When currency cannot be used because it is disabled
      */
-    const IS_DISABLED = 1;
+    public const IS_DISABLED = 1;
 
     /**
      * When currency cannot be used because it is deleted
      */
-    const IS_DELETED = 2;
+    public const IS_DELETED = 2;
 }

@@ -106,12 +106,12 @@ class AdminQuickAccessesControllerCore extends AdminController
                         [
                             'id' => 'new_window_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Enabled', [], 'Admin.Global') . '" title="' . $this->trans('Enabled', [], 'Admin.Global') . '" />',
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'new_window_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('Disabled', [], 'Admin.Global') . '" title="' . $this->trans('Disabled', [], 'Admin.Global') . '" />',
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                 ],

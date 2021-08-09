@@ -47,12 +47,12 @@ final class SearchCriteria implements SearchCriteriaInterface
     private $orderWay;
 
     /**
-     * @var string|null
+     * @var int|null
      */
     private $offset;
 
     /**
-     * @var string|null
+     * @var int|null
      */
     private $limit;
 
@@ -60,8 +60,8 @@ final class SearchCriteria implements SearchCriteriaInterface
      * @param array $filters
      * @param string|null $orderBy
      * @param string|null $orderWay
-     * @param string|null $offset
-     * @param string|null $limit
+     * @param int|null $offset
+     * @param int|null $limit
      */
     public function __construct(array $filters = [], $orderBy = null, $orderWay = null, $offset = null, $limit = null)
     {

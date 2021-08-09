@@ -24,7 +24,7 @@
  *}
 {block name='brand_miniature_item'}
   <li class="brand">
-    <div class="brand-img"><a href="{$brand.url}"><img src="{$brand.image}" alt="{$brand.name}"></a></div>
+    <div class="brand-img"><a href="{$brand.url}"><img src="{$brand.image}" alt="{$brand.name}" loading="lazy"></a></div>
     <div class="brand-infos">
       <p><a href="{$brand.url}">{$brand.name}</a></p>
       {$brand.text nofilter}

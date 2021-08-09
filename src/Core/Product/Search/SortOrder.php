@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException;
 
 /**
@@ -57,7 +58,7 @@ class SortOrder
      * @param string $field the SortOrder field
      * @param string $direction the SortOrder direction
      *
-     * @throws Exception
+     * @throws InvalidSortOrderDirectionException
      */
     public function __construct($entity, $field, $direction = 'asc')
     {
@@ -72,7 +73,7 @@ class SortOrder
      *
      * @return SortOrder
      *
-     * @throws Exception
+     * @throws InvalidSortOrderDirectionException
      */
     public static function random()
     {
@@ -116,11 +117,17 @@ class SortOrder
      *
      * @return SortOrder
      *
-     * @throws Exception
+     * @throws InvalidSortOrderDirectionException
      */
     public static function newFromString($sortOrderConfiguration)
     {
-        list($entity, $field, $direction) = explode('.', $sortOrderConfiguration);
+        $sortParams = explode('.', $sortOrderConfiguration);
+
+        if (count($sortParams) < 3) {
+            throw new CoreException('Invalid argument');
+        }
+
+        list($entity, $field, $direction) = $sortParams;
 
         return new static($entity, $field, $direction);
     }
@@ -190,7 +197,7 @@ class SortOrder
      *
      * @return string
      *
-     * @throws Exception
+     * @throws InvalidSortOrderDirectionException
      */
     public function setDirection($direction)
     {
@@ -213,7 +220,7 @@ class SortOrder
     }
 
     /**
-     * @return string returns the order way using legacy prefix
+     * @return string Returns the order way using legacy prefix
      */
     private function getLegacyPrefix()
     {
@@ -226,12 +233,15 @@ class SortOrder
                 $this->setField('name');
 
                 return 'm.';
-            } else {
-                return 'p.';
             }
-        } elseif ($this->entity === 'manufacturer') {
+
+            return 'p.';
+        }
+        if ($this->entity === 'manufacturer') {
             return 'm.';
         }
+
+        return '';
     }
 
     /**

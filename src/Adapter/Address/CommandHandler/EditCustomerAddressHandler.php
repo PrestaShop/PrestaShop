@@ -68,7 +68,7 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
 
                 // We consider this address as necessarily NOT deleted, in case you were editing a deleted address
                 // from an order then the newly edited address should not be deleted, so that you can select it
-                $editedAddress->deleted = 0;
+                $editedAddress->deleted = false;
                 if (false === $editedAddress->save()) {
                     throw new CannotAddAddressException(sprintf('Failed to add new address "%s"', $command->getAddress()));
                 }

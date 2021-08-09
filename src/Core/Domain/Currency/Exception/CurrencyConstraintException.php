@@ -36,61 +36,71 @@ class CurrencyConstraintException extends CurrencyException
      *
      * @see AlphaIsoCode::PATTERN
      */
-    const INVALID_ISO_CODE = 1;
+    public const INVALID_ISO_CODE = 1;
 
     /**
      * Code used when an invalid exchange rate is used (positive float expected)
      *
      * @see ExchangeRate
      */
-    const INVALID_EXCHANGE_RATE = 2;
+    public const INVALID_EXCHANGE_RATE = 2;
 
     /**
      * Code used when trying to insert a currency already in database
      */
-    const CURRENCY_ALREADY_EXISTS = 3;
+    public const CURRENCY_ALREADY_EXISTS = 3;
 
     /**
      * Code used when an invalid liveExchangeRate is used (boolean expected)
      */
-    const INVALID_LIVE_EXCHANGE_RATES = 4;
+    public const INVALID_LIVE_EXCHANGE_RATES = 4;
 
     /**
      * Code used when the numeric ISO code doesn't respect it's appropriate format
      *
      * @see NumericIsoCode::PATTERN
      */
-    const INVALID_NUMERIC_ISO_CODE = 5;
+    public const INVALID_NUMERIC_ISO_CODE = 5;
 
     /**
      * Code used when trying to set an empty array of names
      */
-    const EMPTY_NAME = 6;
+    public const EMPTY_NAME = 6;
 
     /**
      * Code used when trying to set an empty array of symbols
      */
-    const EMPTY_SYMBOL = 7;
+    public const EMPTY_SYMBOL = 7;
 
     /**
      * Code used when an invalid precision is used (positive integer expected)
      *
      * @see Precision
      */
-    const INVALID_PRECISION = 8;
+    public const INVALID_PRECISION = 8;
 
     /**
      * Code used when an invalid name is used
      */
-    const INVALID_NAME = 9;
+    public const INVALID_NAME = 9;
 
     /**
      * Code used when an invalid symbol is used
      */
-    const INVALID_SYMBOL = 10;
+    public const INVALID_SYMBOL = 10;
 
     /**
      * Code used when an invalid pattern is used
      */
-    const INVALID_PATTERN = 11;
+    public const INVALID_PATTERN = 11;
+
+    /**
+     * @var int Code is used when empty data is used when deleting currencies
+     */
+    public const EMPTY_BULK_DELETE = 12;
+
+    /**
+     * @var int Code is used when empty data is used when toggling currencies
+     */
+    public const EMPTY_BULK_TOGGLE = 13;
 }

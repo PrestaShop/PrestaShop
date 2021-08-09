@@ -57,6 +57,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters\CustomerAddressFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\CustomerDiscountFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
@@ -113,13 +115,16 @@ class CustomerController extends AbstractAdminController
             'deleteCustomersForm' => $deleteCustomerForm->createView(),
             'showcaseCardName' => ShowcaseCard::CUSTOMERS_CARD,
             'isShowcaseCardClosed' => $showcaseCardIsClosed,
+            'layoutHeaderToolbarBtn' => $this->getCustomerToolbarButtons(),
         ]);
     }
 
     /**
+     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
+     *
      * Process Grid search.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -140,7 +145,7 @@ class CustomerController extends AbstractAdminController
     /**
      * Show customer create form & handle processing of it.
      *
-     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -193,7 +198,7 @@ class CustomerController extends AbstractAdminController
     /**
      * Show customer edit form & handle processing of it.
      *
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $customerId
      * @param Request $request
@@ -203,14 +208,24 @@ class CustomerController extends AbstractAdminController
     public function editAction($customerId, Request $request)
     {
         $this->addGroupSelectionToRequest($request);
+        /** @var ViewableCustomer $customerInformation */
+        $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
+        $customerFormOptions = [
+            'is_password_required' => false,
+        ];
         try {
-            /** @var ViewableCustomer $customerInformation */
-            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
-            $customerFormOptions = [
-                'is_password_required' => false,
-            ];
             $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
                 ->getFormFor((int) $customerId, [], $customerFormOptions);
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
+            );
+
+            return $this->redirectToRoute('admin_customers_index');
+        }
+
+        try {
             $customerForm->handleRequest($request);
             $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
             $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
@@ -271,6 +286,22 @@ class CustomerController extends AbstractAdminController
             'note' => $customerInformation->getGeneralInformation()->getPrivateNote(),
         ]);
 
+        $customerDiscountGridFactory = $this->get('prestashop.core.grid.factory.customer.discount');
+        $customerDiscountFilters = new CustomerDiscountFilters([
+            'filters' => [
+                'id_customer' => $customerId,
+            ],
+        ]);
+        $customerDiscountGrid = $customerDiscountGridFactory->getGrid($customerDiscountFilters);
+
+        $customerAddressGridFactory = $this->get('prestashop.core.grid.factory.customer.address');
+        $customerAddressFilters = new CustomerAddressFilters([
+            'filters' => [
+                'id_customer' => $customerId,
+            ],
+        ]);
+        $customerAddressGrid = $customerAddressGridFactory->getGrid($customerAddressFilters);
+
         if ($request->query->has('conf')) {
             $this->manageLegacyFlashes($request->query->get('conf'));
         }
@@ -279,6 +310,8 @@ class CustomerController extends AbstractAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerInformation' => $customerInformation,
+            'customerDiscountGrid' => $this->presentGrid($customerDiscountGrid),
+            'customerAddressGrid' => $this->presentGrid($customerAddressGrid),
             'isMultistoreEnabled' => $this->get('prestashop.adapter.feature.multistore')->isActive(),
             'transferGuestAccountForm' => $transferGuestAccountForm,
             'privateNoteForm' => $privateNoteForm->createView(),
@@ -289,7 +322,7 @@ class CustomerController extends AbstractAdminController
      * Set private note about customer.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))",
      *      redirectRoute="admin_customers_index"
      * )
      *
@@ -311,14 +344,6 @@ class CustomerController extends AbstractAdminController
                     (int) $customerId,
                     $data['note']
                 ));
-
-                if ($request->isXmlHttpRequest()) {
-                    return $this->json([
-                        'success' => true,
-                        'message' => $this->trans('Successful update.', 'Admin.Notifications.Success'),
-                    ]);
-                }
-
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
             } catch (CustomerException $e) {
                 $this->addFlash(
@@ -337,7 +362,7 @@ class CustomerController extends AbstractAdminController
      * Transforms guest to customer
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))",
      *      redirectRoute="admin_customers_index"
      * )
      *
@@ -374,7 +399,7 @@ class CustomerController extends AbstractAdminController
      * Sets required fields for customer
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))",
      *      redirectRoute="admin_customers_index"
      * )
      *
@@ -726,7 +751,7 @@ class CustomerController extends AbstractAdminController
     /**
      * Export filtered customers
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param CustomerFilters $filters
      *
@@ -928,7 +953,7 @@ class CustomerController extends AbstractAdminController
                 ),
             ],
             MissingCustomerRequiredFieldsException::class => $this->trans(
-                'The field %s is required.',
+                'The %s field is required.',
                 'Admin.Notifications.Error',
                 [
                     implode(
@@ -950,6 +975,7 @@ class CustomerController extends AbstractAdminController
     private function manageLegacyFlashes($messageId)
     {
         $messages = [
+            1 => $this->trans('Successful deletion', 'Admin.Notifications.Success'),
             4 => $this->trans('Update successful.', 'Admin.Notifications.Success'),
         ];
 
@@ -959,5 +985,32 @@ class CustomerController extends AbstractAdminController
                 $messages[$messageId]
             );
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getCustomerToolbarButtons(): array
+    {
+        $toolbarButtons = [];
+
+        $isSingleShopContext = $this->get('prestashop.adapter.shop.context')->isSingleShopContext();
+
+        $toolbarButtons['add'] = [
+            'href' => $this->generateUrl('admin_customers_create'),
+            'desc' => $this->trans('Add new customer', 'Admin.Orderscustomers.Feature'),
+            'icon' => 'add_circle_outline',
+            'disabled' => !$isSingleShopContext,
+        ];
+
+        if (!$isSingleShopContext) {
+            $toolbarButtons['add']['help'] = $this->trans(
+                'You can use this feature in a single shop context only. Switch context to enable it.',
+                'Admin.Orderscustomers.Feature'
+            );
+            $toolbarButtons['add']['href'] = '#';
+        }
+
+        return $toolbarButtons;
     }
 }

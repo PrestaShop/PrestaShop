@@ -76,11 +76,17 @@ services:
 
     prestashop.adapter.general.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\GeneralConfiguration'
-        arguments: ['@prestashop.adapter.legacy.configuration']
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@=service("prestashop.adapter.legacy.context").getContext().cookie'
+            - '@=service("prestashop.adapter.environment").isDebug()'
 
     prestashop.adapter.maintenance.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration'
-        arguments: ['@prestashop.adapter.legacy.configuration']
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.shop.context'
+            - '@prestashop.adapter.multistore_feature'
 
     prestashop.adapter.preferences.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration'
@@ -100,7 +106,10 @@ services:
 
     prestashop.adapter.logs.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
-        arguments: ['@prestashop.adapter.legacy.configuration']
+        arguments: 
+            - '@prestashop.adapter.legacy.configuration'
+            - '@translator'
+            - '@prestashop.adapter.validate'
 
     prestashop.adapter.order.delivery.slip.options.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipOptionsConfiguration'
@@ -256,3 +265,9 @@ services:
       class: 'PrestaShop\PrestaShop\Core\CreditSlip\CreditSlipOptionsConfiguration'
       arguments:
         - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.feature_flags.modifier:
+      class: 'PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagsModifier'
+      arguments:
+        - '@doctrine.orm.entity_manager'
+        - '@translator'

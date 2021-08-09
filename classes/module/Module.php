@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Adapter\Container\LegacyContainerInterface;
+
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -36,6 +36,7 @@ use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\Finder\Finder;
 
 abstract class ModuleCore implements ModuleInterface
 {
@@ -205,6 +206,9 @@ abstract class ModuleCore implements ModuleInterface
     /** @var array|null used to cache module ids */
     protected static $cachedModuleNames = null;
 
+    /** @var int Defines the multistore compatibility level of the module */
+    public $multistoreCompatibility = self::MULTISTORE_COMPATIBILITY_UNKNOWN;
+
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
     const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';
@@ -218,6 +222,12 @@ abstract class ModuleCore implements ModuleInterface
 
     const CACHE_FILE_TRUSTED_MODULES_LIST = '/config/xml/trusted_modules_list.xml';
     const CACHE_FILE_UNTRUSTED_MODULES_LIST = '/config/xml/untrusted_modules_list.xml';
+
+    public const MULTISTORE_COMPATIBILITY_NO = -20;
+    public const MULTISTORE_COMPATIBILITY_NOT_CONCERNED = -10;
+    public const MULTISTORE_COMPATIBILITY_UNKNOWN = 0;
+    public const MULTISTORE_COMPATIBILITY_PARTIAL = 10;
+    public const MULTISTORE_COMPATIBILITY_YES = 20;
 
     public static $hosted_modules_blacklist = ['autoupgrade'];
 
@@ -340,7 +350,7 @@ abstract class ModuleCore implements ModuleInterface
                     $this->id = static::$modules_cache[$this->name]['id_module'];
                 }
                 foreach (static::$modules_cache[$this->name] as $key => $value) {
-                    if (array_key_exists($key, $this)) {
+                    if (array_key_exists($key, get_object_vars($this))) {
                         $this->{$key} = $value;
                     }
                 }
@@ -415,6 +425,7 @@ abstract class ModuleCore implements ModuleInterface
         $this->id = Db::getInstance()->Insert_ID();
 
         Cache::clean('Module::isInstalled' . $this->name);
+        Cache::clean('Module::getModuleIdByName_' . pSQL($this->name));
 
         // Enable the module for current shops in context
         $this->enable();
@@ -445,6 +456,18 @@ abstract class ModuleCore implements ModuleInterface
             $this->updateModuleTranslations();
         }
 
+        return true;
+    }
+
+    /**
+     * Important: Do not type this method for compatibility reason.
+     * If your module aims to be compatible for older PHP versions, it will
+     * not be possible if we add strict typing as PHP 5.6 (for example) cannot strict type with bool.
+     *
+     * @return bool
+     */
+    public function postInstall()
+    {
         return true;
     }
 
@@ -701,6 +724,8 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function uninstall()
     {
+        Hook::exec('actionModuleUninstallBefore', ['object' => $this]);
+
         // Check module installation id validation
         if (!Validate::isUnsignedId($this->id)) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('The module is not installed.', [], 'Admin.Modules.Notification');
@@ -754,6 +779,8 @@ abstract class ModuleCore implements ModuleInterface
         if (Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module` WHERE `id_module` = ' . (int) $this->id)) {
             Cache::clean('Module::isInstalled' . $this->name);
             Cache::clean('Module::getModuleIdByName_' . pSQL($this->name));
+
+            Hook::exec('actionModuleUninstallAfter', ['object' => $this]);
 
             return true;
         }
@@ -829,13 +856,19 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Enable module in the shop where it is not enabled yet
+        $moduleActivated = false;
         foreach ($list as $id) {
             if (!in_array($id, $items)) {
                 Db::getInstance()->insert('module_shop', [
                     'id_module' => $this->id,
                     'id_shop' => $id,
                 ]);
+                $moduleActivated = true;
             }
+        }
+
+        if ($moduleActivated) {
+            $this->loadBuiltInTranslations();
         }
 
         return true;
@@ -1384,7 +1417,7 @@ abstract class ModuleCore implements ModuleInterface
                     $file = trim(file_get_contents(_PS_MODULE_DIR_ . $module . '/' . $module . '.php'));
 
                     try {
-                        $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::PREFER_PHP7);
+                        $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::ONLY_PHP7);
                         $parser->parse($file);
                         require_once $file_path;
                     } catch (PhpParser\Error $e) {
@@ -1616,17 +1649,37 @@ abstract class ModuleCore implements ModuleInterface
         return $module_list;
     }
 
+    /**
+     * @param \StdClass $modaddons Addons Module object, provided by XML stream
+     *
+     * @return string|null
+     */
     public static function copyModAddonsImg($modaddons)
     {
         if (!Validate::isLoadedObject($modaddons)) {
-            return;
+            return null;
         }
-        if (!file_exists(_PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg') &&
-        !file_put_contents(_PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg', Tools::file_get_contents($modaddons->img))) {
-            copy(_PS_IMG_DIR_ . '404.gif', _PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg');
+
+        $filename = md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg';
+        $filepath = _PS_TMP_IMG_DIR_ . $filename;
+        $fileExist = file_exists($filepath);
+
+        if (!$fileExist) {
+            $remoteDownloadWasASuccess = false;
+            try {
+                $remoteImage = Tools::file_get_contents($modaddons->img);
+                $remoteDownloadWasASuccess = true;
+            } catch (Exception $e) {
+                copy(_PS_IMG_DIR_ . '404.gif', $filepath);
+            }
+
+            if ($remoteDownloadWasASuccess && !file_put_contents($filepath, $remoteImage)) {
+                copy(_PS_IMG_DIR_ . '404.gif', $filepath);
+            }
         }
-        if (file_exists(_PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg')) {
-            return '../img/tmp/' . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg';
+
+        if (file_exists($filepath)) {
+            return '../img/tmp/' . $filename;
         }
     }
 
@@ -1660,59 +1713,11 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getNonNativeModuleList()
     {
-        $db = Db::getInstance();
-        $module_list_xml = _PS_ROOT_DIR_ . static::CACHE_FILE_MODULES_LIST;
-        $native_modules = @simplexml_load_file($module_list_xml);
-        if ($native_modules) {
-            $native_modules = $native_modules->modules;
-        }
-
-        $arr_native_modules = [];
-        if (is_object($native_modules)) {
-            foreach ($native_modules as $native_modules_type) {
-                if (in_array($native_modules_type['type'], ['native', 'partner'])) {
-                    $arr_native_modules[] = '""';
-                    foreach ($native_modules_type->module as $module) {
-                        $arr_native_modules[] = '"' . pSQL($module['name']) . '"';
-                    }
-                }
-            }
-        }
-
-        if ($arr_native_modules) {
-            return $db->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'module` m WHERE `name` NOT IN (' . implode(',', $arr_native_modules) . ') ');
-        }
-
         return false;
     }
 
     public static function getNativeModuleList()
     {
-        $module_list_xml = _PS_ROOT_DIR_ . static::CACHE_FILE_MODULES_LIST;
-        if (!file_exists($module_list_xml)) {
-            return false;
-        }
-
-        $native_modules = @simplexml_load_file($module_list_xml);
-
-        if ($native_modules) {
-            $native_modules = $native_modules->modules;
-        }
-
-        $modules = [];
-        if (is_object($native_modules)) {
-            foreach ($native_modules as $native_modules_type) {
-                if (in_array($native_modules_type['type'], ['native', 'partner'])) {
-                    foreach ($native_modules_type->module as $module) {
-                        $modules[] = $module['name'];
-                    }
-                }
-            }
-        }
-        if ($modules) {
-            return $modules;
-        }
-
         return false;
     }
 
@@ -1746,15 +1751,14 @@ abstract class ModuleCore implements ModuleInterface
     final public static function isModuleTrusted($module_name)
     {
         static $trusted_modules_list_content = null;
-        static $modules_list_content = null;
         static $default_country_modules_list_content = null;
         static $untrusted_modules_list_content = null;
 
         $context = Context::getContext();
 
-        // If the xml file exist, isn't empty, isn't too old
-        // and if the theme hadn't change
-        // we use the file, otherwise we regenerate it
+        // Check whether the xml file exist, is not empty, is not too old
+        // and if the theme has not changed
+        // If conditions are not met, refresh file
         if (!(
             file_exists(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST)
             && filesize(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST) > 0
@@ -1770,11 +1774,6 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        $modulesListCacheFilepath = _PS_ROOT_DIR_ . static::CACHE_FILE_MODULES_LIST;
-        if ($modules_list_content === null && is_readable($modulesListCacheFilepath)) {
-            $modules_list_content = Tools::file_get_contents($modulesListCacheFilepath);
-        }
-
         if ($default_country_modules_list_content === null) {
             $default_country_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_ . static::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
         }
@@ -1787,10 +1786,8 @@ abstract class ModuleCore implements ModuleInterface
 
         if (stripos($trusted_modules_list_content, $module_name) !== false) {
             // If the module is not a partner, then return 1 (which means the module is "trusted")
-            if (stripos($modules_list_content, '<module name="' . $module_name . '"/>') == false) {
-                return 1;
-            } elseif (stripos($default_country_modules_list_content, '<name><![CDATA[' . $module_name . ']]></name>') !== false) {
-                // The module is a parter. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
+            if (stripos($default_country_modules_list_content, '<name><![CDATA[' . $module_name . ']]></name>') !== false) {
+                // The module is a partner. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
                 return 1;
             }
             // The module seems to be trusted, but it does not seem to be dedicated to this country
@@ -1799,8 +1796,8 @@ abstract class ModuleCore implements ModuleInterface
             // If the module is already in the untrusted list, then return 0 (untrusted)
             return 0;
         } else {
-            // If the module isn't in one of the xml files
-            // It might have been uploaded recenlty so we check
+            // If the module is not registered in xml files
+            // It might have been uploaded recently so we check
             // Addons API and clear XML files to be regenerated next time
             static::deleteTrustedXmlCache();
 
@@ -2351,6 +2348,20 @@ abstract class ModuleCore implements ModuleInterface
         return Cache::retrieve('Module::isEnabled' . $module_name);
     }
 
+    public static function isEnabledForMobileDevices($module_name)
+    {
+        if (!Cache::isStored('Module::isEnabledForMobileDevices' . $module_name)) {
+            $id_module = Module::getModuleIdByName($module_name);
+            $enable_device = (int) Db::getInstance()->getValue('SELECT `enable_device` FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $id_module . ' AND `id_shop` = ' . (int) Context::getContext()->shop->id);
+            $is_enabled_mobile = $enable_device === 7;
+            Cache::store('Module::isEnabledForMobileDevices' . $module_name, (bool) $is_enabled_mobile);
+
+            return (bool) $is_enabled_mobile;
+        }
+
+        return Cache::retrieve('Module::isEnabledForMobileDevices' . $module_name);
+    }
+
     /**
      * Check if module is registered on hook
      *
@@ -2443,6 +2454,9 @@ abstract class ModuleCore implements ModuleInterface
             if ($cache_id !== null) {
                 Tools::enableCache();
             }
+            if ($compile_id === null) {
+                $compile_id = $this->getDefaultCompileId();
+            }
 
             $result = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->fetch();
 
@@ -2471,7 +2485,7 @@ abstract class ModuleCore implements ModuleInterface
             Tools::enableCache();
         }
         if ($compile_id === null) {
-            $compile_id = Context::getContext()->shop->theme->getName();
+            $compile_id = $this->getDefaultCompileId();
         }
 
         $template = $this->context->smarty->createTemplate(
@@ -2497,6 +2511,10 @@ abstract class ModuleCore implements ModuleInterface
      */
     protected function getCurrentSubTemplate($template, $cache_id = null, $compile_id = null)
     {
+        if ($compile_id === null) {
+            $compile_id = $this->getDefaultCompileId();
+        }
+
         if (!isset($this->current_subtemplate[$template . '_' . $cache_id . '_' . $compile_id])) {
             if (false === strpos($template, 'module:') &&
                 !file_exists(_PS_ROOT_DIR_ . '/' . $template) &&
@@ -2522,7 +2540,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Get realpath of a template of current module (check if template is overriden too).
+     * Get realpath of a template of current module (check if template is overridden too).
      *
      * @since 1.5.0
      *
@@ -2556,6 +2574,9 @@ abstract class ModuleCore implements ModuleInterface
         if (false === strpos($template, 'module:') && !file_exists(_PS_ROOT_DIR_ . '/' . $template)) {
             $template = $this->getTemplatePath($template);
         }
+        if ($compile_id === null) {
+            $compile_id = $this->getDefaultCompileId();
+        }
 
         $is_cached = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->isCached($template, $cache_id, $compile_id);
         Tools::restoreCacheSettings();
@@ -2577,6 +2598,9 @@ abstract class ModuleCore implements ModuleInterface
         static $ps_smarty_clear_cache = null;
         if ($ps_smarty_clear_cache === null) {
             $ps_smarty_clear_cache = Configuration::get('PS_SMARTY_CLEAR_CACHE');
+        }
+        if ($compile_id === null) {
+            $compile_id = $this->getDefaultCompileId();
         }
 
         if (static::$_batch_mode) {
@@ -3056,12 +3080,24 @@ abstract class ModuleCore implements ModuleInterface
             // Make a reflection of the override class and the module override class
             $override_file = file($override_path);
             $override_file = array_diff($override_file, ["\n"]);
-            eval(preg_replace(['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'], [' ', 'class ' . $classname . 'OverrideOriginal' . $uniq], implode('', $override_file)));
+            eval(
+                preg_replace(
+                    ['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'],
+                    [' ', 'class ' . $classname . 'OverrideOriginal' . $uniq . ' extends \stdClass'],
+                    implode('', $override_file)
+                )
+            );
             $override_class = new ReflectionClass($classname . 'OverrideOriginal' . $uniq);
 
             $module_file = file($path_override);
             $module_file = array_diff($module_file, ["\n"]);
-            eval(preg_replace(['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'], [' ', 'class ' . $classname . 'Override' . $uniq], implode('', $module_file)));
+            eval(
+                preg_replace(
+                    ['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'],
+                    [' ', 'class ' . $classname . 'Override' . $uniq . ' extends \stdClass'],
+                    implode('', $module_file)
+                )
+            );
             $module_class = new ReflectionClass($classname . 'Override' . $uniq);
 
             // Check if none of the methods already exists in the override class
@@ -3130,7 +3166,13 @@ abstract class ModuleCore implements ModuleInterface
                 do {
                     $uniq = uniqid();
                 } while (class_exists($classname . 'OverrideOriginal_remove', false));
-                eval(preg_replace(['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'], [' ', 'class ' . $classname . 'Override' . $uniq], implode('', $module_file)));
+                eval(
+                    preg_replace(
+                        ['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'],
+                        [' ', 'class ' . $classname . 'Override' . $uniq . ' extends \stdClass'],
+                        implode('', $module_file)
+                    )
+                );
                 $module_class = new ReflectionClass($classname . 'Override' . $uniq);
 
                 // For each method found in the override, prepend a comment with the module name and version
@@ -3210,11 +3252,23 @@ abstract class ModuleCore implements ModuleInterface
             // Make a reflection of the override class and the module override class
             $override_file = file($override_path);
 
-            eval(preg_replace(['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'], [' ', 'class ' . $classname . 'OverrideOriginal_remove' . $uniq], implode('', $override_file)));
+            eval(
+                preg_replace(
+                    ['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'],
+                    [' ', 'class ' . $classname . 'OverrideOriginal_remove' . $uniq . ' extends \stdClass'],
+                    implode('', $override_file)
+                )
+            );
             $override_class = new ReflectionClass($classname . 'OverrideOriginal_remove' . $uniq);
 
             $module_file = file($this->getLocalPath() . 'override/' . $path);
-            eval(preg_replace(['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'], [' ', 'class ' . $classname . 'Override_remove' . $uniq], implode('', $module_file)));
+            eval(
+                preg_replace(
+                    ['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'],
+                    [' ', 'class ' . $classname . 'Override_remove' . $uniq . ' extends \stdClass'],
+                    implode('', $module_file)
+                )
+            );
             $module_class = new ReflectionClass($classname . 'Override_remove' . $uniq);
 
             // Remove methods from override file
@@ -3514,6 +3568,51 @@ abstract class ModuleCore implements ModuleInterface
     public function saveDashConfig(array $config)
     {
         return false;
+    }
+
+    /**
+     * Returns shop theme name from context as a default compile Id.
+     *
+     * @return string
+     */
+    public function getDefaultCompileId()
+    {
+        return Context::getContext()->shop->theme->getName();
+    }
+
+    /**
+     * Returns the declared multistore compatibility level
+     *
+     * @return int
+     */
+    public function getMultistoreCompatibility(): int
+    {
+        return $this->multistoreCompatibility;
+    }
+
+    /**
+     * In order to load or update the module's translations, we just need to clear SfCache.
+     * The translator service will be loaded again with the catalogue within the module
+     *
+     * @throws ContainerNotFoundException
+     */
+    private function loadBuiltInTranslations(): void
+    {
+        $modulePath = $this->getLocalPath();
+        $translationDir = sprintf('%s/translations/', $modulePath);
+        if (!is_dir($translationDir)) {
+            return;
+        }
+
+        $finder = Finder::create()
+            ->files()
+            ->name('*.xlf')
+            ->in($translationDir);
+        if (0 === $finder->count()) {
+            return;
+        }
+
+        $this->getContainer()->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
     }
 }
 

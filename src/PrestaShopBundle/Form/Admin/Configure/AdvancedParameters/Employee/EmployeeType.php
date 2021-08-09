@@ -38,6 +38,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -127,6 +128,15 @@ final class EmployeeType extends AbstractType
                         'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
                     ]),
                 ],
+            ])
+            ->add('avatarUrl', FileType::class, [
+                'required' => false,
+                'attr' => [
+                    'accept' => 'gif,jpg,jpeg,jpe,png',
+                ],
+            ])
+            ->add('has_enabled_gravatar', SwitchType::class, [
+                'required' => false,
             ])
         ;
 
@@ -256,7 +266,7 @@ final class EmployeeType extends AbstractType
     private function getNotBlankConstraint()
     {
         return new NotBlank([
-            'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+            'message' => $this->trans('This field cannot be empty.', [], 'Admin.Notifications.Error'),
         ]);
     }
 }

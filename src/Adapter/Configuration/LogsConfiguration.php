@@ -26,9 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Configuration;
 
+use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This class will manage Logs configuration for a Shop.
@@ -40,9 +42,21 @@ class LogsConfiguration implements DataConfigurationInterface
      */
     private $configuration;
 
-    public function __construct(ConfigurationInterface $configuration)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var Validate
+     */
+    private $validate;
+
+    public function __construct(ConfigurationInterface $configuration, TranslatorInterface $translator, Validate $validate)
     {
         $this->configuration = $configuration;
+        $this->translator = $translator;
+        $this->validate = $validate;
     }
 
     /**
@@ -50,7 +64,10 @@ class LogsConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return ['logs_by_email' => $this->configuration->get('PS_LOGS_BY_EMAIL')];
+        return [
+            'logs_by_email' => $this->configuration->get('PS_LOGS_BY_EMAIL'),
+            'logs_email_receivers' => $this->configuration->get('PS_LOGS_EMAIL_RECEIVERS'),
+        ];
     }
 
     /**
@@ -59,7 +76,40 @@ class LogsConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
+            $checkEmails = explode(',', $configuration['logs_email_receivers']);
+            $errors = [];
+            $invalidEmails = [];
+
+            foreach ($checkEmails as $email) {
+                if (!$this->validate->isEmail($email)) {
+                    $invalidEmails[] = $email;
+                }
+            }
+
+            if (!empty($invalidEmails)) {
+                $nbInvalidEmails = count($invalidEmails);
+
+                if ($nbInvalidEmails > 1) {
+                    $errors[] = $this->translator->trans(
+                        'Invalid emails: %invalid_emails%.',
+                        ['%invalid_emails%' => implode(',', $invalidEmails)],
+                        'Admin.Notifications.Error'
+                    );
+                } else {
+                    $errors[] = $this->translator->trans(
+                        'Invalid email: %invalid_email%.',
+                        ['%invalid_email%' => implode(',', $invalidEmails)],
+                        'Admin.Notifications.Error'
+                    );
+                }
+            }
+
+            if ($errors) {
+                return $errors;
+            }
+
             $this->configuration->set('PS_LOGS_BY_EMAIL', $configuration['logs_by_email']);
+            $this->configuration->set('PS_LOGS_EMAIL_RECEIVERS', $configuration['logs_email_receivers']);
         }
 
         return [];
@@ -72,7 +122,7 @@ class LogsConfiguration implements DataConfigurationInterface
     {
         $resolver = new OptionsResolver();
         $resolver
-            ->setRequired(['logs_by_email'])
+            ->setRequired(['logs_by_email', 'logs_email_receivers'])
             ->resolve($configuration);
 
         return true;

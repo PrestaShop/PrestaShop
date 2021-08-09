@@ -177,6 +177,7 @@ describe('View vouchers on FO account page', async () => {
     it('should go to vouchers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage', baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToVouchersPage(page);
       const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);

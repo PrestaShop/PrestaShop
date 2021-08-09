@@ -3,17 +3,17 @@ module.exports = {
     google: {
       id: 1,
       server: 'google',
-      getVar: 'q',
+      queryKey: 'q',
     },
     lycos: {
       id: 8,
       server: 'lycos',
-      getVar: 'query',
+      queryKey: 'query',
     },
     voila: {
       id: 11,
       server: 'voila',
-      getVar: 'rdata',
+      queryKey: 'rdata',
     },
   },
 };

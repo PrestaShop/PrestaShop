@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<localizationPack name="Armenia" version="1.0">
+	<currencies>
+		<currency name="Armenian dram" iso_code="AMD" iso_code_num="051" sign="֏" blank="1" conversion_rate="0.0021" format="2" decimals="0" />
+	</currencies>
+	<languages>
+		<language iso_code="hy" />
+	</languages>
+	<taxes>
+		<tax id="1" name="ԱԱՀ AM 20%" rate="20" />
+		<tax id="2" name="ԱԱՀ AM 0%" rate="0" />
+    
+		<taxRulesGroup name="AM Standard Rate (20%)">
+			<taxRule iso_code_country="am" id_tax="1" />
+		</taxRulesGroup>
+    
+		<taxRulesGroup name="AM Zero Rate (0%)">
+			<taxRule iso_code_country="am" id_tax="2" />
+		</taxRulesGroup>
+  </taxes>
+	<units>
+		<unit type="weight" value="kg" />
+		<unit type="volume" value="L" />
+		<unit type="short_distance" value="cm" />
+		<unit type="base_distance" value="m" />
+		<unit type="long_distance" value="km" />
+	</units>
+</localizationPack>

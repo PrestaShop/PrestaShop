@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/Payment/Preferences/PaymentModulePreferencesType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3e15057a39314e679d553bd9b6522ec8">
+        <source>Customer currency</source>
+        <target>Customer currency</target>
+        <note>Line: 258</note>
+      </trans-unit>
+      <trans-unit id="cdf4c2da827655c1ea74209dd683c903">
+        <source>Shop default currency</source>
+        <target>Shop default currency</target>
+        <note>Line: 259</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/PaymentMethods/payment_methods.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c2aa74ac66698f48002031386e2d8776">
+        <source>Active payment</source>
+        <target>Active payment</target>
+        <note>Line: 52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/Preferences/Blocks/payment_preferences_form_block.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d3f9cb6a35595b8e7d9c0cd2f5e14929">
+        <source>Currency restrictions</source>
+        <target>Currency restrictions</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="52b7e372bca509e26e66340426dc8531">
+        <source>Country restrictions</source>
+        <target>Country restrictions</target>
+        <note>Line: 87</note>
+      </trans-unit>
+      <trans-unit id="442d9a7c585a4eb14334a32decaee21b">
+        <source>Group restrictions</source>
+        <target>Group restrictions</target>
+        <note>Line: 60</note>
+      </trans-unit>
+      <trans-unit id="1aa915c48859b4638d4048d533bad273">
+        <source>Carrier restrictions</source>
+        <target>Carrier restrictions</target>
+        <note>Line: 114</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

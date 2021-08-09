@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressDniRequired;
 use PrestaShop\PrestaShop\Core\Country\CountryRequiredFieldsProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use Symfony\Component\Validator\Constraint;
@@ -56,6 +57,9 @@ class AddressDniRequiredValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
+        if (!($constraint instanceof AddressDniRequired)) {
+            return;
+        }
         $countryId = new CountryId((int) $constraint->id_country);
 
         if ($this->countryRequiredFieldsProvider->isDniRequired($countryId) || $constraint->required) {

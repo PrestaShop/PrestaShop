@@ -27,12 +27,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
 
+use PrestaShop\PrestaShop\Core\File\Exception\CannotUnlinkFileException;
 use Throwable;
 
 /**
  * Thrown when file unlink fails
  */
-class CannotUnlinkAttachmentException extends AttachmentException
+class CannotUnlinkAttachmentException extends CannotUnlinkFileException
 {
     /**
      * @var string

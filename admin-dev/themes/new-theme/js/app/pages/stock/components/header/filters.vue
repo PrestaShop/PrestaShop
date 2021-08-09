@@ -24,55 +24,93 @@
  *-->
 <template>
   <div id="filters-container">
-    <button class="search-input collapse-button" type="button" data-toggle="collapse" data-target="#filters">
+    <button
+      class="search-input collapse-button"
+      type="button"
+      data-toggle="collapse"
+      data-target="#filters"
+    >
       <i class="material-icons mr-1">filter_list</i>
       <i class="material-icons float-right ">keyboard_arrow_down</i>
-      {{trans('button_advanced_filter')}}
+      {{ trans('button_advanced_filter') }}
     </button>
-    <div id="filters" class="container-fluid collapse">
+    <div
+      id="filters"
+      class="container-fluid collapse"
+    >
       <div class="row">
         <div class="col-lg-4">
-          <div v-if="isOverview" class="py-3">
-            <h2>{{trans('filter_suppliers')}}</h2>
+          <div
+            v-if="isOverview"
+            class="py-3"
+          >
+            <h2>{{ trans('filter_suppliers') }}</h2>
             <FilterComponent
               :placeholder="trans('filter_search_suppliers')"
               :list="this.$store.getters.suppliers"
               class="filter-suppliers"
-              itemID="supplier_id"
+              item-id="supplier_id"
               label="name"
               @active="onFilterActive"
             />
           </div>
-          <div v-else class="py-3">
-            <h2>{{trans('filter_movements_type')}}</h2>
-            <PSSelect :items="movementsTypes" itemID="id_stock_mvt_reason" itemName="name" @change="onChange">
-              {{trans('none')}}
+          <div
+            v-else
+            class="py-3"
+          >
+            <h2>{{ trans('filter_movements_type') }}</h2>
+            <PSSelect
+              :items="movementsTypes"
+              item-id="id_stock_mvt_reason"
+              item-name="name"
+              @change="onChange"
+            >
+              {{ trans('none') }}
             </PSSelect>
-            <h2 class="mt-4">{{trans('filter_movements_employee')}}</h2>
-            <PSSelect :items="employees" itemID="id_employee" itemName="name" @change="onChange">
-             {{trans('none')}}
+            <h2 class="mt-4">
+              {{ trans('filter_movements_employee') }}
+            </h2>
+            <PSSelect
+              :items="employees"
+              item-id="id_employee"
+              item-name="name"
+              @change="onChange"
+            >
+              {{ trans('none') }}
             </PSSelect>
-            <h2 class="mt-4">{{trans('filter_movements_period')}}</h2>
+            <h2 class="mt-4">
+              {{ trans('filter_movements_period') }}
+            </h2>
             <form class="row">
               <div class="col-md-6">
-                <label>{{trans('filter_datepicker_from')}}</label>
-                <PSDatePicker :locale="locale" @dpChange="onDpChange" @reset="onClear" type="sup"/>
+                <label>{{ trans('filter_datepicker_from') }}</label>
+                <PSDatePicker
+                  :locale="locale"
+                  @dpChange="onDpChange"
+                  @reset="onClear"
+                  type="sup"
+                />
               </div>
               <div class="col-md-6">
-                <label>{{trans('filter_datepicker_to')}}</label>
-                <PSDatePicker :locale="locale" @dpChange="onDpChange" @reset="onClear" type="inf" />
+                <label>{{ trans('filter_datepicker_to') }}</label>
+                <PSDatePicker
+                  :locale="locale"
+                  @dpChange="onDpChange"
+                  @reset="onClear"
+                  type="inf"
+                />
               </div>
             </form>
           </div>
         </div>
         <div class="col-lg-4">
           <div class="py-3">
-            <h2>{{trans('filter_categories')}}</h2>
+            <h2>{{ trans('filter_categories') }}</h2>
             <FilterComponent
               :placeholder="trans('filter_search_category')"
               :list="categoriesList"
               class="filter-categories"
-              itemID="id_category"
+              item-id="id_category"
               label="name"
               @active="onFilterActive"
             />
@@ -80,7 +118,7 @@
         </div>
         <div class="col-lg-4">
           <div class="py-3">
-            <h2>{{trans('filter_status')}}</h2>
+            <h2>{{ trans('filter_status') }}</h2>
             <PSRadio
               id="enable"
               :label="trans('filter_status_enable')"
@@ -109,41 +147,40 @@
   </div>
 </template>
 
-<script>
-  import FilterComponent from './filters/filter-component';
+<script lang="ts">
+  import Vue from 'vue';
   import PSSelect from '@app/widgets/ps-select';
-  import PSButton from '@app/widgets/ps-button';
   import PSDatePicker from '@app/widgets/ps-datepicker';
   import PSRadio from '@app/widgets/ps-radio';
-  import _ from 'lodash';
+  import FilterComponent from './filters/filter-component';
 
-  export default {
+  export default Vue.extend({
     computed: {
-      locale() {
+      locale(): string {
         return window.data.locale;
       },
-      isOverview() {
+      isOverview(): boolean {
         return this.$route.name === 'overview';
       },
-      employees() {
+      employees(): Record<string, any> {
         return this.$store.state.employees;
       },
-      movementsTypes() {
+      movementsTypes(): Record<string, any> {
         return this.$store.state.movementsTypes;
       },
-      categoriesList() {
+      categoriesList(): Record<string, any> {
         return this.$store.getters.categories;
       },
     },
     methods: {
-      onClear(event) {
-        delete this.date_add[event.dateType];
+      onClear(event: any): void {
+        delete this.date_add[<number>event.dateType];
         this.applyFilter();
       },
-      onClick() {
+      onClick(): void {
         this.applyFilter();
       },
-      onFilterActive(list, type) {
+      onFilterActive(list: Array<any>, type: string): void {
         if (type === 'supplier') {
           this.suppliers = list;
         } else {
@@ -152,7 +189,7 @@
         this.disabled = !this.suppliers.length && !this.categories.length;
         this.applyFilter();
       },
-      applyFilter() {
+      applyFilter(): void {
         this.$store.dispatch('isLoading');
         this.$emit('applyFilter', {
           suppliers: this.suppliers,
@@ -163,21 +200,21 @@
           active: this.active,
         });
       },
-      onChange(item) {
-        if (item.itemID === 'id_stock_mvt_reason') {
+      onChange(item: any): void {
+        if (item.itemId === 'id_stock_mvt_reason') {
           this.id_stock_mvt_reason = item.value === 'default' ? [] : item.value;
         } else {
           this.id_employee = item.value === 'default' ? [] : item.value;
         }
         this.applyFilter();
       },
-      onDpChange(event) {
-        this.date_add[event.dateType] = event.date.unix();
+      onDpChange(event: any) {
+        this.date_add[<number>event.dateType] = event.date.unix();
         if (event.oldDate) {
           this.applyFilter();
         }
       },
-      onRadioChange(value) {
+      onRadioChange(value: any): void {
         this.active = value;
         this.applyFilter();
       },
@@ -185,23 +222,24 @@
     components: {
       FilterComponent,
       PSSelect,
-      PSButton,
       PSDatePicker,
       PSRadio,
     },
     mounted() {
-      this.date_add = {};
+      this.date_add = [];
       this.$store.dispatch('getSuppliers');
       this.$store.dispatch('getCategories');
     },
-    data: () => ({
-      disabled: true,
-      suppliers: [],
-      categories: [],
-      id_stock_mvt_reason: [],
-      id_employee: [],
-      date_add: {},
-      active: null,
-    }),
-  };
+    data() {
+      return {
+        disabled: true,
+        suppliers: [] as Array<any>,
+        categories: [] as Array<any>,
+        id_stock_mvt_reason: [] as Array<any>,
+        id_employee: [] as Array<any>,
+        date_add: [] as Array<any>,
+        active: null,
+      };
+    },
+  });
 </script>

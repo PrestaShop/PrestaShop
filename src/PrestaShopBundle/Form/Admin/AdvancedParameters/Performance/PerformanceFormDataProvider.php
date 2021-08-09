@@ -26,12 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
-use PrestaShop\PrestaShop\Adapter\Cache\CachingConfiguration;
-use PrestaShop\PrestaShop\Adapter\Cache\CombineCompressCacheConfiguration;
-use PrestaShop\PrestaShop\Adapter\Debug\DebugModeConfiguration;
-use PrestaShop\PrestaShop\Adapter\Media\MediaServerConfiguration;
-use PrestaShop\PrestaShop\Adapter\OptionalFeatures\OptionalFeaturesConfiguration;
-use PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration;
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
@@ -41,49 +36,14 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 final class PerformanceFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var SmartyCacheConfiguration
+     * @var DataConfigurationInterface
      */
-    private $smartyCacheConfiguration;
-
-    /**
-     * @var DebugModeConfiguration
-     */
-    private $debugModeConfiguration;
-
-    /**
-     * @var CombineCompressCacheConfiguration
-     */
-    private $combineCompressCacheConfiguration;
-
-    /**
-     * @var OptionalFeaturesConfiguration
-     */
-    private $optionalFeaturesConfiguration;
-
-    /**
-     * @var MediaServerConfiguration
-     */
-    private $mediaServerConfiguration;
-
-    /**
-     * @var CachingConfiguration
-     */
-    private $cachingConfiguration;
+    private $dataConfiguration;
 
     public function __construct(
-        SmartyCacheConfiguration $smartyCacheConfiguration,
-        DebugModeConfiguration $debugModeConfiguration,
-        OptionalFeaturesConfiguration $optionalFeaturesConfiguration,
-        CombineCompressCacheConfiguration $combineCompressCacheConfiguration,
-        MediaServerConfiguration $mediaServerConfiguration,
-        CachingConfiguration $cachingConfiguration
+        DataConfigurationInterface $dataConfiguration
     ) {
-        $this->smartyCacheConfiguration = $smartyCacheConfiguration;
-        $this->debugModeConfiguration = $debugModeConfiguration;
-        $this->optionalFeaturesConfiguration = $optionalFeaturesConfiguration;
-        $this->combineCompressCacheConfiguration = $combineCompressCacheConfiguration;
-        $this->mediaServerConfiguration = $mediaServerConfiguration;
-        $this->cachingConfiguration = $cachingConfiguration;
+        $this->dataConfiguration = $dataConfiguration;
     }
 
     /**
@@ -91,14 +51,7 @@ final class PerformanceFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
-            'smarty' => $this->smartyCacheConfiguration->getConfiguration(),
-            'debug_mode' => $this->debugModeConfiguration->getConfiguration(),
-            'optional_features' => $this->optionalFeaturesConfiguration->getConfiguration(),
-            'ccc' => $this->combineCompressCacheConfiguration->getConfiguration(),
-            'media_servers' => $this->mediaServerConfiguration->getConfiguration(),
-            'caching' => $this->cachingConfiguration->getConfiguration(),
-        ];
+        return $this->dataConfiguration->getConfiguration();
     }
 
     /**
@@ -106,11 +59,6 @@ final class PerformanceFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        return $this->smartyCacheConfiguration->updateConfiguration($data['smarty']) +
-            $this->debugModeConfiguration->updateConfiguration($data['debug_mode']) +
-            $this->optionalFeaturesConfiguration->updateConfiguration($data['optional_features']) +
-            $this->combineCompressCacheConfiguration->updateConfiguration($data['ccc']) +
-            $this->mediaServerConfiguration->updateConfiguration($data['media_servers']) +
-            $this->cachingConfiguration->updateConfiguration($data['caching']);
+        return $this->dataConfiguration->updateConfiguration($data);
     }
 }

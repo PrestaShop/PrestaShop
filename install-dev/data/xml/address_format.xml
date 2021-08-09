@@ -1056,16 +1056,6 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id="address_format_106" id_country="HM">
-      <format>firstname lastname
-company
-vat_number
-address1
-address2
-postcode city
-Country:name
-phone</format>
-    </address_format>
     <address_format id="address_format_107" id_country="VA">
       <format>firstname lastname
 company
@@ -1561,16 +1551,6 @@ Country:name
 phone</format>
     </address_format>
     <address_format id="address_format_156" id_country="NP">
-      <format>firstname lastname
-company
-vat_number
-address1
-address2
-postcode city
-Country:name
-phone</format>
-    </address_format>
-    <address_format id="address_format_157" id_country="AN">
       <format>firstname lastname
 company
 vat_number
@@ -2331,16 +2311,6 @@ Country:name
 phone</format>
     </address_format>
     <address_format id="address_format_233" id_country="BA">
-      <format>firstname lastname
-company
-vat_number
-address1
-address2
-postcode city
-Country:name
-phone</format>
-    </address_format>
-    <address_format id="address_format_234" id_country="BV">
       <format>firstname lastname
 company
 vat_number

@@ -26,15 +26,25 @@
 
 namespace PrestaShopBundle\Translation\View;
 
-use Doctrine\Common\Util\Inflector;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Translation\Provider\AbstractProvider;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class TreeBuilder
 {
+    /**
+     * @var string
+     */
     private $locale;
+    /**
+     * @var string|null
+     */
     private $theme;
 
+    /**
+     * @param string $locale
+     * @param string|null $theme
+     */
     public function __construct($locale, $theme)
     {
         $this->locale = $locale;
@@ -43,7 +53,7 @@ class TreeBuilder
 
     /**
      * @param AbstractProvider $provider
-     * @param null $search
+     * @param string|array|null $search
      *
      * @return array|mixed
      */
@@ -98,8 +108,8 @@ class TreeBuilder
     /**
      * Check if data contains search word.
      *
-     * @param $search
-     * @param $data
+     * @param string|array|null $search
+     * @param array $data
      *
      * @return bool
      */
@@ -136,9 +146,10 @@ class TreeBuilder
         $translationsTree = [];
 
         foreach ($catalogue as $domain => $messages) {
-            $tableisedDomain = Inflector::tableize($domain);
+            $tableisedDomain = Inflector::getInflector()->tableize($domain);
             // the third component of the domain may have underscores, so we need to limit pieces to 3
             $parts = explode('_', $tableisedDomain, 3);
+            /** @var array $subtree */
             $subtree = &$translationsTree;
 
             foreach ($parts as $part) {
@@ -167,11 +178,11 @@ class TreeBuilder
     /**
      * Clean tree to use it with the new API system.
      *
-     * @param $tree
+     * @param array $tree
      * @param Router $router
-     * @param null $theme
+     * @param string|null $theme
      * @param null $search
-     * @param null $module
+     * @param string|null $module
      *
      * @return array
      */
@@ -279,13 +290,13 @@ class TreeBuilder
 
     /**
      * @param Router $router
-     * @param $tree
-     * @param $index
-     * @param $name
-     * @param $fullName
-     * @param bool $theme
+     * @param array $tree
+     * @param int $index
+     * @param string $name
+     * @param string $fullName
+     * @param string|bool $theme
      * @param null $search
-     * @param null $module
+     * @param string|bool $module
      *
      * @return mixed
      */

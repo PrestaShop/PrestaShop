@@ -139,6 +139,10 @@ class OrderFollowControllerCore extends FrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('Merchandise returns', [], 'Shop.Theme.Global'),
+            'url' => $this->context->link->getPageLink('order-follow'),
+        ];
 
         return $breadcrumb;
     }

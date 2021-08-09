@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 
 volumes:
   db-data:
@@ -19,13 +19,14 @@ services:
   prestashop-git:
     build: .docker
     environment:
-      PS_INSTALL_AUTO: 1
-      DB_PASSWD: prestashop
-      DB_NAME: prestashop
-      DB_SERVER: mysql
-      PS_DOMAIN: localhost:8001
-      PS_FOLDER_INSTALL: install-dev
-      PS_FOLDER_ADMIN: admin-dev
+      DISABLE_MAKE: ${DISABLE_MAKE:-0}
+      PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
+      DB_PASSWD: ${DB_PASSWD:-prestashop}
+      DB_NAME: ${DB_NAME:-prestashop}
+      DB_SERVER: ${DB_SERVER:-mysql}
+      PS_DOMAIN: ${PS_DOMAIN:-localhost:8001}
+      PS_FOLDER_INSTALL: ${PS_FOLDER_INSTALL:-install-dev}
+      PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "mysql:3306", "--", "/tmp/docker_run_git.sh"]
     ports:
       - "8001:80"

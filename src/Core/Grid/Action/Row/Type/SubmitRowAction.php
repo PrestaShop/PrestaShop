@@ -35,8 +35,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class SubmitRowAction extends AbstractRowAction
 {
-    const MESSAGE_TYPE_STATIC = 'static'; // Static confirmation message type is standard confirmation message type
-    const MESSAGE_TYPE_DYNAMIC = 'dynamic'; // Dynamic confirmation message type enables dynamic confirmation message
+    public const MESSAGE_TYPE_STATIC = 'static'; // Static confirmation message type is standard confirmation message type
+    public const MESSAGE_TYPE_DYNAMIC = 'dynamic'; // Dynamic confirmation message type enables dynamic confirmation message
 
     /**
      * {@inheritdoc}
@@ -66,6 +66,7 @@ final class SubmitRowAction extends AbstractRowAction
                 'confirm_message_type' => self::MESSAGE_TYPE_STATIC,
                 'dynamic_message_field' => '',
                 'extra_route_params' => [],
+                'modal_options' => null,
             ])
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')

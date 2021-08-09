@@ -133,19 +133,6 @@ class DispatcherCore
                 'tags' => ['regexp' => '[a-zA-Z0-9-\pL]*'],
             ],
         ],
-        /* Must be after the product and category rules in order to avoid conflict */
-        'layered_rule' => [
-            'controller' => 'category',
-            'rule' => '{id}-{rewrite}{/:selected_filters}',
-            'keywords' => [
-                'id' => ['regexp' => '[0-9]+', 'param' => 'id_category'],
-                /* Selected filters is used by the module blocklayered */
-                'selected_filters' => ['regexp' => '.*', 'param' => 'selected_filters'],
-                'rewrite' => ['regexp' => self::REWRITE_PATTERN],
-                'meta_keywords' => ['regexp' => '[_a-zA-Z0-9-\pL]*'],
-                'meta_title' => ['regexp' => '[_a-zA-Z0-9-\pL]*'],
-            ],
-        ],
     ];
 
     /**
@@ -1186,5 +1173,53 @@ class DispatcherCore
         }
 
         return $controllers;
+    }
+
+    /**
+     * Get the default php_self value of a controller.
+     *
+     * @param string $controller The controller class name
+     *
+     * @return string|null
+     */
+    public static function getControllerPhpself(string $controller)
+    {
+        if (!class_exists($controller)) {
+            return;
+        }
+
+        $reflectionClass = new ReflectionClass($controller);
+        $controllerDefaultProperties = $reflectionClass->getDefaultProperties();
+
+        return $controllerDefaultProperties['php_self'] ?? null;
+    }
+
+    /**
+     * Get list of all php_self property values of each available controller in the specified dir.
+     *
+     * @param string $dir Directory to scan (recursively)
+     * @param bool $base_name_otherwise Return the controller base name if no php_self is found
+     *
+     * @return array
+     */
+    public static function getControllersPhpselfList(string $dir, bool $base_name_otherwise = true)
+    {
+        $controllers = Dispatcher::getControllers($dir);
+
+        $controllersPhpself = [];
+
+        foreach ($controllers as $controllerBaseName => $controllerClassName) {
+            $controllerPhpself = Dispatcher::getControllerPhpself($controllerClassName);
+
+            if ($base_name_otherwise) {
+                $controllerPhpself = $controllerPhpself ?? $controllerBaseName;
+            }
+
+            if ($controllerPhpself) {
+                $controllersPhpself[] = $controllerPhpself;
+            }
+        }
+
+        return $controllersPhpself;
     }
 }

@@ -54,7 +54,7 @@ final class ImportDataFormatter
     }
 
     /**
-     * @param $value
+     * @param string|int $value
      *
      * @return bool
      */
@@ -70,10 +70,13 @@ final class ImportDataFormatter
      */
     public function getPrice($field)
     {
-        $field = (float) str_replace(',', '.', $field);
-        $field = (float) str_replace('%', '', $field);
+        $field = str_replace(
+            [',', '%'],
+            ['.', ''],
+            $field
+        );
 
-        return $field;
+        return (float) $field;
     }
 
     /**
@@ -97,7 +100,7 @@ final class ImportDataFormatter
     /**
      * Split the field by separator.
      *
-     * @param string $field
+     * @param string|null $field
      * @param string $separator
      *
      * @return array
@@ -108,7 +111,7 @@ final class ImportDataFormatter
             return [];
         }
 
-        if (is_null($separator) || trim($separator) == '') {
+        if (trim($separator) == '') {
             $separator = ',';
         }
 

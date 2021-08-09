@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WebserviceKeyDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -33,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class WebserviceKeyFilters extends Filters
 {
+    /** @var string */
+    protected $filterId = WebserviceKeyDefinitionFactory::GRID_ID;
+
     /**
      * {@inheritdoc}
      */

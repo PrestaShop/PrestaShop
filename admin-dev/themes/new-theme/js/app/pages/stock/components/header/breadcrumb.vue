@@ -26,31 +26,33 @@
   <nav aria-label="Breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a :href="catalogLink">{{trans('link_catalog')}}</a>
+        <a :href="catalogLink">{{ trans('link_catalog') }}</a>
       </li>
       <li class="breadcrumb-item">
-        <a :href="stockLink">{{trans('link_stock')}}</a>
+        <a :href="stockLink">{{ trans('link_stock') }}</a>
       </li>
       <li class="breadcrumb-item active">
-        <span v-if="isOverview">{{trans('link_overview')}}</span>
-        <span v-else>{{trans('link_movements')}}</span>
+        <span v-if="isOverview">{{ trans('link_overview') }}</span>
+        <span v-else>{{ trans('link_movements') }}</span>
       </li>
     </ol>
   </nav>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue';
+
+  export default Vue.extend({
     computed: {
-      isOverview() {
+      isOverview(): boolean {
         return this.$route.name === 'overview';
       },
-      catalogLink() {
+      catalogLink(): string {
         return window.data.catalogUrl;
       },
-      stockLink() {
+      stockLink(): string {
         return window.data.stockUrl;
       },
     },
-  };
+  });
 </script>

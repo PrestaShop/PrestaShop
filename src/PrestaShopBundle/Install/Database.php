@@ -77,13 +77,18 @@ class Database extends AbstractInstall
                     if (!$clear && Db::hasTableWithSamePrefix($server, $login, $password, $database, $prefix)) {
                         $errors[] = $this->translator->trans('At least one table with same prefix was already found, please change your prefix or drop your database', [], 'Install');
                     }
-                    if (!Db::checkAutoIncrement($server, $login, $password)) {
-                        $errors[] = $this->translator->trans('The values of auto_increment increment and offset must be set to 1', [], 'Install');
-                    }
+                    // Check CREATE Privilege
                     if (($create_error = Db::checkCreatePrivilege($server, $login, $password, $database, $prefix)) !== true) {
                         $errors[] = $this->translator->trans('Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:', ['%database%' => $database], 'Install');
                         if ($create_error != false) {
                             $errors[] = $create_error;
+                        }
+                    }
+                    // Check SELECT Privilege
+                    if (($select_error = Db::checkSelectPrivilege($server, $login, $password, $database, $prefix)) !== true) {
+                        $errors[] = $this->translator->trans('You must be granted the privilege to select data in the tables of database "%s". Ask your hosting provider to enable it.', ['%database%' => $database], 'Install');
+                        if ($select_error !== false) {
+                            $errors[] = $select_error;
                         }
                     }
 

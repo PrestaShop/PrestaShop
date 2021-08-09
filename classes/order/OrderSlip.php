@@ -293,11 +293,11 @@ class OrderSlipCore extends ObjectModel
         $order_slip->conversion_rate = $currency->conversion_rate;
 
         if ($add_tax) {
-            $add_or_remove = 'add';
+            $taxCalculatorMethod = 'addTaxes';
             $inc_or_ex_1 = 'excl';
             $inc_or_ex_2 = 'incl';
         } else {
-            $add_or_remove = 'remove';
+            $taxCalculatorMethod = 'removeTaxes';
             $inc_or_ex_1 = 'incl';
             $inc_or_ex_2 = 'excl';
         }
@@ -314,7 +314,7 @@ class OrderSlipCore extends ObjectModel
             $order_slip->{'total_shipping_tax_' . $inc_or_ex_1} = ($shipping_cost === null ? $order->{'total_shipping_tax_' . $inc_or_ex_1} : (float) $shipping_cost);
 
             if ($tax_calculator instanceof TaxCalculator) {
-                $order_slip->{'total_shipping_tax_' . $inc_or_ex_2} = Tools::ps_round($tax_calculator->{$add_or_remove . 'Taxes'}($order_slip->{'total_shipping_tax_' . $inc_or_ex_1}), Context::getContext()->getComputingPrecision());
+                $order_slip->{'total_shipping_tax_' . $inc_or_ex_2} = Tools::ps_round($tax_calculator->{$taxCalculatorMethod}($order_slip->{'total_shipping_tax_' . $inc_or_ex_1}), Context::getContext()->getComputingPrecision());
             } else {
                 $order_slip->{'total_shipping_tax_' . $inc_or_ex_2} = $order_slip->{'total_shipping_tax_' . $inc_or_ex_1};
             }
@@ -362,11 +362,11 @@ class OrderSlipCore extends ObjectModel
                 }
             }
 
-            $product_tax_incl_line = Tools::ps_round($tax_calculator->{$add_or_remove . 'Taxes'}($price) * $quantity, Context::getContext()->getComputingPrecision());
+            $product_tax_incl_line = Tools::ps_round($tax_calculator->{$taxCalculatorMethod}($price) * $quantity, Context::getContext()->getComputingPrecision());
 
             switch (Configuration::get('PS_ROUND_TYPE')) {
                 case Order::ROUND_ITEM:
-                    $product_tax_incl = Tools::ps_round($tax_calculator->{$add_or_remove . 'Taxes'}($price), Context::getContext()->getComputingPrecision()) * $quantity;
+                    $product_tax_incl = Tools::ps_round($tax_calculator->{$taxCalculatorMethod}($price), Context::getContext()->getComputingPrecision()) * $quantity;
                     $total_products[$id_tax_rules_group] += $product_tax_incl;
 
                     break;
@@ -383,11 +383,10 @@ class OrderSlipCore extends ObjectModel
             }
 
             $product['unit_price_tax_' . $inc_or_ex_1] = $price;
-            $product['unit_price_tax_' . $inc_or_ex_2] = Tools::ps_round($tax_calculator->{$add_or_remove . 'Taxes'}($price), Context::getContext()->getComputingPrecision());
+            $product['unit_price_tax_' . $inc_or_ex_2] = Tools::ps_round($tax_calculator->{$taxCalculatorMethod}($price), Context::getContext()->getComputingPrecision());
             $product['total_price_tax_' . $inc_or_ex_1] = Tools::ps_round($price * $quantity, Context::getContext()->getComputingPrecision());
             $product['total_price_tax_' . $inc_or_ex_2] = Tools::ps_round($product_tax_incl, Context::getContext()->getComputingPrecision());
         }
-
         unset($product);
 
         foreach ($total_products as $key => $price) {
@@ -395,7 +394,7 @@ class OrderSlipCore extends ObjectModel
                 $tmp = explode('_', $key);
                 $address = Address::initialize((int) $tmp[1], true);
                 $tax_calculator = TaxManagerFactory::getManager($address, $tmp[0])->getTaxCalculator();
-                $order_slip->{'total_products_tax_' . $inc_or_ex_2} += Tools::ps_round($tax_calculator->{$add_or_remove . 'Taxes'}($price), Context::getContext()->getComputingPrecision());
+                $order_slip->{'total_products_tax_' . $inc_or_ex_2} += Tools::ps_round($tax_calculator->{$taxCalculatorMethod}($price), Context::getContext()->getComputingPrecision());
             } else {
                 $order_slip->{'total_products_tax_' . $inc_or_ex_2} += $price;
             }

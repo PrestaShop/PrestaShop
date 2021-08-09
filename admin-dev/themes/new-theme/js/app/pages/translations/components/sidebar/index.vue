@@ -28,9 +28,9 @@
       <PSTree
         ref="domainTree"
         :model="domainsTree"
-        className="translationTree"
+        class-name="translationTree"
         :translations="translations"
-        :currentItem="currentItem"
+        :current-item="currentItem"
         v-if="treeReady"
       />
       <PSSpinner v-else />
@@ -41,13 +41,21 @@
 <script>
   import PSTree from '@app/widgets/ps-tree/ps-tree';
   import PSSpinner from '@app/widgets/ps-spinner';
-  import { EventBus } from '@app/utils/event-bus';
+  import {EventBus} from '@app/utils/event-bus';
 
   export default {
-    props: [
-      'modal',
-      'principal',
-    ],
+    props: {
+      modal: {
+        type: Object,
+        required: false,
+        default: () => ({}),
+      },
+      principal: {
+        type: Object,
+        required: false,
+        default: () => ({}),
+      },
+    },
     computed: {
       treeReady() {
         return !this.$store.state.sidebarLoading;
@@ -60,7 +68,7 @@
             this.$store.dispatch('updateCurrentDomain', domain);
 
             if (domain !== '') {
-              this.$store.dispatch('getCatalog', { url: domain.dataValue });
+              this.$store.dispatch('getCatalog', {url: domain.dataValue});
               EventBus.$emit('setCurrentElement', domain.full_name);
               return domain.full_name;
             }
@@ -111,7 +119,7 @@
        */
       itemClick: function itemClick(el) {
         this.$store.dispatch('updateCurrentDomain', el.item);
-        this.$store.dispatch('getCatalog', { url: el.item.dataValue });
+        this.$store.dispatch('getCatalog', {url: el.item.dataValue});
         this.$store.dispatch('updatePageIndex', 1);
         this.$store.state.modifiedTranslations = [];
       },
@@ -119,7 +127,7 @@
         const keys = Object.keys(tree);
         let toDisplay = '';
 
-        for (let i = 0; i < tree.length; i++) {
+        for (let i = 0; i < tree.length; i += 1) {
           if (!tree[keys[i]].disable) {
             if (tree[keys[i]].children && tree[keys[i]].children.length > 0) {
               return getFirstDomainToDisplay(tree[keys[i]].children);
@@ -137,7 +145,7 @@
        * @returns {boolean}
        */
       edited: function edited() {
-        return this.$store.state.modifiedTranslations.length > 0;
+        return Object.keys(this.$store.state.modifiedTranslations).length > 0;
       },
     },
     components: {
@@ -148,7 +156,8 @@
 </script>
 
 <style lang="scss" type="text/scss">
-  @import "../../../../../../scss/config/_settings.scss";
+  @import '~@scss/config/_settings.scss';
+
   .translationTree {
     .tree-name {
       margin-bottom: .9375rem;

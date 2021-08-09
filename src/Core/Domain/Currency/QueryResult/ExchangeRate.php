@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 
 /**
  * Class ExchangeRate
@@ -34,22 +34,22 @@ use PrestaShop\Decimal\Number;
 class ExchangeRate
 {
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $exchangeRate;
 
     /**
-     * @param Number $exchangeRate
+     * @param DecimalNumber $exchangeRate
      */
-    public function __construct(Number $exchangeRate)
+    public function __construct(DecimalNumber $exchangeRate)
     {
         $this->exchangeRate = $exchangeRate;
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getValue(): Number
+    public function getValue(): DecimalNumber
     {
         return $this->exchangeRate;
     }

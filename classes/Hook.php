@@ -23,7 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 class HookCore extends ObjectModel
@@ -49,6 +52,11 @@ class HookCore extends ObjectModel
     public $position = false;
 
     /**
+     * @var bool
+     */
+    public $active = true;
+
+    /**
      * @var array List of executed hooks on this page
      */
     public static $executed_hooks = [];
@@ -66,6 +74,7 @@ class HookCore extends ObjectModel
             'title' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
             'description' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'],
             'position' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
         ],
     ];
 
@@ -112,6 +121,7 @@ class HookCore extends ObjectModel
 
         // Controller
         'actionAjaxDieBefore' => ['from' => '1.6.1.1'],
+        'actionGetProductPropertiesAfter' => ['from' => '1.7.8.0'],
     ];
 
     const MODULE_LIST_BY_HOOK_KEY = 'hook_module_exec_list_';
@@ -404,21 +414,28 @@ class HookCore extends ObjectModel
      */
     private static function callHookOn(Module $module, string $hookName, array $hookArgs)
     {
-        // Note: we need to make sure to call the exact hook name first.
-        // This especially important when the module uses __call() to process the right hook.
-        // Since is_callable() will always return true when __call() is available,
-        // if the module was expecting an aliased hook name to be invoked, but we send
-        // the canonical hook name instead, the hook will never be acknowledged by the module.
-        $methodName = static::getMethodName($hookName);
-        if (is_callable([$module, $methodName])) {
-            return static::coreCallHook($module, $methodName, $hookArgs);
-        }
-
-        // fall back to all other names
-        foreach (static::getAllKnownNames($hookName) as $hook) {
-            $methodName = static::getMethodName($hook);
+        try {
+            // Note: we need to make sure to call the exact hook name first.
+            // This especially important when the module uses __call() to process the right hook.
+            // Since is_callable() will always return true when __call() is available,
+            // if the module was expecting an aliased hook name to be invoked, but we send
+            // the canonical hook name instead, the hook will never be acknowledged by the module.
+            $methodName = static::getMethodName($hookName);
             if (is_callable([$module, $methodName])) {
                 return static::coreCallHook($module, $methodName, $hookArgs);
+            }
+
+            // fall back to all other names
+            foreach (static::getAllKnownNames($hookName) as $hook) {
+                $methodName = static::getMethodName($hook);
+                if (is_callable([$module, $methodName])) {
+                    return static::coreCallHook($module, $methodName, $hookArgs);
+                }
+            }
+        } catch (Exception $e) {
+            $environment = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Environment');
+            if ($environment->isDebug()) {
+                throw new CoreException($e->getMessage(), $e->getCode(), $e);
             }
         }
 
@@ -481,7 +498,7 @@ class HookCore extends ObjectModel
         }
 
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, active
+            'SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, m.active
             FROM `' . _DB_PREFIX_ . 'hook_module` hm
             STRAIGHT_JOIN `' . _DB_PREFIX_ . 'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' . (int) Context::getContext()->shop->id . ')
             STRAIGHT_JOIN `' . _DB_PREFIX_ . 'module` as m ON (m.id_module = hm.id_module)
@@ -766,7 +783,7 @@ class HookCore extends ObjectModel
         $id_shop = null,
         $chain = false
     ) {
-        if (defined('PS_INSTALLATION_IN_PROGRESS')) {
+        if (defined('PS_INSTALLATION_IN_PROGRESS') || !self::getHookStatusByName($hook_name)) {
             return null;
         }
 
@@ -992,7 +1009,21 @@ class HookCore extends ObjectModel
 
     public static function coreRenderWidget($module, $hook_name, $params)
     {
-        return $module->renderWidget($hook_name, $params);
+        $context = Context::getContext();
+        if (!Module::isEnabled($module->name) || $context->isMobile() && !Module::isEnabledForMobileDevices($module->name)) {
+            return null;
+        }
+
+        try {
+            return $module->renderWidget($hook_name, $params);
+        } catch (Exception $e) {
+            $environment = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Environment');
+            if ($environment->isDebug()) {
+                throw new CoreException($e->getMessage(), $e->getCode(), $e);
+            }
+        }
+
+        return '';
     }
 
     /**
@@ -1239,5 +1270,22 @@ class HookCore extends ObjectModel
     private static function getMethodName(string $hookName): string
     {
         return 'hook' . ucfirst($hookName);
+    }
+
+    /**
+     * Return status from a given hook name.
+     *
+     * @param string $hook_name Hook name
+     *
+     * @return bool
+     */
+    public static function getHookStatusByName($hook_name): bool
+    {
+        $sql = new DbQuery();
+        $sql->select('active');
+        $sql->from('hook', 'h');
+        $sql->where('h.name = "' . pSQL($hook_name) . '"');
+
+        return (bool) Db::getInstance()->getValue($sql);
     }
 }

@@ -48,11 +48,11 @@
         {/block}
       </header>
 
-      {block name='notifications'}
-        {include file='_partials/notifications.tpl'}
-      {/block}
-
       <section id="wrapper">
+        {block name='notifications'}
+          {include file='_partials/notifications.tpl'}
+        {/block}
+
         {hook h="displayWrapperTop"}
         <div class="container">
           {block name='breadcrumb'}
@@ -62,7 +62,7 @@
           {block name="left_column"}
             <div id="left-column" class="col-xs-12 col-sm-4 col-md-3">
               {if $page.page_name == 'product'}
-                {hook h='displayLeftColumnProduct'}
+                {hook h='displayLeftColumnProduct' product=$product category=$category}
               {else}
                 {hook h="displayLeftColumn"}
               {/if}
@@ -70,7 +70,7 @@
           {/block}
 
           {block name="content_wrapper"}
-            <div id="content-wrapper" class="left-column right-column col-sm-4 col-md-6">
+            <div id="content-wrapper" class="js-content-wrapper left-column right-column col-sm-4 col-md-6">
               {hook h="displayContentWrapperTop"}
               {block name="content"}
                 <p>Hello world! This is HTML5 Boilerplate.</p>
@@ -92,7 +92,7 @@
         {hook h="displayWrapperBottom"}
       </section>
 
-      <footer id="footer">
+      <footer id="footer" class="js-footer">
         {block name="footer"}
           {include file="_partials/footer.tpl"}
         {/block}

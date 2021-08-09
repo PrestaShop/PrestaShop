@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Product\Command;
 
 use InvalidArgumentException;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -56,12 +56,12 @@ class AddProductToOrderCommand
     private $combinationId;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $productPriceTaxIncluded;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $productPriceTaxExcluded;
 
@@ -184,8 +184,8 @@ class AddProductToOrderCommand
         $this->productId = new ProductId($productId);
         $this->combinationId = !empty($combinationId) ? new CombinationId($combinationId) : null;
         try {
-            $this->productPriceTaxIncluded = new Number($productPriceTaxIncluded);
-            $this->productPriceTaxExcluded = new Number($productPriceTaxExcluded);
+            $this->productPriceTaxIncluded = new DecimalNumber($productPriceTaxIncluded);
+            $this->productPriceTaxExcluded = new DecimalNumber($productPriceTaxExcluded);
         } catch (InvalidArgumentException $e) {
             throw new InvalidAmountException();
         }
@@ -217,17 +217,17 @@ class AddProductToOrderCommand
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getProductPriceTaxIncluded(): Number
+    public function getProductPriceTaxIncluded(): DecimalNumber
     {
         return $this->productPriceTaxIncluded;
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getProductPriceTaxExcluded(): Number
+    public function getProductPriceTaxExcluded(): DecimalNumber
     {
         return $this->productPriceTaxExcluded;
     }

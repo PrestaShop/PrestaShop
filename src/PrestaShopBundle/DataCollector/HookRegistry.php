@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\DataCollector;
 
+use ModuleCore;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 
 /**
@@ -33,8 +34,8 @@ use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
  */
 final class HookRegistry
 {
-    const HOOK_NOT_CALLED = 'notCalled';
-    const HOOK_CALLED = 'called';
+    public const HOOK_NOT_CALLED = 'notCalled';
+    public const HOOK_CALLED = 'called';
 
     /**
      * @var array the current selected hook during the request
@@ -55,10 +56,10 @@ final class HookRegistry
     }
 
     /**
-     * @param $hookName string
-     * @param $hookArguments array
-     * @param $file string filepath where the "Hook::exec" call have been done
-     * @param $line string position in file where the "Hook::exec" call have been done
+     * @param string $hookName
+     * @param array $hookArguments
+     * @param string $file filepath where the "Hook::exec" call have been done
+     * @param string $line position in file where the "Hook::exec" call have been done
      */
     public function selectHook($hookName, $hookArguments, $file, $line)
     {
@@ -80,7 +81,7 @@ final class HookRegistry
     }
 
     /**
-     * @param ModuleInterface $module
+     * @param ModuleCore $module
      */
     public function hookedByModule(ModuleInterface $module)
     {
@@ -93,8 +94,8 @@ final class HookRegistry
     /**
      * A callback have been executed by the module during the Hook dispatch.
      *
-     * @param ModuleInterface $module
-     * @param $args array All arguments passed to the Module callback
+     * @param ModuleCore $module
+     * @param array $args All arguments passed to the Module callback
      */
     public function hookedByCallback(ModuleInterface $module, $args)
     {
@@ -106,8 +107,8 @@ final class HookRegistry
     /**
      * A widget have been rendered by the module during the Hook dispatch.
      *
-     * @param ModuleInterface $module
-     * @param $args array All arguments passed to the Module callback
+     * @param ModuleCore $module
+     * @param array $args All arguments passed to the Module callback
      */
     public function hookedByWidget(ModuleInterface $module, $args)
     {

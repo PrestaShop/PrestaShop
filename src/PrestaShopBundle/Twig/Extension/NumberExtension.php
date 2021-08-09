@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Extension;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -47,6 +47,6 @@ class NumberExtension extends AbstractExtension
 
     public function createNumber($number)
     {
-        return new Number((string) $number);
+        return new DecimalNumber((string) $number);
     }
 }

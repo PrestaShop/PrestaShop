@@ -63,7 +63,9 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $config
+     *
+     * @return array<int, string>
      */
     public function testConfiguration(array $config)
     {
@@ -96,14 +98,21 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
             Tools::htmlentitiesUTF8($config['smtp_username']),
             $password,
             Tools::htmlentitiesUTF8($config['smtp_port']),
-            Tools::htmlentitiesUTF8($config['smtp_encryption'])
+            Tools::htmlentitiesUTF8($config['smtp_encryption']),
+            (bool) $config['dkim_enable'],
+            (string) $config['dkim_key'],
+            (string) $config['dkim_domain'],
+            (string) $config['dkim_selector']
         );
 
         $errors = [];
 
         if (false === $result || is_string($result)) {
-            $errors[] =
-                $this->translator->trans('Error: Please check your configuration', [], 'Admin.Advparameters.Feature');
+            $errors[] = $this->translator->trans(
+                'Error: Please check your configuration',
+                [],
+                'Admin.Advparameters.Feature'
+            );
         }
 
         if (is_string($result)) {

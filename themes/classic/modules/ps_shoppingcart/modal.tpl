@@ -36,7 +36,22 @@
           <div class="col-md-5 divide-right">
             <div class="row">
               <div class="col-md-6">
-                <img class="product-image" src="{$product.cover.medium.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image">
+                {if $product.default_image}
+                  <img
+                    src="{$product.default_image.medium.url}"
+                    data-full-size-image-url="{$product.default_image.large.url}"
+                    title="{$product.default_image.legend}"
+                    alt="{$product.default_image.legend}"
+                    loading="lazy"
+                    class="product-image"
+                  >
+                {else}
+                  <img
+                    src="{$urls.no_picture_image.bySize.medium_default.url}"
+                    loading="lazy"
+                    class="product-image"
+                  />
+                {/if}
               </div>
               <div class="col-md-6">
                 <h6 class="h6 product-name">{$product.name}</h6>
@@ -54,7 +69,7 @@
               {if $cart.products_count > 1}
                 <p class="cart-products-count">{l s='There are %products_count% items in your cart.' sprintf=['%products_count%' => $cart.products_count] d='Shop.Theme.Checkout'}</p>
               {else}
-                <p class="cart-products-count">{l s='There is %product_count% item in your cart.' sprintf=['%product_count%' =>$cart.products_count] d='Shop.Theme.Checkout'}</p>
+                <p class="cart-products-count">{l s='There is %products_count% item in your cart.' sprintf=['%products_count%' =>$cart.products_count] d='Shop.Theme.Checkout'}</p>
               {/if}
               <p><span class="label">{l s='Subtotal:' d='Shop.Theme.Checkout'}</span>&nbsp;<span class="subtotal value">{$cart.subtotals.products.value}</span></p>
               {if $cart.subtotals.shipping.value}
@@ -71,7 +86,7 @@
               {if $cart.subtotals.tax}
                 <p class="product-tax">{l s='%label%:' sprintf=['%label%' => $cart.subtotals.tax.label] d='Shop.Theme.Global'}&nbsp;<span class="value">{$cart.subtotals.tax.value}</span></p>
               {/if}
-
+              {hook h='displayCartModalContent' product=$product}
               <div class="cart-content-btn">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{l s='Continue shopping' d='Shop.Theme.Actions'}</button>
                 <a href="{$cart_url}" class="btn btn-primary"><i class="material-icons rtl-no-flip">&#xE876;</i>{l s='Proceed to checkout' d='Shop.Theme.Actions'}</a>
@@ -80,6 +95,7 @@
           </div>
         </div>
       </div>
+      {hook h='displayCartModalFooter' product=$product}
     </div>
   </div>
 </div>

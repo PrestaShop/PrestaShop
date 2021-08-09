@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
-use Address;
 use Cart;
 use Combination;
 use Configuration;

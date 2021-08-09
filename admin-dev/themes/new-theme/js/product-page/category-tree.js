@@ -23,14 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-export default function() {
-
+export default function () {
   /**
    * scroll right to show radio buttons on the category tree
    */
   const scrollCategoryTree = function scrollCategoryTree() {
-    let $categoryTreeOverflow = $('.category-tree-overflow');
-    let leftPos = $categoryTreeOverflow.width();
+    const $categoryTreeOverflow = $('.category-tree-overflow');
+    const leftPos = $categoryTreeOverflow.width();
     $categoryTreeOverflow.animate({scrollLeft: leftPos}, 200);
   };
 
@@ -46,12 +45,12 @@ export default function() {
     }
   };
 
-  $('#categories-tree-expand').on('click', (e) => {
+  $('#categories-tree-expand').on('click', () => {
     treeAction('expand');
     $('#categories-tree-expand').hide();
     $('#categories-tree-reduce').show();
   });
-  $('#categories-tree-reduce').on('click', (e) => {
+  $('#categories-tree-reduce').on('click', () => {
     treeAction('collapse');
     $('#categories-tree-reduce').hide();
     $('#categories-tree-expand').show();
@@ -60,15 +59,15 @@ export default function() {
   // scroll right to see the radio buttons
   $('.category-tree-overflow .checkbox').on('click', (e) => {
     if (!$(e.target).is('input')) {
-        // do not scroll if (un)checking some inputs
-        scrollCategoryTree();
+      // do not scroll if (un)checking some inputs
+      scrollCategoryTree();
     }
   });
 
   $('.category-tree-overflow .checkbox label').on('click', (e) => {
     if (!$(e.target).is('input')) {
-        // do not scroll if (un)checking some inputs
-        scrollCategoryTree();
+      // do not scroll if (un)checking some inputs
+      scrollCategoryTree();
     }
   });
 }

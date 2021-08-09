@@ -174,9 +174,9 @@ class AdminCartRulesControllerCore extends AdminController
                     // Add a new rule group
                     $rule_group_id = 1;
                     if (is_array($rule_group_array)) {
-                        // Empty for (with a ; at the end), that just find the first rule_group_id available in rule_group_array
-                        for ($rule_group_id = 1; in_array($rule_group_id, $rule_group_array); ++$rule_group_id) {
-                            42;
+                        // Find the first rule_group_id that is not available in the array
+                        while (in_array($rule_group_id, $rule_group_array)) {
+                            ++$rule_group_id;
                         }
                         $_POST['product_rule_group'][] = $rule_group_id;
                     } else {
@@ -239,8 +239,9 @@ class AdminCartRulesControllerCore extends AdminController
     {
         $res = parent::processDelete();
         if (Tools::isSubmit('delete' . $this->table)) {
-            $back = urldecode(Tools::getValue('back', ''));
+            $back = rawurldecode(Tools::getValue('back', ''));
             if (!empty($back)) {
+                $back .= (strpos($back, '?') === false ? '?' : '&') . 'conf=1';
                 $this->redirect_after = $back;
             }
         }
@@ -505,16 +506,11 @@ class AdminCartRulesControllerCore extends AdminController
                 break;
             case 'categories':
                 $categories = ['selected' => [], 'unselected' => []];
-                $results = Db::getInstance()->executeS('
-				SELECT DISTINCT name, c.id_category as id
-				FROM ' . _DB_PREFIX_ . 'category c
-				LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
-					ON (c.`id_category` = cl.`id_category`
-					AND cl.`id_lang` = ' . (int) Context::getContext()->language->id . Shop::addSqlRestrictionOnLang('cl') . ')
-				' . Shop::addSqlAssociation('category', 'c') . '
-				WHERE id_lang = ' . (int) Context::getContext()->language->id . '
-				ORDER BY name');
-                foreach ($results as $row) {
+                $categoryTree = Category::getNestedCategories(Category::getRootCategory()->id, (int) Context::getContext()->language->id, false);
+
+                $flatCategories = $this->populateCategories([], $categoryTree);
+
+                foreach ($flatCategories as $row) {
                     $categories[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
                 }
                 Context::getContext()->smarty->assign('product_rule_itemlist', $categories);
@@ -528,6 +524,25 @@ class AdminCartRulesControllerCore extends AdminController
         }
 
         return $this->createTemplate('product_rule.tpl')->fetch();
+    }
+
+    public function populateCategories(array $flatCategories, array $currentCategoryTree, string $currentPath = ''): array
+    {
+        if (!$currentCategoryTree) {
+            return $flatCategories;
+        }
+
+        $separator = ' > ';
+        foreach ($currentCategoryTree as $categoryArray) {
+            $fullName = ($currentPath ? $currentPath . $separator : '') . $categoryArray['name'];
+            $flatCategories[] = ['id' => $categoryArray['id_category'], 'name' => $fullName];
+            // recursive call for childrens
+            if (!empty($categoryArray['children'])) {
+                $flatCategories = $this->populateCategories($flatCategories, $categoryArray['children'], $fullName);
+            }
+        }
+
+        return $flatCategories;
     }
 
     public function ajaxProcess()

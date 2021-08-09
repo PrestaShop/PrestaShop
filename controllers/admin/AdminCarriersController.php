@@ -234,12 +234,12 @@ class AdminCarriersControllerCore extends AdminController
                         [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                     'hint' => $this->trans('Enable the carrier in the front office.', [], 'Admin.Shipping.Help'),
@@ -253,13 +253,13 @@ class AdminCarriersControllerCore extends AdminController
                     'values' => [
                         [
                             'id' => 'is_free_on',
-                            'value' => 0,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Yes', [], 'Admin.Global') . '" title="' . $this->trans('Yes', [], 'Admin.Global') . '" />',
+                            'value' => 1,
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'is_free_off',
-                            'value' => 1,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('No', [], 'Admin.Global') . '" title="' . $this->trans('No', [], 'Admin.Global') . '" />',
+                            'value' => 0,
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                     'hint' => $this->trans('Apply both regular shipping cost and product-specific shipping costs.', [], 'Admin.Shipping.Help'),
@@ -289,12 +289,12 @@ class AdminCarriersControllerCore extends AdminController
                         [
                             'id' => 'shipping_handling_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'shipping_handling_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                     'hint' => $this->trans('Include the shipping and handling costs in the carrier price.', [], 'Admin.Shipping.Help'),
@@ -530,7 +530,7 @@ class AdminCarriersControllerCore extends AdminController
         if (!$carrier->update()) {
             $this->errors[] = $this->trans('An error occurred while updating carrier information.', [], 'Admin.Shipping.Notification');
         }
-        Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token);
+        Tools::redirectAdmin(self::$currentIndex . '&conf=5&token=' . $this->token);
     }
 
     /**

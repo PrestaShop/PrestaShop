@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
 use Tools as LegacyTools;
 
@@ -73,12 +73,12 @@ class Tools
     /**
      * Polyfill for bcadd if BC Math extension is not installed.
      *
-     * @deprecated since 1.7.2.2 - Use PrestaShop\Decimal\Number instead
+     * @deprecated since 1.7.2.2 - Use PrestaShop\Decimal\DecimalNumber instead
      */
     public function bcadd($left_operand, $right_operand, $scale = null)
     {
-        $result = (new Number((string) $left_operand))
-            ->plus(new Number((string) $right_operand));
+        $result = (new DecimalNumber((string) $left_operand))
+            ->plus(new DecimalNumber((string) $right_operand));
 
         if (null === $scale) {
             return (string) $result;

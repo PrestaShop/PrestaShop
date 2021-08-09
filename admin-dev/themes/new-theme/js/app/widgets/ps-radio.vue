@@ -25,23 +25,45 @@
 
 <template>
   <div class="ps-radio">
-    <input type="radio" :id="id" name="radio-group" :checked="checked" @change="onChange">
-    <label :for="id">{{label}}</label>
+    <input
+      type="radio"
+      :id="id"
+      name="radio-group"
+      :checked="checked"
+      @change="onChange"
+    >
+    <label :for="id">{{ label }}</label>
   </div>
 </template>
 
-<script>
-  export default{
+<script lang="ts">
+  import Vue from 'vue';
+
+  export default Vue.extend({
     props: {
-      id: { type: String, required: true },
-      label: { type: String, required: false },
-      checked: { type: Boolean, required: false },
-      value: { type: String, required: false },
+      id: {
+        type: String,
+        required: true,
+      },
+      label: {
+        type: String,
+        required: false,
+        default: '',
+      },
+      checked: {
+        type: Boolean,
+        required: false,
+      },
+      value: {
+        type: String,
+        required: false,
+        default: '',
+      },
     },
     methods: {
-      onChange() {
+      onChange(): void {
         this.$emit('change', this.value);
       },
     },
-  };
+  });
 </script>

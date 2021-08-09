@@ -34,8 +34,8 @@ const customerServicePage = require('@pages/BO/customerService/customerService')
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_userAccount_orderHistory_orderDetails_sendMessage';
-const messageOption = `${Products.demo_1.name} - Size : ${Products.demo_1.combination.size[0]}`
-  + `- Color : ${Products.demo_1.combination.color[0]}`;
+const messageOption = `${Products.demo_1.name} (Size: ${Products.demo_1.combination.size[0]} `
+  + `- Color: ${Products.demo_1.combination.color[0]})`;
 
 let browserContext;
 let page;
@@ -190,6 +190,7 @@ describe('Send a message with an ordered product', async () => {
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToHistoryAndDetailsPage(page);
       const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);

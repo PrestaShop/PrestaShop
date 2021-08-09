@@ -23,33 +23,43 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 $(document).ready(function() {
-	tinySetup({
-		editor_selector :"autoload_rte",
-		setup : function(ed) {
+  tinySetup({
+    editor_selector: 'autoload_rte',
+    setup: function(ed) {
       ed.on('loadContent', function(ed, e) {
         handleCounterTiny(tinymce.activeEditor.id);
       });
-			ed.on('change', function(ed, e) {
-				tinyMCE.triggerSave();
+      ed.on('change', function(ed, e) {
+        tinyMCE.triggerSave();
         handleCounterTiny(tinymce.activeEditor.id);
-			});
-			ed.on('blur', function(ed) {
-				tinyMCE.triggerSave();
-			});
-		}
-	});
+      });
+      ed.on('blur', function(ed) {
+        tinyMCE.triggerSave();
+      });
+    }
+  });
 
-	function handleCounterTiny(id) {
-    let textarea = $('#'+id);
+  function handleCounterTiny(id) {
+    let textarea = $('#' + id);
     let counter = textarea.attr('counter');
     let counter_type = textarea.attr('counter_type');
-    let max = tinyMCE.activeEditor.getBody().textContent.length;
+    const editor = window.tinyMCE.get(id);
+    const max = editor.getBody() ? editor.getBody().textContent.length : 0;
 
-    textarea.parent().find('span.currentLength').text(max);
+    textarea
+      .parent()
+      .find('span.currentLength')
+      .text(max);
     if ('recommended' !== counter_type && max > counter) {
-      textarea.parent().find('span.maxLength').addClass('text-danger');
+      textarea
+        .parent()
+        .find('span.maxLength')
+        .addClass('text-danger');
     } else {
-      textarea.parent().find('span.maxLength').removeClass('text-danger');
+      textarea
+        .parent()
+        .find('span.maxLength')
+        .removeClass('text-danger');
     }
   }
 });

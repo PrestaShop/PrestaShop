@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 
 class OrderDiscountForViewing
 {
@@ -46,14 +46,14 @@ class OrderDiscountForViewing
     private $amountFormatted;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $amountRaw;
 
     public function __construct(
         int $orderCartRuleId,
         string $name,
-        Number $amountRaw,
+        DecimalNumber $amountRaw,
         string $amountFormatted
     ) {
         $this->orderCartRuleId = $orderCartRuleId;
@@ -87,9 +87,9 @@ class OrderDiscountForViewing
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getAmountRaw(): Number
+    public function getAmountRaw(): DecimalNumber
     {
         return $this->amountRaw;
     }

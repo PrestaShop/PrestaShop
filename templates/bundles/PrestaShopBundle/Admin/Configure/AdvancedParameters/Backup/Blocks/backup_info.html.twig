@@ -1,0 +1,54 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% block backup_info %}
+  <div class="alert alert-info" role="alert">
+    {% if isHostMode %}
+      <h4>{{ 'How to restore a database backup'|trans({}, 'Admin.Advparameters.Notification') }}</h4>
+      <p>{{ 'If you need to restore a database backup, we invite you to subscribe to a [1][2]technical support plan[/2][/1].'|trans({'[1]': '<strong>',  '[/1]': '</strong>', '[2]': '<a target="_blank" rel="noopener noreferrer nofollow" href="https://addons.prestashop.com/support/16298-support-essentiel-plan.html">', '[/2]': '</a>'}, 'Admin.Advparameters.Notification')|raw }}</p>
+      <p>{{ 'Our team will take care of restoring your database safely.'|trans({}, 'Admin.Advparameters.Notification') }}</p>
+      <br>
+      <p>{{ 'Why can\'t I restore it by myself?'|trans({}, 'Admin.Advparameters.Notification') }}</p>
+      <p>{{ 'Your shop is hosted by PrestaShop. Although you can create backup files here below, there are core settings you cannot access for security reasons, like the database management. Thus, only our team can proceed to a restoration.'|trans({}, 'Admin.Advparameters.Notification') }}</p>
+    {% else %}
+      <h4>{{ 'How to restore a database backup in 10 easy steps'|trans({}, 'Admin.Advparameters.Help') }}</h4>
+      <ol class="mb-0">
+        <li>{{ 'Set "Enable Shop" to "No" in the "Maintenance" page under the "Preferences" menu.'|trans({}, 'Admin.Advparameters.Help') }}</li>
+        <li>{{ 'Download the backup from the list below or from your FTP server (in the folder "admin/backups").'|trans({}, 'Admin.Advparameters.Help') }}</li>
+        <li>{{ 'Check the backup integrity: Look for errors, incomplete file, etc... Be sure to verify all of your data.'|trans({}, 'Admin.Advparameters.Help') }}</li>
+        <li>{{ 'Please ask your hosting provider for "phpMyAdmin" access to your database.'|trans({}, 'Admin.Advparameters.Help') }}</li>
+        <li>{{ 'Connect to "phpMyAdmin" and select your current database.'|trans({}, 'Admin.Advparameters.Help') }}</li>
+        <li>{{ 'Unless you enabled the "Drop existing tables" option, you must delete all tables from your current database.'|trans({}, 'Admin.Advparameters.Help') }}</li>
+        <li>{{ 'At the top of the screen, please select the "Import" tab'|trans({}, 'Admin.Advparameters.Help') }}</li>
+        <li>{{ 'Click on the "%phpmyadmin_browse_label%" button and select the backup file from your hard drive.'|trans({'%phpmyadmin_browse_label%': 'Browse'|trans({}, 'Admin.Actions')}, 'Admin.Advparameters.Help') }}</li>
+        <li>
+          {{ 'Check the maximum filesize allowed (e.g. Max: 16MB)'|trans({}, 'Admin.Advparameters.Help') }} <br>
+          {{ 'If your backup file exceeds this limit, contact your hosting provider for assistance. '|trans({}, 'Admin.Advparameters.Help') }}
+        </li>
+        <li>{{ 'Click on the "%phpmyadmin_go_label%" button and please wait patiently for the import process to conclude. This may take several minutes.'|trans({'%phpmyadmin_go_label%': 'Go'|trans({}, 'Admin.Actions')}, 'Admin.Advparameters.Help') }} <br></li>
+      </ol>
+    {% endif %}
+  </div>
+{% endblock %}

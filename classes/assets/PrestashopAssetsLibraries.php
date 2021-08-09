@@ -50,7 +50,7 @@ class PrestashopAssetsLibraries
     /**
      * Get Library files from name.
      *
-     * @param $name
+     * @param string $name
      *
      * @return bool|mixed
      */

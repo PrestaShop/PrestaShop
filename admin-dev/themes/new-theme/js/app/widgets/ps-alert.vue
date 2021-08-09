@@ -23,7 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div class="ps-alert alert" :class="classObject" role="alert">
+  <div
+    class="ps-alert alert"
+    :class="classObject"
+    role="alert"
+  >
     <button
       v-if="hasClose"
       type="button"
@@ -40,20 +44,32 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
+
   const ALERT_TYPE_INFO = 'ALERT_TYPE_INFO';
   const ALERT_TYPE_WARNING = 'ALERT_TYPE_WARNING';
   const ALERT_TYPE_DANGER = 'ALERT_TYPE_DANGER';
   const ALERT_TYPE_SUCCESS = 'ALERT_TYPE_SUCCESS';
 
-  export default {
+  export default Vue.extend({
     props: {
-      duration: false,
-      alertType: { type: String, required: true },
-      hasClose: { type: Boolean, required: true },
+      duration: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
+      alertType: {
+        type: String,
+        required: true,
+      },
+      hasClose: {
+        type: Boolean,
+        required: true,
+      },
     },
     computed: {
-      classObject() {
+      classObject(): Record<string, any> {
         return {
           'alert-info': this.alertType === ALERT_TYPE_INFO,
           'alert-warning': this.alertType === ALERT_TYPE_WARNING,
@@ -61,14 +77,14 @@
           'alert-success': this.alertType === ALERT_TYPE_SUCCESS,
         };
       },
-      isInfo() {
+      isInfo(): boolean {
         return this.alertType === ALERT_TYPE_INFO;
       },
     },
     methods: {
-      onClick() {
+      onClick(): void {
         this.$emit('closeAlert');
       },
     },
-  };
+  });
 </script>

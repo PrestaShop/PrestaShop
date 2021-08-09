@@ -1,5 +1,5 @@
-$(document).ready(function() {
-  var controller = new AdminModuleController();
+$(document).ready(() => {
+  const controller = new AdminModuleController();
   controller.init();
 });
 
@@ -7,8 +7,7 @@ $(document).ready(function() {
  * Module Admin Page Controller.
  * @constructor
  */
-var AdminModuleController = function() {
-
+const AdminModuleController = function () {
   this.currentDisplay = '';
   this.isCategoryGridDisplayed = false;
   this.currentTagsList = [];
@@ -119,13 +118,19 @@ var AdminModuleController = function() {
     this.getNotificationsCount();
   };
 
-  this.initFilterStatusDropdown = function() {
-    var self = this;
-    var body = $('body');
+  function currentCompare(a, b) {
+    if (a[key] < b[key]) return -1;
+    if (a[key] > b[key]) return 1;
+    return 0;
+  }
+
+  this.initFilterStatusDropdown = function () {
+    const self = this;
+    const body = $('body');
     body.on('click', this.statusItemSelector, function () {
       // Get data from li DOM input
-      self.currentRefStatus = parseInt($(this).attr('data-status-ref'));
-      var statusSelectedDisplayName = $(this).find('a:first').text();
+      self.currentRefStatus = parseInt($(this).attr('data-status-ref'), 10);
+      const statusSelectedDisplayName = $(this).find('a:first').text();
       // Change dropdown label to set it to the current status' displayname
       $(self.statusSelectorLabelSelector).text(statusSelectedDisplayName);
       $(self.statusResetBtnSelector).show();
@@ -134,7 +139,7 @@ var AdminModuleController = function() {
     });
 
     body.on('click', this.statusResetBtnSelector, function () {
-      var text = $(this).find('a').text();
+      const text = $(this).find('a').text();
       $(self.statusSelectorLabelSelector).text(text);
       $(this).hide();
       self.currentRefStatus = null;
@@ -142,99 +147,97 @@ var AdminModuleController = function() {
     });
   };
 
-  this.initBOEventRegistering = function() {
+  this.initBOEventRegistering = function () {
     BOEvent.on('Module Disabled', this.onModuleDisabled, this);
     BOEvent.on('Module Uninstalled', this.updateTotalResults, this);
   };
 
-  this.onModuleDisabled = function() {
-    var moduleItemSelector = this.getModuleItemSelector();
-    var self = this;
+  this.onModuleDisabled = function () {
+    const moduleItemSelector = this.getModuleItemSelector();
+    const self = this;
 
-    $('.modules-list').each(function() {
-      var totalForCurrentSelector = $(this).find(moduleItemSelector+':visible').length;
+    $('.modules-list').each(function () {
+      const totalForCurrentSelector = $(this).find(`${moduleItemSelector}:visible`).length;
       self.updateTotalResults(totalForCurrentSelector, $(this));
     });
-
   };
 
-  this.initPlaceholderMechanism = function() {
-    var self = this;
+  this.initPlaceholderMechanism = function () {
+    const self = this;
 
     if ($(this.placeholderGlobalSelector).length) {
       this.ajaxLoadPage();
     }
 
     // Retry loading mechanism
-    $('body').on('click', this.placeholderFailureRetryBtnSelector, function() {
+    $('body').on('click', this.placeholderFailureRetryBtnSelector, () => {
       $(self.placeholderFailureGlobalSelector).fadeOut();
       $(self.placeholderGlobalSelector).fadeIn();
       self.ajaxLoadPage();
     });
   };
 
-  this.ajaxLoadPage = function() {
-    var self = this;
+  this.ajaxLoadPage = function () {
+    const self = this;
 
     $.ajax({
       method: 'GET',
-      url: moduleURLs.catalogRefresh
-    }).done(function (response) {
+      url: moduleURLs.catalogRefresh,
+    }).done((response) => {
       if (response.status === true) {
         if (typeof response.domElements === 'undefined') response.domElements = null;
         if (typeof response.msg === 'undefined') response.msg = null;
 
-        var stylesheet = document.styleSheets[0];
-        var stylesheetRule = '{display: none}';
-        var moduleGlobalSelector = '.modules-list';
-        var moduleSortingSelector = '.module-sorting-menu';
-        var requiredSelectorCombination = moduleGlobalSelector + ', ' + moduleSortingSelector;
+        const stylesheet = document.styleSheets[0];
+        const stylesheetRule = '{display: none}';
+        const moduleGlobalSelector = '.modules-list';
+        const moduleSortingSelector = '.module-sorting-menu';
+        const requiredSelectorCombination = `${moduleGlobalSelector}, ${moduleSortingSelector}`;
 
         if (stylesheet.insertRule) {
           stylesheet.insertRule(
-            requiredSelectorCombination +
-            stylesheetRule, stylesheet.cssRules.length
+            requiredSelectorCombination
+            + stylesheetRule, stylesheet.cssRules.length,
           );
         } else if (stylesheet.addRule) {
           stylesheet.addRule(
             requiredSelectorCombination,
             stylesheetRule,
-            -1
+            -1,
           );
         }
 
-        $(self.placeholderGlobalSelector).fadeOut(800, function() {
-          $.each(response.domElements, function(index, element){
+        $(self.placeholderGlobalSelector).fadeOut(800, () => {
+          $.each(response.domElements, (index, element) => {
             $(element.selector).append(element.content);
           });
-          $(moduleGlobalSelector).fadeIn(800).css('display','flex');
+          $(moduleGlobalSelector).fadeIn(800).css('display', 'flex');
           $(moduleSortingSelector).fadeIn(800);
           $('[data-toggle="popover"]').popover();
           self.initCurrentDisplay();
           self.fetchModulesList();
         });
-
       } else {
-        $(self.placeholderGlobalSelector).fadeOut(800, function() {
+        $(self.placeholderGlobalSelector).fadeOut(800, () => {
           $(self.placeholderFailureMsgSelector).text(response.msg);
           $(self.placeholderFailureGlobalSelector).fadeIn(800);
         });
       }
-    }).fail(function(response) {
-      $(self.placeholderGlobalSelector).fadeOut(800, function() {
+    }).fail((response) => {
+      $(self.placeholderGlobalSelector).fadeOut(800, () => {
         $(self.placeholderFailureMsgSelector).text(response.statusText);
         $(self.placeholderFailureGlobalSelector).fadeIn(800);
       });
     });
   };
 
-  this.fetchModulesList = function() {
-    var self = this;
+  this.fetchModulesList = function () {
+    const self = this;
     self.modulesList = [];
-    $(".modules-list").each(function() {
-      var container = $(this);
-      container.find(".module-item").each(function() {
-        var $this = $(this);
+    $('.modules-list').each(function () {
+      const container = $(this);
+      container.find('.module-item').each(function () {
+        const $this = $(this);
         self.modulesList.push({
           domObject: $this,
           id: $this.attr('data-id'),
@@ -249,10 +252,10 @@ var AdminModuleController = function() {
           categories: $this.attr('data-categories').toLowerCase(),
           type: $this.attr('data-type'),
           price: parseFloat($this.attr('data-price')),
-          active: parseInt($this.attr('data-active')),
+          active: parseInt($this.attr('data-active'), 10),
           access: $this.attr('data-last-access'),
           display: $this.hasClass('module-item-list') ? 'list' : 'grid',
-          container: container
+          container,
         });
         $this.remove();
       });
@@ -263,28 +266,23 @@ var AdminModuleController = function() {
     $('body').trigger('moduleCatalogLoaded');
   };
 
-  this.updateModuleVisibility = function() {
-    var self = this;
+  this.updateModuleVisibility = function () {
+    const self = this;
 
     if (self.currentSorting) {
       // Modules sorting
-      var order = 'asc';
-      var key = self.currentSorting;
+      let order = 'asc';
+      let key = self.currentSorting;
+
       if (key.split('-').length > 1) {
         key = key.split('-')[0];
       }
-      if (self.currentSorting.indexOf('-desc') != -1) {
+      if (self.currentSorting.indexOf('-desc') !== -1) {
         order = 'desc';
       }
 
-      function currentCompare(a, b) {
-        if (a[key] < b[key]) return -1;
-        if (a[key] > b[key]) return 1;
-        return 0;
-      }
-
       self.modulesList.sort(currentCompare);
-      if (order == 'desc') {
+      if (order === 'desc') {
         self.modulesList.reverse();
       }
     }
@@ -292,10 +290,12 @@ var AdminModuleController = function() {
     $('.modules-list').html('');
 
     // Modules visibility management
-    for (var i = 0; i < this.modulesList.length; i++) {
-      var currentModule = this.modulesList[i];
-      if (currentModule.display == this.currentDisplay) {
-        var isVisible = true;
+    for (let i = 0; i < this.modulesList.length; i += 1) {
+      const currentModule = this.modulesList[i];
+
+      if (currentModule.display === this.currentDisplay) {
+        let isVisible = true;
+
         if (this.currentRefCategory !== null) {
           isVisible &= currentModule.categories === this.currentRefCategory;
         }
@@ -303,14 +303,15 @@ var AdminModuleController = function() {
           isVisible &= currentModule.active === this.currentRefStatus;
         }
         if (self.currentTagsList.length) {
-          var tagExists = false;
-          $.each(self.currentTagsList, function(index, value) {
+          let tagExists = false;
+          $.each(self.currentTagsList, (index, value) => {
+            // eslint-disable-next-line
             value = value.toLowerCase();
             tagExists |= (
-              currentModule.name.indexOf(value) != -1
-              || currentModule.description.indexOf(value) != -1
-              || currentModule.author.indexOf(value) != -1
-              || currentModule.techName.indexOf(value) != -1
+              currentModule.name.indexOf(value) !== -1
+              || currentModule.description.indexOf(value) !== -1
+              || currentModule.author.indexOf(value) !== -1
+              || currentModule.techName.indexOf(value) !== -1
             );
           });
           isVisible &= tagExists;
@@ -321,38 +322,40 @@ var AdminModuleController = function() {
       }
     }
     if (this.currentTagsList.length) {
-        if ('grid' === this.currentDisplay) {
-            $(".modules-list").append(this.addonsCardGrid);
-        } else {
-            $(".modules-list").append(this.addonsCardList);
-        }
+      if (this.currentDisplay === 'grid') {
+        $('.modules-list').append(this.addonsCardGrid);
+      } else {
+        $('.modules-list').append(this.addonsCardList);
+      }
     }
 
     this.updateTotalResults();
   };
 
-  this.initPageChangeProtection = function() {
-    var self = this;
+  this.initPageChangeProtection = function () {
+    const self = this;
 
-    $(window).on('beforeunload', function() {
+    // eslint-disable-next-line
+    $(window).on('beforeunload', () => {
       if (self.isUploadStarted === true) {
-        return "It seems some critical operation are running, are you sure you want to change page ? It might cause some unexepcted behaviors.";
+        // eslint-disable-next-line
+        return 'It seems some critical operation are running, are you sure you want to change page ? It might cause some unexepcted behaviors.';
       }
     });
   };
 
-  this.initBulkActions = function() {
-    var self = this;
-    var body = $('body');
+  this.initBulkActions = function () {
+    const self = this;
+    const body = $('body');
 
-    body.on('change', this.bulkActionDropDownSelector, function() {
-      if (0 === $(self.getBulkCheckboxesCheckedSelector()).length) {
-          $.growl.warning({message: translate_javascripts['Bulk Action - One module minimum']});
-          return;
+    body.on('change', this.bulkActionDropDownSelector, function () {
+      if ($(self.getBulkCheckboxesCheckedSelector()).length === 0) {
+        $.growl.warning({message: translate_javascripts['Bulk Action - One module minimum']});
+        return;
       }
       self.lastBulkAction = $(this).find(':checked').attr('value');
-      var modulesListString = self.buildBulkActionModuleList();
-      var actionString = $(this).find(':checked').text().toLowerCase();
+      const modulesListString = self.buildBulkActionModuleList();
+      const actionString = $(this).find(':checked').text().toLowerCase();
       $(self.bulkConfirmModalListSelector).html(modulesListString);
       $(self.bulkConfirmModalActionNameSelector).text(actionString);
 
@@ -362,7 +365,7 @@ var AdminModuleController = function() {
       $(self.bulkConfirmModalSelector).modal('show');
     });
 
-    body.on('click', this.bulkConfirmModalAckBtnSelector, function(event) {
+    body.on('click', this.bulkConfirmModalAckBtnSelector, (event) => {
       event.preventDefault();
       event.stopPropagation();
       $(self.bulkConfirmModalSelector).modal('hide');
@@ -370,16 +373,17 @@ var AdminModuleController = function() {
     });
   };
 
-  this.buildBulkActionModuleList = function() {
-    var checkBoxesSelector = this.getBulkCheckboxesCheckedSelector();
-    var moduleItemSelector = this.getModuleItemSelector();
-    var alreadyDoneFlag = 0;
-    var htmlGenerated = '';
+  this.buildBulkActionModuleList = function () {
+    const checkBoxesSelector = this.getBulkCheckboxesCheckedSelector();
+    const moduleItemSelector = this.getModuleItemSelector();
+    let alreadyDoneFlag = 0;
+    let htmlGenerated = '';
 
-    $(checkBoxesSelector).each(function() {
-      if (alreadyDoneFlag != 10) {
-        var currentElement = $(this).parents(moduleItemSelector);
-        htmlGenerated += '- ' + currentElement.attr('data-name') + '<br/>';
+    // eslint-disable-next-line
+    $(checkBoxesSelector).each(function () {
+      if (alreadyDoneFlag !== 10) {
+        const currentElement = $(this).parents(moduleItemSelector);
+        htmlGenerated += `- ${currentElement.attr('data-name')}<br/>`;
         alreadyDoneFlag += 1;
       } else {
         // Break each
@@ -392,14 +396,14 @@ var AdminModuleController = function() {
   };
 
   this.initAddonsConnect = function () {
-    var self = this;
+    const self = this;
 
     // Make addons connect modal ready to be clicked
-    if ($(this.addonsConnectModalBtnSelector).attr('href') == '#') {
+    if ($(this.addonsConnectModalBtnSelector).attr('href') === '#') {
       $(this.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
       $(this.addonsConnectModalBtnSelector).attr('data-target', this.addonsConnectModalSelector);
     }
-    if ($(this.addonsLogoutModalBtnSelector).attr('href') == '#') {
+    if ($(this.addonsLogoutModalBtnSelector).attr('href') === '#') {
       $(this.addonsLogoutModalBtnSelector).attr('data-toggle', 'modal');
       $(this.addonsLogoutModalBtnSelector).attr('data-target', this.addonsLogoutModalSelector);
     }
@@ -412,13 +416,13 @@ var AdminModuleController = function() {
         url: $(this).attr('action'),
         dataType: 'json',
         data: $(this).serialize(),
-        beforeSend: function() {
+        beforeSend() {
           $(self.addonsLoginButtonSelector).show();
           $("button.btn[type='submit']", self.addonsConnectForm).hide();
-        }
-      }).done(function (response) {
-        var responseCode = response.success;
-        var responseMsg = response.message;
+        },
+      }).done((response) => {
+        const responseCode = response.success;
+        const responseMsg = response.message;
 
         if (responseCode === 1) {
           location.reload();
@@ -432,22 +436,23 @@ var AdminModuleController = function() {
   };
 
   this.initAddModuleAction = function () {
-    var addModuleButton = $(this.addonsImportModalBtnSelector);
+    const addModuleButton = $(this.addonsImportModalBtnSelector);
     addModuleButton.attr('data-toggle', 'modal');
     addModuleButton.attr('data-target', this.dropZoneModalSelector);
   };
 
   this.initDropzone = function () {
-    var self = this;
-    var body = $('body');
-    var dropzone = $('.dropzone');
-    
+    const self = this;
+    const body = $('body');
+    const dropzone = $('.dropzone');
+
     // Reset modal when click on Retry in case of failure
-    body.on('click', this.moduleImportFailureRetrySelector, function() {
-      $(self.moduleImportSuccessSelector + ', ' + self.moduleImportFailureSelector + ', ' + self.moduleImportProcessingSelector).fadeOut(function() {
+    body.on('click', this.moduleImportFailureRetrySelector, () => {
+      // eslint-disable-next-line
+      $(`${self.moduleImportSuccessSelector}, ${self.moduleImportFailureSelector}, ${self.moduleImportProcessingSelector}`).fadeOut(() => {
         // Added timeout for a better render of animation and avoid to have displayed at the same time
-        setTimeout(function() {
-          $(self.moduleImportStartSelector).fadeIn(function() {
+        setTimeout(() => {
+          $(self.moduleImportStartSelector).fadeIn(() => {
             $(self.moduleImportFailureMsgDetailsSelector).hide();
             $(self.moduleImportSuccessConfigureBtnSelector).hide();
             dropzone.removeAttr('style');
@@ -457,8 +462,8 @@ var AdminModuleController = function() {
     });
 
     // Reinit modal on exit, but check if not already processing something
-    body.on('hidden.bs.modal', this.dropZoneModalSelector, function () {
-      $(self.moduleImportSuccessSelector + ', ' + self.moduleImportFailureSelector).hide();
+    body.on('hidden.bs.modal', this.dropZoneModalSelector, () => {
+      $(`${self.moduleImportSuccessSelector}, ${self.moduleImportFailureSelector}`).hide();
       $(self.moduleImportStartSelector).show();
       dropzone.removeAttr('style');
       $(self.moduleImportFailureMsgDetailsSelector).hide();
@@ -469,25 +474,27 @@ var AdminModuleController = function() {
 
     // Change the way Dropzone.js lib handle file input trigger
     body.on(
-      'click', '.dropzone:not('+this.moduleImportSelectFileManualSelector+', '+this.moduleImportSuccessConfigureBtnSelector+')',
-      function(event, manual_select) {
+      'click',
+      `.dropzone:not(${this.moduleImportSelectFileManualSelector}, ${this.moduleImportSuccessConfigureBtnSelector})`,
+      (event, manualSelect) => {
         // if click comes from .module-import-start-select-manual, stop everything
-        if (typeof manual_select == "undefined") {
+        if (typeof manualSelect === 'undefined') {
           event.stopPropagation();
           event.preventDefault();
         }
-      }
+      },
     );
 
-    body.on('click', this.moduleImportSelectFileManualSelector, function(event) {
+    body.on('click', this.moduleImportSelectFileManualSelector, (event) => {
       event.stopPropagation();
       event.preventDefault();
-      // Trigger click on hidden file input, and pass extra data to .dropzone click handler fro it to notice it comes from here
-      $('.dz-hidden-input').trigger('click', ["manual_select"]);
+      // Trigger click on hidden file input, and pass extra data
+      // to .dropzone click handler fro it to notice it comes from here
+      $('.dz-hidden-input').trigger('click', ['manual_select']);
     });
 
     // Handle modal closure
-    body.on('click', this.moduleImportModalCloseBtn, function() {
+    body.on('click', this.moduleImportModalCloseBtn, () => {
       if (self.isUploadStarted === true) {
         // TODO: Display tooltip saying you can't escape at this stage
       } else {
@@ -496,19 +503,19 @@ var AdminModuleController = function() {
     });
 
     // Fix issue on click configure button
-    body.on('click', this.moduleImportSuccessConfigureBtnSelector, function(event) {
+    body.on('click', this.moduleImportSuccessConfigureBtnSelector, function (event) {
       event.stopPropagation();
       event.preventDefault();
       window.location = $(this).attr('href');
     });
 
     // Open failure message details box
-    body.on('click', this.moduleImportFailureDetailsBtnSelector, function() {
+    body.on('click', this.moduleImportFailureDetailsBtnSelector, () => {
       $(self.moduleImportFailureMsgDetailsSelector).slideDown();
     });
 
     // @see: dropzone.js
-    var dropzoneOptions = {
+    const dropzoneOptions = {
       url: moduleURLs.moduleImport,
       acceptedFiles: '.zip, .tar',
       // The name that will be used to transfer the file
@@ -518,19 +525,22 @@ var AdminModuleController = function() {
       addRemoveLinks: true,
       dictDefaultMessage: '',
       hiddenInputContainer: self.dropZoneImportZoneSelector,
-      timeout:0, // add unlimited timeout. Otherwise dropzone timeout is 30 seconds and if a module is long to install, it is not possible to install the module.
-      addedfile: function() {
+      // add unlimited timeout. Otherwise dropzone timeout is 30 seconds and if a module is long to install,
+      // it is not possible to install the module.
+      timeout: 0,
+      addedfile() {
         self.animateStartUpload();
       },
-      processing: function () {
+      processing() {
         // Leave it empty since we don't require anything while processing upload
       },
-      error: function (file, message) {
+      error(file, message) {
         self.displayOnUploadError(message);
       },
-      complete: function (file) {
+      complete(file) {
         if (file.status !== 'error') {
-          var responseObject = jQuery.parseJSON(file.xhr.response);
+          const responseObject = jQuery.parseJSON(file.xhr.response);
+
           if (typeof responseObject.is_configurable === 'undefined') responseObject.is_configurable = null;
           if (typeof responseObject.module_name === 'undefined') responseObject.module_name = null;
 
@@ -538,102 +548,100 @@ var AdminModuleController = function() {
         }
         // State that we have finish the process to unlock some actions
         self.isUploadStarted = false;
-      }
+      },
     };
     dropzone.dropzone($.extend(dropzoneOptions));
-    
-    this.animateStartUpload = function() {
-        // State that we start module upload
-        self.isUploadStarted = true;
-        $(self.moduleImportStartSelector).hide(0);
-        dropzone.css('border', 'none');
-        $(self.moduleImportProcessingSelector).fadeIn();
+
+    this.animateStartUpload = function () {
+      // State that we start module upload
+      self.isUploadStarted = true;
+      $(self.moduleImportStartSelector).hide(0);
+      dropzone.css('border', 'none');
+      $(self.moduleImportProcessingSelector).fadeIn();
     };
-    
-    this.animateEndUpload = function(callback) {
-        $(self.moduleImportProcessingSelector).finish().fadeOut(callback);
+
+    this.animateEndUpload = function (callback) {
+      $(self.moduleImportProcessingSelector).finish().fadeOut(callback);
     };
-    
+
     /**
      * Method to call for upload modal, when the ajax call went well.
-     * 
+     *
      * @param object result containing the server response
      */
-    this.displayOnUploadDone = function(result) {
-        var self = this;
-        self.animateEndUpload(function() {
-            if (result.status === true) {
-              if (result.is_configurable === true) {
-                var configureLink = moduleURLs.configurationPage.replace('1', result.module_name);
-                $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
-                $(self.moduleImportSuccessConfigureBtnSelector).show();
-              }
-              $(self.moduleImportSuccessSelector).fadeIn();
-            } else if (typeof result.confirmation_subject !== 'undefined') {
-                self.displayPrestaTrustStep(result);
-            } else {
-              $(self.moduleImportFailureMsgDetailsSelector).html(result.msg);
-              $(self.moduleImportFailureSelector).fadeIn();
-            }
-          });
+    this.displayOnUploadDone = function (result) {
+      const that = this;
+      that.animateEndUpload(() => {
+        if (result.status === true) {
+          if (result.is_configurable === true) {
+            const configureLink = moduleURLs.configurationPage.replace('1', result.module_name);
+            $(that.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
+            $(that.moduleImportSuccessConfigureBtnSelector).show();
+          }
+          $(that.moduleImportSuccessSelector).fadeIn();
+        } else if (typeof result.confirmation_subject !== 'undefined') {
+          that.displayPrestaTrustStep(result);
+        } else {
+          $(that.moduleImportFailureMsgDetailsSelector).html(result.msg);
+          $(that.moduleImportFailureSelector).fadeIn();
+        }
+      });
     };
 
     /**
      * Method to call for upload modal, when the ajax call went wrong or when the action requested could not
      * succeed for some reason.
-     * 
+     *
      * @param string message explaining the error.
      */
-    this.displayOnUploadError = function(message) {
-        self.animateEndUpload(function() {
-            $(self.moduleImportFailureMsgDetailsSelector).html(message);
-            $(self.moduleImportFailureSelector).fadeIn();
-        });
+    this.displayOnUploadError = function (message) {
+      self.animateEndUpload(() => {
+        $(self.moduleImportFailureMsgDetailsSelector).html(message);
+        $(self.moduleImportFailureSelector).fadeIn();
+      });
     };
 
     /**
      * If PrestaTrust needs to be confirmed, we ask for the confirmation modal content and we display it in the
      * currently displayed one. We also generate the ajax call to trigger once we confirm we want to install
      * the module.
-     * 
+     *
      * @param Previous server response result
      */
     this.displayPrestaTrustStep = function (result) {
-          var self = this;
-          var modal = module_card_controller.replacePrestaTrustPlaceholders(result);
-          var moduleName = result.module.attributes.name;
-          $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
-          $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
-          $(this.dropZoneModalFooterSelector).find(".pstrust-install").off('click').on('click', function() {
-            
-            $(self.moduleImportConfirmSelector).hide();
-            $(self.dropZoneModalFooterSelector).html('');
-            self.animateStartUpload();
-            
-            // Install ajax call
-            $.post(result.module.attributes.urls.install, { 'actionParams[confirmPrestaTrust]': "1"})
-              .done(function(data) {
-                self.displayOnUploadDone(data[moduleName]);
-              })
-              .fail(function(data) {
-                self.displayOnUploadError(data[moduleName]);
-              })
-              .always(function() {
-                  self.isUploadStarted = false;
-              });
+      const that = this;
+      const modal = module_card_controller.replacePrestaTrustPlaceholders(result);
+      const moduleName = result.module.attributes.name;
+      $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
+      $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
+      $(this.dropZoneModalFooterSelector).find('.pstrust-install').off('click').on('click', () => {
+        $(that.moduleImportConfirmSelector).hide();
+        $(that.dropZoneModalFooterSelector).html('');
+        that.animateStartUpload();
+
+        // Install ajax call
+        $.post(result.module.attributes.urls.install, {'actionParams[confirmPrestaTrust]': '1'})
+          .done((data) => {
+            that.displayOnUploadDone(data[moduleName]);
+          })
+          .fail((data) => {
+            that.displayOnUploadError(data[moduleName]);
+          })
+          .always(() => {
+            that.isUploadStarted = false;
           });
+      });
     };
   };
 
   this.getBulkCheckboxesSelector = function () {
-    return this.currentDisplay == 'grid'
+    return this.currentDisplay === 'grid'
       ? this.bulkActionCheckboxGridSelector
       : this.bulkActionCheckboxListSelector;
   };
 
-
   this.getBulkCheckboxesCheckedSelector = function () {
-    return this.currentDisplay == 'grid'
+    return this.currentDisplay === 'grid'
       ? this.checkedBulkActionGridSelector
       : this.checkedBulkActionListSelector;
   };
@@ -643,70 +651,75 @@ var AdminModuleController = function() {
   };
 
   this.getModuleItemSelector = function () {
-    return this.currentDisplay == 'grid'
+    return this.currentDisplay === 'grid'
       ? this.moduleItemGridSelector
       : this.moduleItemListSelector;
   };
-  
+
   /**
    * Get the module notifications count and displays it as a badge on the notification tab
    * @return void
    */
   this.getNotificationsCount = function () {
-    var urlToCall = moduleURLs.notificationsCount;
+    const urlToCall = moduleURLs.notificationsCount;
 
     $.getJSON(
-        urlToCall,
-        this.updateNotificationsCount
-    ).fail(function() {
-        console.error('Could not retrieve module notifications count.');
+      urlToCall,
+      this.updateNotificationsCount,
+    ).fail(() => {
+      console.error('Could not retrieve module notifications count.');
     });
   };
-  
-  this.updateNotificationsCount = function(badge) {
-    var destinationTabs = {
-        'to_configure': $("#subtab-AdminModulesNotifications"),
-        'to_update': $("#subtab-AdminModulesUpdates"),
+
+  this.updateNotificationsCount = function (badge) {
+    const destinationTabs = {
+      to_configure: $('#subtab-AdminModulesNotifications'),
+      to_update: $('#subtab-AdminModulesUpdates'),
     };
-    
-    for (var key in destinationTabs) {
-        if (destinationTabs[key].length === 0) {
-            continue;
-        }
-        destinationTabs[key].find('.notification-counter').text(badge[key]);
-    };
+
+    // eslint-disable-next-line
+    for (const key in destinationTabs) {
+      if (destinationTabs[key].length === 0) {
+        // eslint-disable-next-line
+        continue;
+      }
+      destinationTabs[key].find('.notification-counter').text(badge[key]);
+    }
   };
 
   this.initAddonsSearch = function () {
-    var self = this;
-    $('body').on('click', this.addonItemGridSelector+', '+this.addonItemListSelector, function () {
-      var searchQuery = '';
+    const self = this;
+    $('body').on('click', `${this.addonItemGridSelector}, ${this.addonItemListSelector}`, () => {
+      let searchQuery = '';
+
       if (self.currentTagsList.length) {
         searchQuery = encodeURIComponent(self.currentTagsList.join(' '));
       }
-      var hrefUrl = self.baseAddonsUrl+'search.php?search_query='+searchQuery;
+      const hrefUrl = `${self.baseAddonsUrl}search.php?search_query=${searchQuery}`;
       window.open(hrefUrl, '_blank');
     });
   };
 
   this.initCategoriesGrid = function () {
+    // eslint-disable-next-line
     if (typeof refMenu === 'undefined') var refMenu = null;
-    var self = this;
+    const self = this;
 
+    // eslint-disable-next-line
     $('body').on('click', this.categoryGridItemSelector, function (event) {
       event.stopPropagation();
       event.preventDefault();
-      var refCategory = $(this).attr('data-category-ref');
+      const refCategory = $(this).attr('data-category-ref');
 
       // In case we have some tags we need to reset it !
       if (self.currentTagsList.length) {
         self.pstaggerInput.resetTags(false);
         self.currentTagsList = [];
       }
-      var menuCategoryToTrigger = $(self.categoryItemSelector+'[data-category-ref="' + refCategory + '"]');
+      const menuCategoryToTrigger = $(`${self.categoryItemSelector}[data-category-ref="${refCategory}"]`);
 
       if (!menuCategoryToTrigger.length) {
-        console.warn('No category with ref ('+refMenu+') seems to exist!');
+        console.warn(`No category with ref (${refMenu}) seems to exist!`);
         return false;
       }
 
@@ -717,84 +730,90 @@ var AdminModuleController = function() {
       }
 
       // Trigger click on right category
-      $(self.categoryItemSelector+'[data-category-ref="'+refCategory+'"]').click();
+      $(`${self.categoryItemSelector}[data-category-ref="${refCategory}"]`).click();
     });
   };
 
-  this.initCurrentDisplay = function() {
+  this.initCurrentDisplay = function () {
     if (this.currentDisplay === '') {
       this.currentDisplay = 'list';
     } else {
       this.currentDisplay = 'grid';
     }
-  }
+  };
 
   this.initSortingDropdown = function () {
-    var self = this;
+    const self = this;
 
     self.currentSorting = $(this.moduleSortingDropdownSelector).find(':checked').attr('value');
 
-    $('body').on('change', this.moduleSortingDropdownSelector, function() {
+    $('body').on('change', this.moduleSortingDropdownSelector, function () {
       self.currentSorting = $(this).find(':checked').attr('value');
       self.updateModuleVisibility();
     });
   };
 
-  this.doBulkAction = function(requestedBulkAction) {
+  // eslint-disable-next-line
+  this.doBulkAction = function (requestedBulkAction) {
     // This object is used to check if requested bulkAction is available and give proper
     // url segment to be called for it
-    var forceDeletion = $('#force_bulk_deletion').prop('checked');
+    const forceDeletion = $('#force_bulk_deletion').prop('checked');
 
-    var bulkActionToUrl = {
+    const bulkActionToUrl = {
       'bulk-uninstall': 'uninstall',
       'bulk-disable': 'disable',
       'bulk-enable': 'enable',
       'bulk-disable-mobile': 'disable_mobile',
       'bulk-enable-mobile': 'enable_mobile',
-      'bulk-reset': 'reset'
+      'bulk-reset': 'reset',
     };
 
     // Note no grid selector used yet since we do not needed it at dev time
     // Maybe useful to implement this kind of things later if intended to
     // use this functionality elsewhere but "manage my module" section
-    if (typeof bulkActionToUrl[requestedBulkAction] === "undefined") {
-      $.growl.error({message: translate_javascripts['Bulk Action - Request not found'].replace('[1]', requestedBulkAction)});
+    if (typeof bulkActionToUrl[requestedBulkAction] === 'undefined') {
+      $.growl.error({
+        message: translate_javascripts['Bulk Action - Request not found']
+          .replace('[1]', requestedBulkAction),
+      });
       return false;
     }
 
     // Loop over all checked bulk checkboxes
-    var bulkActionSelectedSelector = this.getBulkCheckboxesCheckedSelector();
+    const bulkActionSelectedSelector = this.getBulkCheckboxesCheckedSelector();
 
     if ($(bulkActionSelectedSelector).length > 0) {
-      var bulkModulesTechNames = [];
+      const bulkModulesTechNames = [];
       $(bulkActionSelectedSelector).each(function () {
-        var moduleTechName = $(this).attr('data-tech-name');
+        const moduleTechName = $(this).attr('data-tech-name');
         bulkModulesTechNames.push({
           techName: moduleTechName,
-          actionMenuObj: $(this).parent().next()
+          actionMenuObj: $(this).parent().next(),
         });
       });
 
-      $.each(bulkModulesTechNames, function (index, data) {
-        var actionMenuObj = data.actionMenuObj;
-        var moduleTechName = data.techName;
+      $.each(bulkModulesTechNames, (index, data) => {
+        const {actionMenuObj} = data;
+        const moduleTechName = data.techName;
 
-        var urlActionSegment = bulkActionToUrl[requestedBulkAction];
+        const urlActionSegment = bulkActionToUrl[requestedBulkAction];
 
+        // eslint-disable-next-line
         if (typeof module_card_controller !== 'undefined') {
           // We use jQuery to get the specific link for this action. If found, we send it.
-          var urlElement = $(module_card_controller.moduleActionMenuLinkSelector + urlActionSegment, actionMenuObj);
+          const urlElement = $(module_card_controller.moduleActionMenuLinkSelector + urlActionSegment, actionMenuObj);
 
           if (urlElement.length > 0) {
             module_card_controller.requestToController(urlActionSegment, urlElement, forceDeletion);
           } else {
-            $.growl.error({message: translate_javascripts["Bulk Action - Request not available for module"]
-                        .replace('[1]', urlActionSegment)
-                        .replace('[2]', moduleTechName)});
+            $.growl.error({
+              message: translate_javascripts['Bulk Action - Request not available for module']
+                .replace('[1]', urlActionSegment)
+                .replace('[2]', moduleTechName),
+            });
           }
         }
       });
-
     } else {
       console.warn(translate_javascripts['Bulk Action - One module minimum']);
       return false;
@@ -802,35 +821,35 @@ var AdminModuleController = function() {
   };
 
   this.initActionButtons = function () {
-    $('body').on('click', this.moduleInstallBtnSelector, function(event) {
-      var $this = $(this);
-      var $next = $($this.next());
+    $('body').on('click', this.moduleInstallBtnSelector, function (event) {
+      const $this = $(this);
+      const $next = $($this.next());
       event.preventDefault();
       $this.hide();
       $next.show();
       $.ajax({
         url: $this.attr('data-url'),
-        dataType: 'json'
-      }).done(function () {
+        dataType: 'json',
+      }).done(() => {
         $next.fadeOut();
       });
     });
 
     // "Upgrade All" button handler
-    var that = this;
-    $('body').on('click', this.upgradeAllSource, function(event) {
-        event.preventDefault();
-        $(that.upgradeAllTargets).click();
+    const that = this;
+    $('body').on('click', this.upgradeAllSource, (event) => {
+      event.preventDefault();
+      $(that.upgradeAllTargets).click();
     });
   };
 
   this.initCategorySelect = function () {
-    var self = this;
-    var body = $('body');
+    const self = this;
+    const body = $('body');
     body.on('click', this.categoryItemSelector, function () {
       // Get data from li DOM input
       self.currentRefCategory = $(this).attr('data-category-ref').toLowerCase();
-      var categorySelectedDisplayName = $(this).attr('data-category-display-name');
+      const categorySelectedDisplayName = $(this).attr('data-category-display-name');
       // Change dropdown label to set it to the current category's displayname
       $(self.categorySelectorLabelSelector).text(categorySelectedDisplayName);
       $(self.categoryResetBtnSelector).show();
@@ -839,10 +858,10 @@ var AdminModuleController = function() {
     });
 
     body.on('click', this.categoryResetBtnSelector, function () {
-      var rawText = $(self.categorySelector).attr('aria-labelledby');
-      var upperFirstLetter = rawText.charAt(0).toUpperCase();
-      var removedFirstLetter = rawText.slice(1);
-      var originalText = upperFirstLetter + removedFirstLetter;
+      const rawText = $(self.categorySelector).attr('aria-labelledby');
+      const upperFirstLetter = rawText.charAt(0).toUpperCase();
+      const removedFirstLetter = rawText.slice(1);
+      const originalText = upperFirstLetter + removedFirstLetter;
       $(self.categorySelectorLabelSelector).text(originalText);
       $(this).hide();
       self.currentRefCategory = null;
@@ -850,54 +869,54 @@ var AdminModuleController = function() {
     });
   };
 
-  this.updateTotalResults = function() {
-
+  this.updateTotalResults = function () {
     // If there are some shortlist: each shortlist count the modules on the next container.
-    var $shortLists = $('.module-short-list');
+    const $shortLists = $('.module-short-list');
+
     if ($shortLists.length > 0) {
-      $shortLists.each(function() {
-        var $this = $(this);
+      $shortLists.each(function () {
+        const $this = $(this);
         updateText(
           $this.find('.module-search-result-wording'),
-          $this.next('.modules-list').find('.module-item').length
+          $this.next('.modules-list').find('.module-item').length,
         );
       });
 
       // If there is no shortlist: the wording directly update from the only module container.
     } else {
-      var modulesCount = $('.modules-list').find('.module-item').length;
+      const modulesCount = $('.modules-list').find('.module-item').length;
       updateText(
         $('.module-search-result-wording'),
-        modulesCount
+        modulesCount,
       );
 
-      $(this.addonItemGridSelector).toggle(modulesCount !== (this.modulesList.length/2));
-      $(this.addonItemListSelector).toggle(modulesCount !== (this.modulesList.length/2));
+      $(this.addonItemGridSelector).toggle(modulesCount !== (this.modulesList.length / 2));
+      $(this.addonItemListSelector).toggle(modulesCount !== (this.modulesList.length / 2));
       if (modulesCount === 0) {
         $('.module-addons-search-link').attr(
           'href',
-          this.baseAddonsUrl
-          + 'search.php?search_query='
-          + encodeURIComponent(this.currentTagsList.join(' '))
+          `${this.baseAddonsUrl
+          }search.php?search_query=${
+            encodeURIComponent(this.currentTagsList.join(' '))}`,
         );
       }
     }
 
     function updateText(element, value) {
-      var explodedText = element.text().split(' ');
+      const explodedText = element.text().split(' ');
       explodedText[0] = value;
       element.text(explodedText.join(' '));
     }
   };
 
-  this.initSearchBlock = function() {
-    var self = this;
+  this.initSearchBlock = function () {
+    const self = this;
     this.pstaggerInput = $('#module-search-bar').pstagger({
-      onTagsChanged: function(tagList) {
+      onTagsChanged(tagList) {
         self.currentTagsList = tagList;
         self.updateModuleVisibility();
       },
-      onResetTags: function() {
+      onResetTags() {
         self.currentTagsList = [];
         self.updateModuleVisibility();
       },
@@ -906,10 +925,10 @@ var AdminModuleController = function() {
       context: self,
     });
 
-    $('body').on('click', '.module-addons-search-link', function(event) {
+    $('body').on('click', '.module-addons-search-link', function (event) {
       event.preventDefault();
       event.stopPropagation();
-      var href = $(this).attr('href');
+      const href = $(this).attr('href');
       window.open(href, '_blank');
     });
   };
@@ -917,12 +936,13 @@ var AdminModuleController = function() {
   /**
    * Initialize display switching between List or Grid
    */
-  this.initSortingDisplaySwitch = function() {
-    var self = this;
+  this.initSortingDisplaySwitch = function () {
+    const self = this;
 
-    $('body').on('click', '.module-sort-switch', function() {
-      var switchTo = $(this).attr('data-switch');
-      var isAlreadyDisplayed = $(this).hasClass('active-display');
+    $('body').on('click', '.module-sort-switch', function () {
+      const switchTo = $(this).attr('data-switch');
+      const isAlreadyDisplayed = $(this).hasClass('active-display');
+
       if (typeof switchTo !== 'undefined' && isAlreadyDisplayed === false) {
         self.switchSortingDisplayTo(switchTo);
         self.currentDisplay = switchTo;
@@ -931,13 +951,13 @@ var AdminModuleController = function() {
   };
 
   this.switchSortingDisplayTo = function (switchTo) {
-    if (switchTo == 'grid' || switchTo == 'list') {
+    if (switchTo === 'grid' || switchTo === 'list') {
       $('.module-sort-switch').removeClass('module-sort-active');
-      $('#module-sort-'+switchTo).addClass('module-sort-active');
+      $(`#module-sort-${switchTo}`).addClass('module-sort-active');
       this.currentDisplay = switchTo;
       this.updateModuleVisibility();
     } else {
-      console.error('Can\'t switch to undefined display property "' + switchTo + '"');
+      console.error(`Can't switch to undefined display property "${switchTo}"`);
     }
   };
 };

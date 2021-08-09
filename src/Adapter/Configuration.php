@@ -125,12 +125,13 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         }
 
         $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId);
-        if ($hasKey || $isStrict) {
-            return $hasKey ? ConfigurationLegacy::get($key, null, $shopGroupId) : null;
+        if ($hasKey) {
+            return ConfigurationLegacy::get($key, null, $shopGroupId);
         }
 
-        if ($hasKey = ConfigurationLegacy::hasKey($key) || $isStrict) {
-            return $hasKey ? ConfigurationLegacy::get($key) : null;
+        $hasKey = ConfigurationLegacy::hasKey($key);
+        if ($hasKey) {
+            return ConfigurationLegacy::get($key);
         }
 
         return $default;
@@ -180,7 +181,10 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $key
+     * @param ShopConstraint|null $shopConstraint
+     *
+     * @return bool
      */
     public function has($key, ShopConstraint $shopConstraint = null)
     {
@@ -188,13 +192,17 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         $shopGroupId = $this->getShopGroupId($shopConstraint);
         $isStrict = $this->isStrict($shopConstraint);
 
-        $hasKey = ConfigurationLegacy::hasKey($key, null, null, $shopId);
+        if (ConfigurationLegacy::isLangKey($key)) {
+            return $this->hasMultilang($key, $shopId, $shopGroupId, $isStrict);
+        }
+
+        $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId, $shopId);
         if ($hasKey || $isStrict) {
             return $hasKey;
         }
 
         $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId);
-        if ($hasKey || $isStrict) {
+        if ($hasKey) {
             return $hasKey;
         }
 
@@ -202,11 +210,44 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     }
 
     /**
+     * Same as 'has' method, but for multilang configuration keys
+     *
+     * @param string $key
+     * @param int|null $shopId
+     * @param int|null $shopGroupId
+     * @param bool $isStrict
+     *
+     * @return bool
+     */
+    private function hasMultilang(string $key, ?int $shopId, ?int $shopGroupId, bool $isStrict): bool
+    {
+        $langIds = Language::getIDs(false, $shopId ?: false);
+
+        // check that we have a key for at least one of the used languages for given constraints
+        foreach ($langIds as $langId) {
+            if (ConfigurationLegacy::hasKey($key, $langId, $shopGroupId, $shopId)) {
+                return true;
+            }
+
+            // If strict mode is enable, only rely on the first check
+            if ($isStrict) {
+                continue;
+            }
+
+            if (ConfigurationLegacy::hasKey($key, $langId, $shopGroupId) || ConfigurationLegacy::hasKey($key, $langId)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Removes a configuration key.
      *
-     * @param type $key
+     * @param string $key
      *
-     * @return type
+     * @return self
      */
     public function remove($key)
     {
@@ -224,9 +265,9 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     /**
      * Unset configuration value.
      *
-     * @param $key
+     * @param string $key
      *
-     * @return $this
+     * @return void
      *
      * @throws \Exception
      *
@@ -270,7 +311,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      */
     public function combinationIsActive()
     {
-        return  Combination::isFeatureActive();
+        return Combination::isFeatureActive();
     }
 
     /**
@@ -337,5 +378,21 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     private function isStrict(?ShopConstraint $shopConstraint): bool
     {
         return null !== $shopConstraint ? $shopConstraint->isStrict() : false;
+    }
+
+    /**
+     * @param string $key
+     * @param ShopConstraint $shopConstraint
+     */
+    public function deleteFromContext(string $key, ShopConstraint $shopConstraint): void
+    {
+        $shopId = $shopConstraint->getShopId();
+        $shopGroupId = $shopConstraint->getShopGroupId();
+
+        ConfigurationLegacy::deleteFromContext(
+            $key,
+            !empty($shopGroupId) ? $shopGroupId->getValue() : null,
+            !empty($shopId) ? $shopId->getValue() : null
+        );
     }
 }

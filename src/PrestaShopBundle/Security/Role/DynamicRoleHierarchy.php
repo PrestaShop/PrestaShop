@@ -33,7 +33,13 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
  */
 class DynamicRoleHierarchy implements RoleHierarchyInterface
 {
-    public function getReachableRoles(array $roles)
+    /**
+     * @param array<string> $roles An array of directly assigned roles
+     *
+     * @return string[] An array of all reachable roles
+     */
+    public function getReachableRoleNames(array $roles)
     {
+        return [];
     }
 }

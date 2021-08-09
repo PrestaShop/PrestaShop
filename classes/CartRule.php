@@ -55,32 +55,73 @@ class CartRuleCore extends ObjectModel
     public $quantity = 1;
     public $quantity_per_user = 1;
     public $priority = 1;
+    /**
+     * @var bool
+     */
     public $partial_use = 1;
     public $code;
     public $minimum_amount;
+    /**
+     * @var bool
+     */
     public $minimum_amount_tax;
     public $minimum_amount_currency;
+    /**
+     * @var bool
+     */
     public $minimum_amount_shipping;
+    /**
+     * @var bool
+     */
     public $country_restriction;
+    /**
+     * @var bool
+     */
     public $carrier_restriction;
+    /**
+     * @var bool
+     */
     public $group_restriction;
+    /**
+     * @var bool
+     */
     public $cart_rule_restriction;
+    /**
+     * @var bool
+     */
     public $product_restriction;
+    /**
+     * @var bool
+     */
     public $shop_restriction;
+    /**
+     * @var bool
+     */
     public $free_shipping;
     public $reduction_percent;
     public $reduction_amount;
-
     /**
      * @var bool is this voucher value tax included (false = tax excluded value)
      */
     public $reduction_tax;
+    /**
+     * @var int
+     */
     public $reduction_currency;
     public $reduction_product;
+    /**
+     * @var bool
+     */
     public $reduction_exclude_special;
     public $gift_product;
     public $gift_product_attribute;
+    /**
+     * @var bool
+     */
     public $highlight;
+    /**
+     * @var bool
+     */
     public $active = 1;
     public $date_add;
     public $date_upd;
@@ -228,7 +269,7 @@ class CartRuleCore extends ObjectModel
         $r &= Db::getInstance()->delete('cart_rule_product_rule_value', 'NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule_product_rule`
 			WHERE `' . _DB_PREFIX_ . 'cart_rule_product_rule_value`.`id_product_rule` = `' . _DB_PREFIX_ . 'cart_rule_product_rule`.`id_product_rule`)');
 
-        return $r;
+        return (bool) $r;
     }
 
     /**
@@ -324,22 +365,18 @@ class CartRuleCore extends ObjectModel
         static $haveCartRuleToday = [];
 
         if (!isset($haveCartRuleToday[$idCustomer])) {
-            $sql = '(SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
-                'WHERE date_to >= "' . date('Y-m-d 00:00:00') .
-                '" AND date_to <= "' . date('Y-m-d 23:59:59') .
-                '" AND `id_customer` IN (0,' . (int) $idCustomer . ') LIMIT 1)';
+            $start_date = date('Y-m-d 00:00:00');
+            $end_date = date('Y-m-d 23:59:59');
+            $sql = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
+                'WHERE ((date_to >= "' . $start_date .
+                '" AND date_to <= "' . $end_date .
+                '") OR (date_from >= "' . $start_date .
+                '" AND date_from <= "' . $end_date .
+                '") OR (date_from < "' . $start_date .
+                '" AND date_to > "' . $end_date .
+                '")) AND `id_customer` IN (0,' . (int) $idCustomer . ')';
 
-            $sql .= 'UNION ALL (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
-                'WHERE date_from >= "' . date('Y-m-d 00:00:00') .
-                '" AND date_from <= "' . date('Y-m-d 23:59:59') .
-                '" AND `id_customer` IN (0,' . (int) $idCustomer . ') LIMIT 1)';
-
-            $sql .= 'UNION ALL (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
-                'WHERE date_from < "' . date('Y-m-d 00:00:00') .
-                '" AND date_to > "' . date('Y-m-d 23:59:59') .
-                '" AND `id_customer` IN (0,' . (int) $idCustomer . ') LIMIT 1) LIMIT 1';
-
-            $haveCartRuleToday[$idCustomer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+            $haveCartRuleToday[$idCustomer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
         }
 
         return !empty($haveCartRuleToday[$idCustomer]);
@@ -378,11 +415,19 @@ class CartRuleCore extends ObjectModel
         }
 
         $sql_part1 = '* FROM `' . _DB_PREFIX_ . 'cart_rule` cr
-				LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
+			LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
+
+        $sql_where = ' WHERE ((cr.`id_customer` = ' . (int) $id_customer . ' OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = "")))';
+
+        if ($includeGeneric && (int) $id_customer !== 0) {
+            $sql_where .= ' OR cr.`id_customer` = 0)';
+        } else {
+            $sql_where .= ')';
+        }
 
         $sql_part2 = ' AND NOW() BETWEEN cr.date_from AND cr.date_to
-				' . ($active ? 'AND cr.`active` = 1' : '') . '
-				' . ($inStock ? 'AND cr.`quantity` > 0' : '');
+            ' . ($active ? 'AND cr.`active` = 1' : '') . '
+            ' . ($inStock ? 'AND cr.`quantity` > 0' : '');
 
         if ($free_shipping_only) {
             $sql_part2 .= ' AND free_shipping = 1 AND carrier_restriction = 1';
@@ -392,13 +437,7 @@ class CartRuleCore extends ObjectModel
             $sql_part2 .= ' AND highlight = 1 AND code NOT LIKE "' . pSQL(CartRule::BO_ORDER_CODE_PREFIX) . '%"';
         }
 
-        $sql = '(SELECT SQL_NO_CACHE ' . $sql_part1 . '
-            WHERE (cr.`id_customer` = ' . (int) $id_customer . '
-            OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = "")))
-            ' . $sql_part2 . ')';
-        if ($includeGeneric && (int) $id_customer != 0) {
-            $sql .= ' UNION (SELECT ' . $sql_part1 . ' WHERE cr.`id_customer` = 0 ' . $sql_part2 . ')';
-        }
+        $sql = 'SELECT SQL_NO_CACHE ' . $sql_part1 . $sql_where . $sql_part2;
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
@@ -549,7 +588,7 @@ class CartRuleCore extends ObjectModel
         return (bool) Db::getInstance()->getValue('
 		SELECT `id_cart_rule`
 		FROM `' . _DB_PREFIX_ . 'cart_rule`
-		WHERE `code` = \'' . pSQL($code) . '\'');
+		WHERE `code` = \'' . pSQL($code) . '\'', false);
     }
 
     /**
@@ -668,9 +707,22 @@ class CartRuleCore extends ObjectModel
 			AND ocr.`id_cart_rule` = ' . (int) $this->id . '
 			AND ' . (int) Configuration::get('PS_OS_ERROR') . ' != o.`current_state`
 			');
-            // When checking the cart rules present in that cart the request result is accurate
-            // When we check if using the cart rule one more time is valid then we increment this value
-            if (!$alreadyInCart) {
+
+            if ($alreadyInCart) {
+                // Sometimes a cart rule is already in a cart, but the cart is not yet attached to an order (when logging
+                // in for example), these cart rules are not taken into account by the query above:
+                // so we count cart rules that are already linked to the current cart but not attached to an order yet.
+
+                $quantityUsed += (int) Db::getInstance()->getValue('
+                    SELECT count(*)
+                    FROM ps_cart_cart_rule ccr
+                    INNER JOIN ps_cart c ON c.id_cart = ccr.id_cart
+                    LEFT JOIN ps_orders o ON o.id_cart = c.id_cart
+                    WHERE c.id_customer = ' . $cart->id_customer . ' AND c.id_cart = ' . $cart->id . ' AND ccr.id_cart_rule = ' . (int) $this->id . ' AND o.id_order IS NULL
+                ');
+            } else {
+                // When checking the cart rules present in that cart the request result is accurate
+                // When we check if using the cart rule one more time is valid then we increment this value
                 ++$quantityUsed;
             }
             if ($quantityUsed > $this->quantity_per_user) {
@@ -795,7 +847,7 @@ class CartRuleCore extends ObjectModel
             $products = $cart->getProducts();
             $cart_rules = $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
 
-            foreach ($cart_rules as &$cart_rule) {
+            foreach ($cart_rules as $cart_rule) {
                 if ($cart_rule['gift_product']) {
                     foreach ($products as $key => &$product) {
                         if (empty($product['is_gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
@@ -1162,9 +1214,10 @@ class CartRuleCore extends ObjectModel
         }
 
         // Free shipping on selected carriers
+        $reduction_carrier = 0;
         if ($this->free_shipping && in_array($filter, [CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_SHIPPING])) {
             if (!$this->carrier_restriction) {
-                $reduction_value += $context->cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING, null === $package ? null : $package['products'], null === $package ? null : $package['id_carrier']);
+                $reduction_carrier += $context->cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING, null === $package ? null : $package['products'], null === $package ? null : $package['id_carrier']);
             } else {
                 $data = Db::getInstance()->executeS('
 					SELECT crc.id_cart_rule, c.id_carrier
@@ -1175,10 +1228,11 @@ class CartRuleCore extends ObjectModel
 
                 if ($data) {
                     foreach ($data as $cart_rule) {
-                        $reduction_value += $context->cart->getCarrierCost((int) $cart_rule['id_carrier'], $use_tax, $context->country);
+                        $reduction_carrier += $context->cart->getCarrierCost((int) $cart_rule['id_carrier'], $use_tax, $context->country);
                     }
                 }
             }
+            $reduction_value += $reduction_carrier;
         }
 
         if (in_array($filter, [CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_REDUCTION])) {
@@ -1274,7 +1328,10 @@ class CartRuleCore extends ObjectModel
                             if ($use_tax) {
                                 $infos = Product::getTaxesInformations($product, $context);
                                 $tax_rate = $infos['rate'] / 100;
+                                // As the price is tax excluded but ecotax included, we need to substract the ecotax before getting the price tax included
+                                $price -= $product['ecotax'];
                                 $price *= (1 + $tax_rate);
+                                $price += $product['ecotax'];
                             }
 
                             $selected_products_reduction += $price * $product['cart_quantity'];
@@ -1439,10 +1496,17 @@ class CartRuleCore extends ObjectModel
         Cache::store($cache_id, $reduction_value);
 
         // update virtual total values, for percentage reductions that might be applied later
+        // but remove the carrier as free shipping is not a real reduction
         if ($use_tax && !empty($context->virtualTotalTaxIncluded)) {
             $context->virtualTotalTaxIncluded -= $reduction_value;
+            if ($this->free_shipping) {
+                $context->virtualTotalTaxIncluded += $reduction_carrier;
+            }
         } elseif (!$use_tax && !empty($context->virtualTotalTaxExcluded)) {
             $context->virtualTotalTaxExcluded -= $reduction_value;
+            if ($this->free_shipping) {
+                $context->virtualTotalTaxExcluded += $reduction_carrier;
+            }
         }
 
         return $reduction_value;

@@ -75,6 +75,10 @@ class GeolocationOptionsType extends TranslatorAwareType
     {
         $builder
             ->add('geolocation_behaviour', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Geolocation behavior for restricted countries',
+                    'Admin.International.Feature'
+                ),
                 'choices' => [
                     $this->trans('Visitors cannot see your catalog.', 'Admin.International.Feature') => $this->configuration->get('_PS_GEOLOCATION_NO_CATALOG_'),
                     $this->trans('Visitors can see your catalog but cannot place an order.', 'Admin.International.Feature') => $this->configuration->get('_PS_GEOLOCATION_NO_ORDER_'),
@@ -82,6 +86,10 @@ class GeolocationOptionsType extends TranslatorAwareType
                 'choice_translation_domain' => false,
             ])
             ->add('geolocation_na_behaviour', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Geolocation behavior for other countries',
+                    'Admin.International.Feature'
+                ),
                 'choices' => [
                     $this->trans('All features are available', 'Admin.International.Feature') => '-1',
                     $this->trans('Visitors cannot see your catalog.', 'Admin.International.Feature') => $this->configuration->get('_PS_GEOLOCATION_NO_CATALOG_'),
@@ -90,6 +98,10 @@ class GeolocationOptionsType extends TranslatorAwareType
                 'choice_translation_domain' => false,
             ])
             ->add('geolocation_countries', MaterialChoiceTableType::class, [
+                'label' => $this->trans(
+                    'Select the countries from which your store is accessible',
+                    'Admin.International.Feature'
+                ),
                 'choices' => $this->countryChoices,
                 'choice_translation_domain' => false,
             ]);

@@ -103,7 +103,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_catalog_price_rules_index")
      * @DemoRestricted(redirectRoute="admin_catalog_price_rules_index")
      *
-     * @param $catalogPriceRuleId
+     * @param int|string $catalogPriceRuleId
      *
      * @return RedirectResponse
      */
@@ -152,7 +152,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Show & process catalog price rule creation.
      *
-     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -184,7 +184,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Show & process catalog price rule editing.
      *
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $catalogPriceRuleId
      * @param Request $request

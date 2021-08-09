@@ -28,18 +28,21 @@
     <div class="container-fluid">
       <Breadcrumb />
       <div class="title-row">
-        <h1 class="title">{{trans('head_title')}}</h1>
+        <h1 class="title">
+          {{ trans('head_title') }}
+        </h1>
       </div>
     </div>
     <Tabs />
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
   import Breadcrumb from './breadcrumb';
   import Tabs from './tabs';
 
-  const $ = global.$;
+  const {$} = window;
 
   function getOldHeaderToolbarButtons() {
     return $('.header-toolbar')
@@ -47,7 +50,7 @@
       .find('.toolbar-icons');
   }
 
-  export default {
+  export default Vue.extend({
     components: {
       Breadcrumb,
       Tabs,
@@ -63,5 +66,5 @@
       });
       $(document).trigger(event);
     },
-  };
+  });
 </script>

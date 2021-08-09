@@ -26,26 +26,27 @@
   <section class="stock-overview">
     <ProductsActions />
     <ProductsTable
-      :isLoading="isLoading"
+      :is-loading="isLoading"
       @sort="sort"
     />
   </section>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
   import ProductsActions from './products-actions';
   import ProductsTable from './products-table';
 
   const DEFAULT_SORT = 'asc';
 
-  export default {
+  export default Vue.extend({
     computed: {
-      isLoading() {
+      isLoading(): boolean {
         return this.$store.state.isLoading;
       },
     },
     methods: {
-      sort(sortDirection) {
+      sort(sortDirection: string): void {
         this.$emit('fetch', sortDirection);
       },
     },
@@ -61,5 +62,5 @@
       ProductsActions,
       ProductsTable,
     },
-  };
+  });
 </script>

@@ -35,9 +35,16 @@ npm install
 | DB_USER             | Login user of your MySql (default to **`root`**) |
 | DB_NAME             | Name of the MySql database (default to **`prestashop_db`**) |
 | DB_PASSWD           | Password for your MySql (default to **`empty`**) |
+### Maildev parameters
 
+| Parameter           | Description                                          |
+|---------------------|----------------------------------------------------- |
+| SMTP_SERVER             | The smtp server address for maildev (default to **`172.20.0.4`**)|
+| SMTP_PORT            | The smtp port for maildev (default to **`1025`**)|
 ### Playwright parameters
 
+| Parameter           | Description                                          |
+|---------------------|----------------------------------------------------- |
 | BROWSER             | Specific browser to launch for tests (default to **`chromium`**) |
 | HEADLESS            | Boolean to run tests in [headless mode](https://en.wikipedia.org/wiki/Headless_software) or not (default to **`true`**) |
 | SLOW_MO             | Integer to slow down Playwright operations by the specified amount of milliseconds (default to 5 milliseconds) |
@@ -66,7 +73,7 @@ HEADLESS=false URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" npm run sanit
 If you want to run all sanity tests "safely", you can use the Travis-specific command : this will add the Mocha `--bail` parameter which stops the campaign when the first test fails.
 
 ```bash
-npm run sanity-travis
+npm run sanity-tests-fast-fail
 ```
 
 ## Functional tests 
@@ -108,6 +115,22 @@ SetEnv _TOKEN_ disabled
 
 ```bash
 npm run linkchecker
+```
+
+## Upgrade test
+
+This test will upgrade PrestaShop version with the Autoupgrade module
+
+### Launch script
+Before testing it, you should install Prestashop version to upgrade from.
+
+If you want to run this test, you can use command **specific-test**
+
+#### With default values
+
+```bash
+# You need to set PS_VERSION to check after upgrade, default to 1.7.6.0 
+PS_VERSION=1.7.6.0 TEST_PATH="upgrade/upgradeShop" npm run specific-test
 ```
 
 Enjoy :wink: :v:

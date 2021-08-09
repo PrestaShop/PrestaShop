@@ -31,7 +31,7 @@ import nestedCategory from './nested-categories';
 import combination from './combination';
 import Serp from '../app/utils/serp/index';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   productHeader();
@@ -51,7 +51,7 @@ $(() => {
       watchedDescription: '.serp-watched-description',
       watchedMetaUrl: '.serp-watched-url:input',
     },
-    $('#product_form_preview_btn').data('seo-url')
+    $('#product_form_preview_btn').data('seo-url'),
   );
 
   // This is the only script for the module page so there is no specific file for it.

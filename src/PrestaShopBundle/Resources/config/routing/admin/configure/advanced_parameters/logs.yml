@@ -2,7 +2,7 @@ admin_logs_index:
     path: /
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:index'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\LogsController::indexAction'
         _legacy_controller: AdminLogs
         _legacy_link: AdminLogs
 
@@ -10,7 +10,7 @@ admin_logs_save_settings:
     path: /settings
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:saveSettings'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\LogsController::saveSettingsAction'
         _legacy_controller: AdminLogs
         _legacy_link: AdminLogs:update
 
@@ -18,7 +18,7 @@ admin_logs_delete_all:
     path: /delete-all
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:deleteAll'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\LogsController::deleteAllAction'
         _legacy_controller: AdminLogs
         _legacy_link: AdminLogs:deletelog
 
@@ -26,5 +26,5 @@ admin_logs_search:
     path: /
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:search'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\LogsController::searchAction'
         _legacy_controller: AdminLogs

@@ -58,9 +58,9 @@ class ValidateCore
     public static function isEmail($email)
     {
         return !empty($email) && (new EmailValidator())->isValid($email, new MultipleValidationWithAnd([
-                new RFCValidation(),
-                new SwiftMailerValidation(), // special validation to be compatible with Swift Mailer
-            ]));
+            new RFCValidation(),
+            new SwiftMailerValidation(), // special validation to be compatible with Swift Mailer
+        ]));
     }
 
     /**
@@ -628,7 +628,7 @@ class ValidateCore
     }
 
     /**
-     * Check for birthDate validity.
+     * Check for birthDate validity. To avoid year in two digits, disallow date < 200 years ago
      *
      * @param string $date birthdate to validate
      * @param string $format optional format
@@ -645,8 +645,10 @@ class ValidateCore
         if (!empty(DateTime::getLastErrors()['warning_count']) || false === $d) {
             return false;
         }
+        $twoHundredYearsAgo = new Datetime();
+        $twoHundredYearsAgo->sub(new DateInterval('P200Y'));
 
-        return $d->setTime(0, 0, 0)->getTimestamp() <= time();
+        return $d->setTime(0, 0, 0) <= new Datetime() && $d->setTime(0, 0, 0) >= $twoHundredYearsAgo;
     }
 
     /**
@@ -755,7 +757,7 @@ class ValidateCore
      *
      * @param string $way Keyword to validate
      *
-     * @return bool Validity is ok or not
+     * @return int Validity is ok or not
      */
     public static function isOrderWay($way)
     {
@@ -833,7 +835,7 @@ class ValidateCore
      */
     public static function isUnsignedInt($value)
     {
-        return (string) (int) $value === (string) $value && $value < 4294967296 && $value >= 0;
+        return (is_numeric($value) || is_string($value)) && (string) (int) $value === (string) $value && $value < 4294967296 && $value >= 0;
     }
 
     /**
@@ -1185,15 +1187,17 @@ class ValidateCore
     /**
      * @param array $ids
      *
-     * @return bool return true if the array contain only unsigned int value
+     * @return bool return true if the array contain only unsigned int value and not empty
      */
     public static function isArrayWithIds($ids)
     {
-        if (count($ids)) {
-            foreach ($ids as $id) {
-                if ($id == 0 || !Validate::isUnsignedInt($id)) {
-                    return false;
-                }
+        if (!is_array($ids) || count($ids) < 1) {
+            return false;
+        }
+
+        foreach ($ids as $id) {
+            if ($id == 0 || !Validate::isUnsignedInt($id)) {
+                return false;
             }
         }
 

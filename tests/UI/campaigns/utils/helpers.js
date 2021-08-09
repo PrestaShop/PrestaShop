@@ -143,4 +143,19 @@ module.exports = {
     this.interceptJsErrors(page);
     this.interceptConsoleErrors(page);
   },
+
+  /**
+   * Get last opened tab (The current active tab)
+   * @param browser
+   * @returns {Promise<*>}
+   */
+  async getLastOpenedTab(browser) {
+    // Get contexts
+    const contexts = await browser.contexts();
+
+    // Get pages from last created context
+    const tabs = await contexts[contexts.length - 1].pages();
+
+    return tabs[tabs.length - 1];
+  },
 };

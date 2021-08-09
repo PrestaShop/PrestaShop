@@ -33,8 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Translation\TranslatorAwareTrait;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -43,6 +42,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -51,10 +51,8 @@ use Symfony\Component\Validator\Constraints\Type;
 /**
  * Type is used to created form for customer add/edit actions
  */
-class CustomerType extends AbstractType
+class CustomerType extends TranslatorAwareType
 {
-    use TranslatorAwareTrait;
-
     /**
      * @var array
      */
@@ -88,12 +86,15 @@ class CustomerType extends AbstractType
      * @param bool $isPartnerOffersEnabled
      */
     public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
         array $genderChoices,
         array $groupChoices,
         array $riskChoices,
         $isB2bFeatureEnabled,
         $isPartnerOffersEnabled
     ) {
+        parent::__construct($translator, $locales);
         $this->genderChoices = $genderChoices;
         $this->groupChoices = $groupChoices;
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
@@ -113,89 +114,144 @@ class CustomerType extends AbstractType
                 'expanded' => true,
                 'required' => false,
                 'placeholder' => null,
+                'label' => $this->trans('Social title', 'Admin.Global'),
             ])
             ->add('first_name', TextType::class, [
+                'label' => $this->trans('First name', 'Admin.Global'),
+                'help' => $this->trans(
+                    'Only letters and the dot (.) character, followed by a space, are allowed.',
+                    'Admin.Orderscustomers.Help'
+                ),
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
                     new Length([
                         'max' => FirstName::MAX_LENGTH,
                         'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => FirstName::MAX_LENGTH],
-                            'Admin.Notifications.Error'
+                            'Admin.Notifications.Error',
+                            ['%limit%' => FirstName::MAX_LENGTH]
                         ),
                     ]),
                     new CustomerName([
-                        'message' => $this->trans('The %s field is invalid.', [sprintf('"%s"', $this->trans('First name', [], 'Admin.Global'))], 'Admin.Notifications.Error'),
+                        'message' => $this->trans('The %s field is invalid.',
+                            'Admin.Notifications.Error',
+                            [sprintf('"%s"', $this->trans('First name', 'Admin.Global'))]
+                        ),
                     ]),
                 ],
             ])
             ->add('last_name', TextType::class, [
+                'label' => $this->trans('Last name', 'Admin.Global'),
+                'help' => $this->trans(
+                    'Only letters and the dot (.) character, followed by a space, are allowed.',
+                    'Admin.Orderscustomers.Help'
+                ),
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
                     new Length([
                         'max' => LastName::MAX_LENGTH,
                         'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => LastName::MAX_LENGTH],
-                            'Admin.Notifications.Error'
+                            'Admin.Notifications.Error',
+                            ['%limit%' => LastName::MAX_LENGTH]
                         ),
                     ]),
                     new CustomerName([
-                        'message' => $this->trans('The %s field is invalid.', [sprintf('"%s"', $this->trans('Last name', [], 'Admin.Global'))], 'Admin.Notifications.Error'),
+                        'message' => $this->trans(
+                            'The %s field is invalid.',
+                            'Admin.Notifications.Error',
+                            [sprintf('"%s"', $this->trans('Last name', 'Admin.Global'))]
+                        ),
                     ]),
                 ],
             ])
             ->add('email', EmailType::class, [
+                'label' => $this->trans('Email', 'Admin.Global'),
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
                     new Email([
-                        'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
                     ]),
                 ],
             ])
             ->add('password', PasswordType::class, [
+                'label' => $this->trans('Password', 'Admin.Global'),
+                'help' => $this->trans(
+                    'Password should be at least %length% characters long.',
+                    'Admin.Notifications.Info',
+                    [
+                        '%length%' => Password::MIN_LENGTH,
+                    ]
+                ),
                 'constraints' => [
                     new Length([
                         'max' => Password::MAX_LENGTH,
                         'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => Password::MAX_LENGTH],
-                            'Admin.Notifications.Error'
+                            'Admin.Notifications.Error',
+                            ['%limit%' => Password::MAX_LENGTH]
                         ),
                         'min' => Password::MIN_LENGTH,
                         'minMessage' => $this->trans(
                             'This field cannot be shorter than %limit% characters',
-                            ['%limit%' => Password::MIN_LENGTH],
-                            'Admin.Notifications.Error'
+                            'Admin.Notifications.Error',
+                            ['%limit%' => Password::MIN_LENGTH]
                         ),
                     ]),
                 ],
                 'required' => $options['is_password_required'],
             ])
             ->add('birthday', BirthdayType::class, [
+                'label' => $this->trans('Birthday', 'Admin.Orderscustomers.Feature'),
                 'required' => false,
                 'format' => 'yyyy MM dd',
                 'input' => 'string',
             ])
             ->add('is_enabled', SwitchType::class, [
+                'label' => $this->trans('Enabled', 'Admin.Global'),
+                'help' => $this->trans(
+                    'Enable or disable customer login.',
+                    'Admin.Orderscustomers.Help'
+                ),
                 'required' => false,
             ])
             ->add('is_partner_offers_subscribed', SwitchType::class, [
+                'label' => $this->trans('Partner offers', 'Admin.Orderscustomers.Feature'),
+                'help' => $this->trans(
+                    'This customer will receive your ads via email.',
+                    'Admin.Orderscustomers.Help'
+                ),
                 'required' => false,
                 'disabled' => !$this->isPartnerOffersEnabled,
             ])
             ->add('group_ids', MaterialChoiceTableType::class, [
+                'label' => $this->trans('Group access', 'Admin.Orderscustomers.Feature'),
+                'help' => $this->trans(
+                    'Select all the groups that you would like to apply to this customer.',
+                    'Admin.Orderscustomers.Help'
+                ),
                 'empty_data' => [],
                 'choices' => $this->groupChoices,
             ])
             ->add('default_group_id', ChoiceType::class, [
+                'label' => $this->trans('Default customer group', 'Admin.Orderscustomers.Feature'),
+                'help' => sprintf(
+                    '%s %s',
+                    $this->trans(
+                        'This group will be the user\'s default group.',
+                        'Admin.Orderscustomers.Help'
+                    ),
+                    $this->trans(
+                        'Only the discount for the selected group will be applied to this customer.',
+                        'Admin.Orderscustomers.Help'
+                    )
+                ),
                 'required' => false,
                 'placeholder' => null,
                 'choices' => $this->groupChoices,
@@ -205,33 +261,54 @@ class CustomerType extends AbstractType
         if ($this->isB2bFeatureEnabled) {
             $builder
                 ->add('company_name', TextType::class, [
+                    'label' => $this->trans('Company', 'Admin.Global'),
                     'required' => false,
                 ])
                 ->add('siret_code', TextType::class, [
+                    'label' => $this->trans('SIRET', 'Admin.Orderscustomers.Feature'),
                     'required' => false,
                 ])
                 ->add('ape_code', TextType::class, [
+                    'label' => $this->trans('APE', 'Admin.Orderscustomers.Feature'),
                     'required' => false,
                     'constraints' => [
                         new Type([
                             'type' => 'alnum',
-                            'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                            'message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
                         ]),
                     ],
                 ])
                 ->add('website', TextType::class, [
+                    'label' => $this->trans('Website', 'Admin.Orderscustomers.Feature'),
                     'required' => false,
                 ])
                 ->add('allowed_outstanding_amount', NumberType::class, [
+                    'label' => $this->trans('Allowed outstanding amount', 'Admin.Orderscustomers.Feature'),
+                    'help' => sprintf(
+                        '%s 0-9',
+                        $this->trans(
+                            'Valid characters:',
+                            'Admin.Orderscustomers.Help'
+                        )
+                    ),
                     'scale' => 6,
                     'required' => false,
-                    'invalid_message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                    'invalid_message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
                 ])
                 ->add('max_payment_days', IntegerType::class, [
+                    'label' => $this->trans('Maximum number of payment days', 'Admin.Orderscustomers.Feature'),
+                    'help' => sprintf(
+                        '%s 0-9',
+                        $this->trans(
+                            'Valid characters:',
+                            'Admin.Orderscustomers.Help'
+                        )
+                    ),
                     'required' => false,
-                    'invalid_message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                    'invalid_message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
                 ])
                 ->add('risk_id', ChoiceType::class, [
+                    'label' => $this->trans('Risk rating', 'Admin.Orderscustomers.Feature'),
                     'required' => false,
                     'placeholder' => null,
                     'choices' => $this->riskChoices,

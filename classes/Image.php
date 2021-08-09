@@ -43,7 +43,7 @@ class ImageCore extends ObjectModel
     /** @var bool Image is cover */
     public $cover;
 
-    /** @var string Legend */
+    /** @var array<int,string> Legend */
     public $legend;
 
     /** @var string image extension */
@@ -81,8 +81,8 @@ class ImageCore extends ObjectModel
     /**
      * ImageCore constructor.
      *
-     * @param null $id
-     * @param null $idLang
+     * @param int|null $id
+     * @param int|null $idLang
      */
     public function __construct($id = null, $idLang = null)
     {

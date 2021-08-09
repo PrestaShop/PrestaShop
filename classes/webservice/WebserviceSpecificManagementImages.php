@@ -91,7 +91,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      * ------------------------------------------------ */
 
     /**
-     * @param WebserviceOutputBuilderCore $obj
+     * @param WebserviceOutputBuilder $obj
      *
      * @return WebserviceSpecificManagementInterface
      */
@@ -1143,7 +1143,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         if (!Validate::isLoadedObject($product)) {
                             throw new WebserviceException('Product ' . (int) $this->wsObject->urlSegment[2] . ' does not exist', [76, 400]);
                         }
-                        Hook::exec('updateProduct', ['id_product' => (int) $this->wsObject->urlSegment[2]]);
+                        Hook::exec('actionProductUpdate', ['id_product' => (int) $this->wsObject->urlSegment[2]]);
                     }
 
                     // copy image
@@ -1220,6 +1220,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
                     return true;
                 }
+            } else {
+                throw new WebserviceException('Please set an "image" parameter with image data for value', [76, 400]);
             }
         } else {
             throw new WebserviceException('Method ' . $this->wsObject->method . ' is not allowed for an image resource', [77, 405]);

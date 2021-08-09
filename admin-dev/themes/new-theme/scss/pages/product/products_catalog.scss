@@ -1,0 +1,72 @@
+// Config
+/* stylelint-disable */
+@import "@scss/config/_settings";
+@import "@scss/config/_keyframes";
+@import "@scss/config/_bootstrap";
+/* stylelint-enable */
+
+.products-catalog {
+
+  .catalog-tools {
+    flex: 0 0 2rem;
+    max-width: 2rem;
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .icon-caret {
+    display: inline-block;
+    font-size: 0.625rem;
+    vertical-align: 0.0625rem;
+    cursor: pointer;
+
+    &.-current {
+      color: $primary;
+    }
+  }
+
+  table {
+    .form-control,
+    .select2 {
+      font-weight: 400;
+    }
+
+    .form-min-max {
+      display: inline-block;
+      width: 48%;
+    }
+
+    .action-enabled {
+      color: $brand-success;
+    }
+
+    .action-disabled {
+      color: $brand-danger;
+    }
+
+    .img-thumbnail {
+      @include border-radius(0);
+    }
+  }
+
+  .bulk-catalog {
+    .dropdown-item {
+      border: 0;
+    }
+  }
+
+  .dropdown-toggle.product-edit {
+    color: $gray-medium;
+
+    &::after {
+      content: "more_vert";
+    }
+  }
+}
+
+.emptycatalog-icon {
+  > .material-icons {
+    font-size: 12rem;
+    color: $gray-light;
+  }
+}

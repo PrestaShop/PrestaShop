@@ -82,6 +82,20 @@ services:
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleExchangeRateAutomatizationCommand' }
 
+    prestashop.adapter.currency.command_handler.bulk_toggle_currencies_status_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\BulkToggleCurrenciesStatusHandler'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
+        tags:
+           - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\BulkToggleCurrenciesStatusCommand' }
+
+    prestashop.adapter.currency.command_handler.bulk_delete_currencies_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\BulkDeleteCurrenciesHandler'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
+        tags:
+          - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\BulkDeleteCurrenciesCommand' }
+
 
     # Query handlers
 
@@ -107,3 +121,6 @@ services:
         - '@=service("prestashop.core.admin.lang.repository").findAll()'
       tags:
         - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency' }
+
+    prestashop.adapter.currency.repository.currency_repository:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'

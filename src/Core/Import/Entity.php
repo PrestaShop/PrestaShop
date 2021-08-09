@@ -33,17 +33,17 @@ use PrestaShop\PrestaShop\Core\Import\Exception\NotSupportedImportTypeException;
  */
 final class Entity
 {
-    const TYPE_CATEGORIES = 0;
-    const TYPE_PRODUCTS = 1;
-    const TYPE_COMBINATIONS = 2;
-    const TYPE_CUSTOMERS = 3;
-    const TYPE_ADDRESSES = 4;
-    const TYPE_MANUFACTURERS = 5;
-    const TYPE_SUPPLIERS = 6;
-    const TYPE_ALIAS = 7;
-    const TYPE_STORE_CONTACTS = 8;
+    public const TYPE_CATEGORIES = 0;
+    public const TYPE_PRODUCTS = 1;
+    public const TYPE_COMBINATIONS = 2;
+    public const TYPE_CUSTOMERS = 3;
+    public const TYPE_ADDRESSES = 4;
+    public const TYPE_MANUFACTURERS = 5;
+    public const TYPE_SUPPLIERS = 6;
+    public const TYPE_ALIAS = 7;
+    public const TYPE_STORE_CONTACTS = 8;
 
-    const AVAILABLE_TYPES = [
+    public const AVAILABLE_TYPES = [
         'categories' => self::TYPE_CATEGORIES,
         'products' => self::TYPE_PRODUCTS,
         'combinations' => self::TYPE_COMBINATIONS,
@@ -60,7 +60,7 @@ final class Entity
      *
      * @param string $importType
      *
-     * @return string
+     * @return int
      */
     public static function getFromName($importType)
     {

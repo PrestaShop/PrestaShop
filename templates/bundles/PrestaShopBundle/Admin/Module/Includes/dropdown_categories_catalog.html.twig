@@ -1,0 +1,53 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<div class="ps-dropdown dropdown btn-group bordered mb-1">
+  {% for menu in topMenuData %}
+    {% set refMenu = menu.refMenu %}
+    <div id="{{refMenu}}" class="dropdown-label" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="js-selected-item selected-item module-category-selector-label">
+        {{menu.name}}
+      </span>
+      <i class="material-icons arrow-down float-right">keyboard_arrow_down</i>
+    </div>
+
+    <div class="ps-dropdown-menu dropdown-menu module-category-selector items-list js-items-list" aria-labelledby="{{refMenu}}">
+        <a class="dropdown-item module-category-reset">
+          {{ 'All categories'|trans({}, 'Admin.Modules.Feature') }}
+        </a>
+
+        {% for subMenu in menu.subMenu %}
+          <a 
+            class="dropdown-item" 
+            class="module-category-menu"
+            {% if subMenu.tab %}data-category-tab="{{subMenu.tab}}"{% endif %}
+            data-category-ref="{{subMenu.refMenu}}"
+            data-category-display-name="{{subMenu.name}}"
+          >
+            {{subMenu.name}}<span class="float-right">{{subMenu.modules|length }}</span>
+          </a>
+        {% endfor %}
+    </div>
+  {% endfor %}
+</div>

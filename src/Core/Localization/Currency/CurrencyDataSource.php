@@ -71,10 +71,9 @@ class CurrencyDataSource implements DataSourceInterface
      * Is this currency available ?
      * (an available currency is not deleted AND is active).
      *
-     * @param $currencyCode
+     * @param string $currencyCode
      *
-     * @return bool
-     *              True if currency is available
+     * @return bool True if currency is available
      */
     public function isCurrencyAvailable($currencyCode)
     {

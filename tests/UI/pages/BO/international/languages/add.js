@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add language page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddLanguage extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add language page
+   */
   constructor() {
     super();
 
@@ -16,17 +25,17 @@ class AddLanguage extends BOBasePage {
     this.fullDataFormatInput = '#language_full_date_format';
     this.flagInput = '#language_flag_image';
     this.noPictureInput = '#language_no_picture_image';
-    this.isRtlSwitch = id => `label[for='language_is_rtl_${id}']`;
-    this.statusSwitch = id => `label[for='language_is_active_${id}']`;
-    this.saveButton = 'div.card-footer button';
+    this.isRtlToggleInput = toggle => `#language_is_rtl_${toggle}`;
+    this.statusToggleInput = toggle => `#language_is_active_${toggle}`;
+    this.saveButton = '#save-button';
   }
 
   /* Methods */
 
   /**
    * Create or edit language
-   * @param page
-   * @param languageData
+   * @param page {Page} Browser tab
+   * @param languageData {languageData} Data to set on add/edit language form
    * @return {Promise<string>}
    */
   async createEditLanguage(page, languageData) {
@@ -42,11 +51,12 @@ class AddLanguage extends BOBasePage {
     await this.uploadFile(page, this.noPictureInput, languageData.noPicture);
 
     // Set rtl and status
-    await page.click(this.isRtlSwitch(languageData.isRtl ? 1 : 0));
-    await page.click(this.statusSwitch(languageData.enabled ? 1 : 0));
+    await page.check(this.isRtlToggleInput(languageData.isRtl ? 1 : 0));
+    await page.check(this.statusToggleInput(languageData.enabled ? 1 : 0));
 
     // Save and return result
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

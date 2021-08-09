@@ -23,35 +23,54 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div class="ps-sortable-column" data-sort-col-name="id_product" :data-sort-is-current="isCurrent" :data-sort-direction="sortDirection" @click="sortToggle">
+  <div
+    class="ps-sortable-column"
+    data-sort-col-name="id_product"
+    :data-sort-is-current="isCurrent"
+    :data-sort-direction="sortDirection"
+    @click="sortToggle"
+  >
     <span role="columnheader"><slot /></span>
-    <span role="button" class="ps-sort" aria-label="Tri"></span>
+    <span
+      role="button"
+      class="ps-sort"
+      aria-label="Tri"
+    />
   </div>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue';
+
+  export default Vue.extend({
     props: {
       // column name
-      order: String,
+      order: {
+        type: String,
+        required: true,
+      },
       // indicates the currently sorted column in the table
-      currentSort: String,
+      currentSort: {
+        type: String,
+        required: true,
+      },
     },
     methods: {
-      sortToggle() {
+      sortToggle(): void {
         // toggle direction
         this.sortDirection = (this.sortDirection === 'asc') ? 'desc' : 'asc';
         this.$emit('sort', this.order, this.sortDirection);
       },
     },
-    data: () => ({
-      sortDirection: 'asc',
-    }),
+    data() {
+      return {
+        sortDirection: 'asc',
+      };
+    },
     computed: {
-      isCurrent() {
+      isCurrent(): boolean {
         return this.currentSort === this.order;
       },
     },
-  };
+  });
 </script>
-

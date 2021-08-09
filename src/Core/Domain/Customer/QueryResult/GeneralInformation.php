@@ -37,7 +37,7 @@ class GeneralInformation
     private $privateNote;
 
     /**
-     * @var string
+     * @var bool
      */
     private $customerBySameEmailExists;
 
@@ -60,7 +60,7 @@ class GeneralInformation
     }
 
     /**
-     * @return string
+     * @return bool
      */
     public function getCustomerBySameEmailExists()
     {

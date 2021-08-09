@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Titles page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Titles extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on titles page
+   */
   constructor() {
     super();
 
@@ -33,7 +42,6 @@ class Titles extends BOBasePage {
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnSelectRowCheckbox = row => `${this.tableBodyColumn(row)} input[name='genderBox[]']`;
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnTitle = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnGender = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
@@ -60,7 +68,7 @@ class Titles extends BOBasePage {
 
   /**
    * Go to add new title page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewTitle(page) {
@@ -71,10 +79,10 @@ class Titles extends BOBasePage {
 
   /**
    * Filter titles
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {string} Type of filter field( input/select)
+   * @param filterBy {string} Column to filter with
+   * @param value {string} Value to filter
    * @return {Promise<void>}
    */
   async filterTitles(page, filterType, filterBy, value) {
@@ -98,7 +106,7 @@ class Titles extends BOBasePage {
 
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -109,8 +117,8 @@ class Titles extends BOBasePage {
   }
 
   /**
-   * Get Number of titles
-   * @param page
+   * Get number of titles
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -119,7 +127,7 @@ class Titles extends BOBasePage {
 
   /**
    * Reset and get number of titles
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -131,9 +139,9 @@ class Titles extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Column name of the value to return
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -161,8 +169,8 @@ class Titles extends BOBasePage {
 
   /**
    * Go to edit title page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async gotoEditTitlePage(page, row) {
@@ -171,8 +179,8 @@ class Titles extends BOBasePage {
 
   /**
    * Delete title from row
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<string>}
    */
   async deleteTitle(page, row) {
@@ -194,7 +202,7 @@ class Titles extends BOBasePage {
 
   /**
    * Bulk delete titles
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async bulkDeleteTitles(page) {

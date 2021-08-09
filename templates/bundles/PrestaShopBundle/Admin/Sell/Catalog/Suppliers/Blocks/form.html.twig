@@ -1,0 +1,73 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% form_theme supplierForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{{ form_start(supplierForm) }}
+<div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">local_shipping</i>
+    {{ 'Suppliers'|trans({}, 'Admin.Global') }}
+  </h3>
+  <div class="card-block row">
+    <div class="card-text">
+
+      {{ form_row(supplierForm.name) }}
+      {{ form_row(supplierForm.description) }}
+      {{ form_row(supplierForm.phone) }}
+      {{ form_row(supplierForm.mobile_phone) }}
+      {{ form_row(supplierForm.address) }}
+      {{ form_row(supplierForm.address2) }}
+      {{ form_row(supplierForm.post_code) }}
+      {{ form_row(supplierForm.city) }}
+      {{ form_row(supplierForm.id_country) }}
+        <div class="js-supplier-state{% if supplierForm.id_state.vars.choices is empty %} d-none{% endif %}">
+          {{ form_row(supplierForm.id_state) }}
+        </div>
+      {{ form_row(supplierForm.dni) }}
+      {{ form_row(supplierForm.logo) }}
+
+      {% if logoImage is defined and logoImage is not null %}
+        <div class="form-group row">
+          <label class="form-control-label"></label>
+          <div class="col-sm">
+            {% include '@PrestaShop/Admin/Sell/Catalog/Suppliers/logo_image.html.twig' %}
+          </div>
+        </div>
+      {% endif %}
+      {{ form_widget(supplierForm) }}
+
+    </div>
+  </div>
+  <div class="card-footer">
+    <a href="{{ path('admin_suppliers_index') }}" class="btn btn-outline-secondary">
+      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+    </a>
+    <button class="btn btn-primary float-right">
+      {{ 'Save'|trans({}, 'Admin.Actions') }}
+    </button>
+  </div>
+</div>
+{{ form_end(supplierForm) }}

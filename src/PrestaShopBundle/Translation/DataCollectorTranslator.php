@@ -29,7 +29,23 @@ namespace PrestaShopBundle\Translation;
 
 use Symfony\Component\Translation\DataCollectorTranslator as BaseTranslator;
 
-class DataCollectorTranslator extends BaseTranslator
+class DataCollectorTranslator extends BaseTranslator implements TranslatorInterface
 {
     use PrestaShopTranslatorTrait;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isLanguageLoaded($locale)
+    {
+        return $this->__call('isLanguageLoaded', [$locale]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function clearLanguage($locale)
+    {
+        return $this->__call('clearLanguage', [$locale]);
+    }
 }

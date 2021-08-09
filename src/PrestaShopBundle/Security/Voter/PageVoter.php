@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Security\Voter;
 
 use Access;
+use PrestaShopBundle\Security\Admin\Employee;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -35,21 +36,21 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class PageVoter extends Voter
 {
-    const CREATE = 'create';
+    public const CREATE = 'create';
 
-    const UPDATE = 'update';
+    public const UPDATE = 'update';
 
-    const DELETE = 'delete';
+    public const DELETE = 'delete';
 
-    const READ = 'read';
+    public const READ = 'read';
 
-    const LEVEL_DELETE = 4;
+    public const LEVEL_DELETE = 4;
 
-    const LEVEL_UPDATE = 2;
+    public const LEVEL_UPDATE = 2;
 
-    const LEVEL_CREATE = 3;
+    public const LEVEL_CREATE = 3;
 
-    const LEVEL_READ = 1;
+    public const LEVEL_READ = 1;
 
     /**
      * Indicates if this voter should pronounce on this attribute and subject.
@@ -73,6 +74,7 @@ class PageVoter extends Voter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
+        /** @var Employee $user */
         $user = $token->getUser();
         $employeeProfileId = $user->getData()->id_profile;
         $action = $this->buildAction($subject, $attribute);

@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldSettings;
+
 /**
  * Class CustomizationFieldCore.
  */
@@ -37,7 +39,7 @@ class CustomizationFieldCore extends ObjectModel
     public $required;
     /** @var bool Field was added by a module */
     public $is_module;
-    /** @var string Label for customized field */
+    /** @var string[] Label for customized field */
     public $name;
     /** @var bool Soft delete */
     public $is_deleted;
@@ -59,7 +61,7 @@ class CustomizationFieldCore extends ObjectModel
             'is_deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => false],
 
             /* Lang fields */
-            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'size' => 255],
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'size' => CustomizationFieldSettings::MAX_NAME_LENGTH],
         ],
     ];
 

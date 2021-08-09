@@ -9,12 +9,14 @@
 }
 
 table.grid-ordering-column tr {
-  transition-property: all;
-  transition-duration: 0.2s;
   transition-timing-function: ease-out;
+  transition-duration: 0.2s;
+  transition-property: all;
+
   &.hover {
     background-color: $gray-soft;
   }
+
   &:hover {
     .position-drag-handle {
       visibility: visible;
@@ -23,32 +25,29 @@ table.grid-ordering-column tr {
 }
 
 table.grid-ordering-column tr.position-row-while-drag {
-  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
-  color: white;
-  transform: translate(5px, 10px);
+  color: $white;
   background: none;
+  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
+  transform: translate(5px, 10px);
+
   td {
     background-color: $medium-gray;
   }
+
   td:first-child {
-    border-top-left-radius: 3px;
+    @include border-left-radius(3px);
   }
-  td:first-child {
-    border-bottom-left-radius: 3px;
-  }
+
   td:last-child {
-    border-top-right-radius: 3px;
-  }
-  td:last-child {
-    border-bottom-right-radius: 3px;
+    @include border-right-radius(3px);
   }
 
   .position-drag-handle,
   .position-drag-handle:hover,
   .btn,
-  .btn:after,
+  .btn::after,
   .btn .material-icons {
-    color: white;
+    color: $white;
   }
 }
 
@@ -65,18 +64,34 @@ table.grid-ordering-column tr.position-row-while-drag {
   }
 }
 
+.adminmailtheme {
+  .action-type {
+    .text-right {
+      .btn.tooltip-link {
+        justify-content: flex-end;
+      }
+    }
+  }
+}
+
 .btn-group-action {
   a.dropdown-toggle,
   button.dropdown-toggle,
   .dropdown-toggle {
     color: $gray-medium;
-    &:after {
+
+    &::after {
       content: "more_vert";
     }
 
     &:hover {
       color: $primary;
     }
+  }
+
+  .btn.tooltip-link {
+    display: flex;
+    align-items: center;
   }
 }
 
@@ -103,18 +118,22 @@ table .column-filters td:last-child .grid-reset-button {
             display: inline-block;
             width: 60px;
           }
+
           .md-checkbox {
             &:not(:last-child) {
               display: inline-block;
             }
+
             & ~ .form-control {
               display: inline-block;
-              width: calc(100% - 29px);
+              /* stylelint-disable-next-line */
+              width: calc(100% - 32px);
             }
           }
         }
       }
     }
+
     tbody {
       tr {
         $tr: &;
@@ -134,13 +153,12 @@ table .column-filters td:last-child .grid-reset-button {
 
         // styling for row that is being dragged
         &.dragging-row {
-          background: #fafbfc;
           cursor: move;
+          background: #fafbfc;
 
           td {
+            color: $white;
             background: #67868e;
-            color: white;
-            -webkit-transform: translate(5px, 10px);
             transform: translate(5px, 10px);
 
             // make all icons and links white
@@ -148,8 +166,8 @@ table .column-filters td:last-child .grid-reset-button {
             i.grid-toggler-icon-not-valid,
             i.material-icons,
             a,
-            a:after {
-              color: white;
+            a::after {
+              color: $white;
             }
           }
         }
@@ -168,7 +186,9 @@ table .column-filters td:last-child .grid-reset-button {
 
             @at-root {
               #{$tr}:hover .draggable-column {
+                /* stylelint-disable declaration-no-important */
                 color: #15b7d7 !important;
+                /* stylelint-enable declaration-no-important */
               }
             }
           }
@@ -176,47 +196,42 @@ table .column-filters td:last-child .grid-reset-button {
           &.choice-type {
             @mixin display-dropdown-arrow() {
               &::after {
-                visibility: visible;
                 width: 20px;
+                visibility: visible;
               }
             }
 
             .dropdown {
               .dropdown-toggle {
+                padding: 0 5px;
                 margin-right: 20px;
-                transition: 0.2s ease-out;
+                @include transition(0.2s ease-out);
 
                 &:hover {
-                  margin-right: 0px;
+                  margin-right: 0;
+                  @include display-dropdown-arrow();
+                }
+
+                &.coloured {
+                  border: 0;
+                }
+
+                &::after {
+                  width: 0;
+                  visibility: hidden;
+                  @include transition(0.2s ease-out);
                 }
               }
 
               &.show {
                 .dropdown-toggle {
                   margin-right: 20px;
-                  transition: 0.2s ease-out;
+                  @include transition(0.2s ease-out);
 
                   &:hover {
-                    margin-right: 0px;
+                    margin-right: 0;
                   }
 
-                  @include display-dropdown-arrow();
-                }
-              }
-
-              .dropdown-toggle {
-                padding: 0 5px 0 5px;
-                &.coloured {
-                  border: 0;
-                }
-
-                &::after {
-                  visibility: hidden;
-                  width: 0;
-                  transition: 0.2s ease-out;
-                }
-
-                &:hover {
                   @include display-dropdown-arrow();
                 }
               }
@@ -232,7 +247,7 @@ table .column-filters td:last-child .grid-reset-button {
           &.action-type {
             .inline-dropdown-item {
               &:only-child {
-                margin-left: auto;
+                flex: 0 0 auto;
               }
 
               width: inherit;
@@ -248,9 +263,9 @@ table .column-filters td:last-child .grid-reset-button {
 
           &.order_price-type {
             .badge {
+              padding: 5px;
               font-size: 100%;
               font-weight: 600;
-              padding: 5px;
             }
           }
 
@@ -261,12 +276,41 @@ table .column-filters td:last-child .grid-reset-button {
       }
     }
   }
+
   .table-responsive .row {
     margin: 0;
   }
+
   .preview-toggle {
     i:hover {
       cursor: pointer;
+    }
+  }
+}
+
+table {
+  tr {
+    &.column-filters {
+      @include media-breakpoint-down(md) {
+        input,
+        select {
+          min-width: 6rem;
+        }
+      }
+
+      td[data-column-id^="id_"] {
+        max-width: 8rem;
+
+        input:only-child {
+          max-width: 6rem;
+        }
+      }
+
+      td[data-column-id^="name"] {
+        input:only-child {
+          max-width: 8rem;
+        }
+      }
     }
   }
 }

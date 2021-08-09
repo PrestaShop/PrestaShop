@@ -70,7 +70,8 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
         $addressesQb = $this->connection->createQueryBuilder();
         $addressesQb->select('COUNT(a.`id_manufacturer`) AS `addresses_count`')
             ->from($this->dbPrefix . 'address', 'a')
-            ->where('m.`id_manufacturer` = a.`id_manufacturer`')
+            ->where('a.`id_manufacturer` != 0')
+            ->andWhere('m.`id_manufacturer` = a.`id_manufacturer`')
             ->andWhere('a.`deleted` = 0')
             ->groupBy('a.`id_manufacturer`')
         ;

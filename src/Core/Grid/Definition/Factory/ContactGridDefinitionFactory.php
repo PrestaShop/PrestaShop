@@ -27,11 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -48,6 +46,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+    use DeleteActionTrait;
+
     /**
      * @var string
      */
@@ -97,70 +98,62 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('bulk'))
-                ->setOptions([
-                    'bulk_field' => 'id_contact',
-                ])
+                    ->setOptions([
+                        'bulk_field' => 'id_contact',
+                    ])
             )
             ->add(
                 (new DataColumn('id_contact'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id_contact',
-                ])
+                    ->setName($this->trans('ID', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'id_contact',
+                    ])
             )
             ->add(
                 (new DataColumn('name'))
-                ->setName($this->trans('Title', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'name',
-                ])
+                    ->setName($this->trans('Title', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'name',
+                    ])
             )
             ->add(
                 (new DataColumn('email'))
-                ->setName($this->trans('Email address', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'email',
-                ])
+                    ->setName($this->trans('Email address', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'email',
+                    ])
             )
             ->add(
                 (new DataColumn('description'))
-                ->setName($this->trans('Description', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'description',
-                ])
+                    ->setName($this->trans('Description', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'description',
+                    ])
             )
             ->add(
                 (new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'actions' => (new RowActionCollection())
-                        ->add(
-                            (new LinkRowAction('edit'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_contacts_edit',
-                                'route_param_name' => 'contactId',
-                                'route_param_field' => 'id_contact',
-                                'clickable_row' => true,
-                            ])
-                        )
-                        ->add(
-                            (new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'method' => 'POST',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                                'route' => 'admin_contacts_delete',
-                                'route_param_name' => 'contactId',
-                                'route_param_field' => 'id_contact',
-                            ])
-                        ),
-                ])
+                    ->setName($this->trans('Actions', [], 'Admin.Global'))
+                    ->setOptions([
+                        'actions' => (new RowActionCollection())
+                            ->add(
+                                (new LinkRowAction('edit'))
+                                    ->setIcon('edit')
+                                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                    ->setOptions([
+                                        'route' => 'admin_contacts_edit',
+                                        'route_param_name' => 'contactId',
+                                        'route_param_field' => 'id_contact',
+                                        'clickable_row' => true,
+                                    ])
+                            )
+                            ->add(
+                                $this->buildDeleteAction(
+                                    'admin_contacts_delete',
+                                    'contactId',
+                                    'id_contact'
+                                )
+                            ),
+                    ])
             );
     }
 
@@ -172,42 +165,42 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new FilterCollection())
             ->add(
                 (new Filter('id_contact', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('id_contact')
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('id_contact')
             )
             ->add(
                 (new Filter('name', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('name')
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('name')
             )
             ->add(
                 (new Filter('email', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('email')
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('email')
             )
             ->add(
                 (new Filter('description', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('description')
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('description')
             )
 
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
-                    'attr' => [
-                        'data-url' => $this->resetSearchUrl,
-                        'data-redirect' => $this->redirectionUrl,
-                    ],
-                ])
-                ->setAssociatedColumn('actions')
+                    ->setTypeOptions([
+                        'attr' => [
+                            'data-url' => $this->resetSearchUrl,
+                            'data-redirect' => $this->redirectionUrl,
+                        ],
+                    ])
+                    ->setAssociatedColumn('actions')
             );
     }
 
@@ -218,12 +211,7 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add(
-                (new SubmitBulkAction('delete_all'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_contacts_delete_bulk',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+                $this->buildBulkDeleteAction('admin_contacts_delete_bulk')
             );
     }
 
@@ -235,18 +223,18 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new GridActionCollection())
             ->add(
                 (new SimpleGridAction('common_refresh_list'))
-                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
-                ->setIcon('refresh')
+                    ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                    ->setIcon('refresh')
             )
             ->add(
                 (new SimpleGridAction('common_show_query'))
-                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
-                ->setIcon('code')
+                    ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                    ->setIcon('code')
             )
             ->add(
                 (new SimpleGridAction('common_export_sql_manager'))
-                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
-                ->setIcon('storage')
+                    ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                    ->setIcon('storage')
             );
     }
 }

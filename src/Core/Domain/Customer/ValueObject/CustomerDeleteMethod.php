@@ -36,20 +36,22 @@ class CustomerDeleteMethod
     /**
      * If this option is used, then deleted customer can register again using same email.
      */
-    const ALLOW_CUSTOMER_REGISTRATION = 'allow_registration_after';
+    public const ALLOW_CUSTOMER_REGISTRATION = 'allow_registration_after';
 
     /**
      * If this option is used, then deleted customer won't be able to register again using same email.
      */
-    const DENY_CUSTOMER_REGISTRATION = 'deny_registration_after';
+    public const DENY_CUSTOMER_REGISTRATION = 'deny_registration_after';
 
     /**
-     * @var int
+     * @var string
      */
     private $method;
 
     /**
-     * @param $method
+     * @param string $method
+     *
+     * @throws CustomerException
      */
     public function __construct($method)
     {
@@ -76,6 +78,8 @@ class CustomerDeleteMethod
 
     /**
      * @param string $method
+     *
+     * @throws CustomerException
      */
     private function assertMethodIsDefined($method)
     {

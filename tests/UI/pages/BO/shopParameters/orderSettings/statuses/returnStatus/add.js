@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add order return status page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddOrderReturnStatus extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on add order return status page
+   */
   constructor() {
     super();
 
@@ -17,9 +26,9 @@ class AddOrderReturnStatus extends BOBasePage {
   /* Methods */
 
   /**
-   * Fill order return status form in create or edit page and save
-   * @param page
-   * @param orderReturnStatusData
+   * Fill order return status form
+   * @param page {Page} Browser tab
+   * @param orderReturnStatusData {OrderReturnStatusData} Data to set on order return status form
    * @return {Promise<string>}
    */
   async setOrderReturnStatus(page, orderReturnStatusData) {

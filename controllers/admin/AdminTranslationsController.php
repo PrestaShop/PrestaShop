@@ -86,8 +86,8 @@ class AdminTranslationsControllerCore extends AdminController
         $this->link_lang_pack = str_replace('%ps_version%', _PS_VERSION_, $this->link_lang_pack);
 
         $this->themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-                            ->buildRepository()
-                            ->getList();
+            ->buildRepository()
+            ->getList();
     }
 
     /*
@@ -1582,9 +1582,9 @@ class AdminTranslationsControllerCore extends AdminController
         $conf = !$conf ? 4 : $conf;
         $url_base = self::$currentIndex . '&token=' . $this->token . '&conf=' . $conf;
         if ($modify_translation) {
-            Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&lang=' . Tools::getValue('langue') . '&type=' . $this->type_selected . '&module=' . Tools::getValue('module') . '&theme=' . $this->theme_selected);
+            Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&lang=' . Tools::getValue('langue') . '&type=' . $this->type_selected . '&module=' . Tools::getValue('module') . '&selected-theme=' . $this->theme_selected);
         } elseif ($save_and_stay) {
-            Tools::redirectAdmin($url_base . '&lang=' . $this->lang_selected->iso_code . '&type=' . $this->type_selected . '&module=' . Tools::getValue('module') . '&theme=' . $this->theme_selected);
+            Tools::redirectAdmin($url_base . '&lang=' . $this->lang_selected->iso_code . '&type=' . $this->type_selected . '&module=' . Tools::getValue('module') . '&selected-theme=' . $this->theme_selected);
         } else {
             Tools::redirectAdmin($url_base . '&action=settings');
         }
@@ -1664,11 +1664,6 @@ class AdminTranslationsControllerCore extends AdminController
                         $content = htmlspecialchars_decode($content);
                         // replace correct end of line
                         $content = str_replace("\r\n", PHP_EOL, $content);
-
-                        // Magic Quotes shall... not.. PASS!
-                        if (_PS_MAGIC_QUOTES_GPC_) {
-                            $content = stripslashes($content);
-                        }
                     }
 
                     if (Validate::isCleanHTML($content)) {
@@ -2807,10 +2802,12 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         $core_mails = $this->getMailFiles($i18n_dir, 'core_mail');
+        $core_mails['subject'] = $this->getSubjectMailContent($i18n_dir);
 
         foreach ($modules_has_mails as $module_name => $module_path) {
             $module_path = rtrim($module_path, '/');
             $module_mails[$module_name] = $this->getMailFiles($module_path . '/mails/' . $this->lang_selected->iso_code . '/', 'module_mail');
+            $module_mails[$module_name]['subject'] = $core_mails['subject'];
             $module_mails[$module_name]['display'] = $this->displayMailContent($module_mails[$module_name], $subject_mail, $this->lang_selected, Tools::strtolower($module_name), $module_name, $module_name);
         }
 
@@ -2962,10 +2959,6 @@ class AdminTranslationsControllerCore extends AdminController
             fwrite($fd, "<?php\n\nglobal \$_" . $tab . ";\n\$_" . $tab . " = array();\n");
 
             foreach ($sub as $key => $value) {
-                // Magic Quotes shall... not.. PASS!
-                if (_PS_MAGIC_QUOTES_GPC_) {
-                    $value = stripslashes($value);
-                }
                 fwrite($fd, '$_' . $tab . '[\'' . pSQL($key) . '\'] = \'' . pSQL($value) . '\';' . "\n");
             }
 
@@ -3316,5 +3309,28 @@ class AdminTranslationsControllerCore extends AdminController
         $this->ajaxRender(
             AdminTranslationsController::getEmailHTML($email)
         );
+    }
+
+    /**
+     * @param $directory : name of directory
+     *
+     * @return array
+     */
+    protected function getSubjectMailContent($directory)
+    {
+        $subject_mail_content = [];
+        if (Tools::file_exists_cache($directory . '/lang.php')) {
+            // we need to include this even if already included (no include once)
+            include $directory . '/lang.php';
+            foreach ($GLOBALS[$this->translations_informations[$this->type_selected]['var']] as $key => $subject) {
+                ++$this->total_expression;
+                $subject = str_replace('\n', ' ', $subject);
+                $subject = str_replace("\\'", "\'", $subject);
+                $subject_mail_content[$key]['trad'] = htmlentities($subject, ENT_QUOTES, 'UTF-8');
+                $subject_mail_content[$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
+            }
+        }
+
+        return $subject_mail_content;
     }
 }

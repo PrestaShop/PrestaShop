@@ -58,7 +58,7 @@ final class BooleanColumn extends AbstractColumn
             ])
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('true_name', 'string')
-            ->setAllowedTypes('true_name', 'string')
+            ->setAllowedTypes('false_name', 'string')
             ->setAllowedTypes('clickable', 'bool')
         ;
     }

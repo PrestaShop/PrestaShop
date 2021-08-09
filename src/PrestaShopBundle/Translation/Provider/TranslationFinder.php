@@ -27,6 +27,7 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -36,14 +37,16 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * Helper used to build a MessageCataloguer from xliff files
+ *
+ * @deprecated Please use PrestaShop\PrestaShop\Core\Translation\Provider\TranslationFinder instead
  */
 class TranslationFinder
 {
-    const ERR_NO_FILES_IN_DIRECTORY = 1;
-    const ERR_DIRECTORY_NOT_FOUND = 2;
+    private const ERR_NO_FILES_IN_DIRECTORY = 1;
+    private const ERR_DIRECTORY_NOT_FOUND = 2;
 
     /**
-     * @param string|array $paths a list of paths when we can look for translations
+     * @param array $paths a list of paths when we can look for translations
      * @param string $locale the Symfony (not the PrestaShop one) locale
      * @param string|null $pattern a regular expression
      *
@@ -51,7 +54,7 @@ class TranslationFinder
      *
      * @throws FileNotFoundException
      */
-    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
+    public function getCatalogueFromPaths(array $paths, string $locale, string $pattern = null): MessageCatalogue
     {
         $translationFiles = $this->getTranslationFilesFromPath($paths, $pattern);
 
@@ -63,7 +66,7 @@ class TranslationFinder
      *
      * @return MessageCatalogue
      */
-    private function removeTrailingLocaleFromDomains(MessageCatalogueInterface $catalogue)
+    private function removeTrailingLocaleFromDomains(MessageCatalogueInterface $catalogue): MessageCatalogue
     {
         $messages = $catalogue->all();
         $locale = $catalogue->getLocale();
@@ -82,14 +85,14 @@ class TranslationFinder
     }
 
     /**
-     * @param $paths
-     * @param $pattern
+     * @param string[] $paths
+     * @param string|null $pattern
      *
      * @return Finder
      *
      * @throws FileNotFoundException
      */
-    private function getTranslationFilesFromPath($paths, $pattern)
+    private function getTranslationFilesFromPath(array $paths, ?string $pattern = null): Finder
     {
         $finder = new Finder();
 
@@ -99,7 +102,7 @@ class TranslationFinder
 
         try {
             $translationFiles = $finder->files()->notName('index.php')->in($paths);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             throw new FileNotFoundException(sprintf('Could not crawl for translation files: %s', $e->getMessage()), self::ERR_DIRECTORY_NOT_FOUND, $e);
         }
 
@@ -116,7 +119,7 @@ class TranslationFinder
      *
      * @return MessageCatalogue
      */
-    private function buildCatalogueFromFiles(Finder $translationFiles, $locale)
+    private function buildCatalogueFromFiles(Finder $translationFiles, string $locale): MessageCatalogue
     {
         $messageCatalogue = new MessageCatalogue($locale);
         $xliffFileLoader = new XliffFileLoader();
@@ -142,7 +145,7 @@ class TranslationFinder
      *
      * @return string
      */
-    private function getDomainFromFile(SplFileInfo $file, $locale)
+    private function getDomainFromFile(SplFileInfo $file, string $locale): string
     {
         $basename = $file->getBasename('.xlf');
 

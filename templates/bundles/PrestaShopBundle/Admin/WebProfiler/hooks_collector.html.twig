@@ -1,0 +1,179 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% import _self as helper %}
+
+{% block toolbar %}
+    {% set icon %}
+        {{ include('@WebProfiler/Icon/event.svg') }}
+        <span class="sf-toolbar-value">Hooks ({{ collector.calledHooks|length }})</span>
+    {% endset %}
+
+    {% set text %}
+        <div class="sf-toolbar-info-piece">
+            <div class="sf-toolbar-info-piece">
+                <b class="sf-toolbar-ajax-info">{{ collector.calledHooks|length }}
+                    Hooks called and received by modules
+                </b>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <table class="sf-toolbar-ajax-requests">
+                    <thead>
+                    <tr>
+                        <th>Hook name</th>
+                        <th>Call(s)</th>
+                    </tr>
+                    </thead>
+                    <tbody class="sf-toolbar-ajax-request-list">
+                        {% for hookName, hooks in collector.calledHooks %}
+                            <tr><td>{{ hookName }}</td><td>{{ hooks|length }}</td></tr>
+                        {% else %}
+                            <tr><td colspan="2">No hook dispatched.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endset %}
+
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: true }) }}
+
+{% endblock %}
+
+{% block menu %}
+    {# This left-hand menu appears when using the full-screen profiler. #}
+    <span class="label">
+        <span class="icon">{{ include('@WebProfiler/Icon/event.svg') }}</span>
+        <strong>Hooks</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Hooks</h2>
+
+    {% if collector.notCalledHooks is empty %}
+        <div class="empty">
+            <p>No Hooks have been recorded. Check that debugging is enabled in the kernel.</p>
+        </div>
+    {% else %}
+        <div class="sf-tabs">
+            <div class="tab">
+                <h3 class="tab-title">
+                    Hooks called and received by modules
+                    <span class="badge">{{ collector.calledHooks|length }}</span>
+                </h3>
+                <p>
+                    These hooks have been dispatched by PrestaShop and there are active modules listening and receiving them.
+                </p>
+                <div class="tab-content">
+                    {{ helper.render_table(collector.calledHooks, true) }}
+                </div>
+            </div>
+
+            <div class="tab">
+                <h3 class="tab-title">
+                    Hooks called but not received by modules
+                    <span class="badge">{{ collector.notCalledHooks|length }}</span>
+                </h3>
+                <p>
+                    These hooks have been dispatched by PrestaShop but no modules
+                    have subscribed to them.
+                </p>
+                <div class="tab-content">
+                    {% if collector.notCalledHooks is empty %}
+                        <div class="empty">
+                            <p>
+                                <strong>There are no uncalled hooks</strong>.
+                            </p>
+                            <p>
+                                All hooks were called for this request or an error occurred
+                                when trying to collect uncalled listeners (in which case check the
+                                logs to get more information).
+                            </p>
+                        </div>
+                    {% else %}
+                        {{ helper.render_table(collector.notCalledHooks, false) }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% macro render_table(hookList, hookModules) %}
+    {% for hookName, hooks in hookList %}
+        <h3>{{ hookName }}</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Arguments</th>
+                    <th>Location</th>
+                    {% if hookModules %}
+                        <th>Hooked modules</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for position, hook in hooks %}
+            <tr>
+                <td>
+                    {{ profiler_dump(hook.args) }}
+                </td>
+                <td>
+                    <span class="text-muted">{{ hook.location }}</span>
+                </td>
+                {% if hookModules %}
+                    <td>
+                        {% set modules = hook.modules %}
+                        {% for moduleName, module in modules %}
+                            <h4><b>{{ moduleName|capitalize }}</b></h4>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Module arguments</th>
+                                </tr>
+                                </thead>
+
+                                {% if module.callback is defined %}
+                                <tr>
+                                    <td>{{ profiler_dump(module.callback.args) }}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td>{{ profiler_dump(module.widget.args) }}</td>
+                                </tr>
+                                {% endif %}
+                            </table>
+                        {% endfor %}
+                    </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+{% endmacro %}

@@ -23,48 +23,63 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div id="search" class="row mb-2">
+  <div
+    id="search"
+    class="row mb-2"
+  >
     <div class="col-md-8">
       <div class="mb-2">
-        <form class="search-form" @submit.prevent>
-          <label>{{trans('product_search')}}</label>
+        <form
+          class="search-form"
+          @submit.prevent
+        >
+          <label>{{ trans('product_search') }}</label>
           <div class="input-group">
-            <PSTags ref="psTags" :tags="tags" @tagChange="onSearch" />
+            <PSTags
+              ref="psTags"
+              :tags="tags"
+              @tagChange="onSearch"
+            />
             <div class="input-group-append">
-              <PSButton @click="onClick" class="search-button" :primary="true">
+              <PSButton
+                @click="onClick"
+                class="search-button"
+                :primary="true"
+              >
                 <i class="material-icons">search</i>
-                {{trans('button_search')}}
+                {{ trans('button_search') }}
               </PSButton>
             </div>
           </div>
         </form>
       </div>
-      <Filters @applyFilter="applyFilter"/>
+      <Filters @applyFilter="applyFilter" />
     </div>
     <div class="col-md-4 alert-box">
       <transition name="fade">
         <PSAlert
           v-if="showAlert"
-          :alertType="alertType"
-          :hasClose="true"
+          :alert-type="alertType"
+          :has-close="true"
           @closeAlert="onCloseAlert"
         >
-          <span v-if="error">{{trans('alert_bulk_edit')}}</span>
-          <span v-else>{{trans('notification_stock_updated')}}</span>
+          <span v-if="error">{{ trans('alert_bulk_edit') }}</span>
+          <span v-else>{{ trans('notification_stock_updated') }}</span>
         </PSAlert>
       </transition>
     </div>
   </div>
 </template>
 
-<script>
-  import Filters from './filters';
+<script lang="ts">
+  import Vue from 'vue';
   import PSTags from '@app/widgets/ps-tags';
   import PSButton from '@app/widgets/ps-button';
   import PSAlert from '@app/widgets/ps-alert';
-  import { EventBus } from '@app/utils/event-bus';
+  import {EventBus} from '@app/utils/event-bus';
+  import Filters from './filters';
 
-  export default {
+  export default Vue.extend({
     components: {
       Filters,
       PSTags,
@@ -72,22 +87,23 @@
       PSAlert,
     },
     computed: {
-      error() {
+      error(): boolean {
         return (this.alertType === 'ALERT_TYPE_DANGER');
       },
     },
     methods: {
-      onClick() {
-        const tag = this.$refs.psTags.tag;
-        this.$refs.psTags.add(tag);
+      onClick(): void {
+        const refPsTags = this.$refs.psTags as VTags;
+        const {tag} = refPsTags;
+        refPsTags.add(tag);
       },
-      onSearch() {
+      onSearch(): void {
         this.$emit('search', this.tags);
       },
-      applyFilter(filters) {
+      applyFilter(filters: Array<any>): void {
         this.$emit('applyFilter', filters);
       },
-      onCloseAlert() {
+      onCloseAlert(): void {
         this.showAlert = false;
       },
     },
@@ -97,19 +113,21 @@
       },
     },
     mounted() {
-      EventBus.$on('displayBulkAlert', (type) => {
+      EventBus.$on('displayBulkAlert', (type: string) => {
         this.alertType = type === 'success' ? 'ALERT_TYPE_SUCCESS' : 'ALERT_TYPE_DANGER';
         this.showAlert = true;
-        setTimeout(_ => {
+        setTimeout(() => {
           this.showAlert = false;
         }, 5000);
       });
     },
-    data: () => ({
-      tags: [],
-      showAlert: false,
-      alertType: 'ALERT_TYPE_DANGER',
-      duration: false,
-    }),
-  };
+    data() {
+      return {
+        tags: [],
+        showAlert: false,
+        alertType: 'ALERT_TYPE_DANGER',
+        duration: false,
+      };
+    },
+  });
 </script>

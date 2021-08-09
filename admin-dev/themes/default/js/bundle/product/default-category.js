@@ -1,12 +1,13 @@
 /**
  * Default category management
  */
-var defaultCategory = (function() {
-  var defaultCategoryForm = $('#form_step1_id_category_default');
+const defaultCategory = (function () {
+  const defaultCategoryForm = $('#form_step1_id_category_default');
+
   return {
-    'init': function () {
-      /** Populate category tree with the default category **/
-      var defaultCategoryId = defaultCategoryForm.find('input:checked').val();
+    init() {
+      // Populate category tree with the default category
+      const defaultCategoryId = defaultCategoryForm.find('input:checked').val();
       productCategoriesTags.checkDefaultCategory(defaultCategoryId);
 
       /** Hide the default form, if javascript disabled it will be visible and so we
@@ -18,27 +19,29 @@ var defaultCategory = (function() {
     /**
      * Check the radio bouton with the selected value
      */
-    'check': function(value) {
-      defaultCategoryForm.find('input[value="'+value+'"]').prop('checked', true);
+    check(value) {
+      defaultCategoryForm.find(`input[value="${value}"]`).prop('checked', true);
     },
 
-    'isChecked': function(value) {
-      return defaultCategoryForm.find('input[value="'+value+'"]').is(':checked');
+    isChecked(value) {
+      return defaultCategoryForm.find(`input[value="${value}"]`).is(':checked');
     },
 
     /**
      * When the category selected as a default is unselected
      * The default category MUST be a selected category
      */
-    'reset': function() {
-      var firstInput = defaultCategoryForm.find('input:first-child');
+    reset() {
+      const firstInput = defaultCategoryForm.find('input:first-child');
       firstInput.prop('checked', true);
-      var categoryId = firstInput.val();
+      const categoryId = firstInput.val();
       productCategoriesTags.checkDefaultCategory(categoryId);
-    }
+    },
   };
-})();
+}());
 
-BOEvent.on("Product Default category Management started", function initDefaultCategoryManagement() {
+window.defaultCategory = defaultCategory;
+
+BOEvent.on('Product Default category Management started', () => {
   defaultCategory.init();
-}, "Back office");
+}, 'Back office');

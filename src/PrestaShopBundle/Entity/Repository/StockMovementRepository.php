@@ -44,7 +44,7 @@ class StockMovementRepository extends StockManagementRepository
      * @param EntityManager $entityManager
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
-     * @param $tablePrefix
+     * @param string $tablePrefix
      */
     public function __construct(
         ContainerInterface $container,
@@ -81,6 +81,7 @@ class StockMovementRepository extends StockManagementRepository
         }
 
         $combinationNameQuery = $this->getCombinationNameSubquery();
+        $attributeNameQuery = $this->getAttributeNameSubquery();
 
         return str_replace(
             [
@@ -89,6 +90,7 @@ class StockMovementRepository extends StockManagementRepository
                 '{order_by}',
                 '{table_prefix}',
                 '{combination_name}',
+                '{attribute_name}',
             ],
             [
                 $andWhereClause,
@@ -96,6 +98,7 @@ class StockMovementRepository extends StockManagementRepository
                 $orderByClause,
                 $this->tablePrefix,
                 $combinationNameQuery,
+                $attributeNameQuery,
             ],
             'SELECT SQL_CALC_FOUND_ROWS
               sm.id_stock_mvt,
@@ -120,7 +123,8 @@ class StockMovementRepository extends StockManagementRepository
               p.id_supplier                               AS supplier_id,
               COALESCE(s.name, "N/A")                     AS supplier_name,
               COALESCE(ic.id_image, 0)                    AS product_cover_id,
-              {combination_name}
+              {combination_name},
+              {attribute_name}
            FROM {table_prefix}stock_mvt sm
             INNER JOIN {table_prefix}stock_mvt_reason_lang smrl ON (
               smrl.id_stock_mvt_reason = sm.id_stock_mvt_reason

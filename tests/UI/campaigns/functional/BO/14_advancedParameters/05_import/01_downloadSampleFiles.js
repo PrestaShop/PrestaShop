@@ -101,8 +101,8 @@ describe('Download import sample csv files', async () => {
     {
       args:
         {
-          type: 'manufacturers_import',
-          textToCheck: 'Manufacturer ID;Active (0/1);Name *;Description;Short description;'
+          type: 'brands_import',
+          textToCheck: 'ID;Active (0/1);Name *;Description;Short description;'
             + 'Meta title;Meta keywords;Meta description;Image URL',
         },
     },

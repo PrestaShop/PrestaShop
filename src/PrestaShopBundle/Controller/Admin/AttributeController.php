@@ -39,7 +39,7 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * get All Attributes as json.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @return JsonResponse
      */
@@ -82,7 +82,9 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Attributes generator.
      *
-     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))"
+     * )
      *
      * @param Request $request The request
      *
@@ -97,6 +99,7 @@ class AttributeController extends FrameworkBundleAdminController
 
         //get product
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
+        /** @var Product $product */
         $product = $productAdapter->getProduct((int) $idProduct);
 
         if (!is_object($product) || empty($product->id) || empty($options) || !is_array($options)) {
@@ -142,7 +145,6 @@ class AttributeController extends FrameworkBundleAdminController
         $attributes = $product->sortCombinationByAttributePosition($newCombinationIds, $locales[0]['id_lang']);
         $this->ensureProductHasDefaultCombination($product, $attributes);
 
-        $response = new JsonResponse();
         $combinationDataProvider = $this->get('prestashop.adapter.data_provider.combination');
         $result = [
             'ids_product_attribute' => [],
@@ -200,7 +202,7 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Delete a product attribute.
      *
-     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
      * @param int $idProduct The product ID
      * @param Request $request The request
@@ -237,7 +239,7 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Delete all product attributes.
      *
-     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
      * @param int $idProduct The product ID
      * @param Request $request The request
@@ -277,7 +279,7 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * get the images form for a product combinations.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $idProduct The product id
      * @param Request $request The request

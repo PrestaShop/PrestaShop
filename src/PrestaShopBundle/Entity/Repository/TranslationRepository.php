@@ -27,12 +27,13 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
 
-class TranslationRepository extends EntityRepository
+class TranslationRepository extends EntityRepository implements TranslationRepositoryInterface
 {
     /**
-     * @param $language
-     * @param $theme
+     * @param string $language
+     * @param string $theme
      *
      * @return array
      */

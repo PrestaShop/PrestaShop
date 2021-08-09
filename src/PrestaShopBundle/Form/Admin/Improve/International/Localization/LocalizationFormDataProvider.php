@@ -26,45 +26,27 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
-use PrestaShop\PrestaShop\Adapter\Localization\AdvancedConfiguration;
-use PrestaShop\PrestaShop\Adapter\Localization\LocalizationConfiguration;
-use PrestaShop\PrestaShop\Adapter\Localization\LocalUnitsConfiguration;
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
  * Class LocalizationFormDataProvider is responsible for handling
- * 'Improve > International > Localization' page form data.
+ * 'Improve > International > Localization' page forms data.
  */
 class LocalizationFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var LocalizationConfiguration
+     * @var DataConfigurationInterface
      */
-    private $localizationConfiguration;
+    private $dataConfiguration;
 
     /**
-     * @var LocalUnitsConfiguration
-     */
-    private $localUnitsConfiguration;
-
-    /**
-     * @var AdvancedConfiguration
-     */
-    private $advancedConfiguration;
-
-    /**
-     * @param LocalizationConfiguration $localizationConfiguration
-     * @param LocalUnitsConfiguration $localUnitsConfiguration
-     * @param AdvancedConfiguration $advancedConfiguration
+     * @param DataConfigurationInterface $dataConfiguration
      */
     public function __construct(
-        LocalizationConfiguration $localizationConfiguration,
-        LocalUnitsConfiguration $localUnitsConfiguration,
-        AdvancedConfiguration $advancedConfiguration
+        DataConfigurationInterface $dataConfiguration
     ) {
-        $this->localizationConfiguration = $localizationConfiguration;
-        $this->localUnitsConfiguration = $localUnitsConfiguration;
-        $this->advancedConfiguration = $advancedConfiguration;
+        $this->dataConfiguration = $dataConfiguration;
     }
 
     /**
@@ -72,11 +54,7 @@ class LocalizationFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
-            'configuration' => $this->localizationConfiguration->getConfiguration(),
-            'local_units' => $this->localUnitsConfiguration->getConfiguration(),
-            'advanced' => $this->advancedConfiguration->getConfiguration(),
-        ];
+        return $this->dataConfiguration->getConfiguration();
     }
 
     /**
@@ -84,8 +62,6 @@ class LocalizationFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        return $this->localizationConfiguration->updateConfiguration($data['configuration']) +
-            $this->localUnitsConfiguration->updateConfiguration($data['local_units']) +
-            $this->advancedConfiguration->updateConfiguration($data['advanced']);
+        return $this->dataConfiguration->updateConfiguration($data);
     }
 }

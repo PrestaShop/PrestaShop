@@ -61,9 +61,9 @@ class InvoicesController extends FrameworkBundleAdminController
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'byDateForm' => $byDateForm->createView(),
-            'byStatusForm' => $byStatusForm->createView(),
-            'optionsForm' => $optionsForm->createView(),
+            'generateByDateForm' => $byDateForm->createView(),
+            'generateByStatusForm' => $byStatusForm->createView(),
+            'invoiceOptionsForm' => $optionsForm->createView(),
         ];
     }
 
@@ -143,5 +143,21 @@ class InvoicesController extends FrameworkBundleAdminController
         }
 
         return true;
+    }
+
+    /**
+     * Generates PDF of given invoice ID.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     *
+     * @param int $invoiceId
+     */
+    public function generatePdfByIdAction(int $invoiceId)
+    {
+        $this->get('prestashop.adapter.pdf.generator.single_invoice')->generatePDF([$invoiceId]);
+
+        // When using legacy generator,
+        // we want to be sure that displaying PDF is the last thing this controller will do
+        die();
     }
 }

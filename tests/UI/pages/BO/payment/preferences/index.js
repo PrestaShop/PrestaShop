@@ -1,26 +1,33 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * BO Payment preferences page, contains texts, selectors and functions to use on the page.
+ * @class
+ * @extends BOBasePage
+ */
 class Preferences extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use
+   */
   constructor() {
     super();
 
     this.pageTitle = 'Preferences •';
 
     // Selectors for currency restrictions
-    this.euroCurrencyRestrictionsCheckbox = paymentModule => '#form_payment_module_preferences_currency_restrictions_'
-      + `${paymentModule}_0`;
-    this.currencyRestrictionsSaveButton = '#main-div div:nth-child(1) > div.card-footer button';
+    this.euroCurrencyRestrictionsCheckbox = paymentModule => `#form_currency_restrictions_${paymentModule}_0`;
+    this.currencyRestrictionsSaveButton = '#form-currency-restrictions-save-button';
     // Selectors for group restrictions
-    this.paymentModuleCheckbox = (paymentModule, groupID) => '#form_payment_module_preferences_group_restrictions_'
-      + `${paymentModule}_${groupID}`;
-    this.countryRestrictionsCheckbox = (paymentModule, countryID) => '#form_payment_module_preferences_country_'
-      + `restrictions_${paymentModule}_${countryID}`;
-    this.groupRestrictionsSaveButton = '#main-div div:nth-child(2) > div.card-footer button';
+    this.paymentModuleCheckbox = (paymentModule, groupID) => `#form_group_restrictions_${paymentModule}_${groupID}`;
+    this.countryRestrictionsCheckbox = (paymentModule, countryID) => '#form_country_restrictions_'
+      + `${paymentModule}_${countryID}`;
+    this.groupRestrictionsSaveButton = '#form-group-restrictions-save-button';
     // Selectors fot carrier restriction
-    this.carrierRestrictionsCheckbox = (paymentModule, carrierID) => '#form_payment_module_preferences_carrier_'
-     + `restrictions_${paymentModule}_${carrierID}`;
-    this.carrierRestrictionSaveButton = 'div.card:nth-child(4) .card-footer button';
+    this.carrierRestrictionsCheckbox = (paymentModule, carrierID) => '#form_carrier_restrictions_'
+      + `${paymentModule}_${carrierID}`;
+    this.carrierRestrictionSaveButton = '#form-carrier-restrictions-save-button';
   }
 
   /*
@@ -28,9 +35,9 @@ class Preferences extends BOBasePage {
    */
   /**
    * Set currency restrictions
-   * @param page
-   * @param paymentModule
-   * @param valueWanted
+   * @param page {Page} Browser tab
+   * @param paymentModule {string} Name of the module to set restriction on
+   * @param valueWanted {boolean} True to allow the module for the currency
    * @returns {Promise<string>}
    */
   async setCurrencyRestriction(page, paymentModule, valueWanted) {
@@ -42,6 +49,7 @@ class Preferences extends BOBasePage {
       page,
       this.euroCurrencyRestrictionsCheckbox(paymentModule),
     );
+
     if (valueWanted !== isCheckboxSelected) {
       await page.$eval(`${this.euroCurrencyRestrictionsCheckbox(paymentModule)} + i`, el => el.click());
     }
@@ -51,16 +59,17 @@ class Preferences extends BOBasePage {
 
   /**
    * Set group restrictions
-   * @param page
-   * @param group
-   * @param paymentModule
-   * @param valueWanted
+   * @param page {Page} Browser tab
+   * @param group {string} String of the group
+   * @param paymentModule {string} Name of the module to set restriction on
+   * @param valueWanted {boolean} True to allow the module for the group
    * @returns {Promise<string>}
    */
   async setGroupRestrictions(page, group, paymentModule, valueWanted) {
     const selector = this.paymentModuleCheckbox(paymentModule, group);
     await this.waitForAttachedSelector(page, `${selector} + i`);
     const isCheckboxSelected = await this.isCheckboxSelected(page, selector);
+
     if (valueWanted !== isCheckboxSelected) {
       await page.$eval(`${selector} + i`, el => el.click());
     }
@@ -70,10 +79,10 @@ class Preferences extends BOBasePage {
 
   /**
    * Set country restrictions
-   * @param page
-   * @param countryID
-   * @param paymentModule
-   * @param valueWanted
+   * @param page {Page} Browser tab
+   * @param countryID {number} Country position on the table
+   * @param paymentModule {string} Name of the module to set restriction on
+   * @param valueWanted {boolean} True to allow the module for the country
    * @returns {Promise<string>}
    */
   async setCountryRestriction(page, countryID, paymentModule, valueWanted) {
@@ -85,6 +94,7 @@ class Preferences extends BOBasePage {
       page,
       this.countryRestrictionsCheckbox(paymentModule, countryID),
     );
+
     if (valueWanted !== isCheckboxSelected) {
       await page.$eval(`${this.countryRestrictionsCheckbox(paymentModule, countryID)} + i`, el => el.click());
     }
@@ -94,10 +104,10 @@ class Preferences extends BOBasePage {
 
   /**
    * Set carrier restriction
-   * @param page
-   * @param carrierID
-   * @param paymentModule
-   * @param valueWanted
+   * @param page {Page} Browser tab
+   * @param carrierID {number} Carrier position on the table
+   * @param paymentModule {string} Name of the module to set restriction on
+   * @param valueWanted {boolean} True to allow the module for the carrier
    * @return {Promise<string>}
    */
   async setCarrierRestriction(page, carrierID, paymentModule, valueWanted) {
@@ -109,6 +119,7 @@ class Preferences extends BOBasePage {
       page,
       this.carrierRestrictionsCheckbox(paymentModule, carrierID),
     );
+
     if (valueWanted !== isCheckboxSelected) {
       await page.$eval(`${this.carrierRestrictionsCheckbox(paymentModule, carrierID)} + i`, el => el.click());
     }

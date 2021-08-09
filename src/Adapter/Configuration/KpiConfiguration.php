@@ -37,10 +37,10 @@ class KpiConfiguration extends Configuration
     /**
      * Changes configuration definition before calling it's methods.
      *
-     * @param $name
-     * @param $arguments
+     * @param string $name
+     * @param mixed $arguments
      *
-     * @return mixed
+     * @return mixed|void
      */
     public function __call($name, $arguments)
     {

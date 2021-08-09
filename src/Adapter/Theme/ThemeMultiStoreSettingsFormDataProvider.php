@@ -82,7 +82,7 @@ final class ThemeMultiStoreSettingsFormDataProvider implements MultiStoreSetting
     /**
      * Checks if the configuration exists for specific shop context.
      *
-     * @param $configurationKey
+     * @param string $configurationKey
      *
      * @return bool
      */

@@ -54,3 +54,6 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing
+
+  prestashop.adapter.manufacturer.repository.manufacturer_repository:
+      class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository'

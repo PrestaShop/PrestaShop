@@ -36,8 +36,8 @@ use Symfony\Component\Validator\Constraints\Choice;
 
 class ChangeOrderAddressType extends AbstractType
 {
-    const SHIPPING_TYPE = 'shipping';
-    const INVOICE_TYPE = 'invoice';
+    public const SHIPPING_TYPE = 'shipping';
+    public const INVOICE_TYPE = 'invoice';
 
     /**
      * @var ConfigurableFormChoiceProviderInterface
@@ -62,10 +62,10 @@ class ChangeOrderAddressType extends AbstractType
                 'choices' => $this->customerAddressProvider->getChoices($options),
             ])
             ->add('address_type', HiddenType::class, [
-                    'constraints' => [
-                        new Choice($this->getAvailableAddressTypes()),
-                    ],
-                ]
+                'constraints' => [
+                    new Choice($this->getAvailableAddressTypes()),
+                ],
+            ]
             );
     }
 

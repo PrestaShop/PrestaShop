@@ -3,25 +3,28 @@ require('module-alias/register');
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
 
-// Common tests login BO
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
-const foHomePage = require('@pages/FO/home');
-const foProductPage = require('@pages/FO/product');
-const foCartPage = require('@pages/FO/cart');
-const foCheckoutPage = require('@pages/FO/checkout');
-const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const customersPage = require('@pages/BO/customers');
 
+// Import FO pages
+const foHomePage = require('@pages/FO/home');
+const foProductPage = require('@pages/FO/product');
+const foCartPage = require('@pages/FO/cart');
+const foCheckoutPage = require('@pages/FO/checkout');
+const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
+
 // Import data
 const CustomerFaker = require('@data/faker/customer');
 const AddressFaker = require('@data/faker/address');
+const ProductFaker = require('@data/faker/product');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Products} = require('@data/demo/products');
 
@@ -38,7 +41,6 @@ let page;
 
 const customerData = new CustomerFaker({password: ''});
 const addressData = new AddressFaker({country: 'France'});
-const ProductFaker = require('@data/faker/product');
 
 const productOutOfStockAllowed = new ProductFaker({
   name: 'Out of stock allowed',
@@ -115,7 +117,7 @@ Check product block content:
 - Pagination next and previous
 - Delete product
 */
-describe('Check product block in view order page', async () => {
+describe('BO - Orders - view and edit order : Check product block in view order page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -203,7 +205,7 @@ describe('Check product block in view order page', async () => {
     simpleProduct,
   ].forEach((product, index) => {
     describe(`Create product '${product.name}'`, async () => {
-      it('should go to Products page', async function () {
+      it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${index}`, baseContext);
 
         await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
@@ -238,7 +240,7 @@ describe('Check product block in view order page', async () => {
 
   // 3 - Go to view order page
   describe('Go to view order page', async () => {
-    it('should go to Orders page', async function () {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await dashboardPage.goToSubMenu(

@@ -36,39 +36,43 @@
       placeholder="0"
       pattern="\d*"
       step="1"
-      buttons="true"
-      hoverButtons="true"
-      :value="qty"
+      :buttons="true"
+      :hover-buttons="true"
+      :value="getQuantity()"
       @change="onChange"
       @keyup="onKeyup($event)"
       @focus="focusIn"
       @blur="focusOut($event)"
     />
     <transition name="fade">
-      <button v-if="isActive" class="check-button"><i class="material-icons">check</i></button>
+      <button
+        v-if="isActive"
+        class="check-button"
+      >
+        <i class="material-icons">check</i>
+      </button>
     </transition>
   </form>
 </template>
 
-<script>
+<script lang="ts">
   import PSNumber from '@app/widgets/ps-number';
+  import Vue from 'vue';
 
-  const $ = global.$;
+  const {$} = window;
 
-  export default {
-    props: ['product'],
-    computed: {
-      qty() {
-        if (!this.product.qty) {
-          this.isEnabled = false;
-          this.value = '';
-        }
-        return this.product.qty;
+  export default Vue.extend({
+    props: {
+      product: {
+        type: Object,
+        required: true,
       },
-      id() {
+    },
+    computed: {
+      id(): string {
         return `qty-${this.product.product_id}-${this.product.combination_id}`;
       },
-      classObject() {
+      classObject(): Record<string, any> {
         return {
           active: this.isActive,
           disabled: !this.isEnabled,
@@ -76,39 +80,55 @@
       },
     },
     methods: {
-      onChange(val) {
+      getQuantity(): number {
+        if (!this.product.qty) {
+          this.isEnabled = false;
+          this.value = 0;
+        }
+        return Math.round(<number> this.value);
+      },
+      onChange(val: number): void {
         this.value = val;
         this.isEnabled = !!val;
       },
-      deActivate() {
+      deActivate(): void {
         this.isActive = false;
         this.isEnabled = false;
         this.value = null;
         this.product.qty = null;
       },
-      onKeyup(event) {
-        const val = event.target.value;
-        if (val === 0) {
+      onKeyup(event: Event): void {
+        const val = (<HTMLInputElement>event.target).value;
+
+        if (parseInt(val, 10) === 0) {
           this.deActivate();
         } else {
           this.isActive = true;
           this.isEnabled = true;
-          this.value = val;
+          this.value = parseInt(val, 10);
         }
       },
-      focusIn() {
+      focusIn(): void {
         this.isActive = true;
       },
-      focusOut(event) {
-        const value = parseInt(this.value, 10);
-        if (!$(event.target).hasClass('ps-number') && (isNaN(value) || value === 0)) {
+      focusOut(event: Event): void {
+        const value = Math.round(<number> this.value);
+
+        if (
+          !$(<HTMLElement>event.target).hasClass('ps-number')
+          && (Number.isNaN(value) || value === 0)
+        ) {
           this.isActive = false;
         }
         this.isEnabled = !!this.value;
       },
-      sendQty() {
+      sendQty(): void {
         const postUrl = this.product.edit_url;
-        if (parseInt(this.product.qty, 10) !== 0 && !isNaN(parseInt(this.value, 10))) {
+
+        if (
+          parseInt(this.product.qty, 10) !== 0
+          && !Number.isNaN(Math.round(<number> this.value))
+        ) {
           this.$store.dispatch('updateQtyByProductId', {
             url: postUrl,
             delta: this.value,
@@ -118,7 +138,7 @@
       },
     },
     watch: {
-      value(val) {
+      value(val: number): void {
         this.$emit('updateProductQty', {
           product: this.product,
           delta: val,
@@ -128,24 +148,27 @@
     components: {
       PSNumber,
     },
-    data: () => ({
-      value: null,
-      isActive: false,
-      isEnabled: false,
-    }),
-  };
+    data() {
+      return {
+        value: null as null | number,
+        isActive: false,
+        isEnabled: false,
+      };
+    },
+  });
 </script>
 
 <style lang="scss" type="text/scss" scoped>
   @import "~jquery-ui-dist/jquery-ui.css";
-  *{
+  * {
     outline: none;
   }
-  .fade-enter-active, .fade-leave-active {
+  .fade-enter-active,
+  .fade-leave-active {
     transition: opacity 0.2s ease;
   }
-  .fade-enter, .fade-leave-to {
-    opacity: 0
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
   }
-
 </style>

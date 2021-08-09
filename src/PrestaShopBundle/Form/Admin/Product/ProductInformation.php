@@ -26,7 +26,15 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use Currency;
+use Language;
+use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerDataProvider;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
 use PrestaShopBundle\Form\Admin\Feature\ProductFeature;
 use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
@@ -36,11 +44,13 @@ use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType;
 use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLength;
+use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -48,28 +58,73 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ProductInformation extends CommonAbstractType
 {
-    private $router;
+    /**
+     * @var array
+     */
+    public $categories;
+    /**
+     * @var CategoryDataProvider
+     */
+    public $categoryDataProvider;
+    /**
+     * @var Configuration
+     */
+    public $configuration;
+    /**
+     * @var LegacyContext
+     */
     private $context;
-    private $translator;
+    /**
+     * @var Currency
+     */
+    public $currency;
+    /**
+     * @var FeatureDataProvider
+     */
+    public $featureDataProvider;
+    /**
+     * @var array<int|Language>
+     */
     private $locales;
-    private $productDataProvider;
-    private $nested_categories;
-    private $categoryDataProvider;
+    /**
+     * @var ManufacturerDataProvider
+     */
     private $manufacturerDataProvider;
+    /**
+     * @var array
+     */
     private $manufacturers;
+    /**
+     * @var array
+     */
+    public $nested_categories;
+    /**
+     * @var ProductDataProvider
+     */
     private $productAdapter;
-    private $configuration;
+    /**
+     * @var ProductDataProvider
+     */
+    public $productDataProvider;
+    /**
+     * @var Router
+     */
+    public $router;
+    /**
+     * @var TranslatorInterface
+     */
+    public $translator;
 
     /**
      * Constructor.
      *
-     * @param object $translator
-     * @param object $legacyContext
-     * @param object $router
-     * @param object $categoryDataProvider
-     * @param object $productDataProvider
-     * @param object $featureDataProvider
-     * @param object $manufacturerDataProvider
+     * @param TranslatorInterface $translator
+     * @param LegacyContext $legacyContext
+     * @param Router $router
+     * @param CategoryDataProvider $categoryDataProvider
+     * @param ProductDataProvider $productDataProvider
+     * @param FeatureDataProvider $featureDataProvider
+     * @param ManufacturerDataProvider $manufacturerDataProvider
      */
     public function __construct(
         $translator,
@@ -130,6 +185,11 @@ class ProductInformation extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $is_stock_management = $this->configuration->get('PS_STOCK_MANAGEMENT');
+        $shortDescriptionLimit = (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT');
+        if ($shortDescriptionLimit <= 0) {
+            $shortDescriptionLimit = ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH;
+        }
+
         $builder->add('type_product', FormType\ChoiceType::class, [
             'choices' => [
                 $this->translator->trans('Standard product', [], 'Admin.Catalog.Feature') => 0,
@@ -200,11 +260,11 @@ class ProductInformation extends CommonAbstractType
                     'attr' => [
                         'class' => 'autoload_rte',
                         'placeholder' => $this->translator->trans('The summary is a short sentence describing your product.<br />It will appears at the top of your shop\'s product page, in product lists, and in search engines\' results page (so it\'s important for SEO). To give more details about your product, use the "Description" tab.', [], 'Admin.Catalog.Help'),
-                        'counter' => (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT') <= 0 ? 800 : (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT'),
+                        'counter' => $shortDescriptionLimit,
                     ],
                     'constraints' => [
                         new TinyMceMaxLength([
-                            'max' => (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT') <= 0 ? 800 : (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT'),
+                            'max' => $shortDescriptionLimit,
                         ]),
                     ],
                     'required' => false,
@@ -229,6 +289,7 @@ class ProductInformation extends CommonAbstractType
                     'data-minimumResultsForSearch' => '7',
                 ],
                 'label' => $this->translator->trans('Brand', [], 'Admin.Catalog.Feature'),
+                'placeholder' => $this->translator->trans('Choose a brand', [], 'Admin.Catalog.Feature'),
             ])
             //RIGHT COL
             ->add('active', FormType\CheckboxType::class, [

@@ -1,0 +1,91 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+<tr id="addProductTableRow" class="add-product d-none" data-is-order-tax-included="{{ orderForViewing.isTaxIncluded }}">
+  <td colspan="2" class="pr-2">
+    {{ form_row(addProductRowForm.product_id) }}
+    {{ form_row(addProductRowForm.tax_rate) }}
+    {{ form_label(addProductRowForm.search) }}
+    {{ form_widget(addProductRowForm.search) }}
+    <div class="dropdown">
+      <div class="dropdown-menu"></div>
+    </div>
+    <div class="input-group mt-2 d-none" id="addProductCombinations">
+      <div class="input-group-prepend">
+        <div class="input-group-text">{{ 'Combinations'|trans({}, 'Admin.Global') }}</div>
+      </div>
+      <select id="addProductCombinationId" class="custom-select"></select>
+    </div>
+  </td>
+  <td class="pr-2">
+   <div class="row add-product-inputs">
+     <div class="col-sm-6">
+      {{ form_widget(addProductRowForm.price_tax_excluded) }}
+     </div>
+
+     <div class="col-sm-6">
+      {{ form_widget(addProductRowForm.price_tax_included) }}
+     </div>
+   </div>
+  </td>
+  <td class="pr-2 add-product-quantity">
+    {{ form_row(addProductRowForm.quantity, {'type':'number'}) }}
+  </td>
+  <td id="addProductLocation" class="cellProductLocation"></td>
+  <td id="addProductRefunded" class="cellProductRefunded"></td>
+  <td id="addProductAvailable"{% if not isAvailableQuantityDisplayed %} class="d-none"{% endif %}></td>
+  <td id="addProductTotalPrice"></td>
+  {% if orderForViewing.hasInvoice() %}
+    <td class="addProductInvoice pr-2">
+      {{ form_row(addProductRowForm.invoice, {
+        'attr': {
+          'data-modal-title': 'Create a new invoice'|trans({}, 'Admin.Orderscustomers.Feature'),
+          'data-modal-apply': 'Create'|trans({}, 'Admin.Actions'),
+          'data-modal-cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+          'data-modal-body': 'Are you sure you want to create a new invoice?'|trans({}, 'Admin.Orderscustomers.Notification'),
+          'data-modal-edit-price-title': 'Edit the price'|trans({}, 'Admin.Orderscustomers.Feature'),
+          'data-modal-edit-price-apply': 'Update'|trans({}, 'Admin.Actions'),
+          'data-modal-edit-price-cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+          'data-modal-edit-price-body': 'Are you sure you want to edit this product price? It will be applied to all invoices of this order.'|trans({}, 'Admin.Orderscustomers.Notification'),
+        }})
+      }}
+    </td>
+  {% endif %}
+  <td class="text-right add-product-buttons">
+    <div class="btn-group">
+      {{ form_row(addProductRowForm.cancel) }}
+      {{ form_row(addProductRowForm.add) }}
+    </div>
+  </td>
+</tr>
+<tr id="addProductNewInvoiceInfo" class="d-none">
+  <td colspan="12">
+    <div>
+      <h4>{{ 'New invoice information'|trans({}, 'Admin.Orderscustomers.Feature') }}</h4>
+      <p><b>{{ 'Carrier'|trans({}, 'Admin.Shipping.Feature') }} :</b> {{ orderForViewing.carrierName }}</p>
+      {{ form_row(addProductRowForm.free_shipping) }}
+    </div>
+  </td>
+</tr>

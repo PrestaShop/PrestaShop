@@ -26,13 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
+use Configuration;
 use Currency;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiShopException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
@@ -41,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShopDatabaseException;
 use PrestaShopException;
+use Shop;
 
 /**
  * Class AbstractCurrencyHandler is responsible for encapsulating common behavior for legacy currency object model.
@@ -277,5 +281,46 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
         }
 
         throw new LanguageNotFoundException(new LanguageId($langId));
+    }
+
+    /**
+     * @param int $currencyId
+     * @param int $defaultCurrencyId
+     *
+     * @throws CannotDeleteDefaultCurrencyException
+     */
+    protected function assertDefaultCurrencyIsNotBeingRemovedOrDisabled(int $currencyId, int $defaultCurrencyId)
+    {
+        if ($currencyId === $defaultCurrencyId) {
+            throw new CannotDeleteDefaultCurrencyException(sprintf('Currency with id "%s" is the default currency and cannot be deleted or disabled.', $currencyId));
+        }
+    }
+
+    /**
+     * Prevents from removing the currency from any shop context.
+     *
+     * @param Currency $currency
+     *
+     * @throws DefaultCurrencyInMultiShopException
+     */
+    protected function assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromAnyShop(Currency $currency)
+    {
+        $allShopIds = Shop::getShops(false, null, true);
+
+        foreach ($allShopIds as $shopId) {
+            $shopDefaultCurrencyId = (int) Configuration::get(
+                'PS_CURRENCY_DEFAULT',
+                null,
+                null,
+                $shopId
+            );
+
+            if ((int) $currency->id !== $shopDefaultCurrencyId) {
+                continue;
+            }
+
+            $shop = new Shop($shopId);
+            throw new DefaultCurrencyInMultiShopException($currency->name, $shop->name, sprintf('Currency with id %s cannot be removed or disabled from shop with id %s because its the default currency.', $currency->id, $shopId), DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY);
+        }
     }
 }

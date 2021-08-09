@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
  */
 class EditOrderAddressCommand extends AbstractEditAddressCommand
 {
-    const ALLOWED_ADDRESS_TYPES = [
+    public const ALLOWED_ADDRESS_TYPES = [
         OrderAddressType::INVOICE_ADDRESS_TYPE,
         OrderAddressType::DELIVERY_ADDRESS_TYPE,
     ];
@@ -49,7 +49,7 @@ class EditOrderAddressCommand extends AbstractEditAddressCommand
     private $orderId;
 
     /**
-     * @var
+     * @var string
      */
     private $addressType;
 
@@ -77,7 +77,7 @@ class EditOrderAddressCommand extends AbstractEditAddressCommand
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getAddressType()
     {

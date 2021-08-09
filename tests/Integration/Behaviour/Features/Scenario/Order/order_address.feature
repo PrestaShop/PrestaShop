@@ -169,9 +169,13 @@ Feature: Order from Back Office (BO)
     And the preview order "bo_order1" has following shipping details
       | Tracking number  |                              |
       | Tracking URL     |                              |
-    Given the carrier "tracking-carrier" uses "http://tracking.url" as tracking url
-    And I update order "bo_order1" Tracking number to "42424242" and Carrier to "tracking-carrier"
+    Given I update order "bo_order1" Tracking number to "42424242" and Carrier to "tracking-carrier"
+    And the carrier "tracking-carrier" uses "http://tracking.url" as tracking url
     Then order "bo_order1" should have "tracking-carrier" as a carrier
     And the preview order "bo_order1" has following shipping details
       | Tracking number  | 42424242                     |
       | Tracking URL     | http://tracking.url          |
+    Given the carrier "tracking-carrier" uses "http://tracking.url/@" as tracking url
+    Then the preview order "bo_order1" has following shipping details
+      | Tracking number  | 42424242                     |
+      | Tracking URL     | http://tracking.url/42424242 |

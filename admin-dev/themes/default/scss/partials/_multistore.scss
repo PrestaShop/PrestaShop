@@ -1,0 +1,191 @@
+.breadcrumb-multishop {
+  position: relative;
+  width: auto;
+
+  &::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    padding: 0 7px;
+    font-family: FontAwesome, sans-serif;
+    font-size: 14px;
+    line-height: 22px;
+    color: #fff;
+    pointer-events: none;
+    content: "\f0d7";
+    background-color: darken($secondary-color, 15%);
+    @include right(0);
+    @include border-radius(0 4px 4px 0);
+  }
+
+  select {
+    position: relative;
+    display: inline-block;
+    height: 22px;
+    margin: 0;
+    line-height: 20px;
+    color: #666;
+    background: #fff;
+    border: 1px solid darken($secondary-color, 15%);
+    outline: none;
+    -webkit-appearance: none;
+    @include padding(0, 5px, 0, 8px);
+    @include border-radius(4px);
+
+    &:focus {
+      box-shadow: 0 0 0 1px darken($secondary-color, 15%);
+    }
+  }
+}
+
+#header_shop {
+  .dropdown-menu {
+    top: 40px;
+    right: -100px !important;
+    min-width: 17.75rem !important;
+    padding: 0;
+    padding-left: 0;
+    margin: 0;
+    font-size: 13px;
+    border: 1px solid #bbcdd2;
+    border-radius: 0;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+
+    &::before,
+    &::after {
+      position: absolute;
+      right: 95px;
+      bottom: 100%;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+      content: " ";
+      border: solid transparent;
+    }
+
+    &::after {
+      margin-right: 1px;
+      border-color: transparent;
+      border-width: 7px;
+      border-bottom-color: #fff;
+    }
+
+    &::before {
+      margin-left: -8px;
+      border-color: transparent;
+      border-width: 8px;
+      border-bottom-color: #bbcdd2;
+    }
+
+    li:first-child a {
+      font-size: 0.875rem !important;
+      font-weight: 700;
+      color: $brand-info !important;
+    }
+
+    li:not(:first-child) {
+      line-height: 32px;
+
+      a:not(.link-shop) {
+        display: inline-block;
+        width: inherit;
+        padding-top: 0.3125rem;
+        padding-bottom: 0.3125rem;
+      }
+    }
+
+    a {
+      color: #4e6167;
+    }
+
+    .group {
+      a {
+        padding-left: 0.625rem;
+      }
+    }
+
+    .shop {
+      display: flex;
+
+      a {
+        padding-left: 1.5625rem;
+        font-weight: 600;
+      }
+
+      a.link-shop {
+        float: right;
+        padding-top: 3px;
+        padding-right: 10px;
+        padding-left: inherit;
+        margin-left: auto;
+        text-decoration: none;
+
+        i.material-icons {
+          padding: 2px 10px;
+          font-size: 14px;
+          color: #6c868e;
+          cursor: pointer;
+          border: 1px solid #bbcdd2;
+          border-radius: 1px;
+        }
+      }
+    }
+
+    li {
+      &.active,
+      &:hover {
+        a {
+          color: #4e6167 !important;
+        }
+
+        i.material-icons {
+          color: $brand-info !important;
+          border: solid 1px $brand-info !important;
+        }
+      }
+    }
+  }
+
+  .selected-item {
+    color: #00aff0;
+    cursor: pointer;
+  }
+}
+
+// stylelint-disable-next-line
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .custom-select select {
+    @include padding-right(30px);
+  }
+}
+
+
+.no-pointer-events .custom-select::after {
+  content: none;
+}
+
+.multishop-well {
+  @extend .row;
+  padding: 20px 20px 10px;
+  margin-bottom: 15px;
+  background-color: #faf8f0;
+  border: none;
+  @include border-left(3px solid #FBECCB);
+}
+
+@at-root .adminshop .bootstrap {
+  .table-responsive-row {
+    overflow: auto;
+
+    table {
+      max-width: 100%;
+
+      @include media-breakpoint-down(sm) {
+        td::before {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+}

@@ -214,7 +214,7 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
     }
 
     /**
-     * @param Order|OrderDetail|OrderInvoice $object
+     * @param ObjectModel $object
      * @param array $fields
      * @param Currency $oldCurrency
      * @param Currency $newCurrency

@@ -27,17 +27,17 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormHandler;
+use PrestaShop\PrestaShop\Core\Form\Handler;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * Class InvoiceByStatusFormHandler manages the data manipulated using "By status" form
  * in "Sell > Orders > Invoices" page.
  */
-final class InvoiceByStatusFormHandler extends FormHandler
+final class InvoiceByStatusFormHandler extends Handler
 {
     /**
      * @var OrderInvoiceDataProviderInterface
@@ -50,24 +50,24 @@ final class InvoiceByStatusFormHandler extends FormHandler
     private $pdfGenerator;
 
     /**
-     * @param FormBuilderInterface $formBuilder
+     * @param FormFactoryInterface $formFactory
      * @param HookDispatcherInterface $hookDispatcher
      * @param FormDataProviderInterface $formDataProvider
-     * @param array $formTypes
+     * @param string $form
      * @param string $hookName
      * @param OrderInvoiceDataProviderInterface $orderInvoiceDataProvider
      * @param PDFGeneratorInterface $pdfGenerator
      */
     public function __construct(
-        FormBuilderInterface $formBuilder,
+        FormFactoryInterface $formFactory,
         HookDispatcherInterface $hookDispatcher,
         FormDataProviderInterface $formDataProvider,
-        array $formTypes,
+        $form,
         $hookName,
         OrderInvoiceDataProviderInterface $orderInvoiceDataProvider,
         PDFGeneratorInterface $pdfGenerator
     ) {
-        parent::__construct($formBuilder, $hookDispatcher, $formDataProvider, $formTypes, $hookName);
+        parent::__construct($formFactory, $hookDispatcher, $formDataProvider, $form, $hookName);
         $this->orderInvoiceDataProvider = $orderInvoiceDataProvider;
         $this->pdfGenerator = $pdfGenerator;
     }
@@ -83,7 +83,7 @@ final class InvoiceByStatusFormHandler extends FormHandler
 
         $invoiceCollection = [];
 
-        foreach ($data['generate_by_status']['order_states'] as $orderStateId) {
+        foreach ($data['order_states'] as $orderStateId) {
             // Put invoices for each selected status into one collection
             $invoiceCollection = array_merge(
                 $invoiceCollection,

@@ -127,6 +127,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $employee->id_last_order = $employee->getLastElementsForNotify('order');
         $employee->id_last_customer_message = $employee->getLastElementsForNotify('customer_message');
         $employee->id_last_customer = $employee->getLastElementsForNotify('customer');
+        $employee->has_enabled_gravatar = $command->hasEnabledGravatar();
 
         // Allow changing profile and active status only when editing not own account.
         if ($employee->id != $this->contextEmployeeProvider->getId()) {

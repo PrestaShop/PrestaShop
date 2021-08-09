@@ -27,6 +27,7 @@
 
 namespace PrestaShopBundle\Translation\Extractor;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\SmartyExtractor;
@@ -100,11 +101,11 @@ class ThemeExtractor
      * @param string $locale
      * @param bool $rootDir
      *
-     * @return mixed
+     * @return MessageCatalogue|null
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function extract(Theme $theme, $locale = 'en-US', $rootDir = false)
+    public function extract(Theme $theme, $locale = 'en-US', $rootDir = false): ?MessageCatalogue
     {
         $this->catalog = new MessageCatalogue($locale);
         // remove the last "/"
@@ -129,7 +130,9 @@ class ThemeExtractor
                     $options['path'] = $this->outputPath;
                 }
 
-                return $dumper->dump($this->catalog, $options);
+                $dumper->dump($this->catalog, $options);
+
+                return $this->catalog;
             }
         }
 
@@ -184,12 +187,12 @@ class ThemeExtractor
      * @param string $locale
      * @param MessageCatalogue $catalogue
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    private function overrideFromDatabase($themeName, $locale, &$catalogue)
+    private function overrideFromDatabase($themeName, $locale, &$catalogue): void
     {
         if (null === $this->themeProvider) {
-            throw new \Exception('Theme provider is required.');
+            throw new Exception('Theme provider is required.');
         }
 
         $databaseCatalogue = $this->themeProvider
@@ -241,7 +244,7 @@ class ThemeExtractor
     }
 
     /**
-     * @param $outputPath
+     * @param string $outputPath
      *
      * @return $this
      */

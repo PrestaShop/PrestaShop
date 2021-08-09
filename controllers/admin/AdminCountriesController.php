@@ -247,7 +247,7 @@ class AdminCountriesControllerCore extends AdminController
                 ],
                 [
                     'type' => 'switch',
-                    'label' => $this->trans('Does it need Zip/postal code?', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('Does it need Zip/Postal code?', [], 'Admin.International.Feature'),
                     'name' => 'need_zip_code',
                     'required' => false,
                     'is_bool' => true,
@@ -266,7 +266,7 @@ class AdminCountriesControllerCore extends AdminController
                 ],
                 [
                     'type' => 'text',
-                    'label' => $this->trans('Zip/postal code format', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('Zip/Postal code format', [], 'Admin.International.Feature'),
                     'name' => 'zip_code_format',
                     'required' => true,
                     'desc' => $this->trans('Indicate the format of the postal code: use L for a letter, N for a number, and C for the country\'s ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.', [], 'Admin.International.Help'),
@@ -290,12 +290,12 @@ class AdminCountriesControllerCore extends AdminController
                         [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                     'hint' => $this->trans('Display this country to your customers (the selected country will always be displayed in the Back Office).', [], 'Admin.International.Help'),
@@ -309,12 +309,12 @@ class AdminCountriesControllerCore extends AdminController
                         [
                             'id' => 'contains_states_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Yes', [], 'Admin.Global') . '" title="' . $this->trans('Yes', [], 'Admin.Global') . '" />' . $this->trans('Yes', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'contains_states_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('No', [], 'Admin.Global') . '" title="' . $this->trans('No', [], 'Admin.Global') . '" />' . $this->trans('No', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                 ],
@@ -327,12 +327,12 @@ class AdminCountriesControllerCore extends AdminController
                         [
                             'id' => 'need_identification_number_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Yes', [], 'Admin.Global') . '" title="' . $this->trans('Yes', [], 'Admin.Global') . '" />' . $this->trans('Yes', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'need_identification_number_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('No', [], 'Admin.Global') . '" title="' . $this->trans('No', [], 'Admin.Global') . '" />' . $this->trans('No', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                 ],
@@ -345,12 +345,12 @@ class AdminCountriesControllerCore extends AdminController
                         [
                             'id' => 'display_tax_label_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Yes', [], 'Admin.Global') . '" title="' . $this->trans('Yes', [], 'Admin.Global') . '" />' . $this->trans('Yes', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'display_tax_label_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('No', [], 'Admin.Global') . '" title="' . $this->trans('No', [], 'Admin.Global') . '" />' . $this->trans('No', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                 ],

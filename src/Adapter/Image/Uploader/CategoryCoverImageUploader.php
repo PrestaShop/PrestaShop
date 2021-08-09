@@ -29,10 +29,11 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 use Category;
 use ImageManager;
 use ImageType;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -40,7 +41,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * @internal
  */
-final class CategoryCoverImageUploader extends AbstractImageUploader
+final class CategoryCoverImageUploader extends AbstractImageUploader implements ImageUploaderInterface
 {
     /**
      * {@inheritdoc}
@@ -80,11 +81,11 @@ final class CategoryCoverImageUploader extends AbstractImageUploader
     private function uploadImage($id, UploadedFile $image)
     {
         $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-
         if (!$temporaryImageName) {
             throw new ImageUploadException('Failed to create temporary image file');
         }
-
+        // move_uploaded_file -  also checks that the given file is a file that was uploaded via the POST,
+        // this prevents for example that a local file is moved
         if (!move_uploaded_file($image->getPathname(), $temporaryImageName)) {
             throw new ImageUploadException('Failed to upload image');
         }

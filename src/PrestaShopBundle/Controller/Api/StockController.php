@@ -197,7 +197,7 @@ class StockController extends ApiController
     /**
      * @param Request $request
      *
-     * @return int
+     * @return void
      */
     private function guardAgainstMissingDeltaParameter(Request $request)
     {
@@ -215,10 +215,10 @@ class StockController extends ApiController
     }
 
     /**
-     * @param $content
-     * @param $message
+     * @param string $content
+     * @param string $message
      *
-     * @return mixed
+     * @return array
      */
     private function guardAgainstInvalidRequestContent($content, $message)
     {

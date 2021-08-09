@@ -55,7 +55,7 @@
 
 	<!-- Install type (with fixtures or not) -->
 	<div class="field clearfix">
-		<label class="aligned"><?php echo $this->translator->trans('Install demo products', array(), 'Install'); ?></label>
+		<label class="aligned"><?php echo $this->translator->trans('Install demonstration data', array(), 'Install'); ?></label>
 		<div class="contentinput">
 			<label>
 				<input value="full" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ($this->install_type == 'full'): ?>checked="checked"<?php endif; ?> autocomplete="off" />
@@ -99,20 +99,20 @@
 		<?php echo $this->displayError('shop_timezone') ?>
 	</div>
 
-	<!-- Shop logo
-	<div class="field clearfix">
-		<label for="uploadedImage" class="aligned logo"><?php echo $this->translator->trans('Shop logo', array(), 'Install'); ?></label>
-		<div class="contentinput">
-			<p id="alignedLogo"><img id="uploadedImage" src="../img/logo.jpg?t=<?php echo time() ?>" alt="Logo" /></p>
-		</div>
-		<p class="userInfos aligned"><?php echo $this->translator->trans('Optional - You can add you logo at a later time.', array(), 'Install'); ?></p>
-
-		<div id="inputFileLogo" class="contentinput" style="top:-20px;position:relative">
-			<input type="file" name="fileToUpload" id="fileToUpload"/>
-		</div>
-		<span id="resultInfosLogo" class="result"></span>
-	</div>
-	 -->
+    <!-- Enable SSL -->
+    <div class="field clearfix">
+        <label class="aligned"><?php echo $this->translator->trans('Enable SSL', array(), 'Install'); ?></label>
+        <div class="contentinput">
+            <label>
+                <input value="1" type="radio" name="enable_ssl" style="vertical-align: middle;" <?php if ($this->session->enable_ssl == '1'): ?>checked="checked"<?php endif; ?> autocomplete="off" />
+                <?php echo $this->translator->trans('Yes', array(), 'Install'); ?>
+            </label>
+            <label>
+                <input value="0" type="radio" name="enable_ssl" style="vertical-align: middle;" <?php if ($this->session->enable_ssl == '0'): ?>checked="checked"<?php endif; ?> autocomplete="off" />
+                <?php echo $this->translator->trans('No', array(), 'Install'); ?>
+            </label>
+        </div>
+    </div>
 
 	<h2 style="margin-top:20px"><?php echo $this->translator->trans('Your Account', array(), 'Install'); ?></h2>
 

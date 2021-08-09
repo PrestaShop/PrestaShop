@@ -33,7 +33,7 @@
     <a href="#" class="clear_search hide"><i class="icon-remove"></i></a>
   {/if}
   <div class="input-group">
-    <input type="text" class="form-control js-form-search" id="bo_query" name="bo_query" value="{$bo_query}" placeholder="{l s='Search (e.g.: product reference, customer name…)'} d='Admin.Navigation.Header'">
+    <input type="text" class="form-control js-form-search" id="bo_query" name="bo_query" value="{$bo_query}" placeholder="{l s='Search (e.g.: product reference, customer name…)' d='Admin.Navigation.Header'}" aria-label="{l s='Searchbar' d='Admin.Navigation.Header'}">
     <div class="input-group-append">
       <button type="button" class="btn btn-outline-secondary dropdown-toggle js-dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {l s='Everywhere' d='Admin.Navigation.Header'}

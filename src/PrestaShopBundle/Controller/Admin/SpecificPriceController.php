@@ -46,9 +46,9 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * Get specific price list for a product.
      *
-     * @AdminSecurity("is_granted(['read'], 'ADMINPRODUCTS_')")
+     * @AdminSecurity("is_granted('read', 'ADMINPRODUCTS_')")
      *
-     * @param $idProduct The product ID
+     * @param string|int $idProduct The product ID
      *
      * @return JsonResponse
      */
@@ -89,7 +89,9 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * Add specific price Form process.
      *
-     * @AdminSecurity("is_granted(['create', 'update'], 'ADMINPRODUCTS_')")
+     * @AdminSecurity(
+     *     "is_granted('create', 'ADMINPRODUCTS_') && is_granted('update', 'ADMINPRODUCTS_')"
+     * )
      *
      * @param Request $request The request
      *
@@ -116,11 +118,13 @@ class SpecificPriceController extends FrameworkBundleAdminController
      *
      * @Template("@PrestaShop/Admin/Product/ProductPage/Forms/form_specific_price.html.twig")
      *
-     * @AdminSecurity("is_granted(['create', 'update'], 'ADMINPRODUCTS_')")
+     * @AdminSecurity(
+     *     "is_granted('create', 'ADMINPRODUCTS_') && is_granted('update', 'ADMINPRODUCTS_')"
+     * )
      *
      * @param int $idSpecificPrice
      *
-     * @return array
+     * @return Response|array
      */
     public function getUpdateFormAction($idSpecificPrice)
     {
@@ -164,9 +168,11 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * Update specific price Form process.
      *
-     * @AdminSecurity("is_granted(['create', 'update'], 'ADMINPRODUCTS_')")
+     * @AdminSecurity(
+     *     "is_granted('create', 'ADMINPRODUCTS_') && is_granted('update', 'ADMINPRODUCTS_')"
+     * )
      *
-     * @param int idSpecificPrice
+     * @param int $idSpecificPrice
      * @param Request $request
      *
      * @return JsonResponse
@@ -194,7 +200,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * Delete a specific price.
      *
-     * @AdminSecurity("is_granted(['delete'], 'ADMINPRODUCTS_')")
+     * @AdminSecurity("is_granted('delete', 'ADMINPRODUCTS_')")
      *
      * @param int $idSpecificPrice The specific price ID
      * @param Request $request The request
@@ -264,7 +270,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * @param string $dateAsString
      *
-     * @return JsonResponse|null If date is 0000-00-00 00:00:00, null is returned
+     * @return string|null If date is 0000-00-00 00:00:00, null is returned
      *
      * @throws \PrestaShopDatabaseExceptionCore if date is not valid
      */

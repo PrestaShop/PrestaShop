@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -13,9 +17,6 @@ const {Products} = require('@data/demo/products');
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products/index');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_catalog_products_filterAndQuickEitProducts';
 
 let browserContext;
@@ -24,8 +25,8 @@ let page;
 let numberOfProducts = 0;
 let filterValue = '';
 
-// Filter Products
-describe('Filter Products', async () => {
+// Filter and quick edit Products
+describe('BO - Catalog - Products : Filter and quick edit Products table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -41,7 +42,7 @@ describe('Filter Products', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to "Catalog>products" page', async function () {
+  it('should go to \'Catalog > products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -64,8 +65,8 @@ describe('Filter Products', async () => {
   });
 
   // 1 : Filter products with all inputs and selects in grid table
-  describe('Filter products', async () => {
-    const tests = [
+  describe('Filter products table', async () => {
+    [
       {
         args:
           {
@@ -122,15 +123,13 @@ describe('Filter Products', async () => {
       {
         args:
           {
-            testIdentifier: 'filterActive',
+            testIdentifier: 'filterStatus',
             filterType: 'select',
             filterBy: 'active',
             filterValue: Products.demo_1.status,
           },
       },
-    ];
-
-    tests.forEach((test) => {
+    ].forEach((test) => {
       filterValue = test.args.filterValue.min === undefined ? `'${test.args.filterValue}'`
         : `'${test.args.filterValue.min}-${test.args.filterValue.max}'`;
 
@@ -173,7 +172,7 @@ describe('Filter Products', async () => {
   });
 
   // 2 : Editing products from table
-  describe('Quick Edit products', async () => {
+  describe('Quick edit products table', async () => {
     it('should filter by Name \'Hummingbird printed sweater\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
@@ -188,12 +187,10 @@ describe('Filter Products', async () => {
       }
     });
 
-    const statuses = [
+    [
       {args: {status: 'disable', enable: false}},
       {args: {status: 'enable', enable: true}},
-    ];
-
-    statuses.forEach((productStatus) => {
+    ].forEach((productStatus) => {
       it(`should ${productStatus.args.status} the product`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${productStatus.args.status}Product`, baseContext);
 
@@ -216,6 +213,13 @@ describe('Filter Products', async () => {
         const currentStatus = await productsPage.getProductStatusFromList(page, 1);
         await expect(currentStatus).to.be.equal(productStatus.args.enable);
       });
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+
+      const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
   });
 });

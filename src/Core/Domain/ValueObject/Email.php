@@ -36,7 +36,7 @@ class Email
     /**
      * @var int Maximum allowed length for email
      */
-    const MAX_LENGTH = 255;
+    public const MAX_LENGTH = 255;
 
     /**
      * @var string
@@ -80,7 +80,7 @@ class Email
     /**
      * Check that email is not an empty string
      *
-     * @param $email
+     * @param string $email
      *
      * @throws DomainConstraintException
      */

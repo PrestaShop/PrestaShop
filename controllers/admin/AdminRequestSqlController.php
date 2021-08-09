@@ -57,7 +57,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
         $this->fields_list = [
             'id_request_sql' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'class' => 'fixed-width-xs'],
-            'name' => ['title' => $this->trans('SQL query Name', [], 'Admin.Advparameters.Feature')],
+            'name' => ['title' => $this->trans('SQL query name', [], 'Admin.Advparameters.Feature')],
             'sql' => [
                 'title' => $this->trans('SQL query', [], 'Admin.Advparameters.Feature'),
                 'filter_key' => 'a!sql',
@@ -331,7 +331,7 @@ class AdminRequestSqlControllerCore extends AdminController
     }
 
     /**
-     * Genrating a export file.
+     * Generating an export file.
      */
     public function processExport($textDelimiter = '"')
     {

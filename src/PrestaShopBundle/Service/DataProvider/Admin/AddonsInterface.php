@@ -34,6 +34,25 @@ namespace PrestaShopBundle\Service\DataProvider\Admin;
 interface AddonsInterface
 {
     /**
+     * @param int $module_id
+     *
+     * @return bool
+     */
+    public function downloadModule(int $module_id): bool;
+
+    /**
+     * @return bool
+     */
+    public function isAddonsAuthenticated(): bool;
+
+    /**
+     * Check if a request has already failed.
+     *
+     * @return bool
+     */
+    public function isAddonsUp(): bool;
+
+    /**
      * Send a request to addons.prestashop.com to retrieve Modules/Addons data.
      *
      * @param string $action the query type

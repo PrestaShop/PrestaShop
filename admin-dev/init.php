@@ -99,7 +99,7 @@ try {
         Tools::redirectAdmin($url['path'] . '?' . http_build_query($parseQuery, '', '&'));
     }
 
-    $context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+    $context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
 
     if ($context->employee->isLoggedBack()) {
         $shop_id = '';
@@ -109,14 +109,14 @@ try {
             if (count($split) == 2) {
                 if ($split[0] == 'g') {
                     if ($context->employee->hasAuthOnShopGroup($split[1])) {
-                        Shop::setContext(Shop::CONTEXT_GROUP, $split[1]);
+                        Shop::setContext(Shop::CONTEXT_GROUP, (int) $split[1]);
                     } else {
                         $shop_id = $context->employee->getDefaultShopID();
                         Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
                     }
-                } elseif ($context->employee->hasAuthOnShop($split[1])) {
+                } elseif ($context->employee->hasAuthOnShop((int) $split[1])) {
                     $shop_id = $split[1];
-                    Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
+                    Shop::setContext(Shop::CONTEXT_SHOP, (int) $shop_id);
                 } else {
                     $shop_id = $context->employee->getDefaultShopID();
                     Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
@@ -126,7 +126,7 @@ try {
 
         // Replace existing shop if necessary
         if (!$shop_id) {
-            $context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+            $context->shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         } elseif ($context->shop->id != $shop_id) {
             $context->shop = new Shop($shop_id);
         }

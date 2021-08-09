@@ -174,6 +174,11 @@ class OrderCore extends ObjectModel
     public $round_type;
 
     /**
+     * @var string internal order note, what is only available in BO
+     */
+    public $note = '';
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -225,6 +230,7 @@ class OrderCore extends ObjectModel
             'reference' => ['type' => self::TYPE_STRING],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'note' => ['type' => self::TYPE_HTML],
         ],
     ];
 
@@ -256,6 +262,7 @@ class OrderCore extends ObjectModel
                 'getter' => 'getWsShippingNumber',
                 'setter' => 'setWsShippingNumber',
             ],
+            'note' => [],
         ],
         'associations' => [
             'order_rows' => ['resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
@@ -423,7 +430,7 @@ class OrderCore extends ObjectModel
         $this->total_paid_tax_excl -= $product_price_tax_excl + $shipping_diff_tax_excl;
         $this->total_paid_real -= $product_price_tax_incl + $shipping_diff_tax_incl;
 
-        $fields = [
+        $fieldsFloatType = [
             'total_shipping',
             'total_shipping_tax_excl',
             'total_shipping_tax_incl',
@@ -436,14 +443,11 @@ class OrderCore extends ObjectModel
         ];
 
         /* Prevent from floating precision issues */
-        foreach ($fields as $field) {
+        foreach ($fieldsFloatType as $field) {
             if ($this->{$field} < 0) {
                 $this->{$field} = 0;
             }
-        }
 
-        /* Prevent from floating precision issues */
-        foreach ($fields as $field) {
             $this->{$field} = number_format($this->{$field}, Context::getContext()->getComputingPrecision(), '.', '');
         }
 
@@ -498,8 +502,8 @@ class OrderCore extends ObjectModel
      * Get order history.
      *
      * @param int $id_lang Language id
-     * @param int $id_order_state Filter a specific order status
-     * @param int $no_hidden Filter no hidden status
+     * @param int|bool $id_order_state Filter a specific order status
+     * @param int|bool $no_hidden Filter no hidden status
      * @param int $filters Flag to use specific field filter
      *
      * @return array History entries ordered by date DESC
@@ -1138,7 +1142,7 @@ class OrderCore extends ObjectModel
      *
      * @param int $id_customer Customer id
      *
-     * @return array Customer orders number
+     * @return int Customer orders number
      */
     public static function getCustomerNbOrders($id_customer)
     {
@@ -1148,7 +1152,7 @@ class OrderCore extends ObjectModel
                     . Shop::addSqlRestriction();
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
-        return isset($result['nb']) ? $result['nb'] : 0;
+        return isset($result['nb']) ? (int) $result['nb'] : 0;
     }
 
     /**
@@ -1176,7 +1180,7 @@ class OrderCore extends ObjectModel
     {
         $id_order = (int) self::getIdByCartId((int) $id_cart);
 
-        return ($id_order > 0) ? new self($id_order) : null;
+        return ($id_order > 0) ? new static($id_order) : null;
     }
 
     /**
@@ -1691,7 +1695,7 @@ class OrderCore extends ObjectModel
      */
     public function setCurrentState($id_order_state, $id_employee = 0)
     {
-        if (empty($id_order_state)) {
+        if (empty($id_order_state) || (int) $id_order_state === (int) $this->current_state) {
             return false;
         }
         $history = new OrderHistory();
@@ -1848,7 +1852,7 @@ class OrderCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param float $amount_paid
+     * @param string $amount_paid
      * @param string $payment_method
      * @param string $payment_transaction_id
      * @param Currency $currency
@@ -2323,7 +2327,7 @@ class OrderCore extends ObjectModel
     /**
      * @since 1.5.0.4
      *
-     * @return OrderState or null if Order haven't a state
+     * @return OrderState|null null if Order haven't a state
      */
     public function getCurrentOrderState()
     {

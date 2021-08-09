@@ -51,7 +51,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'catalog_price_rule';
+    public const GRID_ID = 'catalog_price_rule';
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher
@@ -82,107 +82,107 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
     {
         return (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
-                ->setOptions([
-                    'bulk_field' => 'id_specific_price_rule',
-                ])
+            ->setOptions([
+                'bulk_field' => 'id_specific_price_rule',
+            ])
             )
             ->add((new DataColumn('id_specific_price_rule'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id_specific_price_rule',
-                ])
+            ->setName($this->trans('ID', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'id_specific_price_rule',
+            ])
             )
             ->add((new DataColumn('name'))
-                ->setName($this->trans('Name', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'name',
-                ])
+            ->setName($this->trans('Name', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'name',
+            ])
             )
             ->add((new DataColumn('shop'))
-                ->setName($this->trans('Shop', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'shop',
-                ])
+            ->setName($this->trans('Shop', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'shop',
+            ])
             )
             ->add((new DataColumn('currency'))
-                ->setName($this->trans('Currency', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'currency',
-                ])
+            ->setName($this->trans('Currency', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'currency',
+            ])
             )
             ->add((new DataColumn('country'))
-                ->setName($this->trans('Country', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'country',
-                ])
+            ->setName($this->trans('Country', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'country',
+            ])
             )
             ->add((new DataColumn('group_name'))
-                ->setName($this->trans('Group', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'group_name',
-                ])
+            ->setName($this->trans('Group', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'group_name',
+            ])
             )
             ->add((new DataColumn('from_quantity'))
-                ->setName($this->trans('From quantity', [], 'Admin.Catalog.Feature'))
-                ->setOptions([
-                    'field' => 'from_quantity',
-                ])
+            ->setName($this->trans('From quantity', [], 'Admin.Catalog.Feature'))
+            ->setOptions([
+                'field' => 'from_quantity',
+            ])
             )
             ->add((new DataColumn('reduction_type'))
-                ->setName($this->trans('Reduction type', [], 'Admin.Catalog.Feature'))
-                ->setOptions([
-                    'field' => 'reduction_type',
-                ])
+            ->setName($this->trans('Reduction type', [], 'Admin.Catalog.Feature'))
+            ->setOptions([
+                'field' => 'reduction_type',
+            ])
             )
             ->add((new DataColumn('reduction'))
-                ->setName($this->trans('Reduction', [], 'Admin.Catalog.Feature'))
-                ->setOptions([
-                    'field' => 'reduction',
-                ])
+            ->setName($this->trans('Reduction', [], 'Admin.Catalog.Feature'))
+            ->setOptions([
+                'field' => 'reduction',
+            ])
             )
             ->add((new DateTimeColumn('date_from'))
-                ->setName($this->trans('Beginning', [], 'Admin.Catalog.Feature'))
-                ->setOptions([
-                    'format' => 'Y-m-d H:i',
-                    'field' => 'date_from',
-                ])
+            ->setName($this->trans('Beginning', [], 'Admin.Catalog.Feature'))
+            ->setOptions([
+                'format' => 'Y-m-d H:i',
+                'field' => 'date_from',
+            ])
             )
             ->add((new DateTimeColumn('date_to'))
-                ->setName($this->trans('End', [], 'Admin.Catalog.Feature'))
-                ->setOptions([
-                    'format' => 'Y-m-d H:i',
-                    'field' => 'date_to',
-                ])
+            ->setName($this->trans('End', [], 'Admin.Catalog.Feature'))
+            ->setOptions([
+                'format' => 'Y-m-d H:i',
+                'field' => 'date_to',
+            ])
             )
             ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_catalog_price_rules_edit',
-                                'route_param_name' => 'catalogPriceRuleId',
-                                'route_param_field' => 'id_specific_price_rule',
-                            ])
-                        )
-                        ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'method' => 'POST',
-                                'route' => 'admin_catalog_price_rules_delete',
-                                'route_param_name' => 'catalogPriceRuleId',
-                                'route_param_field' => 'id_specific_price_rule',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                            ])
+            ->setName($this->trans('Actions', [], 'Admin.Global'))
+            ->setOptions([
+                'actions' => (new RowActionCollection())
+                    ->add((new LinkRowAction('edit'))
+                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                    ->setIcon('edit')
+                    ->setOptions([
+                        'route' => 'admin_catalog_price_rules_edit',
+                        'route_param_name' => 'catalogPriceRuleId',
+                        'route_param_field' => 'id_specific_price_rule',
+                    ])
+                    )
+                    ->add((new SubmitRowAction('delete'))
+                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                    ->setIcon('delete')
+                    ->setOptions([
+                        'method' => 'POST',
+                        'route' => 'admin_catalog_price_rules_delete',
+                        'route_param_name' => 'catalogPriceRuleId',
+                        'route_param_field' => 'id_specific_price_rule',
+                        'confirm_message' => $this->trans(
+                            'Delete selected item?',
+                            [],
+                            'Admin.Notifications.Warning'
                         ),
-                ])
+                    ])
+                    ),
+            ])
             )
         ;
     }
@@ -194,117 +194,117 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
     {
         return (new FilterCollection())
             ->add((new Filter('id_specific_price_rule', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('ID', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('id_specific_price_rule')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('ID', [], 'Admin.Global'),
+                ],
+            ])
+            ->setAssociatedColumn('id_specific_price_rule')
             )
             ->add((new Filter('name', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Name', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('name')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Name', [], 'Admin.Global'),
+                ],
+            ])
+            ->setAssociatedColumn('name')
             )
             ->add((new Filter('shop', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Shop', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('shop')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Shop', [], 'Admin.Global'),
+                ],
+            ])
+            ->setAssociatedColumn('shop')
             )
             ->add((new Filter('currency', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Currency', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('currency')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Currency', [], 'Admin.Global'),
+                ],
+            ])
+            ->setAssociatedColumn('currency')
             )
             ->add((new Filter('country', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Country', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('country')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Country', [], 'Admin.Global'),
+                ],
+            ])
+            ->setAssociatedColumn('country')
             )
             ->add((new Filter('group_name', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Group', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('group_name')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Group', [], 'Admin.Global'),
+                ],
+            ])
+            ->setAssociatedColumn('group_name')
             )
             ->add((new Filter('from_quantity', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('From quantity', [], 'Admin.Catalog.Feature'),
-                    ],
-                ])
-                ->setAssociatedColumn('from_quantity')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('From quantity', [], 'Admin.Catalog.Feature'),
+                ],
+            ])
+            ->setAssociatedColumn('from_quantity')
             )
             ->add((new Filter('reduction_type', ChoiceType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'choices' => [
-                        $this->trans('Percentage', [], 'Admin.Global') => 'percentage',
-                        $this->trans('Amount', [], 'Admin.Global') => 'amount',
-                    ],
-                ])
-                ->setAssociatedColumn('reduction_type')
+            ->setTypeOptions([
+                'required' => false,
+                'choices' => [
+                    $this->trans('Percentage', [], 'Admin.Global') => 'percentage',
+                    $this->trans('Amount', [], 'Admin.Global') => 'amount',
+                ],
+            ])
+            ->setAssociatedColumn('reduction_type')
             )
             ->add((new Filter('reduction', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Reduction', [], 'Admin.Catalog.Feature'),
-                    ],
-                ])
-                ->setAssociatedColumn('reduction')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Reduction', [], 'Admin.Catalog.Feature'),
+                ],
+            ])
+            ->setAssociatedColumn('reduction')
             )
             ->add((new Filter('date_from', DateRangeType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Beginning', [], 'Admin.Catalog.Feature'),
-                    ],
-                    'date_format' => 'YYYY-MM-DD HH:mm:ss',
-                ])
-                ->setAssociatedColumn('date_from')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Beginning', [], 'Admin.Catalog.Feature'),
+                ],
+                'date_format' => 'YYYY-MM-DD HH:mm:ss',
+            ])
+            ->setAssociatedColumn('date_from')
             )
             ->add((new Filter('date_to', DateRangeType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('End', [], 'Admin.Catalog.Feature'),
-                    ],
-                    'date_format' => 'YYYY-MM-DD HH:mm:ss',
-                ])
-                ->setAssociatedColumn('date_to')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('End', [], 'Admin.Catalog.Feature'),
+                ],
+                'date_format' => 'YYYY-MM-DD HH:mm:ss',
+            ])
+            ->setAssociatedColumn('date_to')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-                ->setAssociatedColumn('actions')
-                ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search_by_filter_id',
-                    'reset_route_params' => [
-                        'filterId' => self::GRID_ID,
-                    ],
-                    'redirect_route' => 'admin_catalog_price_rules_index',
-                ])
-                ->setAssociatedColumn('actions')
+            ->setAssociatedColumn('actions')
+            ->setTypeOptions([
+                'reset_route' => 'admin_common_reset_search_by_filter_id',
+                'reset_route_params' => [
+                    'filterId' => self::GRID_ID,
+                ],
+                'redirect_route' => 'admin_catalog_price_rules_index',
+            ])
+            ->setAssociatedColumn('actions')
             )
         ;
     }
@@ -316,16 +316,16 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
     {
         return (new GridActionCollection())
             ->add((new SimpleGridAction('common_refresh_list'))
-                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
-                ->setIcon('refresh')
+            ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+            ->setIcon('refresh')
             )
             ->add((new SimpleGridAction('common_show_query'))
-                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
-                ->setIcon('code')
+            ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+            ->setIcon('code')
             )
             ->add((new SimpleGridAction('common_export_sql_manager'))
-                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
-                ->setIcon('storage')
+            ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+            ->setIcon('storage')
             )
         ;
     }
@@ -337,11 +337,11 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
     {
         return (new BulkActionCollection())
             ->add((new SubmitBulkAction('delete_selection'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_catalog_price_rules_bulk_delete',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+            ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+            ->setOptions([
+                'submit_route' => 'admin_catalog_price_rules_bulk_delete',
+                'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+            ])
             );
     }
 }

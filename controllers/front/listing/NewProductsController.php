@@ -38,7 +38,7 @@ class NewProductsControllerCore extends ProductListingFrontController
     {
         parent::initContent();
 
-        $this->doProductSearch('catalog/listing/new-products');
+        $this->doProductSearch('catalog/listing/new-products', ['entity' => 'new-products']);
     }
 
     protected function getProductSearchQuery()

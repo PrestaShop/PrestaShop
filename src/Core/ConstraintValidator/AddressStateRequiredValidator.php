@@ -26,7 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressStateRequired;
 use PrestaShop\PrestaShop\Core\Country\CountryRequiredFieldsProviderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -58,12 +60,17 @@ class AddressStateRequiredValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
+        if (!($constraint instanceof AddressStateRequired)) {
+            return;
+        }
         $countryId = new CountryId((int) $constraint->id_country);
 
         if ($this->countryRequiredFieldsProvider->isStatesRequired($countryId)) {
-            $constraints = [new NotBlank([
-                'message' => $constraint->message,
-            ])];
+            $constraints = [
+                new NotBlank([
+                    'message' => $constraint->message,
+                ]),
+            ];
 
             /** @var ConstraintViolationInterface[] $violations */
             $violations = $this->context->getValidator()->validate($value, $constraints);

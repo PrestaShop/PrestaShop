@@ -1,0 +1,94 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<div class="product-header col-md-12">
+  <div class="row justify-content-md-center">
+  {% if is_multishop_context %}
+    <div class="col-xxl-10">
+      <div class="alert alert-warning" role="alert">
+        <p class="alert-text">{{ 'You are in a multistore context: any modification will impact all your shops, or each shop of the active group.'|trans({}, 'Admin.Catalog.Notification') }}</p>
+      </div>
+    </div>
+  {% endif %}
+
+    <div class="col-xxl-10">
+      <div class="row">
+        <div class="col-md-7 big-input {{ configuration('PS_FORCE_FRIENDLY_PRODUCT') == 1 ? 'friendly-url-force-update' : '' }}" id="form_step1_names">
+          {{ form_widget(formName) }}
+        </div>
+        <div class="col-sm-7 col-md-2 form_step1_type_product">
+          {{ form_widget(formType) }}
+          <span class="help-box pull-xs-right" data-toggle="popover"
+            data-content="{{ "Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?"|trans({}, 'Admin.Catalog.Help') }}"></span>
+        </div>
+        <div class="col-sm-2 col-md-1 form_switch_language">
+          <div class="{{ languages|length == 1 ? 'hide' : '' }}">
+            <select id="form_switch_language" class="custom-select">
+              {% for language in languages %}
+                <option value="{{ language.iso_code }}" {% if default_language_iso == language.iso_code %}selected="selected"{% endif %}>{{ language.iso_code }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="toolbar col-sm-3 col-md-2 text-md-right">
+          <a class="toolbar-button btn-sales" href="{{ stats_link }}" target="_blank" title="{{ 'Sales'|trans({}, 'Admin.Global') }}"
+            id="product_form_go_to_sales">
+            <i class="material-icons">assessment</i>
+            <span class="title">{{ 'Sales'|trans({}, 'Admin.Global') }}</span>
+          </a>
+
+          <a
+            class="toolbar-button btn-quicknav btn-sidebar"
+            href="#"
+            title="{{ 'Quick navigation'|trans({}, 'Admin.Global') }}"
+            data-toggle="sidebar"
+            data-target="#right-sidebar"
+            data-url="{{ path('admin_product_list', {limit: 'last', offset: 'last', view: 'quicknav'}) }}"
+            id="product_form_open_quicknav"
+          >
+            <i class="material-icons">list</i>
+            <span class="title">{{ 'Product list'|trans({}, 'Admin.Catalog.Feature') }}</span>
+          </a>
+
+          <a class="toolbar-button btn-help btn-sidebar" href="#"
+            title="{{ 'Help'|trans({}, 'Admin.Global') }}"
+            data-toggle="sidebar"
+            data-target="#right-sidebar"
+            data-url="{{ help_link }}"
+            id="product_form_open_help"
+          >
+            <i class="material-icons">help</i>
+            <span class="title">{{ 'Help'|trans({}, 'Admin.Global') }}</span>
+          </a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          {{ form_errors(formName) }}
+          {{ form_errors(formType) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

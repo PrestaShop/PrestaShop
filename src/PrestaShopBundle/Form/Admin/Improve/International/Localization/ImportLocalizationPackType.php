@@ -66,10 +66,22 @@ class ImportLocalizationPackType extends TranslatorAwareType
     {
         $builder
             ->add('iso_localization_pack', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Localization pack you want to import',
+                    'Admin.International.Feature'
+                ),
                 'choices' => $this->localizationPackChoices,
                 'choice_translation_domain' => false,
+                'attr' => [
+                    'data-minimumResultsForSearch' => '7',
+                    'data-toggle' => 'select2',
+                ],
             ])
             ->add('content_to_import', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Content to import',
+                    'Admin.International.Feature'
+                ),
                 'expanded' => true,
                 'multiple' => true,
                 'choices' => $this->getContentToImportChoices(),
@@ -83,6 +95,14 @@ class ImportLocalizationPackType extends TranslatorAwareType
                 'choice_translation_domain' => false,
             ])
             ->add('download_pack_data', SwitchType::class, [
+                'label' => $this->trans(
+                    'Download pack data',
+                    'Admin.International.Feature'
+                ),
+                'help' => $this->trans(
+                    'If set to yes then the localization pack will be downloaded from prestashop.com. Otherwise the local xml file found in the localization folder of your PrestaShop installation will be used.',
+                    'Admin.International.Help'
+                ),
                 'data' => 1,
             ]);
     }

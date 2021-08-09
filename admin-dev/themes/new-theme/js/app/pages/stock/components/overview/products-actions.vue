@@ -32,11 +32,11 @@
         id="bulk-action"
         ref="bulk-action"
         class="mt-3"
-        :isIndeterminate="isIndeterminate"
+        :is-indeterminate="isIndeterminate()"
         @checked="bulkChecked"
       />
       <div class="ml-2">
-        <small>{{trans('title_bulk')}}</small>
+        <small>{{ trans('title_bulk') }}</small>
         <PSNumber
           class="bulk-qty"
           :danger="danger"
@@ -59,41 +59,32 @@
         @click="sendQty"
       >
         <i class="material-icons">edit</i>
-        {{trans('button_movement_type')}}
+        {{ trans('button_movement_type') }}
       </PSButton>
     </div>
   </div>
 </template>
 
-<script>
-  import PSNumber from '@app/widgets/ps-number';
+<script lang="ts">
+  import Vue from 'vue'; import PSNumber from '@app/widgets/ps-number';
   import PSCheckbox from '@app/widgets/ps-checkbox';
   import PSButton from '@app/widgets/ps-button';
-  import { EventBus } from '@app/utils/event-bus';
+  import {EventBus} from '@app/utils/event-bus';
 
-  export default {
+  export default Vue.extend({
     computed: {
-      disabled() {
+      disabled(): boolean {
         return !this.$store.state.hasQty;
       },
-      bulkEditQty() {
+      bulkEditQty(): number {
         return this.$store.state.bulkEditQty;
       },
-      isIndeterminate() {
-        const selectedProductsLng = this.selectedProductsLng;
-        const productsLng = this.$store.state.products.length;
-        const isIndeterminate = (selectedProductsLng > 0 && selectedProductsLng < productsLng);
-        if (isIndeterminate) {
-          this.$refs['bulk-action'].checked = true;
-        }
-        return isIndeterminate;
-      },
-      selectedProductsLng() {
+      selectedProductsLng(): any {
         return this.$store.getters.selectedProductsLng;
       },
     },
     watch: {
-      selectedProductsLng(value) {
+      selectedProductsLng(value: number): void {
         if (value === 0 && this.$refs['bulk-action']) {
           this.$refs['bulk-action'].checked = false;
           this.isFocused = false;
@@ -104,44 +95,56 @@
       },
     },
     methods: {
-      focusIn() {
+      isIndeterminate(): boolean {
+        const {selectedProductsLng} = this;
+        const productsLng = this.$store.state.products.length;
+        const isIndeterminate = (selectedProductsLng > 0 && selectedProductsLng < productsLng);
+
+        if (isIndeterminate) {
+          this.$refs['bulk-action'].checked = true;
+        }
+        return isIndeterminate;
+      },
+      focusIn(): void {
         this.danger = !this.selectedProductsLng;
         this.isFocused = !this.danger;
         if (this.danger) {
           EventBus.$emit('displayBulkAlert', 'error');
         }
       },
-      focusOut(event) {
-        this.isFocused = $(event.target).hasClass('ps-number');
+      focusOut(event: Event): void {
+        this.isFocused = $(<HTMLInputElement>event.target).hasClass('ps-number');
         this.danger = false;
       },
-      bulkChecked(checkbox) {
+      bulkChecked(checkbox: HTMLInputElement): void {
         if (!checkbox.checked) {
           this.$store.dispatch('updateBulkEditQty', null);
         }
-        if (!this.isIndeterminate) {
+        if (!this.isIndeterminate()) {
           EventBus.$emit('toggleProductsCheck', checkbox.checked);
         }
       },
-      sendQty() {
+      sendQty(): void {
         this.$store.dispatch('updateQtyByProductsId');
       },
-      onChange(value) {
+      onChange(value: number): void {
         this.$store.dispatch('updateBulkEditQty', value);
       },
-      onKeyUp(event) {
+      onKeyUp(event: Event): void {
         this.isFocused = true;
-        this.$store.dispatch('updateBulkEditQty', event.target.value);
+        this.$store.dispatch('updateBulkEditQty', (<HTMLInputElement>event.target).value);
       },
     },
-    data: () => ({
-      isFocused: false,
-      danger: false,
-    }),
+    data() {
+      return {
+        isFocused: false,
+        danger: false,
+      };
+    },
     components: {
       PSNumber,
       PSCheckbox,
       PSButton,
     },
-  };
+  });
 </script>

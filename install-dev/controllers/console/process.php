@@ -67,6 +67,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         // Clean all cache values
         Cache::clean('*');
 
+        Shop::initialize();
         Context::getContext()->shop = new Shop(1);
         Shop::setContext(Shop::CONTEXT_SHOP, 1);
         Configuration::loadConfiguration();
@@ -102,7 +103,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->clearConfigXML() && $this->clearConfigThemes();
         $steps = explode(',', $this->datas->step);
         if (in_array('all', $steps)) {
-            $steps = array('database','fixtures','theme','modules','addons_modules');
+            $steps = array('database', 'modules', 'theme', 'fixtures', 'postInstall');
         }
 
         if (in_array('database', $steps)) {
@@ -124,12 +125,13 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             )) {
                 $this->printErrors();
             }
-            if (!$this->processInstallDatabase()) {
-                $this->printErrors();
-            }
 
             // Deferred Kernel Init
             $this->initKernel();
+
+            if (!$this->processInstallDatabase()) {
+                $this->printErrors();
+            }
 
             if (!$this->processInstallDefaultData()) {
                 $this->printErrors();
@@ -149,20 +151,20 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             }
         }
 
-        if (in_array('addons_modules', $steps)) {
-            if (!$this->processInstallAddonsModules()) {
-                $this->printErrors();
-            }
-        }
-
         if (in_array('theme', $steps)) {
             if (!$this->processInstallTheme()) {
                 $this->printErrors();
             }
         }
 
-        if (in_array('fixtures', $steps)) {
+        if (in_array('fixtures', $steps) && $this->datas->fixtures) {
             if (!$this->processInstallFixtures()) {
+                $this->printErrors();
+            }
+        }
+
+        if (in_array('postInstall', $steps)) {
+            if (!$this->processPostInstall()) {
                 $this->printErrors();
             }
         }
@@ -288,12 +290,11 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     }
 
     /**
-     * PROCESS : installModulesAddons
-     * Install modules from addons
+     * Process post install execution
      */
-    public function processInstallAddonsModules()
+    public function processPostInstall(): bool
     {
-        return $this->model_install->installModulesAddons();
+        return $this->model_install->postInstall();
     }
 
     /**

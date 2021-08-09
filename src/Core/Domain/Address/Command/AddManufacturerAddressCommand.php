@@ -104,7 +104,7 @@ class AddManufacturerAddressCommand
      * @param string $address
      * @param int|null $countryId
      * @param string $city
-     * @param int
+     * @param int $manufacturerId
      * @param string|null $address2
      * @param string|null $postCode
      * @param int|null $stateId
@@ -251,7 +251,7 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @throws AddressConstraintException
      */

@@ -86,7 +86,7 @@ class ReleaseCreator
      *
      * @var array
      */
-    protected $foldersRemoveList = [];
+    protected $foldersRemoveList = ['.docker'];
 
     /**
      * Pattern of files or directories to remove.
@@ -280,6 +280,7 @@ class ReleaseCreator
             ->setupShopVersion()
             ->generateLicensesFile()
             ->runComposerInstall()
+            ->runBuildAssets()
             ->createPackage();
         $endTime = date('H:i:s');
         $this->consoleWriter->displayText(
@@ -513,9 +514,32 @@ class ReleaseCreator
             && composer install --no-dev --optimize-autoloader --no-interaction 2>&1";
         exec($command, $output, $returnCode);
 
-        if ($returnCode != 0) {
+        if ($returnCode !== 0) {
             throw new BuildException('Unable to run composer install.');
         }
+
+        $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
+
+        return $this;
+    }
+
+    /**
+     * Build assets.
+     *
+     * @return $this
+     * @throws BuildException
+     */
+    protected function runBuildAssets()
+    {
+        $this->consoleWriter->displayText("Running build assets...", ConsoleWriter::COLOR_YELLOW);
+        $argProjectPath = escapeshellarg($this->tempProjectPath);
+        $command = "cd {$argProjectPath} && make assets 2>&1";
+        exec($command, $output, $returnCode);
+
+        if ($returnCode !== 0) {
+            throw new BuildException('Unable to build assets.');
+        }
+
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;
@@ -789,6 +813,8 @@ class ReleaseCreator
         );
         exec("rm -rf {$argTempProjectPath}");
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
+
+        return $this;
     }
 
     /**
@@ -832,12 +858,12 @@ class ReleaseCreator
             if (is_numeric($key)) {
                 $md5 = md5_file($value);
                 $count = substr_count($value, DIRECTORY_SEPARATOR) - $subCount + 1;
-                $file_name = str_replace($this->tempProjectPath, null, $value);
+                $file_name = str_replace($this->tempProjectPath, '', $value);
                 $file_name = pathinfo($file_name, PATHINFO_BASENAME);
                 $content .= str_repeat("\t", $count) . "<md5file name=\"$file_name\">$md5</md5file>" . PHP_EOL;
             } else {
                 $count = substr_count($key, DIRECTORY_SEPARATOR) - $subCount + 1;
-                $dir_name = str_replace($this->tempProjectPath, null, $key);
+                $dir_name = str_replace($this->tempProjectPath, '', $key);
                 $dir_name = pathinfo($dir_name, PATHINFO_BASENAME);
                 $content .= str_repeat("\t", $count) . "<dir name=\"$dir_name\">" . PHP_EOL;
                 $content .= $this->generateXMLDirectoryChecksum($value);

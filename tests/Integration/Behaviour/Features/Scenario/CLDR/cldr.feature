@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cldr
 @reset-database-before-feature
+@clear-cache-after-feature
 Feature: CLDR display for prices
 
   # It's important to prepare all the currencies status before we display any price, because LocaleRepository

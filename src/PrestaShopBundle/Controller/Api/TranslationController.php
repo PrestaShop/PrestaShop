@@ -27,12 +27,19 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\EntityTranslation\EntityTranslatorFactory;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\CoreDomainProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\OthersProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
+use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Exception\InvalidLanguageException;
+use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
-use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -58,7 +65,7 @@ class TranslationController extends ApiController
      *
      * @return JsonResponse
      */
-    public function listDomainTranslationAction(Request $request)
+    public function listDomainTranslationAction(Request $request): JsonResponse
     {
         try {
             $queryParamsCollection = $this->queryParams->fromRequest($request);
@@ -80,27 +87,26 @@ class TranslationController extends ApiController
                 throw UnsupportedLocaleException::invalidLocale($locale);
             }
 
-            $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search, $module);
+            if (ucfirst(OthersProviderDefinition::OTHERS_DOMAIN_NAME) === $domain) {
+                $domain = OthersProviderDefinition::OTHERS_DOMAIN_NAME;
+            }
+
+            if (!empty($module)) {
+                $providerDefinition = new ModuleProviderDefinition($module);
+            } elseif (
+                !empty($theme)
+                // Default theme is not considered like other themes because its translations belong to the Core
+                && ThemeProviderDefinition::DEFAULT_THEME_NAME !== $theme
+            ) {
+                $providerDefinition = new ThemeProviderDefinition($theme);
+            } else {
+                $providerDefinition = new CoreDomainProviderDefinition($domain);
+            }
+
+            $catalog = $translationService->listDomainTranslation($providerDefinition, $locale, $domain, $this->searchExpressionToArray($search));
             $info = [
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
             ];
-
-            $catalog['info'] = array_merge(
-                $catalog['info'],
-                [
-                    'locale' => $locale,
-                    'domain' => $domain,
-                    'theme' => $theme,
-                    'total_translations' => count($catalog['data']),
-                    'total_missing_translations' => 0,
-                ]
-            );
-
-            foreach ($catalog['data'] as $message) {
-                if (empty($message['xliff']) && empty($message['database'])) {
-                    ++$catalog['info']['total_missing_translations'];
-                }
-            }
 
             $catalog['data'] = array_slice(
                 $catalog['data'],
@@ -137,31 +143,25 @@ class TranslationController extends ApiController
 
             $search = $request->query->get('search');
 
-            if (in_array($type, ['modules', 'themes']) && empty($selected)) {
-                throw new Exception('This \'selected\' param is not valid.');
+            if (!in_array($type, ProviderDefinitionInterface::ALLOWED_TYPES)) {
+                throw new Exception(sprintf("The 'type' parameter '%s' is not valid", $type));
             }
 
-            switch ($type) {
-                case 'themes':
-                    $tree = $this->getNormalTree($lang, $type, $selected, $search);
-                    break;
-
-                case 'modules':
-                    $tree = $this->getModulesTree($lang, $selected, $search);
-                    break;
-
-                case 'mails':
-                    $tree = $this->getMailsSubjectTree($lang, $search);
-                    break;
-
-                case 'mails_body':
-                    $tree = $this->getMailsBodyTree($lang, $search);
-                    break;
-
-                default:
-                    $tree = $this->getNormalTree($lang, $type, null, $search);
-                    break;
+            if (
+                ProviderDefinitionInterface::TYPE_THEMES === $type
+                && ModifyTranslationsType::CORE_TRANSLATIONS_CHOICE_INDEX === $selected
+            ) {
+                $type = ProviderDefinitionInterface::TYPE_FRONT;
             }
+
+            if (
+                in_array($type, [ProviderDefinitionInterface::TYPE_MODULES, ProviderDefinitionInterface::TYPE_THEMES])
+                && empty($selected)
+            ) {
+                throw new Exception("The 'selected' parameter is empty.");
+            }
+
+            $tree = $this->getTree($lang, $type, $this->searchExpressionToArray($search), $selected);
 
             return $this->jsonResponse($tree, $request);
         } catch (Exception $exception) {
@@ -188,27 +188,38 @@ class TranslationController extends ApiController
 
             $translationService = $this->container->get('prestashop.service.translation');
             $response = [];
-            foreach ($translations as $translation) {
-                if (empty($translation['theme'])) {
-                    $translation['theme'] = null;
+            $modifiedDomains = [];
+            if (!empty($translations)) {
+                $lang = null;
+                foreach ($translations as $translation) {
+                    if (empty($translation['theme'])) {
+                        $translation['theme'] = null;
+                    }
+
+                    try {
+                        if ($lang === null) {
+                            $lang = $translationService->findLanguageByLocale($translation['locale']);
+                        }
+                    } catch (Exception $exception) {
+                        throw new BadRequestHttpException($exception->getMessage());
+                    }
+
+                    $response[$translation['default']] = $translationService->saveTranslationMessage(
+                        $lang,
+                        $translation['domain'],
+                        $translation['default'],
+                        $translation['edited'],
+                        $translation['theme']
+                    );
+
+                    $modifiedDomains[$translation['domain']] = true;
                 }
 
-                try {
-                    $lang = $translationService->findLanguageByLocale($translation['locale']);
-                } catch (Exception $exception) {
-                    throw new BadRequestHttpException($exception->getMessage());
-                }
+                // this has to be done *before* retranslating
+                $this->clearCache();
 
-                $response[$translation['default']] = $translationService->saveTranslationMessage(
-                    $lang,
-                    $translation['domain'],
-                    $translation['default'],
-                    $translation['edited'],
-                    $translation['theme']
-                );
+                $this->translateMultilingualContent(array_keys($modifiedDomains), $lang);
             }
-
-            $this->clearCache();
 
             return new JsonResponse($response, 200);
         } catch (BadRequestHttpException $exception) {
@@ -287,7 +298,7 @@ class TranslationController extends ApiController
     }
 
     /**
-     * @param $content
+     * @param array $content
      */
     private function guardAgainstInvalidTranslationEditRequest($content)
     {
@@ -307,7 +318,7 @@ class TranslationController extends ApiController
     }
 
     /**
-     * @param $content
+     * @param array $content
      */
     protected function guardAgainstInvalidTranslationResetRequest($content)
     {
@@ -326,90 +337,64 @@ class TranslationController extends ApiController
     }
 
     /**
-     * @param $lang
-     * @param $type
-     * @param string $theme Selected theme name
-     * @param null $search
+     * Trigger translation of multilingual content in database according to which domains have been modified
      *
-     * @return array
+     * @param string[] $modifiedDomains List of modified domains
+     * @param Lang $lang
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
-    private function getNormalTree($lang, $type, $theme, $search = null)
+    private function translateMultilingualContent(array $modifiedDomains, Lang $lang)
     {
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
-        $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $theme, $search);
+        if (in_array('AdminNavigationMenu', $modifiedDomains)) {
+            $translator = $this->container->get('translator');
 
-        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
+            // reset translator
+            $translator->clearLanguage($lang->getLocale());
+
+            // update menu items (tabs)
+            (new EntityTranslatorFactory($translator))
+                ->buildFromTableName('tab', $lang->getLocale())
+                ->translate($lang->getId(), \Context::getContext()->shop->id);
+        }
     }
 
     /**
-     * @param string $lang Two-letter iso code
-     * @param string $selectedModuleName Selected module name
-     * @param string|null $search
+     * Returns a translation domain tree
+     *
+     * @param string $lang
+     * @param string $type "themes", "modules", "mails", "mails_body", "back", "front" or "others"
+     * @param array $search Search strings
+     * @param string|null $selectedValue Depends on the type. It's a theme name if type = "themes" or a module name if type = "modules"
      *
      * @return array
+     *
+     * @throws Exception
      */
-    private function getModulesTree($lang, $selectedModuleName, $search = null)
+    private function getTree(string $lang, string $type, array $search, ?string $selectedValue = null): array
     {
-        $theme = null;
         $locale = $this->translationService->langToLocale($lang);
+        $providerDefinitionFactory = $this->container->get('prestashop.translation.factory.provider_definition');
 
-        $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
-        $moduleProvider->setModuleName($selectedModuleName);
-
-        $treeBuilder = new TreeBuilder($locale, $theme);
-        $catalogue = $treeBuilder->makeTranslationArray($moduleProvider, $search);
-
-        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search, $selectedModuleName);
+        return $this->translationService->getTranslationsTree(
+            $providerDefinitionFactory->build($type, $selectedValue),
+            $locale,
+            $search
+        );
     }
 
     /**
-     * @param string $lang Two-letter iso code
-     * @param null $search
+     * @param string|array $search
      *
      * @return array
      */
-    private function getMailsSubjectTree($lang, $search = null)
+    private function searchExpressionToArray($search): array
     {
-        $theme = null;
+        if (is_array($search)) {
+            return $search;
+        }
 
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
-        $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails', $theme, $search);
-
-        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
-    }
-
-    /**
-     * @param string $lang Two-letter iso code
-     * @param null $search
-     *
-     * @return array
-     */
-    private function getMailsBodyTree($lang, $search = null)
-    {
-        $theme = null;
-
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
-        $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails_body', $theme, $search);
-
-        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
-    }
-
-    /**
-     * Make final tree.
-     *
-     * @param TreeBuilder $treeBuilder
-     * @param $catalogue
-     * @param string|null $theme
-     * @param string|null $search
-     * @param string|null $module
-     *
-     * @return array
-     */
-    private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $theme, $search = null, $module = null)
-    {
-        $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
-        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $theme, $search, $module);
-
-        return $translationsTree;
+        return empty($search) ? [] : [$search];
     }
 }

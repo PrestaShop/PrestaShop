@@ -342,7 +342,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
         $totalOk = 0;
         $ordersOk = [];
 
-        if ($orders && count($orders)) {
+        if (count($orders)) {
             foreach ($orders as $key => $order) {
                 if ($order['valid']) {
                     $ordersOk[] = $order;

@@ -48,7 +48,7 @@ class CustomerMessageCore extends ObjectModel
     /** @var string */
     public $user_agent;
 
-    /** @var int */
+    /** @var bool */
     public $private;
 
     /** @var string */
@@ -70,10 +70,10 @@ class CustomerMessageCore extends ObjectModel
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_customer_thread' => ['type' => self::TYPE_INT],
             'ip_address' => ['type' => self::TYPE_STRING, 'validate' => 'isIp2Long', 'size' => 15],
-            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 16777216],
+            'message' => ['type' => self::TYPE_HTML, 'required' => true, 'size' => 16777216],
             'file_name' => ['type' => self::TYPE_STRING],
             'user_agent' => ['type' => self::TYPE_STRING],
-            'private' => ['type' => self::TYPE_INT],
+            'private' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'read' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],

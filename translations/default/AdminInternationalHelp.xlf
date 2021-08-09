@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/controllers/countries/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ac42ae31827e4ce47e084ecfb68018aa">
+        <source>This will restore your last registered address format.</source>
+        <target>This will restore your last registered address format.</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="a551db18a168f7b7af97f05f654f6ebd">
+        <source>This will restore the default address format for this country.</source>
+        <target>This will restore the default address format for this country.</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="15103dc2a4e70c7865d2b2ed5542f7ee">
+        <source>This will restore your current address format.</source>
+        <target>This will restore your current address format.</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="658983835e342b548674ebb6d169333f">
+        <source>This will delete the current address format</source>
+        <target>This will delete the current address format</target>
+        <note>Line: 47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c8177e39573538431ca4c24841ee3fbe">
+        <source>Missing files are marked in red</source>
+        <target>Missing files are marked in red</target>
+        <note>Line: 86</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_errors.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3881d16572ee3be6a8ab13f6862b3911">
+        <source>You MUST use this syntax in your translations. Here are a few examples:</source>
+        <target>You MUST use this syntax in your translations. Here are a few examples:</target>
+        <note>Line: 69</note>
+      </trans-unit>
+      <trans-unit id="7cefb4829c6de24b63f7a05716b43bec">
+        <source>This expression uses a special syntax:</source>
+        <target>This expression uses a special syntax:</target>
+        <note>Line: 94</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f75f58622599fa286aa5bdd94fb4404d">
+        <source>Some of these expressions use this special syntax: %s.</source>
+        <target>Some of these expressions use this special syntax: %s.</target>
+        <note>Line: 68</note>
+      </trans-unit>
+      <trans-unit id="f324bbd9de83d61ccb5f7d5593aec5b3">
+        <source>You MUST use this syntax in your translations. Here are several examples:</source>
+        <target>You MUST use this syntax in your translations. Here are several examples:</target>
+        <note>Line: 70</note>
+      </trans-unit>
+      <trans-unit id="919a5a4550f8f714f806f5590ed1b66a">
+        <source>There are [1]%replace%[/1] products</source>
+        <target>There are [1]%replace%[/1] products</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="06fb8ada95eab3e2b5d4a3e834a9ab10">
+        <source>"%s" will be replaced by a number.</source>
+        <target>"%s" will be replaced by a number.</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="cfe3ecf9fcc29ce36de15ee87cebd12b">
+        <source>List of pages in [1]%replace%[/1]</source>
+        <target>List of pages in [1]%replace%[/1]</target>
+        <note>Line: 74</note>
+      </trans-unit>
+      <trans-unit id="a24386154e350ad7c608af84cdb4be11">
+        <source>"%s" will be replaced by a string.</source>
+        <target>"%s" will be replaced by a string.</target>
+        <note>Line: 74</note>
+      </trans-unit>
+      <trans-unit id="9b4ca9541e2c3e7215a5fac1f4cecd2f">
+        <source>Feature: [1]%1%[/1] ([1]%2%[/1] values)</source>
+        <target>Feature: [1]%1%[/1] ([1]%2%[/1] values)</target>
+        <note>Line: 75</note>
+      </trans-unit>
+      <trans-unit id="031775df42ef41141d4b4c7d4db89d65">
+        <source>The numbers enable you to reorder the variables when necessary.</source>
+        <target>The numbers enable you to reorder the variables when necessary.</target>
+        <note>Line: 75</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="013afdec32d184dc61040022a45409ca">
+        <source>Click on the title of a section to open its fieldsets.</source>
+        <target>Click on the title of a section to open its fieldsets.</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="b3f4e400fe40a25d1c2b0c59e63668cf">
+        <source>Here you can modify translations for all installed module.</source>
+        <target>Here you can modify translations for all installed module.</target>
+        <note>Line: 173</note>
+      </trans-unit>
+      <trans-unit id="dd317a8b9f3ecfc5317c2cb586274145">
+        <source>Select your module</source>
+        <target>Select your module</target>
+        <note>Line: 176</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCountriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="abb056fd74a8bdf858dbe3e68c5ea97c">
+        <source>Restrict country selections in front office to those covered by active carriers</source>
+        <target>Restrict country selections in front office to those covered by active carriers</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="b33aadd6763bfea56853a7ecf2176382">
+        <source>Two -- or three -- letter ISO code (e.g. "us" for United States).</source>
+        <target>Two -- or three -- letter ISO code (e.g. "us" for United States).</target>
+        <note>Line: 207</note>
+      </trans-unit>
+      <trans-unit id="cd2f7b9409e0f1527766ad35aa8bd3c5">
+        <source>International call prefix, (e.g. 1 for United States).</source>
+        <target>International call prefix, (e.g. 1 for United States).</target>
+        <note>Line: 221</note>
+      </trans-unit>
+      <trans-unit id="92de0162cbdfa60f671ba3cad1d392a1">
+        <source>Geographical region.</source>
+        <target>Geographical region.</target>
+        <note>Line: 246</note>
+      </trans-unit>
+      <trans-unit id="98ae2fd635525d30d2b0e8b643f9a23c">
+        <source>Indicate the format of the postal code: use L for a letter, N for a number, and C for the country's ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.</source>
+        <target>Indicate the format of the postal code: use L for a letter, N for a number, and C for the country's ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.</target>
+        <note>Line: 272</note>
+      </trans-unit>
+      <trans-unit id="a2ddbdfb29a0708bd711601f9277435c">
+        <source>Display this country to your customers (the selected country will always be displayed in the Back Office).</source>
+        <target>Display this country to your customers (the selected country will always be displayed in the Back Office).</target>
+        <note>Line: 301</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStatesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b6ff06f41cb66b5b89be6a3670e40d63">
+        <source>Provide the state name to be displayed in addresses and on invoices.</source>
+        <target>Provide the state name to be displayed in addresses and on invoices.</target>
+        <note>Line: 158</note>
+      </trans-unit>
+      <trans-unit id="473d5a5e7a18ca5e30b399ae0dfda18e">
+        <source>1 to 4 letter ISO code.</source>
+        <target>1 to 4 letter ISO code.</target>
+        <note>Line: 167</note>
+      </trans-unit>
+      <trans-unit id="d44080730b4d80fb65b9018d57c058b3">
+        <source>You can prefix it with the country ISO code if needed.</source>
+        <target>You can prefix it with the country ISO code if needed.</target>
+        <note>Line: 167</note>
+      </trans-unit>
+      <trans-unit id="0f6ca10753a64573af4ae286c7421e62">
+        <source>Country where the state is located.</source>
+        <target>Country where the state is located.</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="68240d02aad03eed41bc52305688a035">
+        <source>Only the countries with the option "contains states" enabled are displayed.</source>
+        <target>Only the countries with the option "contains states" enabled are displayed.</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="15c5d5dd58a9e70b8b86a7447dd00f70">
+        <source>Geographical region where this state is located.</source>
+        <target>Geographical region where this state is located.</target>
+        <note>Line: 193</note>
+      </trans-unit>
+      <trans-unit id="ec92dbe75bbcc2fbf4cad6302df97c19">
+        <source>Used for shipping</source>
+        <target>Used for shipping</target>
+        <note>Line: 194</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8bd279ebcd912dc792663bc65a1fb499">
+        <source>You can define a range of Zip/postal codes (e.g., 75000-75015) or simply use one Zip/postal code.</source>
+        <target>You can define a range of Zip/postal codes (e.g., 75000-75015) or simply use one Zip/postal code.</target>
+        <note>Line: 289</note>
+      </trans-unit>
+      <trans-unit id="ce9c5fc1032ac5aa03a3d248022773df">
+        <source>You must define the behavior if an address matches multiple rules:</source>
+        <target>You must define the behavior if an address matches multiple rules:</target>
+        <note>Line: 315</note>
+      </trans-unit>
+      <trans-unit id="439fa6ce423495b01ffd31ea56b33335">
+        <source>- This tax only: Will apply only this tax</source>
+        <target>- This tax only: Will apply only this tax</target>
+        <note>Line: 316</note>
+      </trans-unit>
+      <trans-unit id="4019ba4535164cd55c61ac20379a8aa9">
+        <source>- Combine: Combine taxes (e.g.: 10% + 5% = 15%)</source>
+        <target>- Combine: Combine taxes (e.g.: 10% + 5% = 15%)</target>
+        <note>Line: 317</note>
+      </trans-unit>
+      <trans-unit id="dabf677c95d59c749ea5d6d6d22012c4">
+        <source><![CDATA[- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)]]></source>
+        <target><![CDATA[- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)]]></target>
+        <note>Line: 318</note>
+      </trans-unit>
+      <trans-unit id="7475ec0d41372a307c497acb7eeea8c4">
+        <source>No Tax</source>
+        <target>No Tax</target>
+        <note>Line: 332</note>
+      </trans-unit>
+      <trans-unit id="7a3ded393734410a3d3514e10b672c92">
+        <source>(Total tax: 9%)</source>
+        <target>(Total tax: 9%)</target>
+        <note>Line: 335</note>
+      </trans-unit>
+      <trans-unit id="e14eeddb992a1fa103cb2669178369cf">
+        <source>You can define a range of Zip/Postal codes (e.g., 75000-75015) or simply use one Zip/Postal code.</source>
+        <target>You can define a range of Zip/Postal codes (e.g., 75000-75015) or simply use one Zip/Postal code.</target>
+        <note>Line: 289</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Currencies/CurrencyType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3b3f9615aaf2ed5974c15881a08e0b8e">
+        <source>By default, PrestaShop comes with a list of official currencies. If you want to use a local currency, you will have to add it manually. For example, to accept the Iranian Toman on your store, you need to create it before.</source>
+        <target>By default, PrestaShop comes with a list of official currencies. If you want to use a local currency, you will have to add it manually. For example, to accept the Iranian Toman on your store, you need to create it before.</target>
+        <note>Line: 94</note>
+      </trans-unit>
+      <trans-unit id="72d86566f89f1aa5a853fe2750bf96a5">
+        <source>ISO 4217 code (e.g. USD for Dollars, EUR for Euros, etc.)</source>
+        <target>ISO 4217 code (e.g. USD for Dollars, EUR for Euros, etc.)</target>
+        <note>Line: 173</note>
+      </trans-unit>
+      <trans-unit id="0ab7db7a10b7efc8270dd215c2a4ada7">
+        <source><![CDATA[Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).]]></source>
+        <target><![CDATA[Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).]]></target>
+        <note>Line: 197</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationByIpAddressType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c12f8445861a605b788eb90e2c47f02a">
+        <source>This option allows you, among other things, to restrict access to your shop for certain countries. See below.</source>
+        <target>This option allows you, among other things, to restrict access to your shop for certain countries. See below.</target>
+        <note>Line: 51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Language/LanguageType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8ffd2caeab1261d512816def0690329d">
+        <source>Two-letter ISO code (e.g. FR, EN, DE).</source>
+        <target>Two-letter ISO code (e.g. FR, EN, DE).</target>
+        <note>Line: 92</note>
+      </trans-unit>
+      <trans-unit id="5b5f150ebfc12cefc4bf889c3fcb7149">
+        <source>IETF language tag (e.g. en-US, pt-BR).</source>
+        <target>IETF language tag (e.g. en-US, pt-BR).</target>
+        <note>Line: 107</note>
+      </trans-unit>
+      <trans-unit id="cb832fdb1310ad1cb4b36705e3e043d2">
+        <source>Short date format (e.g., Y-m-d).</source>
+        <target>Short date format (e.g., Y-m-d).</target>
+        <note>Line: 119</note>
+      </trans-unit>
+      <trans-unit id="11fb95583b7d678407bb64582a2ca3c6">
+        <source>Full date format (e.g., Y-m-d H:i:s).</source>
+        <target>Full date format (e.g., Y-m-d H:i:s).</target>
+        <note>Line: 135</note>
+      </trans-unit>
+      <trans-unit id="342634d26b64e430960c263ab202e02d">
+        <source>Upload the country flag from your computer.</source>
+        <target>Upload the country flag from your computer.</target>
+        <note>Line: 151</note>
+      </trans-unit>
+      <trans-unit id="6f570144d5f5ca1404b40cab00a9fa3f">
+        <source>Enable if this language is read from right to left.</source>
+        <target>Enable if this language is read from right to left.</target>
+        <note>Line: 172</note>
+      </trans-unit>
+      <trans-unit id="6235bd7718134ee703c36fb7d3c78e69">
+        <source>(Experimental: your theme must be compliant with RTL languages).</source>
+        <target>(Experimental: your theme must be compliant with RTL languages).</target>
+        <note>Line: 175</note>
+      </trans-unit>
+      <trans-unit id="2e5dbe80db3202a360b608da07f1c2de">
+        <source>Image is displayed when no picture is found.</source>
+        <target>Image is displayed when no picture is found.</target>
+        <note>Line: 161</note>
+      </trans-unit>
+      <trans-unit id="1e817248a18ffae64e10be49a46fa9ee">
+        <source>Activate this language.</source>
+        <target>Activate this language.</target>
+        <note>Line: 182</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Localization/AdvancedConfigurationType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5aa30e77b6c3af8d4affb7b5162d60fb">
+        <source>The ISO 639-1 identifier for the language of the country where your web server is located (en, fr, sp, ru, pl, nl, etc.).</source>
+        <target>The ISO 639-1 identifier for the language of the country where your web server is located (en, fr, sp, ru, pl, nl, etc.).</target>
+        <note>Line: 51</note>
+      </trans-unit>
+      <trans-unit id="31de2e2af2f6b180fe4f3969affff0de">
+        <source>The ISO 3166-1 alpha-2 identifier for the country/region where your web server is located, in lowercase (us, gb, fr, sp, ru, pl, nl, etc.).</source>
+        <target>The ISO 3166-1 alpha-2 identifier for the country/region where your web server is located, in lowercase (us, gb, fr, sp, ru, pl, nl, etc.).</target>
+        <note>Line: 61</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Localization/ImportLocalizationPackType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bb0fa2ec7b2d1fcfc14bf6587cc51a66">
+        <source>If set to yes then the localization pack will be downloaded from prestashop.com. Otherwise the local xml file found in the localization folder of your PrestaShop installation will be used.</source>
+        <target>If set to yes then the localization pack will be downloaded from prestashop.com. Otherwise the local xml file found in the localization folder of your PrestaShop installation will be used.</target>
+        <note>Line: 103</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Localization/LocalUnitsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9da30b4a4eab6c20f3ba7ddc89c18d6d">
+        <source>The default weight unit for your shop (e.g. "kg" for kilograms, "lbs" for pound-mass, etc.).</source>
+        <target>The default weight unit for your shop (e.g. "kg" for kilograms, "lbs" for pound-mass, etc.).</target>
+        <note>Line: 51</note>
+      </trans-unit>
+      <trans-unit id="f7f469cfef2bd3d4d0a12cc7875df046">
+        <source>The default distance unit for your shop (e.g. "km" for kilometer, "mi" for mile, etc.).</source>
+        <target>The default distance unit for your shop (e.g. "km" for kilometer, "mi" for mile, etc.).</target>
+        <note>Line: 61</note>
+      </trans-unit>
+      <trans-unit id="dd82d34d95398e0fe58f9b2edfc933fa">
+        <source>The default volume unit for your shop (e.g. "L" for liter, "gal" for gallon, etc.).</source>
+        <target>The default volume unit for your shop (e.g. "L" for liter, "gal" for gallon, etc.).</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="2bec6d5b97c142617d81b6abfd8611a1">
+        <source>The default dimension unit for your shop (e.g. "cm" for centimeter, "in" for inch, etc.).</source>
+        <target>The default dimension unit for your shop (e.g. "cm" for centimeter, "in" for inch, etc.).</target>
+        <note>Line: 81</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Localization/LocalizationConfigurationType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c4b8d8d900acf4712d4511f6c39e6578">
+        <source>The default language used in your shop.</source>
+        <target>The default language used in your shop.</target>
+        <note>Line: 94</note>
+      </trans-unit>
+      <trans-unit id="59a0d89a785e4e00f80b5d6154a446d0">
+        <source>The default country used in your shop.</source>
+        <target>The default country used in your shop.</target>
+        <note>Line: 120</note>
+      </trans-unit>
+      <trans-unit id="eb99748a0429320ff7a0120625ace088">
+        <source>The default currency used in your shop.</source>
+        <target>The default currency used in your shop.</target>
+        <note>Line: 149</note>
+      </trans-unit>
+      <trans-unit id="90f1a96f31bb51ae7d7f347c3b5df846">
+        <source>Set browser language as default language.</source>
+        <target>Set browser language as default language.</target>
+        <note>Line: 110</note>
+      </trans-unit>
+      <trans-unit id="754ab93466f1c17d19e11e8a03731ebd">
+        <source>Set country corresponding to browser language.</source>
+        <target>Set country corresponding to browser language.</target>
+        <note>Line: 136</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Locations/ZoneType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f3211eeee6d9a3f9208dbf61903eaafa">
+        <source>Zone name (e.g. Africa, West Coast, Neighboring Countries).</source>
+        <target>Zone name (e.g. Africa, West Coast, Neighboring Countries).</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="976bb0e0c56156bd36831e1bf244e7ed">
+        <source>Allow or disallow shipping to this zone.</source>
+        <target>Allow or disallow shipping to this zone.</target>
+        <note>Line: 96</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Tax/TaxOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9065c9561edb357b57b213c15813cb32">
+        <source>If you disable the ecotax, the ecotax for all your products will be set to 0.</source>
+        <target>If you disable the ecotax, the ecotax for all your products will be set to 0.</target>
+        <note>Line: 124</note>
+      </trans-unit>
+      <trans-unit id="fc6d7eca192247f8406fc4fc8ff896ef">
+        <source>Select whether or not to include tax on purchases.</source>
+        <target>Select whether or not to include tax on purchases.</target>
+        <note>Line: 91</note>
+      </trans-unit>
+      <trans-unit id="ea9d4f5bdfaaa411eb8c74355aec4553">
+        <source>Select whether or not to display tax on a distinct line in the cart.</source>
+        <target>Select whether or not to display tax on a distinct line in the cart.</target>
+        <note>Line: 106</note>
+      </trans-unit>
+      <trans-unit id="a84047cec2a677153211d701853a65b4">
+        <source>Define the ecotax (e.g. French ecotax: 20%).</source>
+        <target>Define the ecotax (e.g. French ecotax: 20%).</target>
+        <note>Line: 135</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Tax/TaxType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="76fcfab4720e7e09c9ef0afbd9fe8ed9">
+        <source>Tax name to display in carts and on invoices (e.g. "VAT").</source>
+        <target>Tax name to display in carts and on invoices (e.g. "VAT").</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="9441798e99bc6547fc74a158dbf119d6">
+        <source>Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)</source>
+        <target>Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)</target>
+        <note>Line: 91</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Currency/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c7c838899b96b2b17ea954d2578cf541">
+        <source>Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</source>
+        <target>Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</target>
+        <note>Line: 93</note>
+      </trans-unit>
+      <trans-unit id="4ef5571f164a6a7fcc9f4625d14e260b">
+        <source>ISO code (e.g. USD for Dollars, EUR for Euros, etc.).</source>
+        <target>ISO code (e.g. USD for Dollars, EUR for Euros, etc.).</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Geolocation/Blocks/geolocation_ip_address_whitelist.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="632a9a67e93d72324b63a0d0626cd2a2">
+        <source>You can add IP addresses that will always be allowed to access your shop (e.g. Google bots' IP).</source>
+        <target>You can add IP addresses that will always be allowed to access your shop (e.g. Google bots' IP).</target>
+        <note>Line: 40</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Language/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e63a2fc0fc5da5af27fbf5c515beb044">
+        <source>Image is displayed when "no picture is found".</source>
+        <target>Image is displayed when "no picture is found".</target>
+        <note>Line: 77</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Localization/Blocks/configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e932e3b39aa40f0efe327c599cbd406f">
+        <source>Set browser language as default language</source>
+        <target>Set browser language as default language</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="2d84287b4a1226bb820aac87116f401a">
+        <source>Set country corresponding to browser language</source>
+        <target>Set country corresponding to browser language</target>
+        <note>Line: 71</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Tax/Blocks/tax_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e17a0f166831874c90c9a13934c45cf7">
+        <source>Define the ecotax (e.g. French ecotax: 19.6%).</source>
+        <target>Define the ecotax (e.g. French ecotax: 19.6%).</target>
+        <note>Line: 81</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Translations/Blocks/add_update_language.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9deac468eeaf8b5b0d2c4bee2857841a">
+        <source>You can add or update a language directly from the PrestaShop website here.</source>
+        <target>You can add or update a language directly from the PrestaShop website here.</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Translations/Blocks/copy_language.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d4e007a94451a69f593c3ce0e06e08f2">
+        <source>Copies data from one language to another.</source>
+        <target>Copies data from one language to another.</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="3cd0f0cce3990de970f803ffc19f68e1">
+        <source>Warning: This will replace all of the existing data inside the destination language.</source>
+        <target>Warning: This will replace all of the existing data inside the destination language.</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="8a6815aee1e25633b568be3153f4e779">
+        <source>If necessary [1][2] you must first create a new language[/1].</source>
+        <target>If necessary [1][2] you must first create a new language[/1].</target>
+        <note>Line: 45</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Translations/Blocks/export_language.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a577e13cac9ee85d6f298e0a8deffeee">
+        <source>Export data from one language to a file (language pack).</source>
+        <target>Export data from one language to a file (language pack).</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="234350fd7a2ea83720f91f40eb2985a9">
+        <source>Select which theme you would like to export your translations to.</source>
+        <target>Select which theme you would like to export your translations to.</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8e67ab4e5869bb5521650ed40d448438">
+        <source>Here you can modify translations for every line of text inside PrestaShop.</source>
+        <target>Here you can modify translations for every line of text inside PrestaShop.</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="00fd55ca2b1b20cca50d295393b32440">
+        <source>First, select a type of translation (such as "Back office" or "Installed modules"), and then select the language you want to translate strings in.</source>
+        <target>First, select a type of translation (such as "Back office" or "Installed modules"), and then select the language you want to translate strings in.</target>
+        <note>Line: 42</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Translation/Api/InternationalApi.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="15ba451caecdf6917bcd4d150f33fb7c">
+        <source>Search a word or expression, e.g.: "Order confirmation"</source>
+        <target>Search a word or expression, e.g.: "Order confirmation"</target>
+        <note>Line: 59</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

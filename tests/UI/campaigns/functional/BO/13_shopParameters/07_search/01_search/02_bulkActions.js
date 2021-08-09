@@ -117,7 +117,8 @@ describe('Enable/Disable and delete by bulk actions search', async () => {
       it(`should ${test.args.action} with bulk actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Status`, baseContext);
 
-        await searchPage.bulkSetStatus(page, test.args.value);
+        const textResult = await searchPage.bulkSetStatus(page, test.args.value);
+        await expect(textResult).to.contains(searchPage.successfulUpdateStatusMessage);
 
         const numberOfElementInGrid = await searchPage.getNumberOfElementInGrid(page);
 

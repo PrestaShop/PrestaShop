@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import {expect} from 'chai';
+import { expect } from 'chai';
 import NumberSpecification from '../../../js/app/cldr/specifications/number';
 import NumberSymbol from '../../../js/app/cldr/number-symbol';
 
@@ -40,7 +40,7 @@ describe('NumberSpecification', () => {
       '×',
       '‰',
       '∞',
-      'NaN',
+      'NaN'
     );
   });
   describe('validateData', () => {
@@ -52,64 +52,37 @@ describe('NumberSpecification', () => {
 
     it('should throw if invalid negative pattern', () => {
       expect(() => {
-        new NumberSpecification(
-          '#,##0.###',
-        );
+        new NumberSpecification('#,##0.###');
       }).to.throw('Invalid negativePattern');
     });
 
     it('should throw if invalid symbol', () => {
       expect(() => {
-        new NumberSpecification(
-          '#,##0.###',
-          '-#,##0.###',
-        );
+        new NumberSpecification('#,##0.###', '-#,##0.###');
       }).to.throw('Invalid symbol');
     });
 
     it('should throw if invalid maxFractionDigits', () => {
       expect(() => {
-        new NumberSpecification(
-          '#,##0.###',
-          '-#,##0.###',
-          symbol,
-        );
+        new NumberSpecification('#,##0.###', '-#,##0.###', symbol);
       }).to.throw('Invalid maxFractionDigits');
     });
 
     it('should throw if invalid minFractionDigits', () => {
       expect(() => {
-        new NumberSpecification(
-          '#,##0.###',
-          '-#,##0.###',
-          symbol,
-          3,
-        );
+        new NumberSpecification('#,##0.###', '-#,##0.###', symbol, 3);
       }).to.throw('Invalid minFractionDigits');
     });
 
     it('should throw if invalid groupingUsed', () => {
       expect(() => {
-        new NumberSpecification(
-          '#,##0.###',
-          '-#,##0.###',
-          symbol,
-          3,
-          0,
-        );
+        new NumberSpecification('#,##0.###', '-#,##0.###', symbol, 3, 0);
       }).to.throw('Invalid groupingUsed');
     });
 
     it('should throw if invalid primaryGroupSize', () => {
       expect(() => {
-        new NumberSpecification(
-          '#,##0.###',
-          '-#,##0.###',
-          symbol,
-          3,
-          0,
-          false,
-        );
+        new NumberSpecification('#,##0.###', '-#,##0.###', symbol, 3, 0, false);
       }).to.throw('Invalid primaryGroupSize');
     });
 
@@ -122,7 +95,7 @@ describe('NumberSpecification', () => {
           3,
           0,
           true,
-          3,
+          3
         );
       }).to.throw('Invalid secondaryGroupSize');
     });
@@ -137,7 +110,7 @@ describe('NumberSpecification', () => {
           0,
           true,
           3,
-          3,
+          3
         );
       }).to.not.throw();
     });

@@ -118,8 +118,9 @@ class CartRuleCalculator
             }
         }
 
-        // Discount (%) on the whole order
+        // Percentage discount
         if ((float) $cartRule->reduction_percent > 0) {
+            // Discount (%) on the whole order
             if ($cartRule->reduction_product == 0) {
                 foreach ($this->cartRows as $cartRow) {
                     $product = $cartRow->getRowData();
@@ -190,7 +191,7 @@ class CartRuleCalculator
             }
         }
 
-        // Discount (¤) : weighted calculation on all concerned rows
+        // Amount discount (¤) : weighted calculation on all concerned rows
         //                weight factor got from price with same tax (incl/excl) as voucher
         if ((float) $cartRule->reduction_amount > 0) {
             $concernedRows = new CartRowCollection();

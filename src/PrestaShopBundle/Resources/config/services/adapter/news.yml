@@ -12,7 +12,6 @@ services:
       - ['setStrippedFailures', [!php/const \PrestaShop\PrestaShop\Adapter\News\NewsDataProvider::OPEN_ALLOWED_FAILURES]]
       - ['setStrippedTimeout', [!php/const \PrestaShop\PrestaShop\Adapter\News\NewsDataProvider::OPEN_TIMEOUT_SECONDS]]
       - ['setStorage', ['@prestashop.core.circuit_breaker.storage']]
-      - ['setClientOptions', [{'method': 'GET', 'subscribers': ['@prestashop.core.circuit_breaker.guzzle.cache_subscriber']}]]
 
   prestashop.adapter.news.circuit_breaker:
     class: 'PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface'

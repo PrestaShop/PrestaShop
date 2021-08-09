@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * DB Backup page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class DbBackup extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on db backup page
+   */
   constructor() {
     super();
 
@@ -32,13 +41,14 @@ class DbBackup extends BOBasePage {
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-method='DELETE']`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
 
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
-    this.bulkActionsDeleteButton = `${this.gridPanel} #backup_grid_bulk_action_delete_backups`;
-
+    this.bulkActionsDeleteButton = `${this.gridPanel} #backup_grid_bulk_action_delete_selection`;
+    this.confirmDeleteModal = '#backup-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
@@ -50,7 +60,7 @@ class DbBackup extends BOBasePage {
   /* Header methods */
   /**
    * Go to db Backup page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToSqlManagerPage(page) {
@@ -60,7 +70,7 @@ class DbBackup extends BOBasePage {
   /* Form and grid methods */
   /**
    * Get number of backups
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -69,7 +79,7 @@ class DbBackup extends BOBasePage {
 
   /**
    * Create new db backup
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async createDbDbBackup(page) {
@@ -84,40 +94,49 @@ class DbBackup extends BOBasePage {
 
   /**
    * Download backup
-   * @param page
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
    */
-  async downloadDbBackup(page) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      await page.click(this.downloadBackupButton),
-    ]);
-    return download.path();
+  downloadDbBackup(page) {
+    return this.clickAndWaitForDownload(page, this.downloadBackupButton);
   }
 
   /**
    * Delete backup
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async deleteBackup(page, row) {
-    this.dialogListener(page, true);
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteDbBackups(page);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
+   * Confirm delete with in modal
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async confirmDeleteDbBackups(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+  }
+
+  /**
    * Delete with bulk actions
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async deleteWithBulkActions(page) {
-    this.dialogListener(page, true);
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -128,15 +147,22 @@ class DbBackup extends BOBasePage {
       page.click(this.bulkActionsToggleButton),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
+
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+
+    await this.confirmDeleteDbBackups(page);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -145,8 +171,8 @@ class DbBackup extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination limit number to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -160,7 +186,7 @@ class DbBackup extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -171,7 +197,7 @@ class DbBackup extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {

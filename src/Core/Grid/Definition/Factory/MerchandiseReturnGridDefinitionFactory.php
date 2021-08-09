@@ -42,7 +42,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class MerchandiseReturnGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
-    const GRID_ID = 'merchandise_return';
+    public const GRID_ID = 'merchandise_return';
 
     /**
      * {@inheritdoc}
@@ -111,45 +111,45 @@ final class MerchandiseReturnGridDefinitionFactory extends AbstractFilterableGri
     {
         return (new FilterCollection())
             ->add((new Filter('id_order_return', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('id_order_return')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('id_order_return')
             )
             ->add((new Filter('id_order', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search order ID', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('id_order')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search order ID', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('id_order')
             )
             ->add((new Filter('status', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('status')
+            ->setTypeOptions([
+                'required' => false,
+            ])
+            ->setAssociatedColumn('status')
             )
             ->add((new Filter('date_add', DateRangeType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'date_format' => 'YYYY-MM-DD',
-                ])
-                ->setAssociatedColumn('date_add')
+            ->setTypeOptions([
+                'required' => false,
+                'date_format' => 'YYYY-MM-DD',
+            ])
+            ->setAssociatedColumn('date_add')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search_by_filter_id',
-                    'reset_route_params' => [
-                        'filterId' => self::GRID_ID,
-                    ],
-                    'redirect_route' => 'admin_merchandise_returns_index',
-                ])
-                ->setAssociatedColumn('actions')
+            ->setTypeOptions([
+                'reset_route' => 'admin_common_reset_search_by_filter_id',
+                'reset_route_params' => [
+                    'filterId' => self::GRID_ID,
+                ],
+                'redirect_route' => 'admin_merchandise_returns_index',
+            ])
+            ->setAssociatedColumn('actions')
             )
         ;
     }

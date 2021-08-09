@@ -26,30 +26,31 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShop\PrestaShop\Adapter\Routes\DefaultRouteProvider;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class UrlSchemaType is responsible for providing form fields for
  * Shop parameters -> Traffic & Seo -> Seo & Urls -> Schema of urls block.
  */
-class UrlSchemaType extends AbstractType
+class UrlSchemaType extends TranslatorAwareType
 {
     /**
-     * @var bool
+     * @var DefaultRouteProvider
      */
-    private $isRewriteSettingEnabled;
+    private $defaultRouteProvider;
 
-    /**
-     * UrlSchemaType constructor.
-     *
-     * @param bool $isRewriteSettingEnabled
-     */
-    public function __construct($isRewriteSettingEnabled)
-    {
-        $this->isRewriteSettingEnabled = $isRewriteSettingEnabled;
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        DefaultRouteProvider $defaultRouteProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->defaultRouteProvider = $defaultRouteProvider;
     }
 
     /**
@@ -57,17 +58,56 @@ class UrlSchemaType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($this->isRewriteSettingEnabled) {
-            $builder
-                ->add('product_rule', TextType::class)
-                ->add('category_rule', TextType::class)
-                ->add('layered_rule', TextType::class)
-                ->add('supplier_rule', TextType::class)
-                ->add('manufacturer_rule', TextType::class)
-                ->add('cms_rule', TextType::class)
-                ->add('cms_category_rule', TextType::class)
-                ->add('module', TextType::class);
-        }
+        $builder
+            ->add('product_rule', TextType::class, [
+                'label' => $this->trans(
+                    'Route to products',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->getKeywords('product_rule'),
+            ])
+            ->add('category_rule', TextType::class, [
+                'label' => $this->trans(
+                    'Route to category',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->getKeywords('category_rule'),
+            ])
+            ->add('supplier_rule', TextType::class, [
+                'label' => $this->trans(
+                    'Route to supplier',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->getKeywords('supplier_rule'),
+            ])
+            ->add('manufacturer_rule', TextType::class, [
+                'label' => $this->trans(
+                    'Route to brand',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->getKeywords('manufacturer_rule'),
+            ])
+            ->add('cms_rule', TextType::class, [
+                'label' => $this->trans(
+                    'Route to page',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->getKeywords('cms_rule'),
+            ])
+            ->add('cms_category_rule', TextType::class, [
+                'label' => $this->trans(
+                    'Route to page category',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->getKeywords('cms_category_rule'),
+            ])
+            ->add('module', TextType::class, [
+                'label' => $this->trans(
+                    'Route to modules',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->getKeywords('module'),
+            ]);
     }
 
     /**
@@ -78,5 +118,35 @@ class UrlSchemaType extends AbstractType
         $resolver->setDefaults([
             'label' => false,
         ]);
+    }
+
+    /**
+     * @param string $idRoute
+     *
+     * @return string
+     *
+     * @throws \PrestaShopException
+     */
+    private function getKeywords($idRoute)
+    {
+        $keyWords = $this->defaultRouteProvider->getKeywords();
+        $formattedKeyWords = [];
+        if ($keyWords[$idRoute]) {
+            foreach ($keyWords[$idRoute] as $key => $keyWord) {
+                $value = $key;
+                if (isset($keyWord['param'])) {
+                    $value .= '*';
+                }
+                $formattedKeyWords[] = $value;
+            }
+        }
+
+        return $this->trans(
+                'Keywords: %keywords%',
+                'Admin.Shopparameters.Feature',
+                [
+                    '%keywords%' => implode(', ', $formattedKeyWords),
+                ]
+        );
     }
 }

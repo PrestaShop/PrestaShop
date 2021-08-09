@@ -67,7 +67,7 @@ class StockRepository extends StockManagementRepository
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
      * @param StockManager $stockManager
-     * @param $tablePrefix
+     * @param string $tablePrefix
      */
     public function __construct(
         ContainerInterface $container,
@@ -204,8 +204,8 @@ class StockRepository extends StockManagementRepository
     }
 
     /**
-     * @param $offset int
-     * @param $limit int
+     * @param int $offset
+     * @param int $limit
      * @param QueryParamsCollection $queryParams
      *
      * @return array
@@ -235,6 +235,7 @@ class StockRepository extends StockManagementRepository
         }
 
         $combinationNameQuery = $this->getCombinationNameSubquery();
+        $attributeNameQuery = $this->getAttributeNameSubquery();
 
         return str_replace(
             [
@@ -243,6 +244,7 @@ class StockRepository extends StockManagementRepository
                 '{order_by}',
                 '{table_prefix}',
                 '{combination_name}',
+                '{attribute_name}',
             ],
             [
                 $andWhereClause,
@@ -250,6 +252,7 @@ class StockRepository extends StockManagementRepository
                 $orderByClause,
                 $this->tablePrefix,
                 $combinationNameQuery,
+                $attributeNameQuery,
             ],
             'SELECT SQL_CALC_FOUND_ROWS
           p.id_product                                                                      AS product_id,
@@ -269,7 +272,8 @@ class StockRepository extends StockManagementRepository
                       "N/A"))                                                               AS product_low_stock_threshold,
           IF(COALESCE(pa.id_product_attribute, 0) > 0, IF(sa.quantity <= pas.low_stock_threshold, 1, 0),
              IF(sa.quantity <= ps.low_stock_threshold, 1, 0))                               AS product_low_stock_alert,
-          {combination_name}
+          {combination_name},
+          {attribute_name}
         FROM {table_prefix}product p
           LEFT JOIN {table_prefix}product_attribute pa ON (p.id_product = pa.id_product)
           LEFT JOIN {table_prefix}product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = :language_id)
@@ -284,7 +288,7 @@ class StockRepository extends StockManagementRepository
           LEFT JOIN {table_prefix}product_attribute_combination pac ON (pac.id_product_attribute = pa.id_product_attribute)
           LEFT JOIN {table_prefix}product_attribute_shop pas
             ON (pas.id_product = pa.id_product AND pas.id_product_attribute = pa.id_product_attribute AND
-                pas.id_shop = :shop_id)                     
+                pas.id_shop = :shop_id)
         WHERE
           p.state = :state
           {and_where}

@@ -24,17 +24,12 @@
  *}
 {extends file=$layout}
 
-{block name='head_seo' prepend}
-  <link rel="canonical" href="{$product.canonical_url}">
-{/block}
-
 {block name='head' append}
   <meta property="og:type" content="product">
-  <meta property="og:url" content="{$urls.current_url}">
-  <meta property="og:title" content="{$page.meta.title}">
-  <meta property="og:site_name" content="{$shop.name}">
-  <meta property="og:description" content="{$page.meta.description}">
-  <meta property="og:image" content="{$product.cover.large.url}">
+  {if $product.cover}
+    <meta property="og:image" content="{$product.cover.large.url}">
+  {/if}
+
   {if $product.show_price}
     <meta property="product:pretax_price:amount" content="{$product.price_tax_exc}">
     <meta property="product:pretax_price:currency" content="{$currency.iso_code}">
@@ -47,12 +42,16 @@
   {/if}
 {/block}
 
+{block name='head_microdata_special'}
+  {include file='_partials/microdata/product-jsonld.tpl'}
+{/block}
+
 {block name='content'}
 
-  <section id="main" itemscope itemtype="https://schema.org/Product">
-    <meta itemprop="url" content="{$product.url}">
+  <section id="main">
+    <meta content="{$product.url}">
 
-    <div class="row product-container">
+    <div class="row product-container js-product-container">
       <div class="col-md-6">
         {block name='page_content_container'}
           <section class="page-content" id="content">
@@ -74,7 +73,7 @@
         <div class="col-md-6">
           {block name='page_header_container'}
             {block name='page_header'}
-              <h1 class="h1" itemprop="name">{block name='page_title'}{$product.name}{/block}</h1>
+              <h1 class="h1">{block name='page_title'}{$product.name}{/block}</h1>
             {/block}
           {/block}
           {block name='product_prices'}
@@ -83,7 +82,7 @@
 
           <div class="product-information">
             {block name='product_description_short'}
-              <div id="product-description-short-{$product.id}" class="product-description" itemprop="description">{$product.description_short nofilter}</div>
+              <div id="product-description-short-{$product.id}" class="product-description">{$product.description_short nofilter}</div>
             {/block}
 
             {if $product.is_customizable && count($product.customizations.fields)}
@@ -92,12 +91,12 @@
               {/block}
             {/if}
 
-            <div class="product-actions">
+            <div class="product-actions js-product-actions">
               {block name='product_buy'}
                 <form action="{$urls.pages.cart}" method="post" id="add-to-cart-or-refresh">
                   <input type="hidden" name="token" value="{$static_token}">
                   <input type="hidden" name="id_product" value="{$product.id}" id="product_page_product_id">
-                  <input type="hidden" name="id_customization" value="{$product.id_customization}" id="product_customization_id">
+                  <input type="hidden" name="id_customization" value="{$product.id_customization}" id="product_customization_id" class="js-product-customization-id">
 
                   {block name='product_variants'}
                     {include file='catalog/_partials/product-variants.tpl'}
@@ -145,7 +144,7 @@
                   {if $product.description}
                     <li class="nav-item">
                        <a
-                         class="nav-link{if $product.description} active{/if}"
+                         class="nav-link{if $product.description} active js-product-nav-active{/if}"
                          data-toggle="tab"
                          href="#description"
                          role="tab"
@@ -155,7 +154,7 @@
                   {/if}
                   <li class="nav-item">
                     <a
-                      class="nav-link{if !$product.description} active{/if}"
+                      class="nav-link{if !$product.description} active js-product-nav-active{/if}"
                       data-toggle="tab"
                       href="#product-details"
                       role="tab"
@@ -185,7 +184,7 @@
                 </ul>
 
                 <div class="tab-content" id="tab-content">
-                 <div class="tab-pane fade in{if $product.description} active{/if}" id="description" role="tabpanel">
+                 <div class="tab-pane fade in{if $product.description} active js-product-tab-active{/if}" id="description" role="tabpanel">
                    {block name='product_description'}
                      <div class="product-description">{$product.description nofilter}</div>
                    {/block}
@@ -230,7 +229,7 @@
       {if $accessories}
         <section class="product-accessories clearfix">
           <p class="h5 text-uppercase">{l s='You might also like' d='Shop.Theme.Catalog'}</p>
-          <div class="products" itemscope itemtype="http://schema.org/ItemList">
+          <div class="products">
             {foreach from=$accessories item="product_accessory" key="position"}
               {block name='product_miniature'}
                 {include file='catalog/_partials/miniatures/product.tpl' product=$product_accessory position=$position}

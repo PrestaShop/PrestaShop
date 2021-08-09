@@ -8,7 +8,7 @@ class Cart extends FOBasePage {
     this.pageTitle = 'Cart';
 
     // Selectors for cart page
-    this.cartGridBlock = 'div.cart-grid';
+    // Shopping cart block selectors
     this.productItem = number => `#main li:nth-of-type(${number})`;
     this.productName = number => `${this.productItem(number)} div.product-line-info a`;
     this.productRegularPrice = number => `${this.productItem(number)} span.regular-price`;
@@ -20,21 +20,31 @@ class Cart extends FOBasePage {
     this.productColor = number => `${this.productItem(number)} div.product-line-info.color span.value`;
     this.productImage = number => `${this.productItem(number)} span.product-image img`;
     this.deleteIcon = number => `${this.productItem(number)} .remove-from-cart`;
-    this.proceedToCheckoutButton = '#main div.checkout a';
-    this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
+
+    // Cart summary block selectors
+    this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
     this.subtotalDiscountValueSpan = '#cart-subtotal-discount span.value';
     this.cartTotalATI = '.cart-summary-totals span.value';
-    this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
-    this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
+    this.blockPromoDiv = '.block-promo';
+    this.cartSummaryLine = line => `${this.blockPromoDiv} li:nth-child(${line}).cart-summary-line`;
+    this.cartRuleName = line => `${this.cartSummaryLine(line)} span.label`;
+    this.discountValue = line => `${this.cartSummaryLine(line)} div span`;
+
     this.promoCodeLink = '#main div.block-promo a[href=\'#promo-code\']';
     this.promoInput = '#promo-code input.promo-input';
     this.addPromoCodeButton = '#promo-code button.btn-primary';
+    this.promoCodeRemoveIcon = line => `${this.cartSummaryLine(line)} a[data-link-action='remove-voucher']`;
+
+    this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
+
+    this.proceedToCheckoutButton = '#main div.checkout a';
+    this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
   }
 
   /**
    * Get Product detail from cart
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row number in the table
    * @returns {Promise<{discountPercentage: *, image: *, quantity: number, size: *, color: *, totalPrice: *,
    * price: number, regularPrice: number, name: *}>}
    */
@@ -52,8 +62,8 @@ class Cart extends FOBasePage {
 
   /**
    * Get product attributes
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row number in the table
    * @returns {Promise<{size: *, color: *}>}
    */
   async getProductAttributes(page, row) {
@@ -65,7 +75,7 @@ class Cart extends FOBasePage {
 
   /**
    * Click on Proceed to checkout button
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async clickOnProceedToCheckout(page) {
@@ -75,9 +85,9 @@ class Cart extends FOBasePage {
 
   /**
    * To edit the product quantity
-   * @param page
-   * @param productID
-   * @param quantity
+   * @param page {Page} Browser tab
+   * @param productID {number} ID of the product
+   * @param quantity {number} New quantity of the product
    * @returns {Promise<void>}
    */
   async editProductQuantity(page, productID, quantity) {
@@ -88,8 +98,8 @@ class Cart extends FOBasePage {
 
   /**
    * Delete product
-   * @param page
-   * @param productID
+   * @param page {Page} Browser tab
+   * @param productID {number} ID of the product
    * @returns {Promise<void>}
    */
   async deleteProduct(page, productID) {
@@ -98,7 +108,7 @@ class Cart extends FOBasePage {
 
   /**
    * Get All tax included price
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   getATIPrice(page) {
@@ -107,7 +117,7 @@ class Cart extends FOBasePage {
 
   /**
    * Get subtotal discount value
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   getSubtotalDiscountValue(page) {
@@ -116,7 +126,7 @@ class Cart extends FOBasePage {
 
   /**
    * Is proceed to checkout button disabled
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isProceedToCheckoutButtonDisabled(page) {
@@ -125,7 +135,7 @@ class Cart extends FOBasePage {
 
   /**
    * Is alert warning for minimum purchase total visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isAlertWarningForMinimumPurchaseVisible(page) {
@@ -134,7 +144,7 @@ class Cart extends FOBasePage {
 
   /**
    * Get alert warning
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getAlertWarning(page) {
@@ -143,14 +153,48 @@ class Cart extends FOBasePage {
 
   /**
    * Set promo code
-   * @param page
-   * @param code
+   * @param page {Page} Browser tab
+   * @param code {string} The promo code
+   * @param clickOnPromoCodeLink {boolean} True if we need to click on promo code link
    * @returns {Promise<void>}
    */
-  async addPromoCode(page, code) {
-    await page.click(this.promoCodeLink);
+  async addPromoCode(page, code, clickOnPromoCodeLink = true) {
+    if (clickOnPromoCodeLink) {
+      await page.click(this.promoCodeLink);
+    }
     await this.setValue(page, this.promoInput, code);
     await page.click(this.addPromoCodeButton);
+  }
+
+  /**
+   * Get cart rule name
+   * @param page {Page} Browser tab
+   * @param line {number} Cart summary line
+   * @returns {Promise<number>}
+   */
+  getCartRuleName(page, line = 1) {
+    return this.getTextContent(page, this.cartRuleName(line), 2000);
+  }
+
+  /**
+   * Get discount value
+   * @param page {Page} Browser tab
+   * @param line {number} Cart summary line
+   * @returns {Promise<number>}
+   */
+  getDiscountValue(page, line = 1) {
+    return this.getPriceFromText(page, this.discountValue(line), 2000);
+  }
+
+  /**
+   * Remove voucher
+   * @param page {Page} Browser tab
+   * @param line {number} Cart summary line
+   * @returns {Promise<void>}
+   */
+  async removeVoucher(page, line = 1) {
+    await this.waitForSelectorAndClick(page, this.promoCodeRemoveIcon(line));
+    await this.waitForHiddenSelector(page, this.promoCodeRemoveIcon(line));
   }
 }
 

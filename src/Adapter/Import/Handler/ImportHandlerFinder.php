@@ -41,7 +41,7 @@ final class ImportHandlerFinder implements ImportHandlerFinderInterface
     private $importHandlers;
 
     /**
-     * @param ImportHandlerInterface[] $importHandlers
+     * @param ImportHandlerInterface[] ...$importHandlers
      */
     public function __construct(ImportHandlerInterface ...$importHandlers)
     {

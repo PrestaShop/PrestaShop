@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add contact page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddContact extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add contact page
+   */
   constructor() {
     super();
 
@@ -14,10 +23,10 @@ class AddContact extends BOBasePage {
     this.titleInputEN = '#contact_title_1';
     this.titleInputFR = '#contact_title_2';
     this.emailAddressInput = '#contact_email';
-    this.enableSaveMessagesLabel = id => `label[for='contact_is_messages_saving_enabled_${id}']`;
+    this.enableSaveMessagesToggleInput = toggle => `#contact_is_messages_saving_enabled_${toggle}`;
     this.descriptionTextareaEN = '#contact_description_1';
     this.descriptionTextareaFR = '#contact_description_2';
-    this.saveContactButton = 'div.card-footer button';
+    this.saveContactButton = '#save-button';
   }
 
   /*
@@ -26,8 +35,8 @@ class AddContact extends BOBasePage {
 
   /**
    * Change language for selectors
-   * @param page
-   * @param lang
+   * @param page {Page} Browser tab
+   * @param lang {string} Language to choose
    * @return {Promise<void>}
    */
   async changeLanguageForSelectors(page, lang = 'en') {
@@ -43,8 +52,8 @@ class AddContact extends BOBasePage {
 
   /**
    * Fill form for add/edit contact
-   * @param page
-   * @param contactData
+   * @param page {Page} Browser tab
+   * @param contactData {ContactData} Data to set on contact form
    * @returns {Promise<string>}
    */
   async createEditContact(page, contactData) {
@@ -54,7 +63,7 @@ class AddContact extends BOBasePage {
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValue(page, this.titleInputFR, contactData.title);
     await this.setValue(page, this.descriptionTextareaFR, contactData.description);
-    await page.click(this.enableSaveMessagesLabel(contactData.saveMessage ? 1 : 0));
+    await page.check(this.enableSaveMessagesToggleInput(contactData.saveMessage ? 1 : 0));
     // Save Contact
     await this.clickAndWaitForNavigation(page, this.saveContactButton);
     return this.getAlertSuccessBlockParagraphContent(page);

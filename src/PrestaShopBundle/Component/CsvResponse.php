@@ -32,13 +32,13 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class CsvResponse extends StreamedResponse
 {
     // Mode used to paginate page per page, 1/100, 2/100, 3/000, etc
-    const MODE_PAGINATION = 1;
+    public const MODE_PAGINATION = 1;
 
     // Mode used to paginate by offset, 1/100, 100/100, 200/100, etc (like MySql limit)
-    const MODE_OFFSET = 2;
+    public const MODE_OFFSET = 2;
 
     /**
-     * @var array() CSV content
+     * @var array|callable CSV content
      */
     private $data;
 
@@ -111,7 +111,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param $modeType int
+     * @param int $modeType
      *
      * @return $this
      */
@@ -123,7 +123,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param $start int
+     * @param int $start
      *
      * @return $this
      */
@@ -135,7 +135,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param $limit int
+     * @param int $limit
      *
      * @return $this
      */
@@ -280,7 +280,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param $handle, file pointer
+     * @param resource $handle file pointer
      */
     private function dumpFile($handle)
     {

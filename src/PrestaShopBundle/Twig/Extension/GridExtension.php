@@ -30,7 +30,7 @@ use RuntimeException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
-use Twig_SimpleFunction as SimpleFunction;
+use Twig\TwigFunction;
 
 /**
  * Class GridExtension is responsible for providing grid helpers functions.
@@ -40,8 +40,8 @@ use Twig_SimpleFunction as SimpleFunction;
  */
 class GridExtension extends AbstractExtension
 {
-    const BASE_COLUMN_CONTENT_TEMPLATE_PATH = '@PrestaShop/Admin/Common/Grid/Columns/Content';
-    const BASE_COLUMN_HEADER_TEMPLATE_PATH = '@PrestaShop/Admin/Common/Grid/Columns/Header/Content';
+    public const BASE_COLUMN_CONTENT_TEMPLATE_PATH = '@PrestaShop/Admin/Common/Grid/Columns/Content';
+    public const BASE_COLUMN_HEADER_TEMPLATE_PATH = '@PrestaShop/Admin/Common/Grid/Columns/Header/Content';
 
     /**
      * @var Environment
@@ -69,13 +69,13 @@ class GridExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new SimpleFunction('column_content', [$this, 'renderColumnContent'], [
+            new TwigFunction('column_content', [$this, 'renderColumnContent'], [
                 'is_safe' => ['html'],
             ]),
-            new SimpleFunction('column_header', [$this, 'renderColumnHeader'], [
+            new TwigFunction('column_header', [$this, 'renderColumnHeader'], [
                 'is_safe' => ['html'],
             ]),
-            new SimpleFunction('is_ordering_column', [$this, 'isOrderingColumn'], [
+            new TwigFunction('is_ordering_column', [$this, 'isOrderingColumn'], [
                 'is_safe' => ['html'],
             ]),
         ];
@@ -168,8 +168,7 @@ class GridExtension extends AbstractExtension
     {
         if (empty($grid['columns'])
             || empty($grid['sorting']['order_by'])
-            || empty($grid['sorting']['order_way'])
-            || 'asc' != strtolower($grid['sorting']['order_way'])) {
+            || empty($grid['sorting']['order_way'])) {
             return false;
         }
 
@@ -205,15 +204,17 @@ class GridExtension extends AbstractExtension
         $gridTemplate = sprintf('%s/%s_%s.html.twig', $basePath, $gridId, $columnType);
         $columnTemplate = sprintf('%s/%s.html.twig', $basePath, $columnType);
 
-        if ($this->twig->getLoader()->exists($columnGridTemplate)) {
+        $loader = $this->twig->getLoader();
+
+        if ($loader->exists($columnGridTemplate)) {
             return $columnGridTemplate;
         }
 
-        if ($this->twig->getLoader()->exists($gridTemplate)) {
+        if ($loader->exists($gridTemplate)) {
             return $gridTemplate;
         }
 
-        if ($this->twig->getLoader()->exists($columnTemplate)) {
+        if ($loader->exists($columnTemplate)) {
             return $columnTemplate;
         }
 

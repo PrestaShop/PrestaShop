@@ -1,0 +1,51 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% set color = column.options.color_template%}
+{% set class = "text-" ~ color %}
+
+{% if column.options.button_template %}
+  {% set style = column.options.button_template %}
+  {% if style == 'normal' %}
+    {% set class = "btn btn-" ~ color %}
+  {% elseif style == 'outline' %}
+    {% set class = "btn btn-outline-" ~ color %}
+  {% endif %}
+{% endif %}
+
+{% block link %}
+<a
+  class="{{ class }}"
+  href="{{ path(column.options.route, { (column.options.route_param_name) : record[column.options.route_param_field], _fragment : column.options.fragment }) }}"
+  {% if column.options.target is defined %}
+    target="{{ column.options.target }}"
+  {% endif %}
+>
+  {% if column.options.icon is defined %}
+    <i class="material-icons">{{ column.options.icon }}</i>
+  {% endif %}
+  {{ record[column.options.field] }}
+</a>
+{% endblock %}

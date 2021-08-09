@@ -165,7 +165,15 @@ final class DeleteCategoryCoverImageHandler implements DeleteCategoryCoverImageH
                 }
             }
         } catch (IOException $e) {
-            throw new CannotDeleteImageException(sprintf('Cannot delete image with type "%s" for category with id "%s"', $imageType['name'], $category->id), CannotDeleteImageException::COVER_IMAGE, $e);
+            throw new CannotDeleteImageException(
+                sprintf(
+                    'Cannot delete image with type "%s" for category with id "%s"',
+                    isset($imageType) ? $imageType['name'] : '',
+                    $category->id
+                ),
+                CannotDeleteImageException::COVER_IMAGE,
+                $e
+            );
         }
     }
 }

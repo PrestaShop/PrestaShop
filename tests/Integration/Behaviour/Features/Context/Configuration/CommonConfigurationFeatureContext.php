@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 
 use Configuration;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tools;
 
 class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureContext
@@ -68,5 +69,35 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
     public function activateGroupFeature()
     {
         Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', '1');
+    }
+
+    /**
+     * @Given /^customization feature is (enabled|disabled)$/
+     *
+     * @Transform(enabled|disabled)
+     */
+    public function toggleCustomizationFeature(string $status)
+    {
+        $status = PrimitiveUtils::castStringBooleanIntoBoolean($status);
+        Configuration::set(
+            'PS_CUSTOMIZATION_FEATURE_ACTIVE',
+            $status
+        );
+    }
+
+    /**
+     * @Given /^search indexation feature is (enabled|disabled)$/
+     *
+     * @Transform(enabled|disabled)
+     *
+     * @param string $status
+     */
+    public function toggleSearchIndexation(string $status): void
+    {
+        $status = PrimitiveUtils::castStringBooleanIntoBoolean($status);
+        Configuration::set(
+            'PS_SEARCH_INDEXATION',
+            $status
+        );
     }
 }

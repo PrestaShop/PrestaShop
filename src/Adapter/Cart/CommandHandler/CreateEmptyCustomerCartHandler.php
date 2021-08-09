@@ -68,8 +68,8 @@ final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHan
     {
         $cart = new Cart();
 
-        $cart->recyclable = 0;
-        $cart->gift = 0;
+        $cart->recyclable = false;
+        $cart->gift = false;
         $cart->id_customer = $customer->id;
         $cart->secure_key = $customer->secure_key;
 

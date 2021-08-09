@@ -38,7 +38,7 @@ class CategoriesProviderTest extends TestCase
      */
     private $provider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $yamlParser = new YamlParser(_PS_CACHE_DIR_);
         $prestashopAddonsConfig = $yamlParser->parse(__DIR__ . '/fixtures/categories.yml');
@@ -460,7 +460,7 @@ class CategoriesProviderTest extends TestCase
     private function mockModule(string $moduleName, string $tab = null, string $categoryName = null)
     {
         $mock = $this->getMockBuilder(Module::class)
-              ->getMock();
+            ->getMock();
         $mock->attributes->set('name', $moduleName);
 
         if ($tab !== null) {

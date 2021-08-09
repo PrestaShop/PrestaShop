@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult;
 
 use DateTime;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject\CatalogPriceRuleId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
@@ -72,7 +72,7 @@ class EditableCatalogPriceRule
     private $fromQuantity;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $price;
 
@@ -104,7 +104,7 @@ class EditableCatalogPriceRule
      * @param int $countryId
      * @param int $groupId
      * @param int $fromQuantity
-     * @param Number $price
+     * @param DecimalNumber $price
      * @param Reduction $reduction
      * @param bool $includeTax
      * @param DateTime|null $from
@@ -118,7 +118,7 @@ class EditableCatalogPriceRule
         int $countryId,
         int $groupId,
         int $fromQuantity,
-        Number $price,
+        DecimalNumber $price,
         Reduction $reduction,
         bool $includeTax,
         ?DateTime $from,
@@ -195,9 +195,9 @@ class EditableCatalogPriceRule
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getPrice(): Number
+    public function getPrice(): DecimalNumber
     {
         return $this->price;
     }

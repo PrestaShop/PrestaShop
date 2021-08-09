@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
 class AlertsController extends ModuleAbstractController
 {
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -55,7 +55,7 @@ class AlertsController extends ModuleAbstractController
     {
         return new JsonResponse(
             $this->get('prestashop.module.manager')
-            ->countModulesWithNotificationsDetailed()
+                ->countModulesWithNotificationsDetailed()
         );
     }
 }

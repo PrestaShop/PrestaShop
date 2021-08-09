@@ -1,0 +1,44 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+<div id="combinations-empty-state" class="d-none">
+  <div class="text-center showcase-list-card">
+    <img alt="{{ 'Generate product combinations'|trans({}, 'Admin.Catalog.Feature') }}" title="{{ 'Generate product combinations'|trans({}, 'Admin.Catalog.Feature') }}" class="img-responsive mt-3 img-rtl" src="{{ asset('themes/new-theme/img/empty_state/combinations.svg') }}">
+
+    <p class="mt-4 showcase-list-card__header">{{ 'Generate product combinations'|trans({}, 'Admin.Catalog.Feature') }}</p>
+
+    <p class="mx-auto showcase-list-card__message">
+      {{ 'Combinations are the different variations of a product, with attributes like its size, weight or color taking different values.'|trans({}, 'Admin.Catalog.Feature') }}
+      {{ 'To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1].'|trans({'%attributes_and_features_label%': 'Attributes & Features'|trans({}, 'Admin.Navigation.Menu'), '[1]': '<a class="alert-link" href=' ~ getAdminLink("AdminAttributesGroups") ~ ' target="_blank">', '[/1]': '</a>'}, 'Admin.Catalog.Help')|raw }}
+    </p>
+
+    <div class="mt-4">
+      <a href="{{ documentation_link('combinations') }}" target="_blank" class="btn btn-outline-secondary mr-1">{{ 'Learn more'|trans({}, 'Admin.Actions') }}</a>
+      <button class="btn btn-primary generate-combinations-button" disabled="disabled">
+        {{ 'Generate combinations'|trans({}, 'Admin.Catalog.Feature') }}
+      </button>
+    </div>
+  </div>
+</div>

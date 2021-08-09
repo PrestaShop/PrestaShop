@@ -25,22 +25,32 @@
 <template>
   <div class="md-checkbox">
     <label>
-      <input type="checkbox" :id="id" v-model="checked" :class="{'indeterminate' : isIndeterminate }">
-      <i class="md-checkbox-control"></i>
-      <slot name="label"></slot>
+      <input
+        type="checkbox"
+        :id="id"
+        v-model="checked"
+        :class="{'indeterminate' : isIndeterminate }"
+      >
+      <i class="md-checkbox-control" />
+      <slot name="label" />
     </label>
   </div>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue';
+
+  export default Vue.extend({
     props: {
       id: {
         type: String,
+        required: false,
+        default: '',
       },
       model: {
         type: Object,
         required: false,
+        default: () => ({}),
       },
       isIndeterminate: {
         type: Boolean,
@@ -49,15 +59,17 @@
       },
     },
     watch: {
-      checked(val) {
+      checked(val: boolean): void {
         this.$emit('checked', {
           checked: val,
           item: this.model,
         });
       },
     },
-    data: () => ({
-      checked: false,
-    }),
-  };
+    data() {
+      return {
+        checked: false,
+      };
+    },
+  });
 </script>

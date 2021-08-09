@@ -37,9 +37,10 @@ const priceRuleData = new PriceRuleFaker(
     reduction: 20,
   },
 );
-
+// Unit discount in Volume discounts table(Product page FO)
 const unitDiscountToCheck = '€20.00';
-const unitPriceToCheck = '€2.94';
+// Unit price in Volume discounts table(Product page FO)
+const unitPriceToCheck = '€8.68';
 
 describe('Enable/Disable display discounted price', async () => {
   // before and after functions
@@ -134,12 +135,7 @@ describe('Enable/Disable display discounted price', async () => {
     });
 
     it('should check the existence of the unit value', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkUnitValue${productSettingsPage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkUnitValue${index}`, baseContext);
 
       page = await productSettingsPage.viewMyShop(page);
 

@@ -309,16 +309,21 @@ class OrderAmountUpdater
         $order->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts, $carrierId, false, $this->keepOrderPrices);
 
         if (!$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
-            $shippingDiffTaxIncluded = $order->total_shipping_tax_incl - $totalShippingTaxIncluded;
-            $shippingDiffTaxExcluded = $order->total_shipping_tax_excl - $totalShippingTaxExcluded;
+            $freeShipping = $this->isFreeShipping($order);
+
+            if ($freeShipping) {
+                $order->total_discounts = $order->total_discounts - $order->total_shipping_tax_incl + $totalShippingTaxIncluded;
+                $order->total_discounts_tax_excl = $order->total_discounts_tax_excl - $order->total_shipping_tax_excl + $totalShippingTaxExcluded;
+                $order->total_discounts_tax_incl = $order->total_discounts_tax_incl - $order->total_shipping_tax_incl + $totalShippingTaxIncluded;
+            } else {
+                $order->total_paid -= ($order->total_shipping_tax_incl - $totalShippingTaxIncluded);
+                $order->total_paid_tax_incl -= ($order->total_shipping_tax_incl - $totalShippingTaxIncluded);
+                $order->total_paid_tax_excl -= ($order->total_shipping_tax_excl - $totalShippingTaxExcluded);
+            }
 
             $order->total_shipping = $totalShippingTaxIncluded;
             $order->total_shipping_tax_incl = $totalShippingTaxIncluded;
             $order->total_shipping_tax_excl = $totalShippingTaxExcluded;
-
-            $order->total_paid -= $shippingDiffTaxIncluded;
-            $order->total_paid_tax_incl -= $shippingDiffTaxIncluded;
-            $order->total_paid_tax_excl -= $shippingDiffTaxExcluded;
         }
     }
 
@@ -448,6 +453,12 @@ class OrderAmountUpdater
                     $orderCartRule->free_shipping = $cartRule->free_shipping;
                     $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
                     $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
+
+                    if ($orderCartRule->free_shipping && !$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
+                        $orderCartRule->value = $orderCartRule->value - $calculator->getFees()->getInitialShippingFees()->getTaxIncluded() + $order->total_shipping;
+                        $orderCartRule->value_tax_excl = $orderCartRule->value_tax_excl - $calculator->getFees()->getInitialShippingFees()->getTaxExcluded() + $order->total_shipping_tax_excl;
+                    }
+
                     $orderCartRule->save();
                     continue 2;
                 }
@@ -512,7 +523,7 @@ class OrderAmountUpdater
 
             // Shipping are computed on first invoice only
             $carrierId = $order->id_carrier;
-            $totalMethod = ($firstInvoice === null || $firstInvoice->id == $invoice->id) ? Cart::BOTH : Cart::BOTH_WITHOUT_SHIPPING;
+            $totalMethod = ($firstInvoice === false || $firstInvoice->id == $invoice->id) ? Cart::BOTH : Cart::BOTH_WITHOUT_SHIPPING;
             $invoice->total_paid_tax_excl = Tools::ps_round(
                 (float) $cart->getOrderTotal(false, $totalMethod, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices),
                 $computingPrecision
@@ -549,22 +560,42 @@ class OrderAmountUpdater
             $invoice->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices);
 
             if (!$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
-                $shippingDiffTaxIncluded = $invoice->total_shipping_tax_incl - $totalShippingTaxIncluded;
-                $shippingDiffTaxExcluded = $invoice->total_shipping_tax_excl - $totalShippingTaxExcluded;
+                $freeShipping = $this->isFreeShipping($order);
 
-                $invoice->total_shipping = $totalShippingTaxIncluded;
+                if ($freeShipping) {
+                    $invoice->total_discount_tax_excl = $invoice->total_discount_tax_excl - $invoice->total_shipping_tax_excl + $totalShippingTaxExcluded;
+                    $invoice->total_discount_tax_incl = $invoice->total_discount_tax_incl - $invoice->total_shipping_tax_incl + $totalShippingTaxIncluded;
+                }
+
                 $invoice->total_shipping_tax_incl = $totalShippingTaxIncluded;
                 $invoice->total_shipping_tax_excl = $totalShippingTaxExcluded;
 
-                $invoice->total_paid -= $shippingDiffTaxIncluded;
-                $invoice->total_paid_tax_incl -= $shippingDiffTaxIncluded;
-                $invoice->total_paid_tax_excl -= $shippingDiffTaxExcluded;
+                if (!$freeShipping) {
+                    $invoice->total_paid_tax_incl -= ($invoice->total_shipping_tax_incl - $totalShippingTaxIncluded);
+                    $invoice->total_paid_tax_excl -= ($invoice->total_shipping_tax_excl - $totalShippingTaxExcluded);
+                }
             }
 
             if (!$invoice->update()) {
                 throw new OrderException('Could not update order invoice in database.');
             }
         }
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return bool
+     */
+    protected function isFreeShipping(Order $order): bool
+    {
+        foreach ($order->getCartRules() as $cartRule) {
+            if ($cartRule['free_shipping']) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

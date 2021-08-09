@@ -126,7 +126,7 @@ class ConfigurationKPICore extends Configuration
     public static function getInt($key, $idShopGroup = null, $idShop = null)
     {
         ConfigurationKPI::setKpiDefinition();
-        $values = parent::getInt($key, $idShopGroup, $idShop);
+        $values = parent::getConfigInMultipleLangs($key, $idShopGroup, $idShop);
         ConfigurationKPI::unsetKpiDefinition();
 
         return $values;
@@ -238,14 +238,16 @@ class ConfigurationKPICore extends Configuration
     }
 
     /**
-     * @param string $key
+     * @param $key
+     * @param int|null $idShopGroup
+     * @param int|null $idShop
      *
      * @return bool
      */
-    public static function deleteFromContext($key)
+    public static function deleteFromContext($key, int $idShopGroup = null, int $idShop = null)
     {
         ConfigurationKPI::setKpiDefinition();
-        $deleteSuccess = parent::deleteFromContext($key);
+        $deleteSuccess = parent::deleteFromContext($key, $idShopGroup, $idShop);
         ConfigurationKPI::unsetKpiDefinition();
 
         return $deleteSuccess;

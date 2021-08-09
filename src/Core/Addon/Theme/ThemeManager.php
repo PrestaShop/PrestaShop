@@ -90,6 +90,11 @@ class ThemeManager implements AddonManagerInterface
     private $finder;
 
     /**
+     * @var string
+     */
+    public $sandbox;
+
+    /**
      * @var ThemeRepository
      */
     private $themeRepository;
@@ -109,6 +114,18 @@ class ThemeManager implements AddonManagerInterface
      */
     private $translationFinder;
 
+    /**
+     * @param Shop $shop
+     * @param ConfigurationInterface $configuration
+     * @param ThemeValidator $themeValidator
+     * @param TranslatorInterface $translator
+     * @param Employee $employee
+     * @param Filesystem $filesystem
+     * @param Finder $finder
+     * @param HookConfigurator $hookConfigurator
+     * @param ThemeRepository $themeRepository
+     * @param ImageTypeRepository $imageTypeRepository
+     */
     public function __construct(
         Shop $shop,
         ConfigurationInterface $configuration,
@@ -159,8 +176,8 @@ class ThemeManager implements AddonManagerInterface
     /**
      * Remove all theme files, resources, documentation and specific modules.
      *
-     * @param $name The source can be a module name (installed from either local disk or addons.prestashop.com).
-     * or a location (url or path to the zip file)
+     * @param string $name The source can be a module name (installed from either local disk or addons.prestashop.com).
+     *                     or a location (url or path to the zip file)
      *
      * @return bool true for success
      */
@@ -170,6 +187,7 @@ class ThemeManager implements AddonManagerInterface
             return false;
         }
 
+        /** @var Theme $theme */
         $theme = $this->themeRepository->getInstanceByName($name);
         $theme->onUninstall();
 
@@ -213,6 +231,7 @@ class ThemeManager implements AddonManagerInterface
         /* if file exits, remove it and use YAML configuration file instead */
         @unlink($this->appConfiguration->get('_PS_CONFIG_DIR_') . 'themes/' . $name . '/shop' . $this->shop->id . '.json');
 
+        /** @var Theme $theme */
         $theme = $this->themeRepository->getInstanceByName($name);
         if (!$this->themeValidator->isValid($theme)) {
             return false;
@@ -221,12 +240,12 @@ class ThemeManager implements AddonManagerInterface
         $this->disable($this->shop->theme_name);
 
         $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', []))
-                ->doApplyConfiguration($theme->get('global_settings.configuration', []))
-                ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
-                ->doEnableModules($theme->getModulesToEnable())
-                ->doResetModules($theme->get('global_settings.modules.to_reset', []))
-                ->doApplyImageTypes($theme->get('global_settings.image_types'))
-                ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
+            ->doApplyConfiguration($theme->get('global_settings.configuration', []))
+            ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
+            ->doEnableModules($theme->getModulesToEnable())
+            ->doResetModules($theme->get('global_settings.modules.to_reset', []))
+            ->doApplyImageTypes($theme->get('global_settings.image_types'))
+            ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
 
         $theme->onEnable();
 
@@ -235,7 +254,7 @@ class ThemeManager implements AddonManagerInterface
 
         $this->saveTheme($theme);
 
-        return $this;
+        return true;
     }
 
     /**
@@ -247,6 +266,7 @@ class ThemeManager implements AddonManagerInterface
      */
     public function disable($name)
     {
+        /** @var Theme $theme */
         $theme = $this->themeRepository->getInstanceByName($name);
         $theme->getModulesToDisable();
 
@@ -274,7 +294,7 @@ class ThemeManager implements AddonManagerInterface
      *
      * @param string $themeName The technical theme name
      *
-     * @return string|null The last error if found
+     * @return void
      */
     public function getError($themeName)
     {
@@ -390,7 +410,7 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * @param $source
+     * @param string $source
      *
      * @throws ThemeAlreadyExistsException
      * @throws ThemeConstraintException
@@ -432,8 +452,8 @@ class ThemeManager implements AddonManagerInterface
         $modules_parent_dir = $sandboxPath . '/dependencies/modules';
         if ($this->filesystem->exists($modules_parent_dir)) {
             $module_dirs = $this->finder->directories()
-                                        ->in($modules_parent_dir)
-                                        ->depth('== 0');
+                ->in($modules_parent_dir)
+                ->depth('== 0');
             /** @var SplFileInfo $dir */
             foreach (iterator_to_array($module_dirs) as $dir) {
                 $destination = $module_root_dir . basename($dir->getFileName());
@@ -525,7 +545,7 @@ class ThemeManager implements AddonManagerInterface
             try {
                 // construct a new catalog for this lang and import in database if key and message are different
                 $messageCatalog = $this->translationFinder->getCatalogueFromPaths(
-                    $translationFolder . $locale,
+                    [$translationFolder . $locale],
                     $locale
                 );
 

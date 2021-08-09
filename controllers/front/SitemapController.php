@@ -151,12 +151,15 @@ class SitemapControllerCore extends FrontController
             ],
         ];
 
-        if (Configuration::isCatalogMode() && Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
-            $links[] = [
-                'id' => 'best-sales-page',
-                'label' => $this->trans('Best sellers', [], 'Shop.Theme.Catalog'),
-                'url' => $this->context->link->getPageLink('best-sales'),
-            ];
+        if (!Configuration::isCatalogMode()) {
+            if (Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
+                $links[] = [
+                    'id' => 'best-sales-page',
+                    'label' => $this->trans('Best sellers', [], 'Shop.Theme.Catalog'),
+                    'url' => $this->context->link->getPageLink('best-sales'),
+                ];
+            }
+
             $links[] = [
                 'id' => 'prices-drop-page',
                 'label' => $this->trans('Price drop', [], 'Shop.Theme.Catalog'),
@@ -185,5 +188,17 @@ class SitemapControllerCore extends FrontController
         }
 
         return $links;
+    }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('Sitemap', [], 'Shop.Theme.Global'),
+            'url' => $this->context->link->getPageLink('sitemap', true),
+        ];
+
+        return $breadcrumb;
     }
 }

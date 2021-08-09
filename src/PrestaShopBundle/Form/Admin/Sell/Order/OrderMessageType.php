@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\OrderMessageConstraint;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
@@ -53,13 +54,13 @@ class OrderMessageType extends AbstractType
     private $orderMessageNameChoiceProvider;
 
     /**
-     * @var FormChoiceProviderInterface
+     * @var ConfigurableFormChoiceProviderInterface
      */
     private $orderMessageChoiceProvider;
 
     public function __construct(
         FormChoiceProviderInterface $orderMessageNameChoiceProvider,
-        FormChoiceProviderInterface $orderMessageChoiceProvider
+        ConfigurableFormChoiceProviderInterface $orderMessageChoiceProvider
     ) {
         $this->orderMessageNameChoiceProvider = $orderMessageNameChoiceProvider;
         $this->orderMessageChoiceProvider = $orderMessageChoiceProvider;
@@ -83,18 +84,18 @@ class OrderMessageType extends AbstractType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                            'This field cannot be empty.', [], 'Admin.Notifications.Error'
                         ),
                     ]),
                     new CleanHtml([
-                            'message' => $this->trans(
-                                'The %s field is not valid',
-                                [
-                                    sprintf('"%s"', $this->trans('Message', [], 'Admin.Global')),
-                                ],
-                                'Admin.Notifications.Error'
-                            ),
-                        ]
+                        'message' => $this->trans(
+                            'The %s field is not valid',
+                            [
+                                sprintf('"%s"', $this->trans('Message', [], 'Admin.Global')),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]
                     ),
                     new Length([
                         'max' => OrderMessageConstraint::MAX_MESSAGE_LENGTH,
@@ -111,6 +112,8 @@ class OrderMessageType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['messages'] = $this->orderMessageChoiceProvider->getChoices();
+        $view->vars['messages'] = $this->orderMessageChoiceProvider->getChoices([
+            'lang_id' => $options['data']['lang_id'] ?? null,
+        ]);
     }
 }

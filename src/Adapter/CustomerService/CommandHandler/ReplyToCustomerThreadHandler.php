@@ -101,7 +101,7 @@ final class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandler
         $customerMessage = new CustomerMessage();
         $customerMessage->id_employee = (int) $this->context->employee->id;
         $customerMessage->id_customer_thread = $customerThread->id;
-        $customerMessage->ip_address = (int) ip2long(Tools::getRemoteAddr());
+        $customerMessage->ip_address = (string) (int) ip2long(Tools::getRemoteAddr());
         $customerMessage->message = $replyMessage;
 
         if (false === $customerMessage->validateField('message', $customerMessage->message)) {
@@ -138,7 +138,7 @@ final class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandler
         $contact = new Contact((int) $customerThread->id_contact, (int) $customerThread->id_lang);
 
         if (Validate::isLoadedObject($contact)) {
-            $fromName = $contact->name;
+            $fromName = is_array($contact->name) ? $contact->name[array_key_first($contact->name)] : $contact->name;
             $fromEmail = $contact->email;
         } else {
             $fromName = null;

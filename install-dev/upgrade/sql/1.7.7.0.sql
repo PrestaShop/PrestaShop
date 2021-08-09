@@ -639,7 +639,8 @@ VALUES (NULL, 'actionOrderMessageFormBuilderModifier', 'Modify order message ide
        (NULL, 'actionAddressGridPresenterModifier', 'Modify address grid template data',
         'This hook allows to modify data which is about to be used in template for address grid', '1'),
        (NULL, 'actionCreditSlipGridPresenterModifier', 'Modify credit slip grid template data',
-        'This hook allows to modify data which is about to be used in template for credit slip grid', '1')
+        'This hook allows to modify data which is about to be used in template for credit slip grid', '1'),
+       (NULL, 'displayAfterTitleTag', 'After title tag', 'Use this hook to add content after title tag', '1')
 ;
 
 /* Update wrong hook names */

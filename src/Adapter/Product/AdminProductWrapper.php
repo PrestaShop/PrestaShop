@@ -41,6 +41,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShopBundle\Form\Admin\Type\CustomMoneyType;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
 use ProductDownload;
@@ -50,6 +51,7 @@ use SpecificPrice;
 use SpecificPriceRule;
 use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
+use Tax;
 use Tools;
 use Validate;
 
@@ -117,7 +119,7 @@ class AdminProductWrapper
      * @param object $product
      * @param array $combinationValues the posted values
      *
-     * @return AdminProductsController instance
+     * @return void
      */
     public function processProductAttribute($product, $combinationValues)
     {
@@ -137,8 +139,19 @@ class AdminProductWrapper
         if (!isset($combinationValues['attribute_weight_impact'])) {
             $combinationValues['attribute_weight_impact'] = 0;
         }
-        if (!isset($combinationValues['attribute_ecotax'])) {
+
+        // This is VERY UGLY, but since ti ComputingPrecision can never return enough decimals for now we have no
+        // choice but to hard code this one to make sure enough precision is saved in the DB or it results in errors
+        // of 1 cent in the shop
+        $computingPrecision = CustomMoneyType::PRESTASHOP_DECIMALS;
+        if (!isset($combinationValues['attribute_ecotax']) || 0.0 === (float) $combinationValues['attribute_ecotax']) {
             $combinationValues['attribute_ecotax'] = 0;
+        } else {
+            // Value is displayed tax included but must be saved tax excluded
+            $combinationValues['attribute_ecotax'] = Tools::ps_round(
+                $combinationValues['attribute_ecotax'] / (1 + Tax::getProductEcotaxRate() / 100),
+                $computingPrecision
+            );
         }
         if ((isset($combinationValues['attribute_default']) && $combinationValues['attribute_default'] == 1)) {
             $product->deleteDefaultAttributes();
@@ -187,9 +200,7 @@ class AdminProductWrapper
 
         if ((isset($combinationValues['attribute_default']) && $combinationValues['attribute_default'] == 1)) {
             Product::updateDefaultAttribute((int) $product->id);
-            if (isset($id_product_attribute)) {
-                $product->cache_default_attribute = (int) $id_product_attribute;
-            }
+            $product->cache_default_attribute = (int) $id_product_attribute;
 
             // We need to reload the product because some other calls have modified the database
             // It's done just for the setAvailableDate to avoid side effects
@@ -263,14 +274,14 @@ class AdminProductWrapper
      *
      * @param int $id_product
      * @param array $specificPriceValues the posted values
-     * @param int (optional) $id_specific_price if this is an update of an existing specific price, null else
+     * @param int|null $idSpecificPrice if this is an update of an existing specific price, null else
      *
-     * @return AdminProductsController instance
+     * @return AdminProductsController|array
      */
     public function processProductSpecificPrice($id_product, $specificPriceValues, $idSpecificPrice = null)
     {
         // ---- data formatting ----
-        $id_product_attribute = $specificPriceValues['sp_id_product_attribute'];
+        $id_product_attribute = $specificPriceValues['sp_id_product_attribute'] ?? 0;
         $id_shop = $specificPriceValues['sp_id_shop'] ? $specificPriceValues['sp_id_shop'] : 0;
         $id_currency = $specificPriceValues['sp_id_currency'] ? $specificPriceValues['sp_id_currency'] : 0;
         $id_country = $specificPriceValues['sp_id_country'] ? $specificPriceValues['sp_id_country'] : 0;
@@ -409,7 +420,10 @@ class AdminProductWrapper
     public function getSpecificPricesList($product, $defaultCurrency, $shops, $currencies, $countries, $groups)
     {
         $content = [];
-        $specific_prices = SpecificPrice::getByProductId((int) $product->id);
+        $specific_prices = array_merge(
+            SpecificPrice::getByProductId((int) $product->id),
+            SpecificPrice::getByProductId(0)
+        );
 
         $tmp = [];
         foreach ($shops as $shop) {
@@ -523,7 +537,7 @@ class AdminProductWrapper
      *
      * @return SpecificPrice
      *
-     * @throws PrestaShopObjectNotFoundException
+     * @throws EntityNotFoundException
      */
     public function getSpecificPriceDataById($id)
     {
@@ -600,7 +614,7 @@ class AdminProductWrapper
      * @param object $product
      * @param array $data
      *
-     * @return bool
+     * @return array<int, int>
      */
     public function processProductCustomization($product, $data)
     {
@@ -723,7 +737,7 @@ class AdminProductWrapper
      * @param object $product
      * @param array $data
      *
-     * @return bool
+     * @return ProductDownload
      */
     public function updateDownloadProduct($product, $data)
     {
@@ -748,8 +762,8 @@ class AdminProductWrapper
             $download->date_expiration = $data['expiration_date'] ? $data['expiration_date'] . ' 23:59:59' : '';
             $download->nb_days_accessible = (int) $data['nb_days'];
             $download->nb_downloadable = (int) $data['nb_downloadable'];
-            $download->active = 1;
-            $download->is_shareable = 0;
+            $download->active = true;
+            $download->is_shareable = false;
 
             if (!$id_product_download) {
                 $download->save();
@@ -759,7 +773,7 @@ class AdminProductWrapper
         } else {
             if (!empty($id_product_download)) {
                 $download->date_expiration = date('Y-m-d H:i:s', time() - 1);
-                $download->active = 0;
+                $download->active = false;
                 $download->update();
             }
         }
@@ -777,7 +791,7 @@ class AdminProductWrapper
         $id_product_download = ProductDownload::getIdFromIdProduct((int) $product->id, false);
         $download = new ProductDownload($id_product_download ? $id_product_download : null);
 
-        if ($download && !empty($download->filename)) {
+        if (!empty($download->filename)) {
             unlink(_PS_DOWNLOAD_DIR_ . $download->filename);
             Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'product_download` SET filename = "" WHERE `id_product_download` = ' . (int) $download->id);
         }
@@ -792,8 +806,7 @@ class AdminProductWrapper
     {
         $id_product_download = ProductDownload::getIdFromIdProduct((int) $product->id, false);
         $download = new ProductDownload($id_product_download ? $id_product_download : null);
-
-        if ($download) {
+        if (Validate::isLoadedObject($download)) {
             $download->delete(true);
         }
     }
@@ -872,7 +885,7 @@ class AdminProductWrapper
         $img = new Image((int) $idImage);
         if ($data['cover']) {
             Image::deleteCover((int) $img->id_product);
-            $img->cover = 1;
+            $img->cover = true;
         }
         $img->legend = $data['legend'];
         $img->update();
@@ -886,12 +899,12 @@ class AdminProductWrapper
      * @param object $product
      * @param bool $preview
      *
-     * @return string preview url
+     * @return string|bool Preview url
      */
     public function getPreviewUrl($product, $preview = true)
     {
         $context = Context::getContext();
-        $id_lang = Configuration::get('PS_LANG_DEFAULT', null, null, $context->shop->id);
+        $id_lang = (int) Configuration::get('PS_LANG_DEFAULT', null, null, $context->shop->id);
 
         if (!ShopUrl::getMainShopDomain()) {
             return false;

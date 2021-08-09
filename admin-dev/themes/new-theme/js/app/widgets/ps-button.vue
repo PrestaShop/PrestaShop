@@ -23,36 +23,43 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <button type="button" class="btn" :class="classObject" @click="onClick" >
+  <button
+    type="button"
+    class="btn"
+    :class="classObject"
+    @click="onClick"
+  >
     <slot />
   </button>
 </template>
 
-<script>
- export default {
-   props: {
-     primary: { type: Boolean },
-     ghost: { type: Boolean },
-   },
-   computed: {
-     classObject() {
-       if (this.ghost) {
-         return {
-           'btn-outline-primary': this.primary,
-           'btn-outline-secondary': !this.primary,
-         };
-       }
+<script lang="ts">
+  import Vue from 'vue';
 
-       return {
-         'btn-primary': this.primary,
-         'btn-secondary': !this.primary,
-       };
-     },
-   },
-   methods: {
-     onClick() {
-       this.$emit('click');
-     },
-   },
- };
+  export default Vue.extend({
+    props: {
+      primary: {type: Boolean},
+      ghost: {type: Boolean},
+    },
+    computed: {
+      classObject(): Record<string, any> {
+        if (this.ghost) {
+          return {
+            'btn-outline-primary': this.primary,
+            'btn-outline-secondary': !this.primary,
+          };
+        }
+
+        return {
+          'btn-primary': this.primary,
+          'btn-secondary': !this.primary,
+        };
+      },
+    },
+    methods: {
+      onClick(): void {
+        this.$emit('click');
+      },
+    },
+  });
 </script>

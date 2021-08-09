@@ -54,7 +54,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
@@ -132,7 +132,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Show & process manufacturer creation.
      *
      * @AdminSecurity(
-     *     "is_granted(['create'], request.get('_legacy_controller'))"
+     *     "is_granted('create', request.get('_legacy_controller'))"
      * )
      *
      * @return Response
@@ -164,7 +164,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * View single manufacturer details
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $manufacturerId
      *
@@ -198,7 +198,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Show & process manufacturer editing.
      *
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))"
+     *     "is_granted('update', request.get('_legacy_controller'))"
      * )
      *
      * @param int $manufacturerId
@@ -248,7 +248,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
-     * @param $manufacturerId
+     * @param int|string $manufacturerId
      *
      * @return RedirectResponse
      */
@@ -377,7 +377,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Export filtered manufacturers.
      *
      * @AdminSecurity(
-     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_manufacturers_index"
      * )
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
@@ -415,7 +415,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('manufacturer_' . date('Y-m-d_His') . '.csv')
+            ->setFileName('brands_' . date('Y-m-d_His') . '.csv')
             ;
     }
 
@@ -448,7 +448,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Export filtered manufacturer addresses.
      *
      * @AdminSecurity(
-     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_manufacturers_index"
      * )
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
@@ -679,7 +679,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
                     'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
                         $iniConfig->getUploadMaxSizeInBytes(),
-                ]),
+                    ]),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
                     'Admin.Notifications.Error'

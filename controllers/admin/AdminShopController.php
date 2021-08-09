@@ -137,19 +137,19 @@ class AdminShopControllerCore extends AdminController
         $this->addJqueryPlugin('cooki-plugin');
         $data = Shop::getTree();
 
-        foreach ($data as &$group) {
-            foreach ($group['shops'] as &$shop) {
+        foreach ($data as $group_key => $group) {
+            foreach ($group['shops'] as $shop_key => $shop) {
                 $current_shop = new Shop($shop['id_shop']);
                 $urls = $current_shop->getUrls();
 
-                foreach ($urls as &$url) {
+                foreach ($urls as $url) {
                     $title = $url['domain'] . $url['physical_uri'] . $url['virtual_uri'];
                     if (strlen($title) > 23) {
                         $title = substr($title, 0, 23) . '...';
                     }
 
                     $url['name'] = $title;
-                    $shop['urls'][$url['id_shop_url']] = $url;
+                    $data[$group_key][$shop_key]['urls'][$url['id_shop_url']] = $url;
                 }
             }
         }
@@ -344,7 +344,7 @@ class AdminShopControllerCore extends AdminController
         $shop_delete_list = [];
 
         // don't allow to remove shop which have dependencies (customers / orders / ... )
-        foreach ($this->_list as &$shop) {
+        foreach ($this->_list as $shop) {
             if (Shop::hasDependency($shop['id_shop'])) {
                 $shop_delete_list[] = $shop['id_shop'];
             }
@@ -388,6 +388,16 @@ class AdminShopControllerCore extends AdminController
                 $display_group_list = false;
             }
         }
+
+        $this->fields_form['input'][] = [
+            'type' => 'color',
+            'label' => $this->trans('Color', [], 'Admin.Catalog.Feature'),
+            'name' => 'color',
+            'desc' => [
+                $this->trans('It will only be applied to the multistore header to highlight your shop context.', [], 'Admin.Shopparameters.Feature'),
+            ],
+            'hint' => $this->trans('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").', [], 'Admin.Catalog.Help'),
+        ];
 
         if ($display_group_list) {
             $options = [];
@@ -495,28 +505,10 @@ class AdminShopControllerCore extends AdminController
             ],
             'desc' => $this->trans('By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.', [], 'Admin.Shopparameters.Help'),
         ];
-        /*$this->fields_form['input'][] = array(
-            'type' => 'switch',
-            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
-            'name' => 'active',
-            'required' => true,
-            'is_bool' => true,
-            'values' => array(
-                array(
-                    'id' => 'active_on',
-                    'value' => 1
-                ),
-                array(
-                    'id' => 'active_off',
-                    'value' => 0
-                )
-            ),
-            'desc' => $this->trans('Enable or disable your store?', array(), 'Admin.Shopparameters.Help')
-        );*/
 
         $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-                        ->buildRepository()
-                        ->getList();
+            ->buildRepository()
+            ->getList();
 
         $this->fields_form['input'][] = [
             'type' => 'theme',
@@ -603,8 +595,8 @@ class AdminShopControllerCore extends AdminController
 
         if (!$obj->theme_name) {
             $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-                            ->buildRepository()
-                            ->getList();
+                ->buildRepository()
+                ->getList();
             $theme = array_pop($themes);
             $theme_name = $theme->getName();
         } else {
@@ -612,10 +604,24 @@ class AdminShopControllerCore extends AdminController
         }
 
         $this->fields_value = [
-            'id_shop_group' => (Tools::getValue('id_shop_group') ? Tools::getValue('id_shop_group') :
-                (isset($obj->id_shop_group)) ? $obj->id_shop_group : Shop::getContextShopGroupID()),
-            'id_category' => (Tools::getValue('id_category') ? Tools::getValue('id_category') :
-                (isset($obj->id_category)) ? $obj->id_category : (int) Configuration::get('PS_HOME_CATEGORY')),
+            'id_shop_group' => (
+                Tools::getValue('id_shop_group')
+                ? Tools::getValue('id_shop_group')
+                : (
+                    isset($obj->id_shop_group)
+                    ? $obj->id_shop_group
+                    : Shop::getContextShopGroupID()
+                )
+            ),
+            'id_category' => (
+                Tools::getValue('id_category')
+                ? Tools::getValue('id_category')
+                : (
+                    isset($obj->id_category)
+                    ? $obj->id_category
+                    : (int) Configuration::get('PS_HOME_CATEGORY')
+                )
+            ),
             'theme_name' => $theme_name,
         ];
 

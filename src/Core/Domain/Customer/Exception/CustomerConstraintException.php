@@ -34,35 +34,35 @@ class CustomerConstraintException extends CustomerException
     /**
      * @var int Code is used when invalid email is provided for customer
      */
-    const INVALID_EMAIL = 1;
+    public const INVALID_EMAIL = 1;
 
     /**
      * @var int Code is used when invalid first name is provided for customer
      */
-    const INVALID_FIRST_NAME = 2;
+    public const INVALID_FIRST_NAME = 2;
 
     /**
      * @var int Code is used when invalid last name is provided for customer
      */
-    const INVALID_LAST_NAME = 3;
+    public const INVALID_LAST_NAME = 3;
 
     /**
      * @var int Code is used when invalid password is provided for customer
      */
-    const INVALID_PASSWORD = 4;
+    public const INVALID_PASSWORD = 4;
 
     /**
      * @var int Code is used when invalid APE code is provided
      */
-    const INVALID_APE_CODE = 5;
+    public const INVALID_APE_CODE = 5;
 
     /**
      * @var int Is used when invalid (not string) private note is provided as private note
      */
-    const INVALID_PRIVATE_NOTE = 6;
+    public const INVALID_PRIVATE_NOTE = 6;
 
     /**
      * @var int Code is used when invalid customer birthday is provided
      */
-    const INVALID_BIRTHDAY = 7;
+    public const INVALID_BIRTHDAY = 7;
 }

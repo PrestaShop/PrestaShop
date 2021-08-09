@@ -53,14 +53,14 @@ use Tools;
  *
  * USAGE :
  *
- * public function setUp()
+ * public function setUp(): void
  * {
  *     parent::setUp();
  *     $this->contextMocker = (new ContextMocker())->mockContext();
  * }
  *
  *
- * public function tearDown()
+ * public function tearDown(): void
  * {
  *     parent::tearDown();
  *     $this->contextMocker->resetContext();

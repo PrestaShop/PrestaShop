@@ -24,6 +24,8 @@ services:
 
   prestashop.adapter.employee.query_handler.get_employee_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler\GetEmployeeForEditingHandler'
+    arguments:
+      - '@prestashop.core.image.parser.image_tag_source_parser'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing }
 

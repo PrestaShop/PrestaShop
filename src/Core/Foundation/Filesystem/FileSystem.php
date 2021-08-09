@@ -33,12 +33,12 @@ class FileSystem
     /**
      * Default mode for directories
      */
-    const DEFAULT_MODE_FOLDER = 0755;
+    public const DEFAULT_MODE_FOLDER = 0755;
 
     /**
      * Default mode for files
      */
-    const DEFAULT_MODE_FILE = 0644;
+    public const DEFAULT_MODE_FILE = 0644;
 
     /**
      * Replaces directory separators with the system's native one
@@ -64,24 +64,25 @@ class FileSystem
     {
         if (func_num_args() < 2) {
             throw new Exception('joinPaths requires at least 2 arguments.');
-        } elseif (func_num_args() === 2) {
+        }
+        if (func_num_args() === 2) {
             $arg_O = func_get_arg(0);
             $arg_1 = func_get_arg(1);
 
             return $this->joinTwoPaths($arg_O, $arg_1);
-        } elseif (func_num_args() > 2) {
-            $func_args = func_get_args();
-            $arg_0 = func_get_arg(0);
-
-            return $this->joinPaths(
-                $arg_0,
-                call_user_func_array(
-                    [$this,
-                        'joinPaths', ],
-                    array_slice($func_args, 1)
-                )
-            );
         }
+
+        $func_args = func_get_args();
+        $arg_0 = func_get_arg(0);
+
+        return $this->joinPaths(
+            $arg_0,
+            call_user_func_array(
+                [$this,
+                    'joinPaths', ],
+                array_slice($func_args, 1)
+            )
+        );
     }
 
     /**
@@ -90,7 +91,9 @@ class FileSystem
      * If $path is a file and not a directory, just gets the file info for it
      * and return it in an array.
      *
-     * @return an array of SplFileInfo object indexed by file path
+     * @param string $path
+     *
+     * @return SplFileInfo[] Array of SplFileInfo object indexed by file path
      */
     public function listEntriesRecursively($path)
     {

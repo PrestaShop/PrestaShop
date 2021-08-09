@@ -26,18 +26,30 @@
   <div>
     <transition name="fade">
       <div class="modal show">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content"
-               aria-labelledby="modalTitle"
-               aria-describedby="modalDescription"
-               v-click-outside="close"
+        <div
+          class="modal-dialog modal-dialog-centered"
+          role="document"
+        >
+          <div
+            class="modal-content"
+            aria-labelledby="modalTitle"
+            aria-describedby="modalDescription"
+            v-click-outside="close"
           >
             <header
               class="modal-header"
             >
               <slot name="header">
-                <h5 class="modal-title">{{ modalTitle }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click.prevent.stop="close">
+                <h5 class="modal-title">
+                  {{ modalTitle }}
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  @click.prevent.stop="close"
+                >
                   <span aria-hidden="true">×</span>
                 </button>
               </slot>
@@ -48,7 +60,10 @@
               <slot name="body" />
             </section>
             <footer class="modal-footer">
-              <slot name="footer" v-if="!confirmation">
+              <slot
+                name="footer"
+                v-if="!confirmation"
+              >
                 <button
                   type="button"
                   class="btn btn-outline-secondary"
@@ -59,7 +74,10 @@
                 </button>
               </slot>
 
-              <slot name="footer-confirmation" v-if="confirmation">
+              <slot
+                name="footer-confirmation"
+                v-if="confirmation"
+              >
                 <button
                   type="button"
                   class="btn btn-outline-secondary"
@@ -80,9 +98,13 @@
             </footer>
           </div>
         </div>
+        <slot name="outside" />
       </div>
     </transition>
-    <div class="modal-backdrop show" @click.prevent.stop="close" />
+    <div
+      class="modal-backdrop show"
+      @click.prevent.stop="close"
+    />
   </div>
 </template>
 
@@ -90,7 +112,7 @@
   import '@vue/directives/click-outside';
 
   export default {
-    name: 'modal',
+    name: 'Modal',
     props: {
       confirmation: {
         type: Boolean,

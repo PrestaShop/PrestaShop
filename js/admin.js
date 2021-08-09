@@ -919,26 +919,6 @@ $(document).ready(function()
     }
   });
 
-  if (typeof host_mode !== 'undefined' && host_mode)
-  {
-        // http://status.prestashop.com/
-        var status_map = {
-            operational: status_operational,
-            degraded_performance: status_degraded_performance,
-            partial_outage: status_partial_outage,
-            major_outage: status_major_outage,
-        };
-
-        var components_map = {'ca1': 0, 'fr1': 1};
-
-        var sp = new StatusPage.page({page: 'rmfc0cm3rk9y'});
-        sp.components({
-            success: function (data) {
-                $('.status-page-description').text(status_map[data.components[components_map[host_cluster]].status]);
-                $('.status-page-dot').addClass(data.components[components_map[host_cluster]].status);
-            }
-        });
-    }
     if ($('.kpi-container').length) {
         refresh_kpis();
     }
@@ -1553,7 +1533,7 @@ function checkLangPack(token){
           content = $.parseJSON(ret.content);
           message = langPackOk + ' <b>'+content['name'] + '</b>) :'
             +'<br />' + langPackVersion + ' ' + content['version']
-            + ' <a href="http://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
+            + ' <a href="https://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
             + ($('#iso_code').val()).toLowerCase()+'.gzip" target="_blank" class="link">'+download+'</a><br />' + langPackInfo;
           $('#lang_pack_msg').html(message);
           $('#lang_pack_msg').show();
@@ -1566,25 +1546,6 @@ function checkLangPack(token){
 }
 
 function redirect(new_page) { window.location = new_page; }
-
-function saveCustomerNote() {
-  var $customerNoteForm = $('#customer_note');
-  var noteContent = $('#noteContent').val();
-
-  $.ajax({
-    type: "POST",
-    url: $customerNoteForm.attr('action'),
-    data: {
-      'private_note': {
-        'note': noteContent
-      }
-    },
-    async : true,
-    success: function(r) {
-      showSuccessMessage(r.message);
-    }
-  });
-}
 
 function isCleanHtml(content)
 {

@@ -76,7 +76,7 @@ class CLDRFeatureContext extends AbstractPrestaShopFeatureContext
             $currency->name = $isoCode;
             $currency->iso_code = $isoCode;
             $currency->active = 1;
-            $currency->deleted = 0;
+            $currency->deleted = false;
             $currency->conversion_rate = 1;
             $currency->precision = 2;
             $currency->unofficial = $unofficial;

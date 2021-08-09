@@ -24,7 +24,11 @@
  *-->
 <template>
   <div class="input-group date">
-    <input ref="datepicker" type="text" class="form-control" />
+    <input
+      ref="datepicker"
+      type="text"
+      class="form-control"
+    >
     <div class="input-group-append">
       <span class="input-group-text">
         <i class="material-icons">event</i>
@@ -33,8 +37,10 @@
   </div>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue';
+
+  export default Vue.extend({
     props: {
       locale: {
         type: String,
@@ -47,10 +53,10 @@
       },
     },
     mounted() {
-      $(this.$refs.datepicker).datetimepicker({
+      $(<HTMLInputElement> this.$refs.datepicker).datetimepicker({
         format: 'YYYY-MM-DD',
         showClear: true,
-      }).on('dp.change', (infos) => {
+      }).on('dp.change', (infos: Record<string, any>) => {
         infos.dateType = this.type;
         this.$emit(
           infos.date ? 'dpChange' : 'reset',
@@ -58,11 +64,11 @@
         );
       });
     },
-  };
+  });
 </script>
 
 <style lang="scss">
-  @import "../../../scss/config/_settings.scss";
+  @import '~@scss/config/_settings.scss';
 
   .date {
     a[data-action='clear']::before {

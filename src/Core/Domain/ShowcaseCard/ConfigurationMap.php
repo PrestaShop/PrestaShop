@@ -38,7 +38,7 @@ class ConfigurationMap
     /**
      * Template used to create configuration names for "closed status"
      */
-    const CLOSED_TEMPLATE = 'PS_SHOWCASECARD_%s_CLOSED';
+    public const CLOSED_TEMPLATE = 'PS_SHOWCASECARD_%s_CLOSED';
 
     /**
      * @var array
@@ -55,6 +55,7 @@ class ConfigurationMap
             ShowcaseCard::CMS_PAGES_CARD => sprintf(self::CLOSED_TEMPLATE, 'CMS_PAGES'),
             ShowcaseCard::ATTRIBUTES_CARD => sprintf(self::CLOSED_TEMPLATE, 'ATTRIBUTES'),
             ShowcaseCard::MONITORING_CARD => sprintf(self::CLOSED_TEMPLATE, 'MONITORING'),
+            ShowcaseCard::CARRIERS_CARD => sprintf(self::CLOSED_TEMPLATE, 'CARRIERS'),
         ];
     }
 

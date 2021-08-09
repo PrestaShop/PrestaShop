@@ -215,7 +215,7 @@ class ThemeExporter
 
         Flattenizer::flatten($tmpFolderPath . DIRECTORY_SEPARATOR . $locale, $folderPath . DIRECTORY_SEPARATOR . $locale, $locale);
 
-        return $this->themeProvider->getCatalogueFromPaths($folderPath, $locale, '*');
+        return $this->themeProvider->getCatalogueFromPaths([$folderPath], $locale, '*');
     }
 
     /**

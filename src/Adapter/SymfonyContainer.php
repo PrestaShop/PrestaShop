@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -35,13 +36,13 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 final class SymfonyContainer
 {
-    /** @var self */
+    /** @var ContainerInterface|null */
     private static $instance = null;
 
     /**
      * Get a singleton instance of SymfonyContainer.
      *
-     * @return \Symfony\Component\DependencyInjection\ContainerInterface;
+     * @return ContainerInterface|null;
      */
     public static function getInstance()
     {

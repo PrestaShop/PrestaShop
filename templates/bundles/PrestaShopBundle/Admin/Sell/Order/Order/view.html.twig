@@ -1,0 +1,129 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% set use_regular_h1_structure = false %}
+{% set layoutTitle %}
+  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/header.html.twig' %}
+{% endset %}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/orders.css') }}" type="text/css" media="all">
+{% endblock %}
+
+{% block content %}
+  <div id="order-view-page"
+       data-order-title="{{ 'Order'|trans({}, 'Admin.Global') }} #{{ orderForViewing.id }} {{ orderForViewing.reference }}">
+    <div class="row d-print-none">
+      {% set displayAdminOrderTopHookContent = renderhook('displayAdminOrderTop', {'id_order': orderForViewing.id}) %}
+
+      {% if displayAdminOrderTopHookContent != '' %}
+        <div class="col-md-12">
+          {{ displayAdminOrderTopHookContent|raw }}
+        </div>
+      {% endif %}
+      <div class="order-actions col-md-12">
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
+      </div>
+    </div>
+
+    <div class="row d-none d-print-block mb-4">
+      <div class="col-md-12">
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/print_order_statistics.html.twig' %}
+      </div>
+    </div>
+
+    <div class="row d-none mb-4">
+      <div class="col-12" id="orderProductsModificationPosition"></div>
+    </div>
+
+    <div class="row d-none d-print-block mb-4">
+      <div class="col-md-12">
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/print_title.html.twig' %}
+      </div>
+    </div>
+
+    <div class="product-row row">
+      <div class="col-md-4 left-column">
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
+
+        {{ renderhook('displayAdminOrderSide', {'id_order': orderForViewing.id}) }}
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/messages.html.twig' %}
+
+        {{ renderhook('displayAdminOrderSideBottom', {'id_order': orderForViewing.id}) }}
+      </div>
+
+      <div class="col-md-8 d-print-block right-column">
+        <div id="orderProductsOriginalPosition">
+          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
+        </div>
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details.html.twig' %}
+
+        {{ renderhook('displayAdminOrderMain', {'id_order': orderForViewing.id}) }}
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments.html.twig' %}
+
+        {{ renderhook('displayAdminOrderMainBottom', {'id_order': orderForViewing.id}) }}
+      </div>
+    </div>
+
+    {% if orderForViewing.sources.sources is not empty %}
+      <div class="product-row row">
+        <div class="col-md-12 left-column">
+          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/sources.html.twig' %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if orderForViewing.linkedOrders.linkedOrders is not empty %}
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/linked_orders.html.twig' %}
+    {% endif %}
+
+    {{ renderhook('displayAdminOrder', {'id_order': orderForViewing.id}) }}
+
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_order_discount_modal.html.twig' %}
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_shipping_modal.html.twig' %}
+    {% if orderForViewing.customer is not null and orderForViewing.customer.id != 0 %}
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_customer_address_modal.html.twig' %}
+    {% endif %}
+
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/view_all_messages_modal.html.twig' %}
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/view_product_pack_modal.html.twig' %}
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/order_view.bundle.js') }}"></script>
+{% endblock %}
+
+{% set js_translatable = {
+  "The product was successfully added.": 'The product was successfully added.'|trans({}, 'Admin.Notifications.Success'),
+  "The product was successfully removed.": 'The product was successfully removed.'|trans({}, 'Admin.Notifications.Success'),
+  "[1] products were successfully added.": '[1] products were successfully added.'|trans({}, 'Admin.Notifications.Success'),
+  "[1] products were successfully removed.": '[1] products were successfully removed.'|trans({}, 'Admin.Notifications.Success'),
+}|merge(js_translatable)
+%}

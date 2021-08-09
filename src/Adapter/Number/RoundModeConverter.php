@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\CoreException;
 
 class RoundModeConverter
 {
-    const MODE_MAP = [
+    public const MODE_MAP = [
         PS_ROUND_UP => Rounding::ROUND_CEIL,
         PS_ROUND_DOWN => Rounding::ROUND_FLOOR,
         PS_ROUND_HALF_UP => Rounding::ROUND_HALF_UP,

@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -68,6 +69,13 @@ class AttributeGroup
     private $position;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\Attribute", mappedBy="attributeGroup", orphanRemoval=true)
+     */
+    private $attributes;
+
+    /**
      * @ORM\ManyToMany(targetEntity="PrestaShopBundle\Entity\Shop", cascade={"persist"})
      * @ORM\JoinTable(
      *      joinColumns={@ORM\JoinColumn(name="id_attribute_group", referencedColumnName="id_attribute_group")},
@@ -93,6 +101,7 @@ class AttributeGroup
     {
         $this->groupType = 'select';
         $this->shops = new ArrayCollection();
+        $this->attributes = new ArrayCollection();
     }
 
     /**
@@ -179,6 +188,14 @@ class AttributeGroup
     public function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getAttributes(): Collection
+    {
+        return $this->attributes;
     }
 
     /**

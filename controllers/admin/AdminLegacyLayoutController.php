@@ -38,12 +38,27 @@ class AdminLegacyLayoutControllerCore extends AdminController
     protected $showContentHeader = true;
     /** @var string */
     protected $headerTabContent = '';
-    /** @var bool */
+    /**
+     * See the $helpLink phpDoc below
+     *
+     * @var bool
+     */
     protected $enableSidebar = false;
-    /** @var string */
+    /**
+     * The Help Link is used for the 'Help' button in the top right of Back Office pages
+     *
+     * If $enableSidebar is true, the 'Help' button will download the content available at $helpLink
+     * and inject it into the sidebar window
+     *
+     * If $enableSidebar is false, the 'Help' button is a link that redirects to $helpLink
+     *
+     * @var string
+     */
     protected $helpLink;
     /** @var bool */
     protected $useRegularH1Structure;
+    /** @var bool */
+    protected $lockedToAllShopContext = false;
 
     /**
      * @param string $controllerName
@@ -75,10 +90,19 @@ class AdminLegacyLayoutControllerCore extends AdminController
         // Some controllers can only be used in "All shops" context.
         // This makes sure that user cannot switch shop contexts
         // when in one of pages (controller) below.
-        $controllers = ['AdminLanguages', 'AdminProfiles', 'AdminSpecificPriceRule'];
+        $controllers = [
+            'AdminFeatureFlag',
+            'AdminLanguages',
+            'AdminPerformance',
+            'AdminProfiles',
+            'AdminSpecificPriceRule',
+            'AdminStatuses',
+            'AdminTranslations',
+        ];
 
         if (in_array($controllerName, $controllers)) {
             $this->multishop_context = Shop::CONTEXT_ALL;
+            $this->lockedToAllShopContext = true;
         }
 
         parent::__construct($controllerName, 'new-theme');
@@ -98,6 +122,14 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->className = 'LegacyLayout';
         $this->jsRouterMetadata = $jsRouterMetadata;
         $this->useRegularH1Structure = $useRegularH1Structure;
+    }
+
+    /**
+     * This helps avoiding handling legacy processes when in Symfony Controllers.
+     * Otherwise when using POST action to render form you sometimes get an exception.
+     */
+    public function initProcess()
+    {
     }
 
     /**
@@ -143,7 +175,6 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $isProductPage = ('AdminProducts' === $this->controller_name);
 
         $vars = [
-            'viewport_scale' => $isProductPage ? '0.75' : '1',
             'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
             'headerTabContent' => $this->headerTabContent,
@@ -163,6 +194,8 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'js_router_metadata' => $this->jsRouterMetadata,
             /* allow complex <h1> structure. @since 1.7.7 */
             'use_regular_h1_structure' => $this->useRegularH1Structure,
+            // legacy context selector is hidden on migrated pages when multistore feature is used
+            'hideLegacyStoreContextSelector' => $this->container->get('prestashop.adapter.multistore_feature')->isUsed(),
         ];
 
         if ($this->helpLink === false || !empty($this->helpLink)) {
@@ -189,7 +222,5 @@ class AdminLegacyLayoutControllerCore extends AdminController
         parent::display();
         $this->outPutHtml = ob_get_contents();
         ob_end_clean();
-
-        $this->outPutHtml;
     }
 }

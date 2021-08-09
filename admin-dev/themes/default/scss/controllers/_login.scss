@@ -1,0 +1,125 @@
+@mixin background-image-with-ms($image) {
+  @include background-image($image)
+    background-image: -ms-$image;
+}
+
+#login {
+  min-height: 100%;
+  padding-bottom: 45px;
+}
+
+#shop-img {
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  width: 69.5px;
+  margin: 0 auto;
+}
+
+#login-header {
+  padding-top: 40px;
+  margin-bottom: 30px;
+  color: #6d6d6d;
+
+  h1,
+  h4 {
+    padding: 0;
+    margin: 0;
+  }
+}
+
+#login-panel {
+  width: 500px;
+  margin: 0 auto;
+
+  .form-control {
+    height: inherit !important;
+    padding: 10px 8px !important;
+  }
+  @media (max-width: $screen-phone) {
+    width: 90%;
+  }
+
+  .panel {
+    @include border-radius(0);
+    @include box-shadow(0 1px 3px rgba(0,0,0,0.3));
+  }
+
+  .panel-footer {
+    height: inherit;
+    margin: 0 -20px -20px;
+  }
+
+  .flip-container {
+    height: 420px;
+    margin-top: 115px;
+    transform-style: preserve-3d;
+    @include perspective(1000px);
+
+    &.flip {
+      .flipper {
+        @include rotateY(180deg);
+      }
+
+      .back {
+        @include backface-visibility(visible);
+      }
+    }
+  }
+
+  .flipper {
+    position: relative;
+    transform-style: preserve-3d;
+    @include transition-duration(0.6s);
+    @include transform-style ();
+  }
+
+  .front,
+  .back {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    padding: 40px;
+    transition: 0.6s;
+    transform-style: preserve-3d;
+    @include backface-visibility(hidden);
+    @include left(0);
+  }
+
+  .front {
+    @include rotateY(0);
+    z-index: 2;
+  }
+
+  .back {
+    z-index: 1;
+    display: none;
+    @include rotateY(180deg);
+  }
+
+  #shop_name,
+  #reset_name,
+  #reset_confirm_name,
+  #forgot_name,
+  #forgot_confirm_name {
+    font-family: $font-family-sans-serif;
+    text-align: center;
+  }
+
+  #login_form {
+    padding-top: 15px;
+  }
+
+  #remind-me {
+    margin-top: 0;
+  }
+}
+
+#login-footer {
+  margin-top: 20px;
+
+  a {
+    color: #a0aab5;
+  }
+}

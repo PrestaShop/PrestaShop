@@ -25,37 +25,16 @@
 <section id="js-checkout-summary" class="card js-cart" data-refresh-url="{$urls.pages.cart}?ajax=1&action=refresh">
   <div class="card-block">
     {block name='hook_checkout_summary_top'}
-      {hook h='displayCheckoutSummaryTop'}
+      {include file='checkout/_partials/cart-summary-top.tpl' cart=$cart}
     {/block}
 
     {block name='cart_summary_products'}
-      <div class="cart-summary-products">
-
-        <p>{$cart.summary_string}</p>
-
-        <p>
-          <a href="#" data-toggle="collapse" data-target="#cart-summary-product-list">
-            {l s='show details' d='Shop.Theme.Actions'}
-            <i class="material-icons">expand_more</i>
-          </a>
-        </p>
-
-        {block name='cart_summary_product_list'}
-          <div class="collapse" id="cart-summary-product-list">
-            <ul class="media-list">
-              {foreach from=$cart.products item=product}
-                <li class="media">{include file='checkout/_partials/cart-summary-product-line.tpl' product=$product}</li>
-              {/foreach}
-            </ul>
-          </div>
-        {/block}
-      </div>
+      {include file='checkout/_partials/cart-summary-products.tpl' cart=$cart}
     {/block}
 
-  {block name='cart_summary_subtotals'}
-    {include file='checkout/_partials/cart-summary-subtotals.tpl' cart=$cart}
-  {/block}
-
+    {block name='cart_summary_subtotals'}
+      {include file='checkout/_partials/cart-summary-subtotals.tpl' cart=$cart}
+    {/block}
   </div>
 
   {block name='cart_summary_totals'}

@@ -29,19 +29,38 @@
  */
 class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 {
+    /**
+     * @var SupplyOrder
+     */
     public $supply_order;
+
+    /**
+     * @var Warehouse
+     */
     public $warehouse;
+
+    /**
+     * @var Address
+     */
     public $address_warehouse;
+
+    /**
+     * @var Address
+     */
     public $address_supplier;
+
+    /**
+     * @var Context
+     */
     public $context;
 
     /**
      * @param SupplyOrder $supply_order
-     * @param $smarty
+     * @param Smarty $smarty
      *
      * @throws PrestaShopException
      */
-    public function __construct(SupplyOrder $supply_order, $smarty)
+    public function __construct(SupplyOrder $supply_order, Smarty $smarty)
     {
         $this->supply_order = $supply_order;
         $this->smarty = $smarty;
@@ -59,7 +78,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     }
 
     /**
-     * @see HTMLTemplate::getContent()
+     * {@inheritdoc}
      */
     public function getContent()
     {
@@ -112,7 +131,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     }
 
     /**
-     * @see HTMLTemplate::getBulkFilename()
+     * {@inheritdoc}
      */
     public function getBulkFilename()
     {
@@ -120,7 +139,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     }
 
     /**
-     * @see HTMLTemplate::getFileName()
+     * {@inheritdoc}
      */
     public function getFilename()
     {
@@ -130,7 +149,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     /**
      * Get order taxes summary.
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array
      *
      * @throws PrestaShopDatabaseException
      */
@@ -153,14 +172,13 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
             $result['tax_rate'] = Tools::ps_round($result['tax_rate'], 2);
             $result['total_tax_value'] = Tools::ps_round($result['total_tax_value'], 2);
         }
-
-        unset($result); // remove reference
+        unset($result);
 
         return $results;
     }
 
     /**
-     * @see HTMLTemplate::getHeader()
+     * {@inheritdoc}
      */
     public function getHeader()
     {
@@ -188,7 +206,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     }
 
     /**
-     * @see HTMLTemplate::getFooter()
+     * {@inheritdoc}
      */
     public function getFooter()
     {

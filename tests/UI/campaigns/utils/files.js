@@ -22,10 +22,12 @@ module.exports = {
    */
   async doesFileExist(filePath, timeDelay = 5000) {
     let found = false;
+
     for (let i = 0; i <= timeDelay && !found; i += 100) {
       await (new Promise(resolve => setTimeout(resolve, 100)));
       found = await fs.existsSync(filePath);
     }
+
     return found;
   },
 
@@ -38,6 +40,7 @@ module.exports = {
   async getPageTextFromPdf(pdf, pageNo) {
     const page = await pdf.getPage(pageNo);
     const tokenizedText = await page.getTextContent();
+
     return tokenizedText.items.map(token => token.str);
   },
 
@@ -51,10 +54,13 @@ module.exports = {
     const pdf = await pdfJs.getDocument(filePath).promise;
     const maxPages = pdf.numPages;
     const pageTextPromises = [];
+
     for (let pageNo = 1; pageNo <= maxPages; pageNo += 1) {
       pageTextPromises.push(this.getPageTextFromPdf(pdf, pageNo));
     }
+
     const pageTexts = await Promise.all(pageTextPromises);
+
     return (pageTexts.join(' ').indexOf(text) !== -1);
   },
 
@@ -67,6 +73,7 @@ module.exports = {
     const pdf = await pdfJs.getDocument(filePath).promise;
     const nbrPages = pdf.numPages;
     let imageNumber = 0;
+
     for (let pageNo = 1; pageNo <= nbrPages; pageNo += 1) {
       const page = await pdf.getPage(nbrPages);
       /* eslint-disable no-loop-func */
@@ -79,7 +86,29 @@ module.exports = {
       });
       /* eslint-enable no-loop-func */
     }
+
     return imageNumber;
+  },
+  /**
+   * Generate report filename
+   * @return {Promise<string>}
+   */
+  async generateReportFilename() {
+    const curDate = new Date();
+
+    return `report-${
+      curDate.toJSON().slice(0, 10)}-${
+      curDate.getHours()}-${
+      curDate.getMinutes()}-${
+      curDate.getSeconds()}`;
+  },
+  /**
+   * Create directory if not exist
+   * @param path
+   * @return {Promise<void>}
+   */
+  async createDirectory(path) {
+    if (!fs.existsSync(path)) await fs.mkdirSync(path);
   },
   /**
    * Create file with content
@@ -106,6 +135,7 @@ module.exports = {
   async isTextInFile(filePath, textToCheckWith, ignoreSpaces = false, ignoreTimeZone = false) {
     let fileText = await fs.readFileSync(filePath, 'utf8');
     let text = textToCheckWith;
+
     if (ignoreSpaces) {
       fileText = await fileText.replace(/\s/g, '');
       text = await text.replace(/\s/g, '');
@@ -115,28 +145,6 @@ module.exports = {
       text = await text.replace(/\?time=\d+/g, '', '');
     }
     return fileText.includes(text);
-  },
-
-  /**
-   * Create directory if not exist
-   * @param path
-   * @return {Promise<void>}
-   */
-  async createDirectory(path) {
-    if (!fs.existsSync(path)) await fs.mkdirSync(path);
-  },
-
-  /**
-   * Generate report filename
-   * @return {Promise<string>}
-   */
-  async generateReportFilename() {
-    const curDate = new Date();
-    return `report-${
-      curDate.toJSON().slice(0, 10)}-${
-      curDate.getHours()}-${
-      curDate.getMinutes()}-${
-      curDate.getSeconds()}`;
   },
 
   /**

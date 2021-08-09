@@ -32,3 +32,19 @@ services:
       $table: 'attribute_group'
       $idField: 'id_attribute_group'
       $positionField: 'position'
+
+  prestashop.core.grid.carrier.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+        $table: 'carrier'
+        $idField: 'id_carrier'
+        $positionField: 'position'
+
+  prestashop.core.grid.image.position_definition:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+      arguments:
+          $table: 'image'
+          $idField: 'id_image'
+          $positionField: 'position'
+          $parentIdField: 'id_product'
+          $firstPosition: 1

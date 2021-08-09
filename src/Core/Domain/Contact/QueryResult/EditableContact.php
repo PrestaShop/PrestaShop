@@ -89,7 +89,6 @@ class EditableContact
         $this->localisedTitles = $localisedTitles;
         $this->isMessagesSavingEnabled = $isMessagesSavingEnabled;
         $this->localisedDescription = $localisedDescription;
-        $this->contactId = $contactId;
         $this->shopAssociation = $shopAssociation;
         $this->email = $email ? new Email($email) : null;
     }

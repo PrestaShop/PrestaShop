@@ -34,16 +34,16 @@ const {$} = window;
  */
 class TinyMCEEditor {
   constructor(options) {
-    options = options || {};
+    const opts = options || {};
     this.tinyMCELoaded = false;
-    if (typeof options.baseAdminUrl === 'undefined') {
+    if (typeof opts.baseAdminUrl === 'undefined') {
       if (typeof window.baseAdminDir !== 'undefined') {
-        options.baseAdminUrl = window.baseAdminDir;
+        opts.baseAdminUrl = window.baseAdminDir;
       } else {
         const pathParts = window.location.pathname.split('/');
-        pathParts.every(pathPart => {
+        pathParts.every((pathPart) => {
           if (pathPart !== '') {
-            options.baseAdminUrl = `/${pathPart}/`;
+            opts.baseAdminUrl = `/${pathPart}/`;
 
             return false;
           }
@@ -52,10 +52,10 @@ class TinyMCEEditor {
         });
       }
     }
-    if (typeof options.langIsRtl === 'undefined') {
-      options.langIsRtl = typeof window.lang_is_rtl !== 'undefined' ? window.lang_is_rtl === '1' : false;
+    if (typeof opts.langIsRtl === 'undefined') {
+      opts.langIsRtl = typeof window.lang_is_rtl !== 'undefined' ? window.lang_is_rtl === '1' : false;
     }
-    this.setupTinyMCE(options);
+    this.setupTinyMCE(opts);
   }
 
   /**
@@ -77,44 +77,54 @@ class TinyMCEEditor {
    * @param config
    */
   initTinyMCE(config) {
-    config = Object.assign(
-      {
-        selector: '.rte',
-        plugins: 'align colorpicker link image filemanager table media placeholder advlist code table autoresize',
-        browser_spellcheck: true,
-        toolbar1:
-          'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
-        toolbar2: '',
-        external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
-        filemanager_title: 'File manager',
-        external_plugins: {
-          filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`
-        },
-        language: iso_user,
-        content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
-        skin: 'prestashop',
-        menubar: false,
-        statusbar: false,
-        relative_urls: false,
-        convert_urls: false,
-        entity_encoding: 'raw',
-        extended_valid_elements: 'em[class|name|id],@[role|data-*|aria-*]',
-        valid_children: '+*[*]',
-        valid_elements: '*[*]',
-        rel_list: [{title: 'nofollow', value: 'nofollow'}],
-        editor_selector: 'autoload_rte',
-        init_instance_callback: () => {
-          this.changeToMaterial();
-        },
-        setup: editor => {
-          this.setupEditor(editor);
-        }
+    const cfg = {
+      selector: '.rte',
+      plugins: 'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize',
+      browser_spellcheck: true,
+      toolbar1:
+        /* eslint-disable-next-line max-len */
+        'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
+      toolbar2: '',
+      language: window.iso_user,
+      external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
+      filemanager_title: 'File manager',
+      external_plugins: {
+        filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`,
       },
-      config
-    );
+      content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
+      skin: 'prestashop',
+      mobile: {
+        theme: 'mobile',
+        plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code'],
+        toolbar:
+          /* eslint-disable-next-line max-len */
+          'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect',
+      },
+      menubar: false,
+      statusbar: false,
+      relative_urls: false,
+      convert_urls: false,
+      entity_encoding: 'raw',
+      extended_valid_elements: 'em[class|name|id],@[role|data-*|aria-*]',
+      valid_children: '+*[*]',
+      valid_elements: '*[*]',
+      rel_list: [{title: 'nofollow', value: 'nofollow'}],
+      editor_selector: 'autoload_rte',
+      init_instance_callback: () => {
+        this.changeToMaterial();
+      },
+      setup: (editor) => {
+        this.setupEditor(editor);
+      },
+      ...config,
+    };
 
-    if (typeof config.editor_selector !== 'undefined') {
-      config.selector = '.' + config.editor_selector;
+    if (typeof window.defaultTinyMceConfig !== 'undefined') {
+      Object.assign(cfg, window.defaultTinyMceConfig);
+    }
+
+    if (typeof cfg.editor_selector !== 'undefined') {
+      cfg.selector = `.${cfg.editor_selector}`;
     }
 
     // Change icons in popups
@@ -122,8 +132,8 @@ class TinyMCEEditor {
       this.changeToMaterial();
     });
 
-    tinyMCE.init(config);
-    this.watchTabChanges(config);
+    window.tinyMCE.init(cfg);
+    this.watchTabChanges(cfg);
   }
 
   /**
@@ -132,15 +142,18 @@ class TinyMCEEditor {
    * @param editor
    */
   setupEditor(editor) {
-    editor.on('loadContent', event => {
+    editor.on('loadContent', (event) => {
       this.handleCounterTiny(event.target.id);
     });
-    editor.on('change', event => {
-      tinyMCE.triggerSave();
+    editor.on('change', (event) => {
+      window.tinyMCE.triggerSave();
       this.handleCounterTiny(event.target.id);
     });
     editor.on('blur', () => {
-      tinyMCE.triggerSave();
+      window.tinyMCE.triggerSave();
+    });
+    EventEmitter.emit('tinymceEditorSetup', {
+      editor,
     });
   }
 
@@ -162,13 +175,25 @@ class TinyMCEEditor {
 
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
           const form = $(textarea).closest('form');
-          const editor = tinyMCE.get(textarea.id);
+          const editor = window.tinyMCE.get(textarea.id);
+
           if (editor) {
             // Reset content to force refresh of editor
             editor.setContent(editor.getContent());
           }
+
+          EventEmitter.emit('languageSelected', {
+            selectedLocale: textareaLocale,
+            form,
+          });
         });
       }
+    });
+
+    EventEmitter.on('languageSelected', (data) => {
+      const textareaLinkSelector = `.nav-item a[data-locale="${data.selectedLocale}"]`;
+
+      $(textareaLinkSelector).click();
     });
   }
 
@@ -217,7 +242,7 @@ class TinyMCEEditor {
       'mce-i-table': '<i class="material-icons">grid_on</i>',
       'mce-i-media': '<i class="material-icons">video_library</i>',
       'mce-i-browse': '<i class="material-icons">attachment</i>',
-      'mce-i-checkbox': '<i class="mce-ico mce-i-checkbox"></i>'
+      'mce-i-checkbox': '<i class="mce-ico mce-i-checkbox"></i>',
     };
 
     $.each(materialIconAssoc, (index, value) => {
@@ -226,7 +251,9 @@ class TinyMCEEditor {
   }
 
   /**
-   * Updates the characters counter
+   * Updates the characters counter. This counter is used for front but if you don't want to encounter Validation
+   * problems you should be in sync with the TinyMceMaxLengthValidator PHP class. Both codes must behave the same
+   * way.
    *
    * @param id
    */
@@ -234,13 +261,14 @@ class TinyMCEEditor {
     const textarea = $(`#${id}`);
     const counter = textarea.attr('counter');
     const counterType = textarea.attr('counter_type');
-    const max = tinyMCE.activeEditor.getBody().textContent.length;
+    const editor = window.tinyMCE.get(id);
+    const max = editor.getBody() ? editor.getBody().textContent.length : 0;
 
     textarea
       .parent()
       .find('span.currentLength')
       .text(max);
-    if ('recommended' !== counterType && max > counter) {
+    if (counterType !== 'recommended' && max > counter) {
       textarea
         .parent()
         .find('span.maxLength')

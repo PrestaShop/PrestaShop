@@ -43,6 +43,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 3      |
       | product_price               | 11.90  |
+      | original_product_price      | 11.90 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.90  |
       | total_price_tax_incl        | 37.84  |
@@ -291,7 +292,9 @@ Feature: Order from Back Office (BO)
   Scenario: In All Shop Context, Update product in order
     # Create Shop Group & Shops
     When I add a shop group "shopGroup1" with name "Shop Group 1"
-    And I add a shop "shop2" with name "Shop 2" for the group "Shop Group 1"
+    And I add a shop "shop2" with name "Shop 2" and color "blue" for the group "Shop Group 1"
+    And I copy "country" shop data from "test_shop" to "Shop 2"
+    And I copy "currency" shop data from "test_shop" to "Shop 2"
     Then I should have 2 shop groups
     And I should have 1 shop in group "Default"
     And I should have 1 shop in group "Shop Group 1"
@@ -336,6 +339,7 @@ Feature: Order from Back Office (BO)
     When shop context "test_shop" is loaded
     Then the available stock for product "Product A" should be 0
     # Change Context
+    # Broken on develop branch
     When multiple shop context is loaded
     And I edit product "Product B in Shop 2" to order "order_product_B" with following products details:
       | amount        | 30                      |

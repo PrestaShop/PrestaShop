@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Exception;
 use Module as LegacyModule;
@@ -35,53 +34,51 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker;
+use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
-    const NATIVE_AUTHOR = 'PrestaShop';
+    public const NATIVE_AUTHOR = 'PrestaShop';
 
-    const PARTNER_AUTHOR = 'PrestaShop Partners';
+    public const PARTNER_AUTHOR = 'PrestaShop Partners';
 
     /**
-     * Admin Module Data Provider.
-     *
-     * @var \PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
+     * @var AdminModuleDataProvider
      */
     private $adminModuleProvider;
 
     /**
-     * Logger.
-     *
-     * @var \Psr\Log\LoggerInterface
+     * @var Finder
+     */
+    private $finder;
+
+    /**
+     * @var LoggerInterface
      */
     private $logger;
 
     /**
-     * Module Data Provider.
-     *
-     * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
+     * @var ModuleDataProvider
      */
     private $moduleProvider;
 
     /**
-     * Module Data Updater.
-     *
-     * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
+     * @var ModuleDataUpdater
      */
     private $moduleUpdater;
 
     /**
-     * Translator.
-     *
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -93,11 +90,9 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $modulePath;
 
     /**
-     * @var PrestaTrustChecker
+     * @var PrestaTrustChecker|null
      */
     private $prestaTrustChecker = null;
-
-    //### CACHE PROPERTIES ####
 
     /**
      * Key of the cache content.
@@ -116,18 +111,16 @@ class ModuleRepository implements ModuleRepositoryInterface
     /**
      * Optionnal Doctrine cache provider.
      *
-     * @var \Doctrine\Common\Cache\CacheProvider
+     * @var CacheProvider|null
      */
     private $cacheProvider;
 
     /**
      * Keep loaded modules in cache.
      *
-     * @var ArrayCache
+     * @var DoctrineProvider
      */
     private $loadedModules;
-
-    //### END OF CACHE PROPERTIES ####
 
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,
@@ -151,7 +144,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         // Cache related variables
         $this->cacheFilePath = $isoLang . '_local_modules';
         $this->cacheProvider = $cacheProvider;
-        $this->loadedModules = new ArrayCache();
+        $this->loadedModules = new DoctrineProvider(new ArrayAdapter());
 
         if ($this->cacheProvider && $this->cacheProvider->contains($this->cacheFilePath)) {
             $this->cache = $this->cacheProvider->fetch($this->cacheFilePath);
@@ -210,8 +203,10 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         if ($filter->status >= AddonListFilterStatus::ON_DISK
             && $filter->status != AddonListFilterStatus::ALL) {
+            /** @var Module[] $modules */
             $modules = $this->getModulesOnDisk($skip_main_class_attributes);
         } else {
+            /** @var Module[] $modules */
             $modules = $this->getList();
         }
 
@@ -312,6 +307,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             $filter = new AddonListFilter();
             $filter->setOrigin(AddonListFilterOrigin::ADDONS_NATIVE);
 
+            /** @var Module[] $nativeModules */
             $nativeModules = $this->getFilteredList($filter);
 
             foreach ($nativeModules as $key => $module) {
@@ -333,6 +329,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         $filter = new AddonListFilter();
         $filter->setOrigin(AddonListFilterOrigin::ADDONS_NATIVE);
 
+        /** @var Module[] $partnersModules */
         $partnersModules = $this->getFilteredList($filter);
 
         foreach ($partnersModules as $key => $module) {
@@ -350,6 +347,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getInstalledPartnersModules()
     {
+        /** @var Module[] $partnersModules */
         $partnersModules = $this->getPartnersModules();
 
         foreach ($partnersModules as $key => $module) {
@@ -366,6 +364,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getNotInstalledPartnersModules()
     {
+        /** @var Module[] $partnersModules */
         $partnersModules = $this->getPartnersModules();
 
         foreach ($partnersModules as $key => $module) {
@@ -460,7 +459,6 @@ class ModuleRepository implements ModuleRepositoryInterface
             $this->cache[$name]['disk']['filemtime'] === $current_filemtime
         ) {
             // OK, cache can be loaded and used directly
-
             $attributes = array_merge($attributes, $this->cache[$name]['attributes']);
             $disk = $this->cache[$name]['disk'];
         } else {
@@ -525,7 +523,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     /**
      * Send request to get module details on the marketplace, then merge the data received in Module instance.
      *
-     * @param $moduleId
+     * @param int $moduleId
      *
      * @return Module
      */

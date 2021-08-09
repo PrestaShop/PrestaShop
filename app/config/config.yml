@@ -12,10 +12,11 @@ parameters:
     AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
     translator.class: PrestaShopBundle\Translation\Translator
     translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
-    admin_page: "%kernel.root_dir%/../src/PrestaShopBundle/Resources/views/Admin"
+    admin_page: "%kernel.root_dir%/../templates/bundles/PrestaShopBundle/Admin"
     env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
     mail_themes_uri: "/mails/themes"
     mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
+    modules_translation_paths: []
 
 # Autowires Core controllers
 services:
@@ -26,13 +27,19 @@ services:
           - 'controller.service_arguments'
           - !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG
 
+    logger:
+        alias: monolog.logger
+        public: true
+
 framework:
     assets:
         version: !php/const \AppKernel::VERSION
 
     #esi:             ~
     secret:          "%secret%"
-    translator:      { fallbacks: ["default"] }
+    translator:
+        fallbacks: ["default"]
+        paths: "%modules_translation_paths%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
@@ -40,14 +47,16 @@ framework:
     csrf_protection: ~
     validation:      { enable_annotations: true }
     serializer:      { enable_annotations: true }
-    templating:
-        engines: ['twig']
     default_locale:  "%locale%"
     trusted_hosts:   ~
     session:
         handler_id:  ~
     fragments:       ~
     http_method_override: true
+    cache:
+        pools:
+            '%cache.driver%':
+                 adapter: '%cache.adapter%'
 
 # Monolog configuration #
 monolog:
@@ -67,17 +76,20 @@ twig:
     autoescape:       "name"
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    exception_controller: null
     form_themes:
-        - 'PrestaShopBundle:Admin/TwigTemplateForm:bootstrap_4_horizontal_layout.html.twig'
+        - '@PrestaShop/Admin/TwigTemplateForm/bootstrap_4_horizontal_layout.html.twig'
     paths:
         '%admin_page%/Product': Product
         '%admin_page%/TwigTemplateForm': Twig
+        '%admin_page%/Common': Common
         '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
         '%admin_page%/Configure/ShopParameters': ShopParameters
         '%kernel.root_dir%/../modules': Modules
         '%mail_themes_dir%': MailThemes
     globals:
         webpack_server: false
+        multistore_field_prefix: !php/const PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -88,20 +100,18 @@ swiftmailer:
     spool:     { type: memory }
 
 # Guzzle configuration
-csa_guzzle:
-    profiler:
-        enabled: "%kernel.debug%"
-    cache:
-        enabled: true
-        adapter: guzzle.cache
+eight_points_guzzle:
+    logging: "%kernel.debug%"
     clients:
         addons_api:
-            config: # you can specify the options as in http://docs.guzzlephp.org/en/latest/quickstart.html#creating-a-client
-                base_url: "https://api-addons.prestashop.com"
-                defaults:
-                    timeout: "5.0"
+            base_url: "https://api-addons.prestashop.com"
+            options: # you can specify the options as in http://docs.guzzlephp.org/en/latest/quickstart.html#creating-a-client
+                timeout: "5.0"
                 headers:
                     Accept: "application/json"
+                curl:
+                    forbid_reuse: true
+                    fresh_connect: true
 
 prestashop:
     addons:
@@ -110,3 +120,7 @@ prestashop:
         api_client:
             ttl: 7200 # 2h
             # verify_ssl: ~ # Bundle CA by default, declaring "addons.api_client.verify_ssl" parameter overrides its usage
+
+sensio_framework_extra:
+    router:
+        annotations: false

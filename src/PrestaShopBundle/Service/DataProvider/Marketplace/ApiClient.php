@@ -27,20 +27,31 @@
 namespace PrestaShopBundle\Service\DataProvider\Marketplace;
 
 use GuzzleHttp\Client;
+use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 
 class ApiClient
 {
+    /**
+     * @var Client
+     */
     private $addonsApiClient;
+
+    /**
+     * @var array<string, string>
+     */
     private $queryParameters = [
         'format' => 'json',
     ];
     private $defaultQueryParameters;
 
     /**
-     * @var \PrestaShop\PrestaShop\Adapter\Tools
+     * @param Client $addonsApiClient
+     * @param string $locale
+     * @param string|false $isoCode
+     * @param null $toolsAdapter
+     * @param string $domain
+     * @param string $shopVersion
      */
-    private $toolsAdapter;
-
     public function __construct(
         Client $addonsApiClient,
         $locale,
@@ -50,7 +61,6 @@ class ApiClient
         $shopVersion
     ) {
         $this->addonsApiClient = $addonsApiClient;
-        $this->toolsAdapter = $toolsAdapter;
 
         list($isoLang) = explode('-', $locale);
 
@@ -61,10 +71,11 @@ class ApiClient
         $this->defaultQueryParameters = $this->queryParameters;
     }
 
+    /**
+     * @Deprecated use Client constructor instead
+     */
     public function setSslVerification($verifySsl)
     {
-        $this->toolsAdapter->refreshCaCertFile();
-        $this->addonsApiClient->setDefaultOption('verify', $verifySsl);
     }
 
     /**
@@ -191,13 +202,15 @@ class ApiClient
      * Call API for module ZIP content (= download).
      *
      * @param int $moduleId
+     * @param string $moduleChannel
      *
      * @return string binary content (zip format)
      */
-    public function getModuleZip($moduleId)
+    public function getModuleZip($moduleId, string $moduleChannel = AddonsDataProvider::ADDONS_API_MODULE_CHANNEL_STABLE)
     {
         return $this->setMethod('module')
             ->setModuleId($moduleId)
+            ->setModuleChannel($moduleChannel)
             ->getPostResponse();
     }
 
@@ -235,14 +248,14 @@ class ApiClient
             return $responseDecoded->themes;
         }
 
-        return [];
+        return new \stdClass();
     }
 
     public function getResponse()
     {
         return (string) $this->addonsApiClient
             ->get(
-                null,
+                '',
                 ['query' => $this->queryParameters,
                 ]
             )->getBody();
@@ -252,7 +265,7 @@ class ApiClient
     {
         return (string) $this->addonsApiClient
             ->post(
-                null,
+                '',
                 ['query' => $this->queryParameters,
                 ]
             )->getBody();
@@ -294,6 +307,18 @@ class ApiClient
     public function setVersion($version)
     {
         $this->queryParameters['version'] = $version;
+
+        return $this;
+    }
+
+    /**
+     * @param string $moduleChannel
+     *
+     * @return self
+     */
+    public function setModuleChannel(string $moduleChannel): self
+    {
+        $this->queryParameters['channel'] = $moduleChannel;
 
         return $this;
     }
@@ -340,7 +365,11 @@ class ApiClient
         return $this;
     }
 
-    /*
-     * END OF REQUEST PARAMETER SETTERS.
+    /**
+     * @return array<string, string>
      */
+    public function getQueryParameters(): array
+    {
+        return $this->queryParameters;
+    }
 }

@@ -29,11 +29,35 @@
  */
 class PDFCore
 {
+    /**
+     * @var string
+     */
     public $filename;
+
+    /**
+     * @var PDFGenerator
+     */
     public $pdf_renderer;
+
+    /**
+     * @var PrestaShopCollection|ObjectModel|array
+     */
     public $objects;
+
+    /**
+     * @var string
+     */
     public $template;
+
+    /**
+     * @var bool
+     */
     public $send_bulk_flag = false;
+
+    /**
+     * @var Smarty
+     */
+    private $smarty;
 
     const TEMPLATE_INVOICE = 'Invoice';
     const TEMPLATE_ORDER_RETURN = 'OrderReturn';
@@ -42,9 +66,9 @@ class PDFCore
     const TEMPLATE_SUPPLY_ORDER_FORM = 'SupplyOrderForm';
 
     /**
-     * @param $objects
-     * @param $template
-     * @param $smarty
+     * @param PrestaShopCollection|ObjectModel|array $objects
+     * @param string $template
+     * @param Smarty $smarty
      * @param string $orientation
      */
     public function __construct($objects, $template, $smarty, $orientation = 'P')
@@ -98,7 +122,7 @@ class PDFCore
      *
      * @param bool $display
      *
-     * @return mixed
+     * @return string|void
      *
      * @throws PrestaShopException
      */

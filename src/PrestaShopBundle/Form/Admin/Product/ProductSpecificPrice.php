@@ -26,14 +26,23 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use Currency;
+use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
+use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
+use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -41,24 +50,58 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ProductSpecificPrice extends CommonAbstractType
 {
-    private $translator;
-    private $locales;
-    private $shops;
+    /**
+     * @var LegacyContext
+     */
+    public $context;
+    /**
+     * @var array
+     */
     private $countries;
+    /**
+     * @var array
+     */
     private $currencies;
+    /**
+     * @var Currency
+     */
+    public $currency;
+    /**
+     * @var CustomerDataProvider
+     */
+    public $customerDataProvider;
+    /**
+     * @var array
+     */
     private $groups;
-    private $customerDataprovider;
+    /**
+     * @var array<int|array>
+     */
+    public $locales;
+    /**
+     * @var Router
+     */
+    public $router;
+    /**
+     * @var array
+     */
+    public $shops;
+    /**
+     * @var TranslatorInterface
+     */
+    public $translator;
 
     /**
      * Constructor.
      *
-     * @param object $router
-     * @param object $translator
-     * @param object $shopContextAdapter
-     * @param object $countryDataprovider
-     * @param object $currencyDataprovider
-     * @param object $groupDataprovider
-     * @param object $legacyContext
+     * @param Router $router
+     * @param TranslatorInterface $translator
+     * @param Context $shopContextAdapter
+     * @param CountryDataProvider $countryDataprovider
+     * @param CurrencyDataProviderInterface $currencyDataprovider
+     * @param GroupDataProvider $groupDataprovider
+     * @param LegacyContext $legacyContext
+     * @param CustomerDataProvider $customerDataProvider
      */
     public function __construct(
         $router,
@@ -68,7 +111,7 @@ class ProductSpecificPrice extends CommonAbstractType
         $currencyDataprovider,
         $groupDataprovider,
         $legacyContext,
-        $customerDataprovider
+        $customerDataProvider
     ) {
         $this->router = $router;
         $this->translator = $translator;
@@ -79,13 +122,16 @@ class ProductSpecificPrice extends CommonAbstractType
             $countryDataprovider->getCountries($this->locales[0]['id_lang']),
             'id_country'
         );
-        $this->currencies = $this->formatDataChoicesList($currencyDataprovider->getCurrencies(), 'id_currency');
+        $this->currencies = $this->formatDataChoicesList(
+            $currencyDataprovider->getCurrencies(),
+            'id_currency'
+        );
         $this->groups = $this->formatDataChoicesList(
             $groupDataprovider->getGroups($this->locales[0]['id_lang']),
             'id_group'
         );
         $this->currency = $legacyContext->getContext()->currency;
-        $this->customerDataprovider = $customerDataprovider;
+        $this->customerDataProvider = $customerDataProvider;
     }
 
     /**

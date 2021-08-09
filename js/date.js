@@ -10,7 +10,7 @@
  *
  * Additional methods and properties added by Kelvin Luck: firstDayOfWeek, dateFormat, zeroTime, asString, fromString -
  * I've added my name to these methods so you know who to blame if they are broken!
- * 
+ *
  * Dual licensed under the MIT and GPL licenses:
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
@@ -18,8 +18,12 @@
  */
 
 /**
+ * /!\ This file is deprecated, it will be deleted in next major release /!\
+ */
+
+/**
  * An Array of day names starting with Sunday.
- * 
+ *
  * @example dayNames[0]
  * @result 'Sunday'
  *
@@ -31,7 +35,7 @@ Date.dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday
 
 /**
  * An Array of abbreviated day names starting with Sun.
- * 
+ *
  * @example abbrDayNames[0]
  * @result 'Sun'
  *
@@ -43,7 +47,7 @@ Date.abbrDayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 /**
  * An Array of month names starting with Janurary.
- * 
+ *
  * @example monthNames[0]
  * @result 'January'
  *
@@ -55,7 +59,7 @@ Date.monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July
 
 /**
  * An Array of abbreviated month names starting with Jan.
- * 
+ *
  * @example abbrMonthNames[0]
  * @result 'Jan'
  *
@@ -102,7 +106,7 @@ Date.fullYearStart = '20';
 (function() {
 
 	/**
-	 * Adds a given method under the given name 
+	 * Adds a given method under the given name
 	 * to the Date prototype if it doesn't
 	 * currently exist.
 	 *
@@ -113,7 +117,7 @@ Date.fullYearStart = '20';
 			Date.prototype[name] = method;
 		}
 	};
-	
+
 	/**
 	 * Checks if the year is a leap year.
 	 *
@@ -129,7 +133,7 @@ Date.fullYearStart = '20';
 		var y = this.getFullYear();
 		return (y%4==0 && y%100!=0) || y%400==0;
 	});
-	
+
 	/**
 	 * Checks if the day is a weekend day (Sat or Sun).
 	 *
@@ -144,14 +148,14 @@ Date.fullYearStart = '20';
 	add("isWeekend", function() {
 		return this.getDay()==0 || this.getDay()==6;
 	});
-	
+
 	/**
 	 * Check if the day is a day of the week (Mon-Fri)
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.isWeekDay();
 	 * @result false
-	 * 
+	 *
 	 * @name isWeekDay
 	 * @type Boolean
 	 * @cat Plugins/Methods/Date
@@ -159,14 +163,14 @@ Date.fullYearStart = '20';
 	add("isWeekDay", function() {
 		return !this.isWeekend();
 	});
-	
+
 	/**
 	 * Gets the number of days in the month.
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.getDaysInMonth();
 	 * @result 31
-	 * 
+	 *
 	 * @name getDaysInMonth
 	 * @type Number
 	 * @cat Plugins/Methods/Date
@@ -174,18 +178,18 @@ Date.fullYearStart = '20';
 	add("getDaysInMonth", function() {
 		return [31,(this.isLeapYear() ? 29:28),31,30,31,30,31,31,30,31,30,31][this.getMonth()];
 	});
-	
+
 	/**
 	 * Gets the name of the day.
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.getDayName();
 	 * @result 'Saturday'
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.getDayName(true);
 	 * @result 'Sat'
-	 * 
+	 *
 	 * @param abbreviated Boolean When set to true the name will be abbreviated.
 	 * @name getDayName
 	 * @type String
@@ -197,7 +201,7 @@ Date.fullYearStart = '20';
 
 	/**
 	 * Gets the name of the month.
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.getMonthName();
 	 * @result 'Janurary'
@@ -205,7 +209,7 @@ Date.fullYearStart = '20';
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.getMonthName(true);
 	 * @result 'Jan'
-	 * 
+	 *
 	 * @param abbreviated Boolean When set to true the name will be abbreviated.
 	 * @name getDayName
 	 * @type String
@@ -217,11 +221,11 @@ Date.fullYearStart = '20';
 
 	/**
 	 * Get the number of the day of the year.
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.getDayOfYear();
 	 * @result 11
-	 * 
+	 *
 	 * @name getDayOfYear
 	 * @type Number
 	 * @cat Plugins/Methods/Date
@@ -230,14 +234,14 @@ Date.fullYearStart = '20';
 		var tmpdtm = new Date("1/1/" + this.getFullYear());
 		return Math.floor((this.getTime() - tmpdtm.getTime()) / 86400000);
 	});
-	
+
 	/**
 	 * Get the number of the week of the year.
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.getWeekOfYear();
 	 * @result 2
-	 * 
+	 *
 	 * @name getWeekOfYear
 	 * @type Number
 	 * @cat Plugins/Methods/Date
@@ -248,12 +252,12 @@ Date.fullYearStart = '20';
 
 	/**
 	 * Set the day of the year.
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.setDayOfYear(1);
 	 * dtm.toString();
 	 * @result 'Tue Jan 01 2008 00:00:00'
-	 * 
+	 *
 	 * @name setDayOfYear
 	 * @type Date
 	 * @cat Plugins/Methods/Date
@@ -263,15 +267,15 @@ Date.fullYearStart = '20';
 		this.setDate(day);
 		return this;
 	});
-	
+
 	/**
 	 * Add a number of years to the date object.
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.addYears(1);
 	 * dtm.toString();
 	 * @result 'Mon Jan 12 2009 00:00:00'
-	 * 
+	 *
 	 * @name addYears
 	 * @type Date
 	 * @cat Plugins/Methods/Date
@@ -280,38 +284,38 @@ Date.fullYearStart = '20';
 		this.setFullYear(this.getFullYear() + num);
 		return this;
 	});
-	
+
 	/**
 	 * Add a number of months to the date object.
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.addMonths(1);
 	 * dtm.toString();
 	 * @result 'Tue Feb 12 2008 00:00:00'
-	 * 
+	 *
 	 * @name addMonths
 	 * @type Date
 	 * @cat Plugins/Methods/Date
 	 */
 	add("addMonths", function(num) {
 		var tmpdtm = this.getDate();
-		
+
 		this.setMonth(this.getMonth() + num);
-		
+
 		if (tmpdtm > this.getDate())
 			this.addDays(-this.getDate());
-		
+
 		return this;
 	});
-	
+
 	/**
 	 * Add a number of days to the date object.
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.addDays(1);
 	 * dtm.toString();
 	 * @result 'Sun Jan 13 2008 00:00:00'
-	 * 
+	 *
 	 * @name addDays
 	 * @type Date
 	 * @cat Plugins/Methods/Date
@@ -320,15 +324,15 @@ Date.fullYearStart = '20';
 		this.setDate(this.getDate() + num);
 		return this;
 	});
-	
+
 	/**
 	 * Add a number of hours to the date object.
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.addHours(24);
 	 * dtm.toString();
 	 * @result 'Sun Jan 13 2008 00:00:00'
-	 * 
+	 *
 	 * @name addHours
 	 * @type Date
 	 * @cat Plugins/Methods/Date
@@ -340,12 +344,12 @@ Date.fullYearStart = '20';
 
 	/**
 	 * Add a number of minutes to the date object.
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.addMinutes(60);
 	 * dtm.toString();
 	 * @result 'Sat Jan 12 2008 01:00:00'
-	 * 
+	 *
 	 * @name addMinutes
 	 * @type Date
 	 * @cat Plugins/Methods/Date
@@ -354,15 +358,15 @@ Date.fullYearStart = '20';
 		this.setMinutes(this.getMinutes() + num);
 		return this;
 	});
-	
+
 	/**
 	 * Add a number of seconds to the date object.
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.addSeconds(60);
 	 * dtm.toString();
 	 * @result 'Sat Jan 12 2008 00:01:00'
-	 * 
+	 *
 	 * @name addSeconds
 	 * @type Date
 	 * @cat Plugins/Methods/Date
@@ -371,15 +375,15 @@ Date.fullYearStart = '20';
 		this.setSeconds(this.getSeconds() + num);
 		return this;
 	});
-	
+
 	/**
 	 * Sets the time component of this Date to zero for cleaner, easier comparison of dates where time is not relevant.
-	 * 
+	 *
 	 * @example var dtm = new Date();
 	 * dtm.zeroTime();
 	 * dtm.toString();
 	 * @result 'Sat Jan 12 2008 00:01:00'
-	 * 
+	 *
 	 * @name zeroTime
 	 * @type Date
 	 * @cat Plugins/Methods/Date
@@ -392,15 +396,15 @@ Date.fullYearStart = '20';
 		this.setHours(0);
 		return this;
 	});
-	
+
 	/**
 	 * Returns a string representation of the date object according to Date.format.
 	 * (Date.toString may be used in other places so I purposefully didn't overwrite it)
-	 * 
+	 *
 	 * @example var dtm = new Date("01/12/2008");
 	 * dtm.asString();
 	 * @result '12/01/2008' // (where Date.format == 'dd/mm/yyyy'
-	 * 
+	 *
 	 * @name asString
 	 * @type Date
 	 * @cat Plugins/Methods/Date
@@ -415,7 +419,7 @@ Date.fullYearStart = '20';
 			.split('mm').join(_zeroPad(this.getMonth()+1))
 			.split('dd').join(_zeroPad(this.getDate()));
 	});
-	
+
 	/**
 	 * Returns a new date object created from the passed String according to Date.format or false if the attempt to do this results in an invalid date object
 	 * (We can't simple use Date.parse as it's not aware of locale and I chose not to overwrite it incase it's functionality is being relied on elsewhere)
@@ -423,7 +427,7 @@ Date.fullYearStart = '20';
 	 * @example var dtm = Date.fromString("12/01/2008");
 	 * dtm.toString();
 	 * @result 'Sat Jan 12 2008 00:00:00' // (where Date.format == 'dd/mm/yyyy'
-	 * 
+	 *
 	 * @name fromString
 	 * @type Date
 	 * @cat Plugins/Methods/Date
@@ -456,12 +460,12 @@ Date.fullYearStart = '20';
 		}
 		return d;
 	};
-	
+
 	// utility method
 	var _zeroPad = function(num) {
 		var s = '0'+num;
 		return s.substring(s.length-2)
 		//return ('0'+num).substring(-2); // doesn't work on IE :(
 	};
-	
+
 })();

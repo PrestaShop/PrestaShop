@@ -22,8 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import '../sass/font.scss';
-import '../sass/admin-theme.sass';
+import '../scss/font.scss';
+import '../scss/admin-theme.scss';
 import '../node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
 import '@openfonts/ubuntu-condensed_latin';
 
@@ -31,6 +31,7 @@ import PerfectScrollBar from 'perfect-scrollbar';
 
 $(document).ready(() => {
   const $navBarOverflow = $('.nav-bar-overflow');
+
   if ($navBarOverflow.length > 0) {
     new PerfectScrollBar('.nav-bar-overflow');
   }

@@ -60,4 +60,10 @@ class PageNotFoundControllerCore extends FrontController
 
         return $page;
     }
+
+    public function displayAjax()
+    {
+        header('Content-Type: application/json');
+        echo json_encode($this->trans('The page you are looking for was not found.', [], 'Shop.Theme.Global'));
+    }
 }

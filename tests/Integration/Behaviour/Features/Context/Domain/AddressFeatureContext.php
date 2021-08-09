@@ -161,13 +161,12 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         $editAddressCommand = new EditCustomerAddressCommand($customerAddressId);
         $this->updateEditCommandFields($editAddressCommand, $testCaseData);
 
-        $this->lastException = null;
         try {
             /** @var AddressId $addressIdObject */
             $addressIdObject = $this->getCommandBus()->handle($editAddressCommand);
             SharedStorage::getStorage()->set($testCaseData['Address alias'], $addressIdObject->getValue());
         } catch (AddressException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -191,13 +190,12 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         $editOrderAddressCommand = new EditOrderAddressCommand($orderId, $addressType);
         $this->updateEditCommandFields($editOrderAddressCommand, $testCaseData);
 
-        $this->lastException = null;
         try {
             /** @var AddressId $addressIdObject */
             $addressIdObject = $this->getCommandBus()->handle($editOrderAddressCommand);
             SharedStorage::getStorage()->set($testCaseData['Address alias'], $addressIdObject->getValue());
         } catch (AddressException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -221,13 +219,12 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         $editCartAddressCommand = new EditCartAddressCommand($cartId, $addressType);
         $this->updateEditCommandFields($editCartAddressCommand, $testCaseData);
 
-        $this->lastException = null;
         try {
             /** @var AddressId $addressIdObject */
             $addressIdObject = $this->getCommandBus()->handle($editCartAddressCommand);
             SharedStorage::getStorage()->set($testCaseData['Address alias'], $addressIdObject->getValue());
         } catch (AddressException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 

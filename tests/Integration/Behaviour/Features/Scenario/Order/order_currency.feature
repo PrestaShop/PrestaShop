@@ -16,14 +16,16 @@ Feature: Multiple currencies for Order in Back Office (BO)
     And country "FR" is enabled
     And language "French" with locale "fr-FR" exists
     And I add new currency "currency2" with following properties:
-      | iso_code         | EUR                              |
-      | exchange_rate    | 10.00                            |
-      | name             | My Euros                         |
-      | symbols          | en-US:€;fr-FR:€                  |
-      | patterns         | en-US:¤#,##0.00;fr-FR:#,##0.00 ¤ |
-      | is_enabled       | 1                                |
-      | is_unofficial    | 0                                |
-      | shop_association | shop1                            |
+      | iso_code         | EUR        |
+      | exchange_rate    | 10.00      |
+      | name             | My Euros   |
+      | symbols[en-US]   | €          |
+      | symbols[fr-FR]   | €          |
+      | patterns[en-US]  | ¤#,##0.00  |
+      | patterns[fr-FR]  | #,##0.00 ¤ |
+      | is_enabled       | 1          |
+      | is_unofficial    | 0          |
+      | shop_association | shop1      |
     And the module "dummy_payment" is installed
     And I am logged in as "test@prestashop.com" employee
     And there is customer "testCustomer" with email "pub@prestashop.com"
@@ -54,19 +56,19 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 2        |
-      | original_product_price      | 119.00   |
-      | product_price               | 119.00   |
-      | unit_price_tax_incl         | 126.14   |
-      | unit_price_tax_excl         | 119.00   |
-      | total_price_tax_incl        | 252.28   |
-      | total_price_tax_excl        | 238.00   |
+      | product_quantity            | 2      |
+      | original_product_price      | 119.00 |
+      | product_price               | 119.00 |
+      | unit_price_tax_incl         | 126.14 |
+      | unit_price_tax_excl         | 119.00 |
+      | total_price_tax_incl        | 252.28 |
+      | total_price_tax_excl        | 238.00 |
 
   Scenario: Add cart rule of type 'amount' to an order with secondary currency
     Given I add discount to order "bo_order1" with following details:
-      | name      | discount ten-euros    |
-      | type      | amount                |
-      | value     | 10                    |
+      | name  | discount ten-euros |
+      | type  | amount             |
+      | value | 10                 |
     Then order "bo_order1" should have 1 cart rule
     Then order "bo_order1" should have cart rule "discount ten-euros" with amount "€9.43"
     Then order "bo_order1" should have following details:
@@ -83,9 +85,9 @@ Feature: Multiple currencies for Order in Back Office (BO)
 
   Scenario: Add cart rule of type 'percent' to an order with secondary currency
     Given I add discount to order "bo_order1" with following details:
-      | name      | discount ten-percents |
-      | type      | percent               |
-      | value     | 10                    |
+      | name  | discount ten-percents |
+      | type  | percent               |
+      | value | 10                    |
     Then order "bo_order1" should have 1 cart rule
     Then order "bo_order1" should have cart rule "discount ten-percents" with amount "€23.80"
     Then order "bo_order1" should have following details:
@@ -102,8 +104,8 @@ Feature: Multiple currencies for Order in Back Office (BO)
 
   Scenario: Add cart rule of type 'free-shipping' to an order with secondary currency
     Given I add discount to order "bo_order1" with following details:
-      | name      | discount free-shipping |
-      | type      | free_shipping          |
+      | name | discount free-shipping |
+      | type | free_shipping          |
     Then order "bo_order1" should have 1 cart rule
     Then order "bo_order1" should have cart rule "discount free-shipping" with amount "€70.00"
     Then order "bo_order1" should have following details:
@@ -115,8 +117,8 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_paid_tax_incl      | 252.28 |
       | total_paid               | 252.28 |
       | total_paid_real          | 0.00   |
-      | total_shipping_tax_excl  | 70.00   |
-      | total_shipping_tax_incl  | 74.20   |
+      | total_shipping_tax_excl  | 70.00  |
+      | total_shipping_tax_incl  | 74.20  |
 
   Scenario: Add cart rule of type 'amount' to an order with secondary currency and a product with specific price
     Given there is a product in the catalog named "Test Product With Discount and SpecificPrice" with a price of 16.0 and 100 items in stock
@@ -132,8 +134,8 @@ Feature: Multiple currencies for Order in Back Office (BO)
     And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product With Discount and SpecificPrice"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product With Discount and SpecificPrice |
-      | amount        | 2                                     |
-      | price         | 120                                   |
+      | amount        | 2                                            |
+      | price         | 120                                          |
     Then product "Test Product With Discount and SpecificPrice" in order "bo_order1" should have no specific price
 #    For product "Test Product With Discount and SpecificPrice"
 #    Due to the specific price 25% of €160, the customer have to pay 75% of the product price : €120
@@ -155,24 +157,25 @@ Feature: Multiple currencies for Order in Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2        |
       | product_price               | 119.00   |
+      | original_product_price      | 119.00   |
       | unit_price_tax_incl         | 126.14   |
       | unit_price_tax_excl         | 119.00   |
       | total_price_tax_incl        | 252.28   |
       | total_price_tax_excl        | 238.00   |
     And product "Test Product With Discount and SpecificPrice" in order "bo_order1" has following details:
-      | product_quantity            | 2        |
-      | original_product_price      | 160.00   |
-      | product_price               | 120.00   |
-      | unit_price_tax_incl         | 127.20   |
-      | unit_price_tax_excl         | 120.00   |
-      | total_price_tax_incl        | 254.40   |
-      | total_price_tax_excl        | 240.00   |
+      | product_quantity       | 2      |
+      | original_product_price | 160.00 |
+      | product_price          | 120.00 |
+      | unit_price_tax_incl    | 127.20 |
+      | unit_price_tax_excl    | 120.00 |
+      | total_price_tax_incl   | 254.40 |
+      | total_price_tax_excl   | 240.00 |
 
   Scenario: Add product to an order with secondary currency
     When I add products to order "bo_order1" without invoice and the following products details:
-      | name          | Mug Today is a good day  |
-      | amount        | 5                      |
-      | price         | 15                      |
+      | name   | Mug Today is a good day |
+      | amount | 5                       |
+      | price  | 15                      |
     Then order "bo_order1" should have 0 cart rule
     Then order "bo_order1" should have following details:
       | total_products           | 313.00 |
@@ -186,30 +189,30 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 2     |
-      | original_product_price      | 119.00 |
-      | product_price               | 119.00 |
-      | unit_price_tax_incl         | 126.14 |
-      | unit_price_tax_excl         | 119.00 |
-      | total_price_tax_incl        | 252.28 |
-      | total_price_tax_excl        | 238.00 |
+      | product_quantity       | 2     |
+      | original_product_price | 119.00 |
+      | product_price          | 119.00 |
+      | unit_price_tax_incl    | 126.14 |
+      | unit_price_tax_excl    | 119.00 |
+      | total_price_tax_incl   | 252.28 |
+      | total_price_tax_excl   | 238.00 |
 
   Scenario: Update product in order with secondary currency
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
-      | amount        | 3                       |
-      | price         | 12.00                   |
+      | amount | 3     |
+      | price  | 12.00 |
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 3      |
-      | original_product_price      | 119.00 |
-      | product_price               | 12.00  |
-      | unit_price_tax_incl         | 12.72  |
-      | unit_price_tax_excl         | 12.00  |
-      | total_price_tax_incl        | 38.16  |
-      | total_price_tax_excl        | 36.00  |
+      | product_quantity       | 3      |
+      | original_product_price | 119.00 |
+      | product_price          | 12.00  |
+      | unit_price_tax_incl    | 12.72  |
+      | unit_price_tax_excl    | 12.00  |
+      | total_price_tax_incl   | 38.16  |
+      | total_price_tax_excl   | 36.00  |
     And order "bo_order1" should have following details:
-      | total_products           | 36.00 |
-      | total_products_wt        | 38.16 |
+      | total_products           | 36.00  |
+      | total_products_wt        | 38.16  |
       | total_discounts_tax_excl | 0.00   |
       | total_discounts_tax_incl | 0.00   |
       | total_paid_tax_excl      | 106.00 |
@@ -226,12 +229,13 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | price         | 11.90                   |
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 3     |
-      | product_price               | 11.90 |
+      | product_quantity            | 3      |
+      | original_product_price      | 119.00 |
+      | product_price               | 11.90  |
       | unit_price_tax_incl         | 12.614 |
-      | unit_price_tax_excl         | 11.90 |
-      | total_price_tax_incl        | 37.84 |
-      | total_price_tax_excl        | 35.70 |
+      | unit_price_tax_excl         | 11.90  |
+      | total_price_tax_incl        | 37.84  |
+      | total_price_tax_excl        | 35.70  |
     And order "bo_order1" should have following details:
       | total_products           | 35.70 |
       | total_products_wt        | 37.84 |
@@ -248,12 +252,13 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | price         | 20.00                   |
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 3     |
-      | product_price               | 20.00 |
-      | unit_price_tax_incl         | 21.20 |
-      | unit_price_tax_excl         | 20.00 |
-      | total_price_tax_incl        | 63.60 |
-      | total_price_tax_excl        | 60.00 |
+      | product_quantity            | 3      |
+      | original_product_price      | 119.00 |
+      | product_price               | 20.00  |
+      | unit_price_tax_incl         | 21.20  |
+      | unit_price_tax_excl         | 20.00  |
+      | total_price_tax_incl        | 63.60  |
+      | total_price_tax_excl        | 60.00  |
     And order "bo_order1" should have following details:
       | total_products           | 60.00 |
       | total_products_wt        | 63.60 |
@@ -268,31 +273,31 @@ Feature: Multiple currencies for Order in Back Office (BO)
 
   Scenario: Check invoice for an order with secondary currency and discount
     Given I add discount to order "bo_order1" with following details:
-      | name      | discount ten-euros    |
-      | type      | amount                |
-      | value     | 10                    |
+      | name  | discount ten-euros |
+      | type  | amount             |
+      | value | 10                 |
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have 1 invoice
     And the first invoice from order "bo_order1" should contain 2 products "Mug The best is yet to come"
     And the first invoice from order "bo_order1" should have following details:
-      | total_products          | 238.00   |
-      | total_products_wt       | 252.28   |
-      | total_discount_tax_excl | 9.43     |
-      | total_discount_tax_incl | 10.0     |
-      | total_paid_tax_excl     | 298.57   |
-      | total_paid_tax_incl     | 316.48   |
-      | total_shipping_tax_excl | 70.00    |
-      | total_shipping_tax_incl | 74.20    |
+      | total_products          | 238.00 |
+      | total_products_wt       | 252.28 |
+      | total_discount_tax_excl | 9.43   |
+      | total_discount_tax_incl | 10.0   |
+      | total_paid_tax_excl     | 298.57 |
+      | total_paid_tax_incl     | 316.48 |
+      | total_shipping_tax_excl | 70.00  |
+      | total_shipping_tax_incl | 74.20  |
 
   Scenario: Change delivery address
     Given I add new address to customer "testCustomer" with following details:
-      | Address alias    | test-customer-france-address |
-      | First name       | testFirstName                |
-      | Last name        | testLastName                 |
-      | Address          | 36 Avenue des Champs Elysees |
-      | City             | Paris                        |
-      | Country          | France                       |
-      | Postal code      | 75008                        |
+      | Address alias | test-customer-france-address |
+      | First name    | testFirstName                |
+      | Last name     | testLastName                 |
+      | Address       | 36 Avenue des Champs Elysees |
+      | City          | Paris                        |
+      | Country       | France                       |
+      | Postal code   | 75008                        |
     And I change order "bo_order1" shipping address to "test-customer-france-address"
     Then order "bo_order1" should have following details:
       | total_products           | 238.00 |
@@ -310,23 +315,23 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | shipping_cost_tax_excl | 70.00 |
       | shipping_cost_tax_incl | 70.00 |
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 2      |
-      | original_product_price      | 119.00 |
-      | product_price               | 119.00 |
-      | unit_price_tax_incl         | 119.00 |
-      | unit_price_tax_excl         | 119.00 |
-      | total_price_tax_incl        | 238.00 |
-      | total_price_tax_excl        | 238.00 |
+      | product_quantity       | 2      |
+      | original_product_price | 119.00 |
+      | product_price          | 119.00 |
+      | unit_price_tax_incl    | 119.00 |
+      | unit_price_tax_excl    | 119.00 |
+      | total_price_tax_incl   | 238.00 |
+      | total_price_tax_excl   | 238.00 |
 
   Scenario: Change invoice address
     Given I add new address to customer "testCustomer" with following details:
-      | Address alias    | test-customer-france-address |
-      | First name       | testFirstName                |
-      | Last name        | testLastName                 |
-      | Address          | 36 Avenue des Champs Elysees |
-      | City             | Paris                        |
-      | Country          | France                       |
-      | Postal code      | 75008                        |
+      | Address alias | test-customer-france-address |
+      | First name    | testFirstName                |
+      | Last name     | testLastName                 |
+      | Address       | 36 Avenue des Champs Elysees |
+      | City          | Paris                        |
+      | Country       | France                       |
+      | Postal code   | 75008                        |
     And I change order "bo_order1" invoice address to "test-customer-france-address"
     Then order "bo_order1" should have following details:
       | total_products           | 238.00 |
@@ -344,13 +349,13 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | shipping_cost_tax_excl | 70.00 |
       | shipping_cost_tax_incl | 74.20 |
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 2      |
-      | original_product_price      | 119.00 |
-      | product_price               | 119.00 |
-      | unit_price_tax_incl         | 126.14 |
-      | unit_price_tax_excl         | 119.00 |
-      | total_price_tax_incl        | 252.28 |
-      | total_price_tax_excl        | 238.00 |
+      | product_quantity       | 2      |
+      | original_product_price | 119.00 |
+      | product_price          | 119.00 |
+      | unit_price_tax_incl    | 126.14 |
+      | unit_price_tax_excl    | 119.00 |
+      | total_price_tax_incl   | 252.28 |
+      | total_price_tax_excl   | 238.00 |
 
   Scenario: Carrier change for an order with secondary currency
     Given a carrier "default_carrier" with name "My carrier" exists
@@ -359,8 +364,8 @@ Feature: Multiple currencies for Order in Back Office (BO)
     And order "bo_order1" should have "default_carrier" as a carrier
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
-      | shipping_cost_tax_excl | 70.00  |
-      | shipping_cost_tax_incl | 74.20  |
+      | shipping_cost_tax_excl | 70.00 |
+      | shipping_cost_tax_incl | 74.20 |
     When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "price_carrier"
     Then order "bo_order1" should have following details:
       | total_products           | 238.00 |
@@ -375,18 +380,18 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_incl  | 63.60  |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
-      | shipping_cost_tax_excl | 60.00  |
-      | shipping_cost_tax_incl | 63.60  |
+      | shipping_cost_tax_excl | 60.00 |
+      | shipping_cost_tax_incl | 63.60 |
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 2        |
-      | original_product_price      | 119.00 |
-      | product_price               | 119.00   |
-      | unit_price_tax_incl         | 126.14   |
-      | unit_price_tax_excl         | 119.00   |
-      | total_price_tax_incl        | 252.28   |
-      | total_price_tax_excl        | 238.00   |
+      | product_quantity       | 2      |
+      | original_product_price | 119.00 |
+      | product_price          | 119.00 |
+      | unit_price_tax_incl    | 126.14 |
+      | unit_price_tax_excl    | 119.00 |
+      | total_price_tax_incl   | 252.28 |
+      | total_price_tax_excl   | 238.00 |
 
-    @reset-database-before-scenario
+  @reset-database-before-scenario
     # We reset database before this scenario to be sure only default_carrier is enabled
     Scenario: I add the product with associated gift when the order already has the gift
       Given there is a product in the catalog named "Test Product With Auto Gift" with a price of 12.0 and 100 items in stock
@@ -397,9 +402,9 @@ Feature: Multiple currencies for Order in Back Office (BO)
       And cart rule "MultiGiftAutoCartRule" offers free shipping
       And cart rule "MultiGiftAutoCartRule" offers a gift product "Test Product Gifted"
       And I add products to order "bo_order1" with new invoice and the following products details:
-        | name          | Test Product Gifted |
-        | amount        | 1                   |
-        | price         | 150.0               |
+        | name   | Test Product Gifted |
+        | amount | 1                   |
+        | price  | 150.0               |
       Then order "bo_order1" should have 3 products in total
       And order "bo_order1" should have 0 invoice
       And order "bo_order1" should have 0 cart rule
@@ -420,25 +425,25 @@ Feature: Multiple currencies for Order in Back Office (BO)
         | shipping_cost_tax_excl | 70.00 |
         | shipping_cost_tax_incl | 74.20 |
       And product "Mug The best is yet to come" in order "bo_order1" has following details:
-        | product_quantity            | 2      |
-        | original_product_price      | 119.00 |
-        | product_price               | 119.00 |
-        | unit_price_tax_incl         | 126.14 |
-        | unit_price_tax_excl         | 119.00 |
-        | total_price_tax_incl        | 252.28 |
-        | total_price_tax_excl        | 238.00 |
+        | product_quantity       | 2      |
+        | original_product_price | 119.00 |
+        | product_price          | 119.00 |
+        | unit_price_tax_incl    | 126.14 |
+        | unit_price_tax_excl    | 119.00 |
+        | total_price_tax_incl   | 252.28 |
+        | total_price_tax_excl   | 238.00 |
       And product "Test Product Gifted" in order "bo_order1" has following details:
-        | product_quantity            | 1      |
-        | original_product_price      | 150.00 |
-        | product_price               | 150.00 |
-        | unit_price_tax_incl         | 159.00 |
-        | unit_price_tax_excl         | 150.00 |
-        | total_price_tax_incl        | 159.00 |
-        | total_price_tax_excl        | 150.00 |
+        | product_quantity       | 1      |
+        | original_product_price | 150.00 |
+        | product_price          | 150.00 |
+        | unit_price_tax_incl    | 159.00 |
+        | unit_price_tax_excl    | 150.00 |
+        | total_price_tax_incl   | 159.00 |
+        | total_price_tax_excl   | 150.00 |
       When I add products to order "bo_order1" with new invoice and the following products details:
-        | name          | Test Product With Auto Gift |
-        | amount        | 1                           |
-        | price         | 120.00                      |
+        | name   | Test Product With Auto Gift |
+        | amount | 1                           |
+        | price  | 120.00                      |
       Then order "bo_order1" should have 5 products in total
       And order "bo_order1" should have 0 invoice
       And order "bo_order1" should have 1 cart rule
@@ -459,29 +464,29 @@ Feature: Multiple currencies for Order in Back Office (BO)
         | shipping_cost_tax_incl | 74.20 |
       And order "bo_order1" should have cart rule "MultiGiftAutoCartRule" with amount "€230.00"
       And product "Mug The best is yet to come" in order "bo_order1" has following details:
-        | product_quantity            | 2      |
-        | original_product_price      | 119.00 |
-        | product_price               | 119.00 |
-        | unit_price_tax_incl         | 126.14 |
-        | unit_price_tax_excl         | 119.00 |
-        | total_price_tax_incl        | 252.28 |
-        | total_price_tax_excl        | 238.00 |
+        | product_quantity       | 2      |
+        | original_product_price | 119.00 |
+        | product_price          | 119.00 |
+        | unit_price_tax_incl    | 126.14 |
+        | unit_price_tax_excl    | 119.00 |
+        | total_price_tax_incl   | 252.28 |
+        | total_price_tax_excl   | 238.00 |
       And product "Test Product Gifted" in order "bo_order1" has following details:
-        | product_quantity            | 2      |
-        | original_product_price      | 150.00 |
-        | product_price               | 150.00 |
-        | unit_price_tax_incl         | 159.00 |
-        | unit_price_tax_excl         | 150.00 |
-        | total_price_tax_incl        | 318.00 |
-        | total_price_tax_excl        | 300.00 |
+        | product_quantity       | 2      |
+        | original_product_price | 150.00 |
+        | product_price          | 150.00 |
+        | unit_price_tax_incl    | 159.00 |
+        | unit_price_tax_excl    | 150.00 |
+        | total_price_tax_incl   | 318.00 |
+        | total_price_tax_excl   | 300.00 |
       And product "Test Product With Auto Gift" in order "bo_order1" has following details:
-        | product_quantity            | 1      |
-        | original_product_price      | 120.00 |
-        | product_price               | 120.00 |
-        | unit_price_tax_incl         | 127.20 |
-        | unit_price_tax_excl         | 120.00 |
-        | total_price_tax_incl        | 127.20 |
-        | total_price_tax_excl        | 120.00 |
+        | product_quantity       | 1      |
+        | original_product_price | 120.00 |
+        | product_price          | 120.00 |
+        | unit_price_tax_incl    | 127.20 |
+        | unit_price_tax_excl    | 120.00 |
+        | total_price_tax_incl   | 127.20 |
+        | total_price_tax_excl   | 120.00 |
       When I remove cart rule "MultiGiftAutoCartRule" from order "bo_order1"
       Then order "bo_order1" should have 4 products in total
       And order "bo_order1" should have 0 invoice
@@ -502,26 +507,26 @@ Feature: Multiple currencies for Order in Back Office (BO)
         | shipping_cost_tax_excl | 70.00 |
         | shipping_cost_tax_incl | 74.20 |
       And product "Mug The best is yet to come" in order "bo_order1" has following details:
-        | product_quantity            | 2      |
-        | original_product_price      | 119.00 |
-        | product_price               | 119.00 |
-        | unit_price_tax_incl         | 126.14 |
-        | unit_price_tax_excl         | 119.00 |
-        | total_price_tax_incl        | 252.28 |
-        | total_price_tax_excl        | 238.00 |
+        | product_quantity       | 2      |
+        | original_product_price | 119.00 |
+        | product_price          | 119.00 |
+        | unit_price_tax_incl    | 126.14 |
+        | unit_price_tax_excl    | 119.00 |
+        | total_price_tax_incl   | 252.28 |
+        | total_price_tax_excl   | 238.00 |
       And product "Test Product Gifted" in order "bo_order1" has following details:
-        | product_quantity            | 1      |
-        | original_product_price      | 150.00 |
-        | product_price               | 150.00 |
-        | unit_price_tax_incl         | 159.00 |
-        | unit_price_tax_excl         | 150.00 |
-        | total_price_tax_incl        | 159.00 |
-        | total_price_tax_excl        | 150.00 |
+        | product_quantity       | 1      |
+        | original_product_price | 150.00 |
+        | product_price          | 150.00 |
+        | unit_price_tax_incl    | 159.00 |
+        | unit_price_tax_excl    | 150.00 |
+        | total_price_tax_incl   | 159.00 |
+        | total_price_tax_excl   | 150.00 |
       And product "Test Product With Auto Gift" in order "bo_order1" has following details:
-        | product_quantity            | 1      |
-        | original_product_price      | 120.00 |
-        | product_price               | 120.00 |
-        | unit_price_tax_incl         | 127.20 |
-        | unit_price_tax_excl         | 120.00 |
-        | total_price_tax_incl        | 127.20 |
-        | total_price_tax_excl        | 120.00 |
+        | product_quantity       | 1      |
+        | original_product_price | 120.00 |
+        | product_price          | 120.00 |
+        | unit_price_tax_incl    | 127.20 |
+        | unit_price_tax_excl    | 120.00 |
+        | total_price_tax_incl   | 127.20 |
+        | total_price_tax_excl   | 120.00 |

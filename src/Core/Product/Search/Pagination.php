@@ -89,7 +89,7 @@ class Pagination
     }
 
     /**
-     * @param $page
+     * @param int $page
      * @param string $type
      *
      * @return array

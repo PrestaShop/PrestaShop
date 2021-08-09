@@ -25,7 +25,7 @@
  */
 class OrderReturnStateCore extends ObjectModel
 {
-    /** @var string Name */
+    /** @var string|array<int, string> Name */
     public $name;
 
     /** @var string Display state in the specified color */

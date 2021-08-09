@@ -56,7 +56,7 @@ final class ProductFieldsProvider implements EntityFieldsProviderInterface
         $fields = [
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
             new EntityField('active', $this->trans('Active (0/1)', 'Admin.Advparameters.Feature')),
-            new EntityField('name', $this->trans('Name', 'Admin.Global')),
+            new EntityField('name', $this->trans('Name', 'Admin.Global'), '', true),
             new EntityField('category', $this->trans('Categories (x,y,z...)', 'Admin.Advparameters.Feature')),
             new EntityField('price_tex', $this->trans('Price tax excluded', 'Admin.Advparameters.Feature')),
             new EntityField('price_tin', $this->trans('Price tax included', 'Admin.Advparameters.Feature')),
