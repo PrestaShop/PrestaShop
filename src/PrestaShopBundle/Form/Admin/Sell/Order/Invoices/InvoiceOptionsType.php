@@ -124,19 +124,9 @@ class InvoiceOptionsType extends TranslatorAwareType
                 'constraints' => [
                     new GreaterThanOrEqual(
                         [
-                            'value' => $this->nextInvoiceNumber,
-                            'message' => $this->trans(
-                                'Invoice number is invalid. Please enter a positive integer greater than the last invoice number (#%number%).',
-                                'Admin.Orderscustomers.Notification',
-                                ['%number%' => $this->nextInvoiceNumber]
-                            ),
-                        ]
-                    ),
-                    new GreaterThan(
-                        [
                             'value' => 0,
                             'message' => $this->trans(
-                                'Invoice number is invalid. Please enter a positive integer greater than the last invoice number (#%number%).',
+                                'Invoice number is invalid. Please enter a positive integer.',
                                 'Admin.Orderscustomers.Notification',
                                 ['%number%' => $this->nextInvoiceNumber]
                             ),
@@ -144,8 +134,11 @@ class InvoiceOptionsType extends TranslatorAwareType
                     ),
                 ],
                 'label' => $this->trans('Invoice number', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).', 'Admin.Orderscustomers.Help'),
-            ])
+                'help' => $this->trans(
+                    'The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).',
+                    'Admin.Orderscustomers.Help',
+                    ['%number%' => $this->nextInvoiceNumber]
+                ),            ])
             ->add('legal_free_text', TranslatableType::class, [
                 'required' => false,
                 'options' => [
