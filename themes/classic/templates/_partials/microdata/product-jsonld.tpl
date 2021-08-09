@@ -37,10 +37,10 @@
       "@type": "Thing",
       "name": "{if $product_manufacturer->name}{$product_manufacturer->name|escape:'html':'UTF-8'}{else}{$shop.name}{/if}"
     },{/if}
-    {if isset($nbComments) && $nbComments && $ratings.avg}"aggregateRating": {
+    {if isset($product.productComments) && !empty($product.productComments.numComments) && !empty($product.productComments.nbComments)}"aggregateRating": {
       "@type": "AggregateRating",
-      "ratingValue": "{$ratings.avg|round:1|escape:'html':'UTF-8'}",
-      "reviewCount": "{$nbComments|escape:'html':'UTF-8'}"
+      "ratingValue": "{$product.productComments.averageRating|round:1|escape:'html':'UTF-8'}",
+      "reviewCount": "{$product.productComments.nbComments|escape:'html':'UTF-8'}"
     },{/if}
     {if isset($product.weight) && ($product.weight != 0)}
       "weight": {
