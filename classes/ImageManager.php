@@ -476,7 +476,11 @@ class ImageManagerCore
         }
         if (!ImageManager::isRealImage($file['tmp_name'], $file['type'], $mimeTypeList) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
             $typesTxt = $types ? '.' . implode(', .', $types) : '.gif, .jpg, .png';
-            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: %s', array($typesTxt), 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans(
+                'Image format not recognized, allowed formats are: %s',
+                [$typesTxt],
+                 'Admin.Notifications.Error'
+             );
         }
         if ($file['error']) {
             return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings. (Error code: %s)', [$file['error']], 'Admin.Notifications.Error');
