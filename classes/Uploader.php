@@ -280,7 +280,7 @@ class UploaderCore
                 file_put_contents($filePath, fopen('php://input', 'rb'));
             }
 
-            $fileSize = $this->_getFileSize($filePath, true);
+            $fileSize = $this->getFileSize($filePath, true);
 
             if ($fileSize === $file['size']) {
                 $file['save_path'] = $filePath;
@@ -349,7 +349,7 @@ class UploaderCore
 
         $postMaxSize = $this->getPostMaxSizeBytes();
 
-        if ($postMaxSize && ($this->_getServerVars('CONTENT_LENGTH') > $postMaxSize)) {
+        if ($postMaxSize && ($this->getServerVars('CONTENT_LENGTH') > $postMaxSize)) {
             $file['error'] = Context::getContext()->getTranslator()->trans('The uploaded file exceeds the post_max_size directive in php.ini', [], 'Admin.Notifications.Error');
 
             return false;
