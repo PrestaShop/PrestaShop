@@ -346,6 +346,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $pPath_from = _PS_ROOT_DIR_ . '/themes/' . (string) $theme_from . '/pdf/';
         $mPath_from = _PS_MAIL_DIR_ . (string) $iso_from . '/';
 
+        $lPath_to = $tPath_to = $pPath_to = $mPath_to = '';
         if ($copy) {
             $lPath_to = _PS_TRANSLATIONS_DIR_ . (string) $iso_to . '/';
             $tPath_to = _PS_ROOT_DIR_ . '/themes/' . (string) $theme_to . '/';

@@ -203,6 +203,7 @@ class RequestSqlCore extends ObjectModel
     public function getTables()
     {
         $results = Db::getInstance()->executeS('SHOW TABLES');
+        $tables = [];
         foreach ($results as $result) {
             $key = array_keys($result);
             $tables[] = $result[$key[0]];

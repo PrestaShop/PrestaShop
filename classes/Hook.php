@@ -980,7 +980,10 @@ class HookCore extends ObjectModel
             }
         }
 
-        if ($different_shop) {
+        if ($different_shop
+            && isset($old_shop)
+            && isset($old_context)
+            && isset($shop)) {
             $context->shop = $old_shop;
             $context->shop->setContext($old_context, $shop->id);
         }

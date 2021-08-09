@@ -352,7 +352,7 @@ abstract class PaymentModuleCore extends Module
             }
 
             // The country can only change if the address used for the calculation is the delivery address, and if multi-shipping is activated
-            if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery') {
+            if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery' && isset($context_country)) {
                 $this->context->country = $context_country;
             }
 
@@ -740,7 +740,7 @@ abstract class PaymentModuleCore extends Module
                     'orders' => $order_list,
                     'customer' => $this->context->customer,
                     'currency' => $this->context->currency,
-                    'orderStatus' => new OrderState($order->current_state),
+                    'orderStatus' => new OrderState(isset($order) ? $order->current_state : null),
                 ]
             );
 

@@ -284,11 +284,15 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Constructor.
      *
-     * @param string $name Module unique name
-     * @param Context $context
+     * @param string|null $name (Deprecated parameter)
+     * @param Context|null $context
      */
     public function __construct($name = null, Context $context = null)
     {
+        if ($name !== null) {
+            Tools::displayParameterAsDeprecated('name');
+        }
+
         if (isset($this->ps_versions_compliancy) && !isset($this->ps_versions_compliancy['min'])) {
             $this->ps_versions_compliancy['min'] = '1.4.0.0';
         }
@@ -1491,7 +1495,14 @@ abstract class ModuleCore implements ModuleInterface
                     } catch (Exception $e) {
                     }
                 } else {
-                    $module_errors[] = Context::getContext()->getTranslator()->trans('%1$s (class missing in %2$s)', [$module, substr($file_path, strlen(_PS_ROOT_DIR_))], 'Admin.Modules.Notification');
+                    $module_errors[] = Context::getContext()->getTranslator()->trans(
+                        '%1$s (class missing in %2$s)',
+                        [
+                            $module,
+                            substr($file_path ?? '', strlen(_PS_ROOT_DIR_))
+                        ],
+                        'Admin.Modules.Notification'
+                    );
                 }
             }
             $errors = array_merge($errors, $module_errors);
@@ -3229,8 +3240,9 @@ abstract class ModuleCore implements ModuleInterface
     public function removeOverride($classname)
     {
         $orig_path = $path = PrestaShopAutoload::getInstance()->getClassPath($classname . 'Core');
+        $file = PrestaShopAutoload::getInstance()->getClassPath($classname);
 
-        if ($orig_path && !$file = PrestaShopAutoload::getInstance()->getClassPath($classname)) {
+        if ($orig_path && !$file) {
             return true;
         } elseif (!$orig_path && Module::getModuleIdByName($classname)) {
             $path = 'modules' . DIRECTORY_SEPARATOR . $classname . DIRECTORY_SEPARATOR . $classname . '.php';
@@ -3253,6 +3265,7 @@ abstract class ModuleCore implements ModuleInterface
 
         file_put_contents($override_path, preg_replace('#(\r\n|\r)#ism', "\n", file_get_contents($override_path)));
 
+        $code = '';
         if ($orig_path) {
             // Get a uniq id for the class, because you can override a class (or remove the override) twice in the same session and we need to avoid redeclaration
             do {
@@ -3377,7 +3390,6 @@ abstract class ModuleCore implements ModuleInterface
             }
 
             // Rewrite nice code
-            $code = '';
             foreach ($override_file as $line) {
                 if ($line == '#--remove--#') {
                     continue;
