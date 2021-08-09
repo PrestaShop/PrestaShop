@@ -1535,7 +1535,7 @@ class LinkCore
                 );
 
                 break;
-            case 'supplierImageLink':
+            case 'supplierImage':
                 $link = $context->link->getSupplierImageLink(
                     (int) $params['id'],
                     $params['type'] = (isset($params['type']) ? $params['type'] : null)
