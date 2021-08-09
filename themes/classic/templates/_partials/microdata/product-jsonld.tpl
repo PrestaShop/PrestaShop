@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
 {assign var=hasAggregateRating value=false}
-{if isset($nbComments) && $nbComments && $ratings.avg}
+{if !empty($product.productComments.averageRating) && !empty($product.productComments.nbComments)}
   {assign var=hasAggregateRating value=true}
 {/if}
 {assign var=hasWeight value=false}
@@ -53,8 +53,8 @@
     {if $hasAggregateRating},
     "aggregateRating": {
       "@type": "AggregateRating",
-      "ratingValue": "{$ratings.avg|round:1|escape:'html':'UTF-8'}",
-      "reviewCount": "{$nbComments|escape:'html':'UTF-8'}"
+      "ratingValue": "{$product.productComments.averageRating|round:1|escape:'html':'UTF-8'}",
+      "reviewCount": "{$product.productComments.nbComments|escape:'html':'UTF-8'}"
     }
     {/if}
     {if $hasWeight},
