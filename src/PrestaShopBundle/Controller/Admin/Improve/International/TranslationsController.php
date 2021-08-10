@@ -24,14 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Controller\Admin;
+namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,8 +43,6 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  */
 class TranslationsController extends FrameworkBundleAdminController
 {
-    protected $layoutTitle = 'Translations';
-
     public const CONTROLLER_NAME = 'ADMINTRANSLATIONS';
 
     /**
@@ -52,11 +51,14 @@ class TranslationsController extends FrameworkBundleAdminController
     public const controller_name = self::CONTROLLER_NAME;
 
     /**
-     * @Template("@PrestaShop/Admin/Translations/overview.html.twig")
+     * Renders the translation page
      */
     public function overviewAction()
     {
-        return parent::overviewAction();
+        return $this->render('@PrestaShop/Admin/Improve/International/Translations/overview.html.twig', [
+            'is_shop_context' => (new Context())->isShopContext(),
+            'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
+        ]);
     }
 
     /**
@@ -90,7 +92,6 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Show translations settings page.
      *
-     * @Template("@PrestaShop/Admin/Improve/International/Translations/translations_settings.html.twig")
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
@@ -107,7 +108,7 @@ class TranslationsController extends FrameworkBundleAdminController
         $exportCataloguesForm = $this->getExportTranslationCataloguesFormHandler()->getForm();
         $copyLanguageForm = $this->getCopyLanguageTranslationsFormHandler()->getForm();
 
-        return [
+        return $this->render('@PrestaShop/Admin/Improve/International/Translations/translations_settings.html.twig', [
             'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
@@ -117,7 +118,7 @@ class TranslationsController extends FrameworkBundleAdminController
             'addUpdateLanguageForm' => $addUpdateLanguageForm->createView(),
             'modifyTranslationsForm' => $modifyTranslationsForm->createView(),
             'addLanguageUrl' => $legacyContext->getAdminLink('AdminLanguages', true, ['addlang' => '']),
-        ];
+        ]);
     }
 
     /**
