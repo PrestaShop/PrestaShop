@@ -60,7 +60,8 @@ final class OrderReturnStateChoiceProvider implements FormChoiceProviderInterfac
         $orderStates = OrderReturnState::getOrderReturnStates($this->contextLangId);
 
         foreach ($orderStates as $orderState) {
-            $choices[$orderState['id_order_return_state'] . ' - ' . $orderState['name']] = (int) $orderState['id_order_return_state'];
+            $choices[sprintf('%s - %s', $orderState['id_order_return_state'], $orderState['name'])]
+                = (int) $orderState['id_order_return_state'];
         }
 
         return $choices;
