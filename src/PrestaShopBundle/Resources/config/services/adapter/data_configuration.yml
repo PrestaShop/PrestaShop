@@ -109,6 +109,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
       - '@translator'
       - '@prestashop.adapter.validate'
 
