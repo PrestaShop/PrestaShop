@@ -4223,14 +4223,25 @@ class CartCore extends ObjectModel
      */
     public function hasRealProducts()
     {
-        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT 1 FROM ' . _DB_PREFIX_ . 'cart_product cp ' .
-            'INNER JOIN ' . _DB_PREFIX_ . 'product p
-                ON (p.is_virtual = 0 AND p.id_product = cp.id_product) ' .
-            'INNER JOIN ' . _DB_PREFIX_ . 'product_shop ps
-                ON (ps.id_shop = cp.id_shop AND ps.id_product = p.id_product) ' .
-            'WHERE cp.id_cart=' . (int) $this->id
-        );
+        // Check for non-virtual products which are not packs
+        $sql = 'SELECT 1 FROM %scart_product cp
+            INNER JOIN %sproduct p ON (p.id_product = cp.id_product AND cache_is_pack = 0 and p.is_virtual = 0)
+            INNER JOIN %sproduct_shop ps ON (ps.id_shop = cp.id_shop AND ps.id_product = p.id_product)
+            WHERE cp.id_cart=%d';
+        $sql = sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, (int) $this->id);
+        if ((bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql)) {
+            return true;
+        }
+
+        // Check for non-virtual products which are in packs
+        $sql = 'SELECT 1 FROM %scart_product cp
+            INNER JOIN %spack pa ON (pa.id_product_pack = cp.id_product)
+            INNER JOIN %sproduct p ON (p.id_product = pa.id_product_item AND p.is_virtual = 0)
+            INNER JOIN %sproduct_shop ps ON (ps.id_shop = cp.id_shop AND ps.id_product = p.id_product)
+            WHERE cp.id_cart=%d';
+        $sql = sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, (int) $this->id);
+
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
     }
 
     /**
