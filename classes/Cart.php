@@ -683,7 +683,7 @@ class CartCore extends ObjectModel
                         stock.`quantity` AS quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, p.`weight`,
                         p.`available_date`, p.`date_add`, p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
                         CONCAT(LPAD(cp.`id_product`, 10, 0), LPAD(IFNULL(cp.`id_product_attribute`, 0), 10, 0), IFNULL(cp.`id_address_delivery`, 0), IFNULL(cp.`id_customization`, 0)) AS unique_id, cp.id_address_delivery,
-                        product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference');
+                        ps.product_supplier_reference supplier_reference');
 
         // Build FROM
         $sql->from('cart_product', 'cp');
@@ -2530,7 +2530,6 @@ class CartCore extends ObjectModel
      *               0 => array(  // First package
      *               'product_list' => array(...),
      *               'carrier_list' => array(...),
-     *               'id_warehouse' => array(...),
      *               ),
      *               ),
      *               );
@@ -2550,8 +2549,6 @@ class CartCore extends ObjectModel
         // For that we count the number of time we can use a warehouse for a specific delivery address
         $warehouse_count_by_address = [];
 
-        $stock_management_active = Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
-
         foreach ($product_list as &$product) {
             if ((int) $product['id_address_delivery'] == 0) {
                 $product['id_address_delivery'] = (int) $this->id_address_delivery;
@@ -2563,42 +2560,9 @@ class CartCore extends ObjectModel
 
             $product['warehouse_list'] = [];
 
-            if ($stock_management_active &&
-                (int) $product['advanced_stock_management'] == 1) {
-                $warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute'], $this->id_shop);
-                if (count($warehouse_list) == 0) {
-                    $warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute']);
-                }
-                // Does the product is in stock ?
-                // If yes, get only warehouse where the product is in stock
-
-                $warehouse_in_stock = [];
-                $manager = StockManagerFactory::getManager();
-
-                foreach ($warehouse_list as $key => $warehouse) {
-                    $product_real_quantities = $manager->getProductRealQuantities(
-                        $product['id_product'],
-                        $product['id_product_attribute'],
-                        [$warehouse['id_warehouse']],
-                        true
-                    );
-
-                    if ($product_real_quantities > 0 || Pack::isPack((int) $product['id_product'])) {
-                        $warehouse_in_stock[] = $warehouse;
-                    }
-                }
-
-                if (!empty($warehouse_in_stock)) {
-                    $warehouse_list = $warehouse_in_stock;
-                    $product['in_stock'] = true;
-                } else {
-                    $product['in_stock'] = false;
-                }
-            } else {
-                //simulate default warehouse
-                $warehouse_list = [0 => ['id_warehouse' => 0]];
-                $product['in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], $product['id_product_attribute']) > 0;
-            }
+            //simulate default warehouse
+            $warehouse_list = [0 => ['id_warehouse' => 0]];
+            $product['in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], $product['id_product_attribute']) > 0;
 
             foreach ($warehouse_list as $warehouse) {
                 $product['warehouse_list'][$warehouse['id_warehouse']] = $warehouse['id_warehouse'];
@@ -2713,7 +2677,7 @@ class CartCore extends ObjectModel
                 }
                 // Count occurance of each carriers to minimize the number of packages
                 $carrier_count = [];
-                foreach ($warehouse_list as $id_warehouse => $products_grouped_by_carriers) {
+                foreach ($warehouse_list as $products_grouped_by_carriers) {
                     foreach ($products_grouped_by_carriers as $data) {
                         foreach ($data['carrier_list'] as $id_carrier) {
                             if (!isset($carrier_count[$id_carrier])) {
@@ -2758,7 +2722,7 @@ class CartCore extends ObjectModel
                 $final_package_list[$id_address_delivery] = [];
             }
 
-            foreach ($products_in_stock_list as $key => $warehouse_list) {
+            foreach ($products_in_stock_list as $warehouse_list) {
                 foreach ($warehouse_list as $id_warehouse => $products_grouped_by_carriers) {
                     foreach ($products_grouped_by_carriers as $data) {
                         $final_package_list[$id_address_delivery][] = [
@@ -4087,22 +4051,6 @@ class CartCore extends ObjectModel
         }
 
         foreach ($this->getProducts() as $product) {
-            if (
-                !$this->allow_seperated_package &&
-                !$product['allow_oosp'] &&
-                StockAvailable::dependsOnStock($product['id_product']) &&
-                $product['advanced_stock_management'] &&
-                (bool) Context::getContext()->customer->isLogged() &&
-                ($delivery = $this->getDeliveryOption()) &&
-                !empty($delivery)
-            ) {
-                $product['stock_quantity'] = StockManager::getStockByCarrier(
-                    (int) $product['id_product'],
-                    (int) $product['id_product_attribute'],
-                    $delivery
-                );
-            }
-
             if (
                 !$product['active'] ||
                 !$product['available_for_order'] ||

@@ -159,7 +159,11 @@ class OrderDetailCore extends ObjectModel
     /** @var int Id tax rules group */
     public $id_tax_rules_group;
 
-    /** @var int Id warehouse */
+    /**
+     * @var int Id warehouse
+     *
+     * @deprecated Since 8.0, will be removed in 9.0
+     */
     public $id_warehouse;
 
     /** @var float additional shipping price tax excl */
@@ -536,14 +540,7 @@ class OrderDetailCore extends ObjectModel
     protected function checkProductStock($product, $id_order_state)
     {
         if ($id_order_state != Configuration::get('PS_OS_CANCELED') && $id_order_state != Configuration::get('PS_OS_ERROR')) {
-            $update_quantity = true;
-            if (!StockAvailable::dependsOnStock($product['id_product'])) {
-                $update_quantity = StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int) $product['cart_quantity'], $product['id_shop'], true);
-            }
-
-            if ($update_quantity) {
-                $product['stock_quantity'] -= $product['cart_quantity'];
-            }
+            $product['stock_quantity'] -= $product['cart_quantity'];
 
             if ($product['stock_quantity'] < 0 && Configuration::get('PS_STOCK_MANAGEMENT')) {
                 $this->outOfStock = true;
@@ -726,6 +723,7 @@ class OrderDetailCore extends ObjectModel
      * @param int $id_order_status
      * @param int $id_order_invoice
      * @param bool $use_taxes set to false if you don't want to use taxes
+     * @param int $id_warehouse [no longer used]
      */
     protected function create(Order $order, Cart $cart, $product, $id_order_state, $id_order_invoice, $use_taxes = true, $id_warehouse = 0)
     {
@@ -750,7 +748,7 @@ class OrderDetailCore extends ObjectModel
         $this->product_reference = empty($product['reference']) ? null : pSQL($product['reference']);
         $this->product_supplier_reference = empty($product['supplier_reference']) ? null : pSQL($product['supplier_reference']);
         $this->product_weight = $product['id_product_attribute'] ? (float) $product['weight_attribute'] : (float) $product['weight'];
-        $this->id_warehouse = $id_warehouse;
+        $this->id_warehouse = 0;
 
         $product_quantity = (int) Product::getQuantity($this->product_id, $this->product_attribute_id, null, $cart);
         $this->product_quantity_in_stock = ($product_quantity - (int) $product['cart_quantity'] < 0) ?
@@ -788,6 +786,7 @@ class OrderDetailCore extends ObjectModel
      * @param int $id_order_status
      * @param int $id_order_invoice
      * @param bool $use_taxes set to false if you don't want to use taxes
+     * @param int $id_warehouse [no longer used]
      */
     public function createList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true, $id_warehouse = 0)
     {
@@ -798,7 +797,7 @@ class OrderDetailCore extends ObjectModel
         $this->outOfStock = false;
 
         foreach ($product_list as $product) {
-            $this->create($order, $cart, $product, $id_order_state, $id_order_invoice, $use_taxes, $id_warehouse);
+            $this->create($order, $cart, $product, $id_order_state, $id_order_invoice, $use_taxes);
         }
 
         unset(

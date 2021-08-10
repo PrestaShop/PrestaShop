@@ -694,18 +694,6 @@ abstract class PaymentModuleCore extends Module
                         }
                     }
 
-                    // updates stock in shops
-                    if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                        $product_list = $order->getProducts();
-                        foreach ($product_list as $product) {
-                            // if the available quantities depends on the physical stock
-                            if (StockAvailable::dependsOnStock($product['product_id'])) {
-                                // synchronizes
-                                StockAvailable::synchronize($product['product_id'], $order->id_shop);
-                            }
-                        }
-                    }
-
                     $order->updateOrderDetailTax();
 
                     // sync all stock

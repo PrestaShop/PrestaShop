@@ -48,7 +48,6 @@ class StockAvailableValidator extends AbstractObjectModelValidator
         $this->validateStockAvailableProperty($stockAvailable, 'quantity', ProductStockConstraintException::INVALID_QUANTITY);
         $this->validateStockAvailableProperty($stockAvailable, 'location', ProductStockConstraintException::INVALID_LOCATION);
         $this->validateStockAvailableProperty($stockAvailable, 'out_of_stock', ProductStockConstraintException::INVALID_OUT_OF_STOCK);
-        $this->validateStockAvailableProperty($stockAvailable, 'depends_on_stock');
         $this->validateStockAvailableProperty($stockAvailable, 'id_product');
         $this->validateStockAvailableProperty($stockAvailable, 'id_product_attribute');
         $this->validateStockAvailableProperty($stockAvailable, 'id_shop');

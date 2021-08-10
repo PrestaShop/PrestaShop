@@ -81,20 +81,9 @@ final class UpdateOrderStatusHandler extends AbstractOrderHandler implements Upd
         // Save all changes
         $historyAdded = $history->addWithemail(true, $templateVars);
 
-        if ($historyAdded) {
-            // synchronizes quantities if needed..
-            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                foreach ($order->getProducts() as $product) {
-                    if (StockAvailable::dependsOnStock($product['product_id'])) {
-                        StockAvailable::synchronize($product['product_id'], (int) $product['id_shop']);
-                    }
-                }
-            }
-
-            return;
+        if (!$historyAdded) {
+            throw new ChangeOrderStatusException([], [$command->getOrderId()], [], 'Failed to update status or sent email when changing order status.');
         }
-
-        throw new ChangeOrderStatusException([], [$command->getOrderId()], [], 'Failed to update status or sent email when changing order status.');
     }
 
     /**

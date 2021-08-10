@@ -12,7 +12,6 @@ Feature: Update product stock from Back Office (BO)
     Given shop "shop1" with name "test_shop" exists
     # Single shop context is required to modify product quantity
     And single shop shop1 context is loaded
-    And shop configuration for "PS_ADVANCED_STOCK_MANAGEMENT" is set to 0
 
   Scenario: I check default stock values
     When I add product "product1" with following information:

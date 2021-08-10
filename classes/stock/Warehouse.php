@@ -28,6 +28,8 @@
  * Holds Stock.
  *
  * @since 1.5.0
+ *
+ * @deprecated Since 8.0, will be removed in 9.0
  */
 class WarehouseCore extends ObjectModel
 {
@@ -109,6 +111,13 @@ class WarehouseCore extends ObjectModel
             ],
         ],
     ];
+
+    public function __construct($id = null, $id_lang = null, $id_shop = null)
+    {
+        @trigger_error(__CLASS__ . 'is deprecated since version 8.0 and will be removed in 9.0.', E_USER_DEPRECATED);
+
+        parent::__construct($id, $id_lang, $id_shop);
+    }
 
     /**
      * Gets the shops associated to the current warehouse.
@@ -534,19 +543,6 @@ class WarehouseCore extends ObjectModel
         foreach ($pack_warehouses as $pack_warehouse) {
             /* @var WarehouseProductLocation $pack_warehouse */
             $list['pack_warehouses'][] = (int) $pack_warehouse->id_warehouse;
-        }
-
-        // for each products in the pack
-        foreach ($products as $product) {
-            if ($product->advanced_stock_management) {
-                // gets the warehouses of one product
-                $product_warehouses = Warehouse::getProductWarehouseList((int) $product->id, (int) $product->cache_default_attribute, (int) $id_shop);
-                $list[(int) $product->id] = [];
-                // fills array with warehouses for this product
-                foreach ($product_warehouses as $product_warehouse) {
-                    $list[(int) $product->id][] = $product_warehouse['id_warehouse'];
-                }
-            }
         }
 
         $res = false;

@@ -144,13 +144,6 @@ class OrderSlipCreator
                 true,
                 (int) $order->id_shop
             );
-
-            /** @var OrderDetail $orderDetail */
-            foreach ($orderRefundSummary->getOrderDetails() as $orderDetail) {
-                if ($this->configuration->get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                    StockAvailable::synchronize($orderDetail->product_id);
-                }
-            }
         } else {
             throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_AMOUNT);
         }
