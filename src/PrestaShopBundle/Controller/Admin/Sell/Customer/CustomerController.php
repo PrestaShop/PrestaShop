@@ -506,14 +506,14 @@ class CustomerController extends AbstractAdminController
      *
      * @return RedirectResponse
      *
-     * @deprecated Since 1.7.9.0, use toggleStatusThenReturnJsonAction() instead.
+     * @deprecated Since 8.0.0, use toggleStatusThenReturnJsonAction() instead.
      *
      */
     public function toggleStatusAction($customerId)
     {
         @trigger_error(
             sprintf(
-                '%s is deprecated since version 1.7.9.0. Use %s instead.',
+                '%s is deprecated since version 8.0.0. Use %s instead.',
                 __METHOD__,
                 static::class . '::toggleStatusThenReturnJsonAction()'
             ),
@@ -549,7 +549,7 @@ class CustomerController extends AbstractAdminController
     {
         return $this->performActionThenReturnJsonResponse(
             'toggleCustomerStatus',
-            (int) $customerId
+            $customerId
         );
     }
 
@@ -566,13 +566,13 @@ class CustomerController extends AbstractAdminController
      *
      * @return RedirectResponse
      *
-     * @deprecated Since 1.7.9.0, use toggleNewsletterSubscriptionThenReturnJsonAction() instead.
+     * @deprecated Since 8.0.0, use toggleNewsletterSubscriptionThenReturnJsonAction() instead.
      */
     public function toggleNewsletterSubscriptionAction($customerId)
     {
         @trigger_error(
             sprintf(
-                '%s is deprecated since version 1.7.9.0. Use %s instead.',
+                '%s is deprecated since version 8.0.0. Use %s instead.',
                 __METHOD__,
                 static::class . '::toggleNewsletterSubscriptionThenReturnJsonAction()'
             ),
@@ -604,11 +604,11 @@ class CustomerController extends AbstractAdminController
      *
      * @return JsonResponse
      */
-    public function toggleNewsletterSubscriptionThenReturnJsonAction($customerId)
+    public function toggleNewsletterSubscriptionThenReturnJsonAction(int $customerId)
     {
         return $this->performActionThenReturnJsonResponse(
             'toggleCustomerNewsletterSubscription',
-            (int) $customerId
+            $customerId
         );
     }
 
@@ -625,13 +625,13 @@ class CustomerController extends AbstractAdminController
      *
      * @return RedirectResponse
      *
-     * @deprecated Since 1.7.9.0, use togglePartnerOfferSubscriptionThenReturnJsonAction() instead.
+     * @deprecated Since 8.0.0, use togglePartnerOfferSubscriptionThenReturnJsonAction() instead.
      */
     public function togglePartnerOfferSubscriptionAction($customerId)
     {
         @trigger_error(
             sprintf(
-                '%s is deprecated since version 1.7.9.0. Use %s instead.',
+                '%s is deprecated since version 8.0.0. Use %s instead.',
                 __METHOD__,
                 static::class . '::togglePartnerOfferSubscriptionThenReturnJsonAction()'
             ),
@@ -663,11 +663,11 @@ class CustomerController extends AbstractAdminController
      *
      * @return JsonResponse
      */
-    public function togglePartnerOfferSubscriptionThenReturnJsonAction($customerId)
+    public function togglePartnerOfferSubscriptionThenReturnJsonAction(int $customerId)
     {
         return $this->performActionThenReturnJsonResponse(
             'toggleCustomerPartnerOfferSubscription',
-            (int) $customerId
+            $customerId
         );
     }
 
