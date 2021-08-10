@@ -2,7 +2,7 @@ admin_stock_overview:
   path: /
   methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\StockController::overviewAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\StockController::overviewAction
     _legacy_controller: AdminStockManagement
     _legacy_link: AdminStockManagement
 
@@ -10,5 +10,5 @@ admin_stock_movements_overview:
   path: /movements
   methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\StockController::overviewAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\StockController::overviewAction
     _legacy_controller: AdminStockManagement
