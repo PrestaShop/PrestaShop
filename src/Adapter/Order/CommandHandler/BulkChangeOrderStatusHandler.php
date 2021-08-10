@@ -95,14 +95,6 @@ final class BulkChangeOrderStatusHandler implements BulkChangeOrderStatusHandler
 
                 continue;
             }
-
-            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                foreach ($order->getProducts() as $product) {
-                    if (StockAvailable::dependsOnStock($product['product_id'])) {
-                        StockAvailable::synchronize($product['product_id'], (int) $product['id_shop']);
-                    }
-                }
-            }
         }
 
         if (!empty($ordersWithFailedToUpdateStatus)

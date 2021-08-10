@@ -62,11 +62,6 @@ class ProductStockUpdater
     private $stockAvailableRepository;
 
     /**
-     * @var bool
-     */
-    private $advancedStockEnabled;
-
-    /**
      * @param StockManager $stockManager
      * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
@@ -75,13 +70,11 @@ class ProductStockUpdater
     public function __construct(
         StockManager $stockManager,
         ProductRepository $productRepository,
-        StockAvailableRepository $stockAvailableRepository,
-        bool $advancedStockEnabled
+        StockAvailableRepository $stockAvailableRepository
     ) {
         $this->stockManager = $stockManager;
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
-        $this->advancedStockEnabled = $advancedStockEnabled;
     }
 
     /**
@@ -98,10 +91,6 @@ class ProductStockUpdater
         );
 
         $this->updateStockAvailable($product, $properties);
-
-        if ($this->advancedStockEnabled && $product->depends_on_stock) {
-            StockAvailable::synchronize($product->id);
-        }
     }
 
     /**

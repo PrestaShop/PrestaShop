@@ -26,4 +26,3 @@ services:
             - '@prestashop.core.stock.stock_manager'
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.stock.repository.stock_available_repository'
-            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_ADVANCED_STOCK_MANAGEMENT')"

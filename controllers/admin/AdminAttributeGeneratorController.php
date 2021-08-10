@@ -124,12 +124,9 @@ class AdminAttributeGeneratorControllerCore extends AdminController
                 $this->combinations = array_values(AdminAttributeGeneratorController::createCombinations($tab));
                 $values = array_values(array_map([$this, 'addAttribute'], $this->combinations));
 
-                // @since 1.5.0
-                if ($this->product->depends_on_stock == 0) {
-                    $attributes = Product::getProductAttributesIds($this->product->id, true);
-                    foreach ($attributes as $attribute) {
-                        StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute'], Context::getContext()->shop);
-                    }
+                $attributes = Product::getProductAttributesIds($this->product->id, true);
+                foreach ($attributes as $attribute) {
+                    StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute'], Context::getContext()->shop);
                 }
 
                 SpecificPriceRule::disableAnyApplication();
@@ -141,26 +138,21 @@ class AdminAttributeGeneratorControllerCore extends AdminController
                 Product::getDefaultAttribute($this->product->id, 0, true);
                 Product::updateDefaultAttribute($this->product->id);
 
-                // @since 1.5.0
-                if ($this->product->depends_on_stock == 0) {
-                    $attributes = Product::getProductAttributesIds($this->product->id, true);
-                    $quantity = (int) Tools::getValue('quantity');
-                    foreach ($attributes as $attribute) {
-                        if (Shop::getContext() == Shop::CONTEXT_ALL) {
-                            $shops_list = Shop::getShops();
-                            if (is_array($shops_list)) {
-                                foreach ($shops_list as $current_shop) {
-                                    if (isset($current_shop['id_shop']) && (int) $current_shop['id_shop'] > 0) {
-                                        StockAvailable::setQuantity($this->product->id, (int) $attribute['id_product_attribute'], $quantity, (int) $current_shop['id_shop']);
-                                    }
+                $attributes = Product::getProductAttributesIds($this->product->id, true);
+                $quantity = (int) Tools::getValue('quantity');
+                foreach ($attributes as $attribute) {
+                    if (Shop::getContext() == Shop::CONTEXT_ALL) {
+                        $shops_list = Shop::getShops();
+                        if (is_array($shops_list)) {
+                            foreach ($shops_list as $current_shop) {
+                                if (isset($current_shop['id_shop']) && (int) $current_shop['id_shop'] > 0) {
+                                    StockAvailable::setQuantity($this->product->id, (int) $attribute['id_product_attribute'], $quantity, (int) $current_shop['id_shop']);
                                 }
                             }
-                        } else {
-                            StockAvailable::setQuantity($this->product->id, (int) $attribute['id_product_attribute'], $quantity);
                         }
+                    } else {
+                        StockAvailable::setQuantity($this->product->id, (int) $attribute['id_product_attribute'], $quantity);
                     }
-                } else {
-                    StockAvailable::synchronize($this->product->id);
                 }
 
                 SpecificPriceRule::enableAnyApplication();

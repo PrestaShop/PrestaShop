@@ -128,7 +128,6 @@ trans('Theme & Logo', 'Admin.Navigation.Menu');
 trans('Titles', 'Admin.Navigation.Menu');
 trans('Traffic & SEO', 'Admin.Navigation.Menu');
 trans('Translations', 'Admin.Navigation.Menu');
-trans('Warehouses', 'Admin.Navigation.Menu');
 trans('Webservice', 'Admin.Navigation.Menu');
 trans('Zones', 'Admin.Navigation.Menu');
 trans('Modules Catalog', 'Admin.Navigation.Menu');

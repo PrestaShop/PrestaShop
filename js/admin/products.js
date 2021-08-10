@@ -1459,16 +1459,8 @@ product_tabs['Quantities'] = new function(){
 
 	this.refreshQtyAvailabilityForm = function()
 	{
-		if ($('#depends_on_stock_0').prop('checked'))
-		{
-			$('.available_quantity').find('input').show();
-			$('.available_quantity').find('span').hide();
-		}
-		else
-		{
 			$('.available_quantity').find('input').hide();
 			$('.available_quantity').find('span').show();
-		}
 	};
 
 	this.onReady = function(){
@@ -1476,37 +1468,6 @@ product_tabs['Quantities'] = new function(){
 			prevText: '',
 			nextText: '',
 			dateFormat: 'yy-mm-dd'
-		});
-
-		$('.depends_on_stock').click(function(e)
-		{
-			self.refreshQtyAvailabilityForm();
-			self.ajaxCall( { actionQty: 'depends_on_stock', value: $(this).val() } );
-			if($(this).val() == 0)
-				$('.available_quantity input').trigger('change');
-		});
-
-		$('.advanced_stock_management').click(function(e)
-		{
-			var val = 0;
-			if ($(this).prop('checked'))
-				val = 1;
-
-			self.ajaxCall({actionQty: 'advanced_stock_management', value: val});
-			if (val == 1)
-			{
-				$(this).val(1);
-				$('#depends_on_stock_1').attr('disabled', false);
-			}
-			else
-			{
-				$(this).val(0);
-				$('#depends_on_stock_1').attr('disabled', true);
-				$('#depends_on_stock_0').attr('checked', true);
-				self.ajaxCall({actionQty: 'depends_on_stock', value: 0});
-				self.refreshQtyAvailabilityForm();
-			}
-			self.refreshQtyAvailabilityForm();
 		});
 
 		$('.available_quantity').find('input').change(function(e, init_val)

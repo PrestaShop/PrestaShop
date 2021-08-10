@@ -39,11 +39,11 @@ class AddressCore extends ObjectModel
     public $id_supplier = null;
 
     /**
-     * @since 1.5.0
-     *
      * @var int Warehouse ID which address belongs to
+     *
+     * @deprecated Since 8.0, will be removed in 9.0
      */
-    public $id_warehouse = null;
+    public $id_warehouse;
 
     /** @var int Country ID */
     public $id_country;
@@ -149,7 +149,6 @@ class AddressCore extends ObjectModel
             'id_customer' => ['xlink_resource' => 'customers'],
             'id_manufacturer' => ['xlink_resource' => 'manufacturers'],
             'id_supplier' => ['xlink_resource' => 'suppliers'],
-            'id_warehouse' => ['xlink_resource' => 'warehouse'],
             'id_country' => ['xlink_resource' => 'countries'],
             'id_state' => ['xlink_resource' => 'states'],
         ],
@@ -443,8 +442,8 @@ class AddressCore extends ObjectModel
     public static function addressExists($id_address)
     {
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT `id_address` 
-            FROM ' . _DB_PREFIX_ . 'address a 
+            'SELECT `id_address`
+            FROM ' . _DB_PREFIX_ . 'address a
             WHERE a.`id_address` = ' . (int) $id_address,
             false
         );
