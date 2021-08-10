@@ -138,8 +138,8 @@ class InvoicesController extends FrameworkBundleAdminController
             try {
                 $formHandler->save($form->getData());
             } catch (DataProviderException $e) {
-                $errorMessageFactory = $this->get('form.error_message.invalid_configuration_error_message_factory');
-                $this->flashErrors($errorMessageFactory->getErrorMessages($e->getInvalidConfigurationDataErrors(), $form));
+                $errorMessageFactory = $this->get('prestashop.form.error_message.configuration_error_factory');
+                $this->flashErrors($errorMessageFactory->getErrorMessages($e->getConfigurationErrors(), $form));
 
                 return false;
             }

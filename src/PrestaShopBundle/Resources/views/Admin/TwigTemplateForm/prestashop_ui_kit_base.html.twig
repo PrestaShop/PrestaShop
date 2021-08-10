@@ -1091,6 +1091,12 @@
   {{- block('form_help') -}}
 {%- endblock number_widget -%}
 
+{%- block integer_widget -%}
+  {%- set type = type|default('text') -%}
+  {{ block('form_widget_simple') }}
+  {{- block('form_help') -}}
+{%- endblock integer_widget -%}
+
 {% block form_help %}
   {% if help is not null %}
     <small class="form-text">{{ help|raw }}</small>
