@@ -57,7 +57,6 @@ const AdminModuleCard = function () {
     return false; // do not allow a.href to reload the page. The confirm modal dialog will do it async if needed.
   };
 
-
   this.dispatchPreEvent = function (action, element) {
     const event = jQuery.Event('module_card_action_event');
     $(element).trigger(event, [action]);
