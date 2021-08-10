@@ -31,6 +31,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 
 /**
  * This form class generates the "Logs by email" form in Logs page.
@@ -52,6 +53,7 @@ final class LogsByEmailType extends TranslatorAwareType
                     'Minimum severity level',
                     'Admin.Advparameters.Feature'
                 ),
+                'multistore_configuration_key' => 'PS_LOGS_BY_EMAIL',
                 'help' => $this->trans(
                     'Click on "None" to disable log alerts by email or enter the recipients of these emails in the following field.',
                     'Admin.Advparameters.Help'
@@ -62,6 +64,7 @@ final class LogsByEmailType extends TranslatorAwareType
                     'Send emails to',
                     'Admin.Advparameters.Feature'
                 ),
+                'multistore_configuration_key' => 'PS_LOGS_EMAIL_RECEIVERS',
                 'help' => $this->trans(
                     'Log alerts will be sent to these emails. Please use a comma to separate them (e.g. pub@prestashop.com, anonymous@psgdpr.com).',
                     'Admin.Advparameters.Help'
@@ -86,4 +89,15 @@ final class LogsByEmailType extends TranslatorAwareType
     {
         return 'logs_by_email_block';
     }
+
+     /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
+    }
+    
 }
