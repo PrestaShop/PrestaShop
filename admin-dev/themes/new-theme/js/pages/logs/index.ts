@@ -44,3 +44,11 @@ $(() => {
   grid.addExtension(new SubmitGridActionExtension());
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
 });
+
+$(() => {
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );
+});
