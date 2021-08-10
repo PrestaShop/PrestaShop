@@ -81,13 +81,17 @@ class StockManager implements StockInterface
     }
 
     /**
-     * Returns True if Stocks are managed by a module (or by legacy ASM).
+     * Indicates if Stocks are managed by a module (or by legacy ASM).
      *
-     * @return bool True if Stocks are managed by a module (or by legacy ASM)
+     * @deprecated Since 8.0, will be removed in 9.0
+     *
+     * @return bool This function always returns false
      */
     public function isAsmGloballyActivated()
     {
-        return (bool) (new ConfigurationAdapter())->get('PS_ADVANCED_STOCK_MANAGEMENT');
+        @trigger_error(__FUNCTION__ . 'is deprecated since version 8.0 and will be removed in 9.0.', E_USER_DEPRECATED);
+
+        return false;
     }
 
     /**
@@ -211,7 +215,8 @@ class StockManager implements StockInterface
      * @param int $productId
      * @param int $shopId Optional : gets context if null @see Context::getContext()
      *
-     * @return bool : depends on stock @see $depends_on_stock
+     * @return int OutOfStock behavior flag
+     * @see \PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType
      */
     public function outOfStock($productId, $shopId = null)
     {

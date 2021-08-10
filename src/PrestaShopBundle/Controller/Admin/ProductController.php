@@ -560,14 +560,7 @@ class ProductController extends FrameworkBundleAdminController
                     $adminProductController->processSpecificPricePriorities();
                     foreach ($_POST['combinations'] as $combinationValues) {
                         $adminProductWrapper->processProductAttribute($product, $combinationValues);
-                        // For now, each attribute set the same value.
-                        $adminProductWrapper->processDependsOnStock(
-                            $product,
-                            ($_POST['depends_on_stock'] == '1'),
-                            $combinationValues['id_product_attribute']
-                        );
                     }
-                    $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == '1'));
 
                     // If there is no combination, then quantity and location are managed for the whole product (as combination ID 0)
                     // In all cases, legacy hooks are triggered: actionProductUpdate and actionUpdateQuantity
@@ -657,8 +650,6 @@ class ProductController extends FrameworkBundleAdminController
             'ids_product_attribute' => (isset($formData['step3']['id_product_attributes']) ? implode(',', $formData['step3']['id_product_attributes']) : ''),
             'has_combinations' => (isset($formData['step3']['id_product_attributes']) && count($formData['step3']['id_product_attributes']) > 0),
             'combinations_count' => isset($formData['step3']['id_product_attributes']) ? count($formData['step3']['id_product_attributes']) : 0,
-            'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
-            'warehouses' => ($stockManager->isAsmGloballyActivated()) ? $warehouseProvider->getWarehouses() : [],
             'is_multishop_context' => $isMultiShopContext,
             'is_combination_active' => $this->get('prestashop.adapter.legacy.configuration')->combinationIsActive(),
             'showContentHeader' => false,

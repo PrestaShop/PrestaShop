@@ -192,7 +192,6 @@ class AdminProductWrapper
             $combinationValues['attribute_mpn']
         );
 
-        StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, $id_product_attribute);
         StockAvailable::setProductOutOfStock((int) $product->id, $product->out_of_stock, null, $id_product_attribute);
         StockAvailable::setLocation((int) $product->id, $combinationValues['attribute_location'], null, $id_product_attribute);
 
@@ -221,8 +220,6 @@ class AdminProductWrapper
 
     /**
      * Update a quantity for a product or a combination.
-     *
-     * Does not work in Advanced stock management.
      *
      * @param Product $product
      * @param int $quantity
@@ -258,7 +255,9 @@ class AdminProductWrapper
     /**
      * Set if a product depends on stock (ASM). For a product or a combination.
      *
-     * Does work only in Advanced stock management.
+     * @deprecated Since 8.0, to be removed in 9.0.
+     *
+     * This method no longer has any effect.
      *
      * @param Product $product
      * @param bool $dependsOnStock
@@ -266,7 +265,7 @@ class AdminProductWrapper
      */
     public function processDependsOnStock(Product $product, $dependsOnStock, $forAttributeId = 0)
     {
-        StockAvailable::setProductDependsOnStock((int) $product->id, $dependsOnStock, null, $forAttributeId);
+        @trigger_error(__FUNCTION__ . 'is deprecated since version 8.0 and will be removed in 9.0.', E_USER_DEPRECATED);
     }
 
     /**

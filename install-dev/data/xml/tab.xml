@@ -192,57 +192,6 @@
                 <wording_domain>Admin.Navigation.Menu</wording_domain>
             </tab>
 
-            <!--ADVANCED STOCK MANAGEMENT-->
-            <tab id="Advanced_stock_management" id_parent="SELL" active="1" enabled="1" hide_host_mode="0" icon="store">
-                <class_name>AdminStock</class_name>
-                <wording/>
-                <wording_domain/>
-            </tab>
-
-                <tab id="Warehouses" id_parent="Advanced_stock_management" active="1" enabled="1" hide_host_mode="0" icon="">
-                    <class_name>AdminWarehouses</class_name>
-                    <wording>Warehouses</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Stock_Management_Parent" id_parent="Advanced_stock_management" active="1" enabled="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentStockManagement</class_name>
-                    <wording>Stock Management</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="Stock_Management" id_parent="Stock_Management_Parent" active="1" enabled="1" hide_host_mode="0" icon="">
-                        <class_name>AdminStockManagement</class_name>
-                        <wording>Stock Management</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Stock_Movement" id_parent="Stock_Management" active="1" enabled="1" hide_host_mode="0" icon="">
-                        <class_name>AdminStockMvt</class_name>
-                        <wording>Stock Movement</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Instant_Stock_Status" id_parent="Stock_Management" active="1" enabled="1" hide_host_mode="0" icon="">
-                        <class_name>AdminStockInstantState</class_name>
-                        <wording>Instant Stock Status</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Stock_Coverage" id_parent="Stock_Management" active="1" enabled="1" hide_host_mode="0" icon="">
-                        <class_name>AdminStockCover</class_name>
-                        <wording>Stock Coverage</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-                <tab id="Supply_orders" id_parent="Advanced_stock_management" active="1" enabled="1" hide_host_mode="0" icon="">
-                    <class_name>AdminSupplyOrders</class_name>
-                    <wording>Supply orders</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Configuration" id_parent="Advanced_stock_management" active="1" enabled="1" hide_host_mode="0" icon="">
-                    <class_name>AdminStockConfiguration</class_name>
-                    <wording>Configuration</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-
         <!--IMPROVE-->
         <tab id="IMPROVE" id_parent="" active="1" enabled="1" hide_host_mode="0" icon="">
             <class_name>IMPROVE</class_name>

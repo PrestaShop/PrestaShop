@@ -1666,7 +1666,6 @@ CREATE TABLE `PREFIX_product` (
   `cache_default_attribute` int(10) unsigned DEFAULT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
-  `advanced_stock_management` tinyint(1) DEFAULT '0' NOT NULL,
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   `state` int(11) unsigned NOT NULL DEFAULT '1',
   `product_type` ENUM(
@@ -1719,7 +1718,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
     'both', 'catalog', 'search', 'none'
   ) NOT NULL DEFAULT 'both',
   `cache_default_attribute` int(10) unsigned DEFAULT NULL,
-  `advanced_stock_management` tinyint(1) DEFAULT '0' NOT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
@@ -2520,7 +2518,6 @@ CREATE TABLE `PREFIX_stock_available` (
   `quantity` INT(10) NOT NULL DEFAULT '0',
   `physical_quantity` INT(11) NOT NULL DEFAULT '0',
   `reserved_quantity` INT(11) NOT NULL DEFAULT '0',
-  `depends_on_stock` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   `out_of_stock` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   `location` VARCHAR(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id_stock_available`),

@@ -1474,7 +1474,7 @@ class CarrierCore extends ObjectModel
      * @since 1.5.0
      *
      * @param Product $product The id of the product, or an array with at least the package size and weight
-     * @param int $id_warehouse Warehouse ID
+     * @param int $id_warehouse Warehouse ID (Deprecated since 8.0, has no effect)
      * @param int $id_address_delivery Delivery Address ID
      * @param int $id_shop Shop ID
      * @param Cart $cart Cart object
@@ -1549,13 +1549,6 @@ class CarrierCore extends ObjectModel
             }//no linked carrier are available for this zone
         }
 
-        // The product is not directly linked with a carrier
-        // Get all the carriers linked to a warehouse
-        if ($id_warehouse) {
-            $warehouse = new Warehouse($id_warehouse);
-            $warehouse_carrier_list = $warehouse->getCarriers();
-        }
-
         $available_carrier_list = [];
         $cache_id = 'Carrier::getAvailableCarrierList_getCarriersForOrder_' . (int) $id_zone . '-' . (int) $cart->id;
         if (!Cache::isStored($cache_id)) {
@@ -1577,10 +1570,6 @@ class CarrierCore extends ObjectModel
             $carrier_list = array_intersect($available_carrier_list, $carrier_list);
         } else {
             $carrier_list = $available_carrier_list;
-        }
-
-        if (isset($warehouse_carrier_list)) {
-            $carrier_list = array_intersect($carrier_list, $warehouse_carrier_list);
         }
 
         $cart_quantity = 0;

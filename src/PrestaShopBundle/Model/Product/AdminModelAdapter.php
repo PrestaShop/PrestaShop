@@ -579,8 +579,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private function mapStep3FormData(Product $product)
     {
         return [
-            'advanced_stock_management' => (bool) $product->advanced_stock_management,
-            'depends_on_stock' => $product->depends_on_stock ? '1' : '0',
             'qty_0' => $product::getQuantity($product->id),
             'id_product_attributes' => $this->getProductAttributes($product),
             'out_of_stock' => $product->out_of_stock,
