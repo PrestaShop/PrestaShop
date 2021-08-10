@@ -30,6 +30,8 @@ namespace Tests\Unit\PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoicesConfigurationError;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsDataProvider;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType;
 use PrestaShopBundle\Form\Exception\DataProviderException;
@@ -46,8 +48,18 @@ class InvoiceOptionsDataProviderTest extends TestCase
         $data = [
             InvoiceOptionsType::FIELD_INVOICE_NUMBER => 4,
         ];
-        $this->expectException(DataProviderException::class);
-        $invoiceOptionsDataProvider->setData($data);
+        $exceptionThrown = false;
+        $configurationError = new InvoicesConfigurationError(InvoicesConfigurationError::ERROR_INCORRECT_INVOICE_NUMBER, InvoiceOptionsType::FIELD_INVOICE_NUMBER);
+        try {
+            $invoiceOptionsDataProvider->setData($data);
+        } catch (DataProviderException $e) {
+            $exceptionThrown = true;
+            $this->assertContainsEquals($configurationError, $e->getConfigurationErrors());
+        }
+
+        if (!$exceptionThrown) {
+            $this->fail('Expected exception DataProviderException was not thrown');
+        }
     }
 
     /**
@@ -67,8 +79,20 @@ class InvoiceOptionsDataProviderTest extends TestCase
                 2 => '<html>',
             ],
         ];
-        $this->expectException(DataProviderException::class);
-        $invoiceOptionsDataProvider->setData($data);
+
+        $configurationError = new InvoicesConfigurationError(ConfigurationErrorInterface::ERROR_CONTAINS_HTML_TAGS, $field, 2);
+
+        $exceptionThrown = false;
+        try {
+            $invoiceOptionsDataProvider->setData($data);
+        } catch (DataProviderException $e) {
+            $exceptionThrown = true;
+            $this->assertContainsEquals($configurationError, $e->getConfigurationErrors());
+        }
+
+        if (!$exceptionThrown) {
+            $this->fail('Expected exception DataProviderException was not thrown');
+        }
     }
 
     /**
