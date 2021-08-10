@@ -60,10 +60,7 @@ final class OrderReturnStateChoiceProvider implements FormChoiceProviderInterfac
         $orderStates = OrderReturnState::getOrderReturnStates($this->contextLangId);
 
         foreach ($orderStates as $orderState) {
-            if (array_key_exists($orderState['name'], $choices)) {
-                throw new OrderReturnStateException('Duplicate order state names');
-            }
-            $choices[$orderState['name']] = (int) $orderState['id_order_return_state'];
+            $choices[$orderState['id_order_return_state'] . ' - ' . $orderState['name']] = (int) $orderState['id_order_return_state'];
         }
 
         return $choices;
