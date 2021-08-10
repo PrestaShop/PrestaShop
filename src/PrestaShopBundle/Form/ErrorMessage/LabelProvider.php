@@ -38,6 +38,7 @@ class LabelProvider
      * @param string $fieldName
      *
      * @return string
+     *
      * @throws FieldNotFoundException
      */
     public function getLabel(FormInterface $form, string $fieldName): string

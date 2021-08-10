@@ -54,7 +54,7 @@ class ConfigurationErrorFactory
     public function __construct(
         iterable $configurationErrorFactories,
         LabelProvider $labelFactory,
-        TranslatorInterface  $translator
+        TranslatorInterface $translator
     ) {
         $this->configurationErrorFactories = $configurationErrorFactories;
         $this->labelFactory = $labelFactory;
@@ -103,6 +103,5 @@ class ConfigurationErrorFactory
             ],
             'Admin.Notifications.Error'
         );
-
     }
 }
