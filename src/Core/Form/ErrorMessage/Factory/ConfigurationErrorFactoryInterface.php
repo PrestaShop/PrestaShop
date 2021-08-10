@@ -26,30 +26,17 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Exception;
+namespace PrestaShop\PrestaShop\Core\Form\ErrorMessage\Factory;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
-use Throwable;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
 
-class DataProviderException extends DomainException
+interface ConfigurationErrorFactoryInterface
 {
     /**
-     * @var ConfigurationErrorCollection
+     * @param ConfigurationErrorInterface $error
+     * @param string $label
+     *
+     * @return string
      */
-    private $configurationErrors;
-
-    public function __construct($message = '', $code = 0, Throwable $previous = null, ?ConfigurationErrorCollection $configurationErrors = null)
-    {
-        parent::__construct($message, $code, $previous);
-        $this->configurationErrors = $configurationErrors ?: new ConfigurationErrorCollection();
-    }
-
-    /**
-     * @return ConfigurationErrorCollection
-     */
-    public function getConfigurationErrors(): ConfigurationErrorCollection
-    {
-        return $this->configurationErrors;
-    }
+    public function getErrorMessageForConfigurationError(ConfigurationErrorInterface $error, string $label): ?string;
 }

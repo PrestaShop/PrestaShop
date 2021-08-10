@@ -26,30 +26,25 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Exception;
+namespace PrestaShop\PrestaShop\Core\Form\ErrorMessage;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
-use Throwable;
-
-class DataProviderException extends DomainException
+interface ConfigurationErrorInterface
 {
-    /**
-     * @var ConfigurationErrorCollection
-     */
-    private $configurationErrors;
-
-    public function __construct($message = '', $code = 0, Throwable $previous = null, ?ConfigurationErrorCollection $configurationErrors = null)
-    {
-        parent::__construct($message, $code, $previous);
-        $this->configurationErrors = $configurationErrors ?: new ConfigurationErrorCollection();
-    }
+    public const ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO = 'error_not_numeric_or_lower_than_zero';
+    public const ERROR_CONTAINS_HTML_TAGS = 'contains_html_tags';
 
     /**
-     * @return ConfigurationErrorCollection
+     * @return string
      */
-    public function getConfigurationErrors(): ConfigurationErrorCollection
-    {
-        return $this->configurationErrors;
-    }
+    public function getErrorCode(): string;
+
+    /**
+     * @return string
+     */
+    public function getFieldName(): string;
+
+    /**
+     * @return int|null
+     */
+    public function getLanguageId(): ?int;
 }
