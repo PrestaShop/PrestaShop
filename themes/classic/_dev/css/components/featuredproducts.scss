@@ -25,7 +25,8 @@ $product-description-height: 70px;
 
   .thumbnail-container {
     position: relative;
-    width: $thumbnail-size;
+    width: 100%;
+    max-width: $thumbnail-size;
     height: auto;
     margin-bottom: 1.563rem;
     overflow: hidden;
@@ -145,7 +146,10 @@ $product-description-height: 70px;
 
     @at-root .page-index &, .page-search & {
       width: 25%;
-      min-width: 250px;
+
+      @include media-breakpoint-down(xl) {
+        width: auto;
+      }
     }
   }
 
