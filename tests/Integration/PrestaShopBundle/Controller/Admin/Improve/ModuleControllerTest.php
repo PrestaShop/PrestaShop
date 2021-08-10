@@ -124,16 +124,4 @@ class ModuleControllerTest extends WebTestCase
         $this->assertArrayHasKey('msg', $decodedContent);
         $this->assertEquals('This functionality has been disabled.', $decodedContent['msg']);
     }
-
-    /**
-     * @return string
-     */
-    protected function getExpectedErrorMessage()
-    {
-        return $this->translator->trans(
-            'This functionality has been disabled.',
-            [],
-            'Admin.Notifications.Error'
-        );
-    }
 }
