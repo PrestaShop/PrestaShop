@@ -78,6 +78,12 @@ class FloatParser
         // replace arabic numbers by latin
         $value = $this->arabicToLatinNumberConverter->convert($value);
 
+        // CLDR defines few different minusSigns, convert those first
+        // minussigns from CLDR. '−' is the important one, others currently have some js things happening to them
+        $pattern = '/[\-‒⁻₋−➖﹣－]/u';
+        $replacement = '-'; // regular - sign
+        $value = preg_replace($pattern, $replacement, $value);
+
         // remove all non-digit characters
         $split = preg_split('/[^\dE-]+/', $value);
 
