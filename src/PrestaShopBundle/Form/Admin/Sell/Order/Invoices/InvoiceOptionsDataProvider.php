@@ -28,10 +28,11 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoicesConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Form\Exception\DataProviderException;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 
 /**
  * Class is responsible of managing the data manipulated using invoice options form
@@ -90,13 +91,13 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
      */
     private function validate(array $data): void
     {
-        $errorCollection = new InvalidConfigurationDataErrorCollection();
+        $errorCollection = new ConfigurationErrorCollection();
         if (isset($data[InvoiceOptionsType::FIELD_INVOICE_NUMBER])) {
             $invoiceNumber = $data[InvoiceOptionsType::FIELD_INVOICE_NUMBER];
             if ($invoiceNumber !== 0 && $invoiceNumber <= $this->nextInvoiceNumber) {
                 $errorCollection->add(
-                    new InvalidConfigurationDataError(
-                        InvalidConfigurationDataError::ERROR_INCORRECT_INVOICE_NUMBER,
+                    new InvoicesConfigurationError(
+                        InvoicesConfigurationError::ERROR_INCORRECT_INVOICE_NUMBER,
                         InvoiceOptionsType::FIELD_INVOICE_NUMBER
                     )
                 );
@@ -125,17 +126,17 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
      *
      * @param array $data
      * @param string $key
-     * @param InvalidConfigurationDataErrorCollection $errorCollection
+     * @param ConfigurationErrorCollection $errorCollection
      *
      * @throws TypeException
      */
-    private function validateContainsNoTags(array $data, string $key, InvalidConfigurationDataErrorCollection $errorCollection): void
+    private function validateContainsNoTags(array $data, string $key, ConfigurationErrorCollection $errorCollection): void
     {
         foreach ($data as $languageId => $value) {
             if ($value !== null && $value !== strip_tags($value)) {
                 $errorCollection->add(
-                    new InvalidConfigurationDataError(
-                        InvalidConfigurationDataError::ERROR_CONTAINS_HTML_TAGS,
+                    new InvoicesConfigurationError(
+                        ConfigurationErrorInterface::ERROR_CONTAINS_HTML_TAGS,
                         $key,
                         $languageId
                     )
