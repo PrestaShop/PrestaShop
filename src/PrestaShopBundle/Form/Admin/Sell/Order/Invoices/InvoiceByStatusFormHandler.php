@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoicesConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\Handler;

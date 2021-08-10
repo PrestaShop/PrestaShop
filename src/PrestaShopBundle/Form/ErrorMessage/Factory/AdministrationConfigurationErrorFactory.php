@@ -54,6 +54,7 @@ class AdministrationConfigurationErrorFactory implements ConfigurationErrorFacto
         $this->translator = $translator;
         $this->langRepository = $langRepository;
     }
+
     /**
      * @param ConfigurationErrorInterface $error
      * @param string $label
