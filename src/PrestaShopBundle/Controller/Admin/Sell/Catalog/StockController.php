@@ -24,26 +24,25 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Controller\Admin;
+namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Admin controller for the Stock pages.
  */
 class StockController extends FrameworkBundleAdminController
 {
-    protected $layoutTitle = 'Stock';
-
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @Template("@PrestaShop/Admin/Stock/overview.html.twig")
      */
     public function overviewAction()
     {
-        return array_merge(parent::overviewAction(), [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Stock/overview.html.twig', [
+            'is_shop_context' => (new Context())->isShopContext(),
+            'layoutTitle' => $this->trans('Stock', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('stock'),
         ]);
