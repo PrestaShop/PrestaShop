@@ -118,7 +118,7 @@ export default class ProductFormModel {
 
     switch (event.modelKey) {
       case 'product.price.priceTaxIncluded': {
-        const priceTaxIncluded = new BigNumber(this.getProduct().price.priceTaxIncluded);
+        const priceTaxIncluded = new BigNumber(this.getProduct().price.priceTaxIncluded.replace(/,/g, '.'));
         this.mapper.set(
           'product.price.priceTaxExcluded',
           priceTaxIncluded.dividedBy(taxRatio).toFixed(this.precision),
@@ -126,7 +126,7 @@ export default class ProductFormModel {
         break;
       }
       default: {
-        const priceTaxExcluded = new BigNumber(this.getProduct().price.priceTaxExcluded);
+        const priceTaxExcluded = new BigNumber(this.getProduct().price.priceTaxExcluded.replace(/,/g, '.'));
         this.mapper.set('product.price.priceTaxIncluded', priceTaxExcluded.times(taxRatio).toFixed(this.precision));
         break;
       }
