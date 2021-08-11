@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use DateTime;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoicesConfigurationError;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 use PrestaShopBundle\Form\Exception\DataProviderException;
@@ -87,11 +87,11 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
         $errorCollection = new ConfigurationErrorCollection();
 
         if (!isset($data[GenerateByDateType::FIELD_DATE_FROM]) || false === $data[GenerateByDateType::FIELD_DATE_FROM]) {
-            $errorCollection->add(new InvoicesConfigurationError(InvoicesConfigurationError::ERROR_INVALID_DATE_FROM, GenerateByDateType::FIELD_DATE_FROM));
+            $errorCollection->add(new InvoiceConfigurationError(InvoiceConfigurationError::ERROR_INVALID_DATE_FROM, GenerateByDateType::FIELD_DATE_FROM));
         }
 
         if (!isset($data[GenerateByDateType::FIELD_DATE_TO]) || false === $data[GenerateByDateType::FIELD_DATE_TO]) {
-            $errorCollection->add(new InvoicesConfigurationError(InvoicesConfigurationError::ERROR_INVALID_DATE_TO, GenerateByDateType::FIELD_DATE_TO));
+            $errorCollection->add(new InvoiceConfigurationError(InvoiceConfigurationError::ERROR_INVALID_DATE_TO, GenerateByDateType::FIELD_DATE_TO));
         }
 
         if (!$errorCollection->isEmpty()) {
@@ -103,8 +103,8 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
 
         if (!$this->orderInvoiceDataProvider->getByDateInterval($dateFrom, $dateTo)) {
             $errorCollection->add(
-                new InvoicesConfigurationError(
-                    InvoicesConfigurationError::ERROR_NO_INVOICES_FOUND,
+                new InvoiceConfigurationError(
+                    InvoiceConfigurationError::ERROR_NO_INVOICES_FOUND,
                     GenerateByDateType::FIELD_DATE_TO
                 )
             );

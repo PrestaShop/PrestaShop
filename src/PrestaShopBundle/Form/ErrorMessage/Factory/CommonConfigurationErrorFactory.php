@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Form\ErrorMessage\Factory;
 
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\Factory\ConfigurationErrorFactoryInterface;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoicesConfigurationError;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -63,7 +63,7 @@ class CommonConfigurationErrorFactory implements ConfigurationErrorFactoryInterf
     public function getErrorMessageForConfigurationError(ConfigurationErrorInterface $error, string $label): ?string
     {
         switch ($error->getErrorCode()) {
-            case InvoicesConfigurationError::ERROR_CONTAINS_HTML_TAGS:
+            case InvoiceConfigurationError::ERROR_CONTAINS_HTML_TAGS:
                 if ($error->getLanguageId()) {
                     $lang = $this->langRepository->findOneBy(['id' => $error->getLanguageId()]);
 
