@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\ErrorMessage;
 
-class InvoicesConfigurationError implements ConfigurationErrorInterface
+class InvoiceConfigurationError implements ConfigurationErrorInterface
 {
     public const ERROR_INVALID_DATE_FROM = 'invalid_date_from';
     public const ERROR_INVALID_DATE_TO = 'invalid_date_to';
@@ -53,7 +53,7 @@ class InvoicesConfigurationError implements ConfigurationErrorInterface
     private $languageId;
 
     /**
-     * InvoicesConfigurationError constructor.
+     * InvoiceConfigurationError constructor.
      *
      * @param string $errorCode
      * @param string $fieldName

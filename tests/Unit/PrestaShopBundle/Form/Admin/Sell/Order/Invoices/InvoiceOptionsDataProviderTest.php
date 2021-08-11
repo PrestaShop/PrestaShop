@@ -31,7 +31,7 @@ namespace Tests\Unit\PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoicesConfigurationError;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsDataProvider;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType;
 use PrestaShopBundle\Form\Exception\DataProviderException;
@@ -49,7 +49,7 @@ class InvoiceOptionsDataProviderTest extends TestCase
             InvoiceOptionsType::FIELD_INVOICE_NUMBER => 4,
         ];
         $exceptionThrown = false;
-        $configurationError = new InvoicesConfigurationError(InvoicesConfigurationError::ERROR_INCORRECT_INVOICE_NUMBER, InvoiceOptionsType::FIELD_INVOICE_NUMBER);
+        $configurationError = new InvoiceConfigurationError(InvoiceConfigurationError::ERROR_INCORRECT_INVOICE_NUMBER, InvoiceOptionsType::FIELD_INVOICE_NUMBER);
         try {
             $invoiceOptionsDataProvider->setData($data);
         } catch (DataProviderException $e) {
@@ -80,7 +80,7 @@ class InvoiceOptionsDataProviderTest extends TestCase
             ],
         ];
 
-        $configurationError = new InvoicesConfigurationError(ConfigurationErrorInterface::ERROR_CONTAINS_HTML_TAGS, $field, 2);
+        $configurationError = new InvoiceConfigurationError(ConfigurationErrorInterface::ERROR_CONTAINS_HTML_TAGS, $field, 2);
 
         $exceptionThrown = false;
         try {

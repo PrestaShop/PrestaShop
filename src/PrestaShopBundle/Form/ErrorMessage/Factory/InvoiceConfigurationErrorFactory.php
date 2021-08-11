@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Form\ErrorMessage\Factory;
 
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\Factory\ConfigurationErrorFactoryInterface;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoicesConfigurationError;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -63,8 +63,8 @@ class InvoiceConfigurationErrorFactory implements ConfigurationErrorFactoryInter
     public function getErrorMessageForConfigurationError(ConfigurationErrorInterface $error, string $label): ?string
     {
         switch ($error->getErrorCode()) {
-            case InvoicesConfigurationError::ERROR_INVALID_DATE_TO:
-            case InvoicesConfigurationError::ERROR_INVALID_DATE_FROM:
+            case InvoiceConfigurationError::ERROR_INVALID_DATE_TO:
+            case InvoiceConfigurationError::ERROR_INVALID_DATE_FROM:
                 return $this->translator->trans(
                     'Invalid "%s" date.',
                     [
@@ -72,50 +72,29 @@ class InvoiceConfigurationErrorFactory implements ConfigurationErrorFactoryInter
                     ],
                     'Admin.Orderscustomers.Notification'
                 );
-            case InvoicesConfigurationError::ERROR_NO_INVOICES_FOUND:
+            case InvoiceConfigurationError::ERROR_NO_INVOICES_FOUND:
                 return $this->translator->trans(
                     'No invoice has been found for this period.',
                     [],
                     'Admin.Orderscustomers.Notification'
                 );
-            case InvoicesConfigurationError::ERROR_NO_ORDER_STATE_SELECTED:
+            case InvoiceConfigurationError::ERROR_NO_ORDER_STATE_SELECTED:
                 return $this->translator->trans(
                     'You must select at least one order status.',
                     [],
                     'Admin.Orderscustomers.Notification'
                 );
-            case InvoicesConfigurationError::ERROR_NO_INVOICES_FOUND_FOR_STATUS:
+            case InvoiceConfigurationError::ERROR_NO_INVOICES_FOUND_FOR_STATUS:
                 return $this->translator->trans(
                     'No invoice has been found for this status.',
                     [],
                     'Admin.Orderscustomers.Notification'
                 );
-            case InvoicesConfigurationError::ERROR_INCORRECT_INVOICE_NUMBER:
+            case InvoiceConfigurationError::ERROR_INCORRECT_INVOICE_NUMBER:
                 return $this->translator->trans(
                     'Invoice number must be greater than the last invoice number, or 0 if you want to keep the current number.',
                     [],
                     'Admin.Orderscustomers.Notification'
-                );
-            case InvoicesConfigurationError::ERROR_CONTAINS_HTML_TAGS:
-                if ($error->getLanguageId()) {
-                    $lang = $this->langRepository->findOneBy(['id' => $error->getLanguageId()]);
-
-                    return $this->translator->trans(
-                        'The "%s" field in %s is invalid. HTML tags are not allowed.',
-                        [
-                            $label,
-                            $lang->getName(),
-                        ],
-                        'Admin.Orderscustomers.Notification'
-                    );
-                }
-
-                return $this->translator->trans(
-                    'The "%s" field is invalid. HTML tags are not allowed.',
-                    [
-                        $label,
-                    ],
-                    'Admin.Notifications.Error'
                 );
         }
 

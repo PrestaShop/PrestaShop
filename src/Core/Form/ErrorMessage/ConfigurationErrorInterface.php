@@ -24,12 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Form\ErrorMessage;
 
 interface ConfigurationErrorInterface
 {
+    /**
+     * Constants for common errors
+     */
     public const ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO = 'error_not_numeric_or_lower_than_zero';
     public const ERROR_CONTAINS_HTML_TAGS = 'contains_html_tags';
 

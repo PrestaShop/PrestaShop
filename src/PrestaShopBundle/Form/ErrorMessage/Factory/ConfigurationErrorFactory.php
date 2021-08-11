@@ -44,7 +44,7 @@ class ConfigurationErrorFactory
     /**
      * @var LabelProvider
      */
-    private $labelFactory;
+    private $labelProvider;
 
     /**
      * @var TranslatorInterface
@@ -53,11 +53,11 @@ class ConfigurationErrorFactory
 
     public function __construct(
         iterable $configurationErrorFactories,
-        LabelProvider $labelFactory,
+        LabelProvider $labelProvider,
         TranslatorInterface $translator
     ) {
         $this->configurationErrorFactories = $configurationErrorFactories;
-        $this->labelFactory = $labelFactory;
+        $this->labelProvider = $labelProvider;
         $this->translator = $translator;
     }
 
@@ -74,7 +74,7 @@ class ConfigurationErrorFactory
         $messages = [];
 
         foreach ($errors as $error) {
-            $label = $this->labelFactory->getLabel($form, $error->getFieldName());
+            $label = $this->labelProvider->getLabel($form, $error->getFieldName());
             foreach ($this->configurationErrorFactories as $factory) {
                 $errorMessage = $factory->getErrorMessageForConfigurationError(
                     $error,
