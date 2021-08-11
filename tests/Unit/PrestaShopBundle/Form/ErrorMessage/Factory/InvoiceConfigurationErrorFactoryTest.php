@@ -29,11 +29,9 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Form\ErrorMessage\Factory;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\LangRepository;
-use PrestaShopBundle\Form\ErrorMessage\Factory\CommonConfigurationErrorFactory;
 use PrestaShopBundle\Form\ErrorMessage\Factory\InvoiceConfigurationErrorFactory;
 use Symfony\Component\Translation\Translator;
 
