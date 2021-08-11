@@ -507,7 +507,6 @@ class CustomerController extends AbstractAdminController
      * @return RedirectResponse
      *
      * @deprecated Since 8.0.0, use toggleStatusThenReturnJsonAction() instead.
-     *
      */
     public function toggleStatusAction($customerId)
     {
