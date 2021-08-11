@@ -37,7 +37,7 @@ use PrestaShopBundle\Form\ErrorMessage\Factory\CommonConfigurationErrorFactory;
 use PrestaShopBundle\Form\ErrorMessage\Factory\InvoiceConfigurationErrorFactory;
 use Symfony\Component\Translation\Translator;
 
-class InvoiceConfigurationErrorFactoryTest extends TestCase
+class CommonConfigurationErrorFactoryTest extends TestCase
 {
     public function testGetErrorMessageForConfigurationError()
     {
@@ -49,22 +49,23 @@ class InvoiceConfigurationErrorFactoryTest extends TestCase
         $translatorMock->method('trans')->willReturnMap(
             [
                 [
-                    'Invalid "%s" date.',
+                    'The "%s" field in %s is invalid. HTML tags are not allowed.',
                     [
-                        'From',
+                        'field',
+                        'English',
                     ],
                     'Admin.Orderscustomers.Notification',
                     null,
-                    'Invalid "From" date.',
+                    'The "field" field in English is invalid. HTML tags are not allowed.',
                 ],
                 [
-                    'Invalid "%s" date.',
+                    'The "%s" field is invalid. HTML tags are not allowed.',
                     [
-                        'To',
+                        'field',
                     ],
-                    'Admin.Orderscustomers.Notification',
+                    'Admin.Notifications.Error',
                     null,
-                    'Invalid "To" date.',
+                    'The "field" field is invalid. HTML tags are not allowed.',
                 ],
             ]
         );
@@ -77,20 +78,20 @@ class InvoiceConfigurationErrorFactoryTest extends TestCase
         $language = new Lang();
         $language->setName('English');
         $languageRepositoryMock->method('findOneBy')->willReturn($language);
-        $invoiceConfigurationErrorFactory = new InvoiceConfigurationErrorFactory($translatorMock, $languageRepositoryMock);
+        $invoiceConfigurationErrorFactory = new CommonConfigurationErrorFactory($translatorMock, $languageRepositoryMock);
 
-        $error = new InvoiceConfigurationError(InvoiceConfigurationError::ERROR_INVALID_DATE_TO, 'to', 1);
-        $result = $invoiceConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'To');
+        $error = new InvoiceConfigurationError(ConfigurationErrorInterface::ERROR_CONTAINS_HTML_TAGS, 'field', 1);
+        $result = $invoiceConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'field');
         self::assertEquals(
-            'Invalid "From" date.',
+            'The "field" field in English is invalid. HTML tags are not allowed.',
             $result
         );
 
-        $error = new InvoiceConfigurationError(InvoiceConfigurationError::ERROR_INVALID_DATE_FROM, 'from');
-        $result = $invoiceConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'From');
+        $error = new InvoiceConfigurationError(ConfigurationErrorInterface::ERROR_CONTAINS_HTML_TAGS, 'field');
+        $result = $invoiceConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'field');
 
         self::assertEquals(
-            'Invalid "To" date.',
+            'The "field" field is invalid. HTML tags are not allowed.',
             $result
         );
     }
