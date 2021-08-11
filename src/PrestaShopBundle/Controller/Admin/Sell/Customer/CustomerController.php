@@ -68,6 +68,7 @@ use PrestaShopBundle\Form\Admin\Sell\Customer\RequiredFieldsType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use RuntimeException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -504,30 +505,51 @@ class CustomerController extends AbstractAdminController
      * @param int $customerId
      *
      * @return RedirectResponse
+     *
+     * @deprecated Since 1.7.9.0, use toggleStatusThenReturnJsonAction() instead.
      */
     public function toggleStatusAction($customerId)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 1.7.9.0. Use %s instead.',
+                __METHOD__,
+                static::class . '::toggleStatusThenReturnJsonAction()'
+            ),
+            E_USER_DEPRECATED
+        );
+
         try {
-            /** @var EditableCustomer $editableCustomer */
-            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
+            $this->toggleCustomerStatus((int) $customerId);
 
-            $editCustomerCommand = new EditCustomerCommand((int) $customerId);
-            $editCustomerCommand->setIsEnabled(!$editableCustomer->isEnabled());
-
-            $this->getCommandBus()->handle($editCustomerCommand);
-
-            $response = [
-                'status' => true,
-                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
-            ];
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
         } catch (CustomerException $e) {
-            $response = [
-                'status' => false,
-                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
-            ];
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->json($response);
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $customerId
+     *
+     * @return JsonResponse
+     */
+    public function toggleStatusThenReturnJsonAction($customerId)
+    {
+        return $this->performActionThenReturnJsonResponse(
+            'toggleCustomerStatus',
+            (int) $customerId
+        );
     }
 
     /**
@@ -542,32 +564,51 @@ class CustomerController extends AbstractAdminController
      * @param int $customerId
      *
      * @return RedirectResponse
+     *
+     * @deprecated Since 1.7.9.0, use toggleNewsletterSubscriptionThenReturnJsonAction() instead.
      */
     public function toggleNewsletterSubscriptionAction($customerId)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 1.7.9.0. Use %s instead.',
+                __METHOD__,
+                static::class . '::toggleNewsletterSubscriptionThenReturnJsonAction()'
+            ),
+            E_USER_DEPRECATED
+        );
+
         try {
-            /** @var EditableCustomer $editableCustomer */
-            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
+            $this->toggleCustomerNewsletterSubscription((int) $customerId);
 
-            $editCustomerCommand = new EditCustomerCommand((int) $customerId);
-
-            // toggle newsletter subscription
-            $editCustomerCommand->setNewsletterSubscribed(!$editableCustomer->isNewsletterSubscribed());
-
-            $this->getCommandBus()->handle($editCustomerCommand);
-
-            $response = [
-                'status' => true,
-                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
-            ];
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
         } catch (CustomerException $e) {
-            $response = [
-                'status' => false,
-                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
-            ];
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->json($response);
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $customerId
+     *
+     * @return JsonResponse
+     */
+    public function toggleNewsletterSubscriptionThenReturnJsonAction($customerId)
+    {
+        return $this->performActionThenReturnJsonResponse(
+            'toggleCustomerNewsletterSubscription',
+            (int) $customerId
+        );
     }
 
     /**
@@ -582,30 +623,51 @@ class CustomerController extends AbstractAdminController
      * @param int $customerId
      *
      * @return RedirectResponse
+     *
+     * @deprecated Since 1.7.9.0, use togglePartnerOfferSubscriptionThenReturnJsonAction() instead.
      */
     public function togglePartnerOfferSubscriptionAction($customerId)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 1.7.9.0. Use %s instead.',
+                __METHOD__,
+                static::class . '::togglePartnerOfferSubscriptionThenReturnJsonAction()'
+            ),
+            E_USER_DEPRECATED
+        );
+
         try {
-            /** @var EditableCustomer $editableCustomer */
-            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
+            $this->toggleCustomerPartnerOfferSubscription((int) $customerId);
 
-            $editCustomerCommand = new EditCustomerCommand((int) $customerId);
-            $editCustomerCommand->setIsPartnerOffersSubscribed(!$editableCustomer->isPartnerOffersSubscribed());
-
-            $this->getCommandBus()->handle($editCustomerCommand);
-
-            $response = [
-                'status' => true,
-                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
-            ];
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
         } catch (CustomerException $e) {
-            $response = [
-                'status' => false,
-                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
-            ];
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->json($response);
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $customerId
+     *
+     * @return JsonResponse
+     */
+    public function togglePartnerOfferSubscriptionThenReturnJsonAction($customerId)
+    {
+        return $this->performActionThenReturnJsonResponse(
+            'toggleCustomerPartnerOfferSubscription',
+            (int) $customerId
+        );
     }
 
     /**
@@ -856,6 +918,81 @@ class CustomerController extends AbstractAdminController
         return $this->json([
             'orders' => $orders,
         ]);
+    }
+
+    /**
+     * @param string $callable that will be called before JSON response is built and returned
+     * @param int $customerId that will be passed to callable
+     *
+     * @return JsonResponse
+     */
+    protected function performActionThenReturnJsonResponse(string $callable, int $customerId): JsonResponse
+    {
+        if (!method_exists($this, $callable)) {
+            throw new RuntimeException(sprintf('Cannot call %s on %s',
+                $callable,
+                get_class($this)));
+        }
+
+        try {
+            $this->$callable($customerId);
+
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
+        } catch (CustomerException $e) {
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ];
+        }
+
+        return $this->json($response);
+    }
+
+    /**
+     * @param int $customerId
+     */
+    protected function toggleCustomerStatus(int $customerId): void
+    {
+        /** @var EditableCustomer $editableCustomer */
+        $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
+
+        $editCustomerCommand = new EditCustomerCommand((int) $customerId);
+        $editCustomerCommand->setIsEnabled(!$editableCustomer->isEnabled());
+
+        $this->getCommandBus()->handle($editCustomerCommand);
+    }
+
+    /**
+     * @param int $customerId
+     */
+    protected function toggleCustomerNewsletterSubscription(int $customerId): void
+    {
+        /** @var EditableCustomer $editableCustomer */
+        $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
+
+        $editCustomerCommand = new EditCustomerCommand((int) $customerId);
+
+        // toggle newsletter subscription
+        $editCustomerCommand->setNewsletterSubscribed(!$editableCustomer->isNewsletterSubscribed());
+
+        $this->getCommandBus()->handle($editCustomerCommand);
+    }
+
+    /**
+     * @param int $customerId
+     */
+    protected function toggleCustomerPartnerOfferSubscription(int $customerId)
+    {
+        /** @var EditableCustomer $editableCustomer */
+        $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
+
+        $editCustomerCommand = new EditCustomerCommand((int) $customerId);
+        $editCustomerCommand->setIsPartnerOffersSubscribed(!$editableCustomer->isPartnerOffersSubscribed());
+
+        $this->getCommandBus()->handle($editCustomerCommand);
     }
 
     /**
