@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoicesConfigurationError;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\Handler;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -98,8 +98,8 @@ final class InvoiceByStatusFormHandler extends Handler
             $errorCollection = new ConfigurationErrorCollection();
 
             $errorCollection->add(
-                new InvoicesConfigurationError(
-                    InvoicesConfigurationError::ERROR_NO_INVOICES_FOUND_FOR_STATUS,
+                new InvoiceConfigurationError(
+                    InvoiceConfigurationError::ERROR_NO_INVOICES_FOUND_FOR_STATUS,
                     GenerateByStatusType::FIELD_ORDER_STATES
                 )
             );

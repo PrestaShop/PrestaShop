@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoicesConfigurationError;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Form\Exception\DataProviderException;
 
@@ -96,8 +96,8 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
             $invoiceNumber = $data[InvoiceOptionsType::FIELD_INVOICE_NUMBER];
             if ($invoiceNumber !== 0 && $invoiceNumber <= $this->nextInvoiceNumber) {
                 $errorCollection->add(
-                    new InvoicesConfigurationError(
-                        InvoicesConfigurationError::ERROR_INCORRECT_INVOICE_NUMBER,
+                    new InvoiceConfigurationError(
+                        InvoiceConfigurationError::ERROR_INCORRECT_INVOICE_NUMBER,
                         InvoiceOptionsType::FIELD_INVOICE_NUMBER
                     )
                 );
@@ -135,7 +135,7 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
         foreach ($data as $languageId => $value) {
             if ($value !== null && $value !== strip_tags($value)) {
                 $errorCollection->add(
-                    new InvoicesConfigurationError(
+                    new InvoiceConfigurationError(
                         ConfigurationErrorInterface::ERROR_CONTAINS_HTML_TAGS,
                         $key,
                         $languageId
