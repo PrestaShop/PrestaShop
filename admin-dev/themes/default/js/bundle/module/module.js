@@ -94,7 +94,6 @@ const AdminModuleController = function () {
     this.initCategorySelect();
     this.initCategoriesGrid();
     this.initActionButtons();
-    this.initAddModuleAction();
     this.initDropzone();
     this.initPageChangeProtection();
     this.initBulkActions();

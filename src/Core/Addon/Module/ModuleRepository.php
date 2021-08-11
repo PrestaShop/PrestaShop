@@ -183,14 +183,8 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getFilteredList(AddonListFilter $filter, $skip_main_class_attributes = false)
     {
-        if ($filter->status >= AddonListFilterStatus::ON_DISK
-            && $filter->status != AddonListFilterStatus::ALL) {
-            /** @var Module[] $modules */
-            $modules = $this->getModulesOnDisk($skip_main_class_attributes);
-        } else {
-            /** @var Module[] $modules */
-            $modules = $this->getList();
-        }
+        /** @var Module[] $modules */
+        $modules = $this->getList($skip_main_class_attributes);
 
         foreach ($modules as $key => &$module) {
             // Part One : Removing addons not related to the selected product type
@@ -265,17 +259,6 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         return $modules;
-    }
-
-    /**
-     * @return AddonInterface[] retrieve the universe of Modules
-     */
-    public function getList()
-    {
-        return array_merge(
-            $this->getAddonsCatalogModules(),
-            $this->getModulesOnDisk()
-        );
     }
 
     /**
@@ -529,7 +512,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @return \PrestaShop\PrestaShop\Adapter\Module\Module[]
      */
-    private function getModulesOnDisk($skip_main_class_attributes = false)
+    public function getList($skip_main_class_attributes = false)
     {
         $modules = [];
         $modulesDirsList = $this->finder->directories()
