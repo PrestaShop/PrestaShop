@@ -75,6 +75,7 @@ class ConfigurationErrorFactory
 
         foreach ($errors as $error) {
             $label = $this->labelProvider->getLabel($form, $error->getFieldName());
+            $errorMessage = null;
             foreach ($this->configurationErrorFactories as $factory) {
                 $errorMessage = $factory->getErrorMessageForConfigurationError(
                     $error,
