@@ -87,7 +87,7 @@ class ConfigurationErrorFactoryTest extends TestCase
                 [
                     '%s is invalid.',
                     [
-                        'Field'
+                        'Field',
                     ],
                     'Admin.Notifications.Error',
                     null,
@@ -104,7 +104,7 @@ class ConfigurationErrorFactoryTest extends TestCase
         $language = new Lang();
         $language->setName('English');
         $languageRepositoryMock->method('findOneBy')->willReturn($language);
-        $labelProviderMock =  $this
+        $labelProviderMock = $this
             ->getMockBuilder(LabelProvider::class)
             ->setMethods(['getLabel'])
             ->getMock();
