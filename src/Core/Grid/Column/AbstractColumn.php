@@ -35,6 +35,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 abstract class AbstractColumn implements ColumnInterface
 {
     /**
+     * @const string default column content template path
+     */
+    public const BASE_COLUMN_CONTENT_TEMPLATE_PATH = '@PrestaShop/Admin/Common/Grid/Columns/Content';
+
+    /**
+     * @const string default column header template path
+     */
+    public const BASE_COLUMN_HEADER_TEMPLATE_PATH = '@PrestaShop/Admin/Common/Grid/Columns/Header/Content';
+
+    /**
      * @var string
      */
     private $id;
@@ -118,6 +128,26 @@ abstract class AbstractColumn implements ColumnInterface
     }
 
     /**
+     * Column content template path
+     *
+     * @return string
+     */
+    protected function getContentTemplatePath(): string
+    {
+        return self::BASE_COLUMN_CONTENT_TEMPLATE_PATH;
+    }
+
+    /**
+     * Column header template path
+     *
+     * @return string
+     */
+    protected function getHeaderTemplatePath(): string
+    {
+        return self::BASE_COLUMN_HEADER_TEMPLATE_PATH;
+    }
+
+    /**
      * Default column options configuration. You can override or extend it needed options.
      *
      * @param OptionsResolver $resolver
@@ -129,11 +159,15 @@ abstract class AbstractColumn implements ColumnInterface
                 'sortable' => true,
                 'clickable' => false,
                 'alignment' => 'left',
+                'content_template_path' => $this->getContentTemplatePath(),
+                'header_template_path' => $this->getHeaderTemplatePath(),
             ])
             ->setAllowedTypes('sortable', 'bool')
             ->setAllowedTypes('clickable', 'bool')
             ->setAllowedTypes('alignment', 'string')
-            ->setAllowedValues('alignment', ['center', 'left', 'right', 'justify']);
+            ->setAllowedValues('alignment', ['center', 'left', 'right', 'justify'])
+            ->setAllowedTypes('content_template_path', 'string')
+            ->setAllowedTypes('header_template_path', 'string');
     }
 
     /**
