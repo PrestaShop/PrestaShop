@@ -545,7 +545,7 @@ class CustomerController extends AbstractAdminController
      *
      * @return JsonResponse
      */
-    public function toggleStatusThenReturnJsonAction($customerId)
+    public function toggleStatusThenReturnJsonAction(int $customerId): JsonResponse
     {
         return $this->performActionThenReturnJsonResponse(
             'toggleCustomerStatus',
@@ -604,7 +604,7 @@ class CustomerController extends AbstractAdminController
      *
      * @return JsonResponse
      */
-    public function toggleNewsletterSubscriptionThenReturnJsonAction(int $customerId)
+    public function toggleNewsletterSubscriptionThenReturnJsonAction(int $customerId): JsonResponse
     {
         return $this->performActionThenReturnJsonResponse(
             'toggleCustomerNewsletterSubscription',
@@ -663,7 +663,7 @@ class CustomerController extends AbstractAdminController
      *
      * @return JsonResponse
      */
-    public function togglePartnerOfferSubscriptionThenReturnJsonAction(int $customerId)
+    public function togglePartnerOfferSubscriptionThenReturnJsonAction(int $customerId): JsonResponse
     {
         return $this->performActionThenReturnJsonResponse(
             'toggleCustomerPartnerOfferSubscription',
@@ -985,7 +985,7 @@ class CustomerController extends AbstractAdminController
     /**
      * @param int $customerId
      */
-    protected function toggleCustomerPartnerOfferSubscription(int $customerId)
+    protected function toggleCustomerPartnerOfferSubscription(int $customerId): void
     {
         /** @var EditableCustomer $editableCustomer */
         $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
