@@ -26,17 +26,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\Form;
+namespace Tests\Unit\PrestaShopBundle\Form\ErrorMessage\Factory;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\LangRepository;
-use PrestaShopBundle\Form\ErrorMessage\InvalidConfigurationErrorMessageFactory;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
-use ReflectionClass;
+use PrestaShopBundle\Form\ErrorMessage\Factory\InvoiceConfigurationErrorFactory;
 use Symfony\Component\Translation\Translator;
 
-class InvalidConfigurationErrorMessageFactoryTest extends TestCase
+class InvoiceConfigurationErrorFactoryTest extends TestCase
 {
     public function testGetErrorMessageForConfigurationError()
     {
@@ -77,20 +77,18 @@ class InvalidConfigurationErrorMessageFactoryTest extends TestCase
         $language = new Lang();
         $language->setName('English');
         $languageRepositoryMock->method('findOneBy')->willReturn($language);
-        $invalidConfigurationErrorMessageFactory = new InvalidConfigurationErrorMessageFactory($translatorMock, $languageRepositoryMock);
-        $reflectionClass = new ReflectionClass(InvalidConfigurationErrorMessageFactory::class);
-        $reflectionMethod = $reflectionClass->getMethod('getErrorMessageForConfigurationError');
-        $reflectionMethod->setAccessible(true);
+        $invoiceConfigurationErrorFactory = new InvoiceConfigurationErrorFactory($translatorMock, $languageRepositoryMock);
 
-        $error = new InvalidConfigurationDataError(InvalidConfigurationDataError::ERROR_CONTAINS_HTML_TAGS, 'field', 1);
-        $result = $reflectionMethod->invoke($invalidConfigurationErrorMessageFactory, $error, 'field');
+        $error = new InvoiceConfigurationError(ConfigurationErrorInterface::ERROR_CONTAINS_HTML_TAGS, 'field', 1);
+        $result = $invoiceConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'field');
         self::assertEquals(
             'The "field" field in English is invalid. HTML tags are not allowed.',
             $result
         );
 
-        $error = new InvalidConfigurationDataError(InvalidConfigurationDataError::ERROR_CONTAINS_HTML_TAGS, 'field');
-        $result = $reflectionMethod->invoke($invalidConfigurationErrorMessageFactory, $error, 'field');
+        $error = new InvoiceConfigurationError(ConfigurationErrorInterface::ERROR_CONTAINS_HTML_TAGS, 'field');
+        $result = $invoiceConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'field');
+
         self::assertEquals(
             'The "field" field is invalid. HTML tags are not allowed.',
             $result
