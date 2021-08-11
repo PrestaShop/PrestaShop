@@ -100,7 +100,7 @@ class GridExtension extends AbstractExtension
             $template = $this->getTemplatePath(
                 $column,
                 $grid,
-                self::BASE_COLUMN_CONTENT_TEMPLATE_PATH
+                $column['options']['content_template_path'] ?? self::BASE_COLUMN_CONTENT_TEMPLATE_PATH
             );
 
             if (null === $template) {
@@ -142,7 +142,7 @@ class GridExtension extends AbstractExtension
             $template = $this->getTemplatePath(
                 $column,
                 $grid,
-                self::BASE_COLUMN_HEADER_TEMPLATE_PATH,
+                $column['options']['header_template_path'] ?? self::BASE_COLUMN_HEADER_TEMPLATE_PATH,
                 'default.html.twig'
             );
 
