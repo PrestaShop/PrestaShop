@@ -140,7 +140,6 @@ class AdminModuleController {
     this.initCategorySelect();
     this.initCategoriesGrid();
     this.initActionButtons();
-    this.initAddModuleAction();
     this.initDropzone();
     this.initPageChangeProtection();
     this.initPlaceholderMechanism();
@@ -323,6 +322,7 @@ class AdminModuleController {
           type: $this.data('type'),
           price: parseFloat($this.data('price')),
           active: parseInt($this.data('active'), 10),
+          installed: $this.data('installed') === 1,
           access: $this.data('last-access'),
           display: $this.hasClass('module-item-list') ? self.DISPLAY_LIST : self.DISPLAY_GRID,
           container,
@@ -461,7 +461,16 @@ class AdminModuleController {
 
         // Check for same status
         if (self.currentRefStatus !== null) {
-          isVisible &= currentModule.active === self.currentRefStatus;
+          isVisible &= (
+            (
+              currentModule.active === self.currentRefStatus
+                && currentModule.installed === true
+            )
+              || (
+                currentModule.installed === false
+                  && self.currentRefStatus === 2
+              )
+          );
         }
 
         // Check for tag list
@@ -486,15 +495,16 @@ class AdminModuleController {
           defaultMax = moduleCategory === self.CATEGORY_RECENTLY_USED
             ? self.DEFAULT_MAX_RECENTLY_USED
             : self.DEFAULT_MAX_PER_CATEGORIES;
-          if (counter[moduleCategory] >= defaultMax) {
+
+          if (counter[moduleCategory] >= defaultMax && isVisible) {
             isVisible &= self.currentCategoryDisplay[moduleCategory];
           }
-
-          counter[moduleCategory] += 1;
         }
 
         // If visible, display (Thx captain obvious)
         if (isVisible) {
+          counter[moduleCategory] += 1;
+
           if (self.currentRefCategory === self.CATEGORY_RECENTLY_USED) {
             $(self.recentlyUsedSelector).append(currentModule.domObject);
           } else {
@@ -823,6 +833,7 @@ class AdminModuleController {
     const forceDeletion = $('#force_bulk_deletion').prop('checked');
 
     const bulkActionToUrl = {
+      'bulk-install': 'install',
       'bulk-uninstall': 'uninstall',
       'bulk-disable': 'disable',
       'bulk-enable': 'enable',
