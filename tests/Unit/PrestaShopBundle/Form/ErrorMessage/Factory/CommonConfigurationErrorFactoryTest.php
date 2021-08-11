@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Form\ErrorMessage\Factory\CommonConfigurationErrorFactory;
-use PrestaShopBundle\Form\ErrorMessage\Factory\InvoiceConfigurationErrorFactory;
 use Symfony\Component\Translation\Translator;
 
 class CommonConfigurationErrorFactoryTest extends TestCase
