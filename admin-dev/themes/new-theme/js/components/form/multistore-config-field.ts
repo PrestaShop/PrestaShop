@@ -75,6 +75,4 @@ export default class MultistoreConfigField {
       contextualNotification.setItem(notificationKey, true);
     }
   }
-
-
 }

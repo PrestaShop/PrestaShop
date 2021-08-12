@@ -65,12 +65,19 @@ export default class ContextualNotification {
 
   disableNotification(event) {
     const notificationKey = $(event.target).parent().attr('data-notification-key');
-    this.setItem(notificationKey, false);
+
+    if (notificationKey !== '') {
+      this.setItem(notificationKey, false);
+    }
   }
 
   displayNotification(message, key) {
-    let htmlElem = `<div class="alert alert-info contextual-notification" data-notification-key="${key}" style="display:block;">`;
-    htmlElem += `${message}<button type="button" class="close" data-dismiss="alert">&times;</button></div>`;
-    $(htmlElem).insertBefore('#ajax_confirmation');
+    const $element = document.createElement('div');
+    $element.classList.add('alert', 'alert-info', 'contextual-notification');
+    $element.setAttribute('data-notification-key', key);
+    $element.innerHTML = `${message}<button type="button" class="close" data-dismiss="alert">&times;</button>`;
+
+    const ajaxConfirmation = document.getElementById('ajax_confirmation');
+    ajaxConfirmation.parentNode.insertBefore($element, ajaxConfirmation);
   }
 }
