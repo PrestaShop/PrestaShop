@@ -28,7 +28,7 @@ class Products extends BOBasePage {
     this.productListForm = '#product_catalog_list';
     this.productTable = `${this.productListForm} table`;
     this.productRow = `${this.productTable} tbody tr`;
-    this.productListfooterRow = `${this.productListForm} div.row:nth-of-type(3)`;
+    this.productListfooterRow = `${this.productListForm} div.pagination-block`;
     this.productNumberBloc = `${this.productListfooterRow} label.col-form-label`;
     this.dropdownToggleButton = row => `${this.productRow}:nth-of-type(${row}) button.dropdown-toggle`;
     this.dropdownMenu = row => `${this.productRow}:nth-of-type(${row}) div.dropdown-menu`;
