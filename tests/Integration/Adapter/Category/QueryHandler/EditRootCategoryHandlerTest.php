@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class EditRootCategoryHandlerTest extends KernelTestCase
 {
@@ -44,23 +43,18 @@ class EditRootCategoryHandlerTest extends KernelTestCase
      * @var int
      */
     private $rootCategory;
-    /**
-     * @var ContainerInterface|null
-     */
-    private $container;
 
     protected function setUp(): void
     {
         self::bootKernel();
-        $this->container = self::$kernel->getContainer();
 
-        $this->commandBus = $this->container->get('prestashop.core.command_bus');
-        $this->rootCategory = (int) $this->container->get('prestashop.adapter.legacy.configuration')->get('PS_ROOT_CATEGORY');
+        $this->commandBus = self::$container->get('prestashop.core.command_bus');
+        $this->rootCategory = (int) self::$container->get('prestashop.adapter.legacy.configuration')->get('PS_ROOT_CATEGORY');
     }
 
     public function testEditRootCategoryDoesntThrowExceptionIfExists(): void
     {
-        $categories = $this->container->get('prestashop.adapter.form.choice_provider.category_tree_choice_provider')->getChoices();
+        $categories = self::$container->get('prestashop.adapter.form.choice_provider.category_tree_choice_provider')->getChoices();
         $existingCategoryId = $categories[0]['id_category'];
         $command = new EditRootCategoryCommand((int) $existingCategoryId);
 

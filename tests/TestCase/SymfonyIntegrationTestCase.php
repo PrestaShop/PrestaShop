@@ -26,11 +26,10 @@
 
 namespace Tests\TestCase;
 
-use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 use LegacyTests\Unit\ContextMocker;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SymfonyIntegrationTestCase extends WebTestCase
 {
@@ -40,16 +39,11 @@ class SymfonyIntegrationTestCase extends WebTestCase
     protected $contextMocker;
 
     /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
      * @var Client
      */
     protected $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->contextMocker = new ContextMocker();
@@ -59,22 +53,22 @@ class SymfonyIntegrationTestCase extends WebTestCase
 
         //createClient already creates the kernel
         //$this->bootKernel();
-        $this->container = self::$kernel->getContainer();
+        self::$container = self::$kernel->getContainer();
 
         // Global var for SymfonyContainer
         global $kernel;
         $kernel = self::$kernel;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         $this->contextMocker->resetContext();
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
-        Database::restoreTestDB();
+        DatabaseCreator::restoreTestDB();
         require_once __DIR__ . '/../../config/config.inc.php';
     }
 }

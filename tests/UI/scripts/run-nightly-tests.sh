@@ -33,7 +33,7 @@ docker volume prune -f
 
 cd "${TESTS_DIR}"
 
-for command in "sanity-tests" "functional-tests"; do
+for command in "sanity-tests" "functional-BO" "functional-FO" "regression-tests"; do
   if [ -z "$(docker ps -qa)" ]; then
     # Make sure all containers are stopped
     docker stop $(docker ps -qa)

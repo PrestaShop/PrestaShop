@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Translations page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Translations extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on translations page
+   */
   constructor() {
     super();
 
@@ -22,17 +31,21 @@ class Translations extends BOBasePage {
     this.saveTranslationButton = '#app button[type=\'submit\']';
     this.resetTranslationButton = '#app  button[class*=\'btn-outline-secondary\']';
     this.growlMessage = '#growls-default div.growl-message';
+
     // Add/Update language form
     this.addUpdateLanguageForm = 'form[action*=\'add-update-language\']';
     this.languageToAddSelect = '#select2-form_iso_localization_pack-container';
     this.searchLanguageInput = 'span.select2-search.select2-search--dropdown input';
     this.searchLanguageResult = 'li.select2-results__option--highlighted';
     this.addUpdateLanguageButton = `${this.addUpdateLanguageForm} .card-footer button`;
+
     // Export language form
     this.exportLanguageSelect = '#form_iso_code';
+
     // Prestashop translation
     this.prestashopTranslationRadio = '#form_core_selectors_core_type';
     this.prestashopTranslationTypeCheckbox = position => `#form_core_selectors_selected_value_${position}`;
+
     // Theme translation
     this.themeTranslationRadio = '#form_themes_selectors_themes_type';
     this.exportLanguageThemeSelect = '#form_themes_selectors_selected_value';
@@ -45,10 +58,10 @@ class Translations extends BOBasePage {
 
   /**
    * Modify translation
-   * @param page
-   * @param translation
-   * @param theme
-   * @param language
+   * @param page {Page} Browser tab
+   * @param translation {string} Value to choose on translation select
+   * @param theme {string} Value of theme to choose on theme select
+   * @param language {string} Value of language to select on language select
    * @returns {Promise<void>}
    */
   async modifyTranslation(page, translation, theme, language) {
@@ -60,8 +73,8 @@ class Translations extends BOBasePage {
 
   /**
    * Search translation
-   * @param page
-   * @param expression
+   * @param page {Page} Browser tab
+   * @param expression {string} Expression to set on search input
    * @returns {Promise<void>}
    */
   async searchTranslation(page, expression) {
@@ -73,31 +86,33 @@ class Translations extends BOBasePage {
 
   /**
    * Translate an expression
-   * @param page
-   * @param translation
+   * @param page {Page} Browser tab
+   * @param translation {string} Value of translation to set
    * @returns {Promise<string>}
    */
   async translateExpression(page, translation) {
     await this.setValue(page, this.translationTextarea, translation);
     await page.click(this.saveTranslationButton);
+
     return this.getTextContent(page, this.growlMessage);
   }
 
   /**
    * Reset translation
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async resetTranslation(page) {
     await this.waitForSelectorAndClick(page, this.resetTranslationButton);
     await page.click(this.saveTranslationButton);
+
     return this.getTextContent(page, this.growlMessage);
   }
 
   /**
    * Add/Update language
-   * @param page
-   * @param language
+   * @param page {Page} Browser tab
+   * @param language {string} Language to set on language input
    * @returns {Promise<string>}
    */
   async addUpdateLanguage(page, language) {
@@ -105,6 +120,7 @@ class Translations extends BOBasePage {
     await this.setValue(page, this.searchLanguageInput, language);
     await this.waitForSelectorAndClick(page, this.searchLanguageResult);
     await page.click(this.addUpdateLanguageButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

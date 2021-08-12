@@ -381,7 +381,7 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * Deletes current CartRule from the database.
+     * Deletes current Category from the database.
      *
      * @return bool `true` if successfully deleted
      *
@@ -864,18 +864,29 @@ class CategoryCore extends ObjectModel
             'SELECT c.`nleft`, c.`nright` FROM `' . _DB_PREFIX_ . 'category` c ' .
             'WHERE c.`id_category` = ' . (int) $idCategoryRoot
         );
+        if (empty($rootTreeInfo)) {
+            return [];
+        }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.`id_category`, cl.`name`, c.id_parent
-		FROM `' . _DB_PREFIX_ . 'category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
-		ON (c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . ')
-		' . Shop::addSqlAssociation('category', 'c') . '
-		WHERE cl.`id_lang` = ' . (int) $idLang . '
-        AND c.`nleft` >= ' . (int) $rootTreeInfo['nleft'] . '
-        AND c.`nright` <= ' . (int) $rootTreeInfo['nright'] . '
+        $sql = 'SELECT c.`id_category`, cl.`name`, c.id_parent
+		FROM `%scategory` c
+		LEFT JOIN `%scategory_lang` cl ON (c.`id_category` = cl.`id_category`%s) %s
+		WHERE cl.`id_lang` = %d AND c.`nleft` >= %d AND c.`nright` <= %d
 		GROUP BY c.id_category
-		ORDER BY c.`id_category`, category_shop.`position`');
+		ORDER BY c.`id_category`, category_shop.`position`';
+
+        $sql = sprintf(
+            $sql,
+            _DB_PREFIX_,
+            _DB_PREFIX_,
+            Shop::addSqlRestrictionOnLang('cl'),
+            Shop::addSqlAssociation('category', 'c'),
+            (int) $idLang,
+            (int) $rootTreeInfo['nleft'],
+            (int) $rootTreeInfo['nright']
+        );
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
     /**
@@ -1281,7 +1292,7 @@ class CategoryCore extends ObjectModel
      * Copy products from a category to another.
      *
      * @param int $idOld Source category ID
-     * @param bool $idNew Destination category ID
+     * @param int $idNew Destination category ID
      *
      * @return bool Duplication result
      */
@@ -1489,8 +1500,8 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idLang Language ID
      * @param string $path Path of category
-     * @param bool $objectToCreate a category
-     * @param bool $methodToCreate a category
+     * @param object|bool $objectToCreate a category
+     * @param string|bool $methodToCreate a category
      *
      * @return array Corresponding categories
      */

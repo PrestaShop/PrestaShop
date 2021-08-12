@@ -36,7 +36,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     /** @var Link */
     private $link;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         if (!$this->link) {
@@ -254,10 +254,10 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     public static function getLegacyControllers()
     {
         return [
-            ['/Integration/index.php?controller=AdminLogin', 'AdminLogin'],
-            ['/Integration/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']],
-            ['/Integration/index.php?controller=AdminModules', 'AdminModules'],
-            ['/Integration/index.php?controller=AdminModules&configure=ps_linklist', 'AdminModules', ['configure' => 'ps_linklist']],
+            ['/admin-dev/index.php?controller=AdminLogin', 'AdminLogin'],
+            ['/admin-dev/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']],
+            ['/admin-dev/index.php?controller=AdminModules', 'AdminModules'],
+            ['/admin-dev/index.php?controller=AdminModules&configure=ps_linklist', 'AdminModules', ['configure' => 'ps_linklist']],
         ];
     }
 

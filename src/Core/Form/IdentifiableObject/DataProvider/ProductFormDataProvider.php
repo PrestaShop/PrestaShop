@@ -100,13 +100,13 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $productData = [
             'id' => $productId,
             'header' => $this->extractHeaderData($productForEditing),
-            'basic' => $this->extractBasicData($productForEditing),
+            'description' => $this->extractDescriptionData($productForEditing),
+            'specifications' => $this->extractSpecificationsData($productForEditing),
             'stock' => $this->extractStockData($productForEditing),
             'pricing' => $this->extractPricingData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
-            'categories' => $this->extractCategoriesData($productForEditing),
             'footer' => [
                 'active' => $productForEditing->getOptions()->isActive(),
             ],
@@ -124,7 +124,15 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
-            'basic' => [
+            'description' => [
+                'categories' => [
+                    'product_categories' => [
+                        $this->defaultCategoryId => [
+                            'is_associated' => true,
+                            'is_default' => true,
+                        ],
+                    ],
+                ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
@@ -159,14 +167,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                     'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 ],
                 'condition' => ProductCondition::NEW,
-            ],
-            'categories' => [
-                'product_categories' => [
-                    $this->defaultCategoryId => [
-                        'is_associated' => true,
-                        'is_default' => true,
-                    ],
-                ],
             ],
             'footer' => [
                 'active' => $this->defaultProductActivation,
@@ -256,6 +256,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'type' => $productForEditing->getType(),
             'name' => $productForEditing->getBasicInformation()->getLocalizedNames(),
+            'cover_thumbnail' => $productForEditing->getCoverThumbnailUrl(),
         ];
     }
 
@@ -264,13 +265,35 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      *
      * @return array<string, mixed>
      */
-    private function extractBasicData(ProductForEditing $productForEditing): array
+    private function extractDescriptionData(ProductForEditing $productForEditing): array
     {
         return [
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
-            'features' => $this->extractFeatureValues($productForEditing->getProductId()),
+            'categories' => $this->extractCategoriesData($productForEditing),
             'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
+        ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, mixed>
+     */
+    private function extractSpecificationsData(ProductForEditing $productForEditing): array
+    {
+        $details = $productForEditing->getDetails();
+
+        return [
+            'features' => $this->extractFeatureValues($productForEditing->getProductId()),
+            'customizations' => $this->extractCustomizationsData($productForEditing),
+            'references' => [
+                'mpn' => $details->getMpn(),
+                'upc' => $details->getUpc(),
+                'ean_13' => $details->getEan13(),
+                'isbn' => $details->getIsbn(),
+                'reference' => $details->getReference(),
+            ],
         ];
     }
 
@@ -374,21 +397,33 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'meta_description' => $seoOptions->getLocalizedMetaDescriptions(),
             'link_rewrite' => $seoOptions->getLocalizedLinkRewrites(),
             'redirect_option' => $this->extractRedirectOptionData($productForEditing),
+            'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
         ];
     }
 
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array<string, int|string>
+     * @return array{type: string, target: null|array}
      */
     private function extractRedirectOptionData(ProductForEditing $productForEditing): array
     {
         $seoOptions = $productForEditing->getProductSeoOptions();
 
+        // It is important to return null when nothing is selected this way the transformer and therefore
+        // the form field have no value to try and display
+        $redirectTarget = null;
+        if (null !== $seoOptions->getRedirectTarget()) {
+            $redirectTarget = [
+                'id' => $seoOptions->getRedirectTarget()->getId(),
+                'name' => $seoOptions->getRedirectTarget()->getName(),
+                'image' => $seoOptions->getRedirectTarget()->getImage(),
+            ];
+        }
+
         return [
             'type' => $seoOptions->getRedirectType(),
-            'target' => $seoOptions->getRedirectTargetId(),
+            'target' => $redirectTarget,
         ];
     }
 
@@ -426,7 +461,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private function extractOptionsData(ProductForEditing $productForEditing): array
     {
         $options = $productForEditing->getOptions();
-        $details = $productForEditing->getDetails();
 
         return [
             'visibility' => [
@@ -435,17 +469,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'show_price' => $options->showPrice(),
                 'online_only' => $options->isOnlineOnly(),
             ],
-            'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
             'show_condition' => $options->showCondition(),
             'condition' => $options->getCondition(),
-            'references' => [
-                'mpn' => $details->getMpn(),
-                'upc' => $details->getUpc(),
-                'ean_13' => $details->getEan13(),
-                'isbn' => $details->getIsbn(),
-                'reference' => $details->getReference(),
-            ],
-            'customizations' => $this->extractCustomizationsData($productForEditing),
             'suppliers' => $this->extractSuppliersData($productForEditing),
         ];
     }

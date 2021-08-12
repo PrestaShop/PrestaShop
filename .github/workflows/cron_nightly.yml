@@ -10,19 +10,28 @@ jobs:
   nightly:
     runs-on: ubuntu-latest
     name: Nightly
+    strategy:
+      matrix:
+        include:
+          - branch: develop
+            instance: develop
+          - branch: 1.7.8.x
+            instance: release
+      fail-fast: false
     env:
       GC_INSTANCE_NAME: ${{ secrets.GC_INSTANCE_NAME }}
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
       GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
       GC_ZONE: ${{ secrets.GC_ZONE }}
-      GH_BRANCH: 'develop'
-      INSTANCE_TYPE: 'develop'
+      GH_BRANCH: ${{ matrix.branch }}
+      INSTANCE_TYPE: ${{ matrix.instance }}
       NIGHTLY_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}
 
     steps:
       -   uses: actions/checkout@v2
           with:
             fetch-depth: 0
+            ref: ${{ env.GH_BRANCH }}
 
       -   name: Setup PHP
           uses: shivammathur/setup-php@v1

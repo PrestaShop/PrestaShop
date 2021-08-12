@@ -549,7 +549,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public function add($auto_date = true, $null_values = false)
     {
         if (isset($this->id) && !$this->force_id) {
-            unset($this->id);
+            $this->id = null;
         }
 
         // @hook actionObject<ObjectClassName>AddBefore
@@ -579,8 +579,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             return false;
         }
 
-        // Get object id in database
-        $this->id = Db::getInstance()->Insert_ID();
+        // Get object id in database if force_id is not true
+        if (empty($this->id)) {
+            $this->id = Db::getInstance()->Insert_ID();
+        }
 
         // Database insertion for multishop fields related to the object
         if (Shop::isTableAssociated($this->def['table'])) {

@@ -204,14 +204,14 @@
 										</div>
 									{elseif $field['type'] == 'textarea'}
 										<div class="col-lg-9">
-											<textarea class="{if isset($field['autoload_rte']) && $field['autoload_rte']}rte autoload_rte{else}textarea-autosize{/if}" name={$key}{if isset({$field['cols']})} cols="{$field['cols']}"{/if}{if isset({$field['rows']})} rows="{$field['rows']}"{/if}">{$field['value']|escape:'html':'UTF-8'}</textarea>
+											<textarea class="{if isset($field['autoload_rte']) && $field['autoload_rte']}rte autoload_rte{else}textarea-autosize{/if}" name="{$key}"{if isset($field['cols'])} cols="{$field['cols']}"{/if}{if isset($field['rows'])} rows="{$field['rows']}"{/if}>{$field['value']|escape:'html':'UTF-8'}</textarea>
 										</div>
 									{elseif $field['type'] == 'file'}
 										<div class="col-lg-9">{$field['file']}</div>
 									{elseif $field['type'] == 'color'}
 										<div class="col-lg-2">
 											<div class="input-group">
-												<input type="color" size="{$field['size']}" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$field['name']}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'html':'UTF-8'}" />
+												<input type="color" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" data-hex="true" class="{if isset($field['class'])}{$field['class']}{else}color mColorPickerInput{/if}" name="{if isset($field['name'])}{$field['name']}{else}{$key}{/if}" value="{$field['value']|escape:'html':'UTF-8'}" />
 											</div>
 							            </div>
 									{elseif $field['type'] == 'price'}

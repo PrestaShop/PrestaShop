@@ -51,7 +51,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ImageController extends FrameworkBundleAdminController
 {
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param int $productId
      *
@@ -66,7 +66,7 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param Request $request
      *
@@ -101,7 +101,7 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param Request $request
      * @param int $productImageId
@@ -134,7 +134,7 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param int $productImageId
      *

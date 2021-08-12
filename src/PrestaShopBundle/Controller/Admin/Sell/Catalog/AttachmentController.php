@@ -56,7 +56,7 @@ use Symfony\Component\HttpFoundation\Response;
 class AttachmentController extends FrameworkBundleAdminController
 {
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
     public function indexAction(Request $request, AttachmentFilters $filters): Response
     {
@@ -75,7 +75,7 @@ class AttachmentController extends FrameworkBundleAdminController
      * Show "Add new" form and handle form submit.
      *
      * @AdminSecurity(
-     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     "is_granted('create', request.get('_legacy_controller'))",
      *     redirectRoute="admin_attachments_index",
      *     message="You do not have permission to create this."
      * )
@@ -119,7 +119,7 @@ class AttachmentController extends FrameworkBundleAdminController
      * Show & process attachment editing.
      *
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_attachments_index",
      *     message="You do not have permission to edit this."
      * )
@@ -186,7 +186,7 @@ class AttachmentController extends FrameworkBundleAdminController
      * View attachment.
      *
      * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller'))",
      *     redirectRoute="admin_attachments_index",
      *     message="You do not have permission to edit this."
      * )

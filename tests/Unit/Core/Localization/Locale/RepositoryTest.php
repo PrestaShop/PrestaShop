@@ -46,7 +46,7 @@ class RepositoryTest extends TestCase
      */
     protected $localeRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         /**
          * Mock the LocaleRepository dependencies :

@@ -72,7 +72,7 @@ jobs:
                   ${{ runner.os }}-composer-
 
       -   name: Composer Install
-          run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+          run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
       -   name: Run Lint Yaml on `src`
           run: php bin/console lint:yaml src
@@ -111,7 +111,7 @@ jobs:
                   ${{ runner.os }}-composer-
 
       -   name: Composer Install
-          run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+          run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
       -   name: Run Lint Twig
           run: php bin/console lint:twig src/PrestaShopBundle/Resources/views/

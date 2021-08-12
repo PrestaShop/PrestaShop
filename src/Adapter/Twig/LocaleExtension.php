@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Twig;
 
 use DateTime;
 use Twig\Extension\AbstractExtension;
-use Twig_SimpleFunction;
+use Twig\TwigFunction;
 
 /**
  * Provides helper functions in Twig for formatting data using context locale
@@ -54,7 +54,7 @@ final class LocaleExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction(
+            new TwigFunction(
                 'format_date',
                 function ($date) {
                     return (new DateTime($date))->format($this->contextDateFormatLite);

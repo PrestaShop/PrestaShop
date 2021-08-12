@@ -101,6 +101,11 @@ class ProductForEditing
     private $virtualProductFile;
 
     /**
+     * @var string
+     */
+    private $coverThumbnailUrl;
+
+    /**
      * @param int $productId
      * @param string $type
      * @param ProductCustomizationOptions $customizationOptions
@@ -114,6 +119,7 @@ class ProductForEditing
      * @param array $associatedAttachmentIds
      * @param ProductStockInformation $stockInformation
      * @param VirtualProductFileForEditing|null $virtualProductFile
+     * @param string $coverThumbnailUrl
      */
     public function __construct(
         int $productId,
@@ -128,7 +134,8 @@ class ProductForEditing
         ProductSeoOptions $productSeoOptions,
         array $associatedAttachmentIds,
         ProductStockInformation $stockInformation,
-        ?VirtualProductFileForEditing $virtualProductFile
+        ?VirtualProductFileForEditing $virtualProductFile,
+        string $coverThumbnailUrl
     ) {
         $this->productId = $productId;
         $this->type = $type;
@@ -143,6 +150,7 @@ class ProductForEditing
         $this->associatedAttachmentIds = $associatedAttachmentIds;
         $this->stockInformation = $stockInformation;
         $this->virtualProductFile = $virtualProductFile;
+        $this->coverThumbnailUrl = $coverThumbnailUrl;
     }
 
     /**
@@ -247,5 +255,13 @@ class ProductForEditing
     public function getVirtualProductFile(): ?VirtualProductFileForEditing
     {
         return $this->virtualProductFile;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCoverThumbnailUrl(): string
+    {
+        return $this->coverThumbnailUrl;
     }
 }

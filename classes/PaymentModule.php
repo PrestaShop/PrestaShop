@@ -664,6 +664,7 @@ abstract class PaymentModuleCore extends Module
                                 '{total_shipping_tax_incl}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping_tax_incl, $this->context->currency->iso_code),
                                 '{total_wrapping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_wrapping, $this->context->currency->iso_code),
                                 '{total_tax_paid}' => Tools::getContextLocale($this->context)->formatPrice(($order->total_paid_tax_incl - $order->total_paid_tax_excl), $this->context->currency->iso_code),
+                                '{recycled_packaging_label}' => $order->recyclable ? $this->trans('Yes', [], 'Shop.Theme.Global') : $this->trans('No', [], 'Shop.Theme.Global'),
                             ];
 
                             if (is_array($extra_vars)) {
@@ -730,6 +731,18 @@ abstract class PaymentModuleCore extends Module
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
             }
+
+            Hook::exec(
+                'actionValidateOrderAfter',
+                [
+                    'cart' => $this->context->cart,
+                    'order' => $order ?? null,
+                    'orders' => $order_list,
+                    'customer' => $this->context->customer,
+                    'currency' => $this->context->currency,
+                    'orderStatus' => new OrderState($order->current_state),
+                ]
+            );
 
             return true;
         } else {

@@ -29,13 +29,19 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
+use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Entity\ProductDownload;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
@@ -67,7 +73,30 @@ class ProductController extends FrameworkBundleAdminController
     private const PRODUCT_CONTROLLER_PERMISSION = 'ADMINPRODUCTS_';
 
     /**
-     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     * Shows products listing.
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param ProductFilters $filters
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request, ProductFilters $filters): Response
+    {
+        $productGridFactory = $this->get('prestashop.core.grid.factory.product');
+        $productGrid = $productGridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/index.html.twig', [
+            'productGrid' => $this->presentGrid($productGrid),
+            'enableSidebar' => true,
+            'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons(),
+            'help_link' => $this->generateSidebarLink('AdminProducts'),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param Request $request
      *
@@ -104,7 +133,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param Request $request
      * @param int $productId
@@ -159,6 +188,49 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param Request $request
+     * @param int $productId
+     *
+     * @return Response
+     */
+    public function deleteAction(Request $request, int $productId): Response
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteProductCommand($productId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * @return array
+     */
+    private function getProductToolbarButtons(): array
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['add'] = [
+            'href' => $this->generateUrl('admin_product_new'),
+            'desc' => $this->trans('New product', 'Admin.Actions'),
+            'icon' => 'add_circle_outline',
+        ];
+
+        $toolbarButtons['list_v1'] = [
+            'href' => $this->generateUrl('admin_product_catalog'),
+            'desc' => $this->trans('Back to standard page', 'Admin.Catalog.Feature'),
+            'class' => 'btn-outline-primary',
+        ];
+
+        return $toolbarButtons;
+    }
+
+    /**
      * @param FormInterface $productForm
      * @param int|null $productId
      *
@@ -190,7 +262,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
         $download = $this->getDoctrine()
-            ->getRepository('PrestaShopBundle:ProductDownload')
+            ->getRepository(ProductDownload::class)
             ->findOneBy([
                 'id' => $virtualProductFileId,
             ]);
@@ -236,9 +308,21 @@ class ProductController extends FrameworkBundleAdminController
     {
         // @todo: all the constraint error messages are missing for now (see ProductConstraintException)
         return [
+            CannotDeleteProductException::class => $this->trans(
+                'An error occurred while deleting the object.',
+                'Admin.Notifications.Error'
+            ),
+            CannotBulkDeleteProductException::class => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+            ),
             ProductConstraintException::class => [
                 ProductConstraintException::INVALID_PRICE => $this->trans(
                     'Product price is invalid',
+                    'Admin.Notifications.Error'
+                ),
+                ProductConstraintException::INVALID_REDIRECT_TARGET => $this->trans(
+                    'When redirecting towards a product you must select a target product.',
                     'Admin.Notifications.Error'
                 ),
             ],

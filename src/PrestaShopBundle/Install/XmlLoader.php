@@ -577,6 +577,11 @@ class XmlLoader
         $this->storeId($entity, $identifier, $entity_id);
     }
 
+    public function createEntityAttribute($identifier, array $data, array $data_lang = [])
+    {
+        $this->createEntity('attribute', $identifier, 'ProductAttribute', $data, $data_lang);
+    }
+
     public function createEntityConfiguration($identifier, array $data, array $data_lang)
     {
         if (Db::getInstance()->getValue('SELECT id_configuration FROM ' . _DB_PREFIX_ . 'configuration WHERE name = \'' . pSQL($data['name']) . '\'')) {

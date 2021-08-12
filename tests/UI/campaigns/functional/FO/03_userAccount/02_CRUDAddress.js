@@ -77,6 +77,7 @@ describe('CRUD address in FO', async () => {
   it('should go to addresses page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFOAddressesPage', baseContext);
 
+    await foHomePage.goToMyAccountPage(page);
     await foMyAccountPage.goToAddressesPage(page);
     const pageHeaderTitle = await foAddressesPage.getPageTitle(page);
     await expect(pageHeaderTitle).to.equal(foAddressesPage.pageTitle);

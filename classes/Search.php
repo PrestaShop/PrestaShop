@@ -798,7 +798,7 @@ class SearchCore
         // Products are processed 50 by 50 in order to avoid overloading MySQL
         while (($products = Search::getProductsToIndex($total_languages, $id_product, 50, $weight_array)) && (count($products) > 0)) {
             $products_array = [];
-            // Now each non-indexed product is processed one by one, langage by langage
+            // Now each non-indexed product is processed one by one, language by language
             foreach ($products as $product) {
                 if ((int) $weight_array['tags']) {
                     $product['tags'] = Search::getTags($db, (int) $product['id_product'], (int) $product['id_lang']);
@@ -907,7 +907,7 @@ class SearchCore
         }
     }
 
-    /** $queryArray3 is automatically emptied in order to be reused immediatly */
+    /** $queryArray3 is automatically emptied in order to be reused immediately */
     protected static function saveIndex(&$queryArray3)
     {
         if (is_array($queryArray3) && !empty($queryArray3)) {
@@ -1057,7 +1057,7 @@ class SearchCore
     {
         $distance = []; // cache levenshtein distance
         $searchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
-        $psSearchMawWordLenth = (int) Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
+        $psSearchMaxWordLength = (int) Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
 
         if (!self::$totalWordInSearchWordTable) {
             $sql = 'SELECT count(*) FROM `' . _DB_PREFIX_ . 'search_word`;';
@@ -1072,13 +1072,13 @@ class SearchCore
         if (self::$totalWordInSearchWordTable > static::PS_SEARCH_MAX_WORDS_IN_TABLE) {
             self::$targetLengthMin = self::$targetLengthMax = (int) (strlen($queryString));
         } else {
-            /* This part of code could be see like an auto-scale.
-            *  Of course, more words in ps_search_word table is elevate, more server resource is needed.
-            *  So, we need an algorythm to reduce the server load depending the DB size.
+            /* This part of code can be considered like an auto-scale mechanism.
+            *  The table ps_search_word can grow huge, and exceed server resources.
+            *  So, we need a mechanism to reduce the server load depending the DB size.
             *  Here will be calculated ranges of target length depending the ps_search_word table size.
             *  If ps_search_word table size tends to PS_SEARCH_MAX_WORDS_IN_TABLE, $coefMax and $coefMin will tend to 1.
             *  If ps_search_word table size tends to 0, $coefMax will tends to 2, and $coefMin will tends to 0.5.
-            *  Calculating is made with the linear function y = ax + b.
+            *  Computations are made with the linear function y = ax + b.
             *  With actual constant values, we have :
             *  Linear function for $coefMin : a = 0.5 / 100000, b = 0.5
             *  Linear function for $coefMax : a = -1 / 100000, b = 2
@@ -1090,7 +1090,7 @@ class SearchCore
             *  80,000 words id DB give $coefMin : 0.9, $coefMax : 1.2
             *  100,000 words id DB give $coefMin : 1, $coefMax : 1*/
             if (!self::$coefMin) {
-                //self::$coefMin && self::$coefMax depend of the number of total words in ps_search_word table, need to calculate only for every search
+                //self::$coefMin && self::$coefMax depend on the number of total words in ps_search_word table, need to calculate only for every search
                 self::$coefMin = (
                     (static::PS_SEARCH_ORDINATE_MIN / static::PS_SEARCH_MAX_WORDS_IN_TABLE)
                     * self::$totalWordInSearchWordTable
@@ -1108,10 +1108,10 @@ class SearchCore
             if (self::$targetLengthMin < $searchMinWordLength) {
                 self::$targetLengthMin = $searchMinWordLength;
             }
-            if (self::$targetLengthMax > $psSearchMawWordLenth) {
-                self::$targetLengthMax = $psSearchMawWordLenth;
+            if (self::$targetLengthMax > $psSearchMaxWordLength) {
+                self::$targetLengthMax = $psSearchMaxWordLength;
             }
-            // Could happen when $queryString length * $coefMin > $psSearchMawWordLenth
+            // Could happen when $queryString length * $coefMin > $psSearchMaxWordLength
             if (self::$targetLengthMax < self::$targetLengthMin) {
                 return '';
             }
@@ -1135,12 +1135,12 @@ class SearchCore
         $closestWord = array_reduce(
             $selectedWords,
             static function ($a, $b) use ($queryString) {
-                /* The 'null as levenshtein' column is use as cache
+                /* The 'null as levenshtein' column is used as cache
                  *  if $b win, next loop, it will be $a. So, no need to assign $a['levenshtein']*/
                 $b['levenshtein'] = levenshtein($b['word'], $queryString);
 
-                /* The array comparaison will follow the order keys as follow: levenshtein, weight, word
-                 *  So, were looking for the smaller levenshtein distance, then the smallest weight (-SUM(weight))*/
+                /* The array comparison will follow the order keys as follow: levenshtein, weight, word
+                 * So, were looking for the smaller levenshtein distance, then the smallest weight (-SUM(weight))*/
                 return $a < $b ? $a : $b;
             },
             ['word' => 'initial', 'weight' => 0, 'levenshtein' => 100]

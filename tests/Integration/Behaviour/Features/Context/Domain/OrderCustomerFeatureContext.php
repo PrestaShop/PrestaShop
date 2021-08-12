@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Customer;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
@@ -42,11 +43,8 @@ class OrderCustomerFeatureContext extends AbstractDomainFeatureContext
      */
     public function orderCustomerHasAPECode(string $orderReference, string $ape): void
     {
-        $orderId = SharedStorage::getStorage()->get($orderReference);
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        /** @var OrderCustomerForViewing $orderCustomerForViewing */
-        $orderCustomerForViewing = $orderForViewing->getCustomer();
+        $orderCustomerForViewing = $this->getCustomer($orderReference);
+
         Assert::assertSame(
             $ape,
             $orderCustomerForViewing->getApe(),
@@ -67,11 +65,7 @@ class OrderCustomerFeatureContext extends AbstractDomainFeatureContext
      */
     public function orderCustomerHasSIRETCode(string $orderReference, string $siret): void
     {
-        $orderId = SharedStorage::getStorage()->get($orderReference);
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        /** @var OrderCustomerForViewing $orderCustomerForViewing */
-        $orderCustomerForViewing = $orderForViewing->getCustomer();
+        $orderCustomerForViewing = $this->getCustomer($orderReference);
 
         Assert::assertSame(
             $siret,
@@ -83,5 +77,91 @@ class OrderCustomerFeatureContext extends AbstractDomainFeatureContext
                 $siret
             )
         );
+    }
+
+    /**
+     * @Then /^the customer of the order "(.+)" has been deleted$/
+     *
+     * @param string $orderReference
+     */
+    public function orderCustomerIsDeleted(string $orderReference): void
+    {
+        $orderCustomerForViewing = $this->getCustomer($orderReference);
+
+        $customer = new Customer($orderCustomerForViewing->getId());
+
+        Assert::assertTrue(
+            (bool) $customer->delete(),
+            sprintf(
+                'Expected customer with id "%d" has been deleted',
+                $orderCustomerForViewing->getId()
+            )
+        );
+    }
+
+    /**
+     * @Then /^the customer lastname of the order "(.*)" is "(.+)"$/
+     *
+     * @param string $orderReference
+     */
+    public function orderCustomerCheckLastName(string $orderReference, string $value): void
+    {
+        $orderCustomerForViewing = $this->getCustomer($orderReference);
+
+        Assert::assertSame(
+            $value,
+            $orderCustomerForViewing->getLastName(),
+            sprintf(
+                'Expected customer lastname to be "%s"',
+                $value
+            )
+        );
+    }
+
+    /**
+     * @Then /^the customer firstname of the order "(.*)" is "(.+)"$/
+     *
+     * @param string $orderReference
+     */
+    public function orderCustomerCheckFirstName(string $orderReference, string $value): void
+    {
+        $orderCustomerForViewing = $this->getCustomer($orderReference);
+
+        Assert::assertSame(
+            $value,
+            $orderCustomerForViewing->getFirstName(),
+            sprintf(
+                'Expected customer firstname to be "%s"',
+                $value
+            )
+        );
+    }
+
+    /**
+     * @Then /^the customer id of the order "(.*)" is "(.+)"$/
+     *
+     * @param string $orderReference
+     */
+    public function orderCustomerPropertyCheck(string $orderReference, string $value): void
+    {
+        $orderCustomerForViewing = $this->getCustomer($orderReference);
+
+        Assert::assertSame(
+            (int) $value,
+            $orderCustomerForViewing->getId(),
+            sprintf(
+                'Expected customer id to be "%d"',
+                $value
+            )
+        );
+    }
+
+    protected function getCustomer(string $orderReference): OrderCustomerForViewing
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        return $orderForViewing->getCustomer();
     }
 }

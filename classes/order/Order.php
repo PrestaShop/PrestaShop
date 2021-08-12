@@ -430,7 +430,7 @@ class OrderCore extends ObjectModel
         $this->total_paid_tax_excl -= $product_price_tax_excl + $shipping_diff_tax_excl;
         $this->total_paid_real -= $product_price_tax_incl + $shipping_diff_tax_incl;
 
-        $fields = [
+        $fieldsFloatType = [
             'total_shipping',
             'total_shipping_tax_excl',
             'total_shipping_tax_incl',
@@ -443,14 +443,11 @@ class OrderCore extends ObjectModel
         ];
 
         /* Prevent from floating precision issues */
-        foreach ($fields as $field) {
+        foreach ($fieldsFloatType as $field) {
             if ($this->{$field} < 0) {
                 $this->{$field} = 0;
             }
-        }
 
-        /* Prevent from floating precision issues */
-        foreach ($fields as $field) {
             $this->{$field} = number_format($this->{$field}, Context::getContext()->getComputingPrecision(), '.', '');
         }
 
@@ -505,8 +502,8 @@ class OrderCore extends ObjectModel
      * Get order history.
      *
      * @param int $id_lang Language id
-     * @param int $id_order_state Filter a specific order status
-     * @param int $no_hidden Filter no hidden status
+     * @param int|bool $id_order_state Filter a specific order status
+     * @param int|bool $no_hidden Filter no hidden status
      * @param int $filters Flag to use specific field filter
      *
      * @return array History entries ordered by date DESC
@@ -1855,7 +1852,7 @@ class OrderCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param float $amount_paid
+     * @param string $amount_paid
      * @param string $payment_method
      * @param string $payment_transaction_id
      * @param Currency $currency

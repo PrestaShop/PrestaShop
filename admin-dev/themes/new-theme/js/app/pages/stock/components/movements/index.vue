@@ -102,7 +102,8 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
   import PSTable from '@app/widgets/ps-table/ps-table';
   import PSSort from '@app/widgets/ps-table/ps-sort';
   import PSAlert from '@app/widgets/ps-alert';
@@ -111,23 +112,23 @@
 
   const DEFAULT_SORT = 'desc';
 
-  export default {
+  export default Vue.extend({
     computed: {
-      isLoading() {
+      isLoading(): boolean {
         return this.$store.state.isLoading;
       },
-      movements() {
+      movements(): Record<string, any> {
         return this.$store.state.movements;
       },
-      emptyMovements() {
+      emptyMovements(): boolean {
         return !this.$store.state.movements.length;
       },
-      currentSort() {
+      currentSort(): string {
         return this.$store.state.order;
       },
     },
     methods: {
-      sort(order, sortDirection) {
+      sort(order: string, sortDirection: string): void {
         this.$store.dispatch('updateOrder', order);
         this.$emit('fetch', sortDirection === 'desc' ? 'desc' : 'asc');
       },
@@ -148,5 +149,5 @@
       PSLoader,
       MovementLine,
     },
-  };
+  });
 </script>

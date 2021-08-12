@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
-use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 class ProductCore extends ObjectModel
@@ -284,7 +283,7 @@ class ProductCore extends ObjectModel
      *
      * @var bool Tells if the product uses the advanced stock management
      */
-    public $advanced_stock_management = 0;
+    public $advanced_stock_management = false;
 
     /**
      * @deprecated since 1.7.8
@@ -2731,6 +2730,7 @@ class ProductCore extends ObjectModel
             $combinations[$k]['attribute_designation'] = $row['attribute_designation'];
         }
 
+        $computingPrecision = Context::getContext()->getComputingPrecision();
         //Get quantity of each variations
         foreach ($combinations as $key => $row) {
             $cache_key = $row['id_product'] . '_' . $row['id_product_attribute'] . '_quantity';
@@ -2745,6 +2745,10 @@ class ProductCore extends ObjectModel
             } else {
                 $combinations[$key]['quantity'] = Cache::retrieve($cache_key);
             }
+
+            $ecotax = (float) $combinations[$key]['ecotax'] ?? 0;
+            $combinations[$key]['ecotax_tax_excluded'] = $ecotax;
+            $combinations[$key]['ecotax_tax_included'] = Tools::ps_round($ecotax * (1 + Tax::getProductEcotaxRate() / 100), $computingPrecision);
         }
 
         return $combinations;
@@ -2829,6 +2833,7 @@ class ProductCore extends ObjectModel
 
         $res = Db::getInstance()->executeS($sql);
 
+        $computingPrecision = Context::getContext()->getComputingPrecision();
         //Get quantity of each variations
         foreach ($res as $key => $row) {
             $cache_key = $row['id_product'] . '_' . $row['id_product_attribute'] . '_quantity';
@@ -2843,6 +2848,10 @@ class ProductCore extends ObjectModel
             } else {
                 $res[$key]['quantity'] = Cache::retrieve($cache_key);
             }
+
+            $ecotax = (float) $res[$key]['ecotax'] ?? 0;
+            $res[$key]['ecotax_tax_excluded'] = $ecotax;
+            $res[$key]['ecotax_tax_included'] = Tools::ps_round($ecotax * (1 + Tax::getProductEcotaxRate() / 100), $computingPrecision);
         }
 
         return $res;
@@ -3223,7 +3232,7 @@ class ProductCore extends ObjectModel
      * @param string|false $ending Date in mysql format Y-m-d
      * @param Context|null $context
      *
-     * @return array|false
+     * @return array|int|false
      */
     public static function getPricesDrop(
         $id_lang,
@@ -3289,7 +3298,7 @@ class ProductCore extends ObjectModel
         }
 
         if ($count) {
-            return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            $count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT COUNT(DISTINCT p.`id_product`)
             FROM `' . _DB_PREFIX_ . 'product` p
             ' . Shop::addSqlAssociation('product', 'p') . '
@@ -3298,6 +3307,8 @@ class ProductCore extends ObjectModel
             ' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
             ' . ((!$beginning && !$ending) ? 'AND p.`id_product` IN(' . ((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0) . ')' : '') . '
             ' . $sql_groups);
+
+            return $count === false ? $count : (int) $count;
         }
 
         if (strpos($order_by, '.') > 0) {
@@ -3801,7 +3812,7 @@ class ProductCore extends ObjectModel
             $sql->innerJoin('product_shop', 'product_shop', '(product_shop.id_product=p.id_product AND product_shop.id_shop = ' . (int) $id_shop . ')');
             $sql->where('p.`id_product` = ' . (int) $id_product);
             if (Combination::isFeatureActive()) {
-                $sql->select('IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute, product_attribute_shop.`price` AS attribute_price, product_attribute_shop.default_on');
+                $sql->select('IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute, product_attribute_shop.`price` AS attribute_price, product_attribute_shop.default_on, product_attribute_shop.`ecotax` AS attribute_ecotax');
                 $sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_product = p.id_product AND product_attribute_shop.id_shop = ' . (int) $id_shop . ')');
             } else {
                 $sql->select('0 as id_product_attribute');
@@ -3814,7 +3825,8 @@ class ProductCore extends ObjectModel
                     $array_tmp = [
                         'price' => $row['price'],
                         'ecotax' => $row['ecotax'],
-                        'attribute_price' => (isset($row['attribute_price']) ? $row['attribute_price'] : null),
+                        'attribute_price' => $row['attribute_price'] ?: null,
+                        'attribute_ecotax' => $row['attribute_ecotax'] ?: null,
                     ];
                     self::$_pricesLevel2[$cache_id_2][(int) $row['id_product_attribute']] = $array_tmp;
 
@@ -3992,7 +4004,7 @@ class ProductCore extends ObjectModel
         }
         $sql->leftJoin('order_detail_tax', 'odt', 'odt.id_order_detail = od.id_order_detail');
         $sql->leftJoin('tax', 't', 't.id_tax = odt.id_tax');
-        $res = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS($sql);
+        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
         if (!is_array($res) || empty($res)) {
             return null;
         }
@@ -7773,12 +7785,13 @@ class ProductCore extends ObjectModel
     /**
      * Set Advanced Stock Management status for this product
      *
-     * @param int $value 0 for disabled, 1 for enabled
+     * @param bool $value 0 for disabled, 1 for enabled
      */
     public function setAdvancedStockManagement($value)
     {
-        $this->advanced_stock_management = (int) $value;
-        if (Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP && Context::getContext()->shop->getContextShopGroup()->share_stock == 1) {
+        $this->advanced_stock_management = (bool) $value;
+        if (Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP
+            && Context::getContext()->shop->getContextShopGroup()->share_stock == 1) {
             Db::getInstance()->execute(
                 '
                 UPDATE `' . _DB_PREFIX_ . 'product_shop`
@@ -8194,14 +8207,14 @@ class ProductCore extends ObjectModel
     public function getRedirectType()
     {
         switch ($this->redirect_type) {
-            case ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY:
-            case ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND:
+            case RedirectType::TYPE_CATEGORY_PERMANENT:
+            case RedirectType::TYPE_CATEGORY_TEMPORARY:
                 return 'category';
 
                 break;
 
-            case ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY:
-            case ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND:
+            case RedirectType::TYPE_PRODUCT_PERMANENT:
+            case RedirectType::TYPE_PRODUCT_TEMPORARY:
                 return 'product';
 
                 break;

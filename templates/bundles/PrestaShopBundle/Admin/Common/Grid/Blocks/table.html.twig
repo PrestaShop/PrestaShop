@@ -1,0 +1,77 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{{ renderhook('displayAdminGridTableBefore', {
+    'grid': grid,
+    'legacy_controller': app.request.attributes.get('_legacy_controller'),
+    'controller': app.request.attributes.get('_controller')
+  })
+}}
+
+{{ form_start(grid.filter_form, {'attr': {'id': grid.id ~ '_filter_form', 'class': 'table-responsive'}}) }}
+
+<table class="grid-table js-grid-table table {% if is_ordering_column(grid) %}grid-ordering-column{% endif %} {% if grid.attributes.is_empty_state %}border-0{% endif %}"
+       id="{{ grid.id }}_grid_table"
+       data-query="{{ grid.data.query }}"
+>
+  <thead class="thead-default">
+  {% block grid_table_head %}
+    {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/headers_row.html.twig', {'grid': grid}) }}
+    {% if grid.actions.bulk|length > 0 or grid.filter_form|length > 1 %}
+      {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/filters_row.html.twig', {'grid': grid}) }}
+    {% endif %}
+  {% endblock %}
+  </thead>
+  <tbody>
+  {% block grid_table_body %}
+    {% if grid.data.records is not empty %}
+      {% for record in grid.data.records %}
+        <tr>
+          {% for column in grid.columns %}
+            <td
+              {% if column.type == 'identifier' %}data-identifier="{{ record[column.id] }}"{% endif %}
+              class="{{ column.type }}-type column-{{ column.id }}{% if column.options.clickable is defined and column.options.clickable %} clickable{% endif %}{% if column.options.alignment is defined and column.options.alignment %} text-{{ column.options.alignment }}{% endif %}"
+            >
+              {{ column_content(record, column, grid) }}
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    {% else %}
+      {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/empty_row.html.twig', {'grid': grid}) }}
+    {% endif %}
+  {% endblock %}
+  </tbody>
+  {% block grid_table_footer %}{% endblock %}
+</table>
+
+{{ form_end(grid.filter_form) }}
+
+{{ renderhook('displayAdminGridTableAfter', {
+      'grid': grid,
+      'legacy_controller': app.request.attributes.get('_legacy_controller'),
+      'controller': app.request.attributes.get('_controller')
+    })
+}}

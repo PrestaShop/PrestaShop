@@ -156,7 +156,7 @@ class AdminProductDataUpdater implements ProductInterface
         // Hooks: will trigger actionProductDelete
         $result = $product->delete();
 
-        if ($result === 0) {
+        if ($result === false) {
             throw new UpdateProductException('Cannot delete the requested product.', 5007);
         }
 

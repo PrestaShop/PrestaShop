@@ -190,6 +190,7 @@ describe('Send a message with an ordered product', async () => {
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToHistoryAndDetailsPage(page);
       const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);

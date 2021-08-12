@@ -71,7 +71,7 @@ final class ProductWithoutImageQueryBuilder extends AbstractProductQueryBuilder
         $qb = $this->getProductsCommonQueryBuilder($searchCriteria);
 
         $imageSubQuery = $this->connection->createQueryBuilder()
-            ->select(1)
+            ->select('1')
             ->from($this->dbPrefix . 'image_shop', 'img')
             ->andWhere('p.id_product = img.id_product');
 

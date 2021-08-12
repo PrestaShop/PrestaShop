@@ -43,12 +43,10 @@ services:
         class: 'PrestaShopBundle\Routing\Linter\SecurityAnnotationLinter'
         arguments:
           - '@annotation_reader'
-          - '@controller_name_converter'
+        public: true
 
     prestashop.bundle.routing.linter.naming_convention_linter:
         class: 'PrestaShopBundle\Routing\Linter\NamingConventionLinter'
-        arguments:
-            - '@controller_name_converter'
 
     prestashop.bundle.routing.linter.legacy_link_linter:
       class: 'PrestaShopBundle\Routing\Linter\LegacyLinkLinter'

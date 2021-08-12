@@ -143,6 +143,7 @@ describe('CRUD country', async () => {
     it('should go to addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_1', baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToAddressesPage(page);
 
       const pageTitle = await foAddressesPage.getPageTitle(page);
@@ -241,6 +242,7 @@ describe('CRUD country', async () => {
     it('should go to addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_2', baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToAddressesPage(page);
 
       const pageTitle = await foAddressesPage.getPageTitle(page);

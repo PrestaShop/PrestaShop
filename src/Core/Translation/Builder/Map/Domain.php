@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Builder\Map;
 
-use Doctrine\Common\Inflector\Inflector;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 
 /**
  * This class is a representation of a Domain catalogue.
@@ -208,7 +208,7 @@ class Domain
     public static function splitDomain(string $domain): array
     {
         // the third component of the domain may have underscores, so we need to limit pieces to 3
-        return explode('_', Inflector::tableize($domain), 3);
+        return explode('_', Inflector::getInflector()->tableize($domain), 3);
     }
 
     /**

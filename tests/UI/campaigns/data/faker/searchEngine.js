@@ -13,8 +13,8 @@ class SearchEngineData {
     /** @member {string} Server of the engine */
     this.server = searchEngineToCreate.server || `test_${faker.internet.domainWord()}`;
 
-    /** @member {string} Var to use on the search */
-    this.getVar = searchEngineToCreate.getVar || 'qTest_';
+    /** @member {string} key to use on the search */
+    this.queryKey = searchEngineToCreate.queryKey || 'qTest_';
   }
 }
 

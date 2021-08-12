@@ -512,4 +512,63 @@ class ToolsTest extends TestCase
     {
         $this->assertSame($expectedResult, Tools::ceilf($value, $precision));
     }
+
+    /**
+     * @param string $expectedPassword
+     * @param mixed $passwordGenerated
+     *
+     * @dataProvider passwordGenProvider
+     */
+    public function testPasswdGen(string $expectedPassword, $passwordGenerated): void
+    {
+        $this->assertRegExp($expectedPassword, $passwordGenerated, 'The password generated ' . $passwordGenerated . ' no match with ' . $expectedPassword);
+    }
+
+    public function passwordGenProvider(): array
+    {
+        $invalidPasswordLenghtGiven = '//';
+        $alphaNumericPasswordWithTencharacters = '/^(\w){10}$/';
+        $alphaNumericPasswordWithEightCharacters = '/^(\w{8})$/';
+        $numericPasswordWithTwelveCharacters = '/^(\d{12})$/';
+        $noNumerciPasswordWithNineCharacters = '/^[A-Z]{9}$/';
+        $randomPasswordWithTenCharacters = '/([A-Za-z0-9 _!#$%&()*+,\-.\\:\/;=?@^_]+){10}/';
+
+        return [
+            [$alphaNumericPasswordWithEightCharacters, Tools::passwdGen()],
+            [$numericPasswordWithTwelveCharacters, Tools::passwdGen(12, Tools::PASSWORDGEN_FLAG_NUMERIC)],
+            [$noNumerciPasswordWithNineCharacters, Tools::passwdGen(9, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
+            [$randomPasswordWithTenCharacters, Tools::passwdGen(10, Tools::PASSWORDGEN_FLAG_RANDOM)],
+            [$alphaNumericPasswordWithTencharacters, Tools::passwdGen(10, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_RANDOM)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_NUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_RANDOM)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_NUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
+        ];
+    }
+
+    /**
+     * @param bool|null $useSsl
+     * @param string $expectedReturn
+     *
+     * @dataProvider providerGetProtocol
+     */
+    public function testGetProtocol(?bool $useSsl, string $expectedReturn): void
+    {
+        $this->assertSame(Tools::getProtocol($useSsl), $expectedReturn);
+    }
+
+    public function providerGetProtocol(): array
+    {
+        return [
+            [true, 'https://'],
+            [false, 'http://'],
+            [null, 'http://'],
+        ];
+    }
 }

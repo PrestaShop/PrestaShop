@@ -297,6 +297,20 @@ table {
           min-width: 6rem;
         }
       }
+
+      td[data-column-id^="id_"] {
+        max-width: 8rem;
+
+        input:only-child {
+          max-width: 6rem;
+        }
+      }
+
+      td[data-column-id^="name"] {
+        input:only-child {
+          max-width: 8rem;
+        }
+      }
     }
   }
 }

@@ -42,7 +42,7 @@ class CurrencyTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->currency = new Currency(
             true,

@@ -5,7 +5,7 @@ admin_products_combinations:
     options:
         expose: true
     defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getList
+        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::getListAction
         _legacy_controller: AdminProducts
 
 admin_products_combinations_ids:
@@ -14,7 +14,7 @@ admin_products_combinations_ids:
     options:
         expose: true
     defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getListIds
+        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::getListIdsAction
         _legacy_controller: AdminProducts
 
 admin_products_combinations_update_combination_from_listing:
@@ -23,7 +23,7 @@ admin_products_combinations_update_combination_from_listing:
     options:
         expose: true
     defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:updateCombinationFromListing
+        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::updateCombinationFromListingAction
         _legacy_controller: AdminProducts
     requirements:
         combinationId: \d+
@@ -34,18 +34,18 @@ admin_products_combinations_edit_combination:
     options:
         expose: true
     defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:edit
+        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::editAction
         _legacy_controller: AdminProducts
     requirements:
         combinationId: \d+
 
-admin_products_combinations_remove_combination:
-    path: /combinations/{combinationId}/remove
+admin_products_combinations_delete_combination:
+    path: /combinations/{combinationId}/delete
     methods: [DELETE]
     options:
         expose: true
     defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:remove
+        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::deleteAction
         _legacy_controller: AdminProducts
     requirements:
         combinationId: \d+
@@ -56,7 +56,7 @@ admin_products_attribute_groups:
     options:
         expose: true
     defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getAttributeGroups
+        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::getAttributeGroupsAction
         _legacy_controller: AdminProducts
 
 admin_all_attribute_groups:
@@ -65,7 +65,7 @@ admin_all_attribute_groups:
     options:
         expose: true
     defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getAllAttributeGroups
+        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::getAllAttributeGroupsAction
         _legacy_controller: AdminProducts
 
 admin_products_combinations_generate:
@@ -74,5 +74,5 @@ admin_products_combinations_generate:
     options:
         expose: true
     defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:generateCombinations
+        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::generateCombinationsAction
         _legacy_controller: AdminProducts

@@ -59,7 +59,7 @@ class GeneralConfiguration implements DataConfigurationInterface
     {
         $this->configuration = $configuration;
         $this->cookie = $cookie;
-        $this->isDebug = $isDebug === null ? (defined(_PS_MODE_DEV_) ? _PS_MODE_DEV_ : true) : $isDebug;
+        $this->isDebug = $isDebug === null ? (defined('_PS_MODE_DEV_') ? _PS_MODE_DEV_ : true) : $isDebug;
     }
 
     /**

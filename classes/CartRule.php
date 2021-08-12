@@ -365,22 +365,18 @@ class CartRuleCore extends ObjectModel
         static $haveCartRuleToday = [];
 
         if (!isset($haveCartRuleToday[$idCustomer])) {
-            $sql = '(SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
-                'WHERE date_to >= "' . date('Y-m-d 00:00:00') .
-                '" AND date_to <= "' . date('Y-m-d 23:59:59') .
-                '" AND `id_customer` IN (0,' . (int) $idCustomer . ') LIMIT 1)';
+            $start_date = date('Y-m-d 00:00:00');
+            $end_date = date('Y-m-d 23:59:59');
+            $sql = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
+                'WHERE ((date_to >= "' . $start_date .
+                '" AND date_to <= "' . $end_date .
+                '") OR (date_from >= "' . $start_date .
+                '" AND date_from <= "' . $end_date .
+                '") OR (date_from < "' . $start_date .
+                '" AND date_to > "' . $end_date .
+                '")) AND `id_customer` IN (0,' . (int) $idCustomer . ')';
 
-            $sql .= 'UNION ALL (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
-                'WHERE date_from >= "' . date('Y-m-d 00:00:00') .
-                '" AND date_from <= "' . date('Y-m-d 23:59:59') .
-                '" AND `id_customer` IN (0,' . (int) $idCustomer . ') LIMIT 1)';
-
-            $sql .= 'UNION ALL (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
-                'WHERE date_from < "' . date('Y-m-d 00:00:00') .
-                '" AND date_to > "' . date('Y-m-d 23:59:59') .
-                '" AND `id_customer` IN (0,' . (int) $idCustomer . ') LIMIT 1) LIMIT 1';
-
-            $haveCartRuleToday[$idCustomer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+            $haveCartRuleToday[$idCustomer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
         }
 
         return !empty($haveCartRuleToday[$idCustomer]);
@@ -419,11 +415,19 @@ class CartRuleCore extends ObjectModel
         }
 
         $sql_part1 = '* FROM `' . _DB_PREFIX_ . 'cart_rule` cr
-				LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
+			LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
+
+        $sql_where = ' WHERE ((cr.`id_customer` = ' . (int) $id_customer . ' OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = "")))';
+
+        if ($includeGeneric && (int) $id_customer !== 0) {
+            $sql_where .= ' OR cr.`id_customer` = 0)';
+        } else {
+            $sql_where .= ')';
+        }
 
         $sql_part2 = ' AND NOW() BETWEEN cr.date_from AND cr.date_to
-				' . ($active ? 'AND cr.`active` = 1' : '') . '
-				' . ($inStock ? 'AND cr.`quantity` > 0' : '');
+            ' . ($active ? 'AND cr.`active` = 1' : '') . '
+            ' . ($inStock ? 'AND cr.`quantity` > 0' : '');
 
         if ($free_shipping_only) {
             $sql_part2 .= ' AND free_shipping = 1 AND carrier_restriction = 1';
@@ -433,13 +437,7 @@ class CartRuleCore extends ObjectModel
             $sql_part2 .= ' AND highlight = 1 AND code NOT LIKE "' . pSQL(CartRule::BO_ORDER_CODE_PREFIX) . '%"';
         }
 
-        $sql = '(SELECT SQL_NO_CACHE ' . $sql_part1 . '
-            WHERE (cr.`id_customer` = ' . (int) $id_customer . '
-            OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = "")))
-            ' . $sql_part2 . ')';
-        if ($includeGeneric && (int) $id_customer != 0) {
-            $sql .= ' UNION (SELECT ' . $sql_part1 . ' WHERE cr.`id_customer` = 0 ' . $sql_part2 . ')';
-        }
+        $sql = 'SELECT SQL_NO_CACHE ' . $sql_part1 . $sql_where . $sql_part2;
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
@@ -709,9 +707,22 @@ class CartRuleCore extends ObjectModel
 			AND ocr.`id_cart_rule` = ' . (int) $this->id . '
 			AND ' . (int) Configuration::get('PS_OS_ERROR') . ' != o.`current_state`
 			');
-            // When checking the cart rules present in that cart the request result is accurate
-            // When we check if using the cart rule one more time is valid then we increment this value
-            if (!$alreadyInCart) {
+
+            if ($alreadyInCart) {
+                // Sometimes a cart rule is already in a cart, but the cart is not yet attached to an order (when logging
+                // in for example), these cart rules are not taken into account by the query above:
+                // so we count cart rules that are already linked to the current cart but not attached to an order yet.
+
+                $quantityUsed += (int) Db::getInstance()->getValue('
+                    SELECT count(*)
+                    FROM ps_cart_cart_rule ccr
+                    INNER JOIN ps_cart c ON c.id_cart = ccr.id_cart
+                    LEFT JOIN ps_orders o ON o.id_cart = c.id_cart
+                    WHERE c.id_customer = ' . $cart->id_customer . ' AND c.id_cart = ' . $cart->id . ' AND ccr.id_cart_rule = ' . (int) $this->id . ' AND o.id_order IS NULL
+                ');
+            } else {
+                // When checking the cart rules present in that cart the request result is accurate
+                // When we check if using the cart rule one more time is valid then we increment this value
                 ++$quantityUsed;
             }
             if ($quantityUsed > $this->quantity_per_user) {

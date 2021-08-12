@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Session\SessionInterface;
 
 /**
  * @property string $passwd
+ * @property string $shopContext
  */
 class CookieCore
 {
@@ -589,7 +590,7 @@ class CookieCore
             $session = new CustomerSession($sessionId);
         }
 
-        if (!empty($session->getId())) {
+        if (isset($session) && Validate::isLoadedObject($session)) {
             return $session;
         }
 

@@ -343,7 +343,9 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Generates robots.txt file for Front Office.
      *
-     * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     * )
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @return RedirectResponse

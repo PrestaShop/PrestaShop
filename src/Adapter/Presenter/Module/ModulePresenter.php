@@ -65,7 +65,8 @@ class ModulePresenter implements PresenterInterface
         $attributes = $module->attributes->all();
         $attributes['picos'] = $this->addPicos($attributes);
         $attributes['price'] = $this->getModulePrice($attributes['price']);
-        $attributes['starsRate'] = str_replace('.', '', round($attributes['avgRate'] * 2) / 2); // Round to the nearest 0.5
+        // Round to the nearest 0.5
+        $attributes['starsRate'] = str_replace('.', '', (string) (round($attributes['avgRate'] * 2) / 2));
 
         $moduleInstance = $module->getInstance();
 

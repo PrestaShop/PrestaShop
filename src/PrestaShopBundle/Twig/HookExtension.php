@@ -29,11 +29,14 @@ namespace PrestaShopBundle\Twig;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * This class is used by Twig_Environment and provide some methods callable from a twig template.
  */
-class HookExtension extends \Twig_Extension
+class HookExtension extends AbstractExtension
 {
     /**
      * @var HookDispatcherInterface
@@ -74,9 +77,9 @@ class HookExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('renderhook', [$this, 'renderHook'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('renderhooksarray', [$this, 'renderHooksArray'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('hooksarraycontent', [$this, 'hooksArrayContent']),
+            new TwigFilter('renderhook', [$this, 'renderHook'], ['is_safe' => ['html']]),
+            new TwigFilter('renderhooksarray', [$this, 'renderHooksArray'], ['is_safe' => ['html']]),
+            new TwigFilter('hooksarraycontent', [$this, 'hooksArrayContent']),
         ];
     }
 
@@ -88,10 +91,10 @@ class HookExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('renderhook', [$this, 'renderHook'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('renderhooksarray', [$this, 'renderHooksArray'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('hookcount', [$this, 'hookCount']),
-            new \Twig_SimpleFunction('hooksarraycontent', [$this, 'hooksArrayContent']),
+            new TwigFunction('renderhook', [$this, 'renderHook'], ['is_safe' => ['html']]),
+            new TwigFunction('renderhooksarray', [$this, 'renderHooksArray'], ['is_safe' => ['html']]),
+            new TwigFunction('hookcount', [$this, 'hookCount']),
+            new TwigFunction('hooksarraycontent', [$this, 'hooksArrayContent']),
         ];
     }
 

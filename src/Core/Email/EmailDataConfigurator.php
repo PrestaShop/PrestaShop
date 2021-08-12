@@ -65,6 +65,12 @@ final class EmailDataConfigurator implements DataConfigurationInterface
                 'encryption' => $this->configuration->get('PS_MAIL_SMTP_ENCRYPTION'),
                 'port' => $this->configuration->get('PS_MAIL_SMTP_PORT'),
             ],
+            'dkim_enable' => (bool) $this->configuration->get('PS_MAIL_DKIM_ENABLE'),
+            'dkim_config' => [
+                'domain' => (string) $this->configuration->get('PS_MAIL_DKIM_DOMAIN'),
+                'selector' => (string) $this->configuration->get('PS_MAIL_DKIM_SELECTOR'),
+                'key' => (string) $this->configuration->get('PS_MAIL_DKIM_KEY'),
+            ],
         ];
     }
 
@@ -78,7 +84,10 @@ final class EmailDataConfigurator implements DataConfigurationInterface
             $this->configuration->set('PS_MAIL_METHOD', $config['mail_method']);
             $this->configuration->set('PS_MAIL_TYPE', $config['mail_type']);
             $this->configuration->set('PS_LOG_EMAILS', $config['log_emails']);
-
+            $this->configuration->set('PS_MAIL_DKIM_ENABLE', $config['dkim_enable']);
+            $this->configuration->set('PS_MAIL_DKIM_DOMAIN', $config['dkim_config']['domain']);
+            $this->configuration->set('PS_MAIL_DKIM_SELECTOR', $config['dkim_config']['selector']);
+            $this->configuration->set('PS_MAIL_DKIM_KEY', $config['dkim_config']['key']);
             $this->configuration->set('PS_MAIL_DOMAIN', $config['smtp_config']['domain']);
             $this->configuration->set('PS_MAIL_SERVER', $config['smtp_config']['server']);
             $this->configuration->set('PS_MAIL_USER', $config['smtp_config']['username']);
@@ -104,6 +113,10 @@ final class EmailDataConfigurator implements DataConfigurationInterface
             $config['mail_method'],
             $config['mail_type'],
             $config['log_emails'],
+            $config['dkim_enable'],
+            $config['dkim_config']['domain'],
+            $config['dkim_config']['selector'],
+            $config['dkim_config']['key'],
             $config['smtp_config']['domain'],
             $config['smtp_config']['server'],
             $config['smtp_config']['username'],

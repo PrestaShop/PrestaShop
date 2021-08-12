@@ -124,7 +124,7 @@ class CustomerController extends AbstractAdminController
      *
      * Process Grid search.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -145,7 +145,7 @@ class CustomerController extends AbstractAdminController
     /**
      * Show customer create form & handle processing of it.
      *
-     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -198,7 +198,7 @@ class CustomerController extends AbstractAdminController
     /**
      * Show customer edit form & handle processing of it.
      *
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $customerId
      * @param Request $request
@@ -322,7 +322,7 @@ class CustomerController extends AbstractAdminController
      * Set private note about customer.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))",
      *      redirectRoute="admin_customers_index"
      * )
      *
@@ -362,7 +362,7 @@ class CustomerController extends AbstractAdminController
      * Transforms guest to customer
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))",
      *      redirectRoute="admin_customers_index"
      * )
      *
@@ -399,7 +399,7 @@ class CustomerController extends AbstractAdminController
      * Sets required fields for customer
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))",
      *      redirectRoute="admin_customers_index"
      * )
      *
@@ -751,7 +751,7 @@ class CustomerController extends AbstractAdminController
     /**
      * Export filtered customers
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param CustomerFilters $filters
      *
@@ -975,6 +975,7 @@ class CustomerController extends AbstractAdminController
     private function manageLegacyFlashes($messageId)
     {
         $messages = [
+            1 => $this->trans('Successful deletion', 'Admin.Notifications.Success'),
             4 => $this->trans('Update successful.', 'Admin.Notifications.Success'),
         ];
 

@@ -27,6 +27,7 @@
 namespace LegacyTests\PrestaShopBundle\Utils;
 
 use AppKernel;
+use Category;
 use Context;
 use Doctrine\DBAL\DBALException;
 use Language;
@@ -78,6 +79,7 @@ class DatabaseCreator
 
         $install->installFixtures();
 
+        Category::regenerateEntireNtree();
         Tab::resetStaticCache();
         $install->installTheme();
         $install->installModules();

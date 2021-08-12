@@ -57,7 +57,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     private const TRANSLATION_PACK_CACHE_DIR = _PS_TRANSLATIONS_DIR_;
 
     /** Path to the symfony translations directory */
-    private const SF_TRANSLATIONS_DIR = _PS_ROOT_DIR_ . '/app/Resources/translations';
+    private const SF_TRANSLATIONS_DIR = _PS_ROOT_DIR_ . '/translations';
 
     /** @var int */
     public $id;
@@ -323,8 +323,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * @param string $iso_from
      * @param string $theme_from
-     * @param bool $iso_to
-     * @param bool $theme_to
+     * @param string|bool $iso_to
+     * @param string|bool $theme_to
      * @param bool $select
      * @param bool $check
      * @param bool $modules
@@ -688,7 +688,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @see loadLanguages()
      *
      * @param bool $active Select only active languages
-     * @param int|false $id_shop Shop ID
+     * @param int|bool $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
      * @return array<int|array> Language information
@@ -1548,7 +1548,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             $rows = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
             if (!empty($rows)) {
                 // get all values
-                $tableNames = array_map('reset', $rows);
+                $tableNames = [];
+                foreach ($rows as $row) {
+                    $tableNames[] = reset($row);
+                }
                 static::updateMultilangTables($lang, $tableNames);
             }
         }
@@ -1690,17 +1693,14 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         $themesDir = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'themes';
 
-        $processor = new RtlStylesheetProcessor(
+        return new RtlStylesheetProcessor(
             $adminDir,
             $themesDir,
             [
-                _PS_MODULE_DIR_ . 'gamification',
                 _PS_MODULE_DIR_ . 'welcome',
                 _PS_MODULE_DIR_ . 'cronjobs',
             ]
         );
-
-        return $processor;
     }
 
     /**

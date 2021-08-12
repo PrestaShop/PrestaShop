@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate;
 
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use SpecificPrice;
 
