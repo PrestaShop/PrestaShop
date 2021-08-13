@@ -63,13 +63,6 @@ class StockMvt
     /**
      * @var int
      *
-     * @ORM\Column(name="id_supply_order", type="integer", nullable=true)
-     */
-    private $idSupplyOrder;
-
-    /**
-     * @var int
-     *
      * @ORM\Column(name="id_stock_mvt_reason", type="integer", nullable=false)
      */
     private $idStockMvtReason;
@@ -206,30 +199,6 @@ class StockMvt
     public function getIdOrder()
     {
         return $this->idOrder;
-    }
-
-    /**
-     * Set idSupplyOrder.
-     *
-     * @param int $idSupplyOrder
-     *
-     * @return StockMvt
-     */
-    public function setIdSupplyOrder($idSupplyOrder)
-    {
-        $this->idSupplyOrder = $idSupplyOrder;
-
-        return $this;
-    }
-
-    /**
-     * Get idSupplyOrder.
-     *
-     * @return int
-     */
-    public function getIdSupplyOrder()
-    {
-        return $this->idSupplyOrder;
     }
 
     /**

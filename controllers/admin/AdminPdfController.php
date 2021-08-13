@@ -142,22 +142,6 @@ class AdminPdfControllerCore extends AdminController
         $this->generatePDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP);
     }
 
-    public function processGenerateSupplyOrderFormPDF()
-    {
-        if (!Tools::isSubmit('id_supply_order')) {
-            die($this->trans('The supply order ID is missing.', [], 'Admin.Orderscustomers.Notification'));
-        }
-
-        $id_supply_order = (int) Tools::getValue('id_supply_order');
-        $supply_order = new SupplyOrder($id_supply_order);
-
-        if (!Validate::isLoadedObject($supply_order)) {
-            die($this->trans('The supply order cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
-        }
-
-        $this->generatePDF($supply_order, PDF::TEMPLATE_SUPPLY_ORDER_FORM);
-    }
-
     public function generateDeliverySlipPDFByIdOrder($id_order)
     {
         $order = new Order((int) $id_order);
