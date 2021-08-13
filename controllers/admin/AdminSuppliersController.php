@@ -91,7 +91,6 @@ class AdminSuppliersControllerCore extends AdminController
 
     public function renderForm()
     {
-        // loads current warehouse
         if (!($obj = $this->loadObject(true))) {
             return;
         }

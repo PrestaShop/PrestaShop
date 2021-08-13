@@ -38,7 +38,6 @@ use Db;
 use Order;
 use OrderDetail;
 use OrderInvoice;
-use Pack;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
@@ -49,9 +48,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockExcepti
 use Product;
 use Shop;
 use StockAvailable;
-use StockManagerFactory;
-use StockMvt;
-use Warehouse;
 
 /**
  * Increase or decrease quantity of an order's product.
@@ -377,7 +373,6 @@ class OrderProductQuantityUpdater
      * @param int $newQuantity
      * @param bool $delete
      *
-     * @throws OrderException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
@@ -391,33 +386,29 @@ class OrderProductQuantityUpdater
         $reinjectableQuantity = $oldQuantity - $newQuantity;
         $quantityToReinject = $oldQuantity > $reinjectableQuantity ? $reinjectableQuantity : $oldQuantity;
 
-        if ($orderDetail->id_warehouse == 0) {
-            StockAvailable::updateQuantity(
-                $orderDetail->product_id,
-                $orderDetail->product_attribute_id,
-                $quantityToReinject,
-                $orderDetail->id_shop,
-                true,
-                [
-                    'id_order' => $orderDetail->id_order,
-                    'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_RETURN_REASON'),
-                ]
-            );
+        StockAvailable::updateQuantity(
+            $orderDetail->product_id,
+            $orderDetail->product_attribute_id,
+            $quantityToReinject,
+            $orderDetail->id_shop,
+            true,
+            [
+                'id_order' => $orderDetail->id_order,
+                'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_RETURN_REASON'),
+            ]
+        );
 
-            // sync all stock
-            (new StockManager())->updatePhysicalProductQuantity(
-                (int) $orderDetail->id_shop,
-                (int) Configuration::get('PS_OS_ERROR'),
-                (int) Configuration::get('PS_OS_CANCELED'),
-                null,
-                (int) $orderDetail->id_order
-            );
+        // sync all stock
+        (new StockManager())->updatePhysicalProductQuantity(
+            (int) $orderDetail->id_shop,
+            (int) Configuration::get('PS_OS_ERROR'),
+            (int) Configuration::get('PS_OS_CANCELED'),
+            null,
+            (int) $orderDetail->id_order
+        );
 
-            if ($delete) {
-                $orderDetail->delete();
-            }
-        } else {
-            throw new OrderException('This product cannot be re-stocked.');
+        if ($delete) {
+            $orderDetail->delete();
         }
     }
 

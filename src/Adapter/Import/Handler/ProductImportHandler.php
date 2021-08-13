@@ -52,14 +52,11 @@ use Psr\Log\LoggerInterface;
 use Shop;
 use SpecificPrice;
 use StockAvailable;
-use StockManagerFactory;
 use Supplier;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tag;
 use TaxManagerFactory;
 use TaxRulesGroup;
-use Warehouse;
-use WarehouseProductLocation;
 
 /**
  * Class ProductImportHandler is responsible for product import.

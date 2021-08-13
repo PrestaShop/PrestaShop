@@ -31,7 +31,11 @@
  */
 class StockCore extends ObjectModel
 {
-    /** @var int identifier of the warehouse */
+    /**
+     * @var int identifier of the warehouse
+     *
+     *@deprecated Since 8.0, will be removed in 9.0
+     */
     public $id_warehouse;
 
     /** @var int identifier of the product */

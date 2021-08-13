@@ -31,7 +31,6 @@ $(document).ready(() => {
   formCategory.init();
   stock.init();
   supplier.init();
-  warehouseCombinations.init();
   customFieldCollection.init();
   virtualProduct.init();
   attachmentProduct.init();

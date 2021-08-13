@@ -162,7 +162,7 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
-            - "@prestashop.adapter.data_provider.warehouse"
+            - null
             - "@prestashop.adapter.data_provider.carrier"
         parent: 'form.type.common_type'
         public: true
@@ -198,16 +198,6 @@ services:
 
     form.type.product.virtual:
         class: PrestaShopBundle\Form\Admin\Product\ProductVirtual
-        arguments:
-            - "@translator"
-            - "@prestashop.adapter.legacy.context"
-        parent: 'form.type.common_type'
-        public: true
-        tags:
-            - { name: form.type }
-
-    form.type.product.warehouse_combination:
-        class: PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"

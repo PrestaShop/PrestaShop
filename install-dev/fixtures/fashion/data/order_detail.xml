@@ -3,7 +3,6 @@
     <fields class="OrderDetail">
         <field name="id_order" relation="orders"/>
         <field name="id_order_invoice"/>
-        <field name="id_warehouse"/>
         <field name="id_shop"/>
         <field name="product_id" relation="product"/>
         <field name="product_attribute_id" relation="product_attribute"/>
@@ -44,7 +43,7 @@
         <field name="original_product_price"/>
     </fields>
     <entities>
-        <order_detail id="order_detail_1" id_order="1" id_order_invoice="0" id_warehouse="0" id_shop="1"
+        <order_detail id="order_detail_1" id_order="1" id_order_invoice="0" id_shop="1"
                       product_id="Hummingbird_printed_t-shirt" product_attribute_id="product_attribute_46" product_quantity="1"
                       product_quantity_in_stock="1" product_quantity_refunded="0" product_quantity_return="0"
                       product_quantity_reinjected="0" product_price="23.900000" reduction_percent="0.00"
@@ -60,7 +59,7 @@
             <product_name>Hummingbird printed t-shirt - Color : White, Size : S</product_name>
             <download_hash/>
         </order_detail>
-        <order_detail id="order_detail_2" id_order="1" id_order_invoice="0" id_warehouse="0" id_shop="1"
+        <order_detail id="order_detail_2" id_order="1" id_order_invoice="0" id_shop="1"
                       product_id="Hummingbird_printed_sweater" product_attribute_id="product_attribute_62" product_quantity="1"
                       product_quantity_in_stock="1" product_quantity_refunded="0" product_quantity_return="0"
                       product_quantity_reinjected="0" product_price="35.900000" reduction_percent="0.00"
@@ -76,7 +75,7 @@
             <product_name>Hummingbird printed sweater - Color : White, Size : S</product_name>
             <download_hash/>
         </order_detail>
-        <order_detail id="order_detail_3" id_order="2" id_order_invoice="0" id_warehouse="0" id_shop="1"
+        <order_detail id="order_detail_3" id_order="2" id_order_invoice="0" id_shop="1"
                       product_id="The_adventure_begins_Framed_poster" product_attribute_id="product_attribute_75" product_quantity="2"
                       product_quantity_in_stock="3" product_quantity_refunded="0" product_quantity_return="0"
                       product_quantity_reinjected="0" product_price="79.000000" reduction_percent="0.00"
@@ -92,7 +91,7 @@
             <product_name>The adventure begins Framed poster - Size : 80x120cm</product_name>
             <download_hash/>
         </order_detail>
-        <order_detail id="order_detail_4" id_order="2" id_order_invoice="0" id_warehouse="0" id_shop="1"
+        <order_detail id="order_detail_4" id_order="2" id_order_invoice="0" id_shop="1"
                       product_id="Mug_Today_is_a_good_day" product_attribute_id=""
                       product_quantity="1" product_quantity_in_stock="1" product_quantity_refunded="0"
                       product_quantity_return="0" product_quantity_reinjected="0" product_price="11.900000"
@@ -108,7 +107,7 @@
             <product_name>Mug Today is a good day</product_name>
             <download_hash/>
         </order_detail>
-        <order_detail id="order_detail_5" id_order="3" id_order_invoice="0" id_warehouse="0" id_shop="1"
+        <order_detail id="order_detail_5" id_order="3" id_order_invoice="0" id_shop="1"
                       product_id="Mountain_fox_notebook" product_attribute_id="product_attribute_85"
                       product_quantity="1" product_quantity_in_stock="1" product_quantity_refunded="0"
                       product_quantity_return="0" product_quantity_reinjected="0" product_price="12.900000"
@@ -124,7 +123,7 @@
             <product_name>Mountain fox notebook Style : Ruled</product_name>
             <download_hash/>
         </order_detail>
-        <order_detail id="order_detail_6" id_order="4" id_order_invoice="0" id_warehouse="0" id_shop="1"
+        <order_detail id="order_detail_6" id_order="4" id_order_invoice="0" id_shop="1"
                       product_id="Mountain_fox_notebook" product_attribute_id="product_attribute_86"
                       product_quantity="1" product_quantity_in_stock="1" product_quantity_refunded="0"
                       product_quantity_return="0" product_quantity_reinjected="0" product_price="12.900000"
@@ -140,7 +139,7 @@
             <product_name>Mountain fox notebook Style : Plain</product_name>
             <download_hash/>
         </order_detail>
-        <order_detail id="order_detail_7" id_order="5" id_order_invoice="0" id_warehouse="0" id_shop="1"
+        <order_detail id="order_detail_7" id_order="5" id_order_invoice="0" id_shop="1"
                       product_id="Brown_bear_cushion" product_attribute_id="product_attribute_82"
                       product_quantity="1" product_quantity_in_stock="1" product_quantity_refunded="0"
                       product_quantity_return="0" product_quantity_reinjected="0" product_price="18.900000"

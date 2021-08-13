@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
-use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
@@ -78,8 +77,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $taxRuleDataProvider;
     /** @var array */
     private $productPricePriority;
-    /** @var WarehouseDataProvider */
-    private $warehouseAdapter;
     /** @var Router */
     private $router;
 
@@ -181,7 +178,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param Tools $toolsAdapter
      * @param ProductDataProvider $productDataProvider
      * @param SupplierDataProvider $supplierDataProvider
-     * @param WarehouseDataProvider $warehouseDataProvider
      * @param FeatureDataProvider $featureDataProvider
      * @param PackDataProvider $packDataProvider
      * @param ShopContext $shopContext
@@ -195,7 +191,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         Tools $toolsAdapter,
         ProductDataProvider $productDataProvider,
         SupplierDataProvider $supplierDataProvider,
-        WarehouseDataProvider $warehouseDataProvider,
         FeatureDataProvider $featureDataProvider,
         PackDataProvider $packDataProvider,
         ShopContext $shopContext,
@@ -211,7 +206,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->tools = $toolsAdapter;
         $this->productAdapter = $productDataProvider;
         $this->supplierAdapter = $supplierDataProvider;
-        $this->warehouseAdapter = $warehouseDataProvider;
         $this->featureAdapter = $featureDataProvider;
         $this->packAdapter = $packDataProvider;
         $this->configuration = new Configuration();
@@ -383,23 +377,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['inputAccessories'] = $inputAccessories;
         }
 
-        //map warehouseProductLocations
-        $form_data['warehouse_loaded'] = 1;
-        $warehouses = $this->warehouseAdapter->getWarehouses();
-        foreach ($warehouses as $warehouse) {
-            foreach ($form_data['warehouse_combination_' . $warehouse['id_warehouse']] as $combination) {
-                $key = $combination['warehouse_id']
-                    . '_' . $combination['product_id']
-                    . '_' . $combination['id_product_attribute'];
-                if ($combination['activated']) {
-                    $form_data['check_warehouse_' . $key] = '1';
-                }
-                $form_data['location_warehouse_' . $key] = $combination['location'];
-
-                unset($form_data['warehouse_combination_' . $warehouse['id_warehouse']]);
-            }
-        }
-
         //force customization fields values
         $form_data['uploadable_files'] = 0;
         $form_data['text_fields'] = 0;
@@ -463,12 +440,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
         //Inject data form for supplier combinations
         $this->formData['step6'] = array_merge($this->formData['step6'], $this->getDataSuppliersCombinations($product));
-
-        //Inject data form for warehouse combinations
-        $this->formData['step4'] = array_merge(
-            $this->formData['step4'],
-            $this->getDataWarehousesCombinations($product)
-        );
 
         return $this->formData;
     }
@@ -831,51 +802,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         }
 
         return $dataSuppliersCombinations;
-    }
-
-    /**
-     * Generate form warehouses/combinations references.
-     *
-     * @param Product $product
-     *
-     * @return array filled data form references combinations
-     */
-    private function getDataWarehousesCombinations(Product $product)
-    {
-        $combinations = $product->getAttributesResume($this->locales[0]['id_lang']);
-        if (!$combinations || empty($combinations)) {
-            $combinations[] = [
-                'id_product' => $product->id,
-                'id_product_attribute' => 0,
-                'attribute_designation' => $product->name[$this->locales[0]['id_lang']],
-            ];
-        }
-
-        //for each warehouse, generate combinations list
-        $dataWarehousesCombinations = [];
-
-        foreach ($this->warehouseAdapter->getWarehouses() as $warehouse) {
-            $warehouseId = $warehouse['id_warehouse'];
-            foreach ($combinations as $combination) {
-                $warehouseProductLocationData = $this->warehouseAdapter->getWarehouseProductLocationData(
-                    $product->id,
-                    $combination['id_product_attribute'],
-                    $warehouseId
-                );
-                $dataWarehousesCombinations['warehouse_combination_' . $warehouseId][] = [
-                    'label' => $combination['attribute_designation'],
-                    'activated' => (bool) $warehouseProductLocationData['activated'],
-                    'warehouse_id' => $warehouseId,
-                    'product_id' => $product->id,
-                    'id_product_attribute' => $combination['id_product_attribute'],
-                    'location' => isset($warehouseProductLocationData['location'])
-                        ? $warehouseProductLocationData['location']
-                        : '',
-                ];
-            }
-        }
-
-        return $dataWarehousesCombinations;
     }
 
     /**

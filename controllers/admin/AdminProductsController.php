@@ -1890,9 +1890,6 @@ class AdminProductsControllerCore extends AdminController
                         }
                     }
 
-                    if ($this->isTabSubmitted('Warehouses')) {
-                        $this->processWarehouses();
-                    }
                     if (empty($this->errors)) {
                         if (in_array($object->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
                             Search::indexation(false, $object->id);
@@ -2526,76 +2523,14 @@ class AdminProductsControllerCore extends AdminController
     }
 
     /**
-     * Post treatment for warehouses.
+     * Used to post process warehouses. No longer does anything.
+     *
+     * @deprecated Since 8.0, wil be removed in 9.0
      */
     public function processWarehouses()
     {
-        if ((int) Tools::getValue('warehouse_loaded') === 1 && Validate::isLoadedObject($product = new Product((int) $id_product = Tools::getValue('id_product')))) {
-            // Get all id_product_attribute
-            $attributes = $product->getAttributesResume($this->context->language->id);
-            if (empty($attributes)) {
-                $attributes[] = [
-                    'id_product_attribute' => 0,
-                    'attribute_designation' => '',
-                ];
-            }
-
-            // Get all available warehouses
-            $warehouses = Warehouse::getWarehouses(true);
-
-            // Get already associated warehouses
-            $associated_warehouses_collection = WarehouseProductLocation::getCollection($product->id);
-
-            $elements_to_manage = [];
-
-            // get form information
-            foreach ($attributes as $attribute) {
-                foreach ($warehouses as $warehouse) {
-                    $key = $warehouse['id_warehouse'] . '_' . $product->id . '_' . $attribute['id_product_attribute'];
-
-                    // get elements to manage
-                    if (Tools::isSubmit('check_warehouse_' . $key)) {
-                        $location = Tools::getValue('location_warehouse_' . $key, '');
-                        $elements_to_manage[$key] = $location;
-                    }
-                }
-            }
-
-            // Delete entry if necessary
-            foreach ($associated_warehouses_collection as $awc) {
-                /** @var WarehouseProductLocation $awc */
-                if (!array_key_exists($awc->id_warehouse . '_' . $awc->id_product . '_' . $awc->id_product_attribute, $elements_to_manage)) {
-                    $awc->delete();
-                }
-            }
-
-            // Manage locations
-            foreach ($elements_to_manage as $key => $location) {
-                $params = explode('_', $key);
-
-                $wpl_id = (int) WarehouseProductLocation::getIdByProductAndWarehouse((int) $params[1], (int) $params[2], (int) $params[0]);
-
-                if (empty($wpl_id)) {
-                    //create new record
-                    $warehouse_location_entity = new WarehouseProductLocation();
-                    $warehouse_location_entity->id_product = (int) $params[1];
-                    $warehouse_location_entity->id_product_attribute = (int) $params[2];
-                    $warehouse_location_entity->id_warehouse = (int) $params[0];
-                    $warehouse_location_entity->location = pSQL($location);
-                    $warehouse_location_entity->save();
-                } else {
-                    $warehouse_location_entity = new WarehouseProductLocation((int) $wpl_id);
-
-                    $location = pSQL($location);
-
-                    if ($location != $warehouse_location_entity->location) {
-                        $warehouse_location_entity->location = pSQL($location);
-                        $warehouse_location_entity->update();
-                    }
-                }
-            }
-            StockAvailable::synchronize((int) $id_product);
-        }
+        @trigger_error(__FUNCTION__ . 'is deprecated since version 8.0 and will be removed in 9.0.', E_USER_DEPRECATED);
+        // this function does nothing
     }
 
     /**
