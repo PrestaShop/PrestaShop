@@ -1361,8 +1361,6 @@ $baseline = [
     'PrestaShopBundle\Entity\StockMvt::getIdStock',
     'PrestaShopBundle\Entity\StockMvt::setIdOrder',
     'PrestaShopBundle\Entity\StockMvt::getIdOrder',
-    'PrestaShopBundle\Entity\StockMvt::setIdSupplyOrder',
-    'PrestaShopBundle\Entity\StockMvt::getIdSupplyOrder',
     'PrestaShopBundle\Entity\StockMvt::setIdStockMvtReason',
     'PrestaShopBundle\Entity\StockMvt::getIdStockMvtReason',
     'PrestaShopBundle\Entity\StockMvt::setIdEmployee',
