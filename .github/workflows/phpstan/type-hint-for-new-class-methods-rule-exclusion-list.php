@@ -368,7 +368,6 @@ $baseline = [
 'PrestaShopBundle\Controller\ArgumentResolver\SearchParametersResolver::overrideWithSavedFilters',
 'PrestaShopBundle\Entity\StockMvt::setIdStock',
 'PrestaShopBundle\Entity\StockMvt::setIdOrder',
-'PrestaShopBundle\Entity\StockMvt::setIdSupplyOrder',
 'PrestaShopBundle\Translation\View\TreeBuilder::addTreeInfo',
 'PrestaShopBundle\Entity\StockMvt::setIdStockMvtReason',
 'PrestaShopBundle\Entity\StockMvt::setIdEmployee',

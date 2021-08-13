@@ -26,22 +26,31 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
-use SupplyOrder;
-
 /**
  * Class SupplierOrderValidator is responsible for handling supplier and its corresponding order validity.
+ *
+ * @deprecated Since 8.0, will be removed in 9.0
  */
 class SupplierOrderValidator
 {
+    public function __construct()
+    {
+        @trigger_error(__CLASS__ . 'is deprecated since version 8.0 and will be removed in 9.0.', E_USER_DEPRECATED);
+    }
+
     /**
      * Checks if the given supplier has pending orders.
      *
      * @param int $supplierId
      *
+     * @deprecated Since 8.0, will be removed in 9.0
+     *
      * @return bool
      */
     public function hasPendingOrders($supplierId)
     {
-        return SupplyOrder::supplierHasPendingOrders($supplierId);
+        @trigger_error(__FUNCTION__ . 'is deprecated since version 8.0 and will be removed in 9.0.', E_USER_DEPRECATED);
+
+        return false;
     }
 }
