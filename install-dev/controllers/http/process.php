@@ -108,7 +108,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                 $this->processPostInstall();
             }
         } catch (\Exception $e) {
-            $this->ajaxJsonAnswer(false, $e->getMessage());
+            $this->ajaxJsonAnswer(false, (_PS_MODE_DEV_) ? (string) $e : $e->getMessage());
         }
 
         // With no parameters, we consider that we are doing a new install, so session where the last process step
