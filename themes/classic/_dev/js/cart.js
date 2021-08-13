@@ -32,11 +32,11 @@ function createSpin() {
 }
 
 $(document).ready(() => {
-  const productLineInCartSelector = '.js-cart-line-product-quantity';
+  const productLineInCartSelector = prestashop.themeSelectors.cart.productLineQty;
   const promises = [];
 
   prestashop.on('updateCart', () => {
-    $('.quickview').modal('hide');
+    $(prestashop.themeSelectors.cart.quickview).modal('hide');
   });
 
   prestashop.on('updatedCart', () => {
@@ -56,7 +56,7 @@ $(document).ready(() => {
   }
 
   function findCartLineProductQuantityInput($target) {
-    const $input = $target.parents('.bootstrap-touchspin').find(productLineInCartSelector);
+    const $input = $target.parents(prestashop.themeSelectors.cart.touchspin).find(productLineInCartSelector);
 
     if ($input.is(':focus')) {
       return null;
@@ -123,7 +123,7 @@ $(document).ready(() => {
     }
   };
 
-  const getTouchSpinInput = ($button) => $($button.parents('.bootstrap-touchspin').find('input'));
+  const getTouchSpinInput = ($button) => $($button.parents(prestashop.themeSelectors.cart.touchspin).find('input'));
 
   const handleCartAction = (event) => {
     event.preventDefault();
@@ -170,7 +170,7 @@ $(document).ready(() => {
       });
   };
 
-  $body.on('click', '[data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]', handleCartAction);
+  $body.on('click', prestashop.themeSelectors.cart.actions, handleCartAction);
 
   $body.on('touchspin.on.startdownspin', spinnerSelector, handleCartAction);
   $body.on('touchspin.on.startupspin', spinnerSelector, handleCartAction);
@@ -266,30 +266,30 @@ $(document).ready(() => {
 
   const $timeoutEffect = 400;
 
-  $body.on('hidden.bs.collapse', '#promo-code', () => {
-    $('.display-promo').show($timeoutEffect);
+  $body.on('hidden.bs.collapse', prestashop.themeSelectors.cart.promoCode, () => {
+    $(prestashop.themeSelectors.cart.displayPromo).show($timeoutEffect);
   });
 
-  $body.on('click', '.promo-code-button', (event) => {
+  $body.on('click', prestashop.themeSelectors.cart.promoCodeButton, (event) => {
     event.preventDefault();
 
-    $('#promo-code').collapse('toggle');
+    $(prestashop.themeSelectors.cart.promoCode).collapse('toggle');
   });
 
-  $body.on('click', '.display-promo', (event) => {
+  $body.on('click', prestashop.themeSelectors.cart.displayPromo, (event) => {
     $(event.currentTarget).hide($timeoutEffect);
   });
 
-  $body.on('click', '.js-discount .code', (event) => {
+  $body.on('click', prestashop.themeSelectors.cart.discountCode, (event) => {
     event.stopPropagation();
 
     const $code = $(event.currentTarget);
-    const $discountInput = $('[name=discount_name]');
+    const $discountInput = $(prestashop.themeSelectors.cart.discountName);
 
     $discountInput.val($code.text());
     // Show promo code field
-    $('#promo-code').collapse('show');
-    $('.display-promo').hide($timeoutEffect);
+    $(prestashop.themeSelectors.cart.promoCode).collapse('show');
+    $(prestashop.themeSelectors.cart.displayPromo).hide($timeoutEffect);
 
     return false;
   });
@@ -301,9 +301,9 @@ const CheckUpdateQuantityOperations = {
      * if errorMsg is not empty or if notifications are shown, we have error to display
      * if hasError is true, quantity was not updated : we don't disable checkout button
      */
-    const $checkoutBtn = $('.checkout a');
+    const $checkoutBtn = $(prestashop.themeSelectors.checkout.btn);
 
-    if ($('#notifications article.alert-danger').length || (errorMsg !== '' && !hasError)) {
+    if ($(prestashop.themeSelectors.notifications.dangerAlert).length || (errorMsg !== '' && !hasError)) {
       $checkoutBtn.addClass('disabled');
     }
 
@@ -320,7 +320,7 @@ const CheckUpdateQuantityOperations = {
     } else if (!hasError && isUpdateOperation) {
       hasError = false;
       isUpdateOperation = false;
-      $('#notifications .notifications-container').html('');
+      $(prestashop.themeSelectors.notifications.container).html('');
       $checkoutBtn.removeClass('disabled');
     }
   },
