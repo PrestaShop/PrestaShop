@@ -184,7 +184,6 @@ class AdminModelAdapterTest extends KernelTestCase
             self::$kernel->getContainer()->get('prestashop.adapter.tools'),
             self::$kernel->getContainer()->get('prestashop.adapter.data_provider.product'),
             self::$kernel->getContainer()->get('prestashop.adapter.data_provider.supplier'),
-            self::$kernel->getContainer()->get('prestashop.adapter.data_provider.warehouse'),
             self::$kernel->getContainer()->get('prestashop.adapter.data_provider.feature'),
             self::$kernel->getContainer()->get('prestashop.adapter.data_provider.pack'),
             self::$kernel->getContainer()->get('prestashop.adapter.shop.context'),

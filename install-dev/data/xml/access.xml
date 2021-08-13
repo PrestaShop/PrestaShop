@@ -409,10 +409,6 @@
     <access id="access_1_418" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTRANSLATIONS_READ"/>
     <access id="access_1_419" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTRANSLATIONS_UPDATE"/>
     <access id="access_1_420" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTRANSLATIONS_DELETE"/>
-    <access id="access_1_421" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINWAREHOUSES_CREATE"/>
-    <access id="access_1_422" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINWAREHOUSES_READ"/>
-    <access id="access_1_423" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINWAREHOUSES_UPDATE"/>
-    <access id="access_1_424" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINWAREHOUSES_DELETE"/>
     <access id="access_1_425" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINWEBSERVICE_CREATE"/>
     <access id="access_1_426" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINWEBSERVICE_READ"/>
     <access id="access_1_427" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINWEBSERVICE_UPDATE"/>
