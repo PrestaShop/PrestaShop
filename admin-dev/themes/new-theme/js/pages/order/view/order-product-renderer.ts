@@ -133,6 +133,10 @@ export default class OrderProductRenderer {
   moveProductPanelToOriginalPosition(): void {
     $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
     $(OrderViewPageMap.productModificationPosition)
+<<<<<<< HEAD
+=======
+      .closest(OrderViewPageMap.productsModificationRow)
+>>>>>>> Moove sensible selectors to less sensible selectors
       .addClass('d-none');
 
     $(OrderViewPageMap.productsPanel)
