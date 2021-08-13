@@ -116,7 +116,6 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
             )
             ->andWhere('a.id_customer = 0')
             ->andWhere('a.id_supplier = 0')
-            ->andWhere('a.id_warehouse = 0')
             ->andWhere('a.deleted = 0')
         ;
         $this->applyFilters($qb, $filters);

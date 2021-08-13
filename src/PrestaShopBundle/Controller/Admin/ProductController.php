@@ -577,8 +577,6 @@ class ProductController extends FrameworkBundleAdminController
 
                     $adminProductWrapper->processAttachments($product, $_POST['attachments']);
 
-                    $adminProductController->processWarehouses();
-
                     $response = new JsonResponse();
                     $response->setData([
                         'product' => $product,
@@ -610,9 +608,6 @@ class ProductController extends FrameworkBundleAdminController
 
         /** @var StockInterface $stockManager */
         $stockManager = $this->get('prestashop.core.data_provider.stock_interface');
-
-        /** @var WarehouseDataProvider $warehouseProvider */
-        $warehouseProvider = $this->get('prestashop.adapter.data_provider.warehouse');
 
         //If context shop is define to a group shop, disable the form
         if ($shopContext->isGroupShopContext()) {
@@ -1273,7 +1268,6 @@ class ProductController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.tools'),
             $productAdapter,
             $this->get('prestashop.adapter.data_provider.supplier'),
-            $this->get('prestashop.adapter.data_provider.warehouse'),
             $this->get('prestashop.adapter.data_provider.feature'),
             $this->get('prestashop.adapter.data_provider.pack'),
             $this->get('prestashop.adapter.shop.context'),

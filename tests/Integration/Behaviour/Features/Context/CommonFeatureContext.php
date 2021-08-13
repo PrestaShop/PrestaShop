@@ -117,7 +117,6 @@ use TaxManagerFactory;
 use TaxRule;
 use TaxRulesGroup;
 use Tests\Resources\ResourceResetter;
-use WarehouseProductLocation;
 use WebserviceKey;
 use Zone;
 
@@ -426,7 +425,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         SupplyOrderDetail::resetStaticCache();
         SupplyOrderHistory::resetStaticCache();
         SupplyOrderState::resetStaticCache();
-        WarehouseProductLocation::resetStaticCache();
         Tax::resetStaticCache();
         TaxRule::resetStaticCache();
         TaxRulesGroup::resetStaticCache();

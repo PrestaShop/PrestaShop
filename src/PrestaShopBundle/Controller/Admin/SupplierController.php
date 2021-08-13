@@ -77,7 +77,6 @@ class SupplierController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.tools'),
             $this->get('prestashop.adapter.data_provider.product'),
             $this->get('prestashop.adapter.data_provider.supplier'),
-            $this->get('prestashop.adapter.data_provider.warehouse'),
             $this->get('prestashop.adapter.data_provider.feature'),
             $this->get('prestashop.adapter.data_provider.pack'),
             $this->get('prestashop.adapter.shop.context'),

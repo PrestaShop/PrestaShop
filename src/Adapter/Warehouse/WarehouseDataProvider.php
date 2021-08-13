@@ -31,9 +31,16 @@ use WarehouseProductLocation;
 
 /**
  * This class will provide data from DB / ORM about Warehouse.
+ *
+ * @deprecated Since 8.0, will be removed in 9.0
  */
 class WarehouseDataProvider
 {
+    public function __construct()
+    {
+        @trigger_error(__CLASS__ . 'is deprecated since version 8.0 and will be removed in 9.0.', E_USER_DEPRECATED);
+    }
+
     /**
      * Get product warehouses.
      *

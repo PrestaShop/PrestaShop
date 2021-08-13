@@ -3795,7 +3795,6 @@ class AdminImportControllerCore extends AdminController
         // gets parameters
         $id_supplier = (int) $info['id_supplier'];
         $id_lang = (int) $info['id_lang'];
-        $id_warehouse = (int) $info['id_warehouse'];
         $id_currency = (int) $info['id_currency'];
         $reference = pSQL($info['reference']);
         $date_delivery_expected = pSQL($info['date_delivery_expected']);
@@ -3809,9 +3808,6 @@ class AdminImportControllerCore extends AdminController
         }
         if (!Language::getLanguage($id_lang)) {
             $error = $this->trans('Lang ID (%id%) is not valid (at line %line%).', ['%id%' => $id_lang, '%line%' => $current_line + 1], 'Admin.Advparameters.Notification');
-        }
-        if (!Warehouse::exists($id_warehouse)) {
-            $error = $this->trans('Warehouse ID (%id%) is not valid (at line %line%).', ['%id%' => $id_warehouse, '%line%' => $current_line + 1], 'Admin.Advparameters.Notification');
         }
         if (!Currency::getCurrency($id_currency)) {
             $error = $this->trans('Currency ID (%id%) is not valid (at line %line%).', ['%id%' => $id_currency, '%line%' => $current_line + 1], 'Admin.Advparameters.Notification');
@@ -4184,7 +4180,6 @@ class AdminImportControllerCore extends AdminController
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_group_reduction_cache`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_sale`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_supplier`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'warehouse_product_location`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock_available`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock_mvt`');

@@ -339,7 +339,6 @@ class ToolsTest extends TestCase
             ['supply_order_state_lang', 'supplyOrderStateLang', false],
             ['tab', 'tab', false],
             ['tax_lang', 'taxLang', false],
-            ['warehouse', 'warehouse', false],
             ['web_browser', 'webBrowser', false],
             ['zone', 'zone', false],
             // True

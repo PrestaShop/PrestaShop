@@ -1610,36 +1610,6 @@ product_tabs['VirtualProduct'] = new function(){
 	}
 }
 
-product_tabs['Warehouses'] = new function(){
-	this.onReady = function(){
-		$('.check_all_warehouse').click(function() {
-			//get all checkboxes of current warehouse
-			var checkboxes = $('input[name*="'+$(this).val()+'"]');
-			var checked = false;
-
-			for (var i=0; i<checkboxes.length; i++)
-			{
-				var item = $(checkboxes[i]);
-
-				if (item.is(':checked'))
-				{
-					item.removeAttr("checked");
-				}
-				else
-				{
-					item.attr("checked", true);
-					checked = true;
-				}
-			}
-
-			if (checked)
-				$(this).find('i').removeClass('icon-check-sign').addClass('icon-check-empty');
-			else
-				$(this).find('i').removeClass('icon-check-empty').addClass('icon-check-sign');
-		});
-	};
-}
-
 /**
  * Update the product image list position buttons
  *
