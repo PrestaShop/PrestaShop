@@ -53,6 +53,7 @@ final class ImageColumn extends AbstractColumn
             ])
             ->setDefaults([
                 'clickable' => true,
+                'width' => '',
                 'height' => 'auto',
             ])
             ->setAllowedTypes('src_field', 'string')
