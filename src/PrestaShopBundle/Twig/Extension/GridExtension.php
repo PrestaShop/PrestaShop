@@ -100,7 +100,7 @@ class GridExtension extends AbstractExtension
             $template = $this->getTemplatePath(
                 $column,
                 $grid,
-                $column['options']['content_template_path'] ?? self::BASE_COLUMN_CONTENT_TEMPLATE_PATH
+                $column['options']['content_template_path']
             );
 
             if (null === $template) {
