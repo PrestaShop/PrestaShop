@@ -22,5 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
+ 
+{% set width  = record[column.options.width] %}
+{% set height = record[column.options.height] %}
 
-<img src="{{ record[column.options.src_field] }}">
+<img src="{{ record[column.options.src_field] }}" {% if width %} style="width: {{ width }}; height: {{ height }};" {% endif %}>
