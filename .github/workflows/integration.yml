@@ -54,7 +54,7 @@ jobs:
               restore-keys: ${{ runner.os }}-composer-
 
           - name: Composer Install
-            run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+            run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
           - name: Build assets
             run: make assets
