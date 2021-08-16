@@ -38,7 +38,7 @@ use Symfony\Component\Translation\Translator;
 
 class CommonConfigurationErrorFactoryTest extends TestCase
 {
-    public function testGetErrorMessageForConfigurationError()
+    public function testGetErrorMessageForConfigurationError():void
     {
         $translatorMock = $this->getMockBuilder(Translator::class)
             ->disableOriginalConstructor()
