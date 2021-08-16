@@ -560,6 +560,7 @@ class StockAvailableCore extends ObjectModel
      * @param int|null $id_shop Optional : gets context if null @see Context::getContext()
      *
      * @return int OutOfStock behavior flag
+     *
      * @see \PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType
      */
     public static function outOfStock($id_product, $id_shop = null)

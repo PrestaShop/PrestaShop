@@ -223,9 +223,9 @@ class OrderHistoryCore extends ObjectModel
                         ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
 
                         // @since 1.5.0 - Stock Management
-                        if (!Pack::isPack($product['product_id']) &&
-                            in_array($new_os->id, $error_or_canceled_statuses))
-                        {
+                        if (!Pack::isPack($product['product_id'])
+                            && in_array($new_os->id, $error_or_canceled_statuses)
+                        ) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
                         }
                     } elseif (!$new_os->logable && !$old_os->logable &&
