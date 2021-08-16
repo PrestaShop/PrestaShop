@@ -78,14 +78,14 @@ class InvoiceConfigurationErrorFactoryTest extends TestCase
         $invoiceConfigurationErrorFactory = new InvoiceConfigurationErrorFactory($translatorMock, $languageRepositoryMock);
 
         $error = new InvoiceConfigurationError(InvoiceConfigurationError::ERROR_INVALID_DATE_TO, 'to', 1);
-        $result = $invoiceConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'To');
+        $result = $invoiceConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'From');
         self::assertEquals(
             'Invalid "From" date.',
             $result
         );
 
         $error = new InvoiceConfigurationError(InvoiceConfigurationError::ERROR_INVALID_DATE_FROM, 'from');
-        $result = $invoiceConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'From');
+        $result = $invoiceConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'To');
 
         self::assertEquals(
             'Invalid "To" date.',
