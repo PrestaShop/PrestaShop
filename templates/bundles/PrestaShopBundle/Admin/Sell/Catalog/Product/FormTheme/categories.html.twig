@@ -47,7 +47,7 @@
   <span {{ block('widget_attributes') }}>
     <span class="category-name-preview">{{ form.vars.data.name|default('') }}</span>
     <a class="pstaggerClosingCross" href="#">x</a>
-    <input type="hidden" value="{{ categoryId }}">
+    {{ form_widget(form.id, {'attr': {'value': categoryId}}) }}
   </span>
 {% endblock %}
 
