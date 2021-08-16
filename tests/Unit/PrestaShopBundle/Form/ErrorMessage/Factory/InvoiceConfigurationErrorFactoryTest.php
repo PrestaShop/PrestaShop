@@ -91,5 +91,10 @@ class InvoiceConfigurationErrorFactoryTest extends TestCase
             'Invalid "To" date.',
             $result
         );
+
+        $error = new InvoiceConfigurationError('non_existing_error_Code', 'field');
+        $result = $invoiceConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'field');
+
+        self::assertNull($result);
     }
 }
