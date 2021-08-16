@@ -221,7 +221,6 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
             'product_group_reduction_cache',
             'product_sale',
             'product_supplier',
-            'warehouse_product_location',
             'stock',
             'stock_available',
             'stock_mvt',

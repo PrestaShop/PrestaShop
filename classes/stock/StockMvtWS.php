@@ -114,12 +114,7 @@ class StockMvtWSCore extends ObjectModelCore
     public $id_product_attribute;
 
     /**
-     * @var int id_warehouse (@see Stock::id_warehouse)
-     */
-    public $id_warehouse;
-
-    /**
-     * @var int id_currency (@see Warehouse::id_currency)
+     * @var int id_currency (@see Currency::id_currency)
      */
     public $id_currency;
 
@@ -184,7 +179,6 @@ class StockMvtWSCore extends ObjectModelCore
         'fields' => [
             'id_product' => ['xlink_resource' => 'products'],
             'id_product_attribute' => ['xlink_resource' => 'combinations'],
-            'id_warehouse' => ['xlink_resource' => 'warehouses'],
             'id_currency' => ['xlink_resource' => 'currencies'],
             'management_type' => [],
             'id_employee' => ['xlink_resource' => 'employees'],
@@ -213,7 +207,6 @@ class StockMvtWSCore extends ObjectModelCore
     protected $tables_assoc = [
         'id_product' => ['table' => 's'],
         'id_product_attribute' => ['table' => 's'],
-        'id_warehouse' => ['table' => 's'],
         'id_currency' => ['table' => 's'],
         'management_type' => ['table' => 'w'],
         'ean13' => ['table' => 's'],
@@ -249,7 +242,7 @@ class StockMvtWSCore extends ObjectModelCore
         $query = 'SELECT DISTINCT main.' . $this->def['primary'] . ' ';
 
         if ($full) {
-            $query .= ', s.id_product, s.id_product_attribute, s.id_warehouse, w.id_currency, w.management_type,
+            $query .= ', s.id_product, s.id_product_attribute, w.id_currency, w.management_type,
 					   s.ean13, s.upc, s.mpn, s.reference ';
         }
 
@@ -264,7 +257,6 @@ class StockMvtWSCore extends ObjectModelCore
 
         if ($filter !== $old_filter || $full) {
             $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'stock s ON (s.id_stock = main.id_stock) ';
-            $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'warehouse w ON (w.id_warehouse = s.id_warehouse) ';
             $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'currency c ON (c.id_currency = w.id_currency) ';
         }
 

@@ -2743,24 +2743,6 @@ class CartCore extends ObjectModel
 
     public function getPackageIdWarehouse($package, $id_carrier = null)
     {
-        if ($id_carrier === null) {
-            if (isset($package['id_carrier'])) {
-                $id_carrier = (int) $package['id_carrier'];
-            }
-        }
-
-        if ($id_carrier == null) {
-            return $package['id_warehouse'];
-        }
-
-        foreach ($package['warehouse_list'] as $id_warehouse) {
-            $warehouse = new Warehouse((int) $id_warehouse);
-            $available_warehouse_carriers = $warehouse->getCarriers();
-            if (in_array($id_carrier, $available_warehouse_carriers)) {
-                return (int) $id_warehouse;
-            }
-        }
-
         return 0;
     }
 

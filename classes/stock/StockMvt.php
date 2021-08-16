@@ -122,8 +122,7 @@ class StockMvtCore extends ObjectModel
     public $referer;
 
     /**
-     * @deprecated since 1.5.0
-     * @deprecated stock movement will not be updated anymore
+     * @deprecated since 1.5.0, stock movement will not be updated anymore
      */
     public $date_upd;
 
@@ -170,101 +169,4 @@ class StockMvtCore extends ObjectModel
             'id_supply_order' => ['xlink_resource' => 'supply_order'],
         ],
     ];
-
-    /**
-     * @deprecated since 1.5.0
-     *
-     * This method no longer exists.
-     * There is no equivalent or replacement, considering that this should be handled by inventories.
-     */
-    public static function addMissingMvt($id_employee)
-    {
-        // display that this method is deprecated
-        Tools::displayAsDeprecated();
-    }
-
-    /**
-     * Gets the negative (decrements the stock) stock mvts that correspond to the given order, for :
-     * the given product, in the given quantity.
-     *
-     * @since 1.5.0
-     *
-     * @param int $id_order
-     * @param int $id_product
-     * @param int $id_product_attribute Use 0 if the product does not have attributes
-     * @param int $quantity
-     * @param int $id_warehouse Optional
-     *
-     * @return array mvts
-     */
-    public static function getNegativeStockMvts($id_order, $id_product, $id_product_attribute, $quantity, $id_warehouse = null)
-    {
-        $movements = [];
-        $quantity_total = 0;
-
-        // preps query
-        $query = new DbQuery();
-        $query->select('sm.*, s.id_warehouse');
-        $query->from('stock_mvt', 'sm');
-        $query->innerJoin('stock', 's', 's.id_stock = sm.id_stock');
-        $query->where('sm.sign = -1');
-        $query->where('sm.id_order = ' . (int) $id_order);
-        $query->where('s.id_product = ' . (int) $id_product . ' AND s.id_product_attribute = ' . (int) $id_product_attribute);
-
-        // if filer by warehouse
-        if (null !== $id_warehouse) {
-            $query->where('s.id_warehouse = ' . (int) $id_warehouse);
-        }
-
-        // orders the movements by date
-        $query->orderBy('date_add DESC');
-
-        // gets the result
-        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query, false);
-
-        // fills the movements array
-        while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($res)) {
-            if ($quantity_total >= $quantity) {
-                break;
-            }
-            $quantity_total += (int) $row['physical_quantity'];
-            $movements[] = $row;
-        }
-
-        return $movements;
-    }
-
-    /**
-     * For a given product, gets the last positive stock mvt.
-     *
-     * @since 1.5.0
-     *
-     * @param int $id_product
-     * @param int $id_product_attribute Use 0 if the product does not have attributes
-     *
-     * @return bool|array
-     */
-    public static function getLastPositiveStockMvt($id_product, $id_product_attribute)
-    {
-        $query = new DbQuery();
-        $query->select('sm.*, w.id_currency, (s.usable_quantity = sm.physical_quantity) as is_usable');
-        $query->from('stock_mvt', 'sm');
-        $query->innerJoin('stock', 's', 's.id_stock = sm.id_stock');
-        $query->innerJoin('warehouse', 'w', 'w.id_warehouse = s.id_warehouse');
-        $query->where('sm.sign = 1');
-        if ($id_product_attribute) {
-            $query->where('s.id_product = ' . (int) $id_product . ' AND s.id_product_attribute = ' . (int) $id_product_attribute);
-        } else {
-            $query->where('s.id_product = ' . (int) $id_product);
-        }
-        $query->orderBy('date_add DESC');
-
-        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-
-        if ($res != false) {
-            return $res['0'];
-        }
-
-        return false;
-    }
 }

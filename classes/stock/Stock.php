@@ -31,13 +31,6 @@
  */
 class StockCore extends ObjectModel
 {
-    /**
-     * @var int identifier of the warehouse
-     *
-     *@deprecated Since 8.0, will be removed in 9.0
-     */
-    public $id_warehouse;
-
     /** @var int identifier of the product */
     public $id_product;
 
@@ -75,7 +68,6 @@ class StockCore extends ObjectModel
         'table' => 'stock',
         'primary' => 'id_stock',
         'fields' => [
-            'id_warehouse' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_product_attribute' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference'],
@@ -94,7 +86,6 @@ class StockCore extends ObjectModel
      */
     protected $webserviceParameters = [
         'fields' => [
-            'id_warehouse' => ['xlink_resource' => 'warehouses'],
             'id_product' => ['xlink_resource' => 'products'],
             'id_product_attribute' => ['xlink_resource' => 'combinations'],
             'real_quantity' => ['getter' => 'getWsRealQuantity', 'setter' => false],
@@ -169,7 +160,7 @@ class StockCore extends ObjectModel
     public function getWsRealQuantity()
     {
         $manager = StockManagerFactory::getManager();
-        $quantity = $manager->getProductRealQuantities($this->id_product, $this->id_product_attribute, $this->id_warehouse, true);
+        $quantity = $manager->getProductRealQuantities($this->id_product, $this->id_product_attribute, 0, true);
 
         return $quantity;
     }
@@ -185,12 +176,12 @@ class StockCore extends ObjectModel
 
     public static function productIsPresentInStock($id_product = 0, $id_product_attribute = 0, $id_warehouse = 0)
     {
-        if (!(int) $id_product && !is_int($id_product_attribute) && !(int) $id_warehouse) {
+        if (!(int) $id_product && !is_int($id_product_attribute)) {
             return false;
         }
 
         $result = Db::getInstance()->executeS('SELECT `id_stock` FROM ' . _DB_PREFIX_ . 'stock
-			WHERE `id_warehouse` = ' . (int) $id_warehouse . ' AND `id_product` = ' . (int) $id_product . ((int) $id_product_attribute ? ' AND `id_product_attribute` = ' . $id_product_attribute : ''));
+			WHERE `id_product` = ' . (int) $id_product . ((int) $id_product_attribute ? ' AND `id_product_attribute` = ' . $id_product_attribute : ''));
 
         return is_array($result) && !empty($result) ? true : false;
     }

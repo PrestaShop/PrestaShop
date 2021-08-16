@@ -174,7 +174,6 @@ class ShopCore extends ObjectModel
             'referrer' => ['type' => 'shop'],
             'store' => ['type' => 'shop'],
             'webservice_account' => ['type' => 'shop'],
-            'warehouse' => ['type' => 'shop'],
             'stock_available' => ['type' => 'fk_shop', 'primary' => 'id_stock_available'],
             'carrier_tax_rules_group_shop' => ['type' => 'fk_shop'],
             'attribute' => ['type' => 'shop'],
