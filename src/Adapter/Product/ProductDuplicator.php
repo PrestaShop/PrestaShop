@@ -196,7 +196,7 @@ class ProductDuplicator
     {
         $newProduct = clone $product;
         $newProduct->name = $this->getNewProductName($product->name);
-        $this->setPriceByShops($product);
+        $this->setPriceByShops($newProduct);
 
         $newProduct->indexed = false;
         $newProduct->active = false;
