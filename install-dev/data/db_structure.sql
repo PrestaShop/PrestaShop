@@ -17,7 +17,6 @@ CREATE TABLE `PREFIX_address` (
   `id_customer` int(10) unsigned NOT NULL DEFAULT '0',
   `id_manufacturer` int(10) unsigned NOT NULL DEFAULT '0',
   `id_supplier` int(10) unsigned NOT NULL DEFAULT '0',
-  `id_warehouse` int(10) unsigned NOT NULL DEFAULT '0',
   `alias` varchar(32) NOT NULL,
   `company` varchar(255) DEFAULT NULL,
   `lastname` varchar(255) NOT NULL,
@@ -40,8 +39,7 @@ CREATE TABLE `PREFIX_address` (
   KEY `id_country` (`id_country`),
   KEY `id_state` (`id_state`),
   KEY `id_manufacturer` (`id_manufacturer`),
-  KEY `id_supplier` (`id_supplier`),
-  KEY `id_warehouse` (`id_warehouse`)
+  KEY `id_supplier` (`id_supplier`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* Used for search, if a search string is present inside the table, search the alias as well */
@@ -1334,7 +1332,6 @@ CREATE TABLE `PREFIX_order_detail` (
   `id_order_detail` int(10) unsigned NOT NULL auto_increment,
   `id_order` int(10) unsigned NOT NULL,
   `id_order_invoice` int(11) DEFAULT NULL,
-  `id_warehouse` int(10) unsigned DEFAULT '0',
   `id_shop` int(11) unsigned NOT NULL,
   `product_id` int(10) unsigned NOT NULL,
   `product_attribute_id` int(10) unsigned DEFAULT NULL,
@@ -2449,7 +2446,6 @@ CREATE TABLE `PREFIX_stock_mvt_reason_lang` (
 
 CREATE TABLE `PREFIX_stock` (
   `id_stock` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `id_warehouse` INT(11) UNSIGNED NOT NULL,
   `id_product` INT(11) UNSIGNED NOT NULL,
   `id_product_attribute` INT(11) UNSIGNED NOT NULL,
   `reference` VARCHAR(64) NOT NULL,
@@ -2461,52 +2457,8 @@ CREATE TABLE `PREFIX_stock` (
   `usable_quantity` INT(11) UNSIGNED NOT NULL,
   `price_te` DECIMAL(20, 6) DEFAULT '0.000000',
   PRIMARY KEY (`id_stock`),
-  KEY `id_warehouse` (`id_warehouse`),
   KEY `id_product` (`id_product`),
   KEY `id_product_attribute` (`id_product_attribute`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
-
-CREATE TABLE `PREFIX_warehouse` (
-  `id_warehouse` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `id_currency` INT(11) UNSIGNED NOT NULL,
-  `id_address` INT(11) UNSIGNED NOT NULL,
-  `id_employee` INT(11) UNSIGNED NOT NULL,
-  `reference` VARCHAR(64) DEFAULT NULL,
-  `name` VARCHAR(45) NOT NULL,
-  `management_type` ENUM('WA', 'FIFO', 'LIFO') NOT NULL DEFAULT 'WA',
-  `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_warehouse`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
-
-CREATE TABLE `PREFIX_warehouse_product_location` (
-  `id_warehouse_product_location` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `id_product` int(11) unsigned NOT NULL,
-  `id_product_attribute` int(11) unsigned NOT NULL,
-  `id_warehouse` int(11) unsigned NOT NULL,
-  `location` varchar(64) DEFAULT NULL,
-  PRIMARY KEY (
-    `id_warehouse_product_location`
-  ),
-  UNIQUE KEY `id_product` (
-    `id_product`, `id_product_attribute`,
-    `id_warehouse`
-  )
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
-
-CREATE TABLE `PREFIX_warehouse_shop` (
-  `id_shop` INT(11) UNSIGNED NOT NULL,
-  `id_warehouse` INT(11) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id_warehouse`, `id_shop`),
-  KEY `id_warehouse` (`id_warehouse`),
-  KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
-
-CREATE TABLE `PREFIX_warehouse_carrier` (
-  `id_carrier` INT(11) UNSIGNED NOT NULL,
-  `id_warehouse` INT(11) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id_warehouse`, `id_carrier`),
-  KEY `id_warehouse` (`id_warehouse`),
-  KEY `id_carrier` (`id_carrier`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 CREATE TABLE `PREFIX_stock_available` (
@@ -2536,7 +2488,6 @@ CREATE TABLE `PREFIX_supply_order` (
   `id_supplier` INT(11) UNSIGNED NOT NULL,
   `supplier_name` VARCHAR(64) NOT NULL,
   `id_lang` INT(11) UNSIGNED NOT NULL,
-  `id_warehouse` INT(11) UNSIGNED NOT NULL,
   `id_supply_order_state` INT(11) UNSIGNED NOT NULL,
   `id_currency` INT(11) UNSIGNED NOT NULL,
   `id_ref_currency` INT(11) UNSIGNED NOT NULL,
@@ -2553,7 +2504,6 @@ CREATE TABLE `PREFIX_supply_order` (
   `is_template` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id_supply_order`),
   KEY `id_supplier` (`id_supplier`),
-  KEY `id_warehouse` (`id_warehouse`),
   KEY `reference` (`reference`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 

@@ -33,10 +33,6 @@ services:
     prestashop.adapter.data_provider.supplier:
         class: PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider
 
-    prestashop.adapter.data_provider.warehouse:
-        class: PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider
-        deprecated: "%service_id% is deprecated since 8.0 and will be removed in 9.0"
-
     prestashop.adapter.data_provider.category:
         class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
         arguments: ["@=service('prestashop.adapter.legacy.context')"]

@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use Currency;
 use PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
@@ -68,7 +67,7 @@ class ProductShipping extends CommonAbstractType
      *
      * @param TranslatorInterface $translator
      * @param LegacyContext $legacyContext
-     * @param WarehouseDataProvider $warehouseDataProvider [no longer used as of 8.0]
+     * @param null $warehouseDataProvider [no longer used as of 8.0]
      * @param CarrierDataProvider $carrierDataProvider
      */
     public function __construct($translator, $legacyContext, $warehouseDataProvider, $carrierDataProvider)
