@@ -167,7 +167,7 @@ export default {
     deleteProductButton: '.delete-product-button',
   },
   categories: {
-    categoriesContainer: '#product_basic_categories',
+    categoriesContainer: '#product_description_categories',
     categoriesModalTemplate: '#categories-modal-template',
     categoriesModalContainer: '#categories-modal-container',
     applyCategoriesBtn: '.js-apply-categories-btn',
