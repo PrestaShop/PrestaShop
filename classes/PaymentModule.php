@@ -1089,7 +1089,7 @@ abstract class PaymentModuleCore extends Module
 
         // Insert new Order detail list using cart for the current order
         $order_detail = new OrderDetail(null, null, $context);
-        $order_detail->createList($order, $cart, $id_order_state, $order->product_list, 0, true, $warehouseId);
+        $order_detail->createList($order, $cart, $id_order_state, $order->product_list, 0, true);
 
         if ($debug) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - OrderCarrier is about to be added', 1, null, 'Cart', (int) $cart->id, true);

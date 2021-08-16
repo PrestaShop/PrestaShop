@@ -1469,7 +1469,7 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * For a given {product, warehouse}, gets the carrier available.
+     * For a given product, gets the carrier available.
      *
      * @since 1.5.0
      *

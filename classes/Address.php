@@ -38,13 +38,6 @@ class AddressCore extends ObjectModel
     /** @var int Supplier ID which address belongs to */
     public $id_supplier = null;
 
-    /**
-     * @var int Warehouse ID which address belongs to
-     *
-     * @deprecated Since 8.0, will be removed in 9.0
-     */
-    public $id_warehouse;
-
     /** @var int Country ID */
     public $id_country;
 
@@ -120,7 +113,6 @@ class AddressCore extends ObjectModel
             'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
             'id_manufacturer' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
             'id_supplier' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
-            'id_warehouse' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
             'id_country' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_state' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'],
             'alias' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
@@ -579,7 +571,6 @@ class AddressCore extends ObjectModel
         $query->where('deleted = 0');
         $query->where('id_customer = 0');
         $query->where('id_manufacturer = 0');
-        $query->where('id_warehouse = 0');
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }

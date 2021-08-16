@@ -159,13 +159,6 @@ class OrderDetailCore extends ObjectModel
     /** @var int Id tax rules group */
     public $id_tax_rules_group;
 
-    /**
-     * @var int Id warehouse
-     *
-     * @deprecated Since 8.0, will be removed in 9.0
-     */
-    public $id_warehouse;
-
     /** @var float additional shipping price tax excl */
     public $total_shipping_price_tax_excl;
 
@@ -193,7 +186,6 @@ class OrderDetailCore extends ObjectModel
         'fields' => [
             'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_order_invoice' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
-            'id_warehouse' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'product_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'product_attribute_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
@@ -725,7 +717,7 @@ class OrderDetailCore extends ObjectModel
      * @param bool $use_taxes set to false if you don't want to use taxes
      * @param int $id_warehouse [no longer used]
      */
-    protected function create(Order $order, Cart $cart, $product, $id_order_state, $id_order_invoice, $use_taxes = true, $id_warehouse = 0)
+    protected function create(Order $order, Cart $cart, $product, $id_order_state, $id_order_invoice, $use_taxes = true)
     {
         if ($use_taxes) {
             $this->tax_calculator = new TaxCalculator();
@@ -748,7 +740,6 @@ class OrderDetailCore extends ObjectModel
         $this->product_reference = empty($product['reference']) ? null : pSQL($product['reference']);
         $this->product_supplier_reference = empty($product['supplier_reference']) ? null : pSQL($product['supplier_reference']);
         $this->product_weight = $product['id_product_attribute'] ? (float) $product['weight_attribute'] : (float) $product['weight'];
-        $this->id_warehouse = 0;
 
         $product_quantity = (int) Product::getQuantity($this->product_id, $this->product_attribute_id, null, $cart);
         $this->product_quantity_in_stock = ($product_quantity - (int) $product['cart_quantity'] < 0) ?
@@ -788,7 +779,7 @@ class OrderDetailCore extends ObjectModel
      * @param bool $use_taxes set to false if you don't want to use taxes
      * @param int $id_warehouse [no longer used]
      */
-    public function createList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true, $id_warehouse = 0)
+    public function createList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true)
     {
         $this->vat_address = new Address((int) $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $this->customer = new Customer((int) $order->id_customer);
