@@ -31,8 +31,6 @@ use Combination;
 use Context;
 use Product;
 use SpecificPriceRule;
-use Stock;
-use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 use Validate;

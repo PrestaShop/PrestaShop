@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Order;
 
 use Cart;
 use Configuration;
-use Context;
 use Currency;
 use Customer;
 use Customization;

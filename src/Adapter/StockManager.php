@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Db;
-use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopAdapter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use StockAvailable;
@@ -216,6 +215,7 @@ class StockManager implements StockInterface
      * @param int $shopId Optional : gets context if null @see Context::getContext()
      *
      * @return int OutOfStock behavior flag
+     *
      * @see \PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType
      */
     public function outOfStock($productId, $shopId = null)
