@@ -65,7 +65,6 @@ class ProductStockUpdater
      * @param StockManager $stockManager
      * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
-     * @param bool $advancedStockEnabled
      */
     public function __construct(
         StockManager $stockManager,
