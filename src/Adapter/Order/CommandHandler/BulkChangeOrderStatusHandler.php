@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use StockAvailable;
 
 /**
  * @internal

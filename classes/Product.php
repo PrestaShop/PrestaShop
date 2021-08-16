@@ -31,7 +31,6 @@ define('_CUSTOMIZE_FILE_', 0);
 define('_CUSTOMIZE_TEXTFIELD_', 1);
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
@@ -7609,7 +7608,6 @@ class ProductCore extends ObjectModel
      * For a given product, tells if it uses the advanced stock management.
      *
      * @since 1.5.0
-     *
      * @deprecated Since 8.0, will be removed in 9.0
      *
      * @param int $id_product Product identifier

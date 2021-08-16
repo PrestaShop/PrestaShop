@@ -42,7 +42,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShopDatabaseException;
 use PrestaShopException;
-use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
 use TaxCalculator;
 use TaxManagerFactory;
