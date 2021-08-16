@@ -77,21 +77,26 @@ class CommonConfigurationErrorFactoryTest extends TestCase
         $language = new Lang();
         $language->setName('English');
         $languageRepositoryMock->method('findOneBy')->willReturn($language);
-        $invoiceConfigurationErrorFactory = new CommonConfigurationErrorFactory($translatorMock, $languageRepositoryMock);
+        $commonConfigurationErrorFactory = new CommonConfigurationErrorFactory($translatorMock, $languageRepositoryMock);
 
         $error = new InvoiceConfigurationError(ConfigurationErrorInterface::ERROR_CONTAINS_HTML_TAGS, 'field', 1);
-        $result = $invoiceConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'field');
+        $result = $commonConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'field');
         self::assertEquals(
             'The "field" field in English is invalid. HTML tags are not allowed.',
             $result
         );
 
         $error = new InvoiceConfigurationError(ConfigurationErrorInterface::ERROR_CONTAINS_HTML_TAGS, 'field');
-        $result = $invoiceConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'field');
+        $result = $commonConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'field');
 
         self::assertEquals(
             'The "field" field is invalid. HTML tags are not allowed.',
             $result
         );
+
+        $error = new InvoiceConfigurationError('non_existing_error_Code', 'field');
+        $result = $commonConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'field');
+
+        self::assertNull($result);
     }
 }
