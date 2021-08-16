@@ -42,9 +42,11 @@
                     </div>
                   {% endif %}
                   <div class="col-md-4">
-                    <label class="form-control-label">{{ formStockMinimalQuantity.vars.label }}</label>
-                    <span class="help-box" data-toggle="popover"
-                          data-content="{{ "The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                    <label class="form-control-label">
+                      {{ formStockMinimalQuantity.vars.label }}
+                      <span class="help-box" data-toggle="popover"
+                        data-content="{{ "The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                    </label>
                     {{ form_errors(formStockMinimalQuantity) }}
                     {{ form_widget(formStockMinimalQuantity) }}
                   </div>
@@ -95,9 +97,11 @@
                 {{ form_errors(formVirtualProduct) }}
                 <div class="col-md-12">
                   <fieldset class="form-group">
-                    <label class="form-control-label">{{ formVirtualProduct.file.vars.label }}</label>
-                    <span class="help-box" data-toggle="popover"
-                          data-content="{{ "Upload a file from your computer (%maxUploadSize% max.)"|trans({'%maxUploadSize%': max_upload_size}, 'Admin.Catalog.Help') }}" ></span>
+                    <label class="form-control-label">
+                      {{ formVirtualProduct.file.vars.label }}
+                      <span class="help-box" data-toggle="popover"
+                        data-content="{{ "Upload a file from your computer (%maxUploadSize% max.)"|trans({'%maxUploadSize%': max_upload_size}, 'Admin.Catalog.Help') }}" ></span>
+                    </label>
                     <div id="form_step3_virtual_product_file_input" class="{{ formVirtualProduct.vars.value.filename is defined ? 'hide' : 'show' }}">
                       {{ form_widget(formVirtualProduct.file) }}
                     </div>
@@ -109,36 +113,44 @@
                 </div>
                 <div class="col-md-6">
                   <fieldset class="form-group">
-                    <label class="form-control-label">{{ formVirtualProduct.name.vars.label }}</label>
-                    <span class="help-box" data-toggle="popover"
-                          data-content="{{ "The full filename with its extension (e.g. Book.pdf)"|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                    <label class="form-control-label">
+                      {{ formVirtualProduct.name.vars.label }}
+                      <span class="help-box" data-toggle="popover"
+                        data-content="{{ "The full filename with its extension (e.g. Book.pdf)"|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                    </label>
                     {{ form_errors(formVirtualProduct.name) }}
                     {{ form_widget(formVirtualProduct.name) }}
                   </fieldset>
                 </div>
                 <div class="col-md-6">
                   <fieldset class="form-group">
-                    <label class="form-control-label">{{ formVirtualProduct.nb_downloadable.vars.label }}</label>
-                    <span class="help-box" data-toggle="popover"
-                          data-content="{{ "Number of downloads allowed per customer. Set to 0 for unlimited downloads."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                    <label class="form-control-label">
+                      {{ formVirtualProduct.nb_downloadable.vars.label }}
+                      <span class="help-box" data-toggle="popover"
+                        data-content="{{ "Number of downloads allowed per customer. Set to 0 for unlimited downloads."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                    </label>
                     {{ form_errors(formVirtualProduct.nb_downloadable) }}
                     {{ form_widget(formVirtualProduct.nb_downloadable) }}
                   </fieldset>
                 </div>
                 <div class="col-md-6">
                   <fieldset class="form-group">
-                    <label class="form-control-label">{{ formVirtualProduct.expiration_date.vars.label }}</label>
-                    <span class="help-box" data-toggle="popover"
-                          data-content="{{ "If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                    <label class="form-control-label">
+                      {{ formVirtualProduct.expiration_date.vars.label }}
+                      <span class="help-box" data-toggle="popover"
+                        data-content="{{ "If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                    </label>
                     {{ form_errors(formVirtualProduct.expiration_date) }}
                     {{ form_widget(formVirtualProduct.expiration_date) }}
                   </fieldset>
                 </div>
                 <div class="col-md-6">
                   <fieldset class="form-group">
-                    <label class="form-control-label">{{ formVirtualProduct.nb_days.vars.label }}</label>
-                    <span class="help-box" data-toggle="popover"
-                          data-content="{{ "Number of days this file can be accessed by customers. Set to zero for unlimited access."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                    <label class="form-control-label">
+                      {{ formVirtualProduct.nb_days.vars.label }}
+                      <span class="help-box" data-toggle="popover"
+                        data-content="{{ "Number of days this file can be accessed by customers. Set to zero for unlimited access."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                    </label>
                     {{ form_errors(formVirtualProduct.nb_days) }}
                     {{ form_widget(formVirtualProduct.nb_days) }}
                   </fieldset>
