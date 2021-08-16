@@ -1243,7 +1243,6 @@ class AdminImportControllerCore extends AdminController
             $images_types = ImageType::getImagesTypes($entity, true);
 
             if ($regenerate) {
-                $previous_path = null;
                 $path_infos = [];
                 $path_infos[] = [$tgt_width, $tgt_height, $path . '.jpg'];
                 foreach ($images_types as $image_type) {
