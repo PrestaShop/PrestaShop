@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -42,6 +43,10 @@ class CategoriesType extends TranslatorAwareType
     {
         $builder
             ->add('product_categories', CategoryTagsCollectionType::class)
+            ->add('default_category_id', ChoiceType::class, [
+                'label' => $this->trans('Default category', 'Admin.Catalog.Feature'),
+                'choices' => [],
+            ])
             ->add('add_categories_btn', ButtonType::class, [
                 'label' => $this->trans('Add categories', 'Admin.Catalog.Feature'),
                 'attr' => [

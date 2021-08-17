@@ -60,6 +60,7 @@ export default class Tags {
       this.container.append(frag);
     });
     this.listenTagRemoval();
+    this.eventEmitter.emit(ProductEventMap.categories.categoriesUpdated)
   }
 
   toggleContainerVisibility() {

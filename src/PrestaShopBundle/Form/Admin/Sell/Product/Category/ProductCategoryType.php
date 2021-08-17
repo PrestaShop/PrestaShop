@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class ProductCategoryType extends TranslatorAwareType
@@ -39,6 +40,7 @@ class ProductCategoryType extends TranslatorAwareType
         $builder
             ->add('name', HiddenType::class)
             ->add('id', HiddenType::class)
+            ->add('is_default', RadioType::class)
         ;
     }
 }

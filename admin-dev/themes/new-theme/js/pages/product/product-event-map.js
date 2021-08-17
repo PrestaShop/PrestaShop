@@ -54,5 +54,6 @@ export default {
   categories: {
     applyCategoryTreeChanges: 'applyCategoryTreeChanges',
     categoryRemoved: 'categoryRemoved',
+    categoriesUpdated: 'categoriesUpdated',
   },
 };
