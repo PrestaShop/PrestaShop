@@ -47,7 +47,7 @@ class OrderReturnRepositoryTest extends KernelTestCase
         $this->orderReturnRepository = self::$container->get('prestashop.adapter.order_return.repository.order_return_repository');
     }
 
-    public function testGetThrowsException()
+    public function testGetThrowsException(): void
     {
         $this->expectException(OrderReturnNotFoundException::class);
         $this->orderReturnRepository->get(new OrderReturnId(9999));
