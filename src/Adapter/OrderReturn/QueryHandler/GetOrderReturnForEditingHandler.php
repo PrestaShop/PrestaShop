@@ -58,6 +58,13 @@ class GetOrderReturnForEditingHandler implements GetOrderReturnForEditingHandler
      */
     private $orderRepository;
 
+    /**
+     * GetOrderReturnForEditingHandler constructor.
+     *
+     * @param OrderReturnRepository $orderReturnRepository
+     * @param CustomerRepository $customerRepository
+     * @param OrderRepository $orderRepository
+     */
     public function __construct(
         OrderReturnRepository $orderReturnRepository,
         CustomerRepository $customerRepository,
