@@ -1,3 +1,4 @@
+#@todo uncomment links once page is completed
 admin_merchandise_returns_index:
   path: /
   methods: [ GET ]
