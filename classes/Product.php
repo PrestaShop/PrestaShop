@@ -5268,17 +5268,20 @@ class ProductCore extends ObjectModel
             $id_shop = (int) Context::getContext()->shop->id;
         }
 
-        if (!$result = Db::getInstance()->executeS('
-            SELECT cd.`id_customization`, c.`id_address_delivery`, c.`id_product`, cfl.`id_customization_field`, c.`id_product_attribute`,
-                cd.`type`, cd.`index`, cd.`value`, cd.`id_module`, cfl.`name`
-            FROM `' . _DB_PREFIX_ . 'customized_data` cd
-            NATURAL JOIN `' . _DB_PREFIX_ . 'customization` c
-            LEFT JOIN `' . _DB_PREFIX_ . 'customization_field_lang` cfl ON (cfl.id_customization_field = cd.`index` AND id_lang = ' . (int) $id_lang .
-                ($id_shop ? ' AND cfl.`id_shop` = ' . (int) $id_shop : '') . ')
-            WHERE c.`id_cart` = ' . (int) $id_cart .
+        if (!$result = Db::getInstance()->executeS(
+            'SELECT cd.`id_customization`, c.`id_address_delivery`, c.`id_product`, cfl.`id_customization_field`, c.`id_product_attribute`, ' .
+            'cd.`type`, cd.`index`, cd.`value`, cd.`id_module`, ' .
+            'CASE WHEN cfl.`name` IS NULL OR cfl.`name` = \'\' THEN cfl_fallback.`name` ELSE cfl.`name` END AS name ' .
+            'FROM `' . _DB_PREFIX_ . 'customized_data` cd ' .
+            'NATURAL JOIN `' . _DB_PREFIX_ . 'customization` c ' .
+            'LEFT JOIN `' . _DB_PREFIX_ . 'customization_field_lang` cfl ON (cfl.id_customization_field = cd.`index` AND cfl.id_lang = ' . (int) $id_lang .
+                ($id_shop ? ' AND cfl.`id_shop` = ' . (int) $id_shop : '') . ') ' .
+            'LEFT JOIN `' . _DB_PREFIX_ . 'customization_field_lang` cfl_fallback ON (cfl_fallback.id_customization_field = cd.`index` AND cfl_fallback.id_lang = ' . (int) Configuration::get('PS_LANG_DEFAULT') .
+                ($id_shop ? ' AND cfl_fallback.`id_shop` = ' . (int) $id_shop : '') . ') ' .
+            'WHERE c.`id_cart` = ' . (int) $id_cart .
             ($only_in_cart ? ' AND c.`in_cart` = 1' : '') .
-            ((int) $id_customization ? ' AND cd.`id_customization` = ' . (int) $id_customization : '') . '
-            ORDER BY `id_product`, `id_product_attribute`, `type`, `index`')) {
+            ((int) $id_customization ? ' AND cd.`id_customization` = ' . (int) $id_customization : '') . ' ' .
+            'ORDER BY `id_product`, `id_product_attribute`, `type`, `index`')) {
             return false;
         }
 
