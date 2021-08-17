@@ -47,7 +47,9 @@ export default class CategoriesManager {
       this.collectCategories(),
       this.getDefaultCategoryId(),
     );
-
+    this.renderDefaultCategorySelection();
+    this.listenCategoryChanges();
+    this.listenDefaultCategorySelect();
     this.initCategoryTreeModal();
 
     return {};
@@ -86,5 +88,36 @@ export default class CategoriesManager {
   getDefaultCategoryId() {
     // @todo: default category will have to be retrieved from dedicated input when its implemented
     return 2;
+  }
+
+  renderDefaultCategorySelection() {
+    const categories = this.collectCategories();
+    //@todo: move selectors to map
+    const selectContainer = this.categoriesContainer.querySelector('#default-category-selector-widget');
+    const selectElement = this.categoriesContainer.querySelector('#default-category-id');
+    selectElement.innerHTML = '';
+
+    categories.forEach((category) => {
+      const optionElement = document.createElement('option');
+      optionElement.value = category.id;
+      optionElement.innerHTML = category.name;
+      selectElement.append(optionElement);
+    });
+
+    selectContainer.classList.remove('d-none');
+  }
+
+  listenDefaultCategorySelect() {
+    this.categoriesContainer.querySelector('#default-category-id')
+      .addEventListener('change', (e) => {
+        const categoryId = e.currentTarget.value;
+        const radio = this.categoriesContainer.querySelector(`.is_default_category_radio[data-id="${categoryId}"]`)
+        radio.checked = true;
+      });
+  }
+
+  listenCategoryChanges() {
+    this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, () => this.renderDefaultCategorySelection());
+    this.eventEmitter.on(ProductEventMap.categories.categoriesUpdated, () => this.renderDefaultCategorySelection());
   }
 }
