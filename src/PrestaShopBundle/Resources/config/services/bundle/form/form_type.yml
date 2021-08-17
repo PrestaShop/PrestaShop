@@ -666,6 +666,8 @@ services:
       - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
       - '@prestashop.adapter.feature.multistore'
       - '@prestashop.adapter.legacy.configuration'
+      - '@router'
+      - '@prestashop.core.query_bus'
     public: true
 
   form.type.category.delete_categories:
