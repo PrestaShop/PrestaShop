@@ -304,7 +304,7 @@
     height: 100%;
     text-align: center;
     cursor: pointer;
-    background: #000;
+    background: $black;
     background: rgba(0, 0, 0, 0.6);
     opacity: 0;
     @include transition(opacity 0.7s ease-in-out);

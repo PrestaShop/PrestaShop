@@ -400,7 +400,7 @@ $header-text-color: #4e6167 !default;
           overflow: hidden;
           border: none;
           border-top: 1px solid #eaebec;
-          box-shadow: 0 8px 16px 0 rgba(#000, 0.1);
+          box-shadow: 0 8px 16px 0 rgba($black, 0.1);
           @include border-radius(5px);
           transform: inherit !important;
           /* stylelint-enable */

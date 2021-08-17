@@ -154,7 +154,7 @@ table .column-filters td:last-child .grid-reset-button {
         // styling for row that is being dragged
         &.dragging-row {
           cursor: move;
-          background: #fafbfc;
+          background: $gray-250;
 
           td {
             color: $white;
