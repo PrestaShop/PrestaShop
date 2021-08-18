@@ -287,8 +287,6 @@ class CustomerController extends AbstractAdminController
         ]);
 
         $customerDiscountGridFactory = $this->get('prestashop.core.grid.factory.customer.discount');
-        
-        $customerDiscountFilters->addFilter(['id_customer' => $customerId]);
         $customerDiscountGrid = $customerDiscountGridFactory->getGrid($customerDiscountFilters);
 
         $customerAddressGridFactory = $this->get('prestashop.core.grid.factory.customer.address');
