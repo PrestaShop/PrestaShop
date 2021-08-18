@@ -56,9 +56,8 @@ class ProductCategoriesCommandsBuilder implements ProductCommandsBuilderInterfac
         $associatedCategoryIds = [];
         $defaultCategoryId = 0;
         foreach ($productCategories as $categoryId => $categoryData) {
-            if ((bool) $categoryData['is_associated']) {
-                $associatedCategoryIds[] = (int) $categoryId;
-            }
+            $associatedCategoryIds[] = (int) $categoryId;
+
             if ((bool) $categoryData['is_default']) {
                 $defaultCategoryId = (int) $categoryId;
             }
