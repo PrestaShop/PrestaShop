@@ -49,7 +49,7 @@ export default class Tags {
 
       //@todo: move selector to map
       frag.firstChild.querySelector('.is_default_category_checkbox').checked = category.isDefault;
-      // do not allow removing default category (thus don't render the tag removal element)
+      // don't render the tag removal element for main category
       if (category.isDefault) {
         frag.firstChild.querySelector(ProductCategoryMap.tagRemoveBtn).remove();
       }
