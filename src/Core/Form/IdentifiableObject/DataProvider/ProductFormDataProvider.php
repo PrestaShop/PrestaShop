@@ -227,7 +227,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $localizedNames = $categoryInformation->getLocalizedNames();
             $categoryId = $categoryInformation->getId();
 
-            $categories[] = [
+            $categories[$categoryId] = [
                 'id' => $categoryId,
                 'name' => $localizedNames[$this->contextLangId] ?? reset($localizedNames),
                 'is_default' => $defaultCategoryId === $categoryId,
@@ -236,6 +236,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         return [
             'product_categories' => $categories,
+            'default_category_id' => $defaultCategoryId,
         ];
     }
 

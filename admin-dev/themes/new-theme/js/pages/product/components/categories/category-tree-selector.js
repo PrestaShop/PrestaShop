@@ -42,13 +42,12 @@ export default class CategoryTreeSelector {
     this.typeaheadDatas = [];
 
     return {
-      showModal: (selectedCategories, defaultCategoryId) => this.showModal(selectedCategories, defaultCategoryId),
+      showModal: (selectedCategories) => this.showModal(selectedCategories),
     };
   }
 
-  showModal(selectedCategories, defaultCategoryId) {
+  showModal(selectedCategories) {
     this.selectedCategories = selectedCategories;
-    this.defaultCategoryId = defaultCategoryId;
     const modalContent = $(ProductCategoryMap.categoriesModalTemplate);
     // @todo: replace fancybox with Modal after following PR is merged:
     //    https://github.com/PrestaShop/PrestaShop/pull/25184
@@ -84,15 +83,13 @@ export default class CategoryTreeSelector {
     this.tags = new Tags(
       this.eventEmitter,
       `${ProductCategoryMap.categoriesModalContainer} ${ProductCategoryMap.tagsContainer}`,
-      this.selectedCategories,
-      this.defaultCategoryId,
     );
+    this.tags.update(this.selectedCategories);
     this.categories = await getCategories();
 
     this.initTypeaheadData(this.categories, '');
     this.initTypeahead();
     this.initTree();
-    this.updateSelectedCategories();
     this.applyCategoryTreeChanges();
     this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, (categoryId) => this.unselectCategory(categoryId));
   }
