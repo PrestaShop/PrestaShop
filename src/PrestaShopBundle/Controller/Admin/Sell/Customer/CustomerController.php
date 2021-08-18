@@ -261,7 +261,7 @@ class CustomerController extends AbstractAdminController
      *
      * @return Response
      */
-    public function viewAction($customerId, Request $request)
+    public function viewAction($customerId, Request $request, CustomerDiscountFilters $customerDiscountFilters)
     {
         try {
             /** @var ViewableCustomer $customerInformation */
@@ -287,16 +287,8 @@ class CustomerController extends AbstractAdminController
         ]);
 
         $customerDiscountGridFactory = $this->get('prestashop.core.grid.factory.customer.discount');
-        $customerDiscountFilters = new CustomerDiscountFilters(
-            $request->get('customer_discount', [
-                'limit' => CustomerDiscountFilters::getDefaults()['limit'],
-                'offset' => 0
-            ]) + [
-            'filters' => [
-                'id_customer' => $customerId,
-            ],
-        ]);
-
+        
+        $customerDiscountFilters->addFilter(['id_customer' => $customerId]);
         $customerDiscountGrid = $customerDiscountGridFactory->getGrid($customerDiscountFilters);
 
         $customerAddressGridFactory = $this->get('prestashop.core.grid.factory.customer.address');
