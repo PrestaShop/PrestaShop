@@ -24,6 +24,20 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.7.7 - (2021-08-18)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #25634: [BC Break] Do not use name in admin_orders_display_customization_image_route (by @PierreRambaud)
+- Front Office:
+  - Bug fix:
+    - #25629: Use _DB_PREFIX_ constant instead of ps_ in SQL queries (by @PierreRambaud)
+- Core:
+  - Improvement:
+    - #25630: Bump version to 1.7.7.7 (by @PierreRambaud)
+
+####################################
 #   v1.7.7.6 - (2021-06-30)
 ####################################
 
