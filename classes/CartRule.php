@@ -548,7 +548,7 @@ class CartRuleCore extends ObjectModel
         $query = new DbQuery();
         $query->select('cr.*, crl.name');
         $query->from('cart_rule', 'cr');
-        $query->where('cr.id_customer = ' . (int) $customerId);
+        $query->where('cr.id_customer = ' . (int) $customerId . ' OR (cr.id_customer = 0 AND cr.code = "")');
         $query->leftJoin('cart_rule_lang', 'crl', 'cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = ' . (int) Configuration::get('PS_LANG_DEFAULT'));
 
         $result = Db::getInstance()->executeS($query);

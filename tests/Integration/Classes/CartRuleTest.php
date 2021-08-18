@@ -153,19 +153,33 @@ class CartRuleTest extends TestCase
         $this->assertEquals(1, count($yetAnotherCustomerCartRules));
     }
 
+    public function testGetAllCartRulesWithGlobalCartRulesAvailable(): void
+    {
+        $this->createDummyCartRule(true, (int) $this->dummyCustomer->id, false);
+        $this->createDummyCartRule(true, (int) $this->dummyCustomer->id);
+
+        $customerCartRules = CartRule::getAllCustomerCartRules(
+            (int) $this->dummyCustomer->id
+        );
+
+        $this->assertEquals(2, count($customerCartRules));
+    }
+
     /**
      * @param bool $active
      * @param int $customerId
+     * @param bool $code
      *
      * @return CartRule
      */
     public function createDummyCartRule(
         bool $active,
-        int $customerId
+        int $customerId,
+        bool $code = true
     ): CartRule {
         $randomNumber = rand(999, 9999);
         $cart_rule = new CartRule();
-        $cart_rule->code = 'TEST_CART_RULE_' . $randomNumber;
+        $cart_rule->code = $code ? 'TEST_CART_RULE_' . $randomNumber : '';
         $cart_rule->name = [
             $this->configuration->get('PS_LANG_DEFAULT') => 'Test Cart Rule #' . $randomNumber,
         ];
