@@ -233,7 +233,7 @@ export default class CategoryTreeSelector {
    */
   selectCategory(categoryId) {
     const checkbox = this.modalContainer.querySelector(
-      `[name="${ProductCategoryMap.checkboxName(categoryId)}"]`,
+      `[name="${ProductCategoryMap.treeCheckboxName(categoryId)}"]`,
     );
 
     if (!checkbox) {
