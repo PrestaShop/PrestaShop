@@ -65,15 +65,21 @@ final class CustomerDiscountGridDataFactory implements GridDataFactoryInterface
      */
     public function getData(SearchCriteriaInterface $searchCriteria)
     {
-        $discounts = CartRule::getAllCustomerCartRules(
+        $allDiscounts = CartRule::getAllCustomerCartRules(
             $this->customer->id
         );
 
-        $records = new RecordCollection($discounts);
+        $discountsToDisplay = array_slice(
+            $allDiscounts,
+            (int) $searchCriteria->getOffset(),
+            (int) $searchCriteria->getLimit()
+        );
+
+        $records = new RecordCollection($discountsToDisplay);
 
         return new GridData(
             $records,
-            $records->count()
+            count($allDiscounts)
         );
     }
 }
