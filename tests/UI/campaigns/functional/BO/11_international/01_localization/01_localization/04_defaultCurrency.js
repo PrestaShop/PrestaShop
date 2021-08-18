@@ -32,7 +32,7 @@ Choose default currency Euro then check in FO
 Delete localization pack
  */
 
-describe('Update default currency', async () => {
+describe('BO - International - Localization : Update default currency', async () => {
   describe('Import a localization pack', async () => {
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -47,7 +47,7 @@ describe('Update default currency', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to localization page', async function () {
+    it('should go to \'International > Localization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPageToImportPack', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -100,7 +100,7 @@ describe('Update default currency', async () => {
         await loginCommon.loginBO(this, page);
       });
 
-      it('should go to localization page', async function () {
+      it('should go to \'International > Localization\' page', async function () {
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -136,9 +136,14 @@ describe('Update default currency', async () => {
 
         const defaultCurrency = await foHomePage.getDefaultCurrency(page);
         await expect(defaultCurrency).to.equal(test.args.currency);
+      });
 
-        // Go back to BO
+      it('should go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
+
         page = await foHomePage.closePage(browserContext, page, 0);
+        const pageTitle = await localizationPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(localizationPage.pageTitle);
       });
 
       if (index === (tests.length - 1)) {

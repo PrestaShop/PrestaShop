@@ -34,7 +34,7 @@ Update language (and disable it)
 Verify that language do not exist in FO
 Delete language
  */
-describe('CRUD language', async () => {
+describe('BO - International - Languages : CRUD language', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -63,7 +63,7 @@ describe('CRUD language', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to localization page', async function () {
+  it('should go to \'International > Localization\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -78,7 +78,7 @@ describe('CRUD language', async () => {
     await expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
-  it('should go to languages page', async function () {
+  it('should go to \'Languages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
 
     await localizationPage.goToSubTabLanguages(page);
@@ -112,17 +112,29 @@ describe('CRUD language', async () => {
       await expect(numberOfLanguagesAfterCreation).to.be.equal(numberOfLanguages + 1);
     });
 
-    it(`should go to FO and check that '${createLanguageData.name}' exist`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedLanguageFO', baseContext);
+    it('should go to FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFo1', baseContext);
 
-      // View my shop and init pages
+      // View my shop and int pages
       page = await languagesPage.viewMyShop(page);
+
+      const isHomePage = await foHomePage.isHomePage(page);
+      await expect(isHomePage).to.be.true;
+    });
+
+    it(`should check that '${createLanguageData.name}' exist`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedLanguageFO', baseContext);
 
       const isLanguageInFO = await foHomePage.languageExists(page, createLanguageData.isoCode);
       await expect(isLanguageInFO, `${createLanguageData.name} was not found as a language in FO`).to.be.true;
+    });
 
-      // Go back to BO
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
+
       page = await foHomePage.closePage(browserContext, page, 0);
+      const pageTitle = await languagesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(languagesPage.pageTitle);
     });
   });
 
@@ -159,18 +171,29 @@ describe('CRUD language', async () => {
       await expect(numberOfLanguagesAfterReset).to.be.equal(numberOfLanguages + 1);
     });
 
-    it(`should go to FO and check that '${editLanguageData.name}' do not exist`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedLanguageFO', baseContext);
+    it('should go to FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFo2', baseContext);
 
-      // View my shop and init pages
+      // View my shop and int pages
       page = await languagesPage.viewMyShop(page);
 
-      // Check languages if FO
+      const isHomePage = await foHomePage.isHomePage(page);
+      await expect(isHomePage).to.be.true;
+    });
+
+    it(`should check that '${editLanguageData.name}' does not exist`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedLanguageFO', baseContext);
+
       const isLanguageInFO = await foHomePage.languageExists(page, editLanguageData.isoCode);
       await expect(isLanguageInFO, `${editLanguageData.name} was found as a language in FO`).to.be.false;
+    });
 
-      // Go back to BO
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo2', baseContext);
+
       page = await foHomePage.closePage(browserContext, page, 0);
+      const pageTitle = await languagesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(languagesPage.pageTitle);
     });
   });
 

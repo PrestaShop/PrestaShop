@@ -5,11 +5,13 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const localizationPage = require('@pages/BO/international/localization');
 const currenciesPage = require('@pages/BO/international/currencies');
 const languagesPage = require('@pages/BO/international/languages');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 
 // Import Data
@@ -40,7 +42,7 @@ Delete 'spanish' language
 Delete 'Chilean Peso' currency
  */
 
-describe('Import a localization pack including a language and a currency', async () => {
+describe('BO - International - Localization : Import a localization pack', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
@@ -54,7 +56,7 @@ describe('Import a localization pack including a language and a currency', async
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to localization page', async function () {
+  it('should go to \'International > Localization\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -77,22 +79,39 @@ describe('Import a localization pack including a language and a currency', async
       await expect(textResult).to.equal(localizationPage.importLocalizationPackSuccessfulMessage);
     });
 
+    it('should go to FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
+
+      // View my shop and int pages
+      page = await currenciesPage.viewMyShop(page);
+
+      const isHomePage = await foHomePage.isHomePage(page);
+      await expect(isHomePage).to.be.true;
+    });
+
+    it('should change FO currency', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeFoCurrency', baseContext);
+
+      // Check currency
+      await foHomePage.changeCurrency(page, Currencies.chileanPeso.isoCode, Currencies.chileanPeso.symbol);
+      const shopCurrency = await foHomePage.getDefaultCurrency(page);
+      await expect(shopCurrency).to.contain(Currencies.mad.isoCode);
+    });
+
     it('should go to FO and check the existence of currency and language added', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCurrencyAndLanguageInFO', baseContext);
-
-      // Go to FO and init pages
-      page = await localizationPage.viewMyShop(page);
-
-      await foHomePage.changeCurrency(
-        page,
-        Currencies.chileanPeso.isoCode,
-        Currencies.chileanPeso.symbol,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'changeFo', baseContext);
 
       await foHomePage.changeLanguage(page, Languages.spanish.isoCode);
+      const shopLanguage = await foHomePage.getShopLanguage(page);
+      await expect(shopLanguage).to.contain(Languages.spanish.name);
+    });
 
-      // Go back to BO
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
+
       page = await foHomePage.closePage(browserContext, page, 0);
+      const pageTitle = await localizationPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(localizationPage.pageTitle);
     });
   });
 

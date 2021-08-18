@@ -24,7 +24,7 @@ let page;
 let numberOfCurrencies = 0;
 const newExchangeRate = 6;
 
-describe('Update exchange rate', async () => {
+describe('BO - International - Currencies : Update exchange rate', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -40,7 +40,7 @@ describe('Update exchange rate', async () => {
   });
 
   describe('Create new currency', async () => {
-    it('should go to localization page', async function () {
+    it('should go to \'International > Localization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -55,7 +55,7 @@ describe('Update exchange rate', async () => {
       await expect(pageTitle).to.contains(localizationPage.pageTitle);
     });
 
-    it('should go to currencies page', async function () {
+    it('should go to \'Currencies\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
 
       await localizationPage.goToSubTabCurrencies(page);
