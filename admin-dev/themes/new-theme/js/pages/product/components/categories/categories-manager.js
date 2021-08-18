@@ -44,9 +44,8 @@ export default class CategoriesManager {
     this.tags = new Tags(
       eventEmitter,
       `${ProductCategoryMap.categoriesContainer} ${ProductCategoryMap.tagsContainer}`,
-      this.collectCategories(),
-      this.getDefaultCategoryId(),
     );
+    this.tags.update(this.collectCategories());
     this.renderDefaultCategorySelection();
     this.listenCategoryChanges();
     this.listenDefaultCategorySelect();
@@ -58,7 +57,6 @@ export default class CategoriesManager {
   initCategoryTreeModal() {
     this.addCategoriesBtn.addEventListener('click', () => this.categoryTreeSelector.showModal(
       this.collectCategories(),
-      this.getDefaultCategoryId(),
     ));
     this.eventEmitter.on(ProductEventMap.categories.applyCategoryTreeChanges, (eventData) => {
       this.tags.update(eventData.categories);
@@ -71,6 +69,7 @@ export default class CategoriesManager {
    * @returns {[]}
    */
   collectCategories() {
+    // these are at first rendered on page load and later updated dynamically
     const tags = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer)
       .querySelectorAll(ProductCategoryMap.tagItem);
     const categories = [];
@@ -79,6 +78,8 @@ export default class CategoriesManager {
       categories.push({
         id: Number(tag.dataset.id),
         name: tag.querySelector(ProductCategoryMap.categoryNamePreview).firstChild.data,
+        //@todo: move to map
+        isDefault: tag.querySelector('.is_default_category_checkbox').checked,
       });
     });
 
@@ -86,8 +87,11 @@ export default class CategoriesManager {
   }
 
   getDefaultCategoryId() {
-    // @todo: default category will have to be retrieved from dedicated input when its implemented
-    return 2;
+    const checkedDefaultCategory = this.categoriesContainer
+      .querySelector(ProductCategoryMap.tagsContainer)
+      .querySelector('.is_default_category_checkbox:checked');
+
+    return Number(checkedDefaultCategory.dataset.id);
   }
 
   renderDefaultCategorySelection() {
@@ -101,6 +105,8 @@ export default class CategoriesManager {
       const optionElement = document.createElement('option');
       optionElement.value = category.id;
       optionElement.innerHTML = category.name;
+      optionElement.selected = category.isDefault;
+
       selectElement.append(optionElement);
     });
 
@@ -110,9 +116,12 @@ export default class CategoriesManager {
   listenDefaultCategorySelect() {
     this.categoriesContainer.querySelector('#default-category-id')
       .addEventListener('change', (e) => {
-        const categoryId = e.currentTarget.value;
-        const radio = this.categoriesContainer.querySelector(`.is_default_category_radio[data-id="${categoryId}"]`)
-        radio.checked = true;
+        const newDefaultCategoryId = Number(e.currentTarget.value);
+        const categories = this.collectCategories();
+        categories.forEach((category) => {
+          category.isDefault = category.id === newDefaultCategoryId;
+        });
+        this.tags.update(categories);
       });
   }
 
