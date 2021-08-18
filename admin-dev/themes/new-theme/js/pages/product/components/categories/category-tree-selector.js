@@ -76,7 +76,7 @@ export default class CategoryTreeSelector {
       this.eventEmitter.emit(ProductEventMap.categories.applyCategoryTreeChanges, {
         categories: this.selectedCategories,
       });
-      // @todo: close modal. ($.fancybox.close() not working)
+      this.modalContainer.closest('.fancybox-opened').querySelector('.fancybox-close').click();
     });
   }
 
