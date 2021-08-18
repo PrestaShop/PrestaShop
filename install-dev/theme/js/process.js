@@ -186,7 +186,7 @@ function install_error(step, errors)
 			if (typeof psuser_assistance != 'undefined') {
 				psuser_assistance.setStep('install_process_error', {'error': v + ' || {"version": "' + ps_version + '"}'});
 			}
-			display += '<li>' + (k + 1) + ': ' + v + '</li>';
+      display += '<li>' + (k + 1) + ': ' + v.replace(/\n/g, '<br>') + '</li>';
 		});
 
 		display += '</ol>';
