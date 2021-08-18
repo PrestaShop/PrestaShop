@@ -170,6 +170,7 @@ export default {
     categoriesModalTemplate: '#categories-modal-template',
     categoriesModalContainer: '#categories-modal-container',
     applyCategoriesBtn: '.js-apply-categories-btn',
+    cancelCategoriesBtn: '.js-cancel-categories-btn',
     categoryTree: '.js-category-tree-list',
     treeElement: '.category-tree-element',
     treeElementInputs: '.category-tree-inputs',
