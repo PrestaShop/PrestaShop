@@ -85,7 +85,10 @@
         <div class="spinner m-auto d-block"></div>
       </div>
 
-      {{ form_row(form.apply_btn) }}
+      <div class="category-tree-footer">
+        {{ form_widget(form.cancel_btn) }}
+        {{ form_widget(form.apply_btn) }}
+      </div>
     </div>
   </template>
 {% endblock %}
