@@ -40,6 +40,7 @@ class ProductCategoryType extends TranslatorAwareType
         $builder
             ->add('name', HiddenType::class)
             ->add('id', HiddenType::class)
+            //@todo: use "main" instead of "default"
             ->add('is_default', CheckboxType::class)
         ;
     }

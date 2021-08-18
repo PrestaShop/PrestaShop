@@ -48,6 +48,13 @@ export default class CategoryTreeSelector {
 
   showModal(selectedCategories) {
     this.selectedCategories = selectedCategories;
+    for (const category of selectedCategories) {
+      if (category.isDefault) {
+        this.defaultCategoryId = category.id;
+        break;
+      }
+    }
+
     const modalContent = $(ProductCategoryMap.categoriesModalTemplate);
     // @todo: replace fancybox with Modal after following PR is merged:
     //    https://github.com/PrestaShop/PrestaShop/pull/25184
@@ -114,7 +121,17 @@ export default class CategoryTreeSelector {
         checkbox.checked = true;
       }
 
-      checkbox.addEventListener('change', () => this.updateSelectedCategories());
+      checkbox.addEventListener('change', (e) => {
+        // do not allow unchecking main category id
+        //@todo: out of scope - this behavior is not ux friendly. Implement automatic closest parent selection instead (both in tree and in tags)?
+        if (Number(e.currentTarget.dataset.id) === this.defaultCategoryId && !e.currentTarget.checked) {
+          e.currentTarget.checked = true;
+
+          return;
+        }
+
+        this.updateSelectedCategories();
+      });
     }, this);
     // Tree is initialized we can show it and hide loader
     this.modalContainer.querySelector(ProductCategoryMap.fieldset).classList.remove('d-none');
@@ -263,6 +280,7 @@ export default class CategoryTreeSelector {
     if (!checkbox) {
       return;
     }
+
     this.updateCheckbox(checkbox, false);
     this.openCategoryParents(checkbox);
     this.updateSelectedCategories();
@@ -311,16 +329,24 @@ export default class CategoryTreeSelector {
     const checkedCheckboxes = this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
 
     const categories = [];
-    checkedCheckboxes.forEach((checkboxInput) => {
+    for (const i in checkedCheckboxes) {
+      if (!checkedCheckboxes.hasOwnProperty(i)) {
+        break;
+      }
+
+      const checkboxInput = checkedCheckboxes[i];
       const categoryId = Number(checkboxInput.dataset.id);
+
       const category = this.searchCategoryInTree(categoryId, this.categories);
 
       if (!category) {
-        return;
+        continue;
       }
 
+      category.isDefault = category.id === this.defaultCategoryId;
       categories.push(category);
-    });
+    }
+
     this.tags.update(categories);
     this.selectedCategories = categories;
   }
@@ -352,7 +378,6 @@ export default class CategoryTreeSelector {
   updateCheckbox(checkboxInput, checked) {
     if (checkboxInput.checked !== checked) {
       checkboxInput.checked = checked;
-      this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
     }
   }
 }
