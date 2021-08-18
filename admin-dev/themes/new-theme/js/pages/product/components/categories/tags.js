@@ -32,17 +32,13 @@ export default class Tags {
   constructor(
     eventEmitter,
     containerSelector,
-    initialCategories,
-    defaultCategoryId,
   ) {
     this.eventEmitter = eventEmitter;
     this.container = document.querySelector(containerSelector);
-    this.defaultCategoryId = defaultCategoryId;
-    this.update(initialCategories);
   }
 
+  //@todo: rename to render instead?
   update(categories) {
-    this.toggleContainerVisibility();
     this.container.innerHTML = '';
 
     const tagTemplate = this.container.dataset.prototype;
@@ -51,15 +47,19 @@ export default class Tags {
       const template = tagTemplate.replace(RegExp(this.container.dataset.prototypeName, 'g'), category.id);
       const frag = document.createRange().createContextualFragment(template.trim());
 
+      //@todo: move selector to map
+      frag.firstChild.querySelector('.is_default_category_checkbox').checked = category.isDefault;
       // do not allow removing default category (thus don't render the tag removal element)
-      if (this.defaultCategoryId === category.id) {
+      if (category.isDefault) {
         frag.firstChild.querySelector(ProductCategoryMap.tagRemoveBtn).remove();
       }
 
       frag.firstChild.querySelector(ProductCategoryMap.categoryNamePreview).innerHTML = category.name;
       this.container.append(frag);
     });
+
     this.listenTagRemoval();
+    this.toggleContainerVisibility();
     this.eventEmitter.emit(ProductEventMap.categories.categoriesUpdated)
   }
 
