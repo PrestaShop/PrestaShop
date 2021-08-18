@@ -76,8 +76,14 @@ export default class CategoryTreeSelector {
       this.eventEmitter.emit(ProductEventMap.categories.applyCategoryTreeChanges, {
         categories: this.selectedCategories,
       });
-      this.modalContainer.closest('.fancybox-opened').querySelector('.fancybox-close').click();
+      this.closeModal();
     });
+  }
+
+  listenCancelChanges() {
+    this.modalContainer.querySelector(ProductCategoryMap.cancelCategoriesBtn)
+      .addEventListener('click', () => this.closeModal()
+    );
   }
 
   async initModal() {
@@ -97,6 +103,7 @@ export default class CategoryTreeSelector {
     this.initTypeaheadData(this.categories, '');
     this.initTypeahead();
     this.initTree();
+    this.listenCancelChanges();
     this.applyCategoryTreeChanges();
     this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, (categoryId) => this.unselectCategory(categoryId));
   }
@@ -379,5 +386,10 @@ export default class CategoryTreeSelector {
     if (checkboxInput.checked !== checked) {
       checkboxInput.checked = checked;
     }
+  }
+
+  closeModal() {
+    //@todo: these selectors shouldn't need a map, as fancybox will be replaced with custom modal in other PR
+    this.modalContainer.closest('.fancybox-opened').querySelector('.fancybox-close').click();
   }
 }
