@@ -25,7 +25,7 @@ const taxRuleDataToCreate = new TaxRuleGroupFaker();
 const taxRuleDataToEdit = new TaxRuleGroupFaker({enabled: 'No'});
 
 // Create, Update and Delete Tax rule in BO
-describe('Create, Update and Delete Tax rule in BO', async () => {
+describe('BO - International - Tax rules : Create, Update and Delete Tax rule', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -42,7 +42,7 @@ describe('Create, Update and Delete Tax rule in BO', async () => {
 
   // 1 : Create Tax Rule
   describe('Create Tax Rule', async () => {
-    it('should go to Taxes page', async function () {
+    it('should go to \'International > Taxes\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -55,7 +55,7 @@ describe('Create, Update and Delete Tax rule in BO', async () => {
       await expect(pageTitle).to.contains(taxesPage.pageTitle);
     });
 
-    it('should go to Tax Rules page', async function () {
+    it('should go to \'Tax Rules\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxRulesPage', baseContext);
 
       await taxesPage.goToTaxRulesPage(page);
@@ -90,7 +90,7 @@ describe('Create, Update and Delete Tax rule in BO', async () => {
 
   // 2 : Update Tax Rule with data generated with faker
   describe('Update Tax Rule created', async () => {
-    it('should go to Tax Rules page', async function () {
+    it('should go to \'Tax Rules\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxRulesPageToUpdate', baseContext);
 
       await taxesPage.goToTaxRulesPage(page);
@@ -129,7 +129,7 @@ describe('Create, Update and Delete Tax rule in BO', async () => {
       await expect(textResult).to.contains(addTaxRulesPage.successfulUpdateMessage);
     });
 
-    it('should go to Tax Rules page', async function () {
+    it('should go to \'Tax Rules\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxRulesPageToReset', baseContext);
 
       await taxesPage.goToTaxRulesPage(page);
@@ -141,8 +141,8 @@ describe('Create, Update and Delete Tax rule in BO', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterUpdate', baseContext);
 
-      const numberOfTaxRulessAfterReset = await taxRulesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfTaxRulessAfterReset).to.equal(numberOfTaxRules + 1);
+      const numberOfTaxRulesAfterReset = await taxRulesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfTaxRulesAfterReset).to.equal(numberOfTaxRules + 1);
     });
   });
 

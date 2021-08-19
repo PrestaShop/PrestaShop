@@ -20,11 +20,12 @@ const baseContext = 'functional_BO_international_localization_taxes_CRUDTax';
 let browserContext;
 let page;
 let numberOfTaxes = 0;
+
 const createTaxData = new TaxFaker();
 const editTaxData = new TaxFaker({enabled: 'No'});
 
 // Create, Update and Delete Tax in BO
-describe('Create, Update and Delete Tax in BO', async () => {
+describe('BO - International - Taxes : Create, Update and Delete Tax', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -39,7 +40,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to Taxes page', async function () {
+  it('should go to \'International > Taxes\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -148,7 +149,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
 
   // 3 : Delete Tax created from dropdown Menu
   describe('Delete Tax', async () => {
-    it('should go to Taxes page', async function () {
+    it('should go to \'International > Taxes\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxPageToDelete', baseContext);
 
       await taxesPage.goToSubMenu(

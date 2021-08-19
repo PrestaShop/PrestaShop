@@ -35,7 +35,7 @@ Create 16 new tax rules
 Test pagination next and previous
 Delete the created tax rules by bulk actions
  */
-describe('Filter, sort and pagination tax rules', async () => {
+describe('BO - International - Tax rules : Filter, sort and pagination', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -50,7 +50,7 @@ describe('Filter, sort and pagination tax rules', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Taxes\' page', async function () {
+  it('should go to \'International > Taxes\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
     await dashboardPage.goToSubMenu(

@@ -19,7 +19,7 @@ let browserContext;
 let page;
 
 // Edit Tax options
-describe('Edit Tax options with all EcoTax values', async () => {
+describe('BO - International - Taxes : Edit Tax options with all EcoTax values', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -34,7 +34,7 @@ describe('Edit Tax options with all EcoTax values', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to Taxes page', async function () {
+  it('should go to \'International > Taxes\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
