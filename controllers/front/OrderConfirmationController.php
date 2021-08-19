@@ -53,21 +53,29 @@ class OrderConfirmationControllerCore extends FrontController
             $this->checkFreeOrder();
         }
 
-        $this->id_module = (int) (Tools::getValue('id_module', 0));
-        $this->id_order = (int) (Tools::getValue('id_order', 0));
+        /**
+         * Because of order splitting scenarios, we must get the data by id_cart parameter (not id_order),
+         * so we can display all orders made fron this cart.
+         * 
+         * It's not implemented yet, however.
+         */
+        $this->id_cart = (int) (Tools::getValue('id_cart', 0));
+        $this->id_order = Order::getIdByCartId((int) ($this->id_cart));
         $this->secure_key = Tools::getValue('key', false);
         $this->order = new Order((int) ($this->id_order));
+        $this->id_module = (int) (Tools::getValue('id_module', 0));
 
         // This data is kept only for backward compatibility purposes
-        $this->id_cart = (int) $this->order->id_cart;
         $this->reference = (string) $this->order->reference;
+
+        $redirectLink = $this->context->link->getPageLink('history', $this->ssl);
 
         // The confirmation link must contain a unique order secure key matching the key saved in database,
         // this prevents user to view other customer's order confirmations
         if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
             Tools::redirect($redirectLink . (Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
         }
-        $redirectLink = $this->context->link->getPageLink('history', $this->ssl);
+
         if (!Validate::isLoadedObject($this->order) || $this->secure_key != $this->order->secure_key) {
             Tools::redirect($redirectLink);
         }
@@ -108,8 +116,8 @@ class OrderConfirmationControllerCore extends FrontController
             // A) either on page refresh
             // B) if we already transformed him in other window or through backoffice
             } elseif ($this->customer->is_guest == 0) {
-                $this->success[] = $this->trans(
-                    'Your guest account has been already transformed into a customer account. You can log in as a registered shopper.',
+                $this->errors[] = $this->trans(
+                    'We could not transform your guest account, it has already been transformed into a customer account. You can log in as a registered shopper.',
                     [],
                     'Shop.Notifications.Success'
                 );
