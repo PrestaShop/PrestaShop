@@ -19,7 +19,7 @@ const countriesToTest = [countries.netherlands.name, countries.france.name];
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_localization_defaultCurrency';
+const baseContext = 'functional_BO_international_localization_defaultCountry';
 
 let browserContext;
 let page;
