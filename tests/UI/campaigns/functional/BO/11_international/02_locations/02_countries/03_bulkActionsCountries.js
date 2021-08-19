@@ -43,7 +43,13 @@ const secondCountryToCreate = new CountryFaker(
 
 let numberOfCountries = 0;
 
-describe('Bulk actions countries', async () => {
+/*
+Create 2 countries
+Bulk disable them
+Bulk enable them
+Bulk delete them
+ */
+describe('BO - International - Countries : Bulk actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -58,7 +64,7 @@ describe('Bulk actions countries', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to locations page', async function () {
+  it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -73,7 +79,7 @@ describe('Bulk actions countries', async () => {
     await expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
-  it('should go to countries page', async function () {
+  it('should go to \'Countries\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
     await zonesPage.goToSubTabCountries(page);
