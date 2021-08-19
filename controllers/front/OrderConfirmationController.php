@@ -53,10 +53,10 @@ class OrderConfirmationControllerCore extends FrontController
             $this->checkFreeOrder();
         }
 
-        /**
+        /*
          * Because of order splitting scenarios, we must get the data by id_cart parameter (not id_order),
          * so we can display all orders made fron this cart.
-         * 
+         *
          * It's not implemented yet, however.
          */
         $this->id_cart = (int) (Tools::getValue('id_cart', 0));
