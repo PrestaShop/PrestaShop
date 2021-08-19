@@ -30,13 +30,13 @@ class OrderConfirmationControllerCore extends FrontController
 {
     public $ssl = true;
     public $php_self = 'order-confirmation';
+    public $id_cart;
     public $id_module;
     public $id_order;
     public $secure_key;
     protected $order;
     protected $customer;
     public $reference; // Deprecated
-    public $id_cart; // Deprecated
     public $order_presenter; // Deprecated
 
     /**
