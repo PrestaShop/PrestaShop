@@ -95,15 +95,15 @@ describe('BO - International - Localization : Import a localization pack', async
       // Check currency
       await foHomePage.changeCurrency(page, Currencies.chileanPeso.isoCode, Currencies.chileanPeso.symbol);
       const shopCurrency = await foHomePage.getDefaultCurrency(page);
-      await expect(shopCurrency).to.contain(Currencies.mad.isoCode);
+      await expect(shopCurrency).to.contain(Currencies.chileanPeso.isoCode);
     });
 
-    it('should go to FO and check the existence of currency and language added', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeFo', baseContext);
+    it('should change FO language', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeFoLanguage', baseContext);
 
       await foHomePage.changeLanguage(page, Languages.spanish.isoCode);
       const shopLanguage = await foHomePage.getShopLanguage(page);
-      await expect(shopLanguage).to.contain(Languages.spanish.name);
+      await expect(Languages.spanish.name).to.contain(shopLanguage);
     });
 
     it('should go back to BO', async function () {
