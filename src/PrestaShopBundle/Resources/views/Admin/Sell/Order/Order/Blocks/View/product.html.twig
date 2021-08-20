@@ -161,7 +161,7 @@
               <div class="mr-4">
                 <p><strong>{{ customization.name }}</strong></p>
                 <p>
-                  <a href="{{ path('admin_orders_display_customization_image', {'orderId': orderForViewing.id, 'name': customization.name|url_encode|replace({'%': '_'}), "value": customization.value})}}" download>
+                  <a href="{{ path('admin_orders_display_customization_image', {'orderId': orderForViewing.id, "value": customization.value})}}" download>
                     <img src="{{ customization.image }}" alt="{{ customization.name }}">
                   </a>
                 </p>
