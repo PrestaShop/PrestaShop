@@ -21,6 +21,7 @@ global.INSTALL = {
   DB_NAME: process.env.DB_NAME || 'prestashopdb',
   DB_USER: process.env.DB_USER || 'root',
   DB_PASSWD: process.env.DB_PASSWD || '',
+  DB_PREFIX: process.env.DB_PREFIX || 'tst_',
   SHOP_NAME: process.env.SHOP_NAME || 'PrestaShop',
   PS_VERSION: process.env.PS_VERSION || '1.7.6.0',
 };
