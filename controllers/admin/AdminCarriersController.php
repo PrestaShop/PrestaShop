@@ -644,7 +644,7 @@ class AdminCarriersControllerCore extends AdminController
     {
         // Replace "0" by the name of the shop directly in SQL query (allowing sort without errors)
         $this->_select = 'CASE WHEN name = "0" '
-            . 'THEN "' . Carrier::getCarrierNameFromShopName() . '" '
+            . 'THEN "' . pSQL(Carrier::getCarrierNameFromShopName()) . '" '
             . 'ELSE name '
             . 'END AS name';
 
