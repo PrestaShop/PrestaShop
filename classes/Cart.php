@@ -1550,8 +1550,6 @@ class CartCore extends ObjectModel
             'auto_add_cart_rule' => $auto_add_cart_rule,
         ];
 
-        /* @deprecated deprecated since 1.6.1.1 */
-        // Hook::exec('actionBeforeCartUpdateQty', $data);
         Hook::exec('actionCartUpdateQuantityBefore', $data);
 
         if ((int) $quantity <= 0) {
