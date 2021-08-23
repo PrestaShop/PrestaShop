@@ -79,6 +79,10 @@
 
       .link-leveltwo .link {
         padding-left: 0.75rem;
+
+        @include media-breakpoint-down(md) {
+          padding-left: 0.35rem;
+        }
       }
     }
 
@@ -271,7 +275,7 @@
       }
 
       > .link {
-        padding-left: 1rem;
+        padding-left: 0.7rem;
         border-left: 0.25rem solid #25b9d7;
 
         .material-icons {
@@ -306,7 +310,7 @@
       }
 
       span {
-        padding-left: 1rem;
+        padding-left: 0.625rem;
       }
 
       .sub-tabs-arrow {
