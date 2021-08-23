@@ -37,8 +37,7 @@ export default class Tags {
     this.container = document.querySelector(containerSelector);
   }
 
-  //@todo: rename to render instead?
-  update(categories) {
+  render(categories) {
     this.container.innerHTML = '';
 
     const tagTemplate = this.container.dataset.prototype;
