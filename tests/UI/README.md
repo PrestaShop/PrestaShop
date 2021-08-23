@@ -35,12 +35,15 @@ npm install
 | DB_USER             | Login user of your MySql (default to **`root`**) |
 | DB_NAME             | Name of the MySql database (default to **`prestashop_db`**) |
 | DB_PASSWD           | Password for your MySql (default to **`empty`**) |
+| DB_PREFIX           | Prefix for the database tables (default to **`tst_`**) |
+
 ### Maildev parameters
 
 | Parameter           | Description                                          |
 |---------------------|----------------------------------------------------- |
 | SMTP_SERVER             | The smtp server address for maildev (default to **`172.20.0.4`**)|
 | SMTP_PORT            | The smtp port for maildev (default to **`1025`**)|
+
 ### Playwright parameters
 
 | Parameter           | Description                                          |
@@ -52,6 +55,7 @@ npm install
 Before running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with the [`specific-test` command](README.md#specific-test).
 
 ## Sanity tests 
+
 This campaign includes a non-exhaustive set of tests and will ensure that the most important functions work.
 
 ### Launch all scripts
