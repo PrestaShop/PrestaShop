@@ -97,7 +97,7 @@ export default class CategoryTreeSelector {
       this.eventEmitter,
       `${ProductCategoryMap.categoriesModalContainer} ${ProductCategoryMap.tagsContainer}`,
     );
-    this.tags.update(this.selectedCategories);
+    this.tags.render(this.selectedCategories);
     this.categories = await getCategories();
 
     this.initTypeaheadData(this.categories, '');
@@ -354,7 +354,7 @@ export default class CategoryTreeSelector {
       categories.push(category);
     }
 
-    this.tags.update(categories);
+    this.tags.render(categories);
     this.selectedCategories = categories;
   }
 

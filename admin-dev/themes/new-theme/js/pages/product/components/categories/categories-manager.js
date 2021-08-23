@@ -45,7 +45,7 @@ export default class CategoriesManager {
       eventEmitter,
       `${ProductCategoryMap.categoriesContainer} ${ProductCategoryMap.tagsContainer}`,
     );
-    this.tags.update(this.collectCategories());
+    this.tags.render(this.collectCategories());
     this.renderDefaultCategorySelection();
     this.listenCategoryChanges();
     this.listenDefaultCategorySelect();
@@ -59,7 +59,7 @@ export default class CategoriesManager {
       this.collectCategories(),
     ));
     this.eventEmitter.on(ProductEventMap.categories.applyCategoryTreeChanges, (eventData) => {
-      this.tags.update(eventData.categories);
+      this.tags.render(eventData.categories);
     });
   }
 
@@ -120,7 +120,7 @@ export default class CategoriesManager {
         categories.forEach((category) => {
           category.isDefault = category.id === newDefaultCategoryId;
         });
-        this.tags.update(categories);
+        this.tags.render(categories);
       });
   }
 
