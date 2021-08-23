@@ -47,8 +47,7 @@ export default class Tags {
       const template = tagTemplate.replace(RegExp(this.container.dataset.prototypeName, 'g'), category.id);
       const frag = document.createRange().createContextualFragment(template.trim());
 
-      //@todo: move selector to map
-      frag.firstChild.querySelector('.is_default_category_checkbox').checked = category.isDefault;
+      frag.firstChild.querySelector(ProductCategoryMap.defaultCategoryCheckbox).checked = category.isDefault;
       // don't render the tag removal element for main category
       if (category.isDefault) {
         frag.firstChild.querySelector(ProductCategoryMap.tagRemoveBtn).remove();
