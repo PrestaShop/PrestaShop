@@ -75,7 +75,7 @@ class ProductData {
       : productToCreate.minimumQuantity;
 
     /** @member {string} Stock location of the product */
-    this.stockLocation = productToCreate.stockLocation || 'Stock location';
+    this.stockLocation = productToCreate.stockLocation || '';
 
     /** @member {string} Low stock level of the product */
     this.lowStockLevel = productToCreate.lowStockLevel;

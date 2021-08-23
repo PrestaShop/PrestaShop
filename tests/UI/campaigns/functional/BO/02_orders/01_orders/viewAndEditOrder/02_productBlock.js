@@ -85,7 +85,6 @@ const combinationProduct = new ProductFaker({
   taxRule: 'No tax',
   quantity: 197,
   minimumQuantity: 1,
-  stockLocation: 'stock 3',
   lowStockLevel: 3,
   behaviourOutOfStock: 'Default behavior',
 });
