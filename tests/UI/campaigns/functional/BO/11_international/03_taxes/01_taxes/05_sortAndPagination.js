@@ -12,7 +12,7 @@ const taxesPage = require('@pages/BO/international/taxes');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_localization_taxes_sortTaxes';
+const baseContext = 'functional_BO_international_localization_taxes_sortAndPagination';
 
 let browserContext;
 let page;
