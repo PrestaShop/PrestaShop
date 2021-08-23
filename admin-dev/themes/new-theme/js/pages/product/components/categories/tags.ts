@@ -48,7 +48,7 @@ export default class Tags {
     this.container = container;
   }
 
-  public render(categories: Array<{id: number, name: string, isDefault: boolean}>) {
+  public render(categories: Array<{ id: number, name: string, isDefault: boolean }>) {
     this.container.innerHTML = '';
 
     const tagTemplate = this.container.dataset.prototype;
