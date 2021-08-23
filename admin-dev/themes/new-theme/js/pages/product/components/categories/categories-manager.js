@@ -78,8 +78,7 @@ export default class CategoriesManager {
       categories.push({
         id: Number(tag.dataset.id),
         name: tag.querySelector(ProductCategoryMap.categoryNamePreview).firstChild.data,
-        //@todo: move to map
-        isDefault: tag.querySelector('.is_default_category_checkbox').checked,
+        isDefault: tag.querySelector(ProductCategoryMap.defaultCategoryCheckbox).checked,
       });
     });
 
@@ -89,7 +88,7 @@ export default class CategoriesManager {
   getDefaultCategoryId() {
     const checkedDefaultCategory = this.categoriesContainer
       .querySelector(ProductCategoryMap.tagsContainer)
-      .querySelector('.is_default_category_checkbox:checked');
+      .querySelector(`${ProductCategoryMap.defaultCategoryCheckbox}:checked`);
 
     return Number(checkedDefaultCategory.dataset.id);
   }
@@ -97,8 +96,8 @@ export default class CategoriesManager {
   renderDefaultCategorySelection() {
     const categories = this.collectCategories();
     //@todo: move selectors to map
-    const selectContainer = this.categoriesContainer.querySelector('#default-category-selector-widget');
-    const selectElement = this.categoriesContainer.querySelector('#default-category-id');
+    const selectContainer = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectContainer);
+    const selectElement = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectInput);
     selectElement.innerHTML = '';
 
     categories.forEach((category) => {
