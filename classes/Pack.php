@@ -526,7 +526,7 @@ class PackCore extends Product
      *
      * @param int $id_product id_pack
      *
-     * @return bool This function always returns fasle
+     * @return bool This function always returns false
      */
     public static function usesAdvancedStockManagement($id_product)
     {

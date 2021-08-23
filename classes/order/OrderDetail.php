@@ -719,7 +719,6 @@ class OrderDetailCore extends ObjectModel
      * @param int $id_order_status
      * @param int $id_order_invoice
      * @param bool $use_taxes set to false if you don't want to use taxes
-     * @param int $id_warehouse [no longer used]
      */
     protected function create(Order $order, Cart $cart, $product, $id_order_state, $id_order_invoice, $use_taxes = true)
     {
@@ -781,7 +780,6 @@ class OrderDetailCore extends ObjectModel
      * @param int $id_order_status
      * @param int $id_order_invoice
      * @param bool $use_taxes set to false if you don't want to use taxes
-     * @param int $id_warehouse [no longer used]
      */
     public function createList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true)
     {
