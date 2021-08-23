@@ -1,16 +1,22 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const boMerchandiseReturnsPage = require('@pages/BO/customerService/merchandiseReturns');
 const ordersPage = require('@pages/BO/orders/index');
 const viewOrderPage = require('@pages/BO/orders/view');
+
+// Import FO mages
 const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const productPage = require('@pages/FO/product');
@@ -28,7 +34,7 @@ const {Statuses} = require('@data/demo/orderStatuses');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 // Import test context
-const testContext = require('@utils/testContext');
+
 
 const baseContext = 'functional_BO_customerService_orderMessages_merchandiseReturnOptions';
 
@@ -45,7 +51,7 @@ Go to FO>My account>Order history> first order detail in the list
 Check the existence of product return form
 Create a merchandise returns then check the file prefix
  */
-describe('Merchandise return (RMA) options', async () => {
+describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA) options', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -84,8 +90,8 @@ describe('Merchandise return (RMA) options', async () => {
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
   });
 
-  it('should create an order', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
+  it('should add product to cart', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
     // Go to home page
     await foLoginPage.goToHomePage(page);
@@ -93,11 +99,15 @@ describe('Merchandise return (RMA) options', async () => {
     // Go to the first product page
     await homePage.goToProductPage(page, 1);
 
-    // Add the created product to the cart
+    // Add the product to the cart
     await productPage.addProductToTheCart(page);
 
-    // Edit the product quantity
-    await cartPage.editProductQuantity(page, 1, 5);
+    const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+    await expect(notificationsNumber).to.be.equal(1);
+  });
+
+  it('should go to delivery step', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
     // Proceed to checkout the shopping cart
     await cartPage.clickOnProceedToCheckout(page);
@@ -105,10 +115,18 @@ describe('Merchandise return (RMA) options', async () => {
     // Address step - Go to delivery step
     const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
     await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+  });
+
+  it('should go to payment step', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
     // Delivery step - Go to payment step
     const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
     await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+  });
+
+  it('should choose payment method and confirm the order', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
     // Payment step - Choose payment step
     await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
@@ -130,13 +148,11 @@ describe('Merchandise return (RMA) options', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  const tests = [
+  [
     {args: {action: 'activate', enable: true, prefix: '#NE'}},
     {args: {action: 'deactivate', enable: false, prefix: '#RE'}},
-  ];
-
-  tests.forEach((test, index) => {
-    it('should go to merchandise returns page', async function () {
+  ].forEach((test, index) => {
+    it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToMerchandiseReturnsPage${index}`, baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -165,7 +181,7 @@ describe('Merchandise return (RMA) options', async () => {
       await expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
     });
 
-    it('should go to orders page', async function () {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage${index}`, baseContext);
 
       await dashboardPage.goToSubMenu(

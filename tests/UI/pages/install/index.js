@@ -55,6 +55,7 @@ class Install extends CommonPage {
     this.dbLoginInput = '#dbLogin';
     this.dbNameInput = '#dbName';
     this.dbPasswordInput = '#dbPassword';
+    this.dbPrefixInput = '#db_prefix';
     this.testDbConnectionButton = '#btTestDB';
     this.createDbButton = '#btCreateDB';
     this.dbResultCheckOkBlock = '#dbResultCheck.okBlock';
@@ -168,6 +169,7 @@ class Install extends CommonPage {
     await this.setValue(page, this.dbNameInput, global.INSTALL.DB_NAME);
     await this.setValue(page, this.dbLoginInput, global.INSTALL.DB_USER);
     await this.setValue(page, this.dbPasswordInput, global.INSTALL.DB_PASSWD);
+    await this.setValue(page, this.dbPrefixInput, global.INSTALL.DB_PREFIX);
   }
 
   /**

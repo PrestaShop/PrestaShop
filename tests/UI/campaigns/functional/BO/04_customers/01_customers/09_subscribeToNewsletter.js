@@ -1,12 +1,13 @@
 require('module-alias/register');
 
+// Import export from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
-// Import login test
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -19,14 +20,14 @@ const customersPage = require('@pages/BO/customers');
 const moduleManagerPage = require('@pages/BO/modules/moduleManager');
 const psEmailSubscriptionPage = require('@pages/BO/modules/psEmailSubscription');
 
-
 const baseContext = 'BO_customers_customers_subscribeToNewsletter';
+
 let numberOfCustomers = 0;
 
 let browserContext;
 let page;
 
-describe('Check customer subscription to newsletter from BO', async () => {
+describe('BO - Customers : Check customer subscription to newsletter from BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -41,7 +42,7 @@ describe('Check customer subscription to newsletter from BO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to customers page', async function () {
+  it('should go to \'Customers > Customers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -56,14 +57,14 @@ describe('Check customer subscription to newsletter from BO', async () => {
     await expect(pageTitle).to.contains(customersPage.pageTitle);
   });
 
-  it('should reset all filters and get Number of customers in BO', async function () {
+  it('should reset all filters and get number of customers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
 
     numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
     await expect(numberOfCustomers).to.be.above(0);
   });
 
-  it(`should filter by email ${DefaultCustomer.email}`, async function () {
+  it(`should filter by email '${DefaultCustomer.email}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByEmail', baseContext);
 
     await customersPage.filterCustomers(
@@ -92,7 +93,7 @@ describe('Check customer subscription to newsletter from BO', async () => {
       await expect(newsletterStatus).to.be.equal(test.args.value);
     });
 
-    it('should go to module manager page', async function () {
+    it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
@@ -144,7 +145,7 @@ describe('Check customer subscription to newsletter from BO', async () => {
       }
     });
 
-    it('should go to customers page', async function () {
+    it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
