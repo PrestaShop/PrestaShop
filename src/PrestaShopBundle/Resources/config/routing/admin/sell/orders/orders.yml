@@ -378,14 +378,13 @@ admin_orders_configure_product_pagination:
     expose: true
 
 admin_orders_display_customization_image:
-  path: /display-customization-image/{orderId}/{name}/{value}
+  path: /display-customization-image/{orderId}/{value}
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:displayCustomizationImage
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
-    name: .+
     value: .+
 
 admin_orders_product_prices:

@@ -717,9 +717,9 @@ class CartRuleCore extends ObjectModel
 
                 $quantityUsed += (int) Db::getInstance()->getValue('
                     SELECT count(*)
-                    FROM ps_cart_cart_rule ccr
-                    INNER JOIN ps_cart c ON c.id_cart = ccr.id_cart
-                    LEFT JOIN ps_orders o ON o.id_cart = c.id_cart
+                    FROM `' . _DB_PREFIX_ . 'cart_cart_rule` ccr
+                    INNER JOIN `' . _DB_PREFIX_ . 'cart` c ON c.id_cart = ccr.id_cart
+                    LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON o.id_cart = c.id_cart
                     WHERE c.id_customer = ' . $cart->id_customer . ' AND c.id_cart = ' . $cart->id . ' AND ccr.id_cart_rule = ' . (int) $this->id . ' AND o.id_order IS NULL
                 ');
             } else {
