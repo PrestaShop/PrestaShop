@@ -102,7 +102,7 @@ class OrderConfirmationControllerCore extends FrontController
 
             if (empty($password)) {
                 $this->errors[] = $this->trans(
-                    'To convert your account, you must enter a password.',
+                    'Enter a password to transform your guest account into a customer account.',
                     [],
                     'Shop.Forms.Help'
                 );
@@ -117,7 +117,7 @@ class OrderConfirmationControllerCore extends FrontController
             // B) if we already transformed him in other window or through backoffice
             } elseif ($this->customer->is_guest == 0) {
                 $this->errors[] = $this->trans(
-                    'We could not transform your guest account, it has already been transformed into a customer account. You can log in as a registered shopper.',
+                    'A customer account has already been created from this guest account. Please sign in.',
                     [],
                     'Shop.Notifications.Success'
                 );
