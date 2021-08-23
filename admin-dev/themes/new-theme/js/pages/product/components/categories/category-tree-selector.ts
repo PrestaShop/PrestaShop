@@ -23,30 +23,63 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+// @ts-ignore
 import Bloodhound from 'typeahead.js';
 import AutoCompleteSearch from '@components/auto-complete-search';
 import Tokenizers from '@components/bloodhound/tokenizers';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
-import {getCategories} from '@pages/product/services/categories';
+import categories, {getCategories} from '@pages/product/services/categories';
 import Tags from '@pages/product/components/categories/tags';
+import {EventEmitter} from "events";
+import breadcrumb from "@app/pages/stock/components/header/breadcrumb.vue";
 
 const {$} = window;
 
 const ProductCategoryMap = ProductMap.categories;
 
 export default class CategoryTreeSelector {
-  constructor(eventEmitter) {
+  eventEmitter: EventEmitter;
+
+  typeaheadCategories: Array<{ id: number, name: string, breadcrumb: string, children: Array<any> }>;
+
+  //@todo: how to type recursive "children"?
+  categories: Array<{ id: number, name: string, active: boolean, children: Array<any> }>
+
+  selectedCategories: Array<{ id: number, name: string, isDefault: boolean }>
+
+  defaultCategoryId: number|null;
+
+  modalContainer: HTMLElement|null
+
+  categoryTree: HTMLElement|null;
+
+  prototypeTemplate: string|null;
+
+  prototypeName: string|null
+
+  expandAllButton: HTMLElement|null;
+
+  reduceAllButton: HTMLElement|null;
+
+  tags: Tags|null;
+
+  constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
     this.categories = [];
-    this.typeaheadDatas = [];
-
-    return {
-      showModal: (selectedCategories) => this.showModal(selectedCategories),
-    };
+    this.typeaheadCategories = [];
+    this.selectedCategories = [];
+    this.defaultCategoryId = null;
+    this.modalContainer = null;
+    this.categoryTree = null
+    this.prototypeTemplate = null;
+    this.prototypeName = null;
+    this.expandAllButton = null;
+    this.reduceAllButton = null;
+    this.tags = null;
   }
 
-  showModal(selectedCategories) {
+  public showModal(selectedCategories: Array<{ id: number, name: string, isDefault: boolean }>) {
     this.selectedCategories = selectedCategories;
     for (const category of selectedCategories) {
       if (category.isDefault) {
@@ -72,7 +105,13 @@ export default class CategoryTreeSelector {
   }
 
   applyCategoryTreeChanges() {
-    this.modalContainer.querySelector(ProductCategoryMap.applyCategoriesBtn).addEventListener('click', () => {
+    if (!this.modalContainer) {
+      return;
+    }
+
+    const applyBtn = this.modalContainer.querySelector(ProductCategoryMap.applyCategoriesBtn) as HTMLElement;
+
+    applyBtn.addEventListener('click', () => {
       this.eventEmitter.emit(ProductEventMap.categories.applyCategoryTreeChanges, {
         categories: this.selectedCategories,
       });
@@ -81,16 +120,19 @@ export default class CategoryTreeSelector {
   }
 
   listenCancelChanges() {
-    this.modalContainer.querySelector(ProductCategoryMap.cancelCategoriesBtn)
-      .addEventListener('click', () => this.closeModal()
-    );
+    if (!this.modalContainer) {
+      return;
+    }
+
+    const cancelBtn = this.modalContainer.querySelector(ProductCategoryMap.cancelCategoriesBtn) as HTMLElement;
+    cancelBtn.addEventListener('click', () => this.closeModal());
   }
 
   async initModal() {
-    this.modalContainer = document.querySelector(ProductCategoryMap.categoriesModalContainer);
-    this.categoryTree = this.modalContainer.querySelector(ProductCategoryMap.categoryTree);
-    this.prototypeTemplate = this.categoryTree.dataset.prototype;
-    this.prototypeName = this.categoryTree.dataset.prototypeName;
+    this.modalContainer = document.querySelector(ProductCategoryMap.categoriesModalContainer) as HTMLElement;
+    this.categoryTree = this.modalContainer.querySelector(ProductCategoryMap.categoryTree) as HTMLElement;
+    this.prototypeTemplate = this.categoryTree.dataset.prototype ? this.categoryTree.dataset.prototype : null;
+    this.prototypeName = this.categoryTree.dataset.prototypeName ? this.categoryTree.dataset.prototypeName : null;
     this.expandAllButton = this.modalContainer.querySelector(ProductCategoryMap.expandAllButton);
     this.reduceAllButton = this.modalContainer.querySelector(ProductCategoryMap.reduceAllButton);
     this.tags = new Tags(
@@ -109,56 +151,75 @@ export default class CategoryTreeSelector {
   }
 
   initTree() {
+    const categoryTree = this.categoryTree;
+
+    if (!categoryTree) {
+      return;
+    }
+
     this.categories.forEach((category) => {
       const item = this.generateCategoryTree(category);
-      this.categoryTree.append(item);
+      categoryTree.append(item);
     });
 
-    this.expandAllButton.addEventListener('click', () => {
-      this.toggleAll(true);
-    });
-    this.reduceAllButton.addEventListener('click', () => {
-      this.toggleAll(false);
-    });
+    if (this.expandAllButton) {
+      this.expandAllButton.addEventListener('click', () => {
+        this.toggleAll(true);
+      });
+    }
 
-    this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkbox) => {
-      const categoryId = Number(checkbox.dataset.id);
+    if (this.reduceAllButton) {
+      this.reduceAllButton.addEventListener('click', () => {
+        this.toggleAll(false);
+      });
+    }
 
-      if (this.selectedCategories.some((category) => category.id === categoryId)) {
-        checkbox.checked = true;
-      }
+    categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkbox) => {
+      if (checkbox instanceof HTMLInputElement) {
+        const categoryId = Number(checkbox.dataset.id);
 
-      checkbox.addEventListener('change', (e) => {
-        // do not allow unchecking main category id
-        //@todo: out of scope - this behavior is not ux friendly. Implement automatic closest parent selection instead (both in tree and in tags)?
-        if (Number(e.currentTarget.dataset.id) === this.defaultCategoryId && !e.currentTarget.checked) {
-          e.currentTarget.checked = true;
-
-          return;
+        if (this.selectedCategories.some((category) => category.id === categoryId)) {
+          checkbox.checked = true;
         }
 
-        this.updateSelectedCategories();
-      });
+        checkbox.addEventListener('change', (e) => {
+          const currentTarget = e.currentTarget as HTMLInputElement;
+
+          // do not allow unchecking main category id
+          //@todo: out of scope - this behavior is not ux friendly. Implement automatic closest parent selection instead (both in tree and in tags)?
+          if (Number(currentTarget.dataset.id) === this.defaultCategoryId && !currentTarget.checked) {
+            currentTarget.checked = true;
+
+            return;
+          }
+
+          this.updateSelectedCategories();
+        });
+      }
     }, this);
     // Tree is initialized we can show it and hide loader
-    this.modalContainer.querySelector(ProductCategoryMap.fieldset).classList.remove('d-none');
-    this.modalContainer.querySelector(ProductCategoryMap.loader).classList.add('d-none');
+    if (this.modalContainer) {
+      const fieldset = this.modalContainer.querySelector(ProductCategoryMap.fieldset) as HTMLElement;
+      const loader = this.modalContainer.querySelector(ProductCategoryMap.loader) as HTMLElement;
+
+      fieldset.classList.remove('d-none');
+      loader.classList.add('d-none');
+    }
   }
 
   /**
    * Used to recursively create items of the category tree
-   *
-   * @param {Object} category
    */
-  generateCategoryTree(category) {
-    const categoryNode = this.generateTreeElement(category);
-    const childrenList = categoryNode.querySelector(ProductCategoryMap.childrenList);
+  generateCategoryTree(category: { id: number, name: string, active: boolean, children: Array<any> }) {
+    const categoryNode = this.generateTreeElement(category) as HTMLElement;
+    const childrenList = categoryNode.querySelector(ProductCategoryMap.childrenList) as HTMLElement;
     childrenList.classList.add('d-none');
 
     const hasChildren = category.children && category.children.length > 0;
     categoryNode.classList.toggle('more', hasChildren);
     if (hasChildren) {
-      const inputsContainer = categoryNode.querySelector(ProductCategoryMap.treeElementInputs);
+      const inputsContainer = categoryNode.querySelector(ProductCategoryMap.treeElementInputs) as HTMLElement;
+
       inputsContainer.addEventListener('click', (event) => {
         // We don't want to mess with the inputs behaviour (no toggle when checkbox or radio is clicked)
         // So we only toggle when the div itself is clicked.
@@ -186,36 +247,39 @@ export default class CategoryTreeSelector {
   /**
    * If the category is among the initial ones (inserted by the form on load) the existing element is used,
    * if not then it is generated based on the prototype template. In both case the element is injected with the
-   * category name and click on radio is handled.
-   *
-   * @param {Object} category
-   *
-   * @returns {HTMLElement}
+   * category name.
    */
-  generateTreeElement(category) {
-    const template = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), category.id);
+  generateTreeElement(category: { id: number, name: string, active: boolean, children: Array<any> }) {
+    if (!this.prototypeTemplate || !this.prototypeName) {
+      throw 'Invalid category tree prototype template or name';
+    }
+
+    const template = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), String(category.id));
     // Trim is important here or the first child could be some text (whitespace, or \n)
     const frag = document.createRange().createContextualFragment(template.trim());
-    const categoryNode = frag.firstChild;
+    const categoryNode = frag.firstChild as HTMLElement;
 
-    // Add category name as a text between the checkbox and the radio
+    // Add category name text
     const checkboxInput = categoryNode.querySelector(ProductCategoryMap.checkboxInput);
-    const nameelem = document.createTextNode(category.name);
-    const elem = category.active ? nameelem : document.createElement('i').appendChild(nameelem).parentNode;
-    checkboxInput.parentNode.insertBefore(
-      elem,
-      checkboxInput,
-    );
+    if (!checkboxInput) {
+      return;
+    }
+
+    const nameElement = document.createTextNode(category.name);
+    const element = category.active ?
+      nameElement :
+      document.createElement('i').appendChild(nameElement).parentNode as HTMLElement;
+
+    (checkboxInput.parentNode as HTMLElement).insertBefore(element, checkboxInput);
 
     return categoryNode;
   }
 
-  /**
-   * Expand/reduce the category tree
-   *
-   * @param {boolean} expanded Force expanding instead of toggle
-   */
-  toggleAll(expanded) {
+  toggleAll(expanded: boolean) {
+    if (!this.modalContainer || !this.expandAllButton || !this.reduceAllButton) {
+      return;
+    }
+
     this.expandAllButton.style.display = expanded ? 'none' : 'block';
     this.reduceAllButton.style.display = !expanded ? 'none' : 'block';
 
@@ -238,14 +302,19 @@ export default class CategoryTreeSelector {
    *
    * @param {int} categoryId
    */
-  selectCategory(categoryId) {
+  selectCategory(categoryId: number) {
+    if (!this.modalContainer) {
+      return;
+    }
+
     const checkbox = this.modalContainer.querySelector(
       `[name="${ProductCategoryMap.treeCheckboxName(categoryId)}"]`,
     );
 
-    if (!checkbox) {
+    if (!(checkbox instanceof HTMLInputElement)) {
       return;
     }
+
     this.updateCheckbox(checkbox, true);
     this.openCategoryParents(checkbox);
     this.updateSelectedCategories();
@@ -254,37 +323,37 @@ export default class CategoryTreeSelector {
   /**
    * @param {HTMLElement} checkbox
    */
-  openCategoryParents(checkbox) {
+  openCategoryParents(checkbox: HTMLInputElement) {
     // This is the element containing the checkbox
     let parentItem = checkbox.closest(ProductCategoryMap.treeElement);
 
-    if (parentItem !== null) {
+    if (parentItem) {
       // This is the first (potential) parent element
-      parentItem = parentItem.parentNode.closest(ProductCategoryMap.treeElement);
+      parentItem = (parentItem.parentNode as HTMLElement).closest(ProductCategoryMap.treeElement);
     }
 
-    while (parentItem !== null && this.categoryTree.contains(parentItem)) {
+    while (this.categoryTree && parentItem !== null && this.categoryTree.contains(parentItem)) {
       const childrenList = parentItem.querySelector(ProductCategoryMap.childrenList);
 
-      if (childrenList.childNodes.length) {
+      if (childrenList && childrenList.childNodes.length) {
         parentItem.classList.add('less');
         parentItem.classList.remove('more');
-        parentItem.querySelector(ProductCategoryMap.childrenList).classList.remove('d-none');
+        childrenList.classList.remove('d-none');
       }
 
-      parentItem = parentItem.parentNode.closest(ProductCategoryMap.treeElement);
+      parentItem = (parentItem.parentNode as HTMLElement).closest(ProductCategoryMap.treeElement);
     }
   }
 
-  /**
-   * @param {int} categoryId
-   */
-  unselectCategory(categoryId) {
+  unselectCategory(categoryId: number) {
+    if (!this.modalContainer) {
+      return;
+    }
     const checkbox = this.modalContainer.querySelector(
       `[name="${ProductCategoryMap.treeCheckboxName(categoryId)}"]`,
     );
 
-    if (!checkbox) {
+    if (!(checkbox instanceof HTMLInputElement)) {
       return;
     }
 
@@ -293,36 +362,37 @@ export default class CategoryTreeSelector {
     this.updateSelectedCategories();
   }
 
-  /**
-   * Typeahead data require to have only one array level, we also build the breadcrumb as we go through the
-   * categories.
-   */
-  initTypeaheadData(data, parentBreadcrumb) {
-    data.forEach((category) => {
-      category.breadcrumb = parentBreadcrumb ? `${parentBreadcrumb} > ${category.name}` : category.name;
-      this.typeaheadDatas.push(category);
+  initTypeaheadData(
+    categories: Array<{ id: number, active: boolean, name: string, children: Array<any> }>,
+    parentBreadcrumb: string
+  ) {
+    categories.forEach((category) => {
+      let typeaheadCategory: any = category
+      // add breadcrumb to category
+      const breadcrumb = parentBreadcrumb ? `${parentBreadcrumb} > ${category.name}` : category.name;
+      typeaheadCategory.breadcrumb = breadcrumb;
+      this.typeaheadCategories.push(typeaheadCategory);
 
       if (category.children) {
-        this.initTypeaheadData(category.children, category.breadcrumb);
+        this.initTypeaheadData(category.children, breadcrumb);
       }
     });
   }
 
   initTypeahead() {
     const source = new Bloodhound({
-      datumTokenizer: Tokenizers.obj.letters(
-        'breadcrumb',
-      ),
+      // @ts-ignore
+      datumTokenizer: Tokenizers.obj.letters('breadcrumb'),
       queryTokenizer: Bloodhound.tokenizers.nonword,
-      local: this.typeaheadDatas,
+      local: this.typeaheadCategories,
     });
 
     const dataSetConfig = {
       source,
       display: 'breadcrumb',
       value: 'id',
-      onSelect: (selectedItem, e, $searchInput) => {
-        this.selectCategory(selectedItem.id);
+      onSelect: (selectedItem: any, e: JQueryEventObject, $searchInput: JQuery) => {
+        this.selectCategory(Number(selectedItem.id));
 
         // This resets the search input or else previous search is cached and can be added again
         $searchInput.typeahead('val', '');
@@ -333,38 +403,45 @@ export default class CategoryTreeSelector {
   }
 
   updateSelectedCategories() {
+    if (!this.categoryTree || !this.tags) {
+      return;
+    }
+
     const checkedCheckboxes = this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
 
-    const categories = [];
+    const categories: { id: number; name: string; isDefault: boolean; }[] = [];
     for (const i in checkedCheckboxes) {
       if (!checkedCheckboxes.hasOwnProperty(i)) {
         break;
       }
 
-      const checkboxInput = checkedCheckboxes[i];
+      const checkboxInput = checkedCheckboxes[i] as HTMLInputElement;
       const categoryId = Number(checkboxInput.dataset.id);
 
-      const category = this.searchCategoryInTree(categoryId, this.categories);
+      const searchedCategory = this.searchCategoryInTree(categoryId, this.categories);
 
-      if (!category) {
+      if (!searchedCategory) {
         continue;
       }
 
-      category.isDefault = category.id === this.defaultCategoryId;
-      categories.push(category);
+      categories.push({
+        id: searchedCategory.id,
+        name: searchedCategory.name,
+        isDefault: searchedCategory.id === this.defaultCategoryId
+      });
     }
 
     this.tags.render(categories);
     this.selectedCategories = categories;
   }
 
-  /**
-   * @param {int} categoryId
-   * @param {array} categories
-   * @returns {Object|null}
-   */
-  searchCategoryInTree(categoryId, categories) {
-    let searchedCategory = null;
+  searchCategoryInTree(
+    categoryId: number,
+    categories: Array<{ id: number, name: string, active: boolean, children: Array<any> }>
+    ): { id: number, name: string, active: boolean, children: Array<any> }|null {
+
+    let searchedCategory: any = null;
+
     categories.forEach((category) => {
       if (categoryId === category.id) {
         searchedCategory = category;
@@ -382,14 +459,26 @@ export default class CategoryTreeSelector {
    * @param {HTMLElement} checkboxInput
    * @param {boolean} checked
    */
-  updateCheckbox(checkboxInput, checked) {
+  updateCheckbox(checkboxInput: HTMLInputElement, checked: boolean) {
     if (checkboxInput.checked !== checked) {
       checkboxInput.checked = checked;
     }
   }
 
   closeModal() {
+    if (!this.modalContainer) {
+      return;
+    }
+
     //@todo: these selectors shouldn't need a map, as fancybox will be replaced with custom modal in other PR
-    this.modalContainer.closest('.fancybox-opened').querySelector('.fancybox-close').click();
+    const modal = this.modalContainer.closest('.fancybox-opened');
+    if (!modal) {
+      return;
+    }
+
+    const closeBtn = modal.querySelector('.fancybox-close') as HTMLElement;
+    if (closeBtn) {
+      closeBtn.click();
+    }
   }
 }
