@@ -85,7 +85,6 @@ const combinationProduct = new ProductFaker({
   taxRule: 'No tax',
   quantity: 197,
   minimumQuantity: 1,
-  stockLocation: 'stock 3',
   lowStockLevel: 3,
   behaviourOutOfStock: 'Default behavior',
 });
@@ -327,6 +326,7 @@ describe('BO - Orders - view and edit order : Check product block in view order 
 
         await viewOrderPage.searchProduct(page, combinationProduct.name);
         const result = await viewOrderPage.getSearchedProductDetails(page);
+        console.log(result.stockLocation);
         await Promise.all([
           expect(result.stockLocation).to.equal(combinationProduct.stockLocation),
           expect(result.available).to.equal(combinationProduct.quantity - 1),
