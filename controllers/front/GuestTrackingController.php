@@ -93,9 +93,9 @@ class GuestTrackingControllerCore extends FrontController
                     ['%min%' => Validate::PASSWORD_LENGTH],
                     'Shop.Forms.Help'
                 );
-                // Prevent error
-                // A) either on page refresh
-                // B) if we already transformed him in other window or through backoffice
+            // Prevent error
+            // A) either on page refresh
+            // B) if we already transformed him in other window or through backoffice
             } elseif ($customer->is_guest == 0) {
                 $this->errors[] = $this->trans(
                     'A customer account has already been created from this guest account. Please sign in.',
