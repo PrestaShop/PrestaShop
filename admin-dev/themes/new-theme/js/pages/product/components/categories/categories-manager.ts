@@ -27,20 +27,42 @@ import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import CategoryTreeSelector from '@pages/product/components/categories/category-tree-selector';
 import Tags from '@pages/product/components/categories/tags';
+import {EventEmitter} from "events";
 
 const ProductCategoryMap = ProductMap.categories;
 
 export default class CategoriesManager {
-  /**
-   * @param {EventEmitter} eventEmitter
-   * @returns {{}}
-   */
-  constructor(eventEmitter) {
+  eventEmitter: EventEmitter;
+
+  categoryTreeSelector: CategoryTreeSelector;
+
+  categoriesContainer: HTMLElement;
+
+  addCategoriesBtn: HTMLElement;
+
+  typeaheadData: Array<any>;
+
+  tags: Tags;
+
+  constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
     this.categoryTreeSelector = new CategoryTreeSelector(eventEmitter);
-    this.categoriesContainer = document.querySelector(ProductCategoryMap.categoriesContainer);
-    this.addCategoriesBtn = this.categoriesContainer.querySelector(ProductCategoryMap.addCategoriesBtn);
-    this.typeaheadDatas = [];
+
+    const categoriesContainer = document.querySelector(ProductCategoryMap.categoriesContainer);
+
+    if (!(categoriesContainer instanceof HTMLElement)) {
+      throw '"categoriesContainer" must be a valid HTMLElement';
+    }
+    this.categoriesContainer = categoriesContainer;
+
+    const addCategoriesBtn = this.categoriesContainer.querySelector(ProductCategoryMap.addCategoriesBtn);
+
+    if (!(addCategoriesBtn instanceof HTMLElement)) {
+      throw '"addCategoriesBtn" must be a valid HTMLElement';
+    }
+
+    this.addCategoriesBtn = addCategoriesBtn;
+    this.typeaheadData = [];
     this.tags = new Tags(
       eventEmitter,
       `${ProductCategoryMap.categoriesContainer} ${ProductCategoryMap.tagsContainer}`,
@@ -50,11 +72,9 @@ export default class CategoriesManager {
     this.listenCategoryChanges();
     this.listenDefaultCategorySelect();
     this.initCategoryTreeModal();
-
-    return {};
   }
 
-  initCategoryTreeModal() {
+  private initCategoryTreeModal() {
     this.addCategoriesBtn.addEventListener('click', () => this.categoryTreeSelector.showModal(
       this.collectCategories(),
     ));
@@ -63,46 +83,46 @@ export default class CategoriesManager {
     });
   }
 
-  /**
-   * Collects categories from tags
-   *
-   * @returns {[]}
-   */
-  collectCategories() {
+  private collectCategories() {
     // these are at first rendered on page load and later updated dynamically
-    const tags = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer)
-      .querySelectorAll(ProductCategoryMap.tagItem);
-    const categories = [];
+    const tagsContainer = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer) as HTMLElement;
+    const tags = tagsContainer.querySelectorAll(ProductCategoryMap.tagItem);
+    const categories: { id: number; name: string; isDefault: boolean; }[] = [];
 
-    tags.forEach((tag) => {
-      categories.push({
-        id: Number(tag.dataset.id),
-        name: tag.querySelector(ProductCategoryMap.categoryNamePreview).firstChild.data,
-        isDefault: tag.querySelector(ProductCategoryMap.defaultCategoryCheckbox).checked,
-      });
+    tags.forEach((tag: Element) => {
+      if (tag instanceof HTMLElement) {
+        const defaultCategoryCheckbox = tag.querySelector(ProductCategoryMap.defaultCategoryCheckbox) as HTMLInputElement;
+
+        categories.push({
+          id: Number(tag.dataset.id),
+          name: this.extractCategoryName(tag as HTMLElement),
+          isDefault: defaultCategoryCheckbox.checked,
+        });
+      }
     });
 
     return categories;
   }
 
-  getDefaultCategoryId() {
-    const checkedDefaultCategory = this.categoriesContainer
-      .querySelector(ProductCategoryMap.tagsContainer)
-      .querySelector(`${ProductCategoryMap.defaultCategoryCheckbox}:checked`);
+  private extractCategoryName(tag: HTMLElement): string {
+    const tagNameElement = tag.querySelector(ProductCategoryMap.categoryNamePreview) as HTMLElement;
 
-    return Number(checkedDefaultCategory.dataset.id);
+    if (tagNameElement) {
+      return tagNameElement.innerText;
+    }
+
+    return '';
   }
 
-  renderDefaultCategorySelection() {
+  private renderDefaultCategorySelection() {
     const categories = this.collectCategories();
-    //@todo: move selectors to map
-    const selectContainer = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectContainer);
-    const selectElement = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectInput);
+    const selectContainer = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectContainer) as HTMLElement;
+    const selectElement = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectInput) as HTMLElement;
     selectElement.innerHTML = '';
 
     categories.forEach((category) => {
       const optionElement = document.createElement('option');
-      optionElement.value = category.id;
+      optionElement.value = String(category.id);
       optionElement.innerHTML = category.name;
       optionElement.selected = category.isDefault;
 
@@ -112,10 +132,11 @@ export default class CategoriesManager {
     selectContainer.classList.remove('d-none');
   }
 
-  listenDefaultCategorySelect() {
-    this.categoriesContainer.querySelector('#default-category-id')
-      .addEventListener('change', (e) => {
-        const newDefaultCategoryId = Number(e.currentTarget.value);
+  private listenDefaultCategorySelect() {
+    const defaultCategoryInput = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectInput) as HTMLInputElement
+    defaultCategoryInput.addEventListener('change', (e) => {
+        const currentTarget = e.currentTarget as HTMLInputElement;
+        const newDefaultCategoryId = Number(currentTarget.value);
         const categories = this.collectCategories();
         categories.forEach((category) => {
           category.isDefault = category.id === newDefaultCategoryId;
@@ -124,7 +145,7 @@ export default class CategoriesManager {
       });
   }
 
-  listenCategoryChanges() {
+  private listenCategoryChanges() {
     this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, () => this.renderDefaultCategorySelection());
     this.eventEmitter.on(ProductEventMap.categories.categoriesUpdated, () => this.renderDefaultCategorySelection());
   }

@@ -42,13 +42,13 @@ export default class Tags {
     const container = document.querySelector(containerSelector);
 
     if (!(container instanceof HTMLElement)) {
-      throw 'Tags container must be a valid HTMLElement';
+      throw '"container" must be a valid HTMLElement';
     }
 
     this.container = container;
   }
 
-  render(categories: Array<{id: string, name: string, isDefault: boolean}>) {
+  public render(categories: Array<{id: number, name: string, isDefault: boolean}>) {
     this.container.innerHTML = '';
 
     const tagTemplate = this.container.dataset.prototype;
@@ -59,7 +59,7 @@ export default class Tags {
     }
 
     categories.forEach((category) => {
-      const template = tagTemplate.replace(RegExp(prototypeName, 'g'), category.id);
+      const template = tagTemplate.replace(RegExp(prototypeName, 'g'), String(category.id));
       const tplFragment = document.createRange().createContextualFragment(template.trim());
 
       if (tplFragment && tplFragment.firstChild && tplFragment.firstChild.parentNode) {
@@ -91,7 +91,7 @@ export default class Tags {
     this.eventEmitter.emit(ProductEventMap.categories.categoriesUpdated)
   }
 
-  toggleContainerVisibility() {
+  private toggleContainerVisibility() {
     this.container.querySelector(ProductCategoryMap.tagsContainer);
     this.container.classList.toggle(
       'd-block',
@@ -99,7 +99,7 @@ export default class Tags {
     );
   }
 
-  listenTagRemoval() {
+  private listenTagRemoval() {
     this.container.querySelectorAll(ProductCategoryMap.tagRemoveBtn).forEach((element) => {
       element.addEventListener('click', (event) => {
         event.preventDefault();
