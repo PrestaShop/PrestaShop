@@ -104,31 +104,7 @@ export default class CategoryTreeSelector {
     });
   }
 
-  applyCategoryTreeChanges() {
-    if (!this.modalContainer) {
-      return;
-    }
-
-    const applyBtn = this.modalContainer.querySelector(ProductCategoryMap.applyCategoriesBtn) as HTMLElement;
-
-    applyBtn.addEventListener('click', () => {
-      this.eventEmitter.emit(ProductEventMap.categories.applyCategoryTreeChanges, {
-        categories: this.selectedCategories,
-      });
-      this.closeModal();
-    });
-  }
-
-  listenCancelChanges() {
-    if (!this.modalContainer) {
-      return;
-    }
-
-    const cancelBtn = this.modalContainer.querySelector(ProductCategoryMap.cancelCategoriesBtn) as HTMLElement;
-    cancelBtn.addEventListener('click', () => this.closeModal());
-  }
-
-  async initModal() {
+  private async initModal() {
     this.modalContainer = document.querySelector(ProductCategoryMap.categoriesModalContainer) as HTMLElement;
     this.categoryTree = this.modalContainer.querySelector(ProductCategoryMap.categoryTree) as HTMLElement;
     this.prototypeTemplate = this.categoryTree.dataset.prototype ? this.categoryTree.dataset.prototype : null;
@@ -150,7 +126,31 @@ export default class CategoryTreeSelector {
     this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, (categoryId) => this.unselectCategory(categoryId));
   }
 
-  initTree() {
+  private applyCategoryTreeChanges() {
+    if (!this.modalContainer) {
+      return;
+    }
+
+    const applyBtn = this.modalContainer.querySelector(ProductCategoryMap.applyCategoriesBtn) as HTMLElement;
+
+    applyBtn.addEventListener('click', () => {
+      this.eventEmitter.emit(ProductEventMap.categories.applyCategoryTreeChanges, {
+        categories: this.selectedCategories,
+      });
+      this.closeModal();
+    });
+  }
+
+  private listenCancelChanges() {
+    if (!this.modalContainer) {
+      return;
+    }
+
+    const cancelBtn = this.modalContainer.querySelector(ProductCategoryMap.cancelCategoriesBtn) as HTMLElement;
+    cancelBtn.addEventListener('click', () => this.closeModal());
+  }
+
+  private initTree() {
     const categoryTree = this.categoryTree;
 
     if (!categoryTree) {
@@ -210,7 +210,7 @@ export default class CategoryTreeSelector {
   /**
    * Used to recursively create items of the category tree
    */
-  generateCategoryTree(category: { id: number, name: string, active: boolean, children: Array<any> }) {
+  private generateCategoryTree(category: { id: number, name: string, active: boolean, children: Array<any> }) {
     const categoryNode = this.generateTreeElement(category) as HTMLElement;
     const childrenList = categoryNode.querySelector(ProductCategoryMap.childrenList) as HTMLElement;
     childrenList.classList.add('d-none');
@@ -249,7 +249,7 @@ export default class CategoryTreeSelector {
    * if not then it is generated based on the prototype template. In both case the element is injected with the
    * category name.
    */
-  generateTreeElement(category: { id: number, name: string, active: boolean, children: Array<any> }) {
+  private generateTreeElement(category: { id: number, name: string, active: boolean, children: Array<any> }) {
     if (!this.prototypeTemplate || !this.prototypeName) {
       throw 'Invalid category tree prototype template or name';
     }
@@ -275,7 +275,7 @@ export default class CategoryTreeSelector {
     return categoryNode;
   }
 
-  toggleAll(expanded: boolean) {
+  private toggleAll(expanded: boolean) {
     if (!this.modalContainer || !this.expandAllButton || !this.reduceAllButton) {
       return;
     }
@@ -302,7 +302,7 @@ export default class CategoryTreeSelector {
    *
    * @param {int} categoryId
    */
-  selectCategory(categoryId: number) {
+  private selectCategory(categoryId: number) {
     if (!this.modalContainer) {
       return;
     }
@@ -320,10 +320,7 @@ export default class CategoryTreeSelector {
     this.updateSelectedCategories();
   }
 
-  /**
-   * @param {HTMLElement} checkbox
-   */
-  openCategoryParents(checkbox: HTMLInputElement) {
+  private openCategoryParents(checkbox: HTMLInputElement) {
     // This is the element containing the checkbox
     let parentItem = checkbox.closest(ProductCategoryMap.treeElement);
 
@@ -345,7 +342,7 @@ export default class CategoryTreeSelector {
     }
   }
 
-  unselectCategory(categoryId: number) {
+  private unselectCategory(categoryId: number) {
     if (!this.modalContainer) {
       return;
     }
@@ -362,7 +359,7 @@ export default class CategoryTreeSelector {
     this.updateSelectedCategories();
   }
 
-  initTypeaheadData(
+  private initTypeaheadData(
     categories: Array<{ id: number, active: boolean, name: string, children: Array<any> }>,
     parentBreadcrumb: string
   ) {
@@ -379,7 +376,7 @@ export default class CategoryTreeSelector {
     });
   }
 
-  initTypeahead() {
+  private initTypeahead() {
     const source = new Bloodhound({
       // @ts-ignore
       datumTokenizer: Tokenizers.obj.letters('breadcrumb'),
@@ -402,7 +399,7 @@ export default class CategoryTreeSelector {
     new AutoCompleteSearch($(ProductCategoryMap.searchInput), dataSetConfig);
   }
 
-  updateSelectedCategories() {
+  private updateSelectedCategories() {
     if (!this.categoryTree || !this.tags) {
       return;
     }
@@ -435,7 +432,7 @@ export default class CategoryTreeSelector {
     this.selectedCategories = categories;
   }
 
-  searchCategoryInTree(
+  private searchCategoryInTree(
     categoryId: number,
     categories: Array<{ id: number, name: string, active: boolean, children: Array<any> }>
     ): { id: number, name: string, active: boolean, children: Array<any> }|null {
@@ -455,17 +452,13 @@ export default class CategoryTreeSelector {
     return searchedCategory;
   }
 
-  /**
-   * @param {HTMLElement} checkboxInput
-   * @param {boolean} checked
-   */
-  updateCheckbox(checkboxInput: HTMLInputElement, checked: boolean) {
+  private updateCheckbox(checkboxInput: HTMLInputElement, checked: boolean) {
     if (checkboxInput.checked !== checked) {
       checkboxInput.checked = checked;
     }
   }
 
-  closeModal() {
+  private closeModal() {
     if (!this.modalContainer) {
       return;
     }
