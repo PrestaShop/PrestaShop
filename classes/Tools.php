@@ -3071,12 +3071,13 @@ exit;
     public static function getDirectoriesWithGlob($path)
     {
         $directoryList = glob($path . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
-        array_walk(
-            $directoryList,
-            function (&$absolutePath, $key) {
-                $absolutePath = substr($absolutePath, strrpos($absolutePath, '/') + 1);
-            }
-        );
+        if ($directoryList === false) {
+            return [];
+        }
+
+        $directoryList = array_map(function ($path) {
+            return substr($path, strrpos($path, '/') + 1);
+        }, $directoryList);
 
         return $directoryList;
     }
