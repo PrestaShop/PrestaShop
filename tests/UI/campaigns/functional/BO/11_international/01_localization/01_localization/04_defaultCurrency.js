@@ -143,7 +143,7 @@ describe('BO - International - Localization : Update default currency', async ()
       });
 
       it('should go back to BO', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
         page = await foHomePage.closePage(browserContext, page, 0);
         const pageTitle = await localizationPage.getPageTitle(page);
