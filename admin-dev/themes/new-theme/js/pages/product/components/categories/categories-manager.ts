@@ -27,7 +27,7 @@ import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import CategoryTreeSelector from '@pages/product/components/categories/category-tree-selector';
 import Tags from '@pages/product/components/categories/tags';
-import {EventEmitter} from "events";
+import {EventEmitter} from 'events';
 
 const ProductCategoryMap = ProductMap.categories;
 
@@ -47,21 +47,8 @@ export default class CategoriesManager {
   constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
     this.categoryTreeSelector = new CategoryTreeSelector(eventEmitter);
-
-    const categoriesContainer = document.querySelector(ProductCategoryMap.categoriesContainer);
-
-    if (!(categoriesContainer instanceof HTMLElement)) {
-      throw '"categoriesContainer" must be a valid HTMLElement';
-    }
-    this.categoriesContainer = categoriesContainer;
-
-    const addCategoriesBtn = this.categoriesContainer.querySelector(ProductCategoryMap.addCategoriesBtn);
-
-    if (!(addCategoriesBtn instanceof HTMLElement)) {
-      throw '"addCategoriesBtn" must be a valid HTMLElement';
-    }
-
-    this.addCategoriesBtn = addCategoriesBtn;
+    this.categoriesContainer = document.querySelector(ProductCategoryMap.categoriesContainer) as HTMLElement;
+    this.addCategoriesBtn = this.categoriesContainer.querySelector(ProductCategoryMap.addCategoriesBtn) as HTMLElement;
     this.typeaheadData = [];
     this.tags = new Tags(
       eventEmitter,
@@ -116,7 +103,14 @@ export default class CategoriesManager {
 
   private renderDefaultCategorySelection(): void {
     const categories = this.collectCategories();
-    const selectContainer = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectContainer) as HTMLElement;
+    const selectContainer = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectContainer);
+
+    if (!(selectContainer instanceof HTMLElement)) {
+      console.error('"defaultCategorySelectContainer is not defined or invalid');
+
+      return;
+    }
+
     const selectElement = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectInput) as HTMLElement;
     selectElement.innerHTML = '';
 
@@ -133,16 +127,17 @@ export default class CategoriesManager {
   }
 
   private listenDefaultCategorySelect(): void {
-    const defaultCategoryInput = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectInput) as HTMLInputElement
+    const defaultCategoryInput = this.categoriesContainer
+      .querySelector(ProductCategoryMap.defaultCategorySelectInput) as HTMLInputElement;
+
     defaultCategoryInput.addEventListener('change', (e) => {
-        const currentTarget = e.currentTarget as HTMLInputElement;
-        const newDefaultCategoryId = Number(currentTarget.value);
-        const categories = this.collectCategories();
-        categories.forEach((category) => {
-          category.isDefault = category.id === newDefaultCategoryId;
-        });
-        this.tags.render(categories);
-      });
+      const currentTarget = e.currentTarget as HTMLInputElement;
+      const newDefaultCategoryId = Number(currentTarget.value);
+      const categories = this.collectCategories()
+        .map((category) => ({...category, isDefault: category.id === newDefaultCategoryId}));
+
+      this.tags.render(categories);
+    });
   }
 
   private listenCategoryChanges(): void {

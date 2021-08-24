@@ -25,7 +25,7 @@
 
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
-import {EventEmitter} from "events";
+import {EventEmitter} from 'events';
 
 const ProductCategoryMap = ProductMap.categories;
 
@@ -39,23 +39,19 @@ export default class Tags {
     containerSelector: string,
   ) {
     this.eventEmitter = eventEmitter;
-    const container = document.querySelector(containerSelector);
-
-    if (!(container instanceof HTMLElement)) {
-      throw '"container" must be a valid HTMLElement';
-    }
-
-    this.container = container;
+    this.container = document.querySelector(containerSelector) as HTMLElement;
   }
 
   public render(categories: Array<Category>): void {
     this.container.innerHTML = '';
 
     const tagTemplate = this.container.dataset.prototype;
-    const prototypeName = this.container.dataset.prototypeName;
+    const {prototypeName} = this.container.dataset;
 
     if (!tagTemplate || !prototypeName) {
-      throw 'Tags prototype template or name is undefined or invalid';
+      console.error('Tags prototype template or name is undefined or invalid');
+
+      return;
     }
 
     categories.forEach((category) => {
@@ -65,7 +61,7 @@ export default class Tags {
       if (tplFragment && tplFragment.firstChild && tplFragment.firstChild.parentNode) {
         const frag = tplFragment.firstChild.parentNode;
         const defaultCategoryCheckbox = frag.querySelector(ProductCategoryMap.defaultCategoryCheckbox) as HTMLInputElement;
-        defaultCategoryCheckbox.checked = category.isDefault
+        defaultCategoryCheckbox.checked = category.isDefault;
 
         // don't render the tag removal element for main category
         if (category.isDefault) {
@@ -88,7 +84,7 @@ export default class Tags {
 
     this.listenTagRemoval();
     this.toggleContainerVisibility();
-    this.eventEmitter.emit(ProductEventMap.categories.categoriesUpdated)
+    this.eventEmitter.emit(ProductEventMap.categories.categoriesUpdated);
   }
 
   private toggleContainerVisibility(): void {
