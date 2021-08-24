@@ -146,6 +146,7 @@ export default class CategoryTreeSelector {
       return;
     }
 
+    this.toggleAll(true);
     this.treeCategories.forEach((treeCategory) => {
       const treeCategoryElement = this.generateCategoryTree(treeCategory);
       categoryTree.append(treeCategoryElement);
@@ -167,6 +168,13 @@ export default class CategoryTreeSelector {
       if (checkbox instanceof HTMLInputElement) {
         const categoryId = Number(checkbox.dataset.id);
 
+        //@todo: out of scope - this behavior is not ux friendly. Implement automatic closest parent selection instead (both in tree and in tags)?
+        // disable main category checkbox
+        if (categoryId === this.defaultCategoryId) {
+          // eslint-disable-next-line no-param-reassign
+          checkbox.disabled = true;
+        }
+
         if (this.selectedCategories.some((category) => category.id === categoryId)) {
           // eslint-disable-next-line no-param-reassign
           checkbox.checked = true;
@@ -176,7 +184,6 @@ export default class CategoryTreeSelector {
           const currentTarget = e.currentTarget as HTMLInputElement;
 
           // do not allow unchecking main category id
-          //@todo: out of scope - this behavior is not ux friendly. Implement automatic closest parent selection instead (both in tree and in tags)?
           if (Number(currentTarget.dataset.id) === this.defaultCategoryId && !currentTarget.checked) {
             currentTarget.checked = true;
 
