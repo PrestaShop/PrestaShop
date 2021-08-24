@@ -30,7 +30,7 @@ import Tokenizers from '@components/bloodhound/tokenizers';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import {getCategories} from '@pages/product/services/categories';
-import Tags from '@pages/product/components/categories/tags';
+import TagsRenderer from '@pages/product/components/categories/tagsRenderer';
 import {EventEmitter} from 'events';
 
 const {$} = window;
@@ -56,7 +56,7 @@ export default class CategoryTreeSelector {
 
   reduceAllButton: HTMLElement|null;
 
-  tags: Tags|null;
+  tagsRenderer: TagsRenderer|null;
 
   constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
@@ -68,7 +68,7 @@ export default class CategoryTreeSelector {
     this.categoryTree = null;
     this.expandAllButton = null;
     this.reduceAllButton = null;
-    this.tags = null;
+    this.tagsRenderer = null;
   }
 
   public showModal(selectedCategories: Array<Category>): void {
@@ -100,11 +100,11 @@ export default class CategoryTreeSelector {
     this.categoryTree = this.modalContainer.querySelector(ProductCategoryMap.categoryTree) as HTMLElement;
     this.expandAllButton = this.modalContainer.querySelector(ProductCategoryMap.expandAllButton);
     this.reduceAllButton = this.modalContainer.querySelector(ProductCategoryMap.reduceAllButton);
-    this.tags = new Tags(
+    this.tagsRenderer = new TagsRenderer(
       this.eventEmitter,
       `${ProductCategoryMap.categoriesModalContainer} ${ProductCategoryMap.tagsContainer}`,
     );
-    this.tags.render(this.selectedCategories);
+    this.tagsRenderer.render(this.selectedCategories);
     this.treeCategories = await getCategories();
 
     this.initTypeaheadData(this.treeCategories, '');
@@ -146,7 +146,6 @@ export default class CategoryTreeSelector {
       return;
     }
 
-    this.toggleAll(true);
     this.treeCategories.forEach((treeCategory) => {
       const treeCategoryElement = this.generateCategoryTree(treeCategory);
       categoryTree.append(treeCategoryElement);
@@ -163,6 +162,7 @@ export default class CategoryTreeSelector {
         this.toggleAll(false);
       });
     }
+    this.toggleAll(true);
 
     categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkbox) => {
       if (checkbox instanceof HTMLInputElement) {
@@ -392,7 +392,7 @@ export default class CategoryTreeSelector {
   }
 
   private updateSelectedCategories(): void {
-    if (!this.categoryTree || !this.tags) {
+    if (!this.categoryTree || !this.tagsRenderer) {
       return;
     }
 
@@ -412,7 +412,7 @@ export default class CategoryTreeSelector {
       }
     });
 
-    this.tags.render(categories);
+    this.tagsRenderer.render(categories);
     this.selectedCategories = categories;
   }
 
