@@ -208,8 +208,8 @@ class CustomerController extends AbstractAdminController
     public function editAction($customerId, Request $request)
     {
         $this->addGroupSelectionToRequest($request);
-        /** @var ViewableCustomer $customerInformation */
-        $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
+        /** @var EditableCustomer $customerInformation */
+        $customerInformation = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
         $customerFormOptions = [
             'is_password_required' => false,
         ];
