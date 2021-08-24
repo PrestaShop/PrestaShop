@@ -86,7 +86,8 @@ class CustomerFormDataProviderTest extends TestCase
                     'prestashop.com',
                     36.99,
                     10,
-                    1
+                    1,
+                    0
                 )
             )
         ;
