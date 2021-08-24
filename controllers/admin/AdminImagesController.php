@@ -181,7 +181,7 @@ class AdminImagesControllerCore extends AdminController
                         'required' => false,
                         'is_bool' => true,
                         'hint' => $this->trans('Resize the thumbnails when they are requested by HTTP, not during generation of HTML page.', [], 'Admin.Design.Help'),
-                        'desc' => $this->trans('If you have missing thumbnails, this can speed up page generation time by orders of magnitudes.', [], 'Admin.Design.Help'),
+                        'desc' => $this->trans('If you have missing thumbnails, this can speed up the page generation time.', [], 'Admin.Design.Help'),
                         'visibility' => Shop::CONTEXT_ALL,
                     ],
                 ],

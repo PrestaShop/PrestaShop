@@ -1,6 +1,7 @@
 <?php
 require(dirname(__FILE__).'/config/config.inc.php');
 $url = filter_input(INPUT_GET, 'url');
+$matches = [];
 
 preg_match('/^(img\/([^\/]*)\/(?:\d\/)*)(\d+)-([_a-z0-9]+)\.([a-z]+)$/', $url, $matches);
 $url_path = $matches[1];

@@ -137,15 +137,11 @@ class ImageRetriever
      */
     public function getImage($object, $id_image)
     {
-        static $psImageoptLazyResize = null;
-
         if (!$id_image) {
             return null;
         }
 
-        if ($psImageoptLazyResize === null) {
-            $psImageoptLazyResize = \Configuration::get('PS_IMAGEOPT_LAZY_RESIZE');
-        }
+        $psImageoptLazyResize = \Configuration::get('PS_IMAGEOPT_LAZY_RESIZE');
 
         if (get_class($object) === 'Product') {
             $type = 'products';
