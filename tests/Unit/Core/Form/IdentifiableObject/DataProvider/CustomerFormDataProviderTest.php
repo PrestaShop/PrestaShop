@@ -87,7 +87,7 @@ class CustomerFormDataProviderTest extends TestCase
                     36.99,
                     10,
                     1,
-                    true
+                    false
                 )
             )
         ;
