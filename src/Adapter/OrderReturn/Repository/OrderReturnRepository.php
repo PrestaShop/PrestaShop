@@ -62,7 +62,7 @@ class OrderReturnRepository extends AbstractObjectModelRepository
         /* @var OrderReturn $orderReturn */
         $orderReturn = $this->getObjectModel($orderReturnId->getValue(), OrderReturn::class, OrderReturnNotFoundException::class);
         if (!$orderReturn instanceof OrderReturn) {
-            throw new OrderReturnException('Must be instance of OrderReturn');
+            throw new OrderReturnException(sprintf('Must be instance of %s', OrderReturn::class);
         }
 
         return $orderReturn;
