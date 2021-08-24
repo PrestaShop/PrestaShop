@@ -1509,13 +1509,13 @@ class FrontControllerCore extends Controller
 
             if ($themeAssetsConfig && isset($themeAssetsConfig['use_parent_assets']) && $themeAssetsConfig['use_parent_assets']) {
                 $assign_array['theme_assets'] = _PS_PARENT_THEME_URI_ . 'assets/';
-                $assign_array['img_url'] = _PS_PARENT_THEME_URI_ . 'assets/img/';
-                $assign_array['css_url'] = _PS_PARENT_THEME_URI_ . 'assets/css/';
-                $assign_array['js_url'] = _PS_PARENT_THEME_URI_ . 'assets/js/';
+                $assign_array['img_url'] = $assign_array['theme_assets'] . 'img/';
+                $assign_array['css_url'] = $assign_array['theme_assets'] . 'css/';
+                $assign_array['js_url'] = $assign_array['theme_assets'] . 'js/';
                 $assign_array['child_theme_assets'] = _THEME_DIR_ . 'assets/';
-                $assign_array['child_img_url'] = _THEME_DIR_ . 'assets/img/';
-                $assign_array['child_css_url'] = _THEME_DIR_ . 'assets/css/';
-                $assign_array['child_js_url'] = _THEME_DIR_ . 'assets/js/';
+                $assign_array['child_img_url'] = $assign_array['child_theme_assets'] . 'img/';
+                $assign_array['child_css_url'] = $assign_array['child_theme_assets'] . 'css/';
+                $assign_array['child_js_url'] = $assign_array['child_theme_assets'] . 'js/';
             }
 
             foreach ($assign_array as $assign_key => $assign_value) {
