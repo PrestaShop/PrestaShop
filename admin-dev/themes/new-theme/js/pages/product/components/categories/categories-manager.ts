@@ -26,7 +26,7 @@
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import CategoryTreeSelector from '@pages/product/components/categories/category-tree-selector';
-import Tags from '@pages/product/components/categories/tags';
+import TagsRenderer from '@pages/product/components/categories/tagsRenderer';
 import {EventEmitter} from 'events';
 
 const ProductCategoryMap = ProductMap.categories;
@@ -40,21 +40,18 @@ export default class CategoriesManager {
 
   addCategoriesBtn: HTMLElement;
 
-  typeaheadData: Array<any>;
-
-  tags: Tags;
+  tagsRenderer: TagsRenderer;
 
   constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
     this.categoryTreeSelector = new CategoryTreeSelector(eventEmitter);
     this.categoriesContainer = document.querySelector(ProductCategoryMap.categoriesContainer) as HTMLElement;
     this.addCategoriesBtn = this.categoriesContainer.querySelector(ProductCategoryMap.addCategoriesBtn) as HTMLElement;
-    this.typeaheadData = [];
-    this.tags = new Tags(
+    this.tagsRenderer = new TagsRenderer(
       eventEmitter,
       `${ProductCategoryMap.categoriesContainer} ${ProductCategoryMap.tagsContainer}`,
     );
-    this.tags.render(this.collectCategories());
+    this.tagsRenderer.render(this.collectCategories());
     this.renderDefaultCategorySelection();
     this.listenCategoryChanges();
     this.listenDefaultCategorySelect();
@@ -66,7 +63,7 @@ export default class CategoriesManager {
       this.collectCategories(),
     ));
     this.eventEmitter.on(ProductEventMap.categories.applyCategoryTreeChanges, (eventData) => {
-      this.tags.render(eventData.categories);
+      this.tagsRenderer.render(eventData.categories);
     });
   }
 
@@ -136,7 +133,7 @@ export default class CategoriesManager {
       const categories = this.collectCategories()
         .map((category) => ({...category, isDefault: category.id === newDefaultCategoryId}));
 
-      this.tags.render(categories);
+      this.tagsRenderer.render(categories);
     });
   }
 
