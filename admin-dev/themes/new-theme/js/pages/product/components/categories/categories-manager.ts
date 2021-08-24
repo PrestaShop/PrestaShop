@@ -74,7 +74,7 @@ export default class CategoriesManager {
     this.initCategoryTreeModal();
   }
 
-  private initCategoryTreeModal() {
+  private initCategoryTreeModal(): void {
     this.addCategoriesBtn.addEventListener('click', () => this.categoryTreeSelector.showModal(
       this.collectCategories(),
     ));
@@ -83,11 +83,11 @@ export default class CategoriesManager {
     });
   }
 
-  private collectCategories() {
+  private collectCategories(): Array<{ id: number; name: string; isDefault: boolean; }> {
     // these are at first rendered on page load and later updated dynamically
     const tagsContainer = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer) as HTMLElement;
     const tags = tagsContainer.querySelectorAll(ProductCategoryMap.tagItem);
-    const categories: { id: number; name: string; isDefault: boolean; }[] = [];
+    const categories: Array<{ id: number; name: string; isDefault: boolean; }> = [];
 
     tags.forEach((tag: Element) => {
       if (tag instanceof HTMLElement) {
@@ -114,7 +114,7 @@ export default class CategoriesManager {
     return '';
   }
 
-  private renderDefaultCategorySelection() {
+  private renderDefaultCategorySelection(): void {
     const categories = this.collectCategories();
     const selectContainer = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectContainer) as HTMLElement;
     const selectElement = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectInput) as HTMLElement;
@@ -132,7 +132,7 @@ export default class CategoriesManager {
     selectContainer.classList.remove('d-none');
   }
 
-  private listenDefaultCategorySelect() {
+  private listenDefaultCategorySelect(): void {
     const defaultCategoryInput = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectInput) as HTMLInputElement
     defaultCategoryInput.addEventListener('change', (e) => {
         const currentTarget = e.currentTarget as HTMLInputElement;
@@ -145,7 +145,7 @@ export default class CategoriesManager {
       });
   }
 
-  private listenCategoryChanges() {
+  private listenCategoryChanges(): void {
     this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, () => this.renderDefaultCategorySelection());
     this.eventEmitter.on(ProductEventMap.categories.categoriesUpdated, () => this.renderDefaultCategorySelection());
   }
