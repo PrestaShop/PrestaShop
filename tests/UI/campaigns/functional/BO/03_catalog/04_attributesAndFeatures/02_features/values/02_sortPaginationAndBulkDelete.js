@@ -14,7 +14,7 @@ const viewFeaturePage = require('@pages/BO/catalog/features/view');
 const addValuePage = require('@pages/BO/catalog/features/addValue');
 
 // Import data
-const {Value} = require('@data/faker/featureAndValue');
+const {ValueData} = require('@data/faker/featureAndValue');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -113,7 +113,7 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
     });
 
     creationTests.forEach((test, index) => {
-      const createValueData = new Value({featureName: 'Composition', value: `todelete${index}`});
+      const createValueData = new ValueData({featureName: 'Composition', value: `todelete${index}`});
       it(`should create value n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createNewValue${index}`, baseContext);
 
