@@ -14,6 +14,8 @@ const addSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManage
 // Import data
 const SQLQueryFaker = require('@data/faker/sqlQuery');
 
+const dbPrefix = global.INSTALL.DB_PREFIX;
+
 // Import test context
 const testContext = require('@utils/testContext');
 
@@ -78,7 +80,7 @@ describe('Filter, sort and pagination SQL manager', async () => {
 
   creationTests.forEach((test, index) => {
     describe(`Create SQL query n°${index + 1} in BO`, async () => {
-      const sqlQueryData = new SQLQueryFaker({name: `todelete${index}`, tableName: 'ps_alias'});
+      const sqlQueryData = new SQLQueryFaker({name: `todelete${index}`, tableName: `${dbPrefix}alias`});
 
       it('should go to add new SQL manager group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddSqlQueryPage${index}`, baseContext);
@@ -156,7 +158,7 @@ describe('Filter, sort and pagination SQL manager', async () => {
           testIdentifier: 'filterBySqlQuery',
           filterType: 'input',
           filterBy: 'sql',
-          filterValue: 'select * from ps_alias',
+          filterValue: `select * from ${global.INSTALL.DB_PREFIX}alias`,
         },
       },
     ];

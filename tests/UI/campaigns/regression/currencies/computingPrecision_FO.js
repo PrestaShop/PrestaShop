@@ -64,10 +64,11 @@ const giftCartRule = new CartRuleFaker(
 );
 
 // Create sql query data to get last order discount and total price
+const dbPrefix = global.INSTALL.DB_PREFIX;
 const sqlQueryData = {
   name: 'Discount and ATI from last order',
   sqlQuery: orderRef => 'SELECT total_discounts, total_paid_tax_incl '
-    + 'from  ps_orders '
+    + `from  ${dbPrefix}orders `
     + `WHERE reference = '${orderRef}'`,
 };
 
