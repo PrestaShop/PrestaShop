@@ -136,7 +136,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'categories' => [
                     'product_categories' => [
                         $this->defaultCategoryId => [
-                            'is_associated' => true,
+                            //@todo: need category name for create action
+                            'id' => $this->defaultCategoryId,
                             'is_default' => true,
                         ],
                     ],
@@ -175,13 +176,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                     'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 ],
                 'condition' => ProductCondition::NEW,
-            ],
-            'categories' => [
-                'product_categories' => [
-                    $this->defaultCategoryId => [
-                        'is_associated' => true,
-                    ],
-                ],
             ],
             'footer' => [
                 'active' => $this->defaultProductActivation,
