@@ -71,7 +71,7 @@ export default class CategoriesManager {
     // these are at first rendered on page load and later updated dynamically
     const tagsContainer = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer) as HTMLElement;
     const tags = tagsContainer.querySelectorAll(ProductCategoryMap.tagItem);
-    const categories: Array<{ id: number; name: string; isDefault: boolean; }> = [];
+    const categories: Array<Category> = [];
 
     tags.forEach((tag: Element) => {
       if (tag instanceof HTMLElement) {
