@@ -111,11 +111,11 @@ export default class CategoryTreeSelector {
     this.initTypeahead();
     this.initTree();
     this.listenCancelChanges();
-    this.applyCategoryTreeChanges();
+    this.listenApplyChanges();
     this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, (categoryId) => this.unselectCategory(categoryId));
   }
 
-  private applyCategoryTreeChanges(): void {
+  private listenApplyChanges(): void {
     if (!this.modalContainer) {
       return;
     }
@@ -241,11 +241,6 @@ export default class CategoryTreeSelector {
     return categoryNode;
   }
 
-  /**
-   * If the category is among the initial ones (inserted by the form on load) the existing element is used,
-   * if not then it is generated based on the prototype template. In both case the element is injected with the
-   * category name.
-   */
   private generateTreeElement(category: TreeCategory): HTMLElement {
     const categoryTree = this.categoryTree as HTMLElement;
     const prototypeTemplate = categoryTree.dataset.prototype as string;
