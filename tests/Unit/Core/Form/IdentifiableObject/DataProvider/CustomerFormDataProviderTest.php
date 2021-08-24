@@ -134,6 +134,7 @@ class CustomerFormDataProviderTest extends TestCase
             'is_partner_offers_subscribed' => true,
             'group_ids' => [1, 2, 3],
             'default_group_id' => 3,
+            'is_guest' => false,
         ], $customerFormDataProvider->getData(1));
     }
 
@@ -163,6 +164,7 @@ class CustomerFormDataProviderTest extends TestCase
             'allowed_outstanding_amount' => 36.99,
             'max_payment_days' => 10,
             'risk_id' => 1,
+            'is_guest' => false,
         ], $customerFormDataProvider->getData(1));
     }
 
@@ -180,6 +182,7 @@ class CustomerFormDataProviderTest extends TestCase
             'is_partner_offers_subscribed' => false,
             'group_ids' => [1, 2, 3],
             'default_group_id' => 3,
+            'is_guest' => false,
         ], $customerFormDataProvider->getDefaultData());
     }
 
@@ -199,6 +202,7 @@ class CustomerFormDataProviderTest extends TestCase
             'default_group_id' => 3,
             'allowed_outstanding_amount' => 0,
             'max_payment_days' => 0,
+            'is_guest' => false,
         ], $customerFormDataProvider->getDefaultData());
     }
 }
