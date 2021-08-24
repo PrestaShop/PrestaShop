@@ -39,7 +39,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * Class generates "By order status" form
  * in "Sell > Orders > Invoices" page.
  *
- * Backwards compatibility break introduced in 1.7.8.0 due to extension of TranslationAwareType
+ * Backwards compatibility break introduced in 8.0.0 due to extension of TranslationAwareType
  */
 class GenerateByStatusType extends TranslatorAwareType
 {
