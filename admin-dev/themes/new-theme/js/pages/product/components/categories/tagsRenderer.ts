@@ -29,7 +29,7 @@ import {EventEmitter} from 'events';
 
 const ProductCategoryMap = ProductMap.categories;
 
-export default class Tags {
+export default class TagsRenderer {
   eventEmitter: EventEmitter;
 
   container: HTMLElement;
