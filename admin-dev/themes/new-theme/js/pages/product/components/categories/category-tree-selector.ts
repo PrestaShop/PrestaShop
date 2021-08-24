@@ -41,12 +41,11 @@ const ProductCategoryMap = ProductMap.categories;
 export default class CategoryTreeSelector {
   eventEmitter: EventEmitter;
 
-  typeaheadCategories: Array<{ id: number, name: string, breadcrumb: string, children: Array<any> }>;
+  selectedCategories: Array<Category>
 
-  //@todo: how to type recursive "children"?
-  categories: Array<{ id: number, name: string, active: boolean, children: Array<any> }>
+  treeCategories: Array<TreeCategory>
 
-  selectedCategories: Array<{ id: number, name: string, isDefault: boolean }>
+  typeaheadCategories: Array<TypeaheadCategory>;
 
   defaultCategoryId: number|null;
 
@@ -66,7 +65,7 @@ export default class CategoryTreeSelector {
 
   constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
-    this.categories = [];
+    this.treeCategories = [];
     this.typeaheadCategories = [];
     this.selectedCategories = [];
     this.defaultCategoryId = null;
@@ -79,7 +78,7 @@ export default class CategoryTreeSelector {
     this.tags = null;
   }
 
-  public showModal(selectedCategories: Array<{ id: number, name: string, isDefault: boolean }>): void {
+  public showModal(selectedCategories: Array<Category>): void {
     this.selectedCategories = selectedCategories;
     for (const category of selectedCategories) {
       if (category.isDefault) {
@@ -116,9 +115,9 @@ export default class CategoryTreeSelector {
       `${ProductCategoryMap.categoriesModalContainer} ${ProductCategoryMap.tagsContainer}`,
     );
     this.tags.render(this.selectedCategories);
-    this.categories = await getCategories();
+    this.treeCategories = await getCategories();
 
-    this.initTypeaheadData(this.categories, '');
+    this.initTypeaheadData(this.treeCategories, '');
     this.initTypeahead();
     this.initTree();
     this.listenCancelChanges();
@@ -157,9 +156,9 @@ export default class CategoryTreeSelector {
       return;
     }
 
-    this.categories.forEach((category) => {
-      const item = this.generateCategoryTree(category);
-      categoryTree.append(item);
+    this.treeCategories.forEach((treeCategory) => {
+      const treeCategoryElement = this.generateCategoryTree(treeCategory);
+      categoryTree.append(treeCategoryElement);
     });
 
     if (this.expandAllButton) {
@@ -210,12 +209,12 @@ export default class CategoryTreeSelector {
   /**
    * Used to recursively create items of the category tree
    */
-  private generateCategoryTree(category: { id: number, name: string, active: boolean, children: Array<any> }): HTMLElement {
-    const categoryNode = this.generateTreeElement(category) as HTMLElement;
+  private generateCategoryTree(treeCategory: TreeCategory): HTMLElement {
+    const categoryNode = this.generateTreeElement(treeCategory) as HTMLElement;
     const childrenList = categoryNode.querySelector(ProductCategoryMap.childrenList) as HTMLElement;
     childrenList.classList.add('d-none');
 
-    const hasChildren = category.children && category.children.length > 0;
+    const hasChildren = treeCategory.children && treeCategory.children.length > 0;
     categoryNode.classList.toggle('more', hasChildren);
     if (hasChildren) {
       const inputsContainer = categoryNode.querySelector(ProductCategoryMap.treeElementInputs) as HTMLElement;
@@ -234,7 +233,7 @@ export default class CategoryTreeSelector {
       });
 
       // Recursively build the children trees
-      category.children.forEach((childCategory) => {
+      treeCategory.children.forEach((childCategory) => {
         const childTree = this.generateCategoryTree(childCategory);
 
         childrenList.append(childTree);
@@ -249,7 +248,7 @@ export default class CategoryTreeSelector {
    * if not then it is generated based on the prototype template. In both case the element is injected with the
    * category name.
    */
-  private generateTreeElement(category: { id: number, name: string, active: boolean, children: Array<any> }): HTMLElement {
+  private generateTreeElement(category: TreeCategory): HTMLElement {
     if (!this.prototypeTemplate || !this.prototypeName) {
       throw 'Invalid category tree prototype template or name';
     }
@@ -354,18 +353,20 @@ export default class CategoryTreeSelector {
   }
 
   private initTypeaheadData(
-    categories: Array<{ id: number, active: boolean, name: string, children: Array<any> }>,
+    categories: Array<TreeCategory>,
     parentBreadcrumb: string
   ) {
     categories.forEach((category) => {
-      let typeaheadCategory: any = category
-      // add breadcrumb to category
-      const breadcrumb = parentBreadcrumb ? `${parentBreadcrumb} > ${category.name}` : category.name;
-      typeaheadCategory.breadcrumb = breadcrumb;
+      let typeaheadCategory: TypeaheadCategory = {
+        id: category.id,
+        name: category.name,
+        breadcrumb: parentBreadcrumb ? `${parentBreadcrumb} > ${category.name}` : category.name,
+        children: category.children,
+      }
       this.typeaheadCategories.push(typeaheadCategory);
 
       if (category.children) {
-        this.initTypeaheadData(category.children, breadcrumb);
+        this.initTypeaheadData(category.children, typeaheadCategory.breadcrumb);
       }
     });
   }
@@ -409,7 +410,7 @@ export default class CategoryTreeSelector {
       const checkboxInput = checkedCheckboxes[i] as HTMLInputElement;
       const categoryId = Number(checkboxInput.dataset.id);
 
-      const searchedCategory = this.searchCategoryInTree(categoryId, this.categories);
+      const searchedCategory = this.searchCategoryInTree(categoryId, this.treeCategories);
 
       if (!searchedCategory) {
         continue;
@@ -428,12 +429,12 @@ export default class CategoryTreeSelector {
 
   private searchCategoryInTree(
     categoryId: number,
-    categories: Array<{ id: number, name: string, active: boolean, children: Array<any> }>
-    ): { id: number, name: string, active: boolean, children: Array<any> }|null {
+    treeCategories: Array<TreeCategory>
+    ): TreeCategory|null {
 
     let searchedCategory: any = null;
 
-    categories.forEach((category) => {
+    treeCategories.forEach((category) => {
       if (categoryId === category.id) {
         searchedCategory = category;
       }
