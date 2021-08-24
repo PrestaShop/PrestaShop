@@ -16,7 +16,7 @@ const TaxRuleFaker = require('@data/faker/taxRuleGroup');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_localization_taxes_quickEditAndBulkActions';
+const baseContext = 'functional_BO_international_taxes_quickEditAndBulkActions';
 
 let browserContext;
 let page;

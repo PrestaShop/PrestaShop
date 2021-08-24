@@ -115,7 +115,7 @@ describe('BO - International - Languages : CRUD language', async () => {
     it('should go to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo1', baseContext);
 
-      // View my shop and int pages
+      // View my shop and get the new tab
       page = await languagesPage.viewMyShop(page);
 
       const isHomePage = await foHomePage.isHomePage(page);

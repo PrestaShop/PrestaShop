@@ -19,7 +19,7 @@ const {taxRules} = require('@data/demo/taxRule');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_localization_taxes_taxRules_filterSortAndPagination';
+const baseContext = 'functional_BO_international_taxes_taxRules_filterSortAndPagination';
 
 // Import expect from chai
 const {expect} = require('chai');

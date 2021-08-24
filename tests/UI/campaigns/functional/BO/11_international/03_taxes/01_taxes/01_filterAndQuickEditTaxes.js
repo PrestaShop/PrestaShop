@@ -14,7 +14,7 @@ const taxesPage = require('@pages/BO/international/taxes');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_localization_taxes_filterAndQuickEditTaxes';
+const baseContext = 'functional_BO_international_taxes_taxes_filterAndQuickEditTaxes';
 
 let browserContext;
 let page;
