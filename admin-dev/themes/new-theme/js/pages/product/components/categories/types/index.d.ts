@@ -8,7 +8,6 @@ type TypeaheadCategory = {
   id: number,
   name: string,
   breadcrumb: string,
-  children: Array<TypeaheadCategory>
 }
 
 type TreeCategory = {
