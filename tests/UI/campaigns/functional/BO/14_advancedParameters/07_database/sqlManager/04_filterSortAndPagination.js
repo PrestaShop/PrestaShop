@@ -158,7 +158,7 @@ describe('Filter, sort and pagination SQL manager', async () => {
           testIdentifier: 'filterBySqlQuery',
           filterType: 'input',
           filterBy: 'sql',
-          filterValue: `select * from ${global.INSTALL.DB_PREFIX}alias`,
+          filterValue: `select * from ${dbPrefix}alias`,
         },
       },
     ];
