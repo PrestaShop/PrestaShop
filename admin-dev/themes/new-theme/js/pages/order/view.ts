@@ -161,7 +161,12 @@ $(() => {
 
     $form.find(OrderViewPageMap.addCartRuleNameInput).on('keyup', (event) => {
       const cartRuleName = <string>$(event.currentTarget).val();
-      $(OrderViewPageMap.addCartRuleSubmit).attr('disabled', cartRuleName.trim().length === 0 ? 'true' : 'false');
+
+      if (cartRuleName.trim().length === 0) {
+        $(OrderViewPageMap.addCartRuleSubmit).attr('disabled', 'disabled');
+      } else {
+        $(OrderViewPageMap.addCartRuleSubmit).removeAttr('disabled');
+      }
     });
 
     $form.find(OrderViewPageMap.addCartRuleApplyOnAllInvoicesCheckbox).on('change', (event) => {
