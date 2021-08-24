@@ -32,8 +32,10 @@ use Doctrine\DBAL\DBALException;
 use Language;
 use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Install\Install;
+use Shop;
 use Tests\Resources\ResourceResetter;
 use Tab;
+
 
 class DatabaseCreator
 {
@@ -49,6 +51,7 @@ class DatabaseCreator
         require_once __DIR__ . '/../../../install-dev/init.php';
 
         $install = new Install();
+        Shop::setContext(Shop::CONTEXT_SHOP, 1);
         $install->setTranslator(Context::getContext()->getTranslatorFromLocale('en'));
         \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
         $install->clearDatabase(false);
