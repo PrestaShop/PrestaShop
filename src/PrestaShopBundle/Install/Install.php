@@ -368,7 +368,6 @@ class Install extends AbstractInstall
         $this->language->setLanguage('en');
         $context = Context::getContext();
         $context->shop = new Shop(1);
-        Shop::setContext(Shop::CONTEXT_SHOP, 1);
         Configuration::loadConfiguration();
         if (!isset($context->language) || !Validate::isLoadedObject($context->language)) {
             $context->language = new Language('en');
