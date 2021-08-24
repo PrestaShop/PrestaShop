@@ -353,20 +353,19 @@ export default class CategoryTreeSelector {
   }
 
   private initTypeaheadData(
-    categories: Array<TreeCategory>,
+    treeCategory: Array<TreeCategory>,
     parentBreadcrumb: string
   ) {
-    categories.forEach((category) => {
+    treeCategory.forEach((treeCategory) => {
       let typeaheadCategory: TypeaheadCategory = {
-        id: category.id,
-        name: category.name,
-        breadcrumb: parentBreadcrumb ? `${parentBreadcrumb} > ${category.name}` : category.name,
-        children: category.children,
+        id: treeCategory.id,
+        name: treeCategory.name,
+        breadcrumb: parentBreadcrumb ? `${parentBreadcrumb} > ${treeCategory.name}` : treeCategory.name,
       }
       this.typeaheadCategories.push(typeaheadCategory);
 
-      if (category.children) {
-        this.initTypeaheadData(category.children, typeaheadCategory.breadcrumb);
+      if (treeCategory.children) {
+        this.initTypeaheadData(treeCategory.children, typeaheadCategory.breadcrumb);
       }
     });
   }
