@@ -79,7 +79,7 @@ export default class CategoryTreeSelector {
     this.tags = null;
   }
 
-  public showModal(selectedCategories: Array<{ id: number, name: string, isDefault: boolean }>) {
+  public showModal(selectedCategories: Array<{ id: number, name: string, isDefault: boolean }>): void {
     this.selectedCategories = selectedCategories;
     for (const category of selectedCategories) {
       if (category.isDefault) {
@@ -104,7 +104,7 @@ export default class CategoryTreeSelector {
     });
   }
 
-  private async initModal() {
+  private async initModal(): Promise<void> {
     this.modalContainer = document.querySelector(ProductCategoryMap.categoriesModalContainer) as HTMLElement;
     this.categoryTree = this.modalContainer.querySelector(ProductCategoryMap.categoryTree) as HTMLElement;
     this.prototypeTemplate = this.categoryTree.dataset.prototype ? this.categoryTree.dataset.prototype : null;
@@ -126,7 +126,7 @@ export default class CategoryTreeSelector {
     this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, (categoryId) => this.unselectCategory(categoryId));
   }
 
-  private applyCategoryTreeChanges() {
+  private applyCategoryTreeChanges(): void {
     if (!this.modalContainer) {
       return;
     }
@@ -141,7 +141,7 @@ export default class CategoryTreeSelector {
     });
   }
 
-  private listenCancelChanges() {
+  private listenCancelChanges(): void {
     if (!this.modalContainer) {
       return;
     }
@@ -150,7 +150,7 @@ export default class CategoryTreeSelector {
     cancelBtn.addEventListener('click', () => this.closeModal());
   }
 
-  private initTree() {
+  private initTree(): void {
     const categoryTree = this.categoryTree;
 
     if (!categoryTree) {
@@ -210,7 +210,7 @@ export default class CategoryTreeSelector {
   /**
    * Used to recursively create items of the category tree
    */
-  private generateCategoryTree(category: { id: number, name: string, active: boolean, children: Array<any> }) {
+  private generateCategoryTree(category: { id: number, name: string, active: boolean, children: Array<any> }): HTMLElement {
     const categoryNode = this.generateTreeElement(category) as HTMLElement;
     const childrenList = categoryNode.querySelector(ProductCategoryMap.childrenList) as HTMLElement;
     childrenList.classList.add('d-none');
@@ -249,7 +249,7 @@ export default class CategoryTreeSelector {
    * if not then it is generated based on the prototype template. In both case the element is injected with the
    * category name.
    */
-  private generateTreeElement(category: { id: number, name: string, active: boolean, children: Array<any> }) {
+  private generateTreeElement(category: { id: number, name: string, active: boolean, children: Array<any> }): HTMLElement {
     if (!this.prototypeTemplate || !this.prototypeName) {
       throw 'Invalid category tree prototype template or name';
     }
@@ -260,11 +260,7 @@ export default class CategoryTreeSelector {
     const categoryNode = frag.firstChild as HTMLElement;
 
     // Add category name text
-    const checkboxInput = categoryNode.querySelector(ProductCategoryMap.checkboxInput);
-    if (!checkboxInput) {
-      return;
-    }
-
+    const checkboxInput = categoryNode.querySelector(ProductCategoryMap.checkboxInput) as HTMLInputElement;
     const nameElement = document.createTextNode(category.name);
     const element = category.active ?
       nameElement :
@@ -275,7 +271,7 @@ export default class CategoryTreeSelector {
     return categoryNode;
   }
 
-  private toggleAll(expanded: boolean) {
+  private toggleAll(expanded: boolean): void {
     if (!this.modalContainer || !this.expandAllButton || !this.reduceAllButton) {
       return;
     }
@@ -299,10 +295,8 @@ export default class CategoryTreeSelector {
 
   /**
    * Check the selected category (matched by its ID) and toggle the tree by going up through the category's ancestors.
-   *
-   * @param {int} categoryId
    */
-  private selectCategory(categoryId: number) {
+  private selectCategory(categoryId: number): void {
     if (!this.modalContainer) {
       return;
     }
@@ -320,7 +314,7 @@ export default class CategoryTreeSelector {
     this.updateSelectedCategories();
   }
 
-  private openCategoryParents(checkbox: HTMLInputElement) {
+  private openCategoryParents(checkbox: HTMLInputElement): void {
     // This is the element containing the checkbox
     let parentItem = checkbox.closest(ProductCategoryMap.treeElement);
 
@@ -342,7 +336,7 @@ export default class CategoryTreeSelector {
     }
   }
 
-  private unselectCategory(categoryId: number) {
+  private unselectCategory(categoryId: number): void {
     if (!this.modalContainer) {
       return;
     }
@@ -376,7 +370,7 @@ export default class CategoryTreeSelector {
     });
   }
 
-  private initTypeahead() {
+  private initTypeahead(): void {
     const source = new Bloodhound({
       // @ts-ignore
       datumTokenizer: Tokenizers.obj.letters('breadcrumb'),
@@ -399,7 +393,7 @@ export default class CategoryTreeSelector {
     new AutoCompleteSearch($(ProductCategoryMap.searchInput), dataSetConfig);
   }
 
-  private updateSelectedCategories() {
+  private updateSelectedCategories(): void {
     if (!this.categoryTree || !this.tags) {
       return;
     }
@@ -452,13 +446,13 @@ export default class CategoryTreeSelector {
     return searchedCategory;
   }
 
-  private updateCheckbox(checkboxInput: HTMLInputElement, checked: boolean) {
+  private updateCheckbox(checkboxInput: HTMLInputElement, checked: boolean): void {
     if (checkboxInput.checked !== checked) {
       checkboxInput.checked = checked;
     }
   }
 
-  private closeModal() {
+  private closeModal(): void {
     if (!this.modalContainer) {
       return;
     }
