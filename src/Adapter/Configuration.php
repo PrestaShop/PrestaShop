@@ -155,12 +155,14 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      */
     public function set($key, $value, ShopConstraint $shopConstraint = null, array $options = [])
     {
-        if (null === $shopConstraint) {
-            $shopConstraint = $this->buildShopConstraintFromContext();
+        if ($this->shop instanceof Shop && null === $shopConstraint) {
+            $shopGroupId = $this->shop->id_shop_group;
+            $shopId = $this->shop->id;
+        } else {
+            $shopConstraint = null === $shopConstraint ? $this->buildShopConstraintFromContext() : $shopConstraint;
+            $shopId = $this->getShopId($shopConstraint);
+            $shopGroupId = $this->getShopGroupId($shopConstraint);
         }
-
-        $shopId = $this->getShopId($shopConstraint);
-        $shopGroupId = $this->getShopGroupId($shopConstraint);
 
         $html = isset($options['html']) ? (bool) $options['html'] : false;
 
@@ -409,17 +411,9 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             E_USER_DEPRECATED
         );
 
-        if ($this->shop instanceof Shop) {
-            $shopId = $this->shop->id;
-            $shopGroupId = $this->shop->id_shop_group;
-        } else {
-            $shopId = Shop::getContextShopID();
-            $shopGroupId = Shop::getContextShopGroupID();
-        }
-
         return new ShopConstraint(
-            $shopId,
-            $shopGroupId
+            Shop::getContextShopID(),
+            Shop::getContextShopGroupID()
         );
     }
 }
