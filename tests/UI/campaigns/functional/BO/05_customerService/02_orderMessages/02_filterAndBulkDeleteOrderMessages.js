@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -13,9 +17,6 @@ const OrderMessageFaker = require('@data/faker/orderMessage');
 const dashboardPage = require('@pages/BO/dashboard');
 const orderMessagesPage = require('@pages/BO/customerService/orderMessages');
 const addOrderMessagePage = require('@pages/BO/customerService/orderMessages/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customerService_orderMessages_filterAndBulkDeleteOrderMessages';
 
@@ -32,7 +33,7 @@ Create 2 order messages
 Filter by name and message and check result
 Delete order messages with bulk actions
  */
-describe('Create order messages, check filter results and delete them with bulk actions', async () => {
+describe('BO - Customer Service - Order Messages : Filter and bulk delete order messages', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -47,7 +48,7 @@ describe('Create order messages, check filter results and delete them with bulk 
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to order messages page', async function () {
+  it('should go to \'Customer Message > Order Messages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -71,12 +72,10 @@ describe('Create order messages, check filter results and delete them with bulk 
 
   // 1: Create 2 order message
   describe('Create 2 order messages', async () => {
-    const tests = [
+    [
       {args: {orderMessageToCreate: firstOrderMessageData}},
       {args: {orderMessageToCreate: secondOrderMessageData}},
-    ];
-
-    tests.forEach((test, index) => {
+    ].forEach((test, index) => {
       it('should go to new order message page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewOrderMessagePage${index + 1}`, baseContext);
 
@@ -98,13 +97,11 @@ describe('Create order messages, check filter results and delete them with bulk 
   });
 
   // 2: filter order Messages
-  describe('Filter order Messages', async () => {
-    const tests = [
+  describe('Filter order messages table', async () => {
+    [
       {args: {testIdentifier: 'filterName', filterBy: 'name', filterValue: secondOrderMessageData.name}},
       {args: {testIdentifier: 'filterMessage', filterBy: 'message', filterValue: secondOrderMessageData.message}},
-    ];
-
-    tests.forEach((test) => {
+    ].forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
@@ -128,7 +125,7 @@ describe('Create order messages, check filter results and delete them with bulk 
 
   // 3: Delete order messages with bulk actions
   describe('Delete order messages with bulk actions', async () => {
-    it('should filter by name of order message', async function () {
+    it(`should filter by name '${firstOrderMessageData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
       await orderMessagesPage.filterTable(page, 'name', firstOrderMessageData.name);

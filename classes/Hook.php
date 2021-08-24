@@ -784,7 +784,7 @@ class HookCore extends ObjectModel
         $chain = false
     ) {
         if (defined('PS_INSTALLATION_IN_PROGRESS') || !self::getHookStatusByName($hook_name)) {
-            return null;
+            return $array_return ? [] : null;
         }
 
         $hookRegistry = static::getHookRegistry();

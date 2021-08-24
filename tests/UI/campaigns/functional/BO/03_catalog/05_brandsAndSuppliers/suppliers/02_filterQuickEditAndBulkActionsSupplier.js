@@ -1,10 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -21,7 +24,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_suppliers_filterQuickEditAndBulkActionsSupplier';
 
-
 let browserContext;
 let page;
 
@@ -30,8 +32,8 @@ const secondSupplierData = new SupplierFaker();
 
 let numberOfSuppliers = 0;
 
-// Filter, Quick edit and bulk actions suppliers
-describe('Filter, Quick edit and bulk actions suppliers', async () => {
+// Filter, quick edit and bulk actions suppliers
+describe('BO - Catalog - Brands & Suppliers : Filter, quick edit and bulk actions suppliers', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -58,7 +60,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
   });
 
   // Go to brands Page
-  it('should go to brands page', async function () {
+  it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -74,7 +76,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
   });
 
   // Go to Suppliers Page
-  it('should go to suppliers page', async function () {
+  it('should go to Suppliers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSuppliersPage', baseContext);
 
     await brandsPage.goToSubTabSuppliers(page);
@@ -98,7 +100,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
         await expect(pageTitle).to.contains(addSupplierPage.pageTitle);
       });
 
-      it('should create supplier', async function () {
+      it(`should create supplier n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createSupplier${index + 1}`, baseContext);
 
         const result = await addSupplierPage.createEditSupplier(page, test.args.supplierToCreate);
@@ -115,7 +117,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
   });
 
   // 2: Filter Suppliers
-  describe('Filter suppliers', async () => {
+  describe('Filter suppliers table', async () => {
     const tests = [
       {
         args:
@@ -194,12 +196,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
     it('should filter supplier by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await suppliersPage.filterTable(
-        page,
-        'input',
-        'name',
-        firstSupplierData.name,
-      );
+      await suppliersPage.filterTable(page, 'input', 'name', firstSupplierData.name);
 
       // Check number od suppliers
       const numberOfSuppliersAfterFilter = await suppliersPage.getNumberOfElementInGrid(page);

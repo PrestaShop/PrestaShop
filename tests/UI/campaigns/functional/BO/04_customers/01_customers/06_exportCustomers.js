@@ -1,10 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -16,7 +19,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_customers_exportCustomers';
 
-
 let browserContext;
 let page;
 let numberOfCustomers = 0;
@@ -27,7 +29,7 @@ Export customers
 Check csv file was downloaded
 Check existence of customers data in csv file
  */
-describe('Export customers', async () => {
+describe('BO - Customers : Export customers', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -42,7 +44,7 @@ describe('Export customers', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to Customers page', async function () {
+  it('should go to \'Customers > Customers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
     await dashboardPage.goToSubMenu(

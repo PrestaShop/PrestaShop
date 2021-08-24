@@ -1404,6 +1404,69 @@ Release Notes for PrestaShop 1.7
     - #17150: Functional tests - Fix disable shop function (by @boubkerbribri)
 
 ####################################
+#   v1.7.7.7 - (2021-08-18)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #25634: [BC Break] Do not use name in admin_orders_display_customization_image_route (by @PierreRambaud)
+- Front Office:
+  - Bug fix:
+    - #25629: Use _DB_PREFIX_ constant instead of ps_ in SQL queries (by @PierreRambaud)
+- Core:
+  - Improvement:
+    - #25630: Bump version to 1.7.7.7 (by @PierreRambaud)
+
+####################################
+#   v1.7.7.6 - (2021-06-30)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #25489: Fixed selector for fetching if the tax is included  (by @Progi1984)
+    - #25495: Check variable before using it (by @Progi1984)
+    - #25428: Don't recalculate total when PS_ORDER_RECALCULATE_SHIPPING is 0 and editing a carrier (by @Progi1984)
+    - #24991: Fix combination ecotax display and edition (by @jolelievre)
+    - #25378: Order Product Search: Limit only if the search phrase length is greater than 2 characters and HTTP Code Error become a 400 (by @Progi1984)
+    - #25375: In Order view, set the lang of the order for order messages (by @Progi1984)
+    - #25326: Create empty Customer when the customer or the guest has been deleted (by @PierreRambaud)
+    - #25286: Fix cart rule that can be used more than once per user when it shouldn't (by @matthieu-rolland)
+    - #24339: Add number comma formatter (by @PierreRambaud)
+    - #25107: Fixed meta title in BO - Order View (by @Progi1984)
+    - #25200: In Invoice PDF, escape customization name (by @Progi1984)
+    - #24324: Orders View : Display right price depending configuration (by @Progi1984)
+    - #25106: Fixed management of INNER JOIN & GROUP BY in SqlQueryValidator (by @Progi1984)
+    - #25059: [BC Break] Fixed translated order messages in Order View (by @Progi1984)
+    - #24657: BO - New Order - Warn when product's stock of a pack are empty (by @Progi1984)
+    - #24762: Fixed adding a free shipping cart rule on a 0.00 order (by @Progi1984)
+    - #24765: Fix edit price modal showed when adding same product in multi-invoices (by @atomiix)
+    - #24770: Added currency BYN TO CLDR dataset (by @olecorre)
+    - #24773: BO - Order Preview : Added email (by @Progi1984)
+- Front Office:
+  - Bug fix:
+    - #25216: Fix brands links not clickable inside description (by @NeOMakinG)
+    - #24868: Fixed cart rule on selected product with product with ecotax (by @Progi1984)
+    - #24754: Removed free shipping from cumulative reduction (by @Progi1984)
+    - #24320: Bug fix for number of decimals in product price (by @samberrry)
+- Core:
+  - Improvement:
+    - #25449: Build assets on 1.7.7.x  (by @matthieu-rolland)
+    - #25447: Update prestashop modules on 1.7.7.x (by @matthieu-rolland)
+    - #24957: Bump modules Welcome to 6.0.5 & ProductComments to 4.2.2 (by @Progi1984)
+  - Bug fix:
+    - #25413: Fix performance issue on Smarty template caching (by @lukaslau)
+- Installer:
+  - Bug fix:
+    - #25306: Fix 1.7.7.2 upgrade (by @Seb33300)
+    - #24908: Fixed default value for Currency after upgrade (by @Progi1984)
+- Tests:
+  - Bug fix:
+    - #25281: Rise Apache Travis timeout to workaround addons module install issues (by @matks)
+  - Refactoring:
+    - #24951: Change attribute name to something more specific to fix filter (by @boubkerbribri)
+    - #24783: Fix pages name for link list module (by @boubkerbribri)
+
+####################################
 #   v1.7.7.5 - (2021-06-01)
 ####################################
 
