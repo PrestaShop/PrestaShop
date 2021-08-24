@@ -101,10 +101,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     public function get($key, $default = null, ShopConstraint $shopConstraint = null)
     {
         if (null === $shopConstraint) {
-            @trigger_error(
-                'Not specifying the optional ShopConstraint parameter is deprecated since version 1.7.8',
-                E_USER_DEPRECATED
-            );
+            $shopConstraint = $this->buildShopConstraintFromContext();
         }
 
         if (defined($key)) {
@@ -158,17 +155,12 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      */
     public function set($key, $value, ShopConstraint $shopConstraint = null, array $options = [])
     {
-        // By default, set a piece of configuration for all available shops and shop groups
-        $shopGroupId = null;
-        $shopId = null;
-
-        if ($this->shop instanceof Shop && null === $shopConstraint) {
-            $shopGroupId = $this->shop->id_shop_group;
-            $shopId = $this->shop->id;
-        } else {
-            $shopId = $this->getShopId($shopConstraint);
-            $shopGroupId = $this->getShopGroupId($shopConstraint);
+        if (null === $shopConstraint) {
+            $shopConstraint = $this->buildShopConstraintFromContext();
         }
+
+        $shopId = $this->getShopId($shopConstraint);
+        $shopGroupId = $this->getShopGroupId($shopConstraint);
 
         $html = isset($options['html']) ? (bool) $options['html'] : false;
 
@@ -195,6 +187,10 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      */
     public function has($key, ShopConstraint $shopConstraint = null)
     {
+        if (null === $shopConstraint) {
+            $shopConstraint = $this->buildShopConstraintFromContext();
+        }
+
         $shopId = $this->getShopId($shopConstraint);
         $shopGroupId = $this->getShopGroupId($shopConstraint);
         $isStrict = $this->isStrict($shopConstraint);
@@ -352,28 +348,28 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     }
 
     /**
-     * @param ShopConstraint|null $shopConstraint
+     * @param ShopConstraint $shopConstraint
      *
      * @return int|null
      */
-    private function getShopId(?ShopConstraint $shopConstraint): ?int
+    private function getShopId(ShopConstraint $shopConstraint): ?int
     {
-        return null !== $shopConstraint && null !== $shopConstraint->getShopId()
+        return null !== $shopConstraint->getShopId()
             ? $shopConstraint->getShopId()->getValue()
-            : Shop::getContextShopID()
+            : null
         ;
     }
 
     /**
-     * @param ShopConstraint|null $shopConstraint
+     * @param ShopConstraint $shopConstraint
      *
      * @return int|null
      */
-    private function getShopGroupId(?ShopConstraint $shopConstraint): ?int
+    private function getShopGroupId(ShopConstraint $shopConstraint): ?int
     {
-        return null !== $shopConstraint && null !== $shopConstraint->getShopGroupId()
+        return null !== $shopConstraint->getShopGroupId()
             ? $shopConstraint->getShopGroupId()->getValue()
-            : Shop::getContextShopGroupID()
+            : null
         ;
     }
 
@@ -400,6 +396,30 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             $key,
             !empty($shopGroupId) ? $shopGroupId->getValue() : null,
             !empty($shopId) ? $shopId->getValue() : null
+        );
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    private function buildShopConstraintFromContext(): ShopConstraint
+    {
+        @trigger_error(
+            'Not specifying the optional ShopConstraint parameter is deprecated since version 1.7.8.0',
+            E_USER_DEPRECATED
+        );
+
+        if ($this->shop instanceof Shop) {
+            $shopId = $this->shop->id;
+            $shopGroupId = $this->shop->id_shop_group;
+        } else {
+            $shopId = Shop::getContextShopID();
+            $shopGroupId = Shop::getContextShopGroupID();
+        }
+
+        return new ShopConstraint(
+            $shopId,
+            $shopGroupId
         );
     }
 }
