@@ -353,7 +353,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     {
         return null !== $shopConstraint && null !== $shopConstraint->getShopId()
             ? $shopConstraint->getShopId()->getValue()
-            : null
+            : Shop::getContextShopID()
         ;
     }
 
@@ -366,7 +366,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     {
         return null !== $shopConstraint && null !== $shopConstraint->getShopGroupId()
             ? $shopConstraint->getShopGroupId()->getValue()
-            : null
+            : Shop::getContextShopGroupID()
         ;
     }
 
