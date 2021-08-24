@@ -98,7 +98,16 @@ class ProductAttachmentsType extends TranslatorAwareType
         $resolver->setDefaults([
             'label' => $this->trans('Attached files', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h2',
-            'label_help_box' => $this->trans('Instruction manuals, technical works or any file you want to add to a product.', 'Admin.Catalog.Help'),
+            'label_help_box' => $this->trans('Instructions, size guide, or any file you want to add to a product.', 'Admin.Catalog.Help'),
+            'label_subtitle' => $this->trans('Customers can download these files on the product page.', 'Admin.Catalog.Help'),
+            'external_link' => [
+                'text' => $this->trans('[1]Manage all files[/1]', 'Admin.Catalog.Feature'),
+                'href' => $this->urlGenerator->generate('admin_attachments_index'),
+                'position' => 'prepend',
+                'attr' => [
+                    'class' => 'pt-0',
+                ],
+            ],
         ]);
     }
 }
