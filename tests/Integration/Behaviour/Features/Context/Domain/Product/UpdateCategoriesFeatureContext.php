@@ -87,8 +87,12 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
         Cache::clear();
         $data = $table->getRowsHash();
         $productForEditing = $actualCategoryIds = $this->getProductForEditing($productReference);
+        $categoriesInfo = $productForEditing->getCategoriesInformation()->getCategoriesInformation();
+        $actualCategoryIds = [];
 
-        $actualCategoryIds = $productForEditing->getCategoriesInformation()->getCategoryIds();
+        foreach ($categoriesInfo as $categoryInformation) {
+            $actualCategoryIds[] = $categoryInformation->getId();
+        }
         sort($actualCategoryIds);
 
         $expectedCategoriesRef = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
@@ -132,8 +136,8 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
         $productCategoriesInfo = $productForEditing->getCategoriesInformation();
 
         $belongsToDefaultCategory = false;
-        foreach ($productCategoriesInfo->getCategoryIds() as $categoryId) {
-            if ($categoryId === $defaultCategoryId) {
+        foreach ($productCategoriesInfo->getCategoriesInformation() as $categoryInformation) {
+            if ($categoryInformation->getId() === $defaultCategoryId) {
                 $belongsToDefaultCategory = true;
 
                 break;
