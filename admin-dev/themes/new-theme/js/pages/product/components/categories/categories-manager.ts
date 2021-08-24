@@ -83,7 +83,7 @@ export default class CategoriesManager {
     });
   }
 
-  private collectCategories(): Array<{ id: number; name: string; isDefault: boolean; }> {
+  private collectCategories(): Array<Category> {
     // these are at first rendered on page load and later updated dynamically
     const tagsContainer = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer) as HTMLElement;
     const tags = tagsContainer.querySelectorAll(ProductCategoryMap.tagItem);
