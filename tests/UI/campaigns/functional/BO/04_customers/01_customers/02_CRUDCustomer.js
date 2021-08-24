@@ -24,7 +24,7 @@ const foHomePage = require('@pages/FO/home');
 // Import data
 const CustomerFaker = require('@data/faker/customer');
 
-const baseContext = 'functional_BO_customers_customers_CRUDCustomerInBO';
+const baseContext = 'functional_BO_customers_customers_CRUDCustomer';
 
 let browserContext;
 let page;

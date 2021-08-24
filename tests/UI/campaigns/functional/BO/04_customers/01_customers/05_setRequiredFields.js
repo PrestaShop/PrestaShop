@@ -101,6 +101,9 @@ describe('BO - Customers - Customers : Set required fields', async () => {
 
       // Go back to BO
       page = await foCreateAccountPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await customersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customersPage.pageTitle);
     });
   });
 });
