@@ -66,15 +66,19 @@ export default class AttachmentsManager {
         onFormLoaded: (form, formData, dataAttributes) => {
           if (dataAttributes && dataAttributes.attachmentId) {
             const successMessage = this.$addAttachmentBtn.data('successCreateMessage');
-            iframeModal.displayMessage(`<div class="alert alert-success d-print-none m-2" role="alert">
+            $.growl({
+              message: successMessage,
+            });
+            iframeModal.hide();
+            /* iframeModal.displayMessage(`<div class="alert alert-success d-print-none m-2" role="alert">
               <div class="alert-text">
                 <p>${successMessage}</p>
               </div>
-            </div>`);
+            </div>`); */
 
             getAttachmentInfo(dataAttributes.attachmentId).then((response) => {
               this.entitySearchInput.addItem(response.attachmentInfo);
-              setTimeout(() => { iframeModal.hide(); }, 2000);
+              // setTimeout(() => { iframeModal.hide(); }, 2000);
             });
           }
         },
