@@ -68,6 +68,7 @@ final class GetCustomerForEditingHandler implements GetCustomerForEditingHandler
             new Email($customer->email),
             $birthday,
             (bool) $customer->active,
+            (bool) $customer->isGuest(),
             (bool) $customer->optin,
             (bool) $customer->newsletter,
             $customer->getGroups(),

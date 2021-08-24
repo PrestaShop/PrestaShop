@@ -75,6 +75,11 @@ class EditableCustomer
     /**
      * @var bool
      */
+    private $isGuest;
+
+    /**
+     * @var bool
+     */
     private $isPartnerOffersSubscribed;
 
     /**
@@ -135,6 +140,7 @@ class EditableCustomer
      * @param Email $email
      * @param Birthday $birthday
      * @param bool $isEnabled
+     * @param bool $isGuest
      * @param bool $isPartnerOffersSubscribed
      * @param bool $isNewsletterSubscribed
      * @param int[] $groupIds
@@ -155,6 +161,7 @@ class EditableCustomer
         Email $email,
         Birthday $birthday,
         $isEnabled,
+        $isGuest,
         $isPartnerOffersSubscribed,
         $isNewsletterSubscribed,
         array $groupIds,
@@ -174,6 +181,7 @@ class EditableCustomer
         $this->email = $email;
         $this->birthday = $birthday;
         $this->isEnabled = $isEnabled;
+        $this->isGuest = $isGuest;
         $this->isPartnerOffersSubscribed = $isPartnerOffersSubscribed;
         $this->isNewsletterSubscribed = $isNewsletterSubscribed;
         $this->groupIds = $groupIds;
@@ -241,6 +249,14 @@ class EditableCustomer
     public function isEnabled()
     {
         return $this->isEnabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGuest()
+    {
+        return $this->isGuest;
     }
 
     /**
