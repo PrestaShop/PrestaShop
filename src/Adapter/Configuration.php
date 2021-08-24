@@ -100,6 +100,13 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      */
     public function get($key, $default = null, ShopConstraint $shopConstraint = null)
     {
+        if (null === $shopConstraint) {
+            @trigger_error(
+                'Not specifying the optional ShopConstraint parameter is deprecated since version 1.7.8',
+                E_USER_DEPRECATED
+            );
+        }
+
         if (defined($key)) {
             return constant($key);
         }
