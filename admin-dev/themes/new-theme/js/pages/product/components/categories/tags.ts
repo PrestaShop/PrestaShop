@@ -48,7 +48,7 @@ export default class Tags {
     this.container = container;
   }
 
-  public render(categories: Array<{ id: number, name: string, isDefault: boolean }>) {
+  public render(categories: Array<{ id: number, name: string, isDefault: boolean }>): void {
     this.container.innerHTML = '';
 
     const tagTemplate = this.container.dataset.prototype;
@@ -91,7 +91,7 @@ export default class Tags {
     this.eventEmitter.emit(ProductEventMap.categories.categoriesUpdated)
   }
 
-  private toggleContainerVisibility() {
+  private toggleContainerVisibility(): void {
     this.container.querySelector(ProductCategoryMap.tagsContainer);
     this.container.classList.toggle(
       'd-block',
@@ -99,7 +99,7 @@ export default class Tags {
     );
   }
 
-  private listenTagRemoval() {
+  private listenTagRemoval(): void {
     this.container.querySelectorAll(ProductCategoryMap.tagRemoveBtn).forEach((element) => {
       element.addEventListener('click', (event) => {
         event.preventDefault();
