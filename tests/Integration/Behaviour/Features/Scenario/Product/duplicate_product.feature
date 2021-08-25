@@ -8,12 +8,13 @@ Feature: Duplicate product from Back Office (BO).
 
   Background:
     Given category "home" in default language named "Home" exists
+    And category "home" is the default one
     And shop "shop1" with name "test_shop" exists
     And single shop shop1 context is loaded
     And category "men" in default language named "Men" exists
     And category "clothes" in default language named "Clothes" exists
     And manufacturer studioDesign named "Studio Design" exists
-    Given language "language1" with locale "en-US" exists
+    And language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
     And language "language2" with locale "fr-FR" exists
     And carrier carrier1 named "ecoCarrier" exists
@@ -130,8 +131,10 @@ Feature: Duplicate product from Back Office (BO).
       | en-US  | Simple & nice sunglasses   |
       | fr-FR  | lunettes simples et belles |
     And product copy_of_product1 should be assigned to following categories:
-      | categories       | [home, men, clothes] |
-      | default category | clothes              |
+      | id reference | name[en-US] | name[fr-FR] | is default |
+      | home         | Home        | Home        | false      |
+      | men          | Men         | Men         | false      |
+      | clothes      | Clothes     | Clothes     | true       |
     And product "copy_of_product1" should have following options:
       | product option      | value        |
       | active              | false        |
