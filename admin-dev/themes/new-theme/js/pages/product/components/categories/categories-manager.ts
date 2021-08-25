@@ -26,7 +26,7 @@
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import CategoryTreeSelector from '@pages/product/components/categories/category-tree-selector';
-import TagsRenderer from '@pages/product/components/categories/tagsRenderer';
+import TagsRenderer from '@pages/product/components/categories/tags-renderer';
 import {EventEmitter} from 'events';
 
 const ProductCategoryMap = ProductMap.categories;
