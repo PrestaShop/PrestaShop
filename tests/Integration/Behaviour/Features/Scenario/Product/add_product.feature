@@ -7,6 +7,9 @@ Feature: Add basic product from Back Office (BO)
   As a BO user
   I need to be able to add new product with basic information from the BO
 
+  Background:
+    Given language "language1" with locale "en-US" exists
+
   Scenario: I add a product with basic information
     When I add product "product1" with following information:
       | name[en-US] | bottle of beer |
@@ -16,7 +19,9 @@ Feature: Add basic product from Back Office (BO)
     And product "product1" localized "name" should be:
       | locale | value          |
       | en-US  | bottle of beer |
-    And product "product1" should be assigned to default category
+    And product "product1" should be assigned to following categories:
+      | id reference | name[en-US] | is default |
+      | home         | Home        | true       |
 
   Scenario: I add a product with basic information
     When I add product "product1" with following information:
@@ -37,7 +42,9 @@ Feature: Add basic product from Back Office (BO)
     And product "product1" localized "name" should be:
       | locale | value          |
       | en-US  | bottle of beer |
-    And product "product1" should be assigned to default category
+    And product "product1" should be assigned to following categories:
+      | id reference | name[en-US] | is default |
+      | home         | Home        | true       |
 
   Scenario: I add a product with invalid characters in name
     When I add product "product2" with following information:
