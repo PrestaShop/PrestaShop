@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
-{block name='conversion_form'}
+{block name='account_transformation_form'}
   <h4>{l s='Save time on your next order, sign up now' d='Shop.Theme.Checkout'}</h4>
   <ul>
     <li> - {l s='Personalized and secure access' d='Shop.Theme.Customeraccount'}</li>
