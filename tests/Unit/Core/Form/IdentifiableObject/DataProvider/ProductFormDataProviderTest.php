@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFe
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoriesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoryInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
@@ -79,9 +80,9 @@ class ProductFormDataProviderTest extends TestCase
     private const HOME_CATEGORY_ID = 49;
     private const DEFAULT_CATEGORY_ID = 51;
     private const DEFAULT_VIRTUAL_PRODUCT_FILE_ID = 69;
+    private const CONTEXT_LANG_ID = 1;
     private const DEFAULT_QUANTITY = 12;
     private const COVER_URL = 'http://localhost/cover.jpg';
-    private const CONTEXT_LANG_ID = 1;
 
     public function testGetDefaultData()
     {
@@ -96,11 +97,9 @@ class ProductFormDataProviderTest extends TestCase
             'description' => [
                 'categories' => [
                     'product_categories' => [
-                        self::HOME_CATEGORY_ID => [
-                            'is_associated' => true,
-                            'is_default' => true,
-                        ],
+                        ['id' => self::HOME_CATEGORY_ID],
                     ],
+                    'default_category_id' => self::HOME_CATEGORY_ID,
                 ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
@@ -165,11 +164,9 @@ class ProductFormDataProviderTest extends TestCase
             'description' => [
                 'categories' => [
                     'product_categories' => [
-                        self::HOME_CATEGORY_ID => [
-                            'is_associated' => true,
-                            'is_default' => true,
-                        ],
+                        ['id' => self::HOME_CATEGORY_ID],
                     ],
+                    'default_category_id' => self::HOME_CATEGORY_ID,
                 ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
@@ -516,19 +513,25 @@ class ProductFormDataProviderTest extends TestCase
 
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
-            'categories' => [42, 51],
+            'categories' => [
+                ['id' => 42, 'localized_names' => [1 => 'test1', 2 => 'test2']],
+                ['id' => 51, 'localized_names' => [2 => 'test22', 3 => 'test3']],
+            ],
             'default_category' => 51,
         ];
 
-        $expectedOutputData['description']['categories']['product_categories'] = [];
-        $expectedOutputData['description']['categories']['product_categories'][42] = [
-            'is_associated' => true,
-            'is_default' => false,
+        $expectedOutputData['description']['categories']['product_categories'] = [
+            [
+                'id' => 42,
+                'name' => 'test1',
+            ],
         ];
-        $expectedOutputData['description']['categories']['product_categories'][51] = [
-            'is_associated' => true,
-            'is_default' => true,
+        $expectedOutputData['description']['categories']['product_categories'][] = [
+            'id' => 51,
+            'name' => 'test22',
         ];
+
+        $expectedOutputData['description']['categories']['default_category_id'] = 51;
 
         $datasets[] = [
             $productData,
@@ -1142,9 +1145,16 @@ class ProductFormDataProviderTest extends TestCase
      */
     private function createCategories(array $product): CategoriesInformation
     {
+        $categoriesInfo = [];
+        if (isset($product['categories'])) {
+            foreach ($product['categories'] as $category) {
+                $categoriesInfo[] = new CategoryInformation($category['id'], $category['localized_names']);
+            }
+        }
+
         return new CategoriesInformation(
-            $product['categories'] ?? [self::DEFAULT_CATEGORY_ID],
-            $product['default_category'] ?? self::DEFAULT_CATEGORY_ID
+            $categoriesInfo,
+            $product['default_category'] ?? self::HOME_CATEGORY_ID
         );
     }
 
@@ -1226,15 +1236,11 @@ class ProductFormDataProviderTest extends TestCase
             'description' => [
                 'description' => [],
                 'description_short' => [],
-                'categories' => [
-                    'product_categories' => [
-                        self::DEFAULT_CATEGORY_ID => [
-                            'is_associated' => true,
-                            'is_default' => true,
-                        ],
-                    ],
-                ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
+                'categories' => [
+                    'product_categories' => [],
+                    'default_category_id' => self::HOME_CATEGORY_ID,
+                ],
             ],
             'specifications' => [
                 'references' => [
