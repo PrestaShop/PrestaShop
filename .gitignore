@@ -75,7 +75,6 @@ npm-debug.log.*
 !/upload/index.php
 !/upload/.htaccess
 
-/vendor/*
 /docs/phpdoc-sf/
 *.hot-update.js
 *.hot-update.json
@@ -227,6 +226,9 @@ themes/default-bootstrap/modules/*/mails/*
 /var/sessions/*
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
+!/var/modules
+/var/modules/*
+!/var/modules/.gitkeep
 /vendor/
 /web/bundles/
 
