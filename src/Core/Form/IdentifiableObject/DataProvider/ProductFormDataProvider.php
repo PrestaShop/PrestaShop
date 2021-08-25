@@ -135,10 +135,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'description' => [
                 'categories' => [
                     'product_categories' => [
-                        $this->defaultCategoryId => [
-                            //@todo: need category name for create action
-                            'id' => $this->defaultCategoryId,
-                        ],
+                        ['id' => $this->defaultCategoryId],
                     ],
                     'default_category_id' => $this->defaultCategoryId,
                 ],
@@ -221,7 +218,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $localizedNames = $categoryInformation->getLocalizedNames();
             $categoryId = $categoryInformation->getId();
 
-            $categories[$categoryId] = [
+            $categories[] = [
                 'id' => $categoryId,
                 'name' => $localizedNames[$this->contextLangId] ?? reset($localizedNames),
             ];
