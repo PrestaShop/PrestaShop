@@ -114,7 +114,7 @@ export default class CategoryTreeSelector {
     this.initTree();
     this.listenCancelChanges();
     this.listenApplyChanges();
-    this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, (categoryId) => this.unselectCategory(categoryId));
+    this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, (categoryId) => this.updateCategory(categoryId, false));
   }
 
   private listenApplyChanges(): void {
@@ -144,7 +144,9 @@ export default class CategoryTreeSelector {
   private initTree(): void {
     const {categoryTree} = this;
 
-    if (!categoryTree) {
+    if (!(categoryTree instanceof HTMLElement)) {
+      console.error('Category tree is not valid HTMLElement');
+
       return;
     }
 
@@ -168,7 +170,7 @@ export default class CategoryTreeSelector {
 
     categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkbox) => {
       if (checkbox instanceof HTMLInputElement) {
-        const categoryId = Number(checkbox.dataset.id);
+        const categoryId = Number(checkbox.value);
 
         //@todo: out of scope - this behavior is not ux friendly. Implement automatic closest parent selection instead (both in tree and in tags)?
         // disable main category checkbox
@@ -186,7 +188,7 @@ export default class CategoryTreeSelector {
           const currentTarget = e.currentTarget as HTMLInputElement;
 
           // do not allow unchecking main category id
-          if (Number(currentTarget.dataset.id) === this.defaultCategoryId && !currentTarget.checked) {
+          if (Number(currentTarget.value) === this.defaultCategoryId && !currentTarget.checked) {
             currentTarget.checked = true;
 
             return;
@@ -218,6 +220,8 @@ export default class CategoryTreeSelector {
     categoryNode.classList.toggle('more', hasChildren);
     if (hasChildren) {
       const inputsContainer = categoryNode.querySelector(ProductCategoryMap.treeElementInputs) as HTMLElement;
+      const checkboxInput = inputsContainer.querySelector(ProductCategoryMap.treeCheckboxInput) as HTMLInputElement;
+      checkboxInput.value = String(treeCategory.id);
 
       inputsContainer.addEventListener('click', (event) => {
         // We don't want to mess with the inputs behaviour (no toggle when checkbox or radio is clicked)
@@ -248,6 +252,7 @@ export default class CategoryTreeSelector {
     const prototypeTemplate = categoryTree.dataset.prototype as string;
     const prototypeName = categoryTree.dataset.prototypeName as string;
 
+    // It is convenient to have categoryId as prototype name index because it is unique, but nothing depends on it
     const template = prototypeTemplate.replace(new RegExp(prototypeName, 'g'), String(category.id));
     // Trim is important here or the first child could be some text (whitespace, or \n)
     const frag = document.createRange().createContextualFragment(template.trim());
@@ -255,6 +260,8 @@ export default class CategoryTreeSelector {
 
     // Add category name text
     const checkboxInput = categoryNode.querySelector(ProductCategoryMap.checkboxInput) as HTMLInputElement;
+    checkboxInput.value = String(category.id);
+
     const nameElement = document.createTextNode(category.name);
     const element = category.active
       ? nameElement
@@ -288,22 +295,13 @@ export default class CategoryTreeSelector {
   }
 
   /**
-   * Check the selected category (matched by its ID) and toggle the tree by going up through the category's ancestors.
+   * Check/uncheck the selected category (matched by its ID) and toggle the tree by going up through the category's ancestors.
    */
-  private selectCategory(categoryId: number): void {
-    if (!this.modalContainer) {
-      return;
-    }
-
-    const checkbox = this.modalContainer.querySelector(
-      `[name="${ProductCategoryMap.treeCheckboxName(categoryId)}"]`,
-    );
-
-    if (!(checkbox instanceof HTMLInputElement)) {
-      return;
-    }
-
-    checkbox.checked = true;
+  private updateCategory(categoryId: number, check: boolean): void {
+    const treeElement = this.categoryTree as HTMLElement;
+    const checkbox = treeElement.querySelector(ProductCategoryMap.inputByValue(categoryId)) as HTMLInputElement;
+    checkbox.checked = check;
+    this.openCategoryParents(checkbox);
     this.openCategoryParents(checkbox);
     this.updateSelectedCategories();
   }
@@ -328,23 +326,6 @@ export default class CategoryTreeSelector {
 
       parentItem = (parentItem.parentNode as HTMLElement).closest(ProductCategoryMap.treeElement);
     }
-  }
-
-  private unselectCategory(categoryId: number): void {
-    if (!this.modalContainer) {
-      return;
-    }
-    const checkbox = this.modalContainer.querySelector(
-      `[name="${ProductCategoryMap.treeCheckboxName(categoryId)}"]`,
-    );
-
-    if (!(checkbox instanceof HTMLInputElement)) {
-      return;
-    }
-
-    checkbox.checked = false;
-    this.openCategoryParents(checkbox);
-    this.updateSelectedCategories();
   }
 
   private initTypeaheadData(
@@ -378,7 +359,7 @@ export default class CategoryTreeSelector {
       display: 'breadcrumb',
       value: 'id',
       onSelect: (selectedItem: any, e: JQueryEventObject, $searchInput: JQuery) => {
-        this.selectCategory(Number(selectedItem.id));
+        this.updateCategory(Number(selectedItem.id), true);
 
         // This resets the search input or else previous search is cached and can be added again
         $searchInput.typeahead('val', '');
@@ -397,7 +378,7 @@ export default class CategoryTreeSelector {
 
     const categories: Array<Category> = [];
     checkedCheckboxes.forEach((checkbox) => {
-      const categoryId = Number((checkbox as HTMLInputElement).dataset.id);
+      const categoryId = Number((checkbox as HTMLInputElement).value);
       const searchedCategory = this.searchCategoryInTree(categoryId, this.treeCategories);
 
       if (searchedCategory) {

@@ -79,18 +79,73 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
                 'description' => [
                     'categories' => [
                         'product_categories' => [
-                            42 => [
-                                'name' => 'test',
+                            0 => [
+                                'name' => 'name is not important its only for presentation',
                                 'id' => 42,
                             ],
-                            49 => [
-                                'id' => 49
+                            1 => [
+                                'id' => 49,
                             ],
-                            51 => [
-                                'id' => 'whatever its only used for presentation',
+                            2 => [
+                                'id' => 51,
                             ],
                         ],
-                        'default_category_id' => 42
+                        'default_category_id' => 42,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        // default category which is not one of selected categories
+        $command = new SetAssociatedProductCategoriesCommand(
+            $this->getProductId()->getValue(),
+            51,
+            [42, 49, 51]
+        );
+        yield [
+            [
+                'description' => [
+                    'categories' => [
+                        'product_categories' => [
+                            0 => [
+                                'name' => 'name is not important its only for presentation',
+                                'id' => 42,
+                            ],
+                            1 => [
+                                'id' => 49,
+                            ],
+                        ],
+                        'default_category_id' => 51,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        // no default category id provided. First one taken as default
+        $command = new SetAssociatedProductCategoriesCommand(
+            $this->getProductId()->getValue(),
+            42,
+            [42, 49, 51]
+        );
+        yield [
+            [
+                'description' => [
+                    'categories' => [
+                        'product_categories' => [
+                            0 => [
+                                'name' => 'name is not important its only for presentation',
+                                'id' => 42,
+                            ],
+                            1 => [
+                                'id' => 49,
+                            ],
+                            2 => [
+                                'id' => 51,
+                            ],
+                        ],
+                        'default_category_id' => null,
                     ],
                 ],
             ],
