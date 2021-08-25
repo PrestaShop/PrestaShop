@@ -30,7 +30,7 @@
 
           <div class="col-md-12">
 
-            <div id="quantities" style="{% if has_combinations %}display: none;{% endif %}">
+            <div id="quantities"{% if has_combinations %} style="display: none;"{% endif %}>
               <h2>{{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}</h2>
               <fieldset class="form-group">
                 <div class="row">
