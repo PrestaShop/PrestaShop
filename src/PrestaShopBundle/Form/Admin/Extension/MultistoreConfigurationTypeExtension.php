@@ -35,6 +35,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
 {
@@ -75,5 +77,24 @@ class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
     public static function getExtendedTypes(): iterable
     {
         return [MultistoreConfigurationType::class];
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setNormalizer('attr', function (Options $options, $value) {
+            $classes = 'js-multishop-form-row';
+            if (!empty($value['class'])) {
+                $classes .= ' ' . $value['class'];
+            }
+
+            $value['class'] = $classes;
+
+            return $value;
+        });
     }
 }
