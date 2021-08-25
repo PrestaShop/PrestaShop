@@ -52,7 +52,6 @@ export default class CategoriesManager {
       `${ProductCategoryMap.categoriesContainer} ${ProductCategoryMap.tagsContainer}`,
     );
     this.tagsRenderer.render(this.collectCategories());
-    this.renderDefaultCategorySelection();
     this.listenCategoryChanges();
     this.listenDefaultCategorySelect();
     this.initCategoryTreeModal();
@@ -100,13 +99,6 @@ export default class CategoriesManager {
 
   private renderDefaultCategorySelection(): void {
     const categories = this.collectCategories();
-    const selectContainer = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectContainer);
-
-    if (!(selectContainer instanceof HTMLElement)) {
-      console.error('"defaultCategorySelectContainer is not defined or invalid');
-
-      return;
-    }
 
     const selectElement = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectInput) as HTMLElement;
     selectElement.innerHTML = '';
@@ -119,8 +111,6 @@ export default class CategoriesManager {
 
       selectElement.append(optionElement);
     });
-
-    selectContainer.classList.remove('d-none');
   }
 
   private listenDefaultCategorySelect(): void {
