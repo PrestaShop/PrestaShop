@@ -42,6 +42,9 @@ export default {
       itemId: string,
     ): string => `${location}&setShopContext=${urlLetter}-${itemId}`,
   },
+  multistoreForm: {
+    formRow: '.js-multishop-form-row',
+  },
   choiceTable: {
     selectAll: '.js-choice-table-select-all',
   },
