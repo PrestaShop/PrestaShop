@@ -159,7 +159,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             $shopGroupId = $this->shop->id_shop_group;
             $shopId = $this->shop->id;
         } else {
-            $shopConstraint = null === $shopConstraint ? $this->buildShopConstraintFromContext() : $shopConstraint;
+            $shopConstraint = $shopConstraint ?: $this->buildShopConstraintFromContext();
             $shopId = $this->getShopId($shopConstraint);
             $shopGroupId = $this->getShopGroupId($shopConstraint);
         }
