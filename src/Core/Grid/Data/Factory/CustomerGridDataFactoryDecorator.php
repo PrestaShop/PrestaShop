@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 /**
  * Class CustomerGridDataFactoryDecorator decorates data from customer doctrine data factory.
@@ -109,7 +110,7 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
             }
 
             if (null === $customer['connect']) {
-                $customer['connect'] = '--';
+                $customer['connect'] = DateTimeUtil::NULL_DATETIME;
             }
 
             $modifiedCustomers[] = $customer;
