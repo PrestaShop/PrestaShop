@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import PermissionApp from '../../app/pages/permission/index';
+import PermissionApp from '@app/pages/permission/index';
 
 const {$} = window;
 
