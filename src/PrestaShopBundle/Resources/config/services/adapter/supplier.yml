@@ -13,7 +13,7 @@ services:
 
   prestashop.adapter.supplier.supplier_order_validator:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\SupplierOrderValidator'
-    deprecated: ~
+    deprecated: 'The "%service_id%" service is deprecated since 8.0 and will be removed in next major.'
 
 # Command handlers
 
