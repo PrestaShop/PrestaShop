@@ -30,7 +30,7 @@ import Tokenizers from '@components/bloodhound/tokenizers';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import {getCategories} from '@pages/product/services/categories';
-import TagsRenderer from '@pages/product/components/categories/tagsRenderer';
+import TagsRenderer from '@pages/product/components/categories/tags-renderer';
 import {EventEmitter} from 'events';
 
 const {$} = window;
