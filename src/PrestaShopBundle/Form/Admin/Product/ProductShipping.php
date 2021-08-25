@@ -67,10 +67,9 @@ class ProductShipping extends CommonAbstractType
      *
      * @param TranslatorInterface $translator
      * @param LegacyContext $legacyContext
-     * @param null $warehouseDataProvider [no longer used as of 8.0]
      * @param CarrierDataProvider $carrierDataProvider
      */
-    public function __construct($translator, $legacyContext, $warehouseDataProvider, $carrierDataProvider)
+    public function __construct($translator, $legacyContext, $carrierDataProvider)
     {
         $this->translator = $translator;
         $this->legacyContext = $legacyContext;

@@ -162,7 +162,6 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
-            - null
             - "@prestashop.adapter.data_provider.carrier"
         parent: 'form.type.common_type'
         public: true
