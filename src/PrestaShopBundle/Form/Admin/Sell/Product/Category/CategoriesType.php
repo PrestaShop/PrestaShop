@@ -28,13 +28,35 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class CategoriesType extends TranslatorAwareType
 {
+    /**
+     * @var ConfigurableFormChoiceProviderInterface
+     */
+    private $defaultCategoryChoiceProvider;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param ConfigurableFormChoiceProviderInterface $defaultCategoryChoiceProvider
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        ConfigurableFormChoiceProviderInterface $defaultCategoryChoiceProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->defaultCategoryChoiceProvider = $defaultCategoryChoiceProvider;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -42,6 +64,9 @@ class CategoriesType extends TranslatorAwareType
     {
         $builder
             ->add('product_categories', CategoryTagsCollectionType::class)
+            ->add('default_category_id', ChoiceType::class, [
+                'choices' => $this->defaultCategoryChoiceProvider->getChoices(['product_id' => $options['product_id']]),
+            ])
             ->add('add_categories_btn', ButtonType::class, [
                 'label' => $this->trans('Add categories', 'Admin.Catalog.Feature'),
                 'attr' => [
@@ -60,6 +85,8 @@ class CategoriesType extends TranslatorAwareType
         $resolver->setDefaults([
             'label' => false,
             'required' => false,
+            'product_id' => null,
         ]);
+        $resolver->setAllowedTypes('product_id', ['int', 'null']);
     }
 }
