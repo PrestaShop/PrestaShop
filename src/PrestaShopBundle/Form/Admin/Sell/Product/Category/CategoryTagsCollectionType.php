@@ -64,7 +64,7 @@ class CategoryTagsCollectionType extends CollectionType
             ],
             'allow_add' => true,
             'allow_delete' => true,
-            'prototype_name' => '__CATEGORY_ID__',
+            'prototype_name' => '__CATEGORY_INDEX__',
         ]);
     }
 

@@ -36,7 +36,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CategoryTreeSelectorType extends CollectionType
 {
-    private const PROTOTYPE_INDEX_PLACEHOLDER = '__CATEGORY_ID__';
+    private const PROTOTYPE_INDEX_PLACEHOLDER = '__CATEGORY_INDEX__';
 
     /**
      * @var TranslatorInterface
@@ -65,8 +65,7 @@ class CategoryTreeSelectorType extends CollectionType
                     'block_prefix' => 'category_tree_entry',
                     'label' => false,
                     'attr' => [
-                        'class' => 'category',
-                        'data-id' => self::PROTOTYPE_INDEX_PLACEHOLDER,
+                        'class' => 'category tree-checkbox-input',
                     ],
                 ],
                 'allow_add' => true,

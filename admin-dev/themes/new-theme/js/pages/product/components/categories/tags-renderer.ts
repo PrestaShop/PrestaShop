@@ -54,20 +54,23 @@ export default class TagsRenderer {
       return;
     }
 
+    let index = 0;
     categories.forEach((category) => {
-      const template = tagTemplate.replace(RegExp(prototypeName, 'g'), String(category.id));
+      const template = tagTemplate.replace(RegExp(prototypeName, 'g'), String(index));
       const tplFragment = document.createRange().createContextualFragment(template.trim());
 
       if (tplFragment && tplFragment.firstChild && tplFragment.firstChild.parentNode) {
         const frag = tplFragment.firstChild.parentNode;
+        const idInput = frag.querySelector(ProductCategoryMap.tagCategoryIdInput) as HTMLInputElement;
+        idInput.value = String(category.id);
 
-        // don't render the tag removal element for main category
+        const tagRemoveBtn = frag.querySelector(ProductCategoryMap.tagRemoveBtn) as HTMLElement;
+
         if (category.id === defaultCategoryId) {
-          const tagRemoveBtn = frag.querySelector(ProductCategoryMap.tagRemoveBtn);
-
-          if (tagRemoveBtn) {
-            tagRemoveBtn.remove();
-          }
+          // don't show the tag removal element for main category
+          tagRemoveBtn.classList.add('d-none');
+        } else {
+          tagRemoveBtn.classList.remove('d-none');
         }
 
         const namePreviewElement = frag.querySelector(ProductCategoryMap.categoryNamePreview);
@@ -78,6 +81,8 @@ export default class TagsRenderer {
 
         this.container.append(frag);
       }
+
+      index += 1;
     });
 
     this.listenTagRemoval();
