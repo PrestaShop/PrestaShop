@@ -38,7 +38,7 @@ class ProductDefaultCategoryChoiceProvider implements ConfigurableFormChoiceProv
     /**
      * @var int
      */
-    private $homeCategoryId;
+    private $defaultCategoryId;
 
     /**
      * @var CategoryRepository
@@ -53,7 +53,7 @@ class ProductDefaultCategoryChoiceProvider implements ConfigurableFormChoiceProv
         int $homeCategoryId,
         CategoryRepository $categoryRepository
     ) {
-        $this->homeCategoryId = $homeCategoryId;
+        $this->defaultCategoryId = $homeCategoryId;
         $this->categoryRepository = $categoryRepository;
     }
 
@@ -65,7 +65,7 @@ class ProductDefaultCategoryChoiceProvider implements ConfigurableFormChoiceProv
         $options = $this->resolveOptions($options);
 
         if (!isset($options['product_id'])) {
-            $category = $this->categoryRepository->get(new CategoryId($this->homeCategoryId));
+            $category = $this->categoryRepository->get(new CategoryId($this->defaultCategoryId));
 
             // if no product is provided, then default category can only be home
             return [$category->getName() => (int) $category->id];
