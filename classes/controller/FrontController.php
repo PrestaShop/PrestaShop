@@ -1507,7 +1507,7 @@ class FrontControllerCore extends Controller
 
             $themeAssetsConfig = $this->context->shop->theme->get('assets', false);
 
-            if ($themeAssetsConfig && isset($themeAssetsConfig['use_parent_assets']) && $themeAssetsConfig['use_parent_assets']) {
+            if (!empty($themeAssetsConfig['use_parent_assets'])) {
                 $assign_array['theme_assets'] = _PS_PARENT_THEME_URI_ . 'assets/';
                 $assign_array['img_url'] = $assign_array['theme_assets'] . 'img/';
                 $assign_array['css_url'] = $assign_array['theme_assets'] . 'css/';
