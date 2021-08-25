@@ -42,7 +42,7 @@ export default class TagsRenderer {
     this.container = document.querySelector(containerSelector) as HTMLElement;
   }
 
-  public render(categories: Array<Category>): void {
+  public render(categories: Array<Category>, defaultCategoryId: number): void {
     this.container.innerHTML = '';
 
     const tagTemplate = this.container.dataset.prototype;
@@ -60,11 +60,9 @@ export default class TagsRenderer {
 
       if (tplFragment && tplFragment.firstChild && tplFragment.firstChild.parentNode) {
         const frag = tplFragment.firstChild.parentNode;
-        const defaultCategoryCheckbox = frag.querySelector(ProductCategoryMap.defaultCategoryCheckbox) as HTMLInputElement;
-        defaultCategoryCheckbox.checked = category.isDefault;
 
         // don't render the tag removal element for main category
-        if (category.isDefault) {
+        if (category.id === defaultCategoryId) {
           const tagRemoveBtn = frag.querySelector(ProductCategoryMap.tagRemoveBtn);
 
           if (tagRemoveBtn) {

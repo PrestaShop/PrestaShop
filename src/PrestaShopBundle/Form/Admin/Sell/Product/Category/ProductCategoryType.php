@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -40,7 +39,6 @@ class ProductCategoryType extends TranslatorAwareType
         $builder
             ->add('name', HiddenType::class)
             ->add('id', HiddenType::class)
-            ->add('is_default', CheckboxType::class)
         ;
     }
 }

@@ -46,7 +46,7 @@ export default class CategoryTreeSelector {
 
   typeaheadCategories: Array<TypeaheadCategory>;
 
-  defaultCategoryId: number|null;
+  defaultCategoryId: number;
 
   modalContainer: HTMLElement|null
 
@@ -63,7 +63,7 @@ export default class CategoryTreeSelector {
     this.treeCategories = [];
     this.typeaheadCategories = [];
     this.selectedCategories = [];
-    this.defaultCategoryId = null;
+    this.defaultCategoryId = 0;
     this.modalContainer = null;
     this.categoryTree = null;
     this.expandAllButton = null;
@@ -71,13 +71,15 @@ export default class CategoryTreeSelector {
     this.tagsRenderer = null;
   }
 
-  public showModal(selectedCategories: Array<Category>): void {
-    this.selectedCategories = selectedCategories;
-    const defaultCategory = selectedCategories.find((category) => category.isDefault);
+  public showModal(selectedCategories: Array<Category>, defaultCategoryId: number): void {
+    if (!defaultCategoryId) {
+      console.error('Default category id is invalid');
 
-    if (typeof defaultCategory !== 'undefined') {
-      this.defaultCategoryId = defaultCategory.id;
+      return;
     }
+
+    this.selectedCategories = selectedCategories;
+    this.defaultCategoryId = defaultCategoryId;
 
     const modalContent = $(ProductCategoryMap.categoriesModalTemplate);
     // @todo: replace fancybox with Modal after following PR is merged:
@@ -104,7 +106,7 @@ export default class CategoryTreeSelector {
       this.eventEmitter,
       `${ProductCategoryMap.categoriesModalContainer} ${ProductCategoryMap.tagsContainer}`,
     );
-    this.tagsRenderer.render(this.selectedCategories);
+    this.tagsRenderer.render(this.selectedCategories, this.defaultCategoryId);
     this.treeCategories = await getCategories();
 
     this.initTypeaheadData(this.treeCategories, '');
@@ -393,7 +395,7 @@ export default class CategoryTreeSelector {
 
     const checkedCheckboxes = this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
 
-    const categories: { id: number; name: string; isDefault: boolean; }[] = [];
+    const categories: Array<Category> = [];
     checkedCheckboxes.forEach((checkbox) => {
       const categoryId = Number((checkbox as HTMLInputElement).dataset.id);
       const searchedCategory = this.searchCategoryInTree(categoryId, this.treeCategories);
@@ -402,12 +404,11 @@ export default class CategoryTreeSelector {
         categories.push({
           id: searchedCategory.id,
           name: searchedCategory.name,
-          isDefault: searchedCategory.id === this.defaultCategoryId,
         });
       }
     });
 
-    this.tagsRenderer.render(categories);
+    this.tagsRenderer.render(categories, this.defaultCategoryId);
     this.selectedCategories = categories;
   }
 
