@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use Cache;
+use Configuration;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
@@ -129,9 +130,7 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductAssignedToDefaultCategory(string $productReference)
     {
-        $context = $this->getContainer()->get('prestashop.adapter.legacy.context')->getContext();
-        $defaultCategoryId = (int) $context->shop->id_category;
-
+        $defaultCategoryId = (int) Configuration::get('PS_HOME_CATEGORY');
         $productForEditing = $this->getProductForEditing($productReference);
         $productCategoriesInfo = $productForEditing->getCategoriesInformation();
 
