@@ -28,12 +28,10 @@
   <div {{ block('widget_attributes') }}>
     {{ form_row(form.product_categories) }}
     {{ form_row(form.add_categories_btn) }}
-    <div class="form-group select-widget d-none" id="default-category-selector-widget">
-      <label for="default-category-id">{{ 'Default category'|trans({}, 'Admin.Catalog.Feature') }}</label>
-      <select name="default-category-id" id="default-category-id" class="custom-select form-control">
-      {# options are rendered using javascript. See js/pages/product/components/categories/categories-manager.js       #}
-      </select>
-    </div>
+
+{#  @todo; there is no custom styling for options. Could be done similar to brands selection #}
+{#  select options are refreshed using javascript. See js/pages/product/components/categories/categories-manager.js       #}
+    {{ form_row(form.default_category_id) }}
   </div>
 {% endblock %}
 
