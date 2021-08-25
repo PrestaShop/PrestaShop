@@ -50,7 +50,6 @@ class DatabaseCreator
         require_once __DIR__ . '/../../../install-dev/init.php';
 
         $install = new Install();
-        Shop::setContext(Shop::CONTEXT_SHOP, 1);
         $install->setTranslator(Context::getContext()->getTranslatorFromLocale('en'));
         \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
         $install->clearDatabase(false);
