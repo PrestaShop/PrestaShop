@@ -54,13 +54,10 @@ class ProductCategoriesCommandsBuilder implements ProductCommandsBuilderInterfac
 
         $productCategories = $formData['description']['categories']['product_categories'];
         $associatedCategoryIds = [];
-        $defaultCategoryId = 0;
+        $defaultCategoryId = (int) $formData['description']['categories']['default_category_id'];
+
         foreach ($productCategories as $categoryId => $categoryData) {
             $associatedCategoryIds[] = (int) $categoryId;
-
-            if ((bool) $categoryData['is_default']) {
-                $defaultCategoryId = (int) $categoryId;
-            }
         }
 
         // Default is always amongst the associated
