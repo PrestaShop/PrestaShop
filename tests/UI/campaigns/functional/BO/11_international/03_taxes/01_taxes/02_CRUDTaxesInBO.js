@@ -15,7 +15,7 @@ const TaxFaker = require('@data/faker/tax');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_taxes_taxes_CRUDTaxInBO';
+const baseContext = 'functional_BO_international_taxes_taxes_CRUDTaxesInBO';
 
 let browserContext;
 let page;
