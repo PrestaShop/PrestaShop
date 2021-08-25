@@ -86,27 +86,41 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
     public function assertProductCategories(string $productReference, TableNode $table)
     {
         Cache::clear();
-        $data = $table->getRowsHash();
         $productForEditing = $actualCategoryIds = $this->getProductForEditing($productReference);
-        $categoriesInfo = $productForEditing->getCategoriesInformation()->getCategoriesInformation();
-        $actualCategoryIds = [];
+        $expectedCategories = $this->localizeByColumns($table);
+        $categoriesInfo = $productForEditing->getCategoriesInformation();
+        $actualCategories = $categoriesInfo->getCategoriesInformation();
 
-        foreach ($categoriesInfo as $categoryInformation) {
-            $actualCategoryIds[] = $categoryInformation->getId();
+        Assert::assertCount(
+            count($expectedCategories),
+            $actualCategories,
+            'Expected and actual categories count doesn\'t match'
+        );
+
+        $expectedDefaultCategoryId = null;
+        foreach ($actualCategories as $key => $categoryInformation) {
+            $expectedCategory = $expectedCategories[$key];
+            Assert::assertEquals(
+                $categoryInformation->getId(),
+                $this->getSharedStorage()->get($expectedCategory['id reference']),
+                'Unexpected category id'
+            );
+            Assert::assertEquals(
+                $expectedCategory['name'],
+                $categoryInformation->getLocalizedNames(),
+                'Category localized names doesn\'t match'
+            );
+
+            if (PrimitiveUtils::castStringBooleanIntoBoolean($expectedCategory['is default'])) {
+                $expectedDefaultCategoryId = $categoryInformation->getId();
+            }
         }
-        sort($actualCategoryIds);
 
-        $expectedCategoriesRef = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
-        $expectedCategoryIds = array_map(function (string $categoryReference) {
-            return $this->getSharedStorage()->get($categoryReference);
-        }, $expectedCategoriesRef);
-        sort($expectedCategoryIds);
-
-        $expectedDefaultCategoryId = $this->getSharedStorage()->get($data['default category']);
-        $actualDefaultCategoryId = $productForEditing->getCategoriesInformation()->getDefaultCategoryId();
-
-        Assert::assertEquals($expectedDefaultCategoryId, $actualDefaultCategoryId, 'Unexpected default category assigned to product');
-        Assert::assertEquals($expectedCategoryIds, $actualCategoryIds, 'Unexpected categories assigned to product');
+        Assert::assertEquals(
+            $expectedDefaultCategoryId,
+            $categoriesInfo->getDefaultCategoryId(),
+            'Unexpected default category id'
+        );
     }
 
     /**
