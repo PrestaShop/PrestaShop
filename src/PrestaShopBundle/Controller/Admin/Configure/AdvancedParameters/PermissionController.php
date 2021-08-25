@@ -71,7 +71,7 @@ class PermissionController extends FrameworkBundleAdminController
     /**
      * Update tab permissions for profile
      *
-     * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -105,7 +105,7 @@ class PermissionController extends FrameworkBundleAdminController
     /**
      * Updates module permissions for profile
      *
-     * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
