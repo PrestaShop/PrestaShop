@@ -138,9 +138,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                         $this->defaultCategoryId => [
                             //@todo: need category name for create action
                             'id' => $this->defaultCategoryId,
-                            'is_default' => true,
                         ],
                     ],
+                    'default_category_id' => $this->defaultCategoryId,
                 ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
@@ -224,7 +224,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $categories[$categoryId] = [
                 'id' => $categoryId,
                 'name' => $localizedNames[$this->contextLangId] ?? reset($localizedNames),
-                'is_default' => $defaultCategoryId === $categoryId,
             ];
         }
 

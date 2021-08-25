@@ -1,7 +1,6 @@
 type Category = {
   id: number,
   name: string,
-  isDefault: boolean,
 }
 
 type TypeaheadCategory = {
