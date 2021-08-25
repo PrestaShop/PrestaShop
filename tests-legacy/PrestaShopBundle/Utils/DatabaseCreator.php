@@ -36,7 +36,6 @@ use Shop;
 use Tests\Resources\ResourceResetter;
 use Tab;
 
-
 class DatabaseCreator
 {
     /**
