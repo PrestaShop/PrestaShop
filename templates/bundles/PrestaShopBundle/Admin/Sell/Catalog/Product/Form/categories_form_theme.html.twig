@@ -49,14 +49,6 @@
   {%- set attr = attr|merge({'data-id': categoryId}) -%}
 
   <span {{ block('widget_attributes') }}>
-    <input
-      type="checkbox"
-      class="d-none is-default-category-checkbox"
-      id="{{ form.is_default.vars.id }}"
-      data-id="{{ categoryId }}"
-      name="{{ form.is_default.vars.full_name }}"
-      {% if form.vars.data.is_default|default(0) %} checked {% endif %}
-    >
     <span class="category-name-preview">{{ form.vars.data.name|default('') }}</span>
     <a class="pstaggerClosingCross" href="#">x</a>
     {{ form_widget(form.id, {'attr': {'value': categoryId}}) }}

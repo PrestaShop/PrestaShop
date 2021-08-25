@@ -38,6 +38,8 @@ export default class CategoriesManager {
 
   categoriesContainer: HTMLElement;
 
+  defaultCategoryInput: HTMLInputElement;
+
   addCategoriesBtn: HTMLElement;
 
   tagsRenderer: TagsRenderer;
@@ -47,11 +49,13 @@ export default class CategoriesManager {
     this.categoryTreeSelector = new CategoryTreeSelector(eventEmitter);
     this.categoriesContainer = document.querySelector(ProductCategoryMap.categoriesContainer) as HTMLElement;
     this.addCategoriesBtn = this.categoriesContainer.querySelector(ProductCategoryMap.addCategoriesBtn) as HTMLElement;
+    this.defaultCategoryInput = this.categoriesContainer
+      .querySelector(ProductCategoryMap.defaultCategorySelectInput) as HTMLInputElement;
     this.tagsRenderer = new TagsRenderer(
       eventEmitter,
       `${ProductCategoryMap.categoriesContainer} ${ProductCategoryMap.tagsContainer}`,
     );
-    this.tagsRenderer.render(this.collectCategories());
+    this.tagsRenderer.render(this.collectCategories(), this.getDefaultCategoryId());
     this.listenCategoryChanges();
     this.listenDefaultCategorySelect();
     this.initCategoryTreeModal();
@@ -60,9 +64,10 @@ export default class CategoriesManager {
   private initCategoryTreeModal(): void {
     this.addCategoriesBtn.addEventListener('click', () => this.categoryTreeSelector.showModal(
       this.collectCategories(),
+      this.getDefaultCategoryId(),
     ));
     this.eventEmitter.on(ProductEventMap.categories.applyCategoryTreeChanges, (eventData) => {
-      this.tagsRenderer.render(eventData.categories);
+      this.tagsRenderer.render(eventData.categories, this.getDefaultCategoryId());
     });
   }
 
@@ -74,12 +79,9 @@ export default class CategoriesManager {
 
     tags.forEach((tag: Element) => {
       if (tag instanceof HTMLElement) {
-        const defaultCategoryCheckbox = tag.querySelector(ProductCategoryMap.defaultCategoryCheckbox) as HTMLInputElement;
-
         categories.push({
           id: Number(tag.dataset.id),
           name: this.extractCategoryName(tag as HTMLElement),
-          isDefault: defaultCategoryCheckbox.checked,
         });
       }
     });
@@ -107,28 +109,29 @@ export default class CategoriesManager {
       const optionElement = document.createElement('option');
       optionElement.value = String(category.id);
       optionElement.innerHTML = category.name;
-      optionElement.selected = category.isDefault;
+      optionElement.selected = category.id === this.getDefaultCategoryId();
 
       selectElement.append(optionElement);
     });
   }
 
   private listenDefaultCategorySelect(): void {
-    const defaultCategoryInput = this.categoriesContainer
-      .querySelector(ProductCategoryMap.defaultCategorySelectInput) as HTMLInputElement;
-
-    defaultCategoryInput.addEventListener('change', (e) => {
+    this.defaultCategoryInput.addEventListener('change', (e) => {
       const currentTarget = e.currentTarget as HTMLInputElement;
       const newDefaultCategoryId = Number(currentTarget.value);
       const categories = this.collectCategories()
         .map((category) => ({...category, isDefault: category.id === newDefaultCategoryId}));
 
-      this.tagsRenderer.render(categories);
+      this.tagsRenderer.render(categories, this.getDefaultCategoryId());
     });
   }
 
   private listenCategoryChanges(): void {
     this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, () => this.renderDefaultCategorySelection());
     this.eventEmitter.on(ProductEventMap.categories.categoriesUpdated, () => this.renderDefaultCategorySelection());
+  }
+
+  private getDefaultCategoryId(): number {
+    return Number(this.defaultCategoryInput.value);
   }
 }
