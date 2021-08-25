@@ -17,8 +17,8 @@ class CartRuleData {
     /** @type {string} Name of the cart rule */
     this.description = faker.lorem.sentence();
 
-    /** @type {string} Code to apply the cart rule */
-    this.code = cartRuleToCreate.code;
+    /** @type {?string} Code to apply the cart rule */
+    this.code = cartRuleToCreate.code || null;
 
     /** @type {boolean} True to generate code */
     this.generateCode = cartRuleToCreate.generateCode || false;
