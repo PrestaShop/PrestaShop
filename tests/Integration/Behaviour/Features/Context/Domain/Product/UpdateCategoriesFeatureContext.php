@@ -30,13 +30,11 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use Cache;
-use Configuration;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
@@ -86,7 +84,7 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
     public function assertProductCategories(string $productReference, TableNode $table)
     {
         Cache::clear();
-        $productForEditing = $actualCategoryIds = $this->getProductForEditing($productReference);
+        $productForEditing = $this->getProductForEditing($productReference);
         $expectedCategories = $this->localizeByColumns($table);
         $categoriesInfo = $productForEditing->getCategoriesInformation();
         $actualCategories = $categoriesInfo->getCategoriesInformation();
@@ -99,7 +97,16 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
 
         $expectedDefaultCategoryId = null;
         foreach ($actualCategories as $key => $categoryInformation) {
-            $expectedCategory = $expectedCategories[$key];
+            $actualId = $categoryInformation->getId();
+            // We cannot anticipate categories ordering (and we don't really care) so we find related expected category by id
+            $relativeExpectedCategories = array_filter(
+                $expectedCategories,
+                function (array $expectedCategory) use ($actualId) {
+                    return $actualId === $this->getSharedStorage()->get($expectedCategory['id reference']);
+                });
+            // Only one category should be provided in feature, but array filter returns array of found items, so we get first
+            $expectedCategory = reset($relativeExpectedCategories);
+
             Assert::assertEquals(
                 $categoryInformation->getId(),
                 $this->getSharedStorage()->get($expectedCategory['id reference']),
@@ -134,31 +141,6 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
             $this->getCommandBus()->handle(new RemoveAllAssociatedProductCategoriesCommand($this->getSharedStorage()->get($productReference)));
         } catch (ProductException $e) {
             $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @Then product :productReference should be assigned to default category
-     *
-     * @param string $productReference
-     */
-    public function assertProductAssignedToDefaultCategory(string $productReference)
-    {
-        $defaultCategoryId = (int) Configuration::get('PS_HOME_CATEGORY');
-        $productForEditing = $this->getProductForEditing($productReference);
-        $productCategoriesInfo = $productForEditing->getCategoriesInformation();
-
-        $belongsToDefaultCategory = false;
-        foreach ($productCategoriesInfo->getCategoriesInformation() as $categoryInformation) {
-            if ($categoryInformation->getId() === $defaultCategoryId) {
-                $belongsToDefaultCategory = true;
-
-                break;
-            }
-        }
-
-        if ($productCategoriesInfo->getDefaultCategoryId() !== $defaultCategoryId || !$belongsToDefaultCategory) {
-            throw new RuntimeException('Product is not assigned to default category');
         }
     }
 
