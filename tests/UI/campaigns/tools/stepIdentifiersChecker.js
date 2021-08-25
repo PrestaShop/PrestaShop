@@ -1,7 +1,8 @@
 const fs = require('fs');
 
 // Get mochawesome report
-const jsonFile = fs.readFileSync('./mochawesome-report/mochawesome.json');
+const reportPath = process.env.REPORT_PATH || './mochawesome-report/mochawesome.json';
+const jsonFile = fs.readFileSync(reportPath);
 
 /**
  * Count doubles for each context
@@ -35,7 +36,14 @@ const checkDoubles = (jsonFile) => {
   const jsonReport = JSON.parse(jsonFile);
 
   // Map all tests contexts
-  const reportContexts = Object.values(jsonReport.allTests).map(test => JSON.parse(test.context).value);
+  const testsInSuites = jsonReport.results[0].suites.map(suite => suite.tests);
+
+  let allTests = [];
+  for (let i = 0; i < testsInSuites.length - 1; i++) {
+    allTests = allTests.concat(testsInSuites[i]);
+  }
+
+  const reportContexts = Object.values(allTests).map(test => JSON.parse(test.context).value);
 
   const contextDoubles = duplicates(count(reportContexts));
 
