@@ -172,7 +172,7 @@ class EditableCustomer
         $allowedOutstandingAmount,
         $maxPaymentDays,
         $riskId,
-        bool $isGuest
+        bool $isGuest = false
     ) {
         $this->customerId = $customerId;
         $this->genderId = $genderId;
