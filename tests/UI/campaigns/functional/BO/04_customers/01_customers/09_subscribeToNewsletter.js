@@ -1,6 +1,5 @@
 require('module-alias/register');
 
-// Import export from chai
 const {expect} = require('chai');
 
 // Import utils
@@ -23,11 +22,10 @@ const psEmailSubscriptionPage = require('@pages/BO/modules/psEmailSubscription')
 const baseContext = 'BO_customers_customers_subscribeToNewsletter';
 
 let numberOfCustomers = 0;
-
 let browserContext;
 let page;
 
-describe('BO - Customers : Check customer subscription to newsletter from BO', async () => {
+describe('BO - Customers - Customers : Check customer subscription to newsletter from BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -67,23 +65,16 @@ describe('BO - Customers : Check customer subscription to newsletter from BO', a
   it(`should filter by email '${DefaultCustomer.email}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByEmail', baseContext);
 
-    await customersPage.filterCustomers(
-      page,
-      'input',
-      'email',
-      DefaultCustomer.email,
-    );
+    await customersPage.filterCustomers(page, 'input', 'email', DefaultCustomer.email);
 
     const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
     await expect(numberOfCustomersAfterFilter).to.equal(1);
   });
 
-  const tests = [
+  [
     {args: {action: 'disable', value: false}},
     {args: {action: 'enable', value: true}},
-  ];
-
-  tests.forEach((test) => {
+  ].forEach((test, index) => {
     it(`should ${test.args.action} newsletters`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}NewsLetters`, baseContext);
 
@@ -94,12 +85,7 @@ describe('BO - Customers : Check customer subscription to newsletter from BO', a
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `goToModuleManageTo${test.args.action}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `goToModuleManageTo${index}`, baseContext);
 
       await customersPage.goToSubMenu(
         page,
@@ -112,12 +98,7 @@ describe('BO - Customers : Check customer subscription to newsletter from BO', a
     });
 
     it(`should go to '${psEmailSubscription.name}' module`, async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `goToEmailSubscriptionModulePageAfter${test.args.action}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `goToEmailSubscriptionModule${index}`, baseContext);
 
       // Search and go to configure module page
       await moduleManagerPage.searchModule(page, psEmailSubscription.tag, psEmailSubscription.name);
@@ -128,12 +109,7 @@ describe('BO - Customers : Check customer subscription to newsletter from BO', a
     });
 
     it('should check customer registration to newsletter', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkCustomerRegistrationAfter${test.args.action}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkCustomerRegistration${index}`, baseContext);
 
       // Get list of emails registered to newsletter
       const listOfEmails = await psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails(page);
@@ -146,12 +122,7 @@ describe('BO - Customers : Check customer subscription to newsletter from BO', a
     });
 
     it('should go to \'Customers > Customers\' page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `gotoCustomersPageAfterCheck${test.args.action}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `gotoCustomersPage${index}`, baseContext);
 
       await psEmailSubscriptionPage.goToSubMenu(
         page,

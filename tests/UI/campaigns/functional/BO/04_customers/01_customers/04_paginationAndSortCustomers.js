@@ -1,6 +1,5 @@
 require('module-alias/register');
 
-// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
@@ -30,7 +29,7 @@ Paginate between pages
 Sort customers table
 Delete customers with bulk actions
  */
-describe('BO - Customers : Pagination and sort customers table', async () => {
+describe('BO - Customers - Customers : Pagination and sort customers table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -72,25 +71,24 @@ describe('BO - Customers : Pagination and sort customers table', async () => {
     const creationTests = new Array(10).fill(0, 0, 10);
 
     creationTests.forEach((test, index) => {
-      describe(`Create customer n°${index + 1}`, async () => {
-        const createCustomerData = new CustomerFaker({email: `test@prestashop.com${index}`});
-        it('should go to add new customer page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCustomerPage${index}`, baseContext);
+      const createCustomerData = new CustomerFaker({email: `test@prestashop.com${index}`});
 
-          await customersPage.goToAddNewCustomerPage(page);
-          const pageTitle = await addCustomerPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
-        });
+      it('should go to add new customer page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCustomerPage${index}`, baseContext);
 
-        it('should create customer', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `createCustomer${index}`, baseContext);
+        await customersPage.goToAddNewCustomerPage(page);
+        const pageTitle = await addCustomerPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
+      });
 
-          const textResult = await addCustomerPage.createEditCustomer(page, createCustomerData);
-          await expect(textResult).to.equal(customersPage.successfulCreationMessage);
+      it(`should create customer n°${index + 1} and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createCustomer${index}`, baseContext);
 
-          const numberOfCustomersAfterCreation = await customersPage.getNumberOfElementInGrid(page);
-          await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 1 + index);
-        });
+        const textResult = await addCustomerPage.createEditCustomer(page, createCustomerData);
+        await expect(textResult).to.equal(customersPage.successfulCreationMessage);
+
+        const numberOfCustomersAfterCreation = await customersPage.getNumberOfElementInGrid(page);
+        await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 1 + index);
       });
     });
   });
@@ -203,7 +201,7 @@ describe('BO - Customers : Pagination and sort customers table', async () => {
       await expect(textResult).to.contains('test@prestashop.com');
     });
 
-    it('should delete customers and check result', async function () {
+    it('should delete customers', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCustomers', baseContext);
 
       const deleteTextResult = await customersPage.deleteCustomersBulkActions(page);
