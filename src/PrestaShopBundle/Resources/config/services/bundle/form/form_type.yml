@@ -1338,6 +1338,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType'
         parent: 'form.type.translatable.aware'
         public: true
+        arguments:
+            - '@prestashop.adapter.form.choice_provider.product_default_category_choice_provider'
         tags:
             - { name: form.type }
 
