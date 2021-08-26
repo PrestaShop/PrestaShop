@@ -8,7 +8,7 @@ Feature: Copy product from shop to shop.
   Background:
     Given shop "shop1" with name "test_shop" exists
     And shop group "default_shop_group" with name "Default" exists
-    And I add a shop "shop2" with name "default_shop_group" and color "red" for the group "default_shop_group"
+    And I add a shop "shop2" with name "test_second_shop" and color "red" for the group "default_shop_group"
     And I add a shop group "shopGroup2" with name "test_second_shop_group" and color "green"
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
     And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
