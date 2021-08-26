@@ -122,19 +122,20 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             return $this->getLocalized($key, $shopId, $shopGroupId);
         }
 
+        if ($isStrict) {
+            return $this->getStrictValue($key, $shopConstraint, $default);
+        }
+
         // Since hasKey doesn't check manage the fallback shop > shop group > global, we handle it manually
-        $hasKey = ConfigurationLegacy::hasKey($key, null, null, $shopId);
-        if ($hasKey || ($isStrict && null !== $shopConstraint->getShopId())) {
-            return $hasKey ? ConfigurationLegacy::get($key, null, null, $shopId) : null;
+        if (ConfigurationLegacy::hasKey($key, null, null, $shopId)) {
+            return ConfigurationLegacy::get($key, null, null, $shopId);
         }
 
-        $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId);
-        if ($hasKey || ($isStrict && null !== $shopConstraint->getShopGroupId())) {
-            return $hasKey ? ConfigurationLegacy::get($key, null, $shopGroupId) : null;
+        if (ConfigurationLegacy::hasKey($key, null, $shopGroupId)) {
+            return ConfigurationLegacy::get($key, null, $shopGroupId);
         }
 
-        $hasKey = ConfigurationLegacy::hasKey($key);
-        if ($hasKey) {
+        if (ConfigurationLegacy::hasKey($key)) {
             return ConfigurationLegacy::get($key);
         }
 
@@ -421,5 +422,33 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         }
 
         return ShopConstraint::allShops();
+    }
+
+    /**
+     * @param string $key
+     * @param ShopConstraint $shopConstraint
+     * @param $default
+     *
+     * @return mixed
+     */
+    private function getStrictValue(string $key, ShopConstraint $shopConstraint, $default)
+    {
+        if (null !== $shopConstraint->getShopId()) {
+            $hasKey = ConfigurationLegacy::hasKey($key, null, null, $shopConstraint->getShopId()->getValue());
+
+            return $hasKey ? ConfigurationLegacy::get($key, null, null, $shopConstraint->getShopId()->getValue()) : null;
+        }
+
+        if (null !== $shopConstraint->getShopGroupId()) {
+            $hasKey = ConfigurationLegacy::hasKey($key, null, $shopConstraint->getShopGroupId()->getValue());
+
+            return $hasKey ? ConfigurationLegacy::get($key, null, $shopConstraint->getShopGroupId()->getValue()) : null;
+        }
+
+        if (ConfigurationLegacy::hasKey($key)) {
+            return ConfigurationLegacy::get($key);
+        }
+
+        return $default;
     }
 }
