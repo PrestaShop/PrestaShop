@@ -37,12 +37,12 @@ class CopyProductToShopHandler implements CopyProductToShopHandlerInterface
     /**
      * @var ProductShopUpdater
      */
-    private $productShopRepository;
+    private $productShopUpdater;
 
     public function __construct(
-        ProductShopUpdater $productShopRepository
+        ProductShopUpdater $productShopUpdater
     ) {
-        $this->productShopRepository = $productShopRepository;
+        $this->productShopUpdater = $productShopUpdater;
     }
 
     /**
@@ -50,7 +50,7 @@ class CopyProductToShopHandler implements CopyProductToShopHandlerInterface
      */
     public function handle(CopyProductToShop $command): void
     {
-        $this->productShopRepository->copyToShop(
+        $this->productShopUpdater->copyToShop(
             $command->getProductId(),
             $command->getSourceShopId(),
             $command->getTargetShopId()
