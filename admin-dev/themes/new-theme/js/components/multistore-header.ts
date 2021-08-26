@@ -37,6 +37,7 @@ const initMultistoreHeader = () => {
   const MultistoreHeaderMap = ComponentsMap.multistoreHeader;
   const headerButton = document.querySelector(MultistoreHeaderMap.headerButton);
   const modalMultishop = document.querySelector(MultistoreHeaderMap.modal);
+  const modalMultishopDialog = document.querySelector(MultistoreHeaderMap.modalDialog);
   const $searchInput = $(MultistoreHeaderMap.searchInput);
   const router = new Router();
   const route = router.generate('admin_shops_search', {
@@ -71,11 +72,25 @@ const initMultistoreHeader = () => {
 
   new AutoCompleteSearch($searchInput, dataSetConfig);
 
-  if (headerButton && modalMultishop) {
+  function toggleModal() {
+    if (!headerButton || !modalMultishop) {
+      return;
+    }
+
+    modalMultishop.classList.toggle('multishop-modal-hidden');
+    headerButton.classList.toggle('active');
+  }
+
+  if (headerButton && modalMultishop && modalMultishopDialog) {
     headerButton.addEventListener('click', () => {
-      modalMultishop.classList.toggle('multishop-modal-hidden');
-      headerButton.classList.toggle('active');
+      toggleModal();
     });
+
+    modalMultishop.addEventListener('click', (e: Event) => {
+      if (e.target instanceof Node && !modalMultishopDialog.contains(e.target)) {
+        toggleModal();
+      }
+    }, false);
   }
 };
 
