@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use Context as LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
 use Shop;
@@ -227,5 +228,23 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
     public function getShopName()
     {
         return LegacyContext::getContext()->shop->name;
+    }
+
+    /**
+     * @param bool $strict
+     *
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(bool $strict = false): ShopConstraint
+    {
+        if ($this->isShopContext()) {
+            $shopConstraint = ShopConstraint::shop($this->getContextShopID(), $strict);
+        } elseif ($this->isGroupShopContext()) {
+            $shopConstraint = ShopConstraint::shopGroup($this->getContextShopGroup()->id, $strict);
+        } else {
+            $shopConstraint = ShopConstraint::allShops();
+        }
+
+        return $shopConstraint;
     }
 }
