@@ -90,7 +90,7 @@ twig:
   globals:
     webpack_server: false
     multistore_field_prefix: !php/const PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX
-    multistore_override_all_prefix: !php/const PrestaShopBundle\Form\Admin\Extension\MultistoreOverridableExtension::MULTISTORE_OVERRIDE_ALL_PREFIX
+    modify_all_shops_prefix: !php/const PrestaShopBundle\Form\Admin\Extension\MultistoreOverridableExtension::MULTISTORE_OVERRIDE_ALL_PREFIX
 
 # Swiftmailer Configuration
 swiftmailer:

@@ -88,7 +88,7 @@ services:
       - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FileType }
 
   form.extension.multistore_overridable_extension:
-    class: 'PrestaShopBundle\Form\Admin\Extension\MultistoreOverridableExtension'
+    class: 'PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension'
     arguments:
       - '@prestashop.adapter.shop.context'
       - '@form.form_builder_modifier'
