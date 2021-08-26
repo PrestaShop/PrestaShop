@@ -92,7 +92,7 @@ final class GetProductCustomizationFieldsHandler implements GetProductCustomizat
         return new CustomizationField(
             $fieldId,
             (int) $fieldEntity->type,
-            $fieldEntity->name,
+            $fieldEntity->name ?? [],
             (bool) $fieldEntity->required,
             (bool) $fieldEntity->is_module
         );
