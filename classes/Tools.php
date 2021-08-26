@@ -3974,10 +3974,6 @@ exit;
                 $post_data .= '&method=listing&action=native';
 
                 break;
-            case 'partner':
-                $post_data .= '&method=listing&action=partner';
-
-                break;
             case 'service':
                 $post_data .= '&method=listing&action=service';
 
