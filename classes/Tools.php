@@ -3974,10 +3974,6 @@ exit;
                 $post_data .= '&method=listing&action=native';
 
                 break;
-            case 'native_all':
-                $post_data .= '&method=listing&action=native&iso_code=all';
-
-                break;
             case 'must-have':
                 $post_data .= '&method=listing&action=must-have';
 
