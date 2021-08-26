@@ -229,11 +229,6 @@ abstract class ModuleCore implements ModuleInterface
     const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';
 
     const CACHE_FILE_ALL_COUNTRY_MODULES_LIST = '/config/xml/modules_native_addons.xml';
-    const CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST = '/config/xml/default_country_modules_list.xml';
-
-    const CACHE_FILE_CUSTOMER_MODULES_LIST = '/config/xml/customer_modules_list.xml';
-
-    const CACHE_FILE_MUST_HAVE_MODULES_LIST = '/config/xml/must_have_modules_list.xml';
 
     const CACHE_FILE_TRUSTED_MODULES_LIST = '/config/xml/trusted_modules_list.xml';
     const CACHE_FILE_UNTRUSTED_MODULES_LIST = '/config/xml/untrusted_modules_list.xml';
@@ -1542,104 +1537,6 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        // Get Default Country Modules and customer module
-        $files_list = [
-            ['type' => 'addonsNative', 'file' => _PS_ROOT_DIR_ . static::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0],
-            ['type' => 'addonsMustHave', 'file' => _PS_ROOT_DIR_ . static::CACHE_FILE_MUST_HAVE_MODULES_LIST, 'loggedOnAddons' => 0],
-            ['type' => 'addonsBought', 'file' => _PS_ROOT_DIR_ . static::CACHE_FILE_CUSTOMER_MODULES_LIST, 'loggedOnAddons' => 1],
-        ];
-        foreach ($files_list as $f) {
-            if (file_exists($f['file']) && ($f['loggedOnAddons'] == 0 || $logged_on_addons)) {
-                if (Module::useTooMuchMemory()) {
-                    $errors[] = Context::getContext()->getTranslator()->trans('All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration', [], 'Admin.Modules.Notification');
-
-                    break;
-                }
-
-                $file = $f['file'];
-                $content = Tools::file_get_contents($file);
-                $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
-
-                if ($xml && isset($xml->module)) {
-                    foreach ($xml->module as $modaddons) {
-                        $flag_found = 0;
-
-                        foreach ($module_list as $k => &$m) {
-                            if (Tools::strtolower($m->name) == Tools::strtolower($modaddons->name) && !isset($m->available_on_addons)) {
-                                $flag_found = 1;
-                                if ($m->version != $modaddons->version && version_compare($m->version, $modaddons->version) === -1) {
-                                    $module_list[$k]->version_addons = $modaddons->version;
-                                }
-                            }
-                        }
-
-                        if ($flag_found == 0) {
-                            $item = new \stdClass();
-                            $item->id = 0;
-                            $item->warning = '';
-                            $item->type = strip_tags((string) $f['type']);
-                            $item->name = strip_tags((string) $modaddons->name);
-                            $item->version = strip_tags((string) $modaddons->version);
-                            $item->tab = strip_tags((string) $modaddons->tab);
-                            $item->displayName = strip_tags((string) $modaddons->displayName);
-                            $item->description = stripslashes(strip_tags((string) $modaddons->description));
-                            $item->description_full = stripslashes(strip_tags((string) $modaddons->description_full));
-                            $item->author = strip_tags((string) $modaddons->author);
-                            $item->limited_countries = [];
-                            $item->parent_class = '';
-                            $item->onclick_option = false;
-                            $item->is_configurable = 0;
-                            $item->need_instance = 0;
-                            $item->not_on_disk = 1;
-                            $item->available_on_addons = 1;
-                            $item->trusted = Module::isModuleTrusted($item->name);
-                            $item->active = 0;
-                            $item->description_full = stripslashes($modaddons->description_full);
-                            $item->additional_description = isset($modaddons->additional_description) ? stripslashes($modaddons->additional_description) : null;
-                            $item->compatibility = isset($modaddons->compatibility) ? (array) $modaddons->compatibility : null;
-                            $item->nb_rates = isset($modaddons->nb_rates) ? (array) $modaddons->nb_rates : null;
-                            $item->avg_rate = isset($modaddons->avg_rate) ? (array) $modaddons->avg_rate : null;
-                            $item->badges = isset($modaddons->badges) ? (array) $modaddons->badges : null;
-                            $item->url = isset($modaddons->url) ? $modaddons->url : null;
-                            if (isset($item->description_full) && trim($item->description_full) != '') {
-                                $item->show_quick_view = true;
-                            }
-
-                            if (isset($modaddons->img)) {
-                                $item->image = Module::copyModAddonsImg($modaddons);
-                            }
-
-                            if ($item->type == 'addonsMustHave') {
-                                $item->addons_buy_url = strip_tags((string) $modaddons->url);
-                                $prices = (array) $modaddons->price;
-                                $id_default_currency = Configuration::get('PS_CURRENCY_DEFAULT');
-
-                                foreach ($prices as $currency => $price) {
-                                    if ($id_currency = Currency::getIdByIsoCode($currency)) {
-                                        $item->price = (float) $price;
-                                        $item->id_currency = (int) $id_currency;
-
-                                        if ($id_default_currency == $id_currency) {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-
-                            $module_list[$item->name . '_feed'] = $item;
-                        }
-
-                        if (isset($module_list[$modaddons->name . '_disk'])) {
-                            $module_list[$modaddons->name . '_disk']->description_full = stripslashes(strip_tags((string) $modaddons->description_full));
-                            $module_list[$modaddons->name . '_disk']->additional_description = stripslashes(strip_tags((string) $modaddons->additional_description));
-                            $module_list[$modaddons->name . '_disk']->image = Module::copyModAddonsImg($modaddons);
-                            $module_list[$modaddons->name . '_disk']->show_quick_view = true;
-                        }
-                    }
-                }
-            }
-        }
-
         foreach ($module_list as $key => &$module) {
             if (!isset($module->tab)) {
                 $module->tab = 'others';
@@ -1778,7 +1675,6 @@ abstract class ModuleCore implements ModuleInterface
     final public static function isModuleTrusted($module_name)
     {
         static $trusted_modules_list_content = null;
-        static $default_country_modules_list_content = null;
         static $untrusted_modules_list_content = null;
 
         $context = Context::getContext();
@@ -1801,10 +1697,6 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        if ($default_country_modules_list_content === null) {
-            $default_country_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_ . static::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-        }
-
         if ($untrusted_modules_list_content === null) {
             $untrusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_ . static::CACHE_FILE_UNTRUSTED_MODULES_LIST);
         }
@@ -1812,11 +1704,6 @@ abstract class ModuleCore implements ModuleInterface
         // If the module is trusted, which includes both partner modules and modules bought on Addons
 
         if (stripos($trusted_modules_list_content, $module_name) !== false) {
-            // If the module is not a partner, then return 1 (which means the module is "trusted")
-            if (stripos($default_country_modules_list_content, '<name><![CDATA[' . $module_name . ']]></name>') !== false) {
-                // The module is a partner. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
-                return 1;
-            }
             // The module seems to be trusted, but it does not seem to be dedicated to this country
             return 2;
         } elseif (stripos($untrusted_modules_list_content, $module_name) !== false) {
@@ -1852,13 +1739,7 @@ abstract class ModuleCore implements ModuleInterface
 
         $trusted_modules_xml = [
             _PS_ROOT_DIR_ . static::CACHE_FILE_ALL_COUNTRY_MODULES_LIST,
-            _PS_ROOT_DIR_ . static::CACHE_FILE_MUST_HAVE_MODULES_LIST,
-            _PS_ROOT_DIR_ . static::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST,
         ];
-
-        if (file_exists(_PS_ROOT_DIR_ . static::CACHE_FILE_CUSTOMER_MODULES_LIST)) {
-            $trusted_modules_xml[] = _PS_ROOT_DIR_ . static::CACHE_FILE_CUSTOMER_MODULES_LIST;
-        }
 
         // Create 2 arrays with trusted and untrusted modules
         foreach ($trusted_modules_xml as $file) {

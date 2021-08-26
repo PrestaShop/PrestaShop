@@ -109,11 +109,6 @@ class ApiClientTest extends TestCase
         );
     }
 
-    public function testGetNativeModules(): void
-    {
-        $this->assertCount(0, $this->apiClient->getNativesModules());
-    }
-
     private function getDefaultQueryParameters(): array
     {
         return [
