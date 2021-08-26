@@ -96,13 +96,15 @@ class ProductShopUpdater
         $fields = [];
         // The fields are fetched separately for more clarity, and it could also allow to configure which parts are copied
         // (e.g copy only prices but not stock)
-        $fields = $fields + $this->getAssociationFields($sourceProduct);
-        $fields = $fields + $this->getPricesFields($sourceProduct);
-        $fields = $fields + $this->getStockFields($sourceProduct);
-        $fields = $fields + $this->getSEOFields($sourceProduct);
-        $fields = $fields + $this->getOptionsFields($sourceProduct);
-        $fields = $fields + $this->getCustomizationFields($sourceProduct);
-        $fields = $fields + $this->getDateFields($sourceProduct);
+        $fields = array_merge(
+            $this->getAssociationFields($sourceProduct),
+            $this->getPricesFields($sourceProduct),
+            $this->getStockFields($sourceProduct),
+            $this->getSEOFields($sourceProduct),
+            $this->getOptionsFields($sourceProduct),
+            $this->getCustomizationFields($sourceProduct),
+            $this->getDateFields($sourceProduct)
+        );
 
         if ($this->productRepository->isAssociatedToShop($productId, $targetShopId)) {
             $qb = $this->getUpdateQueryBuilder($fields, $productId, $targetShopId);
@@ -178,11 +180,10 @@ class ProductShopUpdater
      */
     private function getAssociationFields(Product $product): array
     {
-        $associationFields = [];
-        $associationFields['id_category_default'] = (int) $product->id_category_default;
-        $associationFields['cache_default_attribute'] = (int) $product->cache_default_attribute;
-
-        return $associationFields;
+        return [
+            'id_category_default' => (int) $product->id_category_default,
+            'cache_default_attribute' => $product->cache_default_attribute,
+        ];
     }
 
     /**
@@ -192,17 +193,16 @@ class ProductShopUpdater
      */
     private function getPricesFields(Product $product): array
     {
-        $priceFields = [];
-        $priceFields['price'] = $product->price;
-        $priceFields['ecotax'] = $product->ecotax;
-        $priceFields['id_tax_rules_group'] = (int) $product->id_tax_rules_group;
-        $priceFields['on_sale'] = $product->on_sale;
-        $priceFields['wholesale_price'] = $product->wholesale_price;
-        $priceFields['unit_price_ratio'] = $product->unit_price_ratio;
-        $priceFields['unity'] = $product->unity;
-        $priceFields['additional_shipping_cost'] = $product->additional_shipping_cost;
-
-        return $priceFields;
+        return [
+            'price' => $product->price,
+            'ecotax' => $product->ecotax,
+            'id_tax_rules_group' => (int) $product->id_tax_rules_group,
+            'on_sale' => $product->on_sale,
+            'wholesale_price' => $product->wholesale_price,
+            'unit_price_ratio' => $product->unit_price_ratio,
+            'unity' => $product->unity,
+            'additional_shipping_cost' => $product->additional_shipping_cost,
+        ];
     }
 
     /**
@@ -212,14 +212,13 @@ class ProductShopUpdater
      */
     private function getStockFields(Product $product): array
     {
-        $stockFields = [];
-        $stockFields['minimal_quantity'] = (int) $product->minimal_quantity;
-        $stockFields['low_stock_threshold'] = $product->low_stock_threshold;
-        $stockFields['low_stock_alert'] = (int) $product->low_stock_alert;
-        $stockFields['advanced_stock_management'] = $product->advanced_stock_management;
-        $stockFields['pack_stock_type'] = (int) $product->pack_stock_type;
-
-        return $stockFields;
+        return [
+            'minimal_quantity' => (int) $product->minimal_quantity,
+            'low_stock_threshold' => $product->low_stock_threshold,
+            'low_stock_alert' => (int) $product->low_stock_alert,
+            'advanced_stock_management' => $product->advanced_stock_management,
+            'pack_stock_type' => (int) $product->pack_stock_type,
+        ];
     }
 
     /**
@@ -229,11 +228,10 @@ class ProductShopUpdater
      */
     private function getSEOFields(Product $product): array
     {
-        $seoFields = [];
-        $seoFields['redirect_type'] = $product->redirect_type;
-        $seoFields['id_type_redirected'] = (int) $product->id_type_redirected;
-
-        return $seoFields;
+        return [
+            'redirect_type' => $product->redirect_type,
+            'id_type_redirected' => (int) $product->id_type_redirected,
+        ];
     }
 
     /**
@@ -243,18 +241,17 @@ class ProductShopUpdater
      */
     private function getOptionsFields(Product $product): array
     {
-        $optionsFields = [];
-        $optionsFields['condition'] = $product->condition;
-        $optionsFields['show_condition'] = (int) $product->show_condition;
-        $optionsFields['show_price'] = (int) $product->show_price;
-        $optionsFields['visibility'] = $product->visibility;
-        $optionsFields['on_sale'] = (int) $product->on_sale;
-        $optionsFields['online_only'] = (int) $product->online_only;
-        $optionsFields['active'] = (int) $product->active;
-        $optionsFields['available_for_order'] = (int) $product->available_for_order;
-        $optionsFields['indexed'] = (int) $product->indexed;
-
-        return $optionsFields;
+        return [
+            'condition' => $product->condition,
+            'show_condition' => (int) $product->show_condition,
+            'show_price' => (int) $product->show_price,
+            'visibility' => $product->visibility,
+            'on_sale' => (int) $product->on_sale,
+            'online_only' => (int) $product->online_only,
+            'active' => (int) $product->active,
+            'available_for_order' => (int) $product->available_for_order,
+            'indexed' => (int) $product->indexed,
+        ];
     }
 
     /**
@@ -264,12 +261,11 @@ class ProductShopUpdater
      */
     private function getCustomizationFields(Product $product): array
     {
-        $customizationFields = [];
-        $customizationFields['customizable'] = (int) $product->customizable;
-        $customizationFields['uploadable_files'] = (int) $product->uploadable_files;
-        $customizationFields['text_fields'] = (int) $product->text_fields;
-
-        return $customizationFields;
+        return [
+            'customizable' => (int) $product->customizable,
+            'uploadable_files' => (int) $product->uploadable_files,
+            'text_fields' => (int) $product->text_fields,
+        ];
     }
 
     /**
