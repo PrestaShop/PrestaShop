@@ -175,7 +175,7 @@ class Stocks extends BOBasePage {
     await page.type(this.searchInput, value);
     await Promise.all([
       page.click(this.searchButton),
-      this.waitForVisibleSelector(page, this.productListLoading),
+      this.waitForVisibleSelector(page, this.productListLoading, 20000),
     ]);
     await this.waitForHiddenSelector(page, this.productListLoading);
   }
