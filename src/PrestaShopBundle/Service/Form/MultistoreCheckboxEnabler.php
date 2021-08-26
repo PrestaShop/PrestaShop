@@ -143,15 +143,8 @@ class MultistoreCheckboxEnabler
     private function isOverriddenInCurrentContext(string $configurationKey): bool
     {
         // Check if current configuration is overridden by current shop / group shop context
-        if (!empty($this->multiStoreContext->getContextShopId())) {
-            $shopConstraint = ShopConstraint::shop($this->multiStoreContext->getContextShopId());
-        } elseif (!empty($this->multiStoreContext->getContextShopGroup()->id)) {
-            $shopConstraint = ShopConstraint::shopGroup($this->multiStoreContext->getContextShopGroup()->id);
-        } else {
-            $shopConstraint = ShopConstraint::allShops();
-        }
-
-        return $this->configuration->has($configurationKey, $shopConstraint);
+        // The $isStrict parameter is important: it will return a value only if it's present, skipping the hierarchical fallback system
+        return $this->configuration->has($configurationKey, $this->multiStoreContext->getShopConstraint(true));
     }
 
     /**

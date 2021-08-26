@@ -411,9 +411,12 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             E_USER_DEPRECATED
         );
 
-        return new ShopConstraint(
-            Shop::getContextShopID(),
-            Shop::getContextShopGroupID()
-        );
+        if ((int) Shop::getContextShopID() > 0) {
+            return ShopConstraint::shop((int) Shop::getContextShopID());
+        } elseif ((int) Shop::getContextShopGroupID() > 0) {
+            return ShopConstraint::shopGroup((int) Shop::getContextShopGroupID());
+        }
+
+        return ShopConstraint::allShops();
     }
 }

@@ -631,10 +631,7 @@ class OrderAmountUpdater
     {
         $constraintKey = $order->id_shop . '-' . $order->id_shop_group;
         if (!isset($this->orderConstraints[$constraintKey])) {
-            $this->orderConstraints[$constraintKey] = new ShopConstraint(
-                (int) $order->id_shop,
-                (int) $order->id_shop_group
-            );
+            $this->orderConstraints[$constraintKey] = ShopConstraint::shop($order->id_shop);
         }
 
         return $this->orderConstraints[$constraintKey];
