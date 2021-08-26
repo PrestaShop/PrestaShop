@@ -34,6 +34,8 @@ export default {
     headerButton: '.js-header-multishop-open-modal',
     searchInput: '.js-multishop-modal-search',
     jsScrollbar: '.js-multishop-scrollbar',
+    shopLinks: 'a.multishop-modal-shop-name',
+    groupShopLinks: 'a.multishop-modal-group-name',
     setContextUrl: (
       location: string,
       urlLetter: string,

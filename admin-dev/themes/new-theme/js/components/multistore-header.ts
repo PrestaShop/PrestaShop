@@ -92,6 +92,26 @@ const initMultistoreHeader = () => {
       }
     }, false);
   }
+
+  /**
+   * Header multishop links don't handle anchors which might be useful for tab navigation for example
+   * so we synchronize them via javascript
+   */
+  function updateLinksAnchor() {
+    function updateLinkAnchor(shopLink: HTMLLinkElement) {
+      const updatedLink = shopLink.href.replace(/#(.*)$/, '') + window.location.hash;
+      shopLink.setAttribute('href', updatedLink);
+    }
+
+    const shopLinks: NodeListOf<HTMLLinkElement> = document.querySelectorAll(MultistoreHeaderMap.shopLinks);
+    shopLinks.forEach(updateLinkAnchor);
+
+    const groupShopLinks: NodeListOf<HTMLLinkElement> = document.querySelectorAll(MultistoreHeaderMap.groupShopLinks);
+    groupShopLinks.forEach(updateLinkAnchor);
+  }
+
+  updateLinksAnchor();
+  window.addEventListener('hashchange', updateLinksAnchor);
 };
 
 $(() => {
