@@ -552,6 +552,7 @@ class AdminShopControllerCore extends AdminController
             'meta_lang' => $this->trans('Meta information', [], 'Admin.Advparameters.Feature'),
             'product' => $this->trans('Products', [], 'Admin.Global'),
             'product_attribute' => $this->trans('Product combinations', [], 'Admin.Advparameters.Feature'),
+            'customization_field_lang' => $this->trans('Customization information', [], 'Admin.Advparameters.Feature'),
             'stock_available' => $this->trans('Available quantities for sale', [], 'Admin.Advparameters.Feature'),
             'store' => $this->trans('Stores', [], 'Admin.Global'),
             'warehouse' => $this->trans('Warehouses', [], 'Admin.Advparameters.Feature'),
