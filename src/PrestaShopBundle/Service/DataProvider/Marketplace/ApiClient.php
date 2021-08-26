@@ -111,17 +111,6 @@ class ApiClient
         return json_decode($response);
     }
 
-    public function getNativesModules()
-    {
-        $response = $this->setMethod('listing')
-            ->setAction('native')
-            ->getResponse();
-
-        $responseArray = json_decode($response);
-
-        return isset($responseArray->modules) ? $responseArray->modules : [];
-    }
-
     public function getPreInstalledModules()
     {
         $response = $this->setMethod('listing')
@@ -130,17 +119,6 @@ class ApiClient
         $responseDecoded = json_decode($response);
 
         return isset($responseDecoded->modules) ? $responseDecoded->modules : [];
-    }
-
-    public function getMustHaveModules()
-    {
-        $response = $this->setMethod('listing')
-            ->setAction('must-have')
-            ->getResponse();
-
-        $responseArray = json_decode($response);
-
-        return isset($responseArray->modules) ? $responseArray->modules : [];
     }
 
     public function getServices()
@@ -193,23 +171,6 @@ class ApiClient
             ->setModuleId($moduleId)
             ->setModuleChannel($moduleChannel)
             ->getPostResponse();
-    }
-
-    public function getCustomerModules($userMail, $password)
-    {
-        $response = $this->setMethod('listing')
-            ->setAction('customer')
-            ->setUserMail($userMail)
-            ->setPassword($password)
-            ->getPostResponse();
-
-        $responseArray = json_decode($response);
-
-        if (!empty($responseArray->modules)) {
-            return $responseArray->modules;
-        }
-
-        return [];
     }
 
     /**
