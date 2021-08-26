@@ -98,8 +98,8 @@ class ShopConstraint
      */
     public function __construct(?int $shopId, ?int $shopGroupId, bool $strict = false)
     {
-        $this->shopId = !empty($shopId)  ? new ShopId($shopId) : null;
-        $this->shopGroupId = !empty($shopGroupId)  ? new ShopGroupId($shopGroupId) : null;
+        $this->shopId = null !== $shopId ? new ShopId($shopId) : null;
+        $this->shopGroupId = null !== $shopGroupId ? new ShopGroupId($shopGroupId) : null;
         $this->strict = $strict;
     }
 
