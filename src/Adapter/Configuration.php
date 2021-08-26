@@ -124,13 +124,13 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
 
         // Since hasKey doesn't check manage the fallback shop > shop group > global, we handle it manually
         $hasKey = ConfigurationLegacy::hasKey($key, null, null, $shopId);
-        if ($hasKey || $isStrict) {
+        if ($hasKey || ($isStrict && Shop::getContext() === Shop::CONTEXT_SHOP)) {
             return $hasKey ? ConfigurationLegacy::get($key, null, null, $shopId) : null;
         }
 
         $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId);
-        if ($hasKey) {
-            return ConfigurationLegacy::get($key, null, $shopGroupId);
+        if ($hasKey || ($isStrict && Shop::getContext() === Shop::CONTEXT_GROUP)) {
+            return $hasKey ? ConfigurationLegacy::get($key, null, $shopGroupId) : null;
         }
 
         $hasKey = ConfigurationLegacy::hasKey($key);
@@ -369,10 +369,13 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      */
     private function getShopGroupId(ShopConstraint $shopConstraint): ?int
     {
-        return null !== $shopConstraint->getShopGroupId()
-            ? $shopConstraint->getShopGroupId()->getValue()
-            : null
-        ;
+        if (null !== $shopConstraint->getShopGroupId()) {
+            return $shopConstraint->getShopGroupId()->getValue();
+        } elseif (null !== $shopConstraint->getShopId()) {
+            return (int) Shop::getGroupFromShop((int) $shopConstraint->getShopId()->getValue(), true);
+        }
+
+        return null;
     }
 
     /**
@@ -411,9 +414,9 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             E_USER_DEPRECATED
         );
 
-        if ((int) Shop::getContextShopID() > 0) {
+        if (Shop::getContext() === Shop::CONTEXT_SHOP) {
             return ShopConstraint::shop((int) Shop::getContextShopID());
-        } elseif ((int) Shop::getContextShopGroupID() > 0) {
+        } elseif (Shop::getContext() === Shop::CONTEXT_GROUP) {
             return ShopConstraint::shopGroup((int) Shop::getContextShopGroupID());
         }
 
