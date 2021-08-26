@@ -29,20 +29,26 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Extension;
 
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
-use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\RetailPriceType;
 use PrestaShopBundle\Form\FormBuilderModifier;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class MultistoreOverridableExtension extends AbstractTypeExtension
+/**
+ * This extension adds a new modify_all_shops option for form fields, then when the
+ * form is built a checkbox is automatically added which matches the configured field.
+ * This checkbox can then be used to apply the modification from the field to all shops.
+ */
+class ModifyAllShopsExtension extends AbstractTypeExtension
 {
-    public const MULTISTORE_OVERRIDE_ALL_PREFIX = 'multistore_override_all_';
+    public const MODIFY_ALL_SHOPS_PREFIX = 'modify_all_shops_';
 
     /**
      * @var MultistoreContextCheckerInterface
@@ -82,11 +88,6 @@ class MultistoreOverridableExtension extends AbstractTypeExtension
         return [
             // To add the option on all form types
             FormType::class,
-            // This is the container that includes the overridable fields
-            // @todo: this is hardcoded for now but this extension needs to be improved so that the activation
-            // of the extension is more automatic, maybe relying on a parent form type like MultistoreConfigurationTypeExtension
-            // but it's not ideal
-            RetailPriceType::class,
         ];
     }
 
@@ -99,27 +100,22 @@ class MultistoreOverridableExtension extends AbstractTypeExtension
             return;
         }
 
-        /** @var FormBuilderInterface $child */
-        foreach ($builder->all() as $childName => $child) {
-            $overridable = (bool) $child->getOption('overridable_for_all');
-            if (!$overridable) {
-                continue;
-            }
-
-            // We add the checkbox after even if the form theme will render it before, this prevents its from being
-            // automatically rendered by the form_row
-            $this->formBuilderModifier->addAfter(
-                $builder,
-                $childName,
-                self::MULTISTORE_OVERRIDE_ALL_PREFIX . $childName,
-                CheckboxType::class,
-                [
-                    'label' => $this->getCheckboxLabel(),
-                    'attr' => [
-                        'data-value-type' => 'boolean',
-                    ],
-                ]
-            );
+        $isOverridden = $builder->getOption('modify_all_shops');
+        if ($isOverridden) {
+            $label = $this->getCheckboxLabel();
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) use ($label) {
+                $form = $event->getForm();
+                $parent = $form->getParent();
+                $parent->add(self::MODIFY_ALL_SHOPS_PREFIX . $form->getName(),
+                    CheckboxType::class,
+                    [
+                        'label' => $label,
+                        'attr' => [
+                            'data-value-type' => 'boolean',
+                        ],
+                    ]
+                );
+            });
         }
     }
 
@@ -135,7 +131,7 @@ class MultistoreOverridableExtension extends AbstractTypeExtension
         }
 
         $view->vars = array_replace($view->vars, [
-            'overridable_for_all' => $options['overridable_for_all'],
+            'modify_all_shops' => $options['modify_all_shops'],
         ]);
     }
 
@@ -145,7 +141,7 @@ class MultistoreOverridableExtension extends AbstractTypeExtension
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'overridable_for_all' => false,
+            'modify_all_shops' => false,
         ]);
     }
 
