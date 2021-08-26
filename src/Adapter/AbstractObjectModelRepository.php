@@ -119,14 +119,14 @@ abstract class AbstractObjectModelRepository
 
     /**
      * @param int $id
-     * @param string $objectModelClass
+     * @param string $objectModelClassName
      * @param ShopId $shopId
      *
      * @throws ShopAssociationNotFound
      */
-    protected function checkShopAssociation(int $id, string $objectModelClass, ShopId $shopId): void
+    protected function checkShopAssociation(int $id, string $objectModelClassName, ShopId $shopId): void
     {
-        $modelDefinition = $objectModelClass::$definition;
+        $modelDefinition = $objectModelClassName::$definition;
         $objectTable = $modelDefinition['table'];
         $primaryColumn = $modelDefinition['primary'];
 
@@ -137,7 +137,7 @@ abstract class AbstractObjectModelRepository
             ->where('e.`' . $primaryColumn . '` = ' . $id)
             ->where('e.`id_shop` = ' . $shopId->getValue())
         ;
-        $sql = $query->build();
+
         try {
             $row = Db::getInstance()->getRow($query, false);
         } catch (PrestaShopDatabaseException $e) {
@@ -147,7 +147,7 @@ abstract class AbstractObjectModelRepository
         if (!isset($row['id'])) {
             throw new ShopAssociationNotFound(sprintf(
                 'Could not find association between %s %d and Shop %d',
-                $objectModelClass,
+                $objectModelClassName,
                 $id,
                 $shopId->getValue()
             ));
