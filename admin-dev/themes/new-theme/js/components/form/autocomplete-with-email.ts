@@ -23,37 +23,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const {$} = window;
+const {$}: Window = window;
 
-/**
- * This component is implemented to work with TextWithRecommendedLengthType,
- * but can be used as standalone component as well.
- *
- * Usage:
- *
- * Define your HTML with input and counter. Example:
- *
- * <input id="myInput"
- *        class="js-recommended-length-input"
- *        data-recommended-length-counter="#myInput_recommended_length_counter"
- * >
- *
- * <div id"myInput_recommended_length_counter">
- *  <span class="js-current-length">0</span> of 70 characters used (recommended)
- * </div>
- *
- * NOTE: You must use exactly the same Classes, but IDs can be different!
- *
- * Then enable component in JavaScript:
- *
- * new TextWithRecommendedLengthCounter();
- */
-export default class TextWithRecommendedLengthCounter {
-  constructor() {
-    $(document).on('input', '.js-recommended-length-input', (event) => {
-      const $input = $(event.currentTarget);
+export default class AutocompleteWithEmail {
+  map: SelectorsMap;
 
-      $($input.data('recommended-length-counter')).find('.js-current-length').text($input.val().length);
-    });
+  $emailInput: JQuery;
+
+  constructor(emailInputSelector: string, map: SelectorsMap = {}) {
+    this.map = map;
+    this.$emailInput = $(emailInputSelector);
+    this.$emailInput.on('change', () => this.change());
+  }
+
+  private change(): void {
+    $.get({
+      url: this.$emailInput.data('customer-information-url'),
+      dataType: 'json',
+      data: {
+        email: this.$emailInput.val(),
+      },
+    })
+      .then((response) => {
+        Object.keys(this.map).forEach((key: string) => {
+          if (response[key] !== undefined) {
+            $(this.map[key]).val(response[key]);
+          }
+        });
+      })
+      .catch((response: AjaxError) => {
+        if (typeof response.responseJSON !== 'undefined') {
+          window.showErrorMessage(response.responseJSON.message);
+        }
+      });
   }
 }

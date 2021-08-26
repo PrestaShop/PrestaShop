@@ -25,6 +25,10 @@
 
 const {$} = window;
 
+export interface ChangePasswordHandlerOptions {
+  minLength?: number;
+}
+
 /**
  * Generates a password and informs about it's strength.
  * You can pass a password input to watch the password strength and display feedback messages.
@@ -33,11 +37,11 @@ const {$} = window;
 export default class ChangePasswordHandler {
   minLength: number;
 
-  $feedbackContainer: JQuery;
+  $feedbackContainer: JQuery<HTMLElement>;
 
   constructor(
     passwordStrengthFeedbackContainerSelector: string,
-    options: OptionsObject = {},
+    options: ChangePasswordHandlerOptions = {},
   ) {
     // Minimum length of the generated password.
     this.minLength = <number>options.minLength || 8;
@@ -104,7 +108,9 @@ export default class ChangePasswordHandler {
    *
    * @private
    */
-  private getPasswordStrengthFeedback(strength: number) {
+  private getPasswordStrengthFeedback(
+    strength: number,
+  ): Record<string, string> {
     switch (strength) {
       case $.passy.strength.LOW:
         return {

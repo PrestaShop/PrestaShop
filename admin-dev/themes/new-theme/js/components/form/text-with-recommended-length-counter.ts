@@ -23,33 +23,42 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ComponentsMap from '@components/components-map';
+
 const {$} = window;
 
 /**
- * Responsible for opening another page with specified url.
- * For example used in 'Save and preview' cms page create/edit actions.
+ * This component is implemented to work with TextWithRecommendedLengthType,
+ * but can be used as standalone component as well.
  *
- * Usage: In selector element attr 'data-preview-url' provide page url.
- * The page will be opened once provided 'open_preview' parameter in query url
+ * Usage:
+ *
+ * Define your HTML with input and counter. Example:
+ *
+ * <input id="myInput"
+ *        class="js-recommended-length-input"
+ *        data-recommended-length-counter="#myInput_recommended_length_counter"
+ * >
+ *
+ * <div id"myInput_recommended_length_counter">
+ *  <span class="js-current-length">0</span> of 70 characters used (recommended)
+ * </div>
+ *
+ * NOTE: You must use exactly the same Classes, but IDs can be different!
+ *
+ * Then enable component in JavaScript:
+ *
+ * new TextWithRecommendedLengthCounter();
  */
-export default class PreviewOpener {
-  constructor(previewUrlSelector) {
-    this.previewUrl = $(previewUrlSelector).data('preview-url');
-    this.open();
+export default class TextWithRecommendedLengthCounter {
+  constructor() {
+    $(document).on('input', ComponentsMap.recommendedLengthInput, (event) => {
+      const $input = $(event.currentTarget);
+      const inputVal = <string>$input.val();
 
-    return {};
-  }
-
-  /**
-   * Opens new page of provided url
-   *
-   * @private
-   */
-  open() {
-    const urlParams = new URLSearchParams(window.location.search);
-
-    if (this.previewUrl && urlParams.has('open_preview')) {
-      window.open(this.previewUrl, '_blank');
-    }
+      $($input.data('recommended-length-counter'))
+        .find(ComponentsMap.currentLength)
+        .text(inputVal.length);
+    });
   }
 }
