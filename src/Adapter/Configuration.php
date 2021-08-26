@@ -123,7 +123,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         }
 
         if ($isStrict) {
-            return $this->getStrictValue($key, $shopConstraint, $default);
+            return $this->getStrictValue($key, $shopConstraint);
         }
 
         // Since hasKey doesn't check manage the fallback shop > shop group > global, we handle it manually
@@ -431,7 +431,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @return mixed
      */
-    private function getStrictValue(string $key, ShopConstraint $shopConstraint, $default)
+    private function getStrictValue(string $key, ShopConstraint $shopConstraint)
     {
         if (null !== $shopConstraint->getShopId()) {
             $hasKey = ConfigurationLegacy::hasKey($key, null, null, $shopConstraint->getShopId()->getValue());
@@ -449,6 +449,6 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             return ConfigurationLegacy::get($key);
         }
 
-        return $default;
+        return null;
     }
 }
