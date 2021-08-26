@@ -124,12 +124,12 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
 
         // Since hasKey doesn't check manage the fallback shop > shop group > global, we handle it manually
         $hasKey = ConfigurationLegacy::hasKey($key, null, null, $shopId);
-        if ($hasKey || ($isStrict && Shop::getContext() === Shop::CONTEXT_SHOP)) {
+        if ($hasKey || ($isStrict && null !== $shopConstraint->getShopId())) {
             return $hasKey ? ConfigurationLegacy::get($key, null, null, $shopId) : null;
         }
 
         $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId);
-        if ($hasKey || ($isStrict && Shop::getContext() === Shop::CONTEXT_GROUP)) {
+        if ($hasKey || ($isStrict && null !== $shopConstraint->getShopGroupId())) {
             return $hasKey ? ConfigurationLegacy::get($key, null, $shopGroupId) : null;
         }
 
