@@ -83,7 +83,7 @@ class RetailPriceType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                 ],
                 'default_empty_data' => 0.0,
-                'overridable_for_all' => true,
+                'modify_all_shops' => true,
             ])
             ->add('price_tax_included', MoneyType::class, [
                 'required' => false,
@@ -95,7 +95,7 @@ class RetailPriceType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                 ],
                 'default_empty_data' => 0.0,
-                'overridable_for_all' => true,
+                'modify_all_shops' => true,
             ])
         ;
 
