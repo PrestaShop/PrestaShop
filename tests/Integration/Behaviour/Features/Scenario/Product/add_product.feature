@@ -9,6 +9,8 @@ Feature: Add basic product from Back Office (BO)
 
   Background:
     Given language "language1" with locale "en-US" exists
+    And category "home" in default language named "Home" exists
+    And category "home" is the default one
 
   Scenario: I add a product with basic information
     When I add product "product1" with following information:
