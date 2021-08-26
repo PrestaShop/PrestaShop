@@ -176,7 +176,7 @@
       {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": content } %}
     {% endif %}
 
-    {% set overrideCheckboxName = multistore_override_all_prefix ~ form.vars.name %}
+    {% set overrideCheckboxName = modify_all_shops_prefix ~ form.vars.name %}
     {% if attribute(form.parent, overrideCheckboxName) is defined %}
       {{ form_errors(attribute(form.parent, overrideCheckboxName)) }}
       {{ form_widget(attribute(form.parent, overrideCheckboxName)) }}
