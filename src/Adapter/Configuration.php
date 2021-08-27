@@ -418,7 +418,6 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     /**
      * @param string $key
      * @param ShopConstraint $shopConstraint
-     * @param $default
      *
      * @return mixed
      */
