@@ -26,4 +26,4 @@
 {% set width  = record[column.options.width] %}
 {% set height = record[column.options.height] %}
 
-<img src="{{ record[column.options.src_field] }}" {% if width %} style="width: {{ width }}; height: {{ height }};" {% endif %}>
+<img src="{{ record[column.options.src_field] }}"{% if width is not empty or height is not empty %} style="{% if width is not empty %}width:{{ width }};{% endif %}{% if height is not empty %}height:{{ height }};{% endif %}"{% endif %}>
