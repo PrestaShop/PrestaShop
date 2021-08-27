@@ -67,13 +67,18 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
   import Bulk from './components/bulk.vue';
   import Row from './components/row.vue';
 
   const {$} = window;
 
-  export default {
+  interface Data {
+    profileDataPermissions: Record<string, any>;
+  }
+
+  export default Vue.extend({
     name: 'Permission',
     components: {
       Bulk,
@@ -126,7 +131,7 @@
         default: false,
       },
     },
-    data() {
+    data(): Data {
       return {
         profileDataPermissions: this.profilePermissions,
       };
@@ -135,7 +140,7 @@
       /**
        * Send ajax request to target url
        */
-      sendRequest(data) {
+      sendRequest(data: Record<string, any>): void {
         data.profile_id = this.profileId;
 
         $.ajax(
@@ -158,23 +163,24 @@
       /**
        * Update user permissions from bulk action
        */
-      updateBulk(data) {
-        Object.keys(this.profileDataPermissions).forEach((key) => {
-          data.types.forEach((type) => {
+      updateBulk(data: Record<string, any>): void {
+        Object.keys(this.profileDataPermissions).forEach((key: string) => {
+          data.types.forEach((type: string) => {
             this.profileDataPermissions[key][type] = data.status ? '1' : '0';
           });
         });
 
-        const params = {
+        const params: Record<string, any> = {
           expected_status: data.status,
           permission: data.updateType,
         };
+
         params[this.permissionKey] = '-1';
 
         this.sendRequest(params);
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss">

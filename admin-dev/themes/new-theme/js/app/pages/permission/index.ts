@@ -31,7 +31,14 @@ const {$} = window;
  * Vue component displaying a permission tree.
  */
 class PermissionApp {
-  constructor(profileId, target, permissionKey, profilePermissions, employeePermissions) {
+  vm?: Vue;
+
+  constructor(
+    profileId: string,
+    target: string, permissionKey: string,
+    profilePermissions: Record<string, any>,
+    employeePermissions: string,
+  ) {
     if ($(target).length === 0) {
       return;
     }
