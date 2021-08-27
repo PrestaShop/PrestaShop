@@ -71,7 +71,7 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
             }
         }
 
-        $this->displayTemplate('welcome');
+        $this->displayContent('welcome');
     }
 
     private function clearCache()

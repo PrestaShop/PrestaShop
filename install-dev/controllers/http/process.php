@@ -327,7 +327,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
         $this->process_steps[] = array('key' => 'postInstall', 'lang' => $this->translator->trans('Post installation scripts', array(), 'Install'));
 
-        $this->displayTemplate('process');
+        $this->displayContent('process');
     }
 
     /**
