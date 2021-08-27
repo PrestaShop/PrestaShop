@@ -32,7 +32,6 @@ use Doctrine\DBAL\DBALException;
 use Language;
 use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Install\Install;
-use Shop;
 use Tests\Resources\ResourceResetter;
 use Tab;
 
