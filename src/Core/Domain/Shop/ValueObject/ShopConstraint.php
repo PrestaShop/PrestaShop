@@ -96,7 +96,7 @@ class ShopConstraint
      *
      * @throws ShopException
      */
-    public function __construct(?int $shopId, ?int $shopGroupId, bool $strict = false)
+    private function __construct(?int $shopId, ?int $shopGroupId, bool $strict = false)
     {
         $this->shopId = null !== $shopId ? new ShopId($shopId) : null;
         $this->shopGroupId = null !== $shopGroupId ? new ShopGroupId($shopGroupId) : null;
