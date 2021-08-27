@@ -80,13 +80,13 @@ class ShopConstraint
     }
 
     /**
-     * Constraint to get configuration for all shops (the global value)
+     * @param bool $isStrict
      *
      * @return static
      */
-    public static function allShops(): self
+    public static function allShops(bool $isStrict = false): self
     {
-        return new static(null, null, false);
+        return new static(null, null, $isStrict);
     }
 
     /**
