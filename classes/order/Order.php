@@ -926,8 +926,12 @@ class OrderCore extends ObjectModel
      */
     public function isPaidAndShipped()
     {
-        $order_state = $this->getCurrentOrderState();
-        if ($order_state && $order_state->paid && $order_state->shipped) {
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+			SELECT SUM(os.`paid`) AS `paid`, SUM(os.`shipped`) AS `shipped` FROM `' . _DB_PREFIX_ . 'order_history` oh 
+			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON (os.`id_order_state` = oh.`id_order_state`) 
+			WHERE oh.`id_order`= ' . (int) $this->id );
+		
+        if ($result['paid'] > 0 && $result['shipped'] > 0) {
             return true;
         }
 
