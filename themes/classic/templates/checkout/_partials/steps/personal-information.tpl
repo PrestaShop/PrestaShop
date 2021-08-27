@@ -48,22 +48,24 @@
 
   {else}
     <ul class="nav nav-inline my-2" role="tablist">
-      <li class="nav-item">
-        <a
-          class="nav-link {if !$show_login_form}active{/if}"
-          data-toggle="tab"
-          href="#checkout-guest-form"
-          role="tab"
-          aria-controls="checkout-guest-form"
-          {if !$show_login_form} aria-selected="true"{/if}
-          >
-          {if $guest_allowed}
-            {l s='Order as a guest' d='Shop.Theme.Checkout'}
-          {else}
-            {l s='Create an account' d='Shop.Theme.Customeraccount'}
-          {/if}
-        </a>
-      </li>
+      {if $show_register_form }
+        <li class="nav-item">
+          <a
+            class="nav-link {if !$show_login_form}active{/if}"
+            data-toggle="tab"
+            href="#checkout-guest-form"
+            role="tab"
+            aria-controls="checkout-guest-form"
+            {if !$show_login_form} aria-selected="true"{/if}
+            >
+            {if $guest_allowed}
+              {l s='Order as a guest' d='Shop.Theme.Checkout'}
+            {else}
+              {l s='Create an account' d='Shop.Theme.Customeraccount'}
+            {/if}
+          </a>
+        </li>
+      {/if}
 
       <li class="nav-item">
         <span class="nav-separator"> | </span>
