@@ -293,7 +293,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         // Install type
         $this->install_type = ($this->session->install_type) ? $this->session->install_type : 'full';
 
-        $this->displayTemplate('configure');
+        $this->displayContent('configure');
     }
 
     /**

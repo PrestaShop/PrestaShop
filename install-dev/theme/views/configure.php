@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
- $this->displayTemplate('header') ?>
+?>
 
 <!-- Configuration form -->
 <div id="infosShopBlock">
@@ -176,5 +176,3 @@
 
 <!-- Partners form -->
 <div id="benefitsBlock" style="display:none"></div>
-
-<?php $this->displayTemplate('footer') ?>

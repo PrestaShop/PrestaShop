@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
- $this->displayTemplate('header') ?>
+?>
 
 <?php if ($this->can_upgrade): ?>
 	<div class="warnBlock">
@@ -36,12 +36,12 @@
 <?php endif; ?>
 
 <h2><?php echo $this->translator->trans('Welcome to the PrestaShop %version% Installer', array('%version%' => _PS_INSTALL_VERSION_), 'Install') ?></h2>
+
 <p><?php echo $this->translator->trans(
     'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than %numMerchants% merchants. You are on the way to creating your own unique online store that you can manage easily every day.',
     array('%numMerchants%' => '300,000'),
     'Install'
-); ?></p>
-<p><?php echo $this->translator->trans('If you need help, do not hesitate to <a href="%tutoriellink%" target="_blank">watch this short tutorial</a>, or check <a href="%linkdoc%" target="_blank">our documentation</a>.', array('%tutoriellink%' => $this->getTutorialLink(), '%linkdoc%' => $this->getDocumentationLink()), 'Install') ?></p>
+     ); ?></p>
 
 <!-- List of languages -->
 <?php if (count($this->language->getIsoList()) > 1): ?>
@@ -56,5 +56,3 @@
 <?php endif; ?>
 
 <p><?php echo $this->translator->trans('The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d% translations, all for free!', array('%d%' => 60), 'Install'); ?> </p>
-
-<?php $this->displayTemplate('footer') ?>

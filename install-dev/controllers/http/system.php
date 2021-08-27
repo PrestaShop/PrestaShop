@@ -185,6 +185,6 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
             $this->next_button = false;
         }
 
-        $this->displayTemplate('system');
+        $this->displayContent('system');
     }
 }

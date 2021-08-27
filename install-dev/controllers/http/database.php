@@ -172,6 +172,6 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
             $this->smtp_port = $this->session->smtp_port;
         }
 
-        $this->displayTemplate('database');
+        $this->displayContent('database');
     }
 }
