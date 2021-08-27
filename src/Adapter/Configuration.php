@@ -111,7 +111,6 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
 
         $shopId = $this->getShopId($shopConstraint);
         $shopGroupId = $this->getShopGroupId($shopConstraint);
-        $isStrict = $this->isStrict($shopConstraint);
 
         //If configuration has never been accessed it is still empty and hasKey/isLangKey will always return false
         if (!ConfigurationLegacy::configurationIsLoaded()) {
@@ -123,7 +122,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             return $this->getLocalized($key, $shopId, $shopGroupId);
         }
 
-        if ($isStrict) {
+        if ($shopConstraint->isStrict()) {
             return $this->getStrictValue($key, $shopConstraint);
         }
 
@@ -199,14 +198,13 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
 
         $shopId = $this->getShopId($shopConstraint);
         $shopGroupId = $this->getShopGroupId($shopConstraint);
-        $isStrict = $this->isStrict($shopConstraint);
 
         if (ConfigurationLegacy::isLangKey($key)) {
-            return $this->hasMultilang($key, $shopId, $shopGroupId, $isStrict);
+            return $this->hasMultilang($key, $shopId, $shopGroupId, $shopConstraint->isStrict());
         }
 
         $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId, $shopId);
-        if ($hasKey || $isStrict) {
+        if ($hasKey || $shopConstraint->isStrict()) {
             return $hasKey;
         }
 
@@ -380,16 +378,6 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         }
 
         return null;
-    }
-
-    /**
-     * @param ShopConstraint|null $shopConstraint
-     *
-     * @return bool
-     */
-    private function isStrict(?ShopConstraint $shopConstraint): bool
-    {
-        return null !== $shopConstraint ? $shopConstraint->isStrict() : false;
     }
 
     /**
