@@ -976,7 +976,7 @@ class ShopCore extends ObjectModel
                 break;
             case self::CONTEXT_GROUP:
                 self::$context_id_shop = null;
-                self::$context_id_shop_group = (int) $id;
+                self::$context_id_shop_group = $id;
 
                 break;
             case self::CONTEXT_SHOP:

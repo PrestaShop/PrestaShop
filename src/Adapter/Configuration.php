@@ -419,9 +419,9 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         );
 
         if (Shop::getContext() === Shop::CONTEXT_SHOP) {
-            return ShopConstraint::shop((int) Shop::getContextShopID());
+            return ShopConstraint::shop(Shop::getContextShopID());
         } elseif (Shop::getContext() === Shop::CONTEXT_GROUP) {
-            return ShopConstraint::shopGroup((int) Shop::getContextShopGroupID());
+            return ShopConstraint::shopGroup(Shop::getContextShopGroupID());
         }
 
         return ShopConstraint::allShops();
