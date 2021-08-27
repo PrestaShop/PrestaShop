@@ -80,6 +80,8 @@ class ShopConstraint
     }
 
     /**
+     * Constraint to get configuration for all shops (the global value)
+     *
      * @param bool $isStrict
      *
      * @return static
