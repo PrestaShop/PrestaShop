@@ -48,7 +48,7 @@
 
   {else}
     <ul class="nav nav-inline my-2" role="tablist">
-      {if $show_register_form }
+      {if $show_register_form}
         <li class="nav-item">
           <a
             class="nav-link {if !$show_login_form}active{/if}"
