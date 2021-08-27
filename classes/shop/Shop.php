@@ -1195,6 +1195,7 @@ class ShopCore extends ObjectModel
         $tables_import['category_lang'] = true;
         if (isset($tables_import['product'])) {
             $tables_import['product_lang'] = true;
+            $tables_import['customization_field_lang'] = true;
         }
 
         if (isset($tables_import['module'])) {
