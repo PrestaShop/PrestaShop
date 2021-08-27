@@ -50,8 +50,10 @@
   </div>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue';
+
+  export default Vue.extend({
     model: {
       prop: 'checked',
       event: 'input',
@@ -78,15 +80,15 @@
       },
     },
     methods: {
-      change() {
-        if (this.checked.includes(this.value)) {
-          this.checked.splice(this.checked.indexOf(this.value), 1);
+      change(): void {
+        if ((<Array<string>> this.checked).includes(this.value)) {
+          (<Array<string>> this.checked).splice((<Array<string>> this.checked).indexOf(this.value), 1);
         } else {
-          this.checked.push(this.value);
+          (<Array<string>> this.checked).push(this.value);
         }
 
         this.$emit('change');
       },
     },
-  };
+  });
 </script>
