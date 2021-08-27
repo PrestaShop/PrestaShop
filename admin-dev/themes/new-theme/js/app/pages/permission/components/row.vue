@@ -74,11 +74,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
   import PsCheckbox from '@app/components/checkbox.vue';
   import ColSize from '@app/mixins/col-size.vue';
 
-  export default {
+  export default Vue.extend({
     name: 'Row',
     mixins: [
       ColSize,
@@ -127,7 +128,7 @@
         required: true,
       },
     },
-    data() {
+    data(): {permissionValues: Array<string>, TYPE_ALL: string} {
       return {
         permissionValues: [],
         TYPE_ALL: 'all',
@@ -135,7 +136,7 @@
     },
     watch: {
       profilePermissions: {
-        handler: function mandatoryFunctionForDeepWatching() {
+        handler: function mandatoryFunctionForDeepWatching(): void {
           this.refreshPermissions();
         },
         deep: true,
@@ -148,7 +149,7 @@
       this.refreshPermissions();
     },
     computed: {
-      displayLevelDepth() {
+      displayLevelDepth(): string {
         if (this.levelDepth < 2) {
           return '';
         }
@@ -157,7 +158,7 @@
       },
     },
     methods: {
-      canEditCheckbox(type) {
+      canEditCheckbox(type: string): boolean {
         // We don't check for employee permissions
         if (Object.keys(this.employeePermissions).length === 0) {
           return true;
@@ -174,7 +175,7 @@
 
           // eslint-disable-next-line no-restricted-syntax
           for (const t of this.types) {
-            if (this.employeePermissions[this.permissionId][t] === '0') {
+            if (this.employeePermissions[this.permissionId][<string>t] === '0') {
               canBeChecked = false;
               break;
             }
@@ -189,21 +190,21 @@
       /**
        * Get the types length, depends if you have the TYPE_ALL or not
        */
-      getTypesLength() {
+      getTypesLength(): number {
         return this.types.includes(this.TYPE_ALL)
           ? this.types.length - 1
           : this.types.length;
       },
       /**
-       * Get permission from id
+       *: void Get permission from id
        */
-      getPermission() {
+      getPermission(): Record<string, any> {
         return this.profilePermissions[this.permissionId];
       },
       /**
        * Check if profile has permission
        */
-      hasPermission(type) {
+      hasPermission(type: string): boolean {
         const permission = this.getPermission();
 
         return permission !== undefined && parseInt(permission[type], 10) === 1;
@@ -211,12 +212,14 @@
       /**
        * Refresh permissions and checkboxes
        */
-      refreshPermissions() {
+      refreshPermissions(): void {
         Object.values(this.types).forEach((type) => {
-          if (this.hasPermission(type)) {
-            this.addPermission(type);
-          } else if (this.permissionValues.includes(type)) {
-            this.removePermission(type);
+          const stringType = type as string;
+
+          if (this.hasPermission(stringType)) {
+            this.addPermission(stringType);
+          } else if (this.permissionValues.includes(stringType)) {
+            this.removePermission(stringType);
           }
         });
 
@@ -229,7 +232,7 @@
        * - if type this.TYPE_ALL is used just toggle values
        * - otherwise check if all must be checked or not
        */
-      checkCheckboxesPermissions(type) {
+      checkCheckboxesPermissions(type: string): void {
         // no need to check there is no type all
         if (!this.types.includes(this.TYPE_ALL)) {
           return;
@@ -238,7 +241,7 @@
         // We click on the type all
         if (type === this.TYPE_ALL) {
           this.permissionValues = this.permissionValues.includes(type)
-            ? [...this.types]
+            ? [...this.types] as Array<string>
             : [];
 
           return;
@@ -261,11 +264,11 @@
        * @param String type
        * @param bool sendRequest Check if ajax request must be sent
        */
-      sendUpdatePermissionRequest(type, sendRequest = true) {
+      sendUpdatePermissionRequest(type: string, sendRequest = true): void {
         this.checkCheckboxesPermissions(type);
 
         if (sendRequest === true) {
-          const params = {
+          const params: Record<string, any> = {
             permission: type,
             expected_status: this.permissionValues.includes(type),
           };
@@ -285,7 +288,7 @@
        * Add permission to current values
        * @return bool
        */
-      addPermission(type) {
+      addPermission(type: string): boolean {
         if (this.permissionValues.includes(type)) {
           return false;
         }
@@ -297,7 +300,7 @@
        * Remove permission
        * @return bool
        */
-      removePermission(type) {
+      removePermission(type: string): boolean {
         if (!this.permissionValues.includes(type)) {
           return false;
         }
@@ -308,7 +311,7 @@
       /**
        * A child has been updated
        */
-      onChildUpdate(type) {
+      onChildUpdate(type: string): void {
         // type already includes
         this.sendUpdatePermissionRequest(
           type,
@@ -318,9 +321,9 @@
       /**
        * Recursive emit send request
        */
-      sendRequest(data) {
+      sendRequest(data: Record<string, any>): void {
         this.$emit('sendRequest', data);
       },
     },
-  };
+  });
 </script>

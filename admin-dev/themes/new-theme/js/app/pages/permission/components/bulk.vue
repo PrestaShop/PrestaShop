@@ -45,11 +45,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
   import PsCheckbox from '@app/components/checkbox.vue';
   import ColSize from '@app/mixins/col-size.vue';
 
-  export default {
+  export default Vue.extend({
     mixins: [
       ColSize,
     ],
@@ -66,7 +67,7 @@
         required: true,
       },
     },
-    data() {
+    data(): {status: Array<string>, TYPE_ALL: string} {
       return {
         status: [],
         TYPE_ALL: 'all',
@@ -74,7 +75,7 @@
     },
     watch: {
       profilePermissions: {
-        handler: function mandatoryFunctionForDeepWatching(val) {
+        handler: function mandatoryFunctionForDeepWatching(val): void {
           this.refreshPermissionsCheckboxes(val);
         },
         deep: true,
@@ -87,8 +88,8 @@
       /**
        * Check if checkboxes must be checked
        */
-      refreshPermissionsCheckboxes(permissions) {
-        Object.keys(this.types).forEach((t) => {
+      refreshPermissionsCheckboxes(permissions: Record<string, any>): void {
+        Object.keys(this.types).forEach((t: string) => {
           if (t === this.TYPE_ALL) {
             return;
           }
@@ -113,7 +114,7 @@
       /**
        * Check is type all must be checked
        */
-      checkForTypeAllCheckbox(bulkType) {
+      checkForTypeAllCheckbox(bulkType?: string): void {
         // no need to check there is no type all
         if (!(this.TYPE_ALL in this.types)) {
           return;
@@ -141,7 +142,7 @@
       /**
        * Update bulk type
        */
-      updateBulk(bulkType) {
+      updateBulk(bulkType: string): void {
         this.checkForTypeAllCheckbox(bulkType);
         this.$emit(
           'updateBulk',
@@ -153,5 +154,5 @@
         );
       },
     },
-  };
+  });
 </script>

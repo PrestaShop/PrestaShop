@@ -23,6 +23,7 @@ interface Window {
   Dropzone: any;
   data: any;
   pstooltip: any;
+  permissionsMessages: Array<string>;
 }
 
 /* eslint-disable */

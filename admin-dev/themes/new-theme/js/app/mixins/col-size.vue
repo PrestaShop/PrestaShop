@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
-<script>
+<script lang="ts">
   /**
    * This mixin component will help you to calculate your col size
    * depending on object size.
@@ -33,7 +33,7 @@
 
   export default {
     methods: {
-      getClasses(object, offsetCondition = true) {
+      getClasses(object: Record<string, any>, offsetCondition = true): Array<string> {
         const objectLength = Object.keys(object).length;
         const size = Math.floor(ROW_LENGTH / objectLength);
         const left = Math.ceil(ROW_LENGTH % objectLength);

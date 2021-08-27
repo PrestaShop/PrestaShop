@@ -28,7 +28,7 @@ import PermissionApp from '@app/pages/permission/index';
 const {$} = window;
 
 $(document).ready(() => {
-  $('.js-permissions-content').each((i, element) => {
+  $('.js-permissions-content').each((i: number, element: HTMLElement): void => {
     new PermissionApp(
       $(element).data('profile-id'),
       `#profile-content-${$(element).data('profile-id')}`,
