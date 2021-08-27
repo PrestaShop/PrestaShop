@@ -94,7 +94,8 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @param string $key
      * @param mixed $default The default value if the parameter key does not exist
-     * @param ShopConstraint|null $shopConstraint
+     * @param ShopConstraint|null $shopConstraint This parameter should always be given, if not, a ShopConstraint will
+     * be built based on the current shop context
      *
      * @return mixed
      */
@@ -147,7 +148,8 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @param string $key
      * @param mixed $value
-     * @param ShopConstraint|null $shopConstraint
+     * @param ShopConstraint|null $shopConstraint If this parameter is not given, a ShopConstraint will
+     * be built based on the current shop context, except if $this->shop is set
      * @param array $options Options @deprecated Will be removed in next major
      *
      * @return $this
@@ -184,7 +186,8 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
 
     /**
      * @param string $key
-     * @param ShopConstraint|null $shopConstraint
+     * @param ShopConstraint|null $shopConstraint This parameter should always be given, if not, a ShopConstraint will
+     * be built based on the current shop context
      *
      * @return bool
      */
