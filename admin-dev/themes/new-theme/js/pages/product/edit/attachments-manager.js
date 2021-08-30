@@ -68,17 +68,13 @@ export default class AttachmentsManager {
             const successMessage = this.$addAttachmentBtn.data('successCreateMessage');
             $.growl({
               message: successMessage,
+              duration: 4000,
             });
+            iframeModal.showLoading();
             iframeModal.hide();
-            /* iframeModal.displayMessage(`<div class="alert alert-success d-print-none m-2" role="alert">
-              <div class="alert-text">
-                <p>${successMessage}</p>
-              </div>
-            </div>`); */
 
             getAttachmentInfo(dataAttributes.attachmentId).then((response) => {
               this.entitySearchInput.addItem(response.attachmentInfo);
-              // setTimeout(() => { iframeModal.hide(); }, 2000);
             });
           }
         },
