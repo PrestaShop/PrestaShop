@@ -78,17 +78,17 @@ class UpdateProductPricesCommand
     private $unity;
 
     /**
-     * @var ShopConstraint|null
+     * @var ShopConstraint
      */
     private $shopConstraint;
 
     /**
      * @param int $productId
-     * @param ShopConstraint|null $shopConstraint
+     * @param ShopConstraint $shopConstraint
      */
     public function __construct(
         int $productId,
-        ?ShopConstraint $shopConstraint = null
+        ShopConstraint $shopConstraint
     ) {
         $this->productId = new ProductId($productId);
         $this->shopConstraint = $shopConstraint;
@@ -243,9 +243,9 @@ class UpdateProductPricesCommand
     }
 
     /**
-     * @return ShopConstraint|null
+     * @return ShopConstraint
      */
-    public function getShopConstraint(): ?ShopConstraint
+    public function getShopConstraint(): ShopConstraint
     {
         return $this->shopConstraint;
     }
