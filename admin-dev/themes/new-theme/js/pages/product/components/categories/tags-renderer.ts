@@ -98,7 +98,7 @@ export default class TagsRenderer {
     );
   }
 
-  private listenTagRemoval(): void {
+  public listenTagRemoval(): void {
     this.container.querySelectorAll(ProductCategoryMap.tagRemoveBtn).forEach((element) => {
       element.addEventListener('click', (event) => {
         event.preventDefault();
@@ -107,10 +107,9 @@ export default class TagsRenderer {
         const tagItem = clickedBtn.closest(ProductCategoryMap.tagItem) as HTMLElement;
 
         if (tagItem) {
-          const categoryId = Number(tagItem.dataset.id);
-
+          const idInput = tagItem.querySelector(ProductCategoryMap.tagCategoryIdInput) as HTMLInputElement;
           tagItem.remove();
-          this.eventEmitter.emit(ProductEventMap.categories.categoryRemoved, categoryId);
+          this.eventEmitter.emit(ProductEventMap.categories.categoryRemoved, Number(idInput.value));
         }
       });
     });
