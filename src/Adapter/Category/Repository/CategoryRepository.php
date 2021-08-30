@@ -84,6 +84,44 @@ class CategoryRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @todo: multishop not considered
+     *
+     * @param CategoryId[] $categoryIds
+     *
+     * @return array<int, array<int, string>> [$categoryId => [$langId => $categoryName]]
+     */
+    public function getLocalizedNames(array $categoryIds): array
+    {
+        $categoryIds = array_map(function ($categoryId) {
+            return $categoryId->getValue();
+        }, $categoryIds
+        );
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('cl.name, cl.id_category, cl.id_lang')
+            ->from($this->dbPrefix . 'category_lang', 'cl')
+            ->where($qb->expr()->in('id_category', ':categoryIds'))
+            ->setParameter('categoryIds', $categoryIds, Connection::PARAM_INT_ARRAY)
+        ;
+
+        $results = $qb->execute()->fetchAllAssociative();
+
+        if (!$results) {
+            return [];
+        }
+
+        $localizedNamesByIds = [];
+        foreach ($results as $result) {
+            $categoryId = (int) $result['id_category'];
+            $langId = (int) $result['id_lang'];
+
+            $localizedNamesByIds[$categoryId][$langId] = $result['name'];
+        }
+
+        return $localizedNamesByIds;
+    }
+
+    /**
      * @param CategoryId $categoryId
      *
      * @throws CategoryNotFoundException
