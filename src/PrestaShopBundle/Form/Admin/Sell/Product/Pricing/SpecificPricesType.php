@@ -43,7 +43,7 @@ class SpecificPricesType extends TranslatorAwareType
                 ],
             ])
             // form for add/edit modal
-            ->add('specific_price_form', SpecificPriceType::class)
+            ->add('specific_price', SpecificPriceType::class)
             //@todo: collection for specific prices list
             ->add('specific_price_collection', CollectionType::class)
         ;

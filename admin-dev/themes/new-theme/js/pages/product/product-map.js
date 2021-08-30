@@ -212,4 +212,9 @@ export default {
     searchAttributeInput: `${attachmentsBlockId}_attached_files`,
     addAttachmentBtn: '.add-attachment',
   },
+  specificPrice: {
+    container: '#specific-prices-container',
+    modalTemplate: '#specific-price-modal-template',
+    addSpecificPriceBtn: '.js-add-specific-price-btn',
+  },
 };
