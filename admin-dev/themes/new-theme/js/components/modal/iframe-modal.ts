@@ -26,10 +26,8 @@
 /* eslint max-classes-per-file: ["error", 2] */
 
 import {
-  ModalContainerType, ModalContainer, ModalType, ModalParams,
-} from '@components/modal/modal-container';
-
-const {$} = window;
+  ModalContainerType, ModalContainer, ModalType, ModalParams, Modal,
+} from '@components/modal/modal';
 
 export interface IframeModalContainerType extends ModalContainerType {
   iframe: HTMLIFrameElement;
@@ -38,7 +36,7 @@ export interface IframeModalContainerType extends ModalContainerType {
 }
 export interface IframeModalType extends ModalType {
   modal: IframeModalContainerType;
-  displayMessage: (message: string, hideIframe?: boolean) => void;
+  render: (content: string, hideIframe?: boolean) => void;
 }
 export type IframeCallbackFunction = (iframe:HTMLIFrameElement, event: Event) => void;
 export type IframeModalParams = ModalParams & {
@@ -104,12 +102,10 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
  * - onLoaded: called when the iframe has juste been refreshed
  * - onUnload: called when the iframe is about to refresh (so it is unloaded)
  */
-export class IframeModal implements IframeModalType {
-  modal: IframeModalContainerType;
+export class IframeModal extends Modal implements IframeModalType {
+  modal!: IframeModalContainerType;
 
-  protected $modal: JQuery;
-
-  protected autoSize: boolean;
+  protected autoSize!: boolean;
 
   constructor(
     inputParams: InputIframeModalParams,
@@ -120,15 +116,15 @@ export class IframeModal implements IframeModalType {
       autoSize: true,
       ...inputParams,
     };
+    super(params);
+  }
 
+  protected initContainer(params: IframeModalParams): void {
     // Construct the container
-    this.autoSize = params.autoSize;
     this.modal = new IframeModalContainer(params);
+    super.initContainer(params);
 
-    const {id, closable} = params;
-
-    // jQuery modal object
-    this.$modal = $(this.modal.container);
+    this.autoSize = params.autoSize;
     this.modal.iframe.addEventListener('load', (loadedEvent) => {
       this.hideLoading();
       if (params.onLoaded) {
@@ -148,28 +144,13 @@ export class IframeModal implements IframeModalType {
       }
     });
 
-    this.$modal.modal({
-      backdrop: closable ? true : 'static',
-      keyboard: closable !== undefined ? closable : true,
-      show: false,
-    });
-
-    this.$modal.on('hidden.bs.modal', () => {
-      const modal = document.querySelector(`#${id}`);
-
-      if (modal) {
-        modal.remove();
-      }
-    });
     this.$modal.on('shown.bs.modal', () => {
       this.modal.iframe.src = params.iframeUrl;
     });
-
-    document.body.appendChild(this.modal.container);
   }
 
-  displayMessage(message: string, hideIframe: boolean = true): void {
-    this.modal.message.innerHTML = message;
+  render(content: string, hideIframe: boolean = true): void {
+    this.modal.message.innerHTML = content;
     this.modal.message.classList.remove('d-none');
 
     if (hideIframe) {
@@ -178,14 +159,6 @@ export class IframeModal implements IframeModalType {
 
     this.autoResize();
     this.hideLoading();
-  }
-
-  show(): void {
-    this.$modal.modal('show');
-  }
-
-  hide(): void {
-    this.$modal.modal('hide');
   }
 
   private hideIframe(): void {

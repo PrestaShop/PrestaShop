@@ -26,7 +26,7 @@
 import IframeModal, {
   IframeModalType, InputIframeModalParams,
 } from '@components/modal/iframe-modal';
-import {ModalParams} from '@components/modal/modal-container';
+import {ModalParams} from '@components/modal/modal';
 
 export type FormIframeModalType = IframeModalType
 export type FormIframeCallbackFunction = (

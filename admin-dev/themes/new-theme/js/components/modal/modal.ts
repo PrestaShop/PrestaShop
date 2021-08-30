@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+/* eslint max-classes-per-file: ["error", 2] */
+
 export interface ModalContainerType {
   container: HTMLElement;
   dialog: HTMLElement;
@@ -37,7 +39,7 @@ export interface ModalType {
   modal: ModalContainerType;
   show: () => void;
   hide: () => void;
-  displayMessage: (message: string) => void;
+  render: (content: string) => void;
 }
 export type CssProps = Record<string, string>;
 export type ModalParams = {
@@ -45,6 +47,7 @@ export type ModalParams = {
   closable?: boolean;
   modalTitle?: string
   dialogStyle?: CssProps;
+  closeCallback?: () => boolean;
 }
 export type InputModalParams = Partial<ModalParams>;
 
@@ -79,6 +82,7 @@ export class ModalContainer implements ModalContainerType {
     const params: ModalParams = {
       id: 'confirm-modal',
       closable: false,
+      closeCallback: () => true,
       ...inputParams,
     };
 
@@ -142,3 +146,73 @@ export class ModalContainer implements ModalContainerType {
     this.container.appendChild(this.dialog);
   }
 }
+
+/**
+ * Modal component
+ *
+ * @param {InputModalParams} params
+ * @param {Function} closeCallback
+ */
+export class Modal implements ModalType {
+  modal!: ModalContainerType;
+
+  protected $modal!: JQuery;
+
+  constructor(
+    inputParams: InputModalParams,
+  ) {
+    const params: ModalParams = {
+      id: 'confirm-modal',
+      closable: false,
+      dialogStyle: {},
+      ...inputParams,
+    };
+
+    this.initContainer(params);
+  }
+
+  protected initContainer(params: ModalParams): void {
+    // Construct the modal, check if it already exists This allows child classes to use their custom container
+    if (!this.modal) {
+      this.modal = new ModalContainer(params);
+    }
+
+    // jQuery modal object
+    this.$modal = $(this.modal.container);
+
+    const {id, closable} = params;
+    this.$modal.modal({
+      backdrop: closable ? true : 'static',
+      keyboard: closable !== undefined ? closable : true,
+      show: false,
+    });
+
+    this.$modal.on('hidden.bs.modal', () => {
+      const modal = document.querySelector(`#${id}`);
+
+      if (modal) {
+        modal.remove();
+      }
+
+      if (params.closeCallback) {
+        params.closeCallback();
+      }
+    });
+
+    document.body.appendChild(this.modal.container);
+  }
+
+  render(content: string): void {
+    this.modal.message.innerHTML = content;
+  }
+
+  show(): void {
+    this.$modal.modal('show');
+  }
+
+  hide(): void {
+    this.$modal.modal('hide');
+  }
+}
+
+export default Modal;

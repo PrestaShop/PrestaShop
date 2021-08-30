@@ -26,10 +26,8 @@
 /* eslint max-classes-per-file: ["error", 2] */
 
 import {
-  ModalContainerType, ModalContainer, ModalType, ModalParams,
-} from '@components/modal/modal-container';
-
-const {$} = window;
+  ModalContainerType, ModalContainer, ModalType, ModalParams, Modal,
+} from '@components/modal/modal';
 
 export interface ConfirmModalContainerType extends ModalContainerType {
   message: HTMLElement;
@@ -46,6 +44,7 @@ export type ConfirmModalParams = ModalParams & {
   closeButtonLabel: string;
   confirmButtonLabel: string;
   confirmButtonClass: string;
+  confirmCallback: (event: Event) => void,
   customButtons: Array<HTMLButtonElement | HTMLAnchorElement>;
 }
 export type InputConfirmModalParams = Partial<ConfirmModalParams>;
@@ -111,13 +110,11 @@ export class ConfirmModalContainer extends ModalContainer implements ConfirmModa
  * ConfirmModal component
  *
  * @param {InputConfirmModalParams} params
- * @param {Function} confirmCallback
- * @param {Function} cancelCallback
+ * @param {Function} confirmCallback @deprecated You should rely on the confirmCallback param
+ * @param {Function} cancelCallback @deprecated You should rely on the closeCallback param
  */
-export class ConfirmModal implements ConfirmModalType {
-  modal: ConfirmModalContainerType;
-
-  protected $modal: JQuery;
+export class ConfirmModal extends Modal implements ConfirmModalType {
+  modal!: ConfirmModalContainerType;
 
   constructor(
     inputParams: InputConfirmModalParams,
@@ -134,50 +131,18 @@ export class ConfirmModal implements ConfirmModalType {
       closable: false,
       modalTitle: inputParams.confirmTitle,
       dialogStyle: {},
+      confirmCallback,
+      closeCallback: cancelCallback,
       ...inputParams,
     };
 
-    // Construct the modal
+    super(params);
+  }
+
+  protected initContainer(params: ConfirmModalParams): void {
     this.modal = new ConfirmModalContainer(params);
-
-    const {id, closable} = params;
-
-    // jQuery modal object
-    this.$modal = $(this.modal.container);
-
-    this.modal.confirmButton.addEventListener('click', confirmCallback);
-
-    this.$modal.modal({
-      backdrop: closable ? true : 'static',
-      keyboard: closable !== undefined ? closable : true,
-      show: false,
-    });
-
-    this.$modal.on('hidden.bs.modal', () => {
-      const modal = document.querySelector(`#${id}`);
-
-      if (modal) {
-        modal.remove();
-      }
-
-      if (cancelCallback) {
-        cancelCallback();
-      }
-    });
-
-    document.body.appendChild(this.modal.container);
-  }
-
-  displayMessage(message: string): void {
-    this.modal.message.innerHTML = message;
-  }
-
-  show(): void {
-    this.$modal.modal('show');
-  }
-
-  hide(): void {
-    this.$modal.modal('hide');
+    this.modal.confirmButton.addEventListener('click', params.confirmCallback);
+    super.initContainer(params);
   }
 }
 
