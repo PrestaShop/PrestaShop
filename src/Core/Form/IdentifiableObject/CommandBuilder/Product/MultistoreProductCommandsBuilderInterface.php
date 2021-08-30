@@ -24,52 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
-/**
- * This class builds a collection of product commands based on the form data and a list of ProductCommandBuilderInterface
- */
-class ProductCommandsBuilder implements MultistoreProductCommandsBuilderInterface
+interface MultistoreProductCommandsBuilderInterface
 {
-    /**
-     * @var iterable<ProductCommandsBuilderInterface|MultistoreProductCommandsBuilderInterface>
-     */
-    private $commandBuilders;
-
-    /**
-     * @param iterable<ProductCommandsBuilderInterface|MultistoreProductCommandsBuilderInterface> $commandBuilders
-     */
-    public function __construct(iterable $commandBuilders)
-    {
-        $this->commandBuilders = $commandBuilders;
-    }
-
     /**
      * @param ProductId $productId
      * @param array $formData
+     * @param ShopId $shopId
      *
-     * @return array
+     * @return array Returns empty array if the required data for the command is absent
      */
-    public function buildCommands(ProductId $productId, array $formData, ShopId $shopId): array
-    {
-        $commandCollection = [];
-        foreach ($this->commandBuilders as $commandBuilder) {
-            if ($commandBuilder instanceof MultistoreProductCommandsBuilderInterface) {
-                $commands = $commandBuilder->buildCommands($productId, $formData, $shopId);
-            } else {
-                $commands = $commandBuilder->buildCommands($productId, $formData);
-            }
-
-            if (!empty($commands)) {
-                $commandCollection = array_merge($commandCollection, $commands);
-            }
-        }
-
-        return $commandCollection;
-    }
+    public function buildCommands(ProductId $productId, array $formData, ShopId $shopId): array;
 }
