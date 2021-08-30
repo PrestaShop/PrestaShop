@@ -225,4 +225,9 @@ export default {
   relatedProducts: {
     searchInput: '#product_description_related_products',
   },
+  specificPrice: {
+    container: '#specific-prices-container',
+    modalTemplate: '#specific-price-modal-template',
+    addSpecificPriceBtn: '.js-add-specific-price-btn',
+  },
 };
