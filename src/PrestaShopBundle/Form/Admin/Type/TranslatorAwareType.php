@@ -43,7 +43,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
     /**
      * All languages available on shop. Used for translations.
      *
-     * @param array $locales
+     * @param array<int, array<string, mixed>> $locales
      */
     protected $locales;
 
