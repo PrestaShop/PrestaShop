@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\SearchAttachmentHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 
+/**
+ * Handles @see SearchAttachment query using legacy object model
+ */
 class SearchAttachmentHandler implements SearchAttachmentHandlerInterface
 {
     /**
@@ -41,11 +44,21 @@ class SearchAttachmentHandler implements SearchAttachmentHandlerInterface
      */
     private $repository;
 
+    /**
+     * @param AttachmentRepository $repository
+     */
     public function __construct(AttachmentRepository $repository)
     {
         $this->repository = $repository;
     }
 
+    /**
+     * @param SearchAttachment $query
+     *
+     * @return array
+     *
+     * @throws EmptySearchException
+     */
     public function handle(SearchAttachment $query): array
     {
         $attachments = $this->repository->search($query->getSearchPhrase());

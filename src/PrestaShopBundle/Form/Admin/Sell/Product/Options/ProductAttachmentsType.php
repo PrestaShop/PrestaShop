@@ -42,6 +42,11 @@ class ProductAttachmentsType extends TranslatorAwareType
      */
     private $urlGenerator;
 
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param UrlGeneratorInterface $urlGenerator
+     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -51,6 +56,10 @@ class ProductAttachmentsType extends TranslatorAwareType
         $this->urlGenerator = $urlGenerator;
     }
 
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
