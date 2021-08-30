@@ -28,20 +28,24 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor;
 
+use Symfony\Component\PropertyAccess\PropertyPath;
+
 class CommandField
 {
     public const TYPE_STRING = 'string';
     public const TYPE_BOOL = 'bool';
     public const TYPE_INT = 'int';
+    public const TYPE_ARRAY = 'array';
 
     public const ACCEPTED_TYPES = [
         self::TYPE_STRING,
         self::TYPE_BOOL,
         self::TYPE_INT,
+        self::TYPE_ARRAY,
     ];
 
     /**
-     * @var string
+     * @var PropertyPath
      */
     private $dataPath;
 
@@ -75,15 +79,15 @@ class CommandField
             ));
         }
 
-        $this->dataPath = $dataPath;
+        $this->dataPath = new PropertyPath($dataPath);
         $this->commandSetter = $commandSetter;
         $this->type = $type;
     }
 
     /**
-     * @return string
+     * @return PropertyPath
      */
-    public function getDataPath(): string
+    public function getDataPath(): PropertyPath
     {
         return $this->dataPath;
     }

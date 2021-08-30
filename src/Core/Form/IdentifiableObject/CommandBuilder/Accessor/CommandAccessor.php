@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor;
 
-use PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension;
 use Symfony\Component\PropertyAccess\Exception\NoSuchIndexException;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -105,7 +104,7 @@ class CommandAccessor
      * Check if the data has a mapping checkbox to modify all shops for the tested field, if so use the allShopsCommand
      *
      * @param array $data
-     * @param string $dataPath
+     * @param PropertyPath $dataPath
      * @param mixed $shopCommand
      * @param mixed|null $allShopsCommand
      *
@@ -113,7 +112,7 @@ class CommandAccessor
      */
     private function getAppropriateCommand(
         array $data,
-        string $dataPath,
+        PropertyPath $dataPath,
         $shopCommand,
         $allShopsCommand
     ) {
@@ -121,17 +120,17 @@ class CommandAccessor
             return $shopCommand;
         }
 
-        $propertyPath = new PropertyPath($dataPath);
-        $lastElement = $propertyPath->getElement($propertyPath->getLength() - 1);
-        $multiShopName = ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX . $lastElement;
+        $lastElement = $dataPath->getElement($dataPath->getLength() - 1);
+        $multiShopName = $this->config->getMultiShopPrefix() . $lastElement;
 
         // Replace last element
-        if (($pos = strrpos($dataPath, $lastElement)) !== false) {
-            $dataPath = substr_replace($dataPath, $multiShopName, $pos, strlen($lastElement));
+        $stringPath = (string) $dataPath;
+        if (($pos = strrpos($stringPath, $lastElement)) !== false) {
+            $stringPath = substr_replace($stringPath, $multiShopName, $pos, strlen($lastElement));
         }
 
         try {
-            $modifyAll = $this->propertyAccessor->getValue($data, $dataPath);
+            $modifyAll = $this->propertyAccessor->getValue($data, $stringPath);
 
             return $modifyAll ? $allShopsCommand : $shopCommand;
         } catch (NoSuchIndexException | NoSuchPropertyException $e) {
