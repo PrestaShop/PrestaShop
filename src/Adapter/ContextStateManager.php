@@ -294,7 +294,7 @@ final class ContextStateManager
         $shop = $this->contextFieldsStack[$currentStashIndex]['shop'];
         $shopId = $shop instanceof Shop ? $shop->id : null;
         $shopContext = $this->contextFieldsStack[$currentStashIndex]['shopContext'];
-        if (null !== $shopContext && null !== $shopId) {
+        if (null !== $shopContext) {
             Shop::setContext($shopContext, $shopId);
         }
         unset($this->contextFieldsStack[$currentStashIndex]['shopContext']);
