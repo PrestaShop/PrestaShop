@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder;
 
 /**
@@ -49,15 +50,22 @@ class ProductFormDataHandler implements FormDataHandlerInterface
     private $commandsBuilder;
 
     /**
+     * @var ShopId
+     */
+    private $shopId;
+
+    /**
      * @param CommandBusInterface $bus
      * @param ProductCommandsBuilder $commandsBuilder
      */
     public function __construct(
         CommandBusInterface $bus,
-        ProductCommandsBuilder $commandsBuilder
+        ProductCommandsBuilder $commandsBuilder,
+        int $shopId
     ) {
         $this->bus = $bus;
         $this->commandsBuilder = $commandsBuilder;
+        $this->shopId = new ShopId($shopId);
     }
 
     /**
@@ -85,7 +93,11 @@ class ProductFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $commands = $this->commandsBuilder->buildCommands(new ProductId($id), $data);
+        $commands = $this->commandsBuilder->buildCommands(
+            new ProductId($id),
+            $data,
+            $this->shopId
+        );
 
         foreach ($commands as $command) {
             $this->bus->handle($command);
