@@ -30,12 +30,12 @@ namespace Tests\Unit\Adapter {
     use Currency;
     use Customer;
     use Language;
-    use PHPUnit\Framework\TestCase;
     use PrestaShop\PrestaShop\Adapter\ContextStateManager;
     use PrestaShop\PrestaShop\Adapter\LegacyContext;
     use Shop;
+    use Tests\TestCase\ContextStateTestCase;
 
-    class ContextStateManagerTest extends TestCase
+    class ContextStateManagerTest extends ContextStateTestCase
     {
         protected $legacyContext;
 
