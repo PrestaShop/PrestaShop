@@ -204,17 +204,19 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      */
     private function getCategoriesInformation(Product $product): CategoriesInformation
     {
-        $categoryIds = $product->getCategories();
+        $categoryIdValues = $product->getCategories();
         $defaultCategoryId = (int) $product->id_category_default;
 
+        $categoryIds = [];
+        foreach ($categoryIdValues as $categoryIdValue) {
+            $categoryIds[] = new CategoryId((int) $categoryIdValue);
+        }
+
+        $categoryNames = $this->categoryRepository->getLocalizedNames($categoryIds);
+
         $categoriesInformation = [];
-        foreach ($categoryIds as $categoryId) {
-            $categoryId = new CategoryId((int) $categoryId);
-            $category = $this->categoryRepository->get($categoryId);
-            $categoriesInformation[] = new CategoryInformation(
-                $categoryId->getValue(),
-                $category->name
-            );
+        foreach ($categoryNames as $categoryId => $localizedNames) {
+            $categoriesInformation[] = new CategoryInformation($categoryId, $localizedNames);
         }
 
         return new CategoriesInformation($categoriesInformation, $defaultCategoryId);
