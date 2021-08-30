@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Pr
 class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     private const SHOP_ID = 1;
+    private const MULTI_SHOP_PREFIX = 'prices_multishop';
 
     /**
      * @var ShopId
@@ -56,7 +57,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommand(array $formData, array $expectedCommands)
     {
-        $builder = new PricesCommandsBuilder();
+        $builder = new PricesCommandsBuilder(self::MULTI_SHOP_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->shopId);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -207,7 +208,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommandMultistore(array $formData, array $expectedCommands)
     {
-        $builder = new PricesCommandsBuilder();
+        $builder = new PricesCommandsBuilder(self::MULTI_SHOP_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->shopId);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -236,7 +237,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     'not_handled' => 0,
                     'retail_price' => [
                         'price_tax_excluded' => 45.56,
-                        'modify_all_shops_price_tax_excluded' => true,
+                        self::MULTI_SHOP_PREFIX . 'price_tax_excluded' => true,
                     ],
                 ],
             ],
@@ -287,7 +288,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 'pricing' => [
                     'retail_price' => [
                         'price_tax_excluded' => 45.56,
-                        'modify_all_shops_price_tax_excluded' => false,
+                        self::MULTI_SHOP_PREFIX . 'price_tax_excluded' => false,
                         'ecotax' => '45.56',
                     ],
                     'tax_rules_group_id' => '42',
@@ -320,7 +321,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 'pricing' => [
                     'retail_price' => [
                         'price_tax_excluded' => 45.56,
-                        'modify_all_shops_price_tax_excluded' => true,
+                        self::MULTI_SHOP_PREFIX . 'price_tax_excluded' => true,
                         'ecotax' => '45.56',
                     ],
                     'tax_rules_group_id' => '42',
