@@ -24,17 +24,6 @@
  *#}
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
-{% block categories_row %}
-  <div {{ block('widget_attributes') }}>
-    {{ form_row(form.product_categories) }}
-    {{ form_row(form.add_categories_btn) }}
-
-{#  @todo; there is no custom styling for options. Could be done similar to brands selection #}
-{#  select options are refreshed using javascript. See js/pages/product/components/categories/categories-manager.js       #}
-    {{ form_row(form.default_category_id) }}
-  </div>
-{% endblock %}
-
 {% block category_tags_collection_row %}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTagsWrapper form-group d-block')|trim }) -%}
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
