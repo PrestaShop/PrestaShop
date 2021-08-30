@@ -107,6 +107,7 @@
 
     {{- form_widget(form) -}}
     {{- form_errors(form) -}}
+    {{- block('form_modify_all_shops') -}}
 
     {{- block('form_append_alert') -}}
     {{- block('form_append_external_link') -}}
@@ -116,6 +117,14 @@
   <div class="form-group form-column-breaker"></div>
   {% endif %}
 {%- endblock form_row %}
+
+{% block form_modify_all_shops %}
+  {% set overrideCheckboxName = modify_all_shops_prefix ~ form.vars.name %}
+  {% if attribute(form.parent, overrideCheckboxName) is defined %}
+    {{ form_errors(attribute(form.parent, overrideCheckboxName)) }}
+    {{ form_widget(attribute(form.parent, overrideCheckboxName)) }}
+  {% endif %}
+{% endblock %}
 
 {% block widget_type_class %}
 {% if not compound and form.vars.block_prefixes|length > 2 %}
@@ -174,12 +183,6 @@
       {% set content = label_help_box is defined ? label_help_box : label_attr['popover'] %}
       {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
       {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": content } %}
-    {% endif %}
-
-    {% set overrideCheckboxName = modify_all_shops_prefix ~ form.vars.name %}
-    {% if attribute(form.parent, overrideCheckboxName) is defined %}
-      {{ form_errors(attribute(form.parent, overrideCheckboxName)) }}
-      {{ form_widget(attribute(form.parent, overrideCheckboxName)) }}
     {% endif %}
     </{{ labelTag }}>
     {% if label_subtitle is defined %}
