@@ -128,7 +128,7 @@ class PricingType extends TranslatorAwareType
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
             ])
-            ->add('specific_prices', UnavailableType::class, [
+            ->add('specific_prices', SpecificPricesType::class, [
                 'label' => $this->trans('Specific prices', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
                 'label_help_box' => $this->trans('You can set specific prices for customers belonging to different groups, different countries, etc.', 'Admin.Catalog.Help'),
