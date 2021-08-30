@@ -161,16 +161,16 @@ export class IframeModal extends Modal implements IframeModalType {
     this.hideLoading();
   }
 
-  private hideIframe(): void {
-    this.modal.iframe.classList.add('d-none');
-  }
-
-  private showLoading(): void {
+  showLoading(): void {
     this.modal.loader.classList.remove('d-none');
   }
 
-  private hideLoading(): void {
+  hideLoading(): void {
     this.modal.loader.classList.add('d-none');
+  }
+
+  hideIframe(): void {
+    this.modal.iframe.classList.add('d-none');
   }
 
   private autoResize(): void {

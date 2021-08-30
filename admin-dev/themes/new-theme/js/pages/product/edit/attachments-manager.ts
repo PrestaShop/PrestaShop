@@ -29,10 +29,23 @@ import Router from '@components/router';
 import {getAttachmentInfo} from '@pages/product/services/attachments-service';
 import {FormIframeModal} from '@components/modal/form-iframe-modal';
 import EntitySearchInput from '@components/entity-search-input';
+import {EventEmitter} from 'events';
 
 const {$} = window;
 
 export default class AttachmentsManager {
+  private $attachmentsContainer: JQuery;
+
+  private $searchAttributeInput: JQuery;
+
+  private $addAttachmentBtn: JQuery;
+
+  private eventEmitter: EventEmitter;
+
+  private router: Router;
+
+  private entitySearchInput!: EntitySearchInput;
+
   constructor() {
     this.$attachmentsContainer = $(ProductMap.attachments.attachmentsContainer);
     this.$searchAttributeInput = $(ProductMap.attachments.searchAttributeInput);
@@ -42,18 +55,12 @@ export default class AttachmentsManager {
     this.init();
   }
 
-  /**
-   * @private
-   */
-  init() {
+  private init(): void {
     this.initAddAttachmentIframe();
     this.initSearchInput();
   }
 
-  /**
-   * @private
-   */
-  initAddAttachmentIframe() {
+  private initAddAttachmentIframe(): void {
     this.$addAttachmentBtn.on('click', (event) => {
       event.preventDefault();
 
@@ -63,7 +70,7 @@ export default class AttachmentsManager {
         formSelector: 'form[name="attachment"]',
         formUrl: $(event.target).prop('href'),
         closable: true,
-        onFormLoaded: (form, formData, dataAttributes) => {
+        onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
           if (dataAttributes && dataAttributes.attachmentId) {
             const successMessage = this.$addAttachmentBtn.data('successCreateMessage');
             $.growl({
@@ -83,7 +90,7 @@ export default class AttachmentsManager {
     });
   }
 
-  initSearchInput() {
+  private initSearchInput(): void {
     this.entitySearchInput = new EntitySearchInput(this.$searchAttributeInput, {
       onRemovedContent: () => {
         this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
