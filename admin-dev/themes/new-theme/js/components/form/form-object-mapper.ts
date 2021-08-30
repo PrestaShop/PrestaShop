@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+// @ts-ignore
 import _ from 'lodash';
 import EventEmitter from '@components/event-emitter';
 
@@ -95,7 +96,6 @@ export default class FormObjectMapper {
 
   watchedProperties: Record<string, Array<(event: FormUpdateEvent) => void>>;
 
-  /* eslint-disable */
   /**
    * @param {jQuery} $form - Form element to attach the mapper to
    * @param {Object} modelMapping - Structure mapping a model to form names
