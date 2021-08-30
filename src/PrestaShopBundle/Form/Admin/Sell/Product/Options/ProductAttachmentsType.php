@@ -68,15 +68,9 @@ class ProductAttachmentsType extends TranslatorAwareType
                 'icon' => 'add_circle',
                 'type' => 'link',
                 'attr' => [
-                    'data-success-create-message' => sprintf('%s %s',
-                        $this->trans(
-                            'The file was successfully added.',
-                            'Admin.Catalog.Feature'
-                        ),
-                        $this->trans(
-                            'This window will close automatically.',
-                            'Admin.Global'
-                        )
+                    'data-success-create-message' => $this->trans(
+                        'The file was successfully added.',
+                        'Admin.Catalog.Feature'
                     ),
                     'data-modal-title' => $this->trans('Add new file', 'Admin.Catalog.Feature'),
                     'class' => 'btn-outline-secondary add-attachment',
