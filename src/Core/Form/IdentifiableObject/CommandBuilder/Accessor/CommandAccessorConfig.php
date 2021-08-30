@@ -31,9 +31,22 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Acce
 class CommandAccessorConfig
 {
     /**
+     * @var string
+     */
+    private $multiShopPrefix;
+
+    /**
      * @var CommandField[]
      */
     private $fields = [];
+
+    /**
+     * @param string $multiShopPrefix
+     */
+    public function __construct(string $multiShopPrefix)
+    {
+        $this->multiShopPrefix = $multiShopPrefix;
+    }
 
     public function addField(string $propertyPath, string $commandSetter, string $propertyType): self
     {
@@ -44,6 +57,14 @@ class CommandAccessorConfig
         );
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMultiShopPrefix(): string
+    {
+        return $this->multiShopPrefix;
     }
 
     /**
