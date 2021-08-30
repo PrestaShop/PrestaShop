@@ -173,10 +173,12 @@ class Stocks extends BOBasePage {
    */
   async simpleFilter(page, value) {
     await page.type(this.searchInput, value);
+
     await Promise.all([
       page.click(this.searchButton),
-      this.waitForVisibleSelector(page, this.productListLoading, 20000),
+      this.waitForVisibleSelector(page, this.productListLoading, 10000),
     ]);
+
     await this.waitForHiddenSelector(page, this.productListLoading);
   }
 
