@@ -28,31 +28,32 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Addon\Theme;
 
-use Phake;
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use Shop;
 use Symfony\Component\Filesystem\Filesystem;
+use Tests\TestCase\ContextStateTestCase;
 
-class ThemeRepositoryTest extends TestCase
+class ThemeRepositoryTest extends ContextStateTestCase
 {
     const NOTICE = '[ThemeRepository] ';
     private $repository;
 
     protected function setUp()
     {
-        $shop = Phake::mock('Shop');
-        $shop->id = 1;
-        $shop->name = 'Demo shop';
+        $context = $this->createContextMock([
+            'shop' => $this->createContextFieldMock(Shop::class, 1),
+        ]);
+        Shop::setContext(Shop::CONTEXT_SHOP, 1);
 
         $configuration = new Configuration();
-        $configuration->restrictUpdatesTo($shop);
+        $configuration->restrictUpdatesTo($context->shop);
 
         /* @var \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository */
         $this->repository = new ThemeRepository(
             $configuration,
             new Filesystem(),
-            $shop
+            $context->shop
         );
     }
 
