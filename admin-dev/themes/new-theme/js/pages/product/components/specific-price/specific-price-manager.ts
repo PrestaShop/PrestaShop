@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,18 +22,28 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
+import ProductMap from '@pages/product/product-map';
+import SpecificPriceModal from '@pages/product/components/specific-price/specific-price-modal';
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
+const SpecificPriceMap = ProductMap.specificPrice;
 
-class SpecificPriceType extends AbstractType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder->add('fixed_price', TextType::class);
-    }
+export default class SpecificPriceManager {
+  container: HTMLElement;
+
+  specificPriceModal: SpecificPriceModal;
+
+  addSpecificPriceBtn: HTMLElement;
+
+  constructor() {
+    this.container = document.querySelector(SpecificPriceMap.container) as HTMLElement;
+    this.specificPriceModal = new SpecificPriceModal();
+    this.addSpecificPriceBtn = this.container.querySelector(SpecificPriceMap.addSpecificPriceBtn) as HTMLElement;
+
+    this.initSpecificPriceModal();
+  }
+
+  private initSpecificPriceModal() {
+    this.addSpecificPriceBtn.addEventListener('click', () => this.specificPriceModal.showModal());
+  }
 }
