@@ -197,4 +197,9 @@ export default {
     moduleContents: '.module-contents .module-render-container',
     moduleContent: (moduleId) => `.module-contents .module-render-container.${moduleId}`,
   },
+  specificPrice: {
+    container: '#specific-prices-container',
+    modalTemplate: '#specific-price-modal-template',
+    addSpecificPriceBtn: '.js-add-specific-price-btn',
+  },
 };

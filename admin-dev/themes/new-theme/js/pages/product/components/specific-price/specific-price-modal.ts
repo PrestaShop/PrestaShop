@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,18 +22,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
+import ProductMap from '@pages/product/product-map';
 
-class SpecificPriceType extends AbstractType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder->add('fixed_price', TextType::class);
-    }
+const {$} = window;
+
+const SpecificPriceMap = ProductMap.specificPrice;
+
+export default class SpecificPriceModal {
+  public showModal(): void {
+    const modalContent = $(SpecificPriceMap.modalTemplate);
+    // @todo: replace fancybox with Modal after following PR is merged:
+    //    https://github.com/PrestaShop/PrestaShop/pull/25184
+    $.fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
+      fitToView: false,
+      autoSize: false,
+      content: modalContent.html(),
+      afterShow: () => {
+        //@todo: all the js magic
+      },
+    });
+  }
 }
