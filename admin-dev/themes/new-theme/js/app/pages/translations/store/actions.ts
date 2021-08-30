@@ -29,7 +29,7 @@ import {showGrowl} from '@app/utils/growl';
 
 Vue.use(VueResource);
 
-export const getTranslations = ({commit}) => {
+export const getTranslations = ({commit}: Record<string, any>): void => {
   const url = window.data.translationUrl;
   Vue.http.get(url).then(
     (response) => {
