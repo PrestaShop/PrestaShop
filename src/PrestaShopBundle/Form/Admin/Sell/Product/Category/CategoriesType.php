@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,17 +45,25 @@ class CategoriesType extends TranslatorAwareType
     private $defaultCategoryChoiceProvider;
 
     /**
+     * @var EventSubscriberInterface
+     */
+    private $eventSubscriber;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param ConfigurableFormChoiceProviderInterface $defaultCategoryChoiceProvider
+     * @param EventSubscriberInterface $eventSubscriber
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        ConfigurableFormChoiceProviderInterface $defaultCategoryChoiceProvider
+        ConfigurableFormChoiceProviderInterface $defaultCategoryChoiceProvider,
+        EventSubscriberInterface $eventSubscriber
     ) {
         parent::__construct($translator, $locales);
         $this->defaultCategoryChoiceProvider = $defaultCategoryChoiceProvider;
+        $this->eventSubscriber = $eventSubscriber;
     }
 
     /**
@@ -77,6 +86,8 @@ class CategoriesType extends TranslatorAwareType
                 ],
             ])
         ;
+
+        $builder->addEventSubscriber($this->eventSubscriber);
     }
 
     /**
