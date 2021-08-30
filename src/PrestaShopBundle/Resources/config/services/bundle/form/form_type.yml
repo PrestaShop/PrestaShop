@@ -1340,6 +1340,7 @@ services:
         public: true
         arguments:
             - '@prestashop.adapter.form.choice_provider.product_default_category_choice_provider'
+            - '@form.type.sell.product.event_listener.categories_listener'
         tags:
             - { name: form.type }
 
@@ -1619,6 +1620,12 @@ services:
 
     form.type.sell.product.event_listener.redirect_option_listener:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
+        public: true
+
+    form.type.sell.product.event_listener.categories_listener:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
+        arguments:
+            - '@form.form_cloner'
         public: true
 
     # Combination form types
