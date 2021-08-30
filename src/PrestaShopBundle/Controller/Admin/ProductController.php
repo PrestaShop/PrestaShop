@@ -607,7 +607,9 @@ class ProductController extends FrameworkBundleAdminController
             // so we need to return the right type of response if an exception it thrown
             if ($request->isXmlHttpRequest()) {
                 return $this->returnErrorJsonResponse(
-                    [],
+                    // this is not perfect, but if there was an exception during saving or in a hook
+                    // atleast show the message near the name to help user identify what happened
+                    ['step1_name_1' => [$e->getMessage()]],
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
             }
