@@ -26,12 +26,10 @@
 
 namespace Tests\Unit\Adapter {
     use Cart;
-    use Context;
     use Country;
     use Currency;
     use Customer;
     use Language;
-    use PHPUnit\Framework\MockObject\MockObject;
     use PHPUnit\Framework\TestCase;
     use PrestaShop\PrestaShop\Adapter\ContextStateManager;
     use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -554,42 +552,6 @@ namespace Tests\Unit\Adapter {
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->language->id);
             $this->assertNull($contextStateManager->getContextFieldsStack());
-        }
-
-        /**
-         * @param string $className
-         * @param int $objectId
-         *
-         * @return MockObject|Cart|Country|Currency|Customer|Language|Shop
-         */
-        private function createContextFieldMock(string $className, int $objectId)
-        {
-            $contextField = $this->getMockBuilder($className)
-                ->disableOriginalConstructor()
-                ->getMock();
-
-            $contextField->id = $objectId;
-
-            return $contextField;
-        }
-
-        /**
-         * @param array $contextFields
-         *
-         * @return MockObject|Context
-         */
-        private function createContextMock(array $contextFields)
-        {
-            $contextMock = $this->getMockBuilder(Context::class)
-                ->disableOriginalConstructor()
-                ->getMock();
-
-            foreach ($contextFields as $fieldName => $contextValue) {
-                $contextMock->$fieldName = $contextValue;
-            }
-            LegacyContext::setInstanceForTesting($contextMock);
-
-            return $contextMock;
         }
     }
 }
