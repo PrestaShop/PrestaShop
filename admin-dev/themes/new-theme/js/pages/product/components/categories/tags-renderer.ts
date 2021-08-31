@@ -87,16 +87,7 @@ export default class TagsRenderer {
     });
 
     this.listenTagRemoval();
-    this.toggleContainerVisibility();
     this.eventEmitter.emit(ProductEventMap.categories.categoriesUpdated);
-  }
-
-  private toggleContainerVisibility(): void {
-    this.container.querySelector(ProductCategoryMap.tagsContainer);
-    this.container.classList.toggle(
-      'd-block',
-      this.container.querySelector(ProductCategoryMap.tagItem) !== null,
-    );
   }
 
   private listenTagRemoval(): void {
