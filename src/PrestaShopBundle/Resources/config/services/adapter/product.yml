@@ -284,6 +284,13 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand
 
+    prestashop.adapter.product.command_handler.bulk_toggle_product_handle:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkToggleProductHandler
+
+        tags:
+            -   name: tactician.handler
+                command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand
+
     prestashop.adapter.product.command_handler.set_associated_product_attachments_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetAssociatedProductAttachmentsHandler
         arguments:

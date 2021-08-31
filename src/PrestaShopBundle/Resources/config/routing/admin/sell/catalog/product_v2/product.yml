@@ -65,3 +65,42 @@ admin_products_v2_delete:
             id_product: productId
     requirements:
         productId: \d+
+
+admin_products_v2_bulk_enable:
+    path: /bulk-enable
+    methods: [POST, DELETE]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkEnable
+        _legacy_controller: AdminProducts
+        _legacy_link:
+            - AdminProducts:submitBulkdisableSelectionproduct
+        _legacy_parameters:
+            id_product: productId
+    requirements:
+        productId: \d+
+
+admin_products_v2_bulk_disable:
+    path: /bulk-disable
+    methods: [POST, DELETE]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkDisable
+        _legacy_controller: AdminProducts
+        _legacy_link:
+            - AdminProducts:submitBulkenableSelectionproduct
+        _legacy_parameters:
+            id_product: productId
+    requirements:
+        productId: \d+
+
+admin_products_v2_bulk_delete:
+    path: /bulk-delete
+    methods: [POST, DELETE]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkDelete
+        _legacy_controller: AdminProducts
+        _legacy_link:
+            - AdminProducts:submitBulkdeleteproduct
+        _legacy_parameters:
+            id_product: productId
+    requirements:
+        productId: \d+

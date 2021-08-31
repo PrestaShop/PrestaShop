@@ -29,6 +29,14 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Command\BulkDeleteAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
@@ -42,10 +50,12 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\ProductDownload;
+use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -206,6 +216,123 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * Delete products in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteProductCommand(
+                    $this->getProductIdsFromRequest($request))
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * Enable products in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkEnableAction(Request $request): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new BulkToggleProductCommand(
+                    $this->getProductIdsFromRequest($request),
+                    true
+                )
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('Successful enable.', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * Disable customers in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+
+    public function bulkDisableAction(Request $request): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new BulkToggleProductCommand(
+                    $this->getProductIdsFromRequest($request),
+                    false
+                )
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('Successful disable.', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getProductIdsFromRequest(Request $request): array
+    {
+        $productIds = $request->request->get('product_bulk');
+
+        if (!is_array($productIds)) {
+            return [];
+        }
+
+        foreach ($productIds as $i => $productId) {
+            $productIds[$i] = (int) $productId;
+        }
+
+        return $productIds;
     }
 
     /**

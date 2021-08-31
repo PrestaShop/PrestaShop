@@ -24,14 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\bulkToggleProductCommand;
 
 /**
- * Exception thrown when an update of a data in the repository (DB) failed.
+ * Defines contract to handle @see bulkToggleProductCommand
  */
-class UpdateProductException extends Exception
+interface BulkToggleProductHandlerInterface
 {
-    public const FAILED_BULK_UPDATE_STATUS = 10;
+    /**
+     * @param bulkToggleProductCommand $command
+     */
+    public function handle(bulkToggleProductCommand $command): void;
 }
