@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
+use ObjectModel;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
@@ -244,29 +245,47 @@ class ProductRepository extends AbstractObjectModelRepository
      *
      * @throws CoreException
      */
-    public function get(
-        ProductId $productId,
-        ?ShopId $shopId = null
-    ): Product {
+    public function get(ProductId $productId): Product
+    {
         /** @var Product $product */
         $product = $this->getObjectModel(
+            $productId->getValue(),
+            Product::class,
+            ProductNotFoundException::class
+        );
+
+        return $this->loadProduct($product);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @return Product
+     *
+     * @throws CoreException
+     */
+    public function getForShop(ProductId $productId, ShopId $shopId): Product
+    {
+        /** @var Product $product */
+        $product = $this->getObjectModelForShop(
             $productId->getValue(),
             Product::class,
             ProductNotFoundException::class,
             $shopId
         );
 
-        try {
-            $product->loadStockData();
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when trying to load Product stock #%d', $productId->getValue()),
-                0,
-                $e
-            );
-        }
+        return $this->loadProduct($product);
+    }
 
-        return $product;
+    /**
+     * This override was needed because of the extra parameter in product constructor
+     *
+     * @inerhitDoc
+     */
+    protected function constructObjectModel(int $id, string $objectModelClass, ?int $shopId): ObjectModel
+    {
+        return new Product($id, false, null, $shopId);
     }
 
     /**
@@ -459,5 +478,27 @@ class ProductRepository extends AbstractObjectModelRepository
         }
 
         return $shops;
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return Product
+     *
+     * @throws CoreException
+     */
+    private function loadProduct(Product $product): Product
+    {
+        try {
+            $product->loadStockData();
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to load Product stock #%d', $product->id),
+                0,
+                $e
+            );
+        }
+
+        return $product;
     }
 }
