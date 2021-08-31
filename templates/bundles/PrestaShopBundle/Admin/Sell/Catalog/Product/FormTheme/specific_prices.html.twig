@@ -28,9 +28,11 @@
 {% block specific_prices_widget %}
   <div id="specific-prices-container">
     {{ form_row(form.add_specific_price_btn) }}
-
-    <template id="specific-price-modal-template">
-      {{ form_row(form.specific_price) }}
-    </template>
   </div>
+{% endblock %}
+
+{% block specific_price_row %}
+  <template id="specific-price-modal-template">
+    {{ form_row(form) }}
+  </template>
 {% endblock %}

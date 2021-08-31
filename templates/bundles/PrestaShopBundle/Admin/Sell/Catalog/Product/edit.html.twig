@@ -157,8 +157,11 @@
   {% block product_external_tab_combinations %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/external_tab.html.twig') }}
   {% endblock %}
-{% endblock %}
 
+  {% block specific_price_form %}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/specific_price_form.html.twig') }}
+  {% endblock %}
+{% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
