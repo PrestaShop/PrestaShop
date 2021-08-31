@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
+use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\EmbeddedAttributesFilter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -74,6 +75,11 @@ class ProductPresenter
      */
     protected $translator;
 
+    /**
+     * @var EmbeddedAttributesFilter
+     */
+    private $embeddedAttributesFilter;
+
     public function __construct(
         ImageRetriever $imageRetriever,
         Link $link,
@@ -81,7 +87,8 @@ class ProductPresenter
         ProductColorsRetriever $productColorsRetriever,
         TranslatorInterface $translator,
         HookManager $hookManager = null,
-        Configuration $configuration = null
+        Configuration $configuration = null,
+        EmbeddedAttributesFilter $embeddedAttributesFilter = null
     ) {
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;
@@ -90,6 +97,7 @@ class ProductPresenter
         $this->translator = $translator;
         $this->hookManager = $hookManager ?? new HookManager();
         $this->configuration = $configuration ?? new Configuration();
+        $this->embeddedAttributesFilter = $embeddedAttributesFilter;
     }
 
     public function present(
@@ -107,7 +115,8 @@ class ProductPresenter
             $this->productColorsRetriever,
             $this->translator,
             $this->hookManager,
-            $this->configuration
+            $this->configuration,
+            $this->embeddedAttributesFilter
         );
 
         Hook::exec('actionPresentProduct',

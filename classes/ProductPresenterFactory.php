@@ -102,7 +102,8 @@ class ProductPresenterFactoryCore
             new ProductColorsRetriever(),
             $this->context->getTranslator(),
             new HookManager(),
-            new AdapterConfiguration()
+            new AdapterConfiguration(),
+            new \PrestaShop\PrestaShop\Core\Filter\FrontEndObject\EmbeddedAttributesFilter()
         );
     }
 }
