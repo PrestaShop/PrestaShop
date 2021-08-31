@@ -1709,11 +1709,15 @@ var priceCalculation = (function() {
 
       /** combinations : update TTC price field on HT change */
       $(document).on('blur', '.combination-form .attribute_priceTE', function() {
+        $(this).val(priceCalculation.formatPrice($(this).val()));
+
         priceCalculation.impactTaxInclude($(this));
         priceCalculation.impactFinalPrice($(this));
       });
       /** combinations : update HT price field on TTC change */
       $(document).on('blur', '.combination-form .attribute_priceTI', function() {
+        $(this).val(priceCalculation.formatPrice($(this).val()));
+
         priceCalculation.impactTaxExclude($(this));
         priceCalculation.impactFinalPrice($(this));
       });
@@ -1740,6 +1744,17 @@ var priceCalculation = (function() {
      */
     normalizePrice: function (price) {
       return Tools.parseFloatFromString(price, true);
+    },
+
+    /**
+     * Round and truncate a price string
+     * @param {String} price
+     * @return {Number}
+     */
+    formatPrice: function(price) {
+      const roundedPrice = ps_round(price, displayPricePrecision);
+
+      return truncateDecimals(roundedPrice, displayPricePrecision)
     },
 
     /**
@@ -1796,7 +1811,7 @@ var priceCalculation = (function() {
       var impactPriceTE = this.getImpactTEInputValue(obj);
       var impactPriceTI = this.computePriceTaxIncluded(impactPriceTE);
 
-      this.updateImpactTIInput(impactPriceTI, obj);
+      this.getImpactTIInput(obj).val(impactPriceTI);
     },
 
     /**
@@ -1820,20 +1835,6 @@ var priceCalculation = (function() {
     },
 
     /**
-     * Computes the impact price tax included and update the related input
-     *
-     * @param {Number} impactPriceTI
-     * @param {jQuery} obj
-     */
-    updateImpactTIInput: function(impactPriceTI, obj) {
-      var impactPriceTIInput = this.getImpactTIInput(obj);
-      impactPriceTIInput
-        .val(impactPriceTI)
-        .trigger('change')
-      ;
-    },
-
-    /**
      * @param {jQuery} obj
      *
      * @returns {jQuery}
@@ -1851,23 +1852,6 @@ var priceCalculation = (function() {
       var impactPriceTEInput = this.getImpactTEInput(obj);
 
       return Number(Tools.parseFloatFromString(impactPriceTEInput.val()));
-    },
-
-    /**
-     * Updates the impact price tax excluded field, then update the impact tax included field accordingly
-     *
-     * @param {Number} impactPriceTE
-     * @param {jQuery} obj
-     */
-    updateImpactTEInput: function(impactPriceTE, obj) {
-      var impactPriceTEInput = this.getImpactTEInput(obj);
-      impactPriceTEInput
-        .val(impactPriceTE)
-        .trigger('change')
-      ;
-
-      var impactPriceTI = this.computePriceTaxIncluded(impactPriceTE);
-      this.updateImpactTIInput(impactPriceTI, obj);
     },
 
     /**
@@ -1980,7 +1964,8 @@ var priceCalculation = (function() {
       impactPriceTI = truncateDecimals(impactPriceTI, displayPricePrecision);
       var impactPriceTE = this.computePriceTaxExcluded(impactPriceTI);
 
-      this.updateImpactTEInput(impactPriceTE, obj);
+      this.getImpactTEInput(obj).val(impactPriceTE);
+      this.getImpactTIInput(obj).val(impactPriceTI);
     },
 
     /**
@@ -1991,7 +1976,7 @@ var priceCalculation = (function() {
       var impactPriceTI = this.getImpactTIInputValue(obj);
       var impactPriceTE = this.computePriceTaxExcluded(impactPriceTI);
 
-      this.updateImpactTEInput(impactPriceTE, obj);
+      this.getImpactTEInput(obj).val(impactPriceTE);
     },
 
     /**
