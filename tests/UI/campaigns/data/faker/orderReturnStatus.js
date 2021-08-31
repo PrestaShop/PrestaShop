@@ -10,10 +10,10 @@ class OrderReturnStatusData {
    * @param orderReturnStatusToCreate {Object} Could be used to force the value of some members
    */
   constructor(orderReturnStatusToCreate = {}) {
-    /** @member {string} Name of the status */
+    /** @type {string} Name of the status */
     this.name = orderReturnStatusToCreate.name || `order_return_status_${faker.lorem.word()}`;
 
-    /** @member {string} Hexadecimal value for the status  */
+    /** @type {string} Hexadecimal value for the status  */
     this.color = orderReturnStatusToCreate.color || faker.internet.color();
   }
 }
