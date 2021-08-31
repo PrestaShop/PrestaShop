@@ -52,10 +52,6 @@ export default class CategoryTreeSelector {
 
   categoryTree: HTMLElement|null;
 
-  expandAllButton: HTMLElement|null;
-
-  reduceAllButton: HTMLElement|null;
-
   tagsRenderer: TagsRenderer|null;
 
   constructor(eventEmitter: EventEmitter) {
@@ -66,8 +62,6 @@ export default class CategoryTreeSelector {
     this.defaultCategoryId = 0;
     this.modalContainer = null;
     this.categoryTree = null;
-    this.expandAllButton = null;
-    this.reduceAllButton = null;
     this.tagsRenderer = null;
   }
 
@@ -100,8 +94,6 @@ export default class CategoryTreeSelector {
   private async initModal(): Promise<void> {
     this.modalContainer = document.querySelector(ProductCategoryMap.categoriesModalContainer) as HTMLElement;
     this.categoryTree = this.modalContainer.querySelector(ProductCategoryMap.categoryTree) as HTMLElement;
-    this.expandAllButton = this.modalContainer.querySelector(ProductCategoryMap.expandAllButton);
-    this.reduceAllButton = this.modalContainer.querySelector(ProductCategoryMap.reduceAllButton);
     this.tagsRenderer = new TagsRenderer(
       this.eventEmitter,
       `${ProductCategoryMap.categoriesModalContainer} ${ProductCategoryMap.tagsContainer}`,
@@ -155,19 +147,6 @@ export default class CategoryTreeSelector {
       categoryTree.append(treeCategoryElement);
     });
 
-    if (this.expandAllButton) {
-      this.expandAllButton.addEventListener('click', () => {
-        this.toggleAll(true);
-      });
-    }
-
-    if (this.reduceAllButton) {
-      this.reduceAllButton.addEventListener('click', () => {
-        this.toggleAll(false);
-      });
-    }
-    this.toggleAll(true);
-
     categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkbox) => {
       if (checkbox instanceof HTMLInputElement) {
         const categoryId = Number(checkbox.value);
@@ -214,7 +193,6 @@ export default class CategoryTreeSelector {
   private generateCategoryTree(treeCategory: TreeCategory): HTMLElement {
     const categoryNode = this.generateTreeElement(treeCategory) as HTMLElement;
     const childrenList = categoryNode.querySelector(ProductCategoryMap.childrenList) as HTMLElement;
-    childrenList.classList.add('d-none');
 
     const hasChildren = treeCategory.children && treeCategory.children.length > 0;
     categoryNode.classList.toggle('more', hasChildren);
@@ -270,28 +248,6 @@ export default class CategoryTreeSelector {
     (checkboxInput.parentNode as HTMLElement).insertBefore(element, checkboxInput);
 
     return categoryNode;
-  }
-
-  private toggleAll(expanded: boolean): void {
-    if (!this.modalContainer || !this.expandAllButton || !this.reduceAllButton) {
-      return;
-    }
-
-    this.expandAllButton.style.display = expanded ? 'none' : 'block';
-    this.reduceAllButton.style.display = !expanded ? 'none' : 'block';
-
-    this.modalContainer
-      .querySelectorAll(ProductCategoryMap.childrenList)
-      .forEach((e) => {
-        e.classList.toggle('d-none', !expanded);
-      });
-
-    this.modalContainer
-      .querySelectorAll(ProductCategoryMap.everyItems)
-      .forEach((e) => {
-        e.classList.toggle('more', !expanded);
-        e.classList.toggle('less', expanded);
-      });
   }
 
   /**
