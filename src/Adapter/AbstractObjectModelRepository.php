@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Db;
 use DbQuery;
+use Exception;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -223,6 +224,39 @@ abstract class AbstractObjectModelRepository
     ): void {
         $objectModel->setFieldsToUpdate($this->formatPropertiesToUpdate($propertiesToUpdate));
         $this->updateObjectModel($objectModel, $exceptionClass, $errorCode);
+    }
+
+    /**
+     * @param ObjectModel $objectModel
+     * @param array $propertiesToUpdate
+     * @param array $shopIds
+     * @param string $exceptionClass
+     * @param int $errorCode
+     *
+     * @throws CoreException
+     */
+    protected function partiallyUpdateObjectModelForShops(
+        ObjectModel $objectModel,
+        array $propertiesToUpdate,
+        array $shopIds,
+        string $exceptionClass,
+        int $errorCode = 0
+    ): void {
+        $objectModel->setFieldsToUpdate($this->formatPropertiesToUpdate($propertiesToUpdate));
+
+        // Store object's list of shop ID to reset it appropriately after the update
+        $savedShopIds = $objectModel->id_shop_list;
+        $objectModel->id_shop_list = $shopIds;
+
+        try {
+            $this->updateObjectModel($objectModel, $exceptionClass, $errorCode);
+        } catch (Exception $e) {
+            // Even if an error occurs we reset the initial object's inner data, but without blocking the exception
+            $objectModel->id_shop_list = $savedShopIds;
+            throw $e;
+        }
+
+        $objectModel->id_shop_list = $savedShopIds;
     }
 
     /**
