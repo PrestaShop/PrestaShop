@@ -55,7 +55,6 @@ export default class CategoriesManager {
       eventEmitter,
       `${ProductCategoryMap.categoriesContainer} ${ProductCategoryMap.tagsContainer}`,
     );
-    this.tagsRenderer.listenTagRemoval();
     this.listenCategoryChanges();
     this.listenDefaultCategorySelect();
     this.initCategoryTreeModal();

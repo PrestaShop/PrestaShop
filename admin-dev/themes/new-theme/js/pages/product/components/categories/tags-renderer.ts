@@ -40,6 +40,7 @@ export default class TagsRenderer {
   ) {
     this.eventEmitter = eventEmitter;
     this.container = document.querySelector(containerSelector) as HTMLElement;
+    this.listenTagRemoval();
   }
 
   public render(categories: Array<Category>, defaultCategoryId: number): void {
@@ -98,7 +99,7 @@ export default class TagsRenderer {
     );
   }
 
-  public listenTagRemoval(): void {
+  private listenTagRemoval(): void {
     this.container.querySelectorAll(ProductCategoryMap.tagRemoveBtn).forEach((element) => {
       element.addEventListener('click', (event) => {
         event.preventDefault();
