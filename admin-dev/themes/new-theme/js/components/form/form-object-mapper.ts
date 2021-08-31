@@ -95,7 +95,7 @@ export default class FormObjectMapper {
   watchedProperties: Record<string, Array<(event: FormUpdateEvent) => void>>;
 
   /**
-   * @param {jQuery} $form - Form element to attach the mapper to
+   * @param {JQuery} $form - Form element to attach the mapper to
    * @param {Object} modelMapping - Structure mapping a model to form names
    * @param {EventEmitter} eventEmitter
    * @param {Object} [config] - Event names
@@ -170,7 +170,7 @@ export default class FormObjectMapper {
    *
    * @param {string} modelKey
    *
-   * @returns {undefined|jQuery}
+   * @returns {undefined|JQuery}
    */
   getInputsFor(modelKey: string): JQuery<HTMLElement> | undefined {
     if (
@@ -182,7 +182,7 @@ export default class FormObjectMapper {
     const inputNames = this.fullModelMapping[modelKey];
 
     // We must loop manually to keep the order in configuration,
-    // if we use jQuery multiple selectors the collection
+    // if we use JQuery multiple selectors the collection
     // will be filled respecting the order in the DOM
     const inputs: Array<HTMLElement> = [];
     const domForm = this.$form.get(0);
@@ -291,11 +291,11 @@ export default class FormObjectMapper {
   /**
    * Triggered when a form input has been changed.
    *
-   * @param {jQuery.Event} event
+   * @param {JQuery.TriggeredEvent} event
    *
    * @private
    */
-  private inputUpdated(event: JQueryEventObject): void {
+  private inputUpdated(event: JQuery.TriggeredEvent): void {
     const target = <HTMLInputElement>event.currentTarget;
 
     // All inputs changes are watched, but not all of them are part of the mapping so we ignore them
@@ -319,7 +319,7 @@ export default class FormObjectMapper {
    *
    * @returns {*}
    */
-  getInputValue($input) {
+  getInputValue($input: JQuery): string | number | string[] | boolean | undefined {
     if ($input.is(':checkbox')) {
       return $input.is(':checked');
     }
@@ -338,7 +338,7 @@ export default class FormObjectMapper {
    */
   private updateInputValue(
     modelKey: string,
-    value: string | number | string[] | undefined,
+    value: string | number | string[] | boolean | undefined,
     sourceInputName?: string,
   ): void {
     const modelInputs = this.fullModelMapping[modelKey];
@@ -367,7 +367,7 @@ export default class FormObjectMapper {
    */
   private updateInputByName(
     inputName: string,
-    value: string | number | string[] | undefined,
+    value: string | number | string[] | boolean | undefined,
   ): void {
     const $input: JQuery = $(`[name="${inputName}"]`, this.$form);
 
@@ -379,7 +379,7 @@ export default class FormObjectMapper {
 
     if (!this.hasSameValue(this.getInputValue($input), value)) {
       if ($input.is(':checkbox')) {
-        $input.val(!!value);
+        $input.val(value ? 1 : 0);
         $input.prop('checked', !!value);
       } else {
         $input.val(<string>value);
@@ -456,7 +456,7 @@ export default class FormObjectMapper {
    */
   private updateObjectByKey(
     modelKey: string,
-    value: string | number | string[] | undefined,
+    value: string | number | string[] | boolean | undefined,
   ): void {
     const modelKeys = modelKey.split('.');
     const previousValue = $.serializeJSON.deepGet(this.model, modelKeys);
