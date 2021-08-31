@@ -48,12 +48,13 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
  * Provides the data that is used to prefill the Product form
  */
-final class ProductFormDataProvider implements FormDataProviderInterface
+class ProductFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var CommandBusInterface
@@ -86,12 +87,18 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $contextLangId;
 
     /**
+     * @var ShopId
+     */
+    private $shopId;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
      * @param int $defaultCategoryId
      * @param CategoryDataProvider $categoryDataProvider
      * @param int $contextLangId
+     * @param int $shopId
      */
     public function __construct(
         CommandBusInterface $queryBus,
@@ -99,7 +106,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         int $mostUsedTaxRulesGroupId,
         int $defaultCategoryId,
         CategoryDataProvider $categoryDataProvider,
-        int $contextLangId
+        int $contextLangId,
+        int $shopId
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
@@ -107,6 +115,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $this->defaultCategoryId = $defaultCategoryId;
         $this->contextLangId = $contextLangId;
         $this->categoryDataProvider = $categoryDataProvider;
+        $this->shopId = new ShopId($shopId);
     }
 
     /**
@@ -116,7 +125,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     {
         $productId = (int) $id;
         /** @var ProductForEditing $productForEditing */
-        $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId));
+        $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId, $this->shopId));
 
         $productData = [
             'id' => $productId,

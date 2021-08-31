@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Get Product data necessary for editing
@@ -40,22 +40,22 @@ class GetProductForEditing
     private $productId;
 
     /**
-     * @var ShopConstraint|null
+     * @var ShopId|null
      */
-    private $shopConstraint;
+    private $shopId;
 
     /**
-     * GetEditableProduct constructor.
+     * GetProductForEditing constructor.
      *
      * @param int $productId
-     * @param ShopConstraint|null $shopConstraint
+     * @param ShopId $shopId
      */
     public function __construct(
         int $productId,
-        ?ShopConstraint $shopConstraint = null
+        ShopId $shopId
     ) {
         $this->productId = new ProductId($productId);
-        $this->shopConstraint = $shopConstraint;
+        $this->shopId = $shopId;
     }
 
     /**
@@ -67,10 +67,10 @@ class GetProductForEditing
     }
 
     /**
-     * @return ShopConstraint|null
+     * @return ShopId|null
      */
-    public function getShopConstraint(): ?ShopConstraint
+    public function getShopId(): ?ShopId
     {
-        return $this->shopConstraint;
+        return $this->shopId;
     }
 }
