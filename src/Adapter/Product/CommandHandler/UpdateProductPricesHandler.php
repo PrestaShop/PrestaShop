@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPrices
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use Product;
 
 /**
@@ -79,27 +78,20 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
      */
     public function handle(UpdateProductPricesCommand $command): void
     {
-        // @todo: this part will very likely be very similar in other multistore handlers, maybe we can share this via an abstract class later
         if ($command->getShopConstraint()->forAllShops()) {
-            $shops = $this->productRepository->getAssociatedShopIds($command->getProductId());
-            foreach ($shops as $shopId) {
-                $this->updatePriceByShop($command, $shopId);
-            }
+            $product = $this->productRepository->get($command->getProductId());
         } else {
-            $this->updatePriceByShop($command, $command->getShopConstraint()->getShopId());
+            $product = $this->productRepository->getForShop($command->getProductId(), $command->getShopConstraint()->getShopId());
         }
-    }
 
-    /**
-     * @param UpdateProductPricesCommand $command
-     * @param ShopId|null $shopId
-     */
-    private function updatePriceByShop(UpdateProductPricesCommand $command, ?ShopId $shopId = null): void
-    {
-        $product = $this->productRepository->getForShop($command->getProductId(), $shopId);
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
+        $this->productRepository->partialUpdateForShopConstraint(
+            $product,
+            $updatableProperties,
+            $command->getShopConstraint(),
+            CannotUpdateProductException::FAILED_UPDATE_PRICES
+        );
 
-        $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_PRICES);
         if (null !== $command->getWholesalePrice()) {
             $this->updateDefaultSupplier($command->getProductId(), $command->getWholesalePrice());
         }
