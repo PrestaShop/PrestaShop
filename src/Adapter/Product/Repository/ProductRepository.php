@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
@@ -52,7 +53,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstr
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
@@ -317,30 +320,43 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param Product $product
      * @param array $propertiesToUpdate
      * @param int $errorCode
-     *
-     * @throws CoreException
-     * @throws ProductConstraintException
-     * @throws ProductPackConstraintException
-     * @throws ProductStockConstraintException
      */
     public function partialUpdate(Product $product, array $propertiesToUpdate, int $errorCode): void
     {
-        $taxRulesGroupIdIsBeingUpdated = in_array('id_tax_rules_group', $propertiesToUpdate, true);
-        $taxRulesGroupId = (int) $product->id_tax_rules_group;
-        $manufacturerIdIsBeingUpdated = in_array('id_manufacturer', $propertiesToUpdate, true);
-        $manufacturerId = (int) $product->id_manufacturer;
+        $this->validateProduct($product, $propertiesToUpdate);
 
-        if ($taxRulesGroupIdIsBeingUpdated && $taxRulesGroupId !== ProductTaxRulesGroupSettings::NONE_APPLIED) {
-            $this->taxRulesGroupRepository->assertTaxRulesGroupExists(new TaxRulesGroupId($taxRulesGroupId));
-        }
-        if ($manufacturerIdIsBeingUpdated && $manufacturerId !== NoManufacturerId::NO_MANUFACTURER_ID) {
-            $this->manufacturerRepository->assertManufacturerExists(new ManufacturerId($manufacturerId));
-        }
-
-        $this->productValidator->validate($product);
         $this->partiallyUpdateObjectModel(
             $product,
             $propertiesToUpdate,
+            CannotUpdateProductException::class,
+            $errorCode
+        );
+    }
+
+    /**
+     * @param Product $product
+     * @param array $propertiesToUpdate
+     * @param ShopConstraint $shopConstraint
+     * @param int $errorCode
+     */
+    public function partialUpdateForShopConstraint(Product $product, array $propertiesToUpdate, ShopConstraint $shopConstraint, int $errorCode): void
+    {
+        $this->validateProduct($product, $propertiesToUpdate);
+
+        $shopIds = [];
+        if ($shopConstraint->forAllShops()) {
+            $shops = $this->getAssociatedShopIds(new ProductId((int) $product->id));
+            foreach ($shops as $shopId) {
+                $shopIds[] = $shopId->getValue();
+            }
+        } else {
+            $shopIds = [$shopConstraint->getShopId()->getValue()];
+        }
+
+        $this->partiallyUpdateObjectModelForShops(
+            $product,
+            $propertiesToUpdate,
+            $shopIds,
             CannotUpdateProductException::class,
             $errorCode
         );
@@ -478,6 +494,35 @@ class ProductRepository extends AbstractObjectModelRepository
         }
 
         return $shops;
+    }
+
+    /**
+     * @param Product $product
+     * @param array $propertiesToUpdate
+     *
+     * @throws CoreException
+     * @throws ProductConstraintException
+     * @throws ProductException
+     * @throws ProductPackConstraintException
+     * @throws ProductStockConstraintException
+     * @throws ManufacturerException
+     * @throws TaxRulesGroupException
+     */
+    private function validateProduct(Product $product, array $propertiesToUpdate): void
+    {
+        $taxRulesGroupIdIsBeingUpdated = in_array('id_tax_rules_group', $propertiesToUpdate, true);
+        $taxRulesGroupId = (int) $product->id_tax_rules_group;
+        $manufacturerIdIsBeingUpdated = in_array('id_manufacturer', $propertiesToUpdate, true);
+        $manufacturerId = (int) $product->id_manufacturer;
+
+        if ($taxRulesGroupIdIsBeingUpdated && $taxRulesGroupId !== ProductTaxRulesGroupSettings::NONE_APPLIED) {
+            $this->taxRulesGroupRepository->assertTaxRulesGroupExists(new TaxRulesGroupId($taxRulesGroupId));
+        }
+        if ($manufacturerIdIsBeingUpdated && $manufacturerId !== NoManufacturerId::NO_MANUFACTURER_ID) {
+            $this->manufacturerRepository->assertManufacturerExists(new ManufacturerId($manufacturerId));
+        }
+
+        $this->productValidator->validate($product);
     }
 
     /**
