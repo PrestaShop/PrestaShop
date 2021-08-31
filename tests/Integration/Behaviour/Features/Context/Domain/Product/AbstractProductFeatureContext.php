@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -116,17 +117,22 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
 
     /**
      * @param string $reference
-     * @param ShopConstraint|null $shopConstraint
+     * @param ShopId|null $shopId
      *
      * @return ProductForEditing
      */
-    protected function getProductForEditing(string $reference, ?ShopConstraint $shopConstraint = null): ProductForEditing
+    protected function getProductForEditing(string $reference, ?ShopId $shopId = null): ProductForEditing
     {
+        // @todo: For now, we handle a default fallback to avoid refactoring the whole tests, but ultimately this parameter should become mandatory
+        if (null === $shopId) {
+            $shopId = $this->getDefaultShopId();
+        }
+
         $productId = $this->getSharedStorage()->get($reference);
 
         return $this->getQueryBus()->handle(new GetProductForEditing(
             $productId,
-            $shopConstraint
+            $shopId
         ));
     }
 
@@ -300,5 +306,21 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         return $propertyAccessor->getValue($productForEditing, $pathsByNames[$propertyName]);
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    protected function getDefaultShopConstraint(): ShopConstraint
+    {
+        return ShopConstraint::shop((int) Configuration::get('PS_SHOP_DEFAULT'));
+    }
+
+    /**
+     * @return ShopId
+     */
+    protected function getDefaultShopId(): ShopId
+    {
+        return new ShopId((int) Configuration::get('PS_SHOP_DEFAULT'));
     }
 }
