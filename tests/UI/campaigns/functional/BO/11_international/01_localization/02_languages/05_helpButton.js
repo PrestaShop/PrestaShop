@@ -19,8 +19,8 @@ const baseContext = 'functional_BO_international_localization_languages_helpCard
 let browserContext;
 let page;
 
-// Check that help card is in english in languages page
-describe('Languages help card', async () => {
+// Check that help button is in english in languages page
+describe('BO - International - Languages : Help Button', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -34,7 +34,7 @@ describe('Languages help card', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to localization page', async function () {
+  it('should go to \'International > Localization\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -49,7 +49,7 @@ describe('Languages help card', async () => {
     await expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
-  it('should go to languages page', async function () {
+  it('should go to \'Languages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
 
     await localizationPage.goToSubTabLanguages(page);

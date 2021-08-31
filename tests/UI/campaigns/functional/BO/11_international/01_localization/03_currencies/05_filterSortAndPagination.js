@@ -30,7 +30,7 @@ Pagination next and previous
 Sort currencies by : ID, iso code, exchange rate, enabled
 Delete the created currencies
  */
-describe('Create official currency and check it in FO', async () => {
+describe('BO - International - Currencies : Filter, sort and pagination', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -45,7 +45,7 @@ describe('Create official currency and check it in FO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to localization page', async function () {
+  it('should go to \'International > Localization\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -60,7 +60,7 @@ describe('Create official currency and check it in FO', async () => {
     await expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
-  it('should go to currencies page', async function () {
+  it('should go to \'Currencies\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
 
     await localizationPage.goToSubTabCurrencies(page);

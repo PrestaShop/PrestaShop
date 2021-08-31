@@ -15,7 +15,7 @@ const TaxFaker = require('@data/faker/tax');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_localization_taxes_taxesBulkActions';
+const baseContext = 'functional_BO_international_taxes_taxes_taxesBulkActionsInBO';
 
 let browserContext;
 let page;
@@ -26,7 +26,7 @@ const firstTaxData = new TaxFaker({name: 'TVA to delete'});
 const secondTaxData = new TaxFaker({name: 'TVA to delete2'});
 
 // Create taxes, Then disable / Enable and Delete with Bulk actions
-describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', async () => {
+describe('BO - International - Taxes : Bulk actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -41,7 +41,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to Taxes page', async function () {
+  it('should go to \'International > Taxes\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -105,12 +105,10 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       await expect(textResult).to.contains('TVA to delete');
     });
 
-    const tests = [
+    [
       {args: {action: 'disable', enabledValue: false}},
       {args: {action: 'enable', enabledValue: true}},
-    ];
-
-    tests.forEach((test) => {
+    ].forEach((test) => {
       it(`should ${test.args.action} taxes with bulk actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}`, baseContext);
 

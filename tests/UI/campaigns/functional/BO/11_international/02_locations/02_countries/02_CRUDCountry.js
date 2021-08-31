@@ -4,11 +4,13 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const zonesPage = require('@pages/BO/international/locations');
 const countriesPage = require('@pages/BO/international/locations/countries');
 const addCountryPage = require('@pages/BO/international/locations/countries/add');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
@@ -48,7 +50,12 @@ const editCountryData = new CountryFaker(
 
 let numberOfCountries = 0;
 
-describe('CRUD country', async () => {
+/*
+Create country
+Update country
+Delete country
+ */
+describe('BO - International - Countries : CRUD country', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -63,7 +70,7 @@ describe('CRUD country', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'International>Locations\' page', async function () {
+  it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -78,7 +85,7 @@ describe('CRUD country', async () => {
     await expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
-  it('should go to countries page', async function () {
+  it('should go to \'Countries\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
     await zonesPage.goToSubTabCountries(page);
@@ -165,9 +172,7 @@ describe('CRUD country', async () => {
       const isCustomerConnected = await foAddressesPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
-  });
 
-  describe('Update country', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo_1', baseContext);
 
@@ -177,7 +182,9 @@ describe('CRUD country', async () => {
       const pageTitle = await countriesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(countriesPage.pageTitle);
     });
+  });
 
+  describe('Update country', async () => {
     it(`should filter country by name '${createCountryData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
@@ -255,9 +262,7 @@ describe('CRUD country', async () => {
       const isCountryExist = await foAddressesPage.isCountryExist(page, editCountryData.name);
       await expect(isCountryExist, 'Country exist').to.be.false;
     });
-  });
 
-  describe('Delete country by bulk actions', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo_2', baseContext);
 
@@ -267,7 +272,9 @@ describe('CRUD country', async () => {
       const pageTitle = await countriesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(countriesPage.pageTitle);
     });
+  });
 
+  describe('Delete country by bulk actions', async () => {
     it(`should filter country by name '${editCountryData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 

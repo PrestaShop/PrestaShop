@@ -30,7 +30,7 @@ const editZoneData = new ZoneFaker();
 
 let numberOfZones = 0;
 
-describe('CRUD zone', async () => {
+describe('BO - International - Zones : CRUD zone', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -45,7 +45,7 @@ describe('CRUD zone', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to locations page', async function () {
+  it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(

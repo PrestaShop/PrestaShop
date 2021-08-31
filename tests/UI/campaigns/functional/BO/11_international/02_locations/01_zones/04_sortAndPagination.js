@@ -33,7 +33,7 @@ Paginate between pages
 Delete zones with bulk actions
  */
 
-describe('Sort and pagination zones table', async () => {
+describe('BO - International - Zones : Sort and pagination', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -70,7 +70,7 @@ describe('Sort and pagination zones table', async () => {
 
   // 1 : Sort zones
   describe('Sort zones table', async () => {
-    const sortTests = [
+    [
       {
         args: {
           testIdentifier: 'sortByIdDesc', sortBy: 'id_zone', sortDirection: 'desc', isFloat: true,
@@ -91,9 +91,7 @@ describe('Sort and pagination zones table', async () => {
           testIdentifier: 'sortByIdAsc', sortBy: 'id_zone', sortDirection: 'asc', isFloat: true,
         },
       },
-    ];
-
-    sortTests.forEach((test) => {
+    ].forEach((test) => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 

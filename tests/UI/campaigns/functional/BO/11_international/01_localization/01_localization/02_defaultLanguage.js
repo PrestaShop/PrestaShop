@@ -21,15 +21,13 @@ const baseContext = 'functional_BO_international_localization_defaultLanguage';
 let browserContext;
 let page;
 
-describe('Update default language', async () => {
-  const tests = [
+describe('BO - International - Localization : Update default language', async () => {
+  [
     {args: {language: Languages.french.name, defaultBrowserLanguage: false, languageToCheck: 'Français'}},
     {args: {language: Languages.english.name, defaultBrowserLanguage: false, languageToCheck: 'English'}},
     // To back to the default values
     {args: {language: Languages.english.name, defaultBrowserLanguage: true}},
-  ];
-
-  tests.forEach((test, index) => {
+  ].forEach((test, index) => {
     describe(`Set default language to '${test.args.language}' and default language from browser to`
       + ` '${test.args.defaultBrowserLanguage}'`, async () => {
       before(async function () {
