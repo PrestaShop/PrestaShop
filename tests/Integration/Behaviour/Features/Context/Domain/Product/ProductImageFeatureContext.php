@@ -281,7 +281,8 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     {
         /** @var ProductForEditing $productForEditing */
         $productForEditing = $this->getCommandBus()->handle(new GetProductForEditing(
-            (int) $this->getSharedStorage()->get($productReference)
+            (int) $this->getSharedStorage()->get($productReference),
+            $this->getDefaultShopId()
         ));
         $realImageUrl = $this->getRealImageUrl($coverUrl);
 
