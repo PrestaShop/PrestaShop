@@ -20,7 +20,7 @@ const brandsPage = require('@pages/BO/catalog/brands');
 const suppliersPage = require('@pages/BO/catalog/suppliers');
 const addSupplierPage = require('@pages/BO/catalog/suppliers/add');
 
-const baseContext = 'functional_BO_catalog_brandsAndSuppliers_suppliers_paginationAndSortSuppliers';
+const baseContext = 'functional_BO_catalog_brandsAndSuppliers_suppliers_paginationSortAndBulkActions';
 
 let browserContext;
 let page;
@@ -30,7 +30,8 @@ let numberOfSuppliers = 0;
 Create 11 suppliers
 Paginate between pages
 Sort suppliers table
-Delete suppliers with bulk actions
+Bulk enable and disable suppliers
+Bulk delete them
  */
 describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', async () => {
   // before and after functions
@@ -142,8 +143,16 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
       },
       {args: {testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc'}},
       {args: {testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc'}},
-      {args: {testIdentifier: 'sortByNumberProductsAsc', sortBy: 'products_count', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByNumberProductsDesc', sortBy: 'products_count', sortDirection: 'desc'}},
+      {
+        args: {
+          testIdentifier: 'sortByNumberProductsAsc', sortBy: 'products_count', sortDirection: 'asc', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByNumberProductsDesc', sortBy: 'products_count', sortDirection: 'desc', isFloat: true,
+        },
+      },
       {args: {testIdentifier: 'sortByEnabledAsc', sortBy: 'active', sortDirection: 'asc'}},
       {args: {testIdentifier: 'sortByEnabledDesc', sortBy: 'active', sortDirection: 'desc'}},
       {
@@ -182,8 +191,8 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
     });
   });
 
-  // 4 : Delete suppliers created with bulk actions
-  describe('Delete suppliers with Bulk Actions', async () => {
+  // 4: Enable, disable and delete with bulk actions
+  describe('Bulk enable, disable and delete suppliers', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
@@ -197,18 +206,40 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
       await expect(textColumn).to.contains('todelete');
     });
 
-    it('should delete suppliers with Bulk Actions and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
+    [
+      {args: {action: 'disable', enabledValue: false}},
+      {args: {action: 'enable', enabledValue: true}},
+    ].forEach((test) => {
+      it(`should bulk ${test.args.action} suppliers`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}Suppliers`, baseContext);
+
+        const disableTextResult = await suppliersPage.bulkSetStatus(page, test.args.enabledValue);
+
+        await expect(disableTextResult).to.be.equal(suppliersPage.successfulUpdateStatusMessage);
+
+        // Check that element in grid are disabled
+        const numberOfSuppliersInGrid = await suppliersPage.getNumberOfElementInGrid(page);
+        await expect(numberOfSuppliersInGrid).to.be.at.most(11);
+
+        for (let i = 1; i <= numberOfSuppliersInGrid; i++) {
+          const supplierStatus = await suppliersPage.getStatus(page, i);
+          await expect(supplierStatus).to.equal(test.args.enabledValue);
+        }
+      });
+    });
+
+    it('should bulk delete suppliers', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteSuppliers', baseContext);
 
       const deleteTextResult = await suppliersPage.deleteWithBulkActions(page);
       await expect(deleteTextResult).to.be.equal(suppliersPage.successfulMultiDeleteMessage);
     });
 
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+    it('should reset filter', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterBulkDelete', baseContext);
 
       const numberOfSuppliersAfterReset = await suppliersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfSuppliersAfterReset).to.equal(numberOfSuppliers);
+      await expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
     });
   });
 });

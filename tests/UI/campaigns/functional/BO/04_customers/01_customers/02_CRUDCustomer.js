@@ -1,10 +1,12 @@
 require('module-alias/register');
 
-// Import expect from chai
 const {expect} = require('chai');
 
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
+
+// Import login steps
+const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -22,9 +24,6 @@ const foHomePage = require('@pages/FO/home');
 // Import data
 const CustomerFaker = require('@data/faker/customer');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_customers_customers_CRUDCustomer';
 
 let browserContext;
@@ -35,7 +34,7 @@ const createCustomerData = new CustomerFaker();
 const editCustomerData = new CustomerFaker({enabled: false});
 
 // Create, Read, Update and Delete Customer in BO
-describe('BO - Customers : CRUD customer in BO', async () => {
+describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -72,8 +71,8 @@ describe('BO - Customers : CRUD customer in BO', async () => {
     await expect(numberOfCustomers).to.be.above(0);
   });
 
-  // 1 : Create customer in BO
-  describe('Create customer in BO', async () => {
+  // 1 : Create customer and go to FO to check sign in is OK
+  describe('Create customer in BO and check sign in in FO', async () => {
     it('should go to add new customer page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCustomerPage', baseContext);
 
@@ -146,12 +145,7 @@ describe('BO - Customers : CRUD customer in BO', async () => {
 
       await customersPage.resetFilter(page);
 
-      await customersPage.filterCustomers(
-        page,
-        'input',
-        'email',
-        createCustomerData.email,
-      );
+      await customersPage.filterCustomers(page, 'input', 'email', createCustomerData.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
       await expect(textEmail).to.contains(createCustomerData.email);
@@ -195,12 +189,7 @@ describe('BO - Customers : CRUD customer in BO', async () => {
 
       await customersPage.resetFilter(page);
 
-      await customersPage.filterCustomers(
-        page,
-        'input',
-        'email',
-        createCustomerData.email,
-      );
+      await customersPage.filterCustomers(page, 'input', 'email', createCustomerData.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
       await expect(textEmail).to.contains(createCustomerData.email);
@@ -246,6 +235,7 @@ describe('BO - Customers : CRUD customer in BO', async () => {
       // Try to login
       await foHomePage.goToLoginPage(page);
       await foLoginPage.customerLogin(page, editCustomerData);
+
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected).to.be.false;
     });
@@ -268,12 +258,7 @@ describe('BO - Customers : CRUD customer in BO', async () => {
 
       await customersPage.resetFilter(page);
 
-      await customersPage.filterCustomers(
-        page,
-        'input',
-        'email',
-        editCustomerData.email,
-      );
+      await customersPage.filterCustomers(page, 'input', 'email', editCustomerData.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
       await expect(textEmail).to.contains(editCustomerData.email);
@@ -297,7 +282,7 @@ describe('BO - Customers : CRUD customer in BO', async () => {
     });
   });
 
-  // 7 : Delete Customer from BO
+  // 7 : Delete customer from BO
   describe('Delete customer', async () => {
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToDelete', baseContext);
@@ -317,12 +302,7 @@ describe('BO - Customers : CRUD customer in BO', async () => {
 
       await customersPage.resetFilter(page);
 
-      await customersPage.filterCustomers(
-        page,
-        'input',
-        'email',
-        editCustomerData.email,
-      );
+      await customersPage.filterCustomers(page, 'input', 'email', editCustomerData.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
       await expect(textEmail).to.contains(editCustomerData.email);

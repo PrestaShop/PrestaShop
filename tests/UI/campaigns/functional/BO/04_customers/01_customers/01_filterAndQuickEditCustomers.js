@@ -1,6 +1,5 @@
 require('module-alias/register');
 
-// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
@@ -30,8 +29,11 @@ const dd = (`0${today.getDate()}`).slice(-2); // Current day
 const yyyy = today.getFullYear(); // Current year
 const dateToday = `${yyyy}-${mm}-${dd}`;
 
-// Filter and quick edit customers
-describe('BO - Customers : Filter and quick edit customers', async () => {
+/*
+Filter customers table by Id, social title, first name, last name, email, active, newsletter and optin
+Quick edit customer enable/disable - status, newsletter and partner offers
+ */
+describe('BO - Customers - Customers : Filter and quick edit Customers table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -69,7 +71,7 @@ describe('BO - Customers : Filter and quick edit customers', async () => {
   });
 
   // 1 : Filter Customers with all inputs and selects in grid table
-  describe('Filter Customers', async () => {
+  describe('Filter customers table', async () => {
     const tests = [
       {
         args:
@@ -234,7 +236,7 @@ describe('BO - Customers : Filter and quick edit customers', async () => {
 
   // 2 : Editing customers from grid table
   describe('Quick edit customers', async () => {
-    it(`should filter by Email '${DefaultCustomer.email}'`, async function () {
+    it(`should filter by email '${DefaultCustomer.email}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
       await customersPage.filterCustomers(
@@ -301,10 +303,10 @@ describe('BO - Customers : Filter and quick edit customers', async () => {
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterQuickEdit', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
 
       const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomersAfterReset).to.be.equal(numberOfCustomers);
+      await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
   });
 });
