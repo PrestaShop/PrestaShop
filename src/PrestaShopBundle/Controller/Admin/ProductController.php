@@ -525,7 +525,6 @@ class ProductController extends FrameworkBundleAdminController
                         Response::HTTP_SERVICE_UNAVAILABLE
                     );
                 }
-
                 if ($form->isValid()) {
                     //define POST values for keeping legacy adminController skills
                     $_POST = $modelMapper->getModelData($formData, $isMultiShopContext) + $_POST;
@@ -604,7 +603,7 @@ class ProductController extends FrameworkBundleAdminController
             // so we need to return the right type of response if an exception it thrown
             if ($request->isXmlHttpRequest()) {
                 return $this->returnErrorJsonResponse(
-                    [],
+                    ['error'=> [$e->getMessage()]],
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
             }

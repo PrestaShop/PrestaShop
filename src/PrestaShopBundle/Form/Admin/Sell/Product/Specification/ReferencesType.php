@@ -47,7 +47,7 @@ class ReferencesType extends TranslatorAwareType
             ->add('reference', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('Reference', 'Admin.Global'),
-                'label_help_box' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('Your reference code for this product.', 'Admin.Catalog.Help'),
                 'empty_data' => '',
             ])
             ->add('mpn', TextType::class, [

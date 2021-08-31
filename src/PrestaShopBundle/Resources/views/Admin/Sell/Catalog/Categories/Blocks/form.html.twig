@@ -36,8 +36,7 @@
       {{ form_errors(categoryForm) }}
 
       {{ ps.form_group_row(categoryForm.name, {}, {
-        'label': 'Name'|trans({}, 'Admin.Global'),
-        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+        'label': 'Name'|trans({}, 'Admin.Global')
       }) }}
 
       <div class="form-group row">

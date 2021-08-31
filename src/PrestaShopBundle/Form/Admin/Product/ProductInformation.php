@@ -220,12 +220,8 @@ class ProductInformation extends CommonAbstractType
                 'type' => FormType\TextType::class,
                 'options' => [
                     'constraints' => [
-                        new Assert\Regex([
-                            'pattern' => '/[<>;=#{}]/',
-                            'match' => false,
-                        ]),
                         new Assert\NotBlank(),
-                        new Assert\Length(['min' => 3, 'max' => 128]),
+                        new Assert\Length(['min' => 1, 'max' => 128]),
                     ],
                     'attr' => [
                         'placeholder' => $this->translator->trans('Enter your product name', [], 'Admin.Catalog.Help'),
