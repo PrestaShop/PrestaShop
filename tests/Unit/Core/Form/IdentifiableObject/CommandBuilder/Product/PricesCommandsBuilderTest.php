@@ -30,24 +30,11 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PricesCommandsBuilder;
 
 class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
-    private const SHOP_ID = 1;
     private const MULTI_SHOP_PREFIX = 'prices_multishop';
-
-    /**
-     * @var ShopId
-     */
-    private $shopId;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->shopId = new ShopId(self::SHOP_ID);
-    }
 
     /**
      * @dataProvider getExpectedCommands
@@ -339,7 +326,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 
     private function getSingleShopCommand(): UpdateProductPricesCommand
     {
-        return new UpdateProductPricesCommand($this->getProductId()->getValue(), ShopConstraint::shop(static::SHOP_ID));
+        return new UpdateProductPricesCommand($this->getProductId()->getValue(), ShopConstraint::shop(self::SHOP_ID));
     }
 
     private function getAllShopsCommand(): UpdateProductPricesCommand
