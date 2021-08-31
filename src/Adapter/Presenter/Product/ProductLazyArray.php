@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\EmbeddedAttributesFilter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
@@ -96,6 +97,11 @@ class ProductLazyArray extends AbstractLazyArray
      */
     private $configuration;
 
+    /**
+     * @var EmbeddedAttributesFilter
+     */
+    private $embeddedAttributesFilter;
+
     public function __construct(
         ProductPresentationSettings $settings,
         array $product,
@@ -106,7 +112,8 @@ class ProductLazyArray extends AbstractLazyArray
         ProductColorsRetriever $productColorsRetriever,
         TranslatorInterface $translator,
         HookManager $hookManager = null,
-        Configuration $configuration = null
+        Configuration $configuration = null,
+        EmbeddedAttributesFilter $embeddedAttributesFilter = null
     ) {
         $this->settings = $settings;
         $this->product = $product;
@@ -118,6 +125,7 @@ class ProductLazyArray extends AbstractLazyArray
         $this->translator = $translator;
         $this->hookManager = $hookManager ?? new HookManager();
         $this->configuration = $configuration ?? new Configuration();
+        $this->embeddedAttributesFilter = $embeddedAttributesFilter;
 
         $this->fillImages(
             $product,
@@ -290,6 +298,10 @@ class ProductLazyArray extends AbstractLazyArray
             if (in_array($attribute, $whitelist)) {
                 $embeddedProductAttributes[$attribute] = $value;
             }
+        }
+
+        if ($this->embeddedAttributesFilter !== null) {
+            $embeddedProductAttributes = $this->embeddedAttributesFilter->filter($embeddedProductAttributes);
         }
 
         return $embeddedProductAttributes;
