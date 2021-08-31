@@ -161,6 +161,10 @@
   {% block category_tree_form %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Category/category_tree_form.html.twig') }}
   {% endblock %}
+
+  {% block specific_price_form %}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/specific_price_form.html.twig') }}
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}
