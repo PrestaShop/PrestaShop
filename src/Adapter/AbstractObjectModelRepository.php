@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopDatabaseException;
 use PrestaShopException;
-use Product;
 
 abstract class AbstractObjectModelRepository
 {
@@ -81,38 +80,25 @@ abstract class AbstractObjectModelRepository
      */
     protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass, ?ShopId $shopId = null): ObjectModel
     {
-        try {
-            if (null !== $shopId) {
-                $this->checkShopAssociation($id, $objectModelClass, $shopId);
-            }
+        return $this->fetchObjectModel($id, $objectModelClass, $exceptionClass, null);
+    }
 
-            // Special case for Product because it has an additional full parameter
-            if ($objectModelClass === Product::class) {
-                $objectModel = new Product($id, false, null, $shopId ? $shopId->getValue() : null);
-            } else {
-                $objectModel = new $objectModelClass($id, null, $shopId ? $shopId->getValue() : null);
-            }
+    /**
+     * @param int $id
+     * @param string $objectModelClass
+     * @param string $exceptionClass
+     *
+     * @return ObjectModel
+     *
+     * @throws CoreException
+     */
+    protected function getObjectModelForShop(int $id, string $objectModelClass, string $exceptionClass, ShopId $shopId): ObjectModel
+    {
+        $this->checkShopAssociation($id, $objectModelClass, $shopId);
+        $objectModel = $this->fetchObjectModel($id, $objectModelClass, $exceptionClass, $shopId->getValue());
 
-            // Force id_shop_list right away so that DB modification use the appropriate shop and not the one from context
-            if (null !== $shopId) {
-                $objectModel->id_shop_list = [$shopId->getValue()];
-            }
-
-            if ((int) $objectModel->id !== $id) {
-                throw new $exceptionClass(sprintf('%s #%d was not found', $objectModelClass, $id));
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf(
-                    'Error occurred when trying to get %s #%d [%s]',
-                    $objectModelClass,
-                    $id,
-                    $e->getMessage()
-                ),
-                0,
-                $e
-            );
-        }
+        // Force id_shop_list right away so that DB modification use the appropriate shop and not the one from context
+        $objectModel->id_shop_list = [$shopId->getValue()];
 
         return $objectModel;
     }
@@ -335,5 +321,52 @@ abstract class AbstractObjectModelRepository
         }
 
         return $formattedPropertiesToUpdate;
+    }
+
+    /**
+     * @param int $id
+     * @param string $objectModelClass
+     * @param string $exceptionClass
+     * @param int|null $shopId
+     *
+     * @return ObjectModel
+     *
+     * @throws CoreException
+     */
+    protected function fetchObjectModel(int $id, string $objectModelClass, string $exceptionClass, ?int $shopId): ObjectModel
+    {
+        try {
+            $objectModel = $this->constructObjectModel($id, $objectModelClass, $shopId);
+            if ((int) $objectModel->id !== $id) {
+                throw new $exceptionClass(sprintf('%s #%d was not found', $objectModelClass, $id));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when trying to get %s #%d [%s]',
+                    $objectModelClass,
+                    $id,
+                    $e->getMessage()
+                ),
+                0,
+                $e
+            );
+        }
+
+        return $objectModel;
+    }
+
+    /**
+     * This method can be overridden in case your ObjectModel has a special constructor
+     *
+     * @param int $id
+     * @param string $objectModelClass
+     * @param int|null $shopId
+     *
+     * @return ObjectModel
+     */
+    protected function constructObjectModel(int $id, string $objectModelClass, ?int $shopId): ObjectModel
+    {
+        return new $objectModelClass($id, null, $shopId);
     }
 }
