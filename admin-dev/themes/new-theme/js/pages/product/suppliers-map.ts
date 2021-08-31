@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-export default (suppliersFormId) => {
+export default (suppliersFormId: string): Record<string, any> => {
   const productSuppliersId = `${suppliersFormId}_product_suppliers`;
-  const productSupplierInputId = (supplierIndex, inputName) => `${productSuppliersId}_${supplierIndex}_${inputName}`;
+  const productSupplierInputId = (supplierIndex: string, inputName: string): string => `${productSuppliersId}_${supplierIndex}_${inputName}`;
 
   return {
     productSuppliersCollection: `${productSuppliersId}`,
@@ -35,13 +35,13 @@ export default (suppliersFormId) => {
     productsSuppliersTableBody: `${productSuppliersId} table tbody`,
     defaultSupplierClass: 'default-supplier',
     productSupplierRow: {
-      supplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_id'),
-      supplierNameInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_name'),
-      productSupplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'product_supplier_id'),
-      referenceInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'reference'),
-      priceInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'price_tax_excluded'),
-      currencyIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'currency_id'),
-      supplierNamePreview: (supplierIndex) => `#product_supplier_row_${supplierIndex} .supplier_name .preview`,
+      supplierIdInput: (supplierIndex: string): string => productSupplierInputId(supplierIndex, 'supplier_id'),
+      supplierNameInput: (supplierIndex: string): string => productSupplierInputId(supplierIndex, 'supplier_name'),
+      productSupplierIdInput: (supplierIndex: string): string => productSupplierInputId(supplierIndex, 'product_supplier_id'),
+      referenceInput: (supplierIndex: string): string => productSupplierInputId(supplierIndex, 'reference'),
+      priceInput: (supplierIndex: string): string => productSupplierInputId(supplierIndex, 'price_tax_excluded'),
+      currencyIdInput: (supplierIndex: string): string => productSupplierInputId(supplierIndex, 'currency_id'),
+      supplierNamePreview: (supplierIndex: string): string => `#product_supplier_row_${supplierIndex} .supplier_name .preview`,
     },
     checkboxContainer: '.form-check',
   };
