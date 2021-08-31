@@ -157,7 +157,6 @@ const AdminModuleController = function () {
     });
   };
 
-
   this.fetchModulesList = function () {
     const self = this;
     self.modulesList = [];
@@ -187,6 +186,7 @@ const AdminModuleController = function () {
         $this.remove();
       });
     });
+
     this.updateModuleVisibility();
     $('body').trigger('moduleCatalogLoaded');
   };
@@ -469,7 +469,7 @@ const AdminModuleController = function () {
         $(self.moduleImportFailureSelector).fadeIn();
       });
     };
-
+  };
 
   this.getBulkCheckboxesSelector = function () {
     return this.currentDisplay === 'grid'
@@ -523,7 +523,6 @@ const AdminModuleController = function () {
       destinationTabs[key].find('.notification-counter').text(badge[key]);
     }
   };
-
 
   this.initCategoriesGrid = function () {
     // eslint-disable-next-line
