@@ -22,32 +22,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-export default {
-  computed: {
-    thumbnail() {
-      if (this.product.combination_thumbnail !== 'N/A') {
-        return `${this.product.combination_thumbnail}`;
-      }
+import Vue from 'vue';
 
-      if (this.product.product_thumbnail !== 'N/A') {
-        return `${this.product.product_thumbnail}`;
-      }
-
-      return null;
-    },
-    combinationName() {
-      const combinations = this.product.combination_name.split(',');
-      const attributes = this.product.attribute_name.split(',');
-      const separator = ' - ';
-      let attr = '';
-      combinations.forEach((attribute, index) => {
-        const value = attribute.trim().slice(attributes[index].trim().length + separator.length);
-        attr += attr.length ? ` - ${value}` : value;
-      });
-      return attr;
-    },
-    hasCombination() {
-      return !!this.product.combination_id;
+export default Vue.extend({
+  methods: {
+    trans(key: string) {
+      return this.$store.state.translations[key];
     },
   },
-};
+});

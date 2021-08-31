@@ -23,49 +23,51 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+/* eslint-disable no-param-reassign */
+
 import _ from 'lodash';
 import * as types from './mutation-types';
 
 export default {
-  [types.UPDATE_ORDER](state, order) {
+  [types.UPDATE_ORDER](state: Record<string, any>, order: Record<string, any>): void {
     state.order = order;
   },
-  [types.UPDATE_KEYWORDS](state, keywords) {
+  [types.UPDATE_KEYWORDS](state: Record<string, any>, keywords: Array<string>): void {
     state.keywords = keywords;
   },
-  [types.SET_TOTAL_PAGES](state, totalPages) {
+  [types.SET_TOTAL_PAGES](state: Record<string, any>, totalPages: number): void {
     state.totalPages = Number(totalPages);
   },
-  [types.SET_PAGE_INDEX](state, pageIndex) {
+  [types.SET_PAGE_INDEX](state: Record<string, any>, pageIndex: number): void {
     state.pageIndex = pageIndex;
   },
-  [types.SET_SUPPLIERS](state, suppliers) {
+  [types.SET_SUPPLIERS](state: Record<string, any>, suppliers: Array<Record<string, any>>): void {
     state.suppliers = suppliers;
   },
-  [types.SET_CATEGORIES](state, categories) {
+  [types.SET_CATEGORIES](state: Record<string, any>, categories: Record<string, any>): void {
     state.categories = categories.data.tree.children;
   },
-  [types.SET_MOVEMENTS](state, movements) {
+  [types.SET_MOVEMENTS](state: Record<string, any>, movements: Record<string, any>): void {
     state.movements = movements.data;
   },
-  [types.SET_TRANSLATIONS](state, translations) {
-    translations.data.forEach((t) => {
+  [types.SET_TRANSLATIONS](state: Record<string, any>, translations: Record<string, any>): void {
+    translations.data.forEach((t: Record<string, any>) => {
       state.translations[t.translation_id] = t.name;
     });
   },
-  [types.LOADING_STATE](state, isLoading) {
+  [types.LOADING_STATE](state: Record<string, any>, isLoading: boolean): void {
     state.isLoading = isLoading;
   },
-  [types.APP_IS_READY](state) {
+  [types.APP_IS_READY](state: Record<string, any>): void {
     state.isReady = true;
   },
-  [types.SET_EMPLOYEES_LIST](state, employees) {
+  [types.SET_EMPLOYEES_LIST](state: Record<string, any>, employees: Record<string, any>): void {
     state.employees = employees.data;
   },
-  [types.SET_MOVEMENTS_TYPES](state, movementsTypes) {
+  [types.SET_MOVEMENTS_TYPES](state: Record<string, any>, movementsTypes: Record<string, any>): void {
     state.movementsTypes = movementsTypes.data;
   },
-  [types.ADD_PRODUCTS](state, products) {
+  [types.ADD_PRODUCTS](state: Record<string, any>, products: Record<string, any>): void {
     state.productsToUpdate = [];
     state.selectedProducts = [];
     _.forEach(products.data.data, (product) => {
@@ -74,7 +76,7 @@ export default {
     state.editBulkUrl = products.data.info.edit_bulk_url;
     state.products = products.data.data;
   },
-  [types.UPDATE_PRODUCT](state, updatedProduct) {
+  [types.UPDATE_PRODUCT](state: Record<string, any>, updatedProduct: Record<string, any>): void {
     const index = _.findIndex(state.products, {
       product_id: updatedProduct.product_id,
       combination_id: updatedProduct.combination_id,
@@ -87,7 +89,7 @@ export default {
     state.products.splice(index, 1, updatedProduct);
     state.productsToUpdate.splice(updatedIndex, 1);
   },
-  [types.UPDATE_PRODUCTS_QTY](state, updatedProducts) {
+  [types.UPDATE_PRODUCTS_QTY](state: Record<string, any>, updatedProducts: Record<string, any>): void {
     state.productsToUpdate = [];
     state.selectedProducts = [];
     _.forEach(updatedProducts, (product) => {
@@ -100,7 +102,7 @@ export default {
     });
     state.hasQty = false;
   },
-  [types.UPDATE_PRODUCT_QTY](state, updatedProduct) {
+  [types.UPDATE_PRODUCT_QTY](state: Record<string, any>, updatedProduct: Record<string, any>): void {
     let hasQty = false;
 
     const productToUpdate = _.find(state.products, {
@@ -117,7 +119,7 @@ export default {
 
     state.hasQty = hasQty;
   },
-  [types.ADD_PRODUCT_TO_UPDATE](state, updatedProduct) {
+  [types.ADD_PRODUCT_TO_UPDATE](state: Record<string, any>, updatedProduct: Record<string, any>): void {
     const index = _.findIndex(state.productsToUpdate, {
       product_id: updatedProduct.product_id,
       combination_id: updatedProduct.combination_id,
@@ -129,17 +131,17 @@ export default {
       state.productsToUpdate.push(updatedProduct);
     }
   },
-  [types.REMOVE_PRODUCT_TO_UPDATE](state, updatedProduct) {
+  [types.REMOVE_PRODUCT_TO_UPDATE](state: Record<string, any>, updatedProduct: Record<string, any>): void {
     const index = _.findIndex(state.productsToUpdate, {
       product_id: updatedProduct.product_id,
       combination_id: updatedProduct.combination_id,
     });
     state.productsToUpdate.splice(index, 1);
   },
-  [types.UPDATE_BULK_EDIT_QTY](state, value) {
+  [types.UPDATE_BULK_EDIT_QTY](state: Record<string, any>, value: number): void {
     state.bulkEditQty = value;
     if (value) {
-      _.forEach(state.selectedProducts, (product) => {
+      _.forEach(state.selectedProducts, (product: Record<string, any>) => {
         const index = _.findIndex(state.productsToUpdate, {
           product_id: product.product_id,
           combination_id: product.combination_id,
@@ -163,7 +165,7 @@ export default {
       state.hasQty = false;
     }
   },
-  [types.ADD_SELECTED_PRODUCT](state, product) {
+  [types.ADD_SELECTED_PRODUCT](state: Record<string, any>, product: Record<string, any>): void {
     const index = _.findIndex(state.selectedProducts, {
       product_id: product.product_id,
       combination_id: product.combination_id,
@@ -175,7 +177,7 @@ export default {
       state.selectedProducts.push(product);
     }
   },
-  [types.REMOVE_SELECTED_PRODUCT](state, product) {
+  [types.REMOVE_SELECTED_PRODUCT](state: Record<string, any>, product: Record<string, any>): void {
     const index = _.findIndex(state.selectedProducts, {
       product_id: product.product_id,
       combination_id: product.combination_id,
