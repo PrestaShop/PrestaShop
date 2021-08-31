@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% form_theme productForm.specifications.features '@PrestaShop/Admin/Sell/Catalog/Product/Form/features_form_theme.html.twig' %}
-{% form_theme productForm.specifications.customizations '@PrestaShop/Admin/Sell/Catalog/Product/Form/customizations_form_theme.html.twig' %}
+{% form_theme productForm.specifications.features '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/features.html.twig' %}
+{% form_theme productForm.specifications.customizations '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/customizations.html.twig' %}
 
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="specifications-tab">
   {{ form_row(productForm.specifications) }}
