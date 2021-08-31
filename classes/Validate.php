@@ -369,7 +369,7 @@ class ValidateCore
      */
     public static function isCatalogName($name)
     {
-        return strlen($name) <= 128;
+        return Tools::strlen($name) <= 128;
     }
 
     /**
@@ -517,7 +517,7 @@ class ValidateCore
      */
     public static function isReference($reference)
     {
-        return strlen($reference) <= 64;
+        return Tools::strlen($reference) <= 64;
     }
 
     /**
