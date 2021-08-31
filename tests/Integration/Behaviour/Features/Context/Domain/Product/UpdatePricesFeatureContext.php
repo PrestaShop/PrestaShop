@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
@@ -75,15 +76,15 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
      */
     public function updateProductPrices(string $productReference, TableNode $table): void
     {
-        $this->updatePrices($productReference, $table);
+        $this->updatePrices($productReference, $table, $this->getDefaultShopConstraint());
     }
 
     /**
      * @param string $productReference
      * @param TableNode $table
-     * @param ShopConstraint|null $shopConstraint
+     * @param ShopConstraint $shopConstraint
      */
-    private function updatePrices(string $productReference, TableNode $table, ?ShopConstraint $shopConstraint = null): void
+    private function updatePrices(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
     {
         $data = $table->getRowsHash();
         $command = new UpdateProductPricesCommand(
@@ -158,7 +159,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
             $shop = $this->getSharedStorage()->get(trim($shopReference));
             $pricesInfo = $this->getProductForEditing(
                 $productReference,
-                ShopConstraint::shop((int) $shop->id)
+                new ShopId((int) $shop->id)
             )->getPricesInformation();
 
             $this->assertPricesInfos($pricesInfo, $data, $shopReference);
