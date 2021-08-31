@@ -23,8 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% form_theme productForm.pricing.specific_prices '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/specific_prices.html.twig' %}
+{% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
-<div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="pricing-tab">
-  {{ form_row(productForm.pricing) }}
-</div>
+{% block specific_prices_widget %}
+  <div id="specific-prices-container">
+    {{ form_row(form.add_specific_price_btn) }}
+
+    <template id="specific-price-modal-template">
+      {{ form_row(form.specific_price) }}
+    </template>
+  </div>
+{% endblock %}
