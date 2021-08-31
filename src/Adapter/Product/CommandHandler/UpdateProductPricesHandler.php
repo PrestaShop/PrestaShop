@@ -80,9 +80,7 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
     public function handle(UpdateProductPricesCommand $command): void
     {
         // @todo: this part will very likely be very similar in other multistore handlers, maybe we can share this via an abstract class later
-        if (null === $command->getShopConstraint()) {
-            $this->updatePriceByShop($command);
-        } elseif ($command->getShopConstraint()->forAllShops()) {
+        if ($command->getShopConstraint()->forAllShops()) {
             $shops = $this->productRepository->getAssociatedShopIds($command->getProductId());
             foreach ($shops as $shopId) {
                 $this->updatePriceByShop($command, $shopId);
@@ -98,7 +96,7 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
      */
     private function updatePriceByShop(UpdateProductPricesCommand $command, ?ShopId $shopId = null): void
     {
-        $product = $this->productRepository->get($command->getProductId(), $shopId);
+        $product = $this->productRepository->getForShop($command->getProductId(), $shopId);
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
         $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_PRICES);
