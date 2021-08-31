@@ -76,6 +76,7 @@ class ProductFormDataProviderTest extends TestCase
 {
     private const PRODUCT_ID = 42;
     private const HOME_CATEGORY_ID = 49;
+    private const SHOP_ID = 1;
     private const DEFAULT_CATEGORY_ID = 51;
     private const DEFAULT_VIRTUAL_PRODUCT_FILE_ID = 69;
     private const DEFAULT_QUANTITY = 12;
@@ -1324,7 +1325,8 @@ class ProductFormDataProviderTest extends TestCase
             $queryBusMock,
             $activation,
             42,
-            self::HOME_CATEGORY_ID
+            self::HOME_CATEGORY_ID,
+            self::SHOP_ID
         );
     }
 }
