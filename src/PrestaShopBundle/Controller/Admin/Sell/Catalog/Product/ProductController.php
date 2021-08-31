@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\ProductDownload;
+use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
@@ -348,6 +349,8 @@ class ProductController extends FrameworkBundleAdminController
             'categoryTreeSelectorForm' => $categoryTreeFormBuilder->getForm()->createView(),
             'showContentHeader' => false,
             'productForm' => $productForm->createView(),
+            //@todo: form builder
+            'specificPriceForm' => $this->createForm(SpecificPriceType::class)->createView(),
             'statsLink' => $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null,
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
             'isMultiShopContext' => $isMultiShopContext,
