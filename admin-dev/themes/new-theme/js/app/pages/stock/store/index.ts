@@ -22,13 +22,15 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
+/* eslint-disable no-param-reassign */
+
+import Vue, {PluginObject} from 'vue';
 import Vuex from 'vuex';
 import _ from 'lodash';
 import * as actions from './actions';
 import mutations from './mutations';
 
-Vue.use(Vuex);
+Vue.use(<PluginObject<any>><unknown>Vuex);
 
 // root state object.
 
@@ -59,18 +61,18 @@ const state = {
 
 // getters are functions
 const getters = {
-  suppliers(rootState) {
-    function convert(suppliers) {
-      suppliers.forEach((supplier) => {
+  suppliers(rootState: Record<string, any>) {
+    function convert(suppliers: Record<string, any>) {
+      suppliers.forEach((supplier: Record<string, any>) => {
         supplier.id = supplier.supplier_id;
       });
       return suppliers;
     }
     return convert(rootState.suppliers.data);
   },
-  categories(rootState) {
-    function convert(categories) {
-      categories.forEach((category) => {
+  categories(rootState: Record<string, any>) {
+    function convert(categories: Record<string, any>) {
+      categories.forEach((category: Record<string, any>) => {
         category.children = _.values(category.children);
         rootState.categoryList.push(category);
         category.id = `${category.id_parent}-${category.id_category}`;
@@ -80,7 +82,7 @@ const getters = {
     }
     return convert(rootState.categories);
   },
-  selectedProductsLng(rootState) {
+  selectedProductsLng(rootState: Record<string, any>) {
     return rootState.selectedProducts.length;
   },
 };

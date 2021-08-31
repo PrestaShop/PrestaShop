@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import Vue from 'vue';
+import {Commit} from 'vuex/types';
 import VueResource from 'vue-resource';
 import * as types from '@app/pages/stock/store/mutation-types';
 import {showGrowl} from '@app/utils/growl';
@@ -30,7 +31,7 @@ import {EventBus} from '@app/utils/event-bus';
 
 Vue.use(VueResource);
 
-export const getStock = ({commit}, payload) => {
+export const getStock = ({commit}: {commit: Commit}, payload: Record<string, any>): void => {
   const url = window.data.apiStockUrl;
   Vue.http.get(url, {
     params: {
@@ -43,34 +44,34 @@ export const getStock = ({commit}, payload) => {
       active: payload.active !== 'null' ? payload.active : [],
       low_stock: payload.low_stock,
     },
-  }).then((response) => {
+  }).then((response: Record<string, any>): void => {
     commit(types.LOADING_STATE, false);
     commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
     commit(types.ADD_PRODUCTS, response.body);
-  }, (error) => {
+  }, (error): void => {
     showGrowl('error', error.statusText);
   });
 };
 
-export const getSuppliers = ({commit}) => {
+export const getSuppliers = ({commit}: {commit: Commit}): void => {
   const url = window.data.suppliersUrl;
-  Vue.http.get(url).then((response) => {
+  Vue.http.get(url).then((response: Record<string, any>): void => {
     commit(types.SET_SUPPLIERS, response.body);
-  }, (error) => {
+  }, (error): void => {
     showGrowl('error', error.statusText);
   });
 };
 
-export const getCategories = ({commit}) => {
+export const getCategories = ({commit}: {commit: Commit}): void => {
   const url = window.data.categoriesUrl;
-  Vue.http.get(url).then((response) => {
+  Vue.http.get(url).then((response: Record<string, any>): void => {
     commit(types.SET_CATEGORIES, response.body);
-  }, (error) => {
+  }, (error): void => {
     showGrowl('error', error.statusText);
   });
 };
 
-export const getMovements = ({commit}, payload) => {
+export const getMovements = ({commit}: {commit: Commit}, payload: Record<string, any>): void => {
   const url = window.data.apiMovementsUrl;
 
   Vue.http.get(url, {
@@ -85,105 +86,105 @@ export const getMovements = ({commit}, payload) => {
       id_employee: payload.id_employee ? payload.id_employee : [],
       date_add: payload.date_add ? payload.date_add : [],
     },
-  }).then((response) => {
+  }).then((response: Record<string, any>): void => {
     commit(types.LOADING_STATE, false);
     commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
     commit(types.SET_MOVEMENTS, response.body);
-  }, (error) => {
+  }, (error): void => {
     showGrowl('error', error.statusText);
   });
 };
 
-export const getTranslations = ({commit}) => {
+export const getTranslations = ({commit}: {commit: Commit}): void => {
   const url = window.data.translationUrl;
-  Vue.http.get(url).then((response) => {
+  Vue.http.get(url).then((response: Record<string, any>): void => {
     commit(types.SET_TRANSLATIONS, response.body);
     commit(types.APP_IS_READY);
-  }, (error) => {
+  }, (error): void => {
     showGrowl('error', error.statusText);
   });
 };
 
-export const getEmployees = ({commit}) => {
+export const getEmployees = ({commit}: {commit: Commit}): void => {
   const url = window.data.employeesUrl;
-  Vue.http.get(url).then((response) => {
+  Vue.http.get(url).then((response: Record<string, any>): void => {
     commit(types.SET_EMPLOYEES_LIST, response.body);
-  }, (error) => {
+  }, (error): void => {
     showGrowl('error', error.statusText);
   });
 };
 
-export const getMovementsTypes = ({commit}) => {
+export const getMovementsTypes = ({commit}: {commit: Commit}): void => {
   const url = window.data.movementsTypesUrl;
-  Vue.http.get(url).then((response) => {
+  Vue.http.get(url).then((response: Record<string, any>): void => {
     commit(types.SET_MOVEMENTS_TYPES, response.body);
-  }, (error) => {
+  }, (error): void => {
     showGrowl('error', error.statusText);
   });
 };
 
-export const updateOrder = ({commit}, order) => {
+export const updateOrder = ({commit}: {commit: Commit}, order: Record<string, any>): void => {
   commit(types.UPDATE_ORDER, order);
 };
 
-export const updatePageIndex = ({commit}, pageIndex) => {
+export const updatePageIndex = ({commit}: {commit: Commit}, pageIndex: number): void => {
   commit(types.SET_PAGE_INDEX, pageIndex);
 };
 
-export const updateKeywords = ({commit}, keywords) => {
+export const updateKeywords = ({commit}: {commit: Commit}, keywords: Array<string>): void => {
   commit(types.UPDATE_KEYWORDS, keywords);
 };
 
-export const isLoading = ({commit}) => {
+export const isLoading = ({commit}: {commit: Commit}): void => {
   commit(types.LOADING_STATE, true);
 };
 
-export const updateProductQty = ({commit}, payload) => {
+export const updateProductQty = ({commit}: {commit: Commit}, payload: Record<string, any>): void => {
   commit(types.UPDATE_PRODUCT_QTY, payload);
 };
 
-export const updateQtyByProductId = ({commit}, payload) => {
+export const updateQtyByProductId = ({commit}: {commit: Commit}, payload: Record<string, any>): void => {
   const {url} = payload;
   const {delta} = payload;
 
   Vue.http.post(url, {
     delta,
-  }).then((res) => {
+  }).then((res: Record<string, any>): void => {
     commit(types.UPDATE_PRODUCT, res.body);
     EventBus.$emit('displayBulkAlert', 'success');
-  }, (error) => {
+  }, (error): void => {
     showGrowl('error', error.statusText);
   });
 };
 
-export const updateQtyByProductsId = ({commit, state}) => {
+export const updateQtyByProductsId = ({commit, state}: {commit: Commit, state: Record<string, any>}): void => {
   const url = state.editBulkUrl;
   const productsQty = state.productsToUpdate;
 
-  Vue.http.post(url, productsQty).then((res) => {
+  Vue.http.post(url, productsQty).then((res: Record<string, any>): void => {
     commit(types.UPDATE_PRODUCTS_QTY, res.body);
     EventBus.$emit('displayBulkAlert', 'success');
-  }, (error) => {
+  }, (error): void => {
     showGrowl('error', error.statusText);
   });
 };
 
-export const updateBulkEditQty = ({commit}, value) => {
+export const updateBulkEditQty = ({commit}: {commit: Commit}, value: number): void => {
   commit(types.UPDATE_BULK_EDIT_QTY, value);
 };
 
-export const addProductToUpdate = ({commit}, product) => {
+export const addProductToUpdate = ({commit}: {commit: Commit}, product: Record<string, any>): void => {
   commit(types.ADD_PRODUCT_TO_UPDATE, product);
 };
 
-export const removeProductToUpdate = ({commit}, product) => {
+export const removeProductToUpdate = ({commit}: {commit: Commit}, product: Record<string, any>): void => {
   commit(types.REMOVE_PRODUCT_TO_UPDATE, product);
 };
 
-export const addSelectedProduct = ({commit}, product) => {
+export const addSelectedProduct = ({commit}: {commit: Commit}, product: Record<string, any>): void => {
   commit(types.ADD_SELECTED_PRODUCT, product);
 };
 
-export const removeSelectedProduct = ({commit}, product) => {
+export const removeSelectedProduct = ({commit}: {commit: Commit}, product: Record<string, any>): void => {
   commit(types.REMOVE_SELECTED_PRODUCT, product);
 };

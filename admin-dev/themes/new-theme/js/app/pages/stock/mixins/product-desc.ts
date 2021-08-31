@@ -23,29 +23,41 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Overview from '@app/pages/stock/components/overview/index';
-import Movements from '@app/pages/stock/components/movements/index';
 
-Vue.use(VueRouter);
+interface ProductDescProps {
+  product: Record<string, any>;
+}
 
-export default new VueRouter({
-  mode: 'history',
-  base: (() => {
-    const hasIndex = /(index\.php)/.exec(window.location.href);
+export default Vue.extend<any, any, any, ProductDescProps>({
+  computed: {
+    thumbnail(): string | null {
+      if (this.product.combination_thumbnail !== 'N/A') {
+        return `${this.product.combination_thumbnail}`;
+      }
 
-    return `${window.data.baseUrl}${hasIndex ? '/index.php' : ''}/sell/stocks`;
-  })(),
-  routes: [
-    {
-      path: '/',
-      name: 'overview',
-      component: Overview,
+      if (this.product.product_thumbnail !== 'N/A') {
+        return `${this.product.product_thumbnail}`;
+      }
+
+      return null;
     },
-    {
-      path: '/movements',
-      name: 'movements',
-      component: Movements,
+
+    combinationName(): string {
+      const combinations = this.product.combination_name.split(',');
+      const attributes = this.product.attribute_name.split(',');
+      const separator = ' - ';
+      let attr = '';
+
+      combinations.forEach((attribute: string, index: string) => {
+        const value = attribute.trim().slice(attributes[index].trim().length + separator.length);
+        attr += attr.length ? ` - ${value}` : value;
+      });
+
+      return attr;
     },
-  ],
+
+    hasCombination() {
+      return !!this.product.combination_id;
+    },
+  },
 });
