@@ -192,8 +192,6 @@ export default {
     loader: '.categories-tree-loader',
     childrenList: '.children-list',
     everyItems: '.less, .more',
-    expandAllButton: '#categories-tree-expand',
-    reduceAllButton: '#categories-tree-reduce',
     addCategoriesBtn: '.add-categories-btn',
   },
   modules: {
