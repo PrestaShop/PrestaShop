@@ -214,3 +214,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SearchEngineFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.specific_price_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SpecificPriceFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
