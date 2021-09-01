@@ -28,7 +28,7 @@
  */
 export default {
   modifyAllWidgets: '.modify-all-shops',
-  widgetCheckBox: '[type=checkbox]',
+  widgetCheckbox: '[type=checkbox]',
   fieldFocusedClass: 'multi-store-field-focused',
   focusedClass: 'multi-store-focused',
   updatedClass: 'multi-store-updated',
