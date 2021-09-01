@@ -202,5 +202,6 @@ export default {
     modalTemplate: '#specific-price-modal-template',
     modalContentId: 'specific-price-modal',
     addSpecificPriceBtn: '.js-add-specific-price-btn',
+    formModal: '#specific-price-form-modal',
   },
 };

@@ -22,8 +22,22 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
-{# {% form_theme specificPriceForm '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/specific_prices.html.twig' %} #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{# <div id="external-specific-price-tab" class="d-none"> #}
-{# {{ form_row(specificPriceForm) }} #}
-{# </div> #}
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
+{% endblock %}
+
+{% block content %}
+  <div>
+    {{ form_start(specificPriceForm) }}
+    {{ form_row(specificPriceForm) }}
+    {{ form_end(specificPriceForm) }}
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/specific_price_form.bundle.js') }}"></script>
+{% endblock %}
