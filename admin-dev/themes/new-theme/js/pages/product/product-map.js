@@ -228,6 +228,7 @@ export default {
   specificPrice: {
     container: '#specific-prices-container',
     modalTemplate: '#specific-price-modal-template',
+    modalContentId: 'specific-price-modal',
     addSpecificPriceBtn: '.js-add-specific-price-btn',
   },
 };
