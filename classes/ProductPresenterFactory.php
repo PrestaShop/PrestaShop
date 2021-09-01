@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\EmbeddedAttributesFilter;
 
 /**
  * Class ProductPresenterFactoryCore.
@@ -103,7 +104,7 @@ class ProductPresenterFactoryCore
             $this->context->getTranslator(),
             new HookManager(),
             new AdapterConfiguration(),
-            new \PrestaShop\PrestaShop\Core\Filter\FrontEndObject\EmbeddedAttributesFilter()
+            new EmbeddedAttributesFilter()
         );
     }
 }
