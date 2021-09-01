@@ -28,12 +28,15 @@ import ProductMap from '@pages/product/product-map';
 const {$} = window;
 
 export default class ImageSelector {
+
+  $selectorContainer: JQuery;
+
   constructor() {
     this.$selectorContainer = $(ProductMap.combinations.images.selectorContainer);
     this.init();
   }
 
-  init() {
+  init(): void {
     $(ProductMap.combinations.images.checkboxContainer, this.$selectorContainer).hide();
     this.$selectorContainer.on('click', ProductMap.combinations.images.imageChoice, (event) => {
       const $imageChoice = $(event.currentTarget);
