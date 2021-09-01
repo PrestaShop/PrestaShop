@@ -30,34 +30,28 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Exception;
+use Symfony\Component\HttpFoundation\Response;
 
 class SpecificPriceController extends FrameworkBundleAdminController
 {
-    public function createAction(int $productId, Request $request): JsonResponse
+    public function createAction(Request $request, int $productId): Response
     {
         $form = $this->getFormBuilder()->getForm(['product_id' => $productId]);
         $form->handleRequest($request);
-        $formHandler = $this->getFormHandler();
 
-        try {
-            $result = $formHandler->handle($form);
+        $result = $this->getFormHandler()->handle($form);
 
-            if ($result->getIdentifiableObjectId()) {
-                return $this->json(['specificPriceId' => $result->getIdentifiableObjectId()]);
-            }
-        } catch (Exception $e) {
-            return $this->json([
-                'errors' => [
-                    $this->getFallbackErrorMessage(get_class($e), $e->getCode()),
-                ],
-            ]);
+        if ($result->isSubmitted() && $result->isValid()) {
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+            //@todo: where to redirect after submit?
+            return $this->redirectToRoute('admin_products_specific_prices_create');
         }
 
-        //@todo:
-        return $this->json('test');
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/create.html.twig', [
+            'specificPriceForm' => $form->createView(),
+        ]);
     }
 
     private function getFormBuilder(): FormBuilderInterface
