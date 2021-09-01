@@ -23,23 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import MultiStoreModifyAllMap from './multi-store-modify-all-map';
+import MultiStoreModifyAllMap from './modify-all-stores-checkbox-map';
 
 /**
  * Enables multi store modify all checkboxes on the page. The checkboxes are hidden by default,
  * they appear on input focus and stay visible when the value changed.
  */
-export default class MultiStoreModifyAll {
-  private multiStoreNamePrefix: string;
+export default class ModifyAllStoresCheckbox {
+  private modifyAllNamePrefix: string;
 
   /**
-   * @param {string} multiStoreNamePrefix
+   * @param {string} modifyAllNamePrefix
    */
-  constructor(multiStoreNamePrefix = '') {
-    if (!multiStoreNamePrefix) {
-      this.multiStoreNamePrefix = 'modify_all_stores_';
+  constructor(modifyAllNamePrefix = '') {
+    if (!modifyAllNamePrefix) {
+      this.modifyAllNamePrefix = 'modify_all_stores_';
     } else {
-      this.multiStoreNamePrefix = multiStoreNamePrefix;
+      this.modifyAllNamePrefix = modifyAllNamePrefix;
     }
 
     this.init();
@@ -48,10 +48,10 @@ export default class MultiStoreModifyAll {
   init(): void {
     const widgets = document.querySelectorAll(MultiStoreModifyAllMap.modifyAllWidgets);
     widgets.forEach((widget: Element) => {
-      const widgetCheckBox: HTMLInputElement = <HTMLInputElement>widget.querySelector(MultiStoreModifyAllMap.widgetCheckBox);
+      const widgetCheckbox: HTMLInputElement = <HTMLInputElement>widget.querySelector(MultiStoreModifyAllMap.widgetCheckbox);
 
-      if (widgetCheckBox) {
-        const multiStoreFieldId: string = widgetCheckBox.id.replace(this.multiStoreNamePrefix, '');
+      if (widgetCheckbox) {
+        const multiStoreFieldId: string = widgetCheckbox.id.replace(this.modifyAllNamePrefix, '');
         const multiStoreField: HTMLInputElement = <HTMLInputElement>document.getElementById(multiStoreFieldId);
 
         if (multiStoreField) {
@@ -75,7 +75,7 @@ export default class MultiStoreModifyAll {
           multiStoreField.addEventListener('change', () => {
             widget.classList.add(MultiStoreModifyAllMap.updatedClass);
           });
-          widgetCheckBox.addEventListener('change', () => {
+          widgetCheckbox.addEventListener('change', () => {
             widget.classList.add(MultiStoreModifyAllMap.updatedClass);
           });
         }
