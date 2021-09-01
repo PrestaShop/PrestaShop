@@ -679,7 +679,7 @@
 {% block checkbox_widget -%}
     {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
     {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-check-input')|trim}) -%}
-    <div class="form-check form-check-radio form-checkbox">
+    <div class="form-check form-check-radio form-checkbox{% if attr.container_class is defined %} {{ attr.container_class }}{% endif %}">
         {{- form_label(form, null, { widget: block('base_checkbox_widget') }) -}}
     </div>
 {%- endblock checkbox_widget %}
