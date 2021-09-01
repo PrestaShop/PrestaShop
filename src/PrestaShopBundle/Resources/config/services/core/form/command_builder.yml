@@ -22,7 +22,7 @@ services:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PricesCommandsBuilder
         public: true
         arguments:
-            - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
+            - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllStoresExtension::MODIFY_ALL_STORES_PREFIX
         tags: ['core.product_command_builder']
 
     prestashop.core.form.command_builder.product.seo:
