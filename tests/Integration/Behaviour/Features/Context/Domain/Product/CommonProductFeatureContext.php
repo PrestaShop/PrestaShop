@@ -139,12 +139,14 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductDoesNotExistAnymore(string $reference): void
     {
+        $caughtException = null;
         try {
             $this->getProductForEditing($reference);
             throw new RuntimeException(sprintf('Product "%s" was not expected to exist, but it was found', $reference));
         } catch (ProductNotFoundException $e) {
-            // intentional. Means product is not found and test should pass
+            $caughtException = $e;
         }
+        Assert::assertNotNull($caughtException);
     }
 
     /**
