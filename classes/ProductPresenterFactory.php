@@ -31,8 +31,8 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
-use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\EmbeddedAttributesFilter;
+use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 
 /**
  * Class ProductPresenterFactoryCore.
