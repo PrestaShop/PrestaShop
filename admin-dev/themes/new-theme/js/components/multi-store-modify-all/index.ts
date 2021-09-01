@@ -37,7 +37,7 @@ export default class MultiStoreModifyAll {
    */
   constructor(multiStoreNamePrefix = '') {
     if (!multiStoreNamePrefix) {
-      this.multiStoreNamePrefix = 'modify_all_shops_';
+      this.multiStoreNamePrefix = 'modify_all_stores_';
     } else {
       this.multiStoreNamePrefix = multiStoreNamePrefix;
     }
