@@ -31,6 +31,7 @@ use Configuration as ConfigurationLegacy;
 use Feature;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Exception\NotImplementedException;
 use Shop;
@@ -374,7 +375,18 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         if (null !== $shopConstraint->getShopGroupId()) {
             return $shopConstraint->getShopGroupId()->getValue();
         } elseif (null !== $shopConstraint->getShopId()) {
-            return (int) Shop::getGroupFromShop((int) $shopConstraint->getShopId()->getValue(), true);
+            $shopGroupId = Shop::getGroupFromShop((int) $shopConstraint->getShopId()->getValue(), true);
+            // $shopGroupId can must not be false, it would mean that the shop group was not found for the given shop
+            if ($shopGroupId === false) {
+                throw new ShopException(
+                    sprintf(
+                        'Shop group with id %s was not found.',
+                        $shopGroupId
+                    )
+                );
+            }
+
+            return (int) $shopGroupId;
         }
 
         return null;
