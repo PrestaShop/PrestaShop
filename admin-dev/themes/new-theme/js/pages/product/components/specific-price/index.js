@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,26 +22,45 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
+import Vue from 'vue';
+import VueI18n from 'vue-i18n';
+import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import SpecificPriceModal from '@pages/product/components/specific-price/SpecificPriceModal';
 
-use PrestaShopBundle\Form\Admin\Type\IconButtonType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\FormBuilderInterface;
+Vue.use(VueI18n);
 
-class SpecificPricesType extends TranslatorAwareType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('add_specific_price_btn', IconButtonType::class, [
-                'label' => $this->trans('Add a specific price', 'Admin.Catalog.Feature'),
-                'attr' => [
-                    'class' => 'js-add-specific-price-btn btn btn-outline-primary',
-                ],
-                'icon' => 'add_circle',
-            ])
-        ;
-    }
+/**
+ * @param {string} specificPriceModalSelector
+ * @param {Object} eventEmitter
+ *
+ * @returns {Vue|CombinedVueInstance<Vue, {eventEmitter, productId}, object, object, Record<never, any>>|null}
+ */
+export default function initSpecificPriceModal(
+  specificPriceModalSelector,
+  eventEmitter,
+) {
+  const container = document.querySelector(specificPriceModalSelector);
+
+  if (!container) {
+    return null;
+  }
+
+  const translations = JSON.parse(container.dataset.translations);
+  const i18n = new VueI18n({
+    locale: 'en',
+    formatter: new ReplaceFormatter(),
+    messages: {en: translations},
+  });
+
+  return new Vue({
+    el: specificPriceModalSelector,
+    template:
+      '<specific-price-modal :eventEmitter=eventEmitter />',
+    components: {SpecificPriceModal},
+    i18n,
+    data: {
+      eventEmitter,
+    },
+  });
 }

@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,26 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
+const {$} = window;
 
-use PrestaShopBundle\Form\Admin\Type\IconButtonType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\FormBuilderInterface;
-
-class SpecificPricesType extends TranslatorAwareType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('add_specific_price_btn', IconButtonType::class, [
-                'label' => $this->trans('Add a specific price', 'Admin.Catalog.Feature'),
-                'attr' => [
-                    'class' => 'js-add-specific-price-btn btn btn-outline-primary',
-                ],
-                'icon' => 'add_circle',
-            ])
-        ;
-    }
-}
+$(() => {
+  window.prestashop.component.initComponents([
+    'EventEmitter',
+  ]);
+});

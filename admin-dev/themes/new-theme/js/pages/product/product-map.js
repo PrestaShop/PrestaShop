@@ -213,9 +213,11 @@ export default {
     addAttachmentBtn: '.add-attachment',
   },
   specificPrice: {
-    container: '#specific-prices-container',
+    container: '#product_pricing_specific_prices',
     modalTemplate: '#specific-price-modal-template',
     modalContentId: 'specific-price-modal',
     addSpecificPriceBtn: '.js-add-specific-price-btn',
+    formModal: '#specific-price-form-modal',
+    form: 'form[name="specific_price"]',
   },
 };
