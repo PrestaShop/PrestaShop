@@ -4,6 +4,9 @@ _combinations:
 _images:
   resource: 'image.yml'
 
+_specific_prices:
+    resource: 'specific_price.yml'
+
 admin_products_v2_index:
   path: /
   methods: [ GET ]

@@ -25,25 +25,36 @@
 
 import ProductMap from '@pages/product/product-map';
 import SpecificPriceModal from '@pages/product/components/specific-price/specific-price-modal';
+import initSpecificPriceModal from '@pages/product/components/specific-price';
+import {EventEmitter} from 'events';
 
 const SpecificPriceMap = ProductMap.specificPrice;
 
 export default class SpecificPriceManager {
   container: HTMLElement;
 
+  eventEmitter: EventEmitter;
+
   specificPriceModal: SpecificPriceModal;
 
   addSpecificPriceBtn: HTMLElement;
 
+  specificPriceModalApp: null;
+
   constructor() {
+    this.eventEmitter = window.prestashop.instance.eventEmitter;
+    this.specificPriceModalApp = initSpecificPriceModal(
+      SpecificPriceMap.formModal,
+      this.eventEmitter,
+    );
     this.container = document.querySelector(SpecificPriceMap.container) as HTMLElement;
     this.specificPriceModal = new SpecificPriceModal();
     this.addSpecificPriceBtn = this.container.querySelector(SpecificPriceMap.addSpecificPriceBtn) as HTMLElement;
-
-    this.initSpecificPriceModal();
+    // @todo: temporary commented. WIP - new modal using vue as in combinations example
+    // this.initSpecificPriceModal();
   }
-
-  private initSpecificPriceModal() {
-    this.addSpecificPriceBtn.addEventListener('click', () => this.specificPriceModal.showModal());
-  }
+  //
+  // private initSpecificPriceModal() {
+  //   this.addSpecificPriceBtn.addEventListener('click', () => this.specificPriceModal.showModal());
+  // }
 }
