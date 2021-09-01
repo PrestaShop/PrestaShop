@@ -242,7 +242,6 @@ class ProductRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param ShopId|null $shopId
      *
      * @return Product
      *
