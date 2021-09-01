@@ -140,7 +140,7 @@ const initPrestashopComponents = () => {
     GridExtensions,
     Router,
     ColorPicker,
-    MultiStoreModifyAll: ModifyAllStoresCheckbox,
+    ModifyAllStoresCheckbox,
   };
 };
 export default initPrestashopComponents;
