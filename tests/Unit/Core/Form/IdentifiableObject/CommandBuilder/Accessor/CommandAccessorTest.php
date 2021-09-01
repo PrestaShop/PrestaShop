@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\C
 
 class CommandAccessorTest extends TestCase
 {
-    private const MULTI_SHOP_PREFIX = 'multi_shop_';
+    private const MULTI_STORE_PREFIX = 'multi_store_';
     private const SHOP_ID = 1;
 
     /**
@@ -59,7 +59,7 @@ class CommandAccessorTest extends TestCase
 
     public function getSingleCommandParameters(): iterable
     {
-        $config = new CommandAccessorConfig(self::MULTI_SHOP_PREFIX);
+        $config = new CommandAccessorConfig(self::MULTI_STORE_PREFIX);
         $config
             ->addField('[name]', 'setName', CommandField::TYPE_STRING)
             ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
@@ -134,7 +134,7 @@ class CommandAccessorTest extends TestCase
 
     public function getMultiShopCommandsParameters(): iterable
     {
-        $config = new CommandAccessorConfig(self::MULTI_SHOP_PREFIX);
+        $config = new CommandAccessorConfig(self::MULTI_STORE_PREFIX);
         $config
             ->addField('[name]', 'setName', CommandField::TYPE_STRING)
             ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
@@ -189,10 +189,10 @@ class CommandAccessorTest extends TestCase
                     'isValid' => false,
                 ],
                 '_number' => 42,
-                self::MULTI_SHOP_PREFIX . '_number' => true,
+                self::MULTI_STORE_PREFIX . '_number' => true,
                 'parent' => [
                     'children' => $children,
-                    self::MULTI_SHOP_PREFIX . 'children' => true,
+                    self::MULTI_STORE_PREFIX . 'children' => true,
                 ],
             ],
             [$command, $allShopsCommand],
@@ -202,10 +202,10 @@ class CommandAccessorTest extends TestCase
             $config,
             [
                 '_number' => 42,
-                self::MULTI_SHOP_PREFIX . '_number' => true,
+                self::MULTI_STORE_PREFIX . '_number' => true,
                 'parent' => [
                     'children' => $children,
-                    self::MULTI_SHOP_PREFIX . 'children' => true,
+                    self::MULTI_STORE_PREFIX . 'children' => true,
                 ],
             ],
             [$allShopsCommand],
@@ -231,10 +231,10 @@ class CommandAccessorTest extends TestCase
                     'isValid' => false,
                 ],
                 '_number' => 42,
-                self::MULTI_SHOP_PREFIX . '_number' => false,
+                self::MULTI_STORE_PREFIX . '_number' => false,
                 'parent' => [
                     'children' => $children,
-                    self::MULTI_SHOP_PREFIX . 'children' => true,
+                    self::MULTI_STORE_PREFIX . 'children' => true,
                 ],
             ],
             [$command, $allShopsCommand],
