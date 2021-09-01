@@ -53,6 +53,7 @@ $(() => {
     'EventEmitter',
     'TextWithLengthCounter',
     'DeltaQuantityInput',
+    'MultiStoreModifyAll',
   ]);
 
   const $productForm = $(ProductMap.productForm);
