@@ -388,9 +388,9 @@ export default class FormObjectMapper {
   }
 
   /**
-   * Simulate change even programmatically, this is required because when changing the value of an input via js no
-   * change event is triggered, so if you added a listener for this event it won't trigger and your app will not behave
-   * as expected.
+   * Simulate change event programmatically, this is required because when changing the value of an input via js no
+   * change event is triggered, so if you added a listener for this event it won't trigger and your app will not
+   * behave as expected.
    *
    * @param inputName
    */
