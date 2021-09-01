@@ -98,7 +98,7 @@
 
     {{- form_widget(form) -}}
     {{- form_errors(form) -}}
-    {{- block('form_modify_all_shops') -}}
+    {{- block('form_modify_all_stores') -}}
 
     {{- block('form_external_link') -}}
     {{- block('form_append_alert') -}}
@@ -109,8 +109,8 @@
   {% endif %}
 {%- endblock form_row %}
 
-{% block form_modify_all_shops %}
-  {% set overrideCheckboxName = modify_all_shops_prefix ~ form.vars.name %}
+{% block form_modify_all_stores %}
+  {% set overrideCheckboxName = modify_all_stores_prefix ~ form.vars.name %}
   {% if attribute(form.parent, overrideCheckboxName) is defined %}
     {{ form_errors(attribute(form.parent, overrideCheckboxName)) }}
     {{ form_widget(attribute(form.parent, overrideCheckboxName)) }}
