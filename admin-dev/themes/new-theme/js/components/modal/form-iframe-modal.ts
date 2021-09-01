@@ -62,7 +62,7 @@ export class FormIframeModal extends IframeModal implements FormIframeModalType 
   ) {
     const iframeParams: InputIframeModalParams = {
       iframeUrl: params.formUrl,
-      onLoaded: (iframe:HTMLIFrameElement, event: Event) => this.onIframeLoaded(iframe, event),
+      onLoaded: (iframe: HTMLIFrameElement, event: Event) => this.onIframeLoaded(iframe, event),
       ...params,
     };
     super(iframeParams);
@@ -72,7 +72,7 @@ export class FormIframeModal extends IframeModal implements FormIframeModalType 
     this.formSelector = params.formSelector || 'form';
   }
 
-  private onIframeLoaded(iframe:HTMLIFrameElement, event: Event): void {
+  private onIframeLoaded(iframe: HTMLIFrameElement, event: Event): void {
     if (!iframe.contentWindow) {
       return;
     }

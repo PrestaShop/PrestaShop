@@ -27,7 +27,7 @@ import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import Router from '@components/router';
 import {getAttachmentInfo} from '@pages/product/services/attachments-service';
-import {FormIframeModal} from '@components/modal/form-iframe-modal';
+import {FormIframeModal} from '@components/modal';
 import EntitySearchInput from '@components/entity-search-input';
 import {EventEmitter} from 'events';
 
