@@ -176,18 +176,6 @@ class SpecificPriceType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('apply_btn', ButtonType::class, [
-                'label' => $this->trans('Apply', 'Admin.Actions'),
-                'attr' => [
-                    'class' => 'js-apply-categories-btn btn-outline-primary',
-                ],
-            ])
-            ->add('cancel_btn', ButtonType::class, [
-                'label' => $this->trans('Cancel', 'Admin.Actions'),
-                'attr' => [
-                    'class' => 'js-cancel-categories-btn btn-outline-secondary',
-                ],
-            ])
         ;
 
         //@todo: handle multishop. Check if we need this?
