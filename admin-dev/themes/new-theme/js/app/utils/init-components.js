@@ -59,7 +59,7 @@ import SortingExtension from '@components/grid/extension/sorting-extension';
 import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-action-extension';
 import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import MultiStoreModifyAll from '@components/multi-store-modify-all';
+import ModifyAllStoresCheckbox from '@components/modify-all-stores-checkbox';
 
 const GridExtensions = {
   AsyncToggleColumnExtension,
@@ -140,7 +140,7 @@ const initPrestashopComponents = () => {
     GridExtensions,
     Router,
     ColorPicker,
-    MultiStoreModifyAll,
+    MultiStoreModifyAll: ModifyAllStoresCheckbox,
   };
 };
 export default initPrestashopComponents;
