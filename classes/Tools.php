@@ -3974,33 +3974,12 @@ exit;
                 $post_data .= '&method=listing&action=native';
 
                 break;
-            case 'partner':
-                $post_data .= '&method=listing&action=partner';
-
-                break;
-            case 'service':
-                $post_data .= '&method=listing&action=service';
-
-                break;
-            case 'native_all':
-                $post_data .= '&method=listing&action=native&iso_code=all';
-
-                break;
             case 'must-have':
                 $post_data .= '&method=listing&action=must-have';
 
                 break;
-            case 'must-have-themes':
-                $post_data .= '&method=listing&action=must-have-themes';
-
-                break;
             case 'customer':
                 $post_data .= '&method=listing&action=customer&username=' . urlencode(trim(Context::getContext()->cookie->username_addons))
-                    . '&password=' . urlencode(trim(Context::getContext()->cookie->password_addons));
-
-                break;
-            case 'customer_themes':
-                $post_data .= '&method=listing&action=customer-themes&username=' . urlencode(trim(Context::getContext()->cookie->username_addons))
                     . '&password=' . urlencode(trim(Context::getContext()->cookie->password_addons));
 
                 break;
@@ -4017,13 +3996,6 @@ exit;
                 if (isset($params['username_addons'], $params['password_addons'])) {
                     $post_data .= '&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
                 }
-
-                break;
-            case 'hosted_module':
-                $post_data .= '&method=module&id_module=' . urlencode((int) $params['id_module']) . '&username=' . urlencode($params['hosted_email'])
-                    . '&password=' . urlencode($params['password_addons'])
-                    . '&shop_url=' . urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
-                    . '&mail=' . urlencode(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
 
                 break;
             case 'install-modules':
