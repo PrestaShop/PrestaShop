@@ -292,19 +292,11 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getEmbeddedAttributes()
     {
-        $whitelist = $this->getProductAttributeWhitelist();
-        $embeddedProductAttributes = [];
-        foreach ($this->product as $attribute => $value) {
-            if (in_array($attribute, $whitelist)) {
-                $embeddedProductAttributes[$attribute] = $value;
-            }
-        }
-
         if ($this->embeddedAttributesFilter !== null) {
-            $embeddedProductAttributes = $this->embeddedAttributesFilter->filter($embeddedProductAttributes);
+            return $this->embeddedAttributesFilter->filter($this->product);
         }
 
-        return $embeddedProductAttributes;
+        return [];
     }
 
     /**
@@ -990,119 +982,6 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         return $key;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getProductAttributeWhitelist()
-    {
-        return [
-            'add_to_cart_url',
-            'additional_shipping_cost',
-            'advanced_stock_management',
-            'allow_oosp',
-            'attachments',
-            'attribute_price',
-            'attributes',
-            'availability',
-            'availability_date',
-            'availability_message',
-            'available_date',
-            'available_for_order',
-            'available_later',
-            'available_now',
-            'cache_default_attribute',
-            'canonical_url',
-            'category',
-            'category_name',
-            'condition',
-            'cover',
-            'customer_group_discount',
-            'customizable',
-            'customization_required',
-            'customizations',
-            'date_add',
-            'date_upd',
-            'delivery_in_stock',
-            'delivery_out_stock',
-            'description',
-            'description_short',
-            'discount_amount',
-            'discount_amount_to_display',
-            'discount_percentage',
-            'discount_percentage_absolute',
-            'discount_type',
-            'ecotax',
-            'ecotax_rate',
-            'extraContent',
-            'features',
-            'flags',
-            'has_discount',
-            'id',
-            'id_category_default',
-            'id_customization',
-            'id_image',
-            'id_manufacturer',
-            'id_product',
-            'id_product_attribute',
-            'id_shop_default',
-            'id_supplier',
-            'id_type_redirected',
-            'images',
-            'indexed',
-            'is_customizable',
-            'is_virtual',
-            'labels',
-            'link',
-            'link_rewrite',
-            'low_stock_alert',
-            'low_stock_threshold',
-            'main_variants',
-            'meta_description',
-            'meta_keywords',
-            'meta_title',
-            'minimal_quantity',
-            'name',
-            'new',
-            'nopackprice',
-            'on_sale',
-            'online_only',
-            'out_of_stock',
-            'pack',
-            'pack_stock_type',
-            'packItems',
-            'price',
-            'price_amount',
-            'price_tax_exc',
-            'price_without_reduction',
-            'quantity',
-            'quantity_all_versions',
-            'quantity_discounts',
-            'quantity_label',
-            'quantity_wanted',
-            'rate',
-            'redirect_type',
-            'reduction',
-            'reference',
-            'reference_to_display',
-            'show_availability',
-            'show_condition',
-            'show_price',
-            'show_quantities',
-            'specific_prices',
-            'tax_name',
-            'text_fields',
-            'unit_price',
-            'unit_price_full',
-            'unit_price_ratio',
-            'unity',
-            'uploadable_files',
-            'url',
-            'virtual',
-            'visibility',
-            'weight_unit',
-        ];
     }
 
     /**
