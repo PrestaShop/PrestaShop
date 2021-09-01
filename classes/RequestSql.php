@@ -239,8 +239,20 @@ class RequestSqlCore extends ObjectModel
             if (in_array($attr['expr_type'], ['operator', 'const'])) {
                 continue;
             }
-            if ($attribut = $this->cutAttribute($attr['base_expr'], $from)) {
-                $tab[] = $attribut;
+
+            if (!empty($attr['sub_tree'])) {
+                foreach ($attr['sub_tree'] as $treeItem) {
+                    if ($treeItem['expr_type'] !== 'colref') {
+                        continue;
+                    }
+                    if ($attribut = $this->cutAttribute($treeItem['base_expr'], $from)) {
+                        $tab[] = $attribut;
+                    }
+                }
+            } else {
+                if ($attribut = $this->cutAttribute($attr['base_expr'], $from)) {
+                    $tab[] = $attribut;
+                }
             }
         }
 
