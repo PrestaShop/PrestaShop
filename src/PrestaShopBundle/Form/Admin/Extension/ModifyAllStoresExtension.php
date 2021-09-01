@@ -111,7 +111,7 @@ class ModifyAllStoresExtension extends AbstractTypeExtension
                     [
                         'label' => $label,
                         'attr' => [
-                            'container_class' => 'modify-all-shops',
+                            'container_class' => 'modify-all-stores',
                             'data-value-type' => 'boolean',
                         ],
                     ]
@@ -152,7 +152,7 @@ class ModifyAllStoresExtension extends AbstractTypeExtension
     private function getCheckboxLabel(): string
     {
         if (!$this->checkboxLabel) {
-            $this->checkboxLabel = $this->translator->trans('Apply the changes in all the shops', [], 'Admin.Global');
+            $this->checkboxLabel = $this->translator->trans('Apply changes to all stores', [], 'Admin.Global');
         }
 
         return $this->checkboxLabel;

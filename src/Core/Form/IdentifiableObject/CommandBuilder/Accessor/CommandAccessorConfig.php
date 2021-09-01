@@ -28,12 +28,24 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor;
 
+/**
+ * Config that gives information to the CommandAccessor component to correctly check the data and prefill the command
+ * object, each data property is associated to a setter in the command and its appropriate type for casting. Example:
+ *
+ * $config = new CommandAccessorConfig('modify_all_');
+ * $config
+ *     ->addField('[name]', 'setName', CommandField::TYPE_STRING)
+ *     ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
+ *     ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
+ *     ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+ * ;
+ */
 class CommandAccessorConfig
 {
     /**
      * @var string
      */
-    private $multiShopPrefix;
+    private $modifyAllNamePrefix;
 
     /**
      * @var CommandField[]
@@ -41,13 +53,22 @@ class CommandAccessorConfig
     private $fields = [];
 
     /**
-     * @param string $multiShopPrefix
+     * @param string $modifyAllNamePrefix
      */
-    public function __construct(string $multiShopPrefix)
+    public function __construct(string $modifyAllNamePrefix = '')
     {
-        $this->multiShopPrefix = $multiShopPrefix;
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
     }
 
+    /**
+     * @param string $propertyPath
+     * @param string $commandSetter
+     * @param string $propertyType
+     *
+     * @return $this
+     *
+     * @throws InvalidCommandFieldTypeException
+     */
     public function addField(string $propertyPath, string $commandSetter, string $propertyType): self
     {
         $this->fields[] = new CommandField(
@@ -62,9 +83,9 @@ class CommandAccessorConfig
     /**
      * @return string
      */
-    public function getMultiShopPrefix(): string
+    public function getModifyAllNamePrefix(): string
     {
-        return $this->multiShopPrefix;
+        return $this->modifyAllNamePrefix;
     }
 
     /**

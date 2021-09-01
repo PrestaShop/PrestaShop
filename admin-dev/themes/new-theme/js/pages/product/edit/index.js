@@ -52,7 +52,7 @@ $(() => {
     'TranslatableInput',
     'EventEmitter',
     'TextWithLengthCounter',
-    'MultiStoreModifyAll',
+    'ModifyAllStoresCheckbox',
   ]);
 
   const $productForm = $(ProductMap.productForm);
