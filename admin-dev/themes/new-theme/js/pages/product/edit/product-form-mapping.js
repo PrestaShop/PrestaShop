@@ -37,8 +37,8 @@ export default {
     // 'product[shortcuts][retail_price][price_tax_included]',
   ],
   'product.price.overrideAllPriceTaxExcluded': [
-    'product[pricing][retail_price][modify_all_shops_price_tax_excluded]',
-    'product[pricing][retail_price][modify_all_shops_price_tax_included]',
+    'product[pricing][retail_price][modify_all_stores_price_tax_excluded]',
+    'product[pricing][retail_price][modify_all_stores_price_tax_included]',
   ],
   'product.price.taxRulesGroupId': [
     'product[pricing][tax_rules_group_id]',
