@@ -95,8 +95,10 @@ abstract class AbstractObjectModelRepository
      */
     protected function getObjectModelForShop(int $id, string $objectModelClass, string $exceptionClass, ShopId $shopId): ObjectModel
     {
-        $this->checkShopAssociation($id, $objectModelClass, $shopId);
         $objectModel = $this->fetchObjectModel($id, $objectModelClass, $exceptionClass, $shopId->getValue());
+
+        // The object is fetched before checking the association, so that the NotFoundException has the priority over the NoAssociationException
+        $this->checkShopAssociation($id, $objectModelClass, $shopId);
 
         // Force id_shop_list right away so that DB modification use the appropriate shop and not the one from context
         $objectModel->id_shop_list = [$shopId->getValue()];
