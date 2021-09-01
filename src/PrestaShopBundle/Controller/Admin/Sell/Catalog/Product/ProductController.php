@@ -241,12 +241,12 @@ class ProductController extends FrameworkBundleAdminController
     {
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
+        $specificPriceFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.specific_price_form_builder');
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
             'showContentHeader' => false,
             'productForm' => $productForm->createView(),
-            //@todo: form builder
-            'specificPriceForm' => $this->createForm(SpecificPriceType::class)->createView(),
+            'specificPriceForm' => $specificPriceFormBuilder->getForm()->createView(),
             'statsLink' => $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null,
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
             'isMultiShopContext' => $isMultiShopContext,

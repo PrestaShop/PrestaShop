@@ -42,8 +42,6 @@ class SpecificPricesType extends TranslatorAwareType
                     'class' => 'js-add-specific-price-btn btn btn-outline-primary',
                 ],
             ])
-            // form for add/edit modal
-//            ->add('specific_price', SpecificPriceType::class)
         ;
     }
 }
