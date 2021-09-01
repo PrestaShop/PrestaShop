@@ -125,7 +125,7 @@ class ProductLazyArray extends AbstractLazyArray
         $this->translator = $translator;
         $this->hookManager = $hookManager ?? new HookManager();
         $this->configuration = $configuration ?? new Configuration();
-        $this->embeddedAttributesFilter = $embeddedAttributesFilter;
+        $this->embeddedAttributesFilter = $embeddedAttributesFilter ?? new EmbeddedAttributesFilter();
 
         $this->fillImages(
             $product,

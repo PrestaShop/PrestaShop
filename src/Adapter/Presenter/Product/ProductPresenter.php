@@ -97,7 +97,7 @@ class ProductPresenter
         $this->translator = $translator;
         $this->hookManager = $hookManager ?? new HookManager();
         $this->configuration = $configuration ?? new Configuration();
-        $this->embeddedAttributesFilter = $embeddedAttributesFilter;
+        $this->embeddedAttributesFilter = $embeddedAttributesFilter ?? new EmbeddedAttributesFilter();
     }
 
     public function present(
