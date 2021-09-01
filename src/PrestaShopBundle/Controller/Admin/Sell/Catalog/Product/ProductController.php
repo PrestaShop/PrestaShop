@@ -246,7 +246,8 @@ class ProductController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
             'showContentHeader' => false,
             'productForm' => $productForm->createView(),
-            'specificPriceForm' => $specificPriceFormBuilder->getForm()->createView(),
+            //@todo: should not be available in create page as product_id is required. (maybe add it in configurable options instead?)
+            'specificPriceForm' => $specificPriceFormBuilder->getForm(['product_id' => $productId])->createView(),
             'statsLink' => $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null,
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
             'isMultiShopContext' => $isMultiShopContext,

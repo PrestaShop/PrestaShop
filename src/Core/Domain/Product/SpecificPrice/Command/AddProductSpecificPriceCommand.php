@@ -127,6 +127,7 @@ class AddProductSpecificPriceCommand
         string $reductionType,
         float $reductionValue,
         bool $includeTax,
+        //@todo: string
         float $price,
         int $fromQuantity
     ) {
