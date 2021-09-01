@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import _ from 'lodash';
+import _, {DebouncedFunc} from 'lodash';
 import EventEmitter from '@components/event-emitter';
 
 const {$} = window;
@@ -92,7 +92,7 @@ export default class FormObjectMapper {
 
   watchedProperties: Record<string, Array<(event: FormUpdateEvent) => void>>;
 
-  private updateDebounce?: any;
+  private updateDebounce?: DebouncedFunc<() => void>;
 
   /* eslint-disable */
   /**
@@ -265,7 +265,22 @@ export default class FormObjectMapper {
    * @private
    */
   private watchUpdates(): void {
-    this.$form.on('keyup change dp.change', ':input', (event: JQuery.TriggeredEvent) => this.inputUpdated(event));
+    // Text and textarea inputs need to be debounced
+    this.$form.on(
+      'keyup change dp.change',
+      '[type="text"], textarea',
+      _.debounce((event: JQuery.TriggeredEvent) => this.inputUpdated(event), 1000, {
+        maxWait: 1500,
+      }),
+    );
+
+    // Other inputs can be updated straight away
+    this.$form.on(
+      'keyup change dp.change',
+      ':input:not([type="text"]):not(textarea)',
+      (event: JQuery.TriggeredEvent) => this.inputUpdated(event),
+    );
+
     this.eventEmitter.on(this.updateModelEventName, () => this.updateFullObject(),
     );
   }
@@ -285,27 +300,6 @@ export default class FormObjectMapper {
       return;
     }
 
-    // Text inputs need a little debounce while typing to avoid too frequent updates
-    if (target.type === 'text' || target.type === 'textarea') {
-      if (this.updateDebounce) {
-        this.updateDebounce.cancel();
-      }
-
-      this.updateDebounce = _.debounce(() => this.performInputUpdate(target), 350, {
-        maxWait: 1500,
-      });
-      this.updateDebounce();
-    } else {
-      // For other elements (checkbox, select, ...) we can update straight away
-      this.performInputUpdate(target);
-    }
-  }
-
-  /**
-   * @param {HTMLInputElement} target
-   * @private
-   */
-  private performInputUpdate(target: HTMLInputElement): void {
     const updatedValue = this.getInputValue($(target));
     const updatedModelKey = this.formMapping[target.name];
 
