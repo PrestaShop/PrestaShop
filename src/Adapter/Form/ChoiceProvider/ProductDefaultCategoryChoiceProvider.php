@@ -64,7 +64,7 @@ class ProductDefaultCategoryChoiceProvider implements ConfigurableFormChoiceProv
     {
         $options = $this->resolveOptions($options);
 
-        if (!isset($options['product_id'])) {
+        if (!$options['product_id']) {
             $category = $this->categoryRepository->get(new CategoryId($this->defaultCategoryId));
 
             // if no product is provided, then default category can only be home

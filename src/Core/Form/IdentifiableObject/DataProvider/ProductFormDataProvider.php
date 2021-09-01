@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use Category;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
@@ -128,6 +129,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
+        //@todo: next PR -> refactor this. Legacy object model cannot stay in Core
+        $defaultCategory = new Category($this->defaultCategoryId);
+
         return $this->addShortcutData([
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
@@ -135,7 +139,10 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'description' => [
                 'categories' => [
                     'product_categories' => [
-                        ['id' => $this->defaultCategoryId],
+                        [
+                            'id' => $this->defaultCategoryId,
+                            'name' => $defaultCategory->name[$this->contextLangId],
+                        ],
                     ],
                     'default_category_id' => $this->defaultCategoryId,
                 ],
