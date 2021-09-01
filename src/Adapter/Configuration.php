@@ -172,8 +172,8 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             $key,
             $value,
             $html,
-            $shopGroupId,
-            $shopId
+            $shopGroupId ?: 0,
+            $shopId ?: 0
         );
 
         if (!$success) {
