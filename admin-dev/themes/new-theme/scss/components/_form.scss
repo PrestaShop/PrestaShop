@@ -141,3 +141,15 @@
     }
   }
 }
+
+.modify-all-shops {
+  margin-top: 5px;
+  margin-left: 10px;
+  display: none;
+
+  &.multi-store-field-focused,
+  &.multi-store-focused,
+  &.multi-store-updated {
+    display: block;
+  }
+}
