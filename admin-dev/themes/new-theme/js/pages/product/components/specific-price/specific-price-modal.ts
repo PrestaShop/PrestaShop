@@ -25,26 +25,34 @@
 
 
 import ProductMap from '@pages/product/product-map';
-
-const {$} = window;
+import ConfirmModal from '@components/modal';
 
 const SpecificPriceMap = ProductMap.specificPrice;
 
 export default class SpecificPriceModal {
   public showModal(): void {
-    const modalContent = $(SpecificPriceMap.modalTemplate);
-    // @todo: replace fancybox with Modal after following PR is merged:
-    //    https://github.com/PrestaShop/PrestaShop/pull/25184
-    $.fancybox({
-      type: 'iframe',
-      width: '90%',
-      height: '90%',
-      fitToView: false,
-      autoSize: false,
-      content: modalContent.html(),
-      afterShow: () => {
-        //@todo: all the js magic
+    const modalTemplate = document.querySelector(SpecificPriceMap.modalTemplate) as HTMLTemplateElement;
+    const modalContent = modalTemplate.content?.firstElementChild?.cloneNode(true);
+
+    if (!(modalContent instanceof HTMLElement)) {
+      console.error('Specific price modal content expected to be HTMLElement');
+
+      return;
+    }
+
+    const modal = new (ConfirmModal as any)(
+      {
+        id: SpecificPriceMap.modalContentId,
+        confirmMessage: modalContent.innerHTML,
+        confirmButtonLabel: modalTemplate.dataset.confirmBtnText,
+        closeButtonLabel: modalTemplate.dataset.cancelBtnText,
       },
-    });
+      () => {
+        //@todo;
+        console.log('confirmed');
+      },
+    );
+
+    modal.show();
   }
 }
