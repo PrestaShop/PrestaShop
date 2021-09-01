@@ -14,6 +14,9 @@ services:
     prestashop.adapter.shop.url.category_image_folder_provider:
         class: 'Tests\Integration\Adapter\Shop\Url\TestCategoryImageFolderProvider'
 
+    prestashop.adapter.shop.context:
+        class: Tests\Integration\Adapter\Shop\TestContext
+
     # Advanced form type
     test.integration.prestashop_bundle.form.advanced_form_type:
         class: 'Tests\Integration\PrestaShopBundle\Form\AdvancedFormType'
