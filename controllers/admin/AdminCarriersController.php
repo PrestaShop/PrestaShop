@@ -642,13 +642,16 @@ class AdminCarriersControllerCore extends AdminController
      */
     public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
     {
-        parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
-
-        foreach ($this->_list as $key => $list) {
-            if ($list['name'] == '0') {
-                $this->_list[$key]['name'] = Carrier::getCarrierNameFromShopName();
-            }
+        // Replace "0" by the name of the shop directly in SQL query (allowing sort without errors)
+        if (!empty($this->_select)) {
+            $this->_select .= ', ';
         }
+        $this->_select .= sprintf(
+            'IF(name = "0", "%s", name) AS name',
+            pSQL(Carrier::getCarrierNameFromShopName())
+        );
+
+        parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
     }
 
     public function ajaxProcessUpdatePositions()
