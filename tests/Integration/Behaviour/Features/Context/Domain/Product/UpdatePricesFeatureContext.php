@@ -50,6 +50,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      * @param string $shopReference
+     * @param TableNode $table
      */
     public function updateProductPricesForShop(string $productReference, string $shopReference, TableNode $table): void
     {
@@ -62,6 +63,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
      * @When I update product :productReference prices for all shops with following information:
      *
      * @param string $productReference
+     * @param TableNode $table
      */
     public function updateProductPricesForAllShops(string $productReference, TableNode $table): void
     {
@@ -181,11 +183,11 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @param $pricesInfo
+     * @param ProductPricesInformation $pricesInfo
      * @param array $data
      * @param string|null $shopReference
      */
-    private function assertPricesInfos($pricesInfo, array $data, string $shopReference = null): void
+    private function assertPricesInfos(ProductPricesInformation $pricesInfo, array $data, string $shopReference = null): void
     {
         $shopErrorMessage = !empty($shopReference) ? sprintf(' for shop %s', $shopReference) : '';
         if (isset($data['on_sale'])) {
