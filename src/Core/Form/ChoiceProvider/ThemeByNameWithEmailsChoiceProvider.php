@@ -42,11 +42,17 @@ final class ThemeByNameWithEmailsChoiceProvider implements FormChoiceProviderInt
     private $themeCollection;
 
     /**
+     * @var string
+     */
+    private $themesDirectory;
+
+    /**
      * @param ThemeCollection $themeCollection
      */
-    public function __construct(ThemeCollection $themeCollection)
+    public function __construct(ThemeCollection $themeCollection, string $themesDirectory)
     {
         $this->themeCollection = $themeCollection;
+        $this->themesDirectory = $themesDirectory;
     }
 
     /**
@@ -61,7 +67,7 @@ final class ThemeByNameWithEmailsChoiceProvider implements FormChoiceProviderInt
             $coreMailsFolder = $theme->getDirectory() . '/mails';
             $modulesMailFolder = $theme->getDirectory() . '/modules';
             if (is_dir($coreMailsFolder) || is_dir($modulesMailFolder)) {
-                $themeChoices[$theme->getName()] = $theme->getName();
+                $themeChoices[$theme->getName()] = realpath($this->themesDirectory . '/' . $theme->getName());
             }
         }
 

@@ -24,12 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
-use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameWithEmailsChoiceProvider;
 
 class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
 {
@@ -42,7 +43,7 @@ class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
      *
      * @param TableNode $table
      */
-    public function generateEmailsWithTheFollowingDetails(TableNode $table)
+    public function generateEmailsWithTheFollowingDetails(TableNode $table): void
     {
         $testCaseData = $table->getRowsHash();
 
@@ -76,13 +77,9 @@ class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
      *
      * @return array
      */
-    private function mapGenerateThemeMailTemplatesData(array $testCaseData, array $data)
+    private function mapGenerateThemeMailTemplatesData(array $testCaseData, array $data): array
     {
-        /** @var ThemeByNameWithEmailsChoiceProvider $themeWithEmailsChoiceProvider */
-        $themeWithEmailsChoiceProvider =
-            $this->getContainer()->get('prestashop.core.form.choice_provider.theme_by_name_with_emails');
-        $AvailableLanguages = $themeWithEmailsChoiceProvider->getChoices();
-        $data['themeName'] = $AvailableLanguages[$testCaseData['Email theme']];
+        $data['themeName'] = $testCaseData['Email theme'];
 
         // have not found locale choice provider
         $data['languageLocale'] = array_flip(self::LANGUAGES_MAP)[$data['Language']];
