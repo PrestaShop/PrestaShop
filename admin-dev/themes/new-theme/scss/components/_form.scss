@@ -143,9 +143,9 @@
 }
 
 .modify-all-stores {
+  display: none;
   margin-top: 5px;
   margin-left: 10px;
-  display: none;
 
   &.multi-store-field-focused,
   &.multi-store-focused,
