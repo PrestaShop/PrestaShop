@@ -38,17 +38,19 @@
 <?php } ?>
 
 <!-- Display tests results -->
-<?php foreach ($this->tests_render as $type => $categories) { ?>
+<?php foreach ($this->tests_render as $type => $categories): ?>
   <ul id="<?php echo $type; ?>">
-	<?php foreach ($categories as $category) { ?>
-	  <li class="title <?php if ($category['success'] == 1) { ?>ok<?php } ?>"><?php echo $category['title']; ?></li>
-	  <?php $i = 0; foreach ($category['checks'] as $id => $lang) { ?>
-		<li class="required <?php if ($i == 0) { ?>first<?php } ?> <?php echo isset($this->tests[$type]['checks'][$id]) ? $this->tests[$type]['checks'][$id] : 'fail'; ?>">
-		  <?php echo $lang; ?>
-		</li>
-	  <?php ++$i; } ?>
-	<?php } ?>
+    <?php foreach ($categories as $category): ?>
+      <li class="title <?php if ($category['success'] == 1): ?>ok<?php endif; ?>"><?php echo $category['title']; ?></li>
+      <?php $i = 0; ?>
+      <?php foreach ($category['checks'] as $id => $lang): ?>
+        <li class="required <?php if ($i == 0): ?>first<?php endif; ?> <?php echo isset($this->tests[$type]['checks'][$id]) ? $this->tests[$type]['checks'][$id] : 'fail'; ?>">
+          <?php echo $lang; ?>
+        </li>
+        <?php ++$i; ?>
+      <?php endforeach; ?>
+    <?php endforeach; ?>
   </ul>
-<?php } ?>
+<?php endforeach; ?>
 
 <p><input class="button" value="<?php echo $this->translator->trans('Refresh information', [], 'Install'); ?> " type="submit" id="req_bt_refresh" /></p>

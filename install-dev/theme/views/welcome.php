@@ -27,8 +27,8 @@
 
 <?php if ($this->can_upgrade): ?>
   <div class="warnBlock">
-	<img src="theme/img/pict_error.png" alt="" style="vertical-align: middle;" /> &nbsp;
-	<?php echo $this->translator->trans(
+    <img src="theme/img/pict_error.png" alt="" style="vertical-align: middle;" /> &nbsp;
+    <?php echo $this->translator->trans(
       '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %version% installed</b>.<br /><br />If you want to upgrade to the latest version, please use the 1-Click Upgrade module and follow its instructions.',
         ['%version%' => $this->ps_version],
         'Install'
@@ -51,17 +51,17 @@
 <?php if (count($this->language->getIsoList()) > 1): ?>
   <h3><?php echo $this->translator->trans('Continue the installation in:', [], 'Install'); ?></h3>
   <select id="langList" name="language">
-	<?php foreach ($this->language->getIsoList() as $iso): ?>
-	  <option
+    <?php foreach ($this->language->getIsoList() as $iso): ?>
+      <option
         value="<?php echo $iso; ?>"
         <?php if ($iso == $this->language->getLanguageIso()): ?>
           selected="selected"
         <?php endif; ?>
       >
 
-		<?php echo $this->language->getLanguage($iso)->getName(); ?>
-	  </option>
-	<?php endforeach; ?>
+        <?php echo $this->language->getLanguage($iso)->getName(); ?>
+      </option>
+    <?php endforeach; ?>
   </select>
 <?php endif; ?>
 
