@@ -25,6 +25,8 @@
 
 import MultiStoreModifyAllMap from './modify-all-stores-checkbox-map';
 
+const {$} = window;
+
 /**
  * Enables multi store modify all checkboxes on the page. The checkboxes are hidden by default,
  * they appear on input focus and stay visible when the value changed.
@@ -75,6 +77,12 @@ export default class ModifyAllStoresCheckbox {
           multiStoreField.addEventListener('change', () => {
             widget.classList.add(MultiStoreModifyAllMap.updatedClass);
           });
+          // We check the event via JQuery as well because some components use internal JQuery event instead of native
+          // ones (like select2)
+          $(multiStoreField).on('change', () => {
+            widget.classList.add(MultiStoreModifyAllMap.updatedClass);
+          });
+          // Check for checkbox change also, in case it is modified programmatically
           widgetCheckbox.addEventListener('change', () => {
             widget.classList.add(MultiStoreModifyAllMap.updatedClass);
           });
