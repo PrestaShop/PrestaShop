@@ -175,7 +175,7 @@ class ProductShopUpdater
     /**
      * @param Product $product
      *
-     * @return array
+     * @return array<string, int>
      */
     private function getAssociationFields(Product $product): array
     {
@@ -188,7 +188,7 @@ class ProductShopUpdater
     /**
      * @param Product $product
      *
-     * @return array
+     * @return array<string, float|bool|int|string>
      */
     private function getPricesFields(Product $product): array
     {
@@ -207,7 +207,7 @@ class ProductShopUpdater
     /**
      * @param Product $product
      *
-     * @return array
+     * @return array<string, int|bool|null>
      */
     private function getStockFields(Product $product): array
     {
@@ -223,7 +223,7 @@ class ProductShopUpdater
     /**
      * @param Product $product
      *
-     * @return array
+     * @return array<string, int|string>
      */
     private function getSEOFields(Product $product): array
     {
@@ -236,7 +236,7 @@ class ProductShopUpdater
     /**
      * @param Product $product
      *
-     * @return array
+     * @return array<string, int|string|bool>
      */
     private function getOptionsFields(Product $product): array
     {
@@ -256,7 +256,7 @@ class ProductShopUpdater
     /**
      * @param Product $product
      *
-     * @return array
+     * @return array<string, int>
      */
     private function getCustomizationFields(Product $product): array
     {
@@ -272,7 +272,7 @@ class ProductShopUpdater
      *
      * @param Product $product
      *
-     * @return array
+     * @return array<string, string|null>
      */
     private function getDateFields(Product $product): array
     {
