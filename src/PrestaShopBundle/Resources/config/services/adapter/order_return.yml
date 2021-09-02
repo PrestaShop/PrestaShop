@@ -12,7 +12,7 @@ services:
        - '@prestashop.adapter.customer.repository.customer_repository'
        - '@prestashop.adapter.order.repository.order_repository'
 
-  prestashop.adapter.order_return.command_handler.edit_order_return_state_handler:
+  prestashop.adapter.order_return.command_handler.update_order_return_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\UpdateOrderReturnStateHandler'
     tags:
       - name: tactician.handler

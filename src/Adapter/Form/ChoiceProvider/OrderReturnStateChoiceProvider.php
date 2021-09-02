@@ -32,7 +32,7 @@ use OrderReturnState;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateException;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
-final class OrderReturnStateChoiceProvider implements FormChoiceProviderInterface
+class OrderReturnStateChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var int
