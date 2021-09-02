@@ -73,11 +73,10 @@ class ProductPricePropertiesFiller
         if (null !== $price) {
             $product->price = (float) (string) $price;
             $updatableProperties[] = 'price';
-        } else {
-            $price = $this->numberExtractor->extract($product, 'price');
         }
 
-        if (null !== $unitPrice) {
+        // When price or unit price is changed the ratio must be updated
+        if (null !== $unitPrice || null !== $price) {
             $this->fillUnitPriceRatio($product, $price, $unitPrice);
             $updatableProperties[] = 'unit_price_ratio';
         }
@@ -87,11 +86,15 @@ class ProductPricePropertiesFiller
 
     /**
      * @param Product $product
-     * @param DecimalNumber $price
+     * @param DecimalNumber|null $price
      * @param DecimalNumber|null $unitPrice
      */
-    private function fillUnitPriceRatio(Product $product, DecimalNumber $price, ?DecimalNumber $unitPrice): void
+    private function fillUnitPriceRatio(Product $product, ?DecimalNumber $price, ?DecimalNumber $unitPrice): void
     {
+        if (null === $price) {
+            $price = $this->numberExtractor->extract($product, 'price');
+        }
+
         // if price was reset then also reset unit_price_ratio
         if ($price->equalsZero()) {
             $this->setUnitPriceRatio($product, $price, $price);
