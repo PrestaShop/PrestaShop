@@ -90,6 +90,11 @@ class InstallControllerHttp
      */
     protected $__vars = [];
 
+    /**
+     * @var array Configuration
+     */
+    protected static $config;
+
     private function initSteps()
     {
         $stepConfig = [
@@ -161,6 +166,7 @@ class InstallControllerHttp
             $this->initSteps();
         }
 
+        $this->loadConfiguration();
         $this->init();
     }
 
@@ -398,6 +404,31 @@ class InstallControllerHttp
         }
 
         return '';
+    }
+
+    protected function loadConfiguration(): void
+    {
+        if (self::$config === null) {
+            $path = _PS_INSTALL_PATH_ . 'theme/config.php';
+            $customPath = _PS_INSTALL_PATH_ . 'theme/custom/config.php';
+
+            if (file_exists($customPath)) {
+                self::$config = include $customPath;
+                return;
+            }
+
+            if (file_exists($path)) {
+                self::$config = include $path;
+                return;
+            }
+
+            throw new PrestashopInstallerException("Config file not found");
+        }
+    }
+
+    public function getConfig(string $element)
+    {
+        return self::$config[$element] ?: null;
     }
 
     public function displayContent(string $content): void
