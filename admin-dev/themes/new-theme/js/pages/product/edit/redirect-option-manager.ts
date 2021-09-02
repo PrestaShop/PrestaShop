@@ -24,6 +24,7 @@
  */
 
 import EntitySearchInput from '@components/entity-search-input';
+import EventEmitter from '@components/event-emitter';
 import ComponentsMap from '@components/components-map';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
@@ -40,10 +41,28 @@ const {$} = window;
  * and values of the target.
  */
 export default class RedirectOptionManager {
+  eventEmitter: typeof EventEmitter;
+
+  $redirectTypeInput: JQuery;
+
+  $redirectTargetInput: JQuery;
+
+  $searchInput: JQuery;
+
+  $redirectTargetRow: JQuery;
+
+  $redirectTargetLabel: JQuery;
+
+  $redirectTargetHint: JQuery;
+
+  lastSelectedType: string | number | string[] | undefined;
+
+  entitySearchInput!: EntitySearchInput;
+
   /**
    * @param {EventEmitter} eventEmitter
    */
-  constructor(eventEmitter) {
+  constructor(eventEmitter: typeof EventEmitter) {
     this.eventEmitter = eventEmitter;
     this.$redirectTypeInput = $(ProductMap.seo.redirectOption.typeInput);
     this.$redirectTargetInput = $(ProductMap.seo.redirectOption.targetInput);
@@ -61,7 +80,7 @@ export default class RedirectOptionManager {
   /**
    * Watch the selected redirection type and adapt the inputs accordingly.
    */
-  watchRedirectType() {
+  watchRedirectType(): void {
     this.lastSelectedType = this.$redirectTypeInput.val();
 
     this.$redirectTypeInput.change(() => {
@@ -106,7 +125,7 @@ export default class RedirectOptionManager {
     });
   }
 
-  buildAutoCompleteSearchInput() {
+  buildAutoCompleteSearchInput(): void {
     const redirectType = this.$redirectTypeInput.val();
     // On first load only allow delete for category target
     let initialAllowDelete;
@@ -132,11 +151,11 @@ export default class RedirectOptionManager {
     });
   }
 
-  showTarget() {
+  showTarget(): void {
     this.$redirectTargetRow.removeClass('d-none');
   }
 
-  hideTarget() {
+  hideTarget(): void {
     this.$redirectTargetRow.addClass('d-none');
   }
 }
