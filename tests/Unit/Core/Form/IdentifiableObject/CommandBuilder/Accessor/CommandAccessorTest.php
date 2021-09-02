@@ -61,6 +61,7 @@ class CommandAccessorTest extends TestCase
     {
         $config = new CommandAccessorConfig(self::MULTI_STORE_PREFIX);
         $config
+            ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
             ->addField('[name]', 'setName', CommandField::TYPE_STRING)
             ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
             ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
@@ -73,6 +74,7 @@ class CommandAccessorTest extends TestCase
 
         $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
+            ->setUrl('http://localhost')
             ->setName('toto')
             ->setIsValid(true)
             ->setCount(42)
@@ -82,6 +84,7 @@ class CommandAccessorTest extends TestCase
         yield [
             $config,
             [
+                'url' => 'http://localhost',
                 'name' => 'toto',
                 'command' => [
                     'isValid' => true,
@@ -136,10 +139,11 @@ class CommandAccessorTest extends TestCase
     {
         $config = new CommandAccessorConfig(self::MULTI_STORE_PREFIX);
         $config
-            ->addField('[name]', 'setName', CommandField::TYPE_STRING)
-            ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
-            ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
+            ->addMultiStoreField('[name]', 'setName', CommandField::TYPE_STRING)
+            ->addMultiStoreField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
+            ->addMultiStoreField('[_number]', 'setCount', CommandField::TYPE_INT)
+            ->addMultiStoreField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
         ;
         $children = [
             'bob',
@@ -148,6 +152,7 @@ class CommandAccessorTest extends TestCase
 
         $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
+            ->setUrl('http://localhost')
             ->setName('toto')
             ->setIsValid(true)
             ->setCount(42)
@@ -157,6 +162,7 @@ class CommandAccessorTest extends TestCase
         yield [
             $config,
             [
+                'url' => 'http://localhost',
                 'name' => 'toto',
                 'command' => [
                     'isValid' => true,
@@ -171,6 +177,7 @@ class CommandAccessorTest extends TestCase
 
         $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
+            ->setUrl('http://localhost')
             ->setName('toto')
             ->setIsValid(false)
         ;
@@ -184,6 +191,7 @@ class CommandAccessorTest extends TestCase
         yield [
             $config,
             [
+                'url' => 'http://localhost',
                 'name' => 'toto',
                 'command' => [
                     'isValid' => false,
@@ -211,8 +219,10 @@ class CommandAccessorTest extends TestCase
             [$allShopsCommand],
         ];
 
+        // More advanced use, multistore field is present but not always true, and url is not a multistore field
         $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
+            ->setUrl('http://localhost')
             ->setName('toto')
             ->setCount(42)
             ->setIsValid(false)
@@ -226,6 +236,50 @@ class CommandAccessorTest extends TestCase
         yield [
             $config,
             [
+                'url' => 'http://localhost',
+                self::MULTI_STORE_PREFIX . 'url' => true,
+                'name' => 'toto',
+                'command' => [
+                    'isValid' => false,
+                ],
+                '_number' => 42,
+                self::MULTI_STORE_PREFIX . '_number' => false,
+                'parent' => [
+                    'children' => $children,
+                    self::MULTI_STORE_PREFIX . 'children' => true,
+                ],
+            ],
+            [$command, $allShopsCommand],
+        ];
+
+        // Same test but now url is a multistore field
+        $config = new CommandAccessorConfig(self::MULTI_STORE_PREFIX);
+        $config
+            ->addMultiStoreField('[url]', 'setUrl', CommandField::TYPE_STRING)
+            ->addMultiStoreField('[name]', 'setName', CommandField::TYPE_STRING)
+            ->addMultiStoreField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
+            ->addMultiStoreField('[_number]', 'setCount', CommandField::TYPE_INT)
+            ->addMultiStoreField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+        ;
+
+        $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
+        $command
+            ->setName('toto')
+            ->setCount(42)
+            ->setIsValid(false)
+        ;
+
+        $allShopsCommand = new CommandAccessorTestCommand(ShopConstraint::allShops());
+        $allShopsCommand
+            ->setUrl('http://localhost')
+            ->setChildren($children)
+        ;
+
+        yield [
+            $config,
+            [
+                'url' => 'http://localhost',
+                self::MULTI_STORE_PREFIX . 'url' => true,
                 'name' => 'toto',
                 'command' => [
                     'isValid' => false,
@@ -248,6 +302,11 @@ class CommandAccessorTestCommand
      * @var string
      */
     private $name;
+
+    /**
+     * @var string
+     */
+    private $url;
 
     /**
      * @var bool
@@ -293,6 +352,26 @@ class CommandAccessorTestCommand
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return static
+     */
+    public function setUrl(string $url): self
+    {
+        $this->url = $url;
 
         return $this;
     }
