@@ -279,9 +279,9 @@ class ProductShopUpdater
         $now = new DateTime();
 
         return [
-            'available_date' => $product->available_date,
             'date_add' => $product->date_add,
             'date_upd' => $now->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+            'available_date' => DateTimeUtil::getNullableDateTime($product->available_date),
         ];
     }
 
