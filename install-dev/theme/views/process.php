@@ -43,11 +43,11 @@
     </div>
 
     <ol class="process_list">
-      <?php foreach ($this->process_steps as $item) { ?>
+      <?php foreach ($this->process_steps as $item): ?>
         <li id="process_step_<?php echo $item['key']; ?>" class="process_step">
           <?php echo $item['lang']; ?>
         </li>
-      <?php } ?>
+      <?php endif ?>
     </ol>
 
     <div id="error_process">
