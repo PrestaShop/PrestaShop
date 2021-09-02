@@ -165,7 +165,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
             }
         }
 
-        $this->ajaxJsonAnswer(($error) ? false : true, $error);
+        $this->ajaxJsonAnswer(!$error, $error);
     }
 
     /**
@@ -174,7 +174,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     public function processTimezoneByIso()
     {
         $timezone = $this->getTimezoneByIso(Tools::getValue('iso'));
-        $this->ajaxJsonAnswer(($timezone) ? true : false, $timezone);
+        $this->ajaxJsonAnswer((bool) $timezone, $timezone);
     }
 
     /**

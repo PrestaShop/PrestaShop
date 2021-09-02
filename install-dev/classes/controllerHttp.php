@@ -357,7 +357,7 @@ class InstallControllerHttp
      * @param bool $success
      * @param string $message
      */
-    public function ajaxJsonAnswer($success, $message = '')
+    public function ajaxJsonAnswer(bool $success, string $message = ''): void
     {
         if (!$success && empty($message)) {
             $message = print_r(@error_get_last(), true);
