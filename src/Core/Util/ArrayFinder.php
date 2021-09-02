@@ -24,22 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Util;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
-class SymfonyArrayFinder implements \ArrayAccess, \Countable
+/**
+ * ArrayFinder allows to modify an array content using selectors such as $arrayFinder->get('property_a.property_3.4');
+ *
+ * This class replaces https://github.com/Shudrum/ArrayFinder/blob/master/ArrayFinder.php that
+ * was used in previous PrestaShop versions.
+ */
+class ArrayFinder implements \ArrayAccess, \Countable
 {
     /**
      * @var array
      */
     private $array;
+
     /**
      * @var PropertyAccessor
      */
     private $propertyAccessor;
 
+    /**
+     * @param array $content the array to be searched and manager by ArrayFinder
+     */
     public function __construct(array $content = [])
     {
         $this->array = $content;
@@ -54,21 +66,9 @@ class SymfonyArrayFinder implements \ArrayAccess, \Countable
         return count($this->array);
     }
 
-    private function convertDotPathToArrayPath(string $dotPath): string
-    {
-        if ($dotPath === '[]') {
-            return '[0]';
-        }
-
-        $expl = explode('.', $dotPath);
-        $in = implode('][', $expl);
-
-        return '[' . $in . ']';
-    }
-
     /**
-     * @param string $path
-     * @param mixed $default
+     * @param string|null $path selector to find the desired value. if empty, will return full array
+     * @param mixed|null $default default value to be returned if selector matches nothing
      *
      * @return mixed|null
      */
@@ -89,12 +89,12 @@ class SymfonyArrayFinder implements \ArrayAccess, \Countable
     }
 
     /**
-     * @param string $path
-     * @param mixed $value
+     * @param string $path selector for the value to be set
+     * @param mixed $value input value to be set inside array
      *
-     * @return $this
+     * @return self
      */
-    public function set(string $path, $value): SymfonyArrayFinder
+    public function set(string $path, $value): self
     {
         $this->propertyAccessor->setValue(
             $this->array,
@@ -129,7 +129,7 @@ class SymfonyArrayFinder implements \ArrayAccess, \Countable
      */
     public function offsetSet($offset, $value)
     {
-        if (is_null($offset)) {
+        if ($offset === null) {
             $this->array[] = $value;
         } else {
             $this->set($offset, $value);
@@ -142,5 +142,21 @@ class SymfonyArrayFinder implements \ArrayAccess, \Countable
     public function offsetUnset($offset)
     {
         $this->set($offset, null);
+    }
+
+    /**
+     * @param string $dotPath
+     * @return string
+     */
+    private function convertDotPathToArrayPath(string $dotPath): string
+    {
+        if ($dotPath === '[]') {
+            return '[0]';
+        }
+
+        $expl = explode('.', $dotPath);
+        $in = implode('][', $expl);
+
+        return '[' . $in . ']';
     }
 }
