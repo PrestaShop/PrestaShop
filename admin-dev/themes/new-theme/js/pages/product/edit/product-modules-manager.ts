@@ -26,6 +26,18 @@
 import ProductMap from '@pages/product/product-map';
 
 export default class ProductModulesManager {
+  $previewContainer: JQuery;
+
+  $selectorContainer: JQuery;
+
+  $contentContainer: JQuery;
+
+  $moduleSelector: JQuery;
+
+  $selectorPreviews: JQuery;
+
+  $moduleContents: JQuery;
+
   constructor() {
     this.$previewContainer = $(ProductMap.modules.previewContainer);
     this.$selectorContainer = $(ProductMap.modules.selectorContainer);
@@ -35,14 +47,12 @@ export default class ProductModulesManager {
     this.$moduleContents = $(ProductMap.modules.moduleContents);
 
     this.init();
-
-    return {};
   }
 
   /**
    * @private
    */
-  init() {
+  private init(): void {
     this.$previewContainer.removeClass('d-none');
     this.$selectorContainer.addClass('d-none');
     this.$contentContainer.addClass('d-none');
@@ -62,7 +72,7 @@ export default class ProductModulesManager {
    *
    * @private
    */
-  selectModule(moduleId) {
+  private selectModule(moduleId: string): void {
     this.$previewContainer.addClass('d-none');
     this.$selectorContainer.removeClass('d-none');
     this.$contentContainer.removeClass('d-none');
@@ -75,12 +85,12 @@ export default class ProductModulesManager {
   /**
    * @private
    */
-  showSelectedModule() {
+  private showSelectedModule(): void {
     this.$selectorPreviews.addClass('d-none');
     this.$moduleContents.addClass('d-none');
 
     const moduleId = this.$moduleSelector.val();
-    $(ProductMap.modules.selectorPreview(moduleId)).removeClass('d-none');
-    $(ProductMap.modules.moduleContent(moduleId)).removeClass('d-none');
+    $(ProductMap.modules.selectorPreview(<string>moduleId)).removeClass('d-none');
+    $(ProductMap.modules.moduleContent(<string>moduleId)).removeClass('d-none');
   }
 }
