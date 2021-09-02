@@ -448,7 +448,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $product->available_now,
             $product->available_later,
             $stockAvailable->location,
-            DateTimeUtil::NULL_DATE === $product->available_date ? null : new DateTime($product->available_date)
+            DateTimeUtil::isNull($product->available_date) ? null : new DateTime($product->available_date)
         );
     }
 
