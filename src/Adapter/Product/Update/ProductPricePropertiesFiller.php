@@ -85,7 +85,8 @@ class ProductPricePropertiesFiller
             $updatableProperties[] = 'unit_price';
         }
 
-        // When price or unit price is changed the ratio must be updated
+        // When price or unit price is changed the ratio must be updated, but only the object field
+        // we don't ask to update this property since it will be updated via an SQL query by the Product class
         if (null !== $unitPrice || null !== $price) {
             $this->fillUnitPriceRatio($product, $price, $unitPrice);
         }

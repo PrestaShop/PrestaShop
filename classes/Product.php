@@ -767,7 +767,9 @@ class ProductCore extends ObjectModel
     public function getFieldsShop()
     {
         $fields = parent::getFieldsShop();
-        $fields['unity'] = pSQL($this->unity);
+        if (null === $this->update_fields || !empty($this->update_fields['unity'])) {
+            $fields['unity'] = pSQL($this->unity);
+        }
 
         return $fields;
     }
