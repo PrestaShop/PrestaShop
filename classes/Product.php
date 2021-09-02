@@ -761,7 +761,9 @@ class ProductCore extends ObjectModel
                 $fields['unit_price_ratio'] = (float) $this->unit_price > 0 ? $this->price / $this->unit_price : 0;
             }
         }
-        $fields['unity'] = pSQL($this->unity);
+        if (null === $this->update_fields || !empty($this->update_fields['unity'])) {
+            $fields['unity'] = pSQL($this->unity);
+        }
 
         return $fields;
     }
