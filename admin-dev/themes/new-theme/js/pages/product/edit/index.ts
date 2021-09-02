@@ -73,7 +73,7 @@ $(() => {
     new CombinationsManager(productId);
   }
 
-  new NavbarHandler(ProductMap.navigationBar);
+  new NavbarHandler($(ProductMap.navigationBar));
   new ProductSEOManager(eventEmitter);
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
