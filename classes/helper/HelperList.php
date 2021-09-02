@@ -717,18 +717,7 @@ class HelperListCore extends Helper
 
                     break;
 
-                case 'select':
-                    foreach ($params['list'] as $option_value => $option_display) {
-                        if (isset(Context::getContext()->cookie->{$prefix . $this->list_id . 'Filter_' . $params['filter_key']})
-                            && Context::getContext()->cookie->{$prefix . $this->list_id . 'Filter_' . $params['filter_key']} == $option_value
-                            && Context::getContext()->cookie->{$prefix . $this->list_id . 'Filter_' . $params['filter_key']} != '') {
-                            $this->fields_list[$key]['select'][$option_value]['selected'] = 'selected';
-                        }
-                    }
-
-                    break;
-
-                case 'text':
+                case 'editable':
                     if (!Validate::isCleanHtml($value)) {
                         $value = '';
                     }
