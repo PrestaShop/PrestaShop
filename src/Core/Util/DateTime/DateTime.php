@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Util\DateTime;
 
+use DateTime as NativeDateTime;
 use RuntimeException;
 
 /**
@@ -64,5 +65,29 @@ final class DateTime
     public function __construct()
     {
         throw new RuntimeException(sprintf('This class purpose is to define constants only. You might have mistaken it with "%s"', \DateTime::class));
+    }
+
+    /**
+     * Returns null if input value is nullable (including 0000-00-00 value), return a DateTime object otherwise.
+     *
+     * @param string|null $value
+     *
+     * @return NativeDateTime|null
+     */
+    public static function getNullableDate(?string $value): ?NativeDateTime
+    {
+        return empty($value) || $value === self::NULL_DATE || $value === self::NULL_DATETIME ? null : new NativeDateTime($value);
+    }
+
+    /**
+     * Returns null if input value is nullable (including 0000-00-00 value), return a DateTime object otherwise.
+     *
+     * @param string|null $value
+     *
+     * @return NativeDateTime|null
+     */
+    public static function getNullableDateTime(?string $value): ?NativeDateTime
+    {
+        return empty($value) || $value === self::NULL_DATETIME || $value === self::NULL_DATE ? null : new NativeDateTime($value);
     }
 }
