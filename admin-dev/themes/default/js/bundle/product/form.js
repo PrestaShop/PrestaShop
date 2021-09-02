@@ -1708,17 +1708,17 @@ var priceCalculation = (function() {
       });
 
       /** combinations : update TTC price field on HT change */
-      $(document).on('keyup', '.combination-form .attribute_priceTE', function() {
+      $(document).on('blur', '.combination-form .attribute_priceTE', function() {
         priceCalculation.impactTaxInclude($(this));
         priceCalculation.impactFinalPrice($(this));
       });
       /** combinations : update HT price field on TTC change */
-      $(document).on('keyup', '.combination-form .attribute_priceTI', function() {
+      $(document).on('blur', '.combination-form .attribute_priceTI', function() {
         priceCalculation.impactTaxExclude($(this));
         priceCalculation.impactFinalPrice($(this));
       });
       /** combinations : update price fields on ecotax change */
-      $(document).on('keyup', '.combination-form .attribute_ecotaxTi', function() {
+      $(document).on('blur', '.combination-form .attribute_ecotaxTi', function() {
         priceCalculation.impactPricesForEcotax($(this));
         priceCalculation.impactFinalPrice($(this));
       });
@@ -1881,7 +1881,6 @@ var priceCalculation = (function() {
         var rates = this.getRates();
         var computation_method = taxElem.find('option:selected').attr('data-computation-method');
         priceTI = ps_round(addTaxes(priceTE, rates, computation_method), displayPricePrecision);
-        priceTI = truncateDecimals(priceTI, displayPricePrecision);
       }
 
       return priceTI;
@@ -1898,7 +1897,6 @@ var priceCalculation = (function() {
         var rates = this.getRates();
         var computation_method = taxElem.find('option:selected').attr('data-computation-method');
         priceTE = ps_round(removeTaxes(priceTI, rates, computation_method), displayPricePrecision);
-        priceTE = truncateDecimals(priceTE, displayPricePrecision);
       }
 
       return priceTE;
@@ -1930,7 +1928,6 @@ var priceCalculation = (function() {
       var productPriceTE = priceCalculation.getProductBasePrice();
       var finalPriceTE = productPriceTE + impactPriceTE + ecotaxTE;
       finalPriceTE = ps_round(finalPriceTE, displayPricePrecision);
-      finalPriceTE = truncateDecimals(finalPriceTE, displayPricePrecision);
 
       finalPriceContainer.html(finalPriceTE);
       finalPriceContainer.data('price', finalPriceTE);
@@ -1953,7 +1950,6 @@ var priceCalculation = (function() {
       var productPriceTE = priceCalculation.getProductBasePrice();
       var finalPriceTI = this.computePriceTaxIncluded(productPriceTE + impactPriceTE) + ecotaxTI;
       finalPriceTI = ps_round(finalPriceTI, displayPricePrecision);
-      finalPriceTI = truncateDecimals(finalPriceTI, displayPricePrecision);
 
       finalPriceTIContainer.html(finalPriceTI);
       finalPriceTIContainer.data('price', finalPriceTI);
@@ -1977,7 +1973,6 @@ var priceCalculation = (function() {
       // Compute impact price tax excluded then update the price tax included
       var impactPriceTI = currentFinalPriceTI - ecotaxTI - productPriceTI;
       impactPriceTI = ps_round(impactPriceTI, displayPricePrecision);
-      impactPriceTI = truncateDecimals(impactPriceTI, displayPricePrecision);
       var impactPriceTE = this.computePriceTaxExcluded(impactPriceTI);
 
       this.updateImpactTEInput(impactPriceTE, obj);
@@ -2054,7 +2049,6 @@ var priceCalculation = (function() {
       var productPrice = priceCalculation.getProductBasePrice();
       var finalPrice = productPrice + combinationEcotaxTE + impactPriceTE;
       finalPrice = ps_round(finalPrice, displayPricePrecision);
-      finalPrice = truncateDecimals(finalPrice, displayPricePrecision);
 
       return finalPrice;
     },
