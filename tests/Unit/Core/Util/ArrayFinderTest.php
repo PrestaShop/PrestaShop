@@ -32,6 +32,9 @@ use PrestaShop\PrestaShop\Core\Util\ArrayFinder;
 
 class ArrayFinderTest extends TestCase
 {
+    /** @var array */
+    private $sampleArray;
+
     /** @var ArrayFinder */
     private $arrayFinder;
 
@@ -40,7 +43,7 @@ class ArrayFinderTest extends TestCase
      */
     public function setupComplexArrayFinder()
     {
-        $this->arrayFinder = new ArrayFinder([
+        $this->sampleArray = [
             'hello',
             'world',
             'a' => [
@@ -53,12 +56,14 @@ class ArrayFinderTest extends TestCase
                 ],
             ],
             'here' => 'is_a_key',
-        ]);
+        ];
+        $this->arrayFinder = new ArrayFinder($this->sampleArray);
     }
 
     public function testArrayAccessReading()
     {
         $this->assertEquals('hello', $this->arrayFinder[0]);
+        $this->assertEquals('world', $this->arrayFinder[1]);
     }
 
     public function testArrayAccessInsertValueWithoutKey()
@@ -82,6 +87,7 @@ class ArrayFinderTest extends TestCase
     public function testArrayAccessIsset()
     {
         $this->assertEquals(true, isset($this->arrayFinder['here']));
+        $this->assertEquals(false, isset($this->arrayFinder['out']));
     }
 
     public function testArrayAccessIssetRecursive()
@@ -104,6 +110,16 @@ class ArrayFinderTest extends TestCase
     public function testGetWithStringPath()
     {
         $this->assertEquals('end', $this->arrayFinder->get('a.b.c'));
+    }
+
+    public function testGetRoot()
+    {
+        $this->assertEquals('hello', $this->arrayFinder->get('[]'));
+    }
+
+    public function testGetWithoutArgument()
+    {
+        $this->assertEquals($this->sampleArray, $this->arrayFinder->get());
     }
 
     public function testGetWithIndexPath()
@@ -139,7 +155,7 @@ class ArrayFinderTest extends TestCase
         $this->assertInstanceOf('\PrestaShop\PrestaShop\Core\Util\ArrayFinder', $this->arrayFinder->set('a', 'b'));
     }
 
-    public function testSetCorrecltyAddValueIfPathDoesNotExist()
+    public function testSetCorrectlyAddValueIfPathDoesNotExist()
     {
         $this->arrayFinder->set('d.e.f', 'f_setted');
         $this->assertEquals('f_setted', $this->arrayFinder['d.e.f']);

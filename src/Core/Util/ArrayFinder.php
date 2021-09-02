@@ -67,12 +67,17 @@ class ArrayFinder implements \ArrayAccess, \Countable
     }
 
     /**
-     * @param string|null $path selector to find the desired value. if empty, will return full array
+     * @param string|int|null $path selector to find the desired value. if empty, will return full array
      * @param mixed|null $default default value to be returned if selector matches nothing
      *
      * @return mixed|null
+     *
+     * Examples of use:
+     * $arrayFinder->get('a');
+     * $arrayFinder->get(4);
+     * $arrayFinder[4];
      */
-    public function get(string $path = null, $default = null)
+    public function get($path = null, $default = null)
     {
         if ($path === null) {
             return $this->array;
@@ -89,12 +94,12 @@ class ArrayFinder implements \ArrayAccess, \Countable
     }
 
     /**
-     * @param string $path selector for the value to be set
+     * @param string|int $path selector for the value to be set
      * @param mixed $value input value to be set inside array
      *
      * @return self
      */
-    public function set(string $path, $value): self
+    public function set($path, $value): self
     {
         $this->propertyAccessor->setValue(
             $this->array,
@@ -110,9 +115,10 @@ class ArrayFinder implements \ArrayAccess, \Countable
      */
     public function offsetExists($offset)
     {
-        return $this->propertyAccessor->isReadable(
+        return ($this->propertyAccessor->isReadable(
             $this->array,
-            $this->convertDotPathToArrayPath($offset)
+            $this->convertDotPathToArrayPath($offset))
+            && ($this->get($offset) !== null)
         );
     }
 
@@ -145,13 +151,21 @@ class ArrayFinder implements \ArrayAccess, \Countable
     }
 
     /**
-     * @param string $dotPath
+     * Converts paths following format 'dot' structure a.4.9.d.10
+     * to Symfony format [a][4][9][d][10]
+     *
+     * @param string|int $dotPath
+     *
      * @return string
      */
-    private function convertDotPathToArrayPath(string $dotPath): string
+    private function convertDotPathToArrayPath($dotPath): string
     {
         if ($dotPath === '[]') {
             return '[0]';
+        }
+
+        if (is_int($dotPath)) {
+            $dotPath = (string)$dotPath;
         }
 
         $expl = explode('.', $dotPath);
