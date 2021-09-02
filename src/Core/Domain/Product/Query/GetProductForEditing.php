@@ -40,7 +40,7 @@ class GetProductForEditing
     private $productId;
 
     /**
-     * @var ShopId|null
+     * @var ShopId
      */
     private $shopId;
 
@@ -67,9 +67,9 @@ class GetProductForEditing
     }
 
     /**
-     * @return ShopId|null
+     * @return ShopId
      */
-    public function getShopId(): ?ShopId
+    public function getShopId(): ShopId
     {
         return $this->shopId;
     }

@@ -72,7 +72,7 @@ const initMultistoreHeader = () => {
 
   new AutoCompleteSearch($searchInput, dataSetConfig);
 
-  function toggleModal() {
+  function toggleModal(): void {
     if (!headerButton || !modalMultishop) {
       return;
     }
@@ -97,7 +97,7 @@ const initMultistoreHeader = () => {
    * Header multishop links don't handle anchors which might be useful for tab navigation for example
    * so we synchronize them via javascript
    */
-  function updateLinksAnchor() {
+  function updateLinksAnchor(): void {
     function updateLinkAnchor(shopLink: HTMLLinkElement) {
       const updatedLink = shopLink.href.replace(/#(.*)$/, '') + window.location.hash;
       shopLink.setAttribute('href', updatedLink);
