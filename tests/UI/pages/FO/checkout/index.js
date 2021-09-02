@@ -25,6 +25,8 @@ class Checkout extends FOBasePage {
     this.termsOfServiceModalDiv = '#modal div.js-modal-content';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
     this.shippingValueSpan = '#cart-subtotal-shipping span.value';
+    this.noPaymentNeededElement = `${this.paymentStepSection} div.content > p.cart-payment-step-not-needed-info`;
+    this.noPaymentNeededText = 'No payment needed for this order';
 
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
@@ -134,6 +136,25 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Is confirm button visible and enabled
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  isPaymentConfirmationButtonVisibleAndEnabled(page) {
+    // small side effect note, the selector is the one that checks for disabled
+    return this.elementVisible(page, this.paymentConfirmationButton, 1000);
+  }
+
+  /**
+   * Get No payment needed block content
+   * @param page
+   * @returns {string}
+   */
+  getNoPaymentNeededBlockContent(page) {
+    return this.getTextContent(page, this.noPaymentNeededElement);
+  }
+
+  /**
    * Get selected shipping method name
    * @param page {Page} Browser tab
    * @return {Promise<string>}
@@ -207,6 +228,24 @@ class Checkout extends FOBasePage {
       this.waitForVisibleSelector(page, this.paymentConfirmationButton),
       page.click(this.conditionToApproveLabel),
     ]);
+    await this.clickAndWaitForNavigation(page, this.paymentConfirmationButton);
+  }
+
+  /**
+   * Order when no payment is needed
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async orderWithoutPaymentMethod(page) {
+    // Click on terms of services checkbox if visible
+    if (await this.elementVisible(page, this.conditionToApproveLabel, 500)) {
+      await Promise.all([
+        this.waitForVisibleSelector(page, this.paymentConfirmationButton),
+        page.click(this.conditionToApproveLabel),
+      ]);
+    }
+
+    // Validate the order
     await this.clickAndWaitForNavigation(page, this.paymentConfirmationButton);
   }
 
