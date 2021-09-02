@@ -76,10 +76,12 @@ class UnitPriceType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                 ],
                 'default_empty_data' => 0.0,
+                'modify_all_stores' => true,
             ])
             ->add('unity', TextType::class, [
                 'required' => false,
                 'attr' => ['placeholder' => $this->trans('Per kilo, per litre', 'Admin.Catalog.Help')],
+                'modify_all_stores' => true,
             ])
         ;
     }
