@@ -23,15 +23,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace Tests\Unit\Core\Util;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Util\SymfonyArrayFinder;
+use PrestaShop\PrestaShop\Core\Util\ArrayFinder;
 
-class SymfonyArrayFinderTest extends TestCase
+class ArrayFinderTest extends TestCase
 {
-    /** @var SymfonyArrayFinder */
+    /** @var ArrayFinder */
     private $arrayFinder;
 
     /**
@@ -39,7 +40,7 @@ class SymfonyArrayFinderTest extends TestCase
      */
     public function setupComplexArrayFinder()
     {
-        $this->arrayFinder = new SymfonyArrayFinder([
+        $this->arrayFinder = new ArrayFinder([
             'hello',
             'world',
             'a' => [
@@ -135,7 +136,7 @@ class SymfonyArrayFinderTest extends TestCase
 
     public function testSetCorrectlyReturnTheInstance()
     {
-        $this->assertInstanceOf('\PrestaShop\PrestaShop\Core\Util\SymfonyArrayFinder', $this->arrayFinder->set('a', 'b'));
+        $this->assertInstanceOf('\PrestaShop\PrestaShop\Core\Util\ArrayFinder', $this->arrayFinder->set('a', 'b'));
     }
 
     public function testSetCorrecltyAddValueIfPathDoesNotExist()
@@ -198,7 +199,7 @@ class SymfonyArrayFinderTest extends TestCase
 
     public function testArrayAccessAddValueToRoot()
     {
-        $arrayFinder = new SymfonyArrayFinder();
+        $arrayFinder = new ArrayFinder();
         $arrayFinder[] = 'added';
 
         $this->assertCount(1, $arrayFinder);
@@ -218,14 +219,14 @@ class SymfonyArrayFinderTest extends TestCase
         // the array does have the key
         $this->assertEquals(
             'is defined',
-            (new SymfonyArrayFinder(['some' => ['key' => 'is defined']]))->get('some.key', 'default value')
+            (new ArrayFinder(['some' => ['key' => 'is defined']]))->get('some.key', 'default value')
         );
 
         // ensure that when the key is not defined, the default
         // value is used
         $this->assertEquals(
             'default value',
-            (new SymfonyArrayFinder([]))->get('some.key', 'default value')
+            (new ArrayFinder([]))->get('some.key', 'default value')
         );
     }
 }
