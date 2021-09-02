@@ -47,7 +47,7 @@
         <li id="process_step_<?php echo $item['key']; ?>" class="process_step">
           <?php echo $item['lang']; ?>
         </li>
-      <?php endif; ?>
+      <?php endforeach; ?>
     </ol>
 
     <div id="error_process">
