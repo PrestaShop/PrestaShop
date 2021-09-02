@@ -74,7 +74,29 @@ class CommandAccessorConfig
         $this->fields[] = new CommandField(
             $propertyPath,
             $commandSetter,
-            $propertyType
+            $propertyType,
+            false
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param string $propertyPath
+     * @param string $commandSetter
+     * @param string $propertyType
+     *
+     * @return $this
+     *
+     * @throws InvalidCommandFieldTypeException
+     */
+    public function addMultiStoreField(string $propertyPath, string $commandSetter, string $propertyType): self
+    {
+        $this->fields[] = new CommandField(
+            $propertyPath,
+            $commandSetter,
+            $propertyType,
+            true
         );
 
         return $this;
