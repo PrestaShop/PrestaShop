@@ -91,3 +91,59 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | unit_price_ratio   | 10.0495           |
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
+
+  @multi-price-sequence
+  Scenario: I update some fields for single shop and right after for all shops
+    Given product product1 should have following prices information for shops "shop1,shop2":
+      | price              | 100.99          |
+      | price_tax_included | 105.0296        |
+      | ecotax             | 0               |
+      | tax rules group    | US-AL Rate (4%) |
+      | on_sale            | true            |
+      | wholesale_price    | 70              |
+      | unit_price         | 10              |
+      | unity              | bag of ten      |
+      | unit_price_ratio   | 10.099          |
+    And product product1 is not associated to shop shop3
+    And product product1 is not associated to shop shop4
+    # Important to test unity because it was always overridden in all shops mode (because of a bug in
+    # Product::getFieldsShops that did not handle partial update correctly)
+    When I update product "product1" prices for shop shop2 with following information:
+      | unit_price         | 20              |
+      | unity              | bag of twenty   |
+    Then product product1 should have following prices information for shops "shop2":
+      | price              | 100.99          |
+      | price_tax_included | 105.0296        |
+      | ecotax             | 0               |
+      | tax rules group    | US-AL Rate (4%) |
+      | on_sale            | true            |
+      | wholesale_price    | 70              |
+      | unit_price         | 20              |
+      | unity              | bag of twenty   |
+      | unit_price_ratio   | 5.0495          |
+    # Important to test the data after a command for all shops because the partial update did not work correctly for
+    # shop fields and all fields were overridden (because of a bug in ObjectModel::formatFields)
+    And I update product "product1" prices for all shops with following information:
+      | wholesale_price    | 90              |
+    Then product product1 should have following prices information for shops "shop2":
+      | price              | 100.99          |
+      | price_tax_included | 105.0296        |
+      | ecotax             | 0               |
+      | tax rules group    | US-AL Rate (4%) |
+      | on_sale            | true            |
+      | wholesale_price    | 90              |
+      | unit_price         | 20              |
+      | unity              | bag of twenty   |
+      | unit_price_ratio   | 5.0495          |
+    And product product1 should have following prices information for shops "shop1":
+      | price              | 100.99          |
+      | price_tax_included | 105.0296        |
+      | ecotax             | 0               |
+      | tax rules group    | US-AL Rate (4%) |
+      | on_sale            | true            |
+      | wholesale_price    | 90              |
+      | unit_price         | 10              |
+      | unity              | bag of ten      |
+      | unit_price_ratio   | 10.099          |
+    And product product1 is not associated to shop shop3
+    And product product1 is not associated to shop shop4
