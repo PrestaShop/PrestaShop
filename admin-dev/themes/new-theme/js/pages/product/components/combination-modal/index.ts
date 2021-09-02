@@ -22,17 +22,35 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
+import EventEmitter from '@components/event-emitter';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
-import CombinationGenerator from '@pages/product/components/generator/CombinationGenerator.vue';
+import CombinationModal from '@pages/product/components/combination-modal/CombinationModal.vue';
 
 Vue.use(VueI18n);
 
-export default function initCombinationGenerator(combinationGeneratorSelector, eventEmitter, productId) {
-  const container = document.querySelector(combinationGeneratorSelector);
+/**
+ * @param {string} combinationModalSelector
+ * @param {int} productId
+ * @param {Object} eventEmitter
+ *
+ * @returns {Vue|CombinedVueInstance<Vue, {eventEmitter, productId}, object, object, Record<never, any>>|null}
+ */
+export default function initCombinationModal(
+  combinationModalSelector: string,
+  productId: string,
+  eventEmitter: typeof EventEmitter,
+): Vue | null {
+  const container = <HTMLElement> document.querySelector(combinationModalSelector);
+  const {emptyImage} = container.dataset;
 
-  const translations = JSON.parse(container.dataset.translations);
+  if (!container) {
+    return null;
+  }
+
+  const translations = JSON.parse(<string>container.dataset.translations);
   const i18n = new VueI18n({
     locale: 'en',
     formatter: new ReplaceFormatter(),
@@ -40,13 +58,15 @@ export default function initCombinationGenerator(combinationGeneratorSelector, e
   });
 
   return new Vue({
-    el: combinationGeneratorSelector,
-    template: '<combination-generator :productId=productId :eventEmitter=eventEmitter />',
-    components: {CombinationGenerator},
+    el: combinationModalSelector,
+    template:
+      '<combination-modal :productId=productId :emptyImageUrl="emptyImage" :eventEmitter=eventEmitter />',
+    components: {CombinationModal},
     i18n,
     data: {
       productId,
       eventEmitter,
+      emptyImage,
     },
   });
 }

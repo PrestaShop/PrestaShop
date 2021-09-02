@@ -32,25 +32,31 @@ import ProductMap from '@pages/product/product-map';
  * is confirmed the form is submitted right away to validate the change and update the page.
  */
 export default class ProductTypeManager {
+  $typeSelector: JQuery;
+
+  $productForm: JQuery;
+
+  productId: number;
+
+  initialType: string | number | string[] | undefined;
+
   /**
    * @param {jQuery} $typeSelector Select element to choose the product type
    * @param {jQuery} $productForm Product form that needs to be submitted
    */
-  constructor($typeSelector, $productForm) {
+  constructor($typeSelector: JQuery, $productForm: JQuery) {
     this.$typeSelector = $typeSelector;
     this.$productForm = $productForm;
     this.productId = parseInt($productForm.data('productId'), 10);
     this.initialType = $typeSelector.val();
 
-    this.$typeSelector.on('change', (event) => this.confirmTypeSubmit(event));
-
-    return {};
+    this.$typeSelector.on('change', () => this.confirmTypeSubmit());
   }
 
   /**
    * @private
    */
-  confirmTypeSubmit() {
+  private confirmTypeSubmit() {
     let confirmMessage = this.$typeSelector.data('confirm-message');
     let confirmWarning = '';
 
@@ -78,7 +84,7 @@ export default class ProductTypeManager {
     }
     confirmMessage = `<div class="alert alert-info">${confirmMessage}</div>`;
 
-    const modal = new ConfirmModal(
+    const modal = new (ConfirmModal as any)(
       {
         id: 'modal-confirm-product-type',
         confirmTitle: this.$typeSelector.data('modal-title'),
@@ -92,7 +98,7 @@ export default class ProductTypeManager {
         this.$productForm.submit();
       },
       () => {
-        this.$typeSelector.val(this.initialType);
+        this.$typeSelector.val(<string> this.initialType);
       },
     );
     modal.show();
