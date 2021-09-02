@@ -161,6 +161,8 @@
 	</div>
 	<?php echo $this->displayError('admin_password_confirm'); ?>
   </div>
+
+  <?php echo $this->getHook('configure-footer') ?>
 </div>
 
 <!-- Partners form -->
