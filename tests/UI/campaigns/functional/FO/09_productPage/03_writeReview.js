@@ -11,7 +11,7 @@ const loginCommon = require('@commonTests/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const moduleManagerPage = require('@pages/BO/modules/moduleManager');
 const moduleConfigurationPage = require('@pages/BO/modules/moduleConfiguration');
-const productcommentsModulePage = require('@pages/BO/modules/productComments');
+const productCommentsModulePage = require('@pages/BO/modules/productComments');
 // FO pages
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
@@ -139,7 +139,6 @@ describe('FO - product page : Write a review', async () => {
 
   describe('Go to BO and go to \'product comments\' module configuration page', async () => {
     it('should login in BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'loginToBO', baseContext);
       await loginCommon.loginBO(this, page);
     });
 
@@ -179,7 +178,7 @@ describe('FO - product page : Write a review', async () => {
     it('should get the waiting review count', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getWaitingReviewCount', baseContext);
 
-      waitingApprovalReviewCount = await productcommentsModulePage.getTableReviewCount(page, 'waiting-approval');
+      waitingApprovalReviewCount = await productCommentsModulePage.getTableReviewCount(page, 'waiting-approval');
 
       await expect(waitingApprovalReviewCount).to.be.greaterThan(0);
     });
@@ -187,7 +186,7 @@ describe('FO - product page : Write a review', async () => {
     it('should check if review is in \'waiting for approval\' table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfReviewInWaitingApproval', baseContext);
 
-      const tableData = await productcommentsModulePage.getReviewDataFromWaitingApprovalTable(page);
+      const tableData = await productCommentsModulePage.getReviewDataFromWaitingApprovalTable(page);
 
       await expect(tableData.title).to.contains(productReviewData.reviewTitle);
       await expect(tableData.content).to.contains(productReviewData.reviewContent);
@@ -197,8 +196,8 @@ describe('FO - product page : Write a review', async () => {
     it('should approve review', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'approveReview', baseContext);
 
-      await productcommentsModulePage.approveReview(page);
-      const newReviewCount = await productcommentsModulePage.getTableReviewCount(page, 'waiting-approval');
+      await productCommentsModulePage.approveReview(page);
+      const newReviewCount = await productCommentsModulePage.getTableReviewCount(page, 'waiting-approval');
 
       await expect(newReviewCount).to.equal(waitingApprovalReviewCount - 1);
     });
@@ -208,7 +207,7 @@ describe('FO - product page : Write a review', async () => {
     it('should check if review is in "approved review" table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfReviewIsApproved', baseContext);
 
-      const approvedReviewData = await productcommentsModulePage.getReviewDataFromApprovedReviewTable(page);
+      const approvedReviewData = await productCommentsModulePage.getReviewDataFromApprovedReviewTable(page);
 
       await expect(approvedReviewData.title).to.contains(productReviewData.reviewTitle);
       await expect(approvedReviewData.content).to.contains(productReviewData.reviewContent);
@@ -270,7 +269,6 @@ describe('FO - product page : Write a review', async () => {
 
   describe('Go to BO and delete the approved review', async () => {
     it('should login in BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'secondBoLogin', baseContext);
       await loginCommon.loginBO(this, page);
     });
 
@@ -308,7 +306,7 @@ describe('FO - product page : Write a review', async () => {
     it('should get the approved review count', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getApprovedReviewCount', baseContext);
 
-      approvedReviewCount = await productcommentsModulePage.getApprovedReviewCount(page);
+      approvedReviewCount = await productCommentsModulePage.getApprovedReviewCount(page);
 
       await expect(approvedReviewCount).to.be.greaterThan(0);
     });
@@ -316,8 +314,8 @@ describe('FO - product page : Write a review', async () => {
     it('should delete the review in the "approved review" table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteApprovedReview', baseContext);
 
-      await productcommentsModulePage.deleteApprovedReview(page);
-      const newReviewCount = await productcommentsModulePage.getApprovedReviewCount(page);
+      await productCommentsModulePage.deleteApprovedReview(page);
+      const newReviewCount = await productCommentsModulePage.getApprovedReviewCount(page);
 
       await expect(newReviewCount).to.equal(approvedReviewCount - 1);
     });
