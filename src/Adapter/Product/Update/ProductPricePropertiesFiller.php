@@ -64,6 +64,7 @@ class ProductPricePropertiesFiller
      */
     public function fillWithPrices(Product $product, ?DecimalNumber $price, ?DecimalNumber $unitPrice, ?DecimalNumber $wholesalePrice): array
     {
+        $updatableProperties = [];
         if (null !== $wholesalePrice) {
             $product->wholesale_price = (float) (string) $wholesalePrice;
             $updatableProperties[] = 'wholesale_price';
@@ -76,8 +77,10 @@ class ProductPricePropertiesFiller
             $price = $this->numberExtractor->extract($product, 'price');
         }
 
-        $this->fillUnitPriceRatio($product, $price, $unitPrice);
-        $updatableProperties[] = 'unit_price_ratio';
+        if (null !== $unitPrice) {
+            $this->fillUnitPriceRatio($product, $price, $unitPrice);
+            $updatableProperties[] = 'unit_price_ratio';
+        }
 
         return $updatableProperties;
     }
