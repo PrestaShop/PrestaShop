@@ -32,7 +32,6 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchIndexException;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Symfony\Component\PropertyAccess\PropertyPath;
 
 /**
  * This class is inspired from the PropertyAccessor component from Symfony, but it's centered around
@@ -82,7 +81,8 @@ class CommandAccessor
             try {
                 $value = $this->propertyAccessor->getValue($data, $commandField->getDataPath());
                 $castedValue = $this->castValue($value, $commandField->getType());
-                $command = $this->getAppropriateCommand($data, $commandField->getDataPath(), $singleStoreCommand, $allStoresCommand);
+
+                $command = $this->getAppropriateCommand($data, $commandField, $singleStoreCommand, $allStoresCommand);
                 $this->propertyAccessor->setValue($command, $commandField->getCommandSetter(), $castedValue);
                 if (!in_array($command, $modifiedCommands)) {
                     $modifiedCommands[] = $command;
@@ -108,7 +108,7 @@ class CommandAccessor
      * Check if the data has a mapping checkbox to modify all stores for the tested field, if so use the allStoresCommand
      *
      * @param array $data
-     * @param PropertyPath $dataPath
+     * @param CommandField $commandField
      * @param mixed $singleStoreCommand
      * @param mixed|null $allStoresCommand
      *
@@ -116,14 +116,15 @@ class CommandAccessor
      */
     private function getAppropriateCommand(
         array $data,
-        PropertyPath $dataPath,
+        CommandField $commandField,
         $singleStoreCommand,
         $allStoresCommand
     ) {
-        if (null === $allStoresCommand) {
+        if (null === $allStoresCommand || !$commandField->isMultistoreField()) {
             return $singleStoreCommand;
         }
 
+        $dataPath = $commandField->getDataPath();
         $lastElement = $dataPath->getElement($dataPath->getLength() - 1);
         $modifyAllNamePrefix = $this->config->getModifyAllNamePrefix() . $lastElement;
 

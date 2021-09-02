@@ -60,6 +60,11 @@ class CommandField
     private $type;
 
     /**
+     * @var bool
+     */
+    private $multistoreField;
+
+    /**
      * @param string $dataPath
      * @param string $commandSetter
      * @param string $type
@@ -69,7 +74,8 @@ class CommandField
     public function __construct(
         string $dataPath,
         string $commandSetter,
-        string $type
+        string $type,
+        bool $multistoreField
     ) {
         if (!in_array($type, self::ACCEPTED_TYPES)) {
             throw new InvalidCommandFieldTypeException(sprintf(
@@ -82,6 +88,7 @@ class CommandField
         $this->dataPath = new PropertyPath($dataPath);
         $this->commandSetter = $commandSetter;
         $this->type = $type;
+        $this->multistoreField = $multistoreField;
     }
 
     /**
@@ -106,5 +113,13 @@ class CommandField
     public function getType(): string
     {
         return $this->type;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMultistoreField(): bool
+    {
+        return $this->multistoreField;
     }
 }
