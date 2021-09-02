@@ -28,25 +28,29 @@ import ProductMap from '@pages/product/product-map';
 const {$} = window;
 
 export default class VirtualProductManager {
-  constructor(productFormModel) {
+  productFormModel: Record<string, any>;
+
+  $virtualProductContainer: JQuery;
+
+  $fileContentContainer: JQuery;
+
+  constructor(productFormModel: Record<string, any>) {
     this.productFormModel = productFormModel;
     this.$virtualProductContainer = $(ProductMap.virtualProduct.container);
     this.$fileContentContainer = $(ProductMap.virtualProduct.fileContentContainer);
 
     this.init();
-
-    return {};
   }
 
   /**
    * @private
    */
-  init() {
+  private init() {
     this.productFormModel.watch('stock.hasVirtualProductFile', () => this.toggleContentVisibility());
     this.toggleContentVisibility();
   }
 
-  toggleContentVisibility() {
+  toggleContentVisibility(): void {
     const hasVirtualFile = Number(this.productFormModel.getProduct().stock.hasVirtualProductFile) === 1;
     const hasErrors = this.$virtualProductContainer
       .find(ProductMap.invalidField)
@@ -62,14 +66,14 @@ export default class VirtualProductManager {
   /**
    * @private
    */
-  hideContent() {
+  private hideContent(): void {
     this.$fileContentContainer.addClass('d-none');
   }
 
   /**
    * @private
    */
-  showContent() {
+  private showContent(): void {
     this.$fileContentContainer.removeClass('d-none');
   }
 }

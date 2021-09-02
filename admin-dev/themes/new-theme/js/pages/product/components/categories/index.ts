@@ -22,7 +22,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+/* eslint-disable no-param-reassign */
 
+// @ts-ignore-next-line
 import Bloodhound from 'typeahead.js';
 import _ from 'lodash';
 
@@ -40,21 +42,21 @@ const ProductCategoryMap = ProductMap.categories;
 export default class CategoriesManager {
   eventEmitter: typeof EventEmitter;
 
-  categoriesContainer: HTMLElement | null;
+  categoriesContainer: HTMLElement;
 
-  categories: Array<Record<string, any> | null>;
+  categories: Array<Record<string, any>>;
 
   typeaheadDatas: Array<Record<string, any> | null>;
 
-  categoryTree!: HTMLElement | null | undefined;
+  categoryTree: HTMLElement;
 
-  prototypeTemplate: string | undefined;
+  prototypeTemplate: string;
 
   prototypeName: string | undefined;
 
-  expandAllButton: HTMLElement | null | undefined;
+  expandAllButton: HTMLElement;
 
-  reduceAllButton: HTMLElement | null | undefined;
+  reduceAllButton: HTMLElement;
 
   radioIdRegexp!: RegExp;
 
@@ -66,16 +68,16 @@ export default class CategoriesManager {
    */
   constructor(eventEmitter: typeof EventEmitter) {
     this.eventEmitter = eventEmitter;
-    this.categoriesContainer = document.querySelector(
+    this.categoriesContainer = <HTMLElement>document.querySelector(
       ProductCategoryMap.categoriesContainer,
     );
     this.categories = [];
     this.typeaheadDatas = [];
-    this.categoryTree = this.categoriesContainer?.querySelector(ProductCategoryMap.categoryTree);
-    this.prototypeTemplate = this.categoryTree?.dataset.prototype;
+    this.categoryTree = <HTMLElement> this.categoriesContainer.querySelector(ProductCategoryMap.categoryTree);
+    this.prototypeTemplate = <string> this.categoryTree.dataset.prototype;
     this.prototypeName = this.categoryTree?.dataset.prototypeName;
-    this.expandAllButton = this.categoriesContainer?.querySelector(ProductCategoryMap.expandAllButton);
-    this.reduceAllButton = this.categoriesContainer?.querySelector(ProductCategoryMap.reduceAllButton);
+    this.expandAllButton = <HTMLElement> this.categoriesContainer.querySelector(ProductCategoryMap.expandAllButton);
+    this.reduceAllButton = <HTMLElement> this.categoriesContainer.querySelector(ProductCategoryMap.reduceAllButton);
 
     this.initCategories();
   }
@@ -100,17 +102,17 @@ export default class CategoriesManager {
   }
 
   initTree(): void {
-    const initialElements = {};
+    const initialElements: Record<number, any> = {};
 
     this.categoryTree?.querySelectorAll(ProductCategoryMap.treeElement).forEach((treeElement) => {
-      const checkboxInput = treeElement.querySelector(ProductCategoryMap.checkboxInput);
+      const checkboxInput = <HTMLInputElement> treeElement.querySelector(ProductCategoryMap.checkboxInput);
       const categoryId = this.getIdFromCheckbox(checkboxInput);
       initialElements[categoryId] = treeElement;
     });
 
-    this.categories.forEach((category) => {
+    this.categories.forEach((category: Record<string, any>) => {
       const item = this.generateCategoryTree(category, initialElements);
-      this.categoryTree?.append(item);
+      this.categoryTree.append(item);
     });
 
     this.expandAllButton?.addEventListener('click', () => {
@@ -123,8 +125,8 @@ export default class CategoriesManager {
     this.categoryTree?.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkbox) => {
       checkbox.addEventListener('change', (event) => {
         const checkboxInput = <HTMLInputElement>event.currentTarget;
-        const parentItem = checkboxInput?.parentNode?.closest(ProductCategoryMap.treeElement);
-        const radioInput = parentItem.querySelector(ProductCategoryMap.radioInput);
+        const parentItem = <Element>(<Element>checkboxInput.parentNode).closest(ProductCategoryMap.treeElement);
+        const radioInput = <HTMLInputElement>parentItem.querySelector(ProductCategoryMap.radioInput);
 
         // If checkbox is associated to the default radio input it cannot be unchecked
         if (radioInput.checked) {
@@ -137,7 +139,7 @@ export default class CategoriesManager {
       });
     });
 
-    this.categoryTree?.querySelectorAll(ProductCategoryMap.radioInput).forEach((radioInput) => {
+    (<NodeListOf<HTMLInputElement>> this.categoryTree.querySelectorAll(ProductCategoryMap.radioInput)).forEach((radioInput: HTMLInputElement) => {
       radioInput.addEventListener('click', () => {
         this.selectedDefaultCategory(radioInput);
       });
@@ -147,11 +149,11 @@ export default class CategoriesManager {
     });
 
     // Tree is initialized we can show it and hide loader
-    this.categoriesContainer
-      .querySelector(ProductCategoryMap.fieldset)
+    (<HTMLElement> this.categoriesContainer
+      .querySelector(ProductCategoryMap.fieldset))
       .classList.remove('d-none');
-    this.categoriesContainer
-      .querySelector(ProductCategoryMap.loader)
+    (<HTMLElement> this.categoriesContainer
+      .querySelector(ProductCategoryMap.loader))
       .classList.add('d-none');
   }
 
@@ -161,16 +163,16 @@ export default class CategoriesManager {
    * @param {Object} category
    * @param {Object} initialElements
    */
-  generateCategoryTree(category, initialElements) {
+  generateCategoryTree(category: Record<string, any>, initialElements: Record<string, any>): HTMLElement {
     const categoryNode = this.generateTreeElement(category, initialElements);
-    const childrenList = categoryNode.querySelector(ProductCategoryMap.childrenList);
+    const childrenList = <HTMLElement>categoryNode.querySelector(ProductCategoryMap.childrenList);
     childrenList.classList.add('d-none');
 
     const hasChildren = category.children && category.children.length > 0;
     categoryNode.classList.toggle('more', hasChildren);
     if (hasChildren) {
-      const inputsContainer = categoryNode.querySelector(ProductCategoryMap.treeElementInputs);
-      inputsContainer.addEventListener('click', (event) => {
+      const inputsContainer = <HTMLElement>categoryNode.querySelector(ProductCategoryMap.treeElementInputs);
+      inputsContainer.addEventListener('click', (event: Event) => {
         // We don't want to mess with the inputs behaviour (no toggle when checkbox or radio is clicked)
         // So we only toggle when the div itself is clicked.
         if (event.target !== event.currentTarget) {
@@ -184,7 +186,7 @@ export default class CategoriesManager {
       });
 
       // Recursively build the children trees
-      category.children.forEach((childCategory) => {
+      category.children.forEach((childCategory: HTMLElement) => {
         const childTree = this.generateCategoryTree(childCategory, initialElements);
 
         childrenList.append(childTree);
@@ -204,11 +206,11 @@ export default class CategoriesManager {
    *
    * @returns {HTMLElement}
    */
-  generateTreeElement(category, initialElements) {
+  generateTreeElement(category: Record<string, any>, initialElements: Record<string, any>): HTMLElement {
     let categoryNode;
 
     if (!Object.prototype.hasOwnProperty.call(initialElements, category.id)) {
-      const template = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), category.id);
+      const template = this.prototypeTemplate.replace(new RegExp(<string> this.prototypeName, 'g'), category.id);
       // Trim is important here or the first child could be some text (whitespace, or \n)
       const frag = document.createRange().createContextualFragment(template.trim());
       categoryNode = frag.firstChild;
@@ -231,17 +233,17 @@ export default class CategoriesManager {
   /**
    * @param {HTMLElement} radioInput
    */
-  selectedDefaultCategory(radioInput) {
+  selectedDefaultCategory(radioInput: HTMLInputElement): void {
     // Uncheck all other radio inputs when one is selected
-    this.categoryTree.querySelectorAll(ProductCategoryMap.radioInput).forEach((radioTreeElement) => {
+    (<NodeListOf<HTMLInputElement>> this.categoryTree.querySelectorAll(ProductCategoryMap.radioInput)).forEach((radioTreeElement: HTMLInputElement) => {
       if (radioTreeElement !== radioInput) {
         radioTreeElement.checked = false;
       }
     });
 
     this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkboxTreeElement) => {
-      const materialCheckbox = checkboxTreeElement.parentNode.closest(ProductCategoryMap.materialCheckbox);
-      materialCheckbox.classList.remove('disabled');
+      const materialCheckbox = (<HTMLElement> checkboxTreeElement.parentNode).closest(ProductCategoryMap.materialCheckbox);
+      materialCheckbox?.classList.remove('disabled');
     });
 
     this.updateDefaultCheckbox(radioInput);
@@ -250,17 +252,20 @@ export default class CategoriesManager {
   /**
    * @param {HTMLElement} radioInput
    */
-  updateDefaultCheckbox(radioInput) {
+  updateDefaultCheckbox(radioInput: HTMLInputElement): void {
     // If the element is selected as default it is also associated by definition
-    const parentItem = radioInput.parentNode.closest(ProductCategoryMap.treeElement);
-    const checkbox = parentItem.querySelector(ProductCategoryMap.checkboxInput);
+    const parentItem = (<HTMLInputElement>radioInput.parentNode).closest(ProductCategoryMap.treeElement);
+    const checkbox = <HTMLInputElement>(<HTMLInputElement>parentItem).querySelector(ProductCategoryMap.checkboxInput);
 
     // A default category is necessarily associated, so displayed as disabled (we do not use the disabled
     // attribute because it removes the data from the form).
-    const materialCheckbox = checkbox.parentNode.closest(ProductCategoryMap.materialCheckbox);
-    materialCheckbox.classList.add('disabled');
+    const materialCheckbox = (<HTMLElement>checkbox?.parentNode).closest(ProductCategoryMap.materialCheckbox);
+    materialCheckbox?.classList.add('disabled');
 
-    this.updateCheckbox(checkbox, true);
+    if (checkbox) {
+      this.updateCheckbox(checkbox, true);
+    }
+
     this.updateCategoriesTags();
     this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
   }
@@ -270,7 +275,7 @@ export default class CategoriesManager {
    *
    * @param {boolean} expanded Force expanding instead of toggle
    */
-  toggleAll(expanded) {
+  toggleAll(expanded: boolean): void {
     this.expandAllButton.style.display = expanded ? 'none' : 'block';
     this.reduceAllButton.style.display = !expanded ? 'none' : 'block';
 
@@ -293,8 +298,8 @@ export default class CategoriesManager {
    *
    * @param {int} categoryId
    */
-  selectCategory(categoryId) {
-    const checkbox = this.categoriesContainer.querySelector(
+  selectCategory(categoryId: string): void {
+    const checkbox = <HTMLInputElement> this.categoriesContainer.querySelector(
       `[name="${ProductCategoryMap.checkboxName(categoryId)}"]`,
     );
 
@@ -309,33 +314,33 @@ export default class CategoriesManager {
   /**
    * @param {HTMLElement} checkbox
    */
-  openCategoryParents(checkbox) {
+  openCategoryParents(checkbox: HTMLElement): void {
     // This is the element containing the checkbox
     let parentItem = checkbox.closest(ProductCategoryMap.treeElement);
 
     if (parentItem !== null) {
       // This is the first (potential) parent element
-      parentItem = parentItem.parentNode.closest(ProductCategoryMap.treeElement);
+      parentItem = (<HTMLElement>parentItem.parentNode)?.closest(ProductCategoryMap.treeElement);
     }
 
     while (parentItem !== null && this.categoryTree.contains(parentItem)) {
       const childrenList = parentItem.querySelector(ProductCategoryMap.childrenList);
 
-      if (childrenList.childNodes.length) {
+      if (childrenList?.childNodes.length) {
         parentItem.classList.add('less');
         parentItem.classList.remove('more');
-        parentItem.querySelector(ProductCategoryMap.childrenList).classList.remove('d-none');
+        parentItem?.querySelector(ProductCategoryMap.childrenList)?.classList.remove('d-none');
       }
 
-      parentItem = parentItem.parentNode.closest(ProductCategoryMap.treeElement);
+      parentItem = (<HTMLElement>parentItem?.parentNode).closest(ProductCategoryMap.treeElement);
     }
   }
 
   /**
    * @param {int} categoryId
    */
-  unselectCategory(categoryId) {
-    const checkbox = this.categoriesContainer.querySelector(
+  unselectCategory(categoryId: string): void {
+    const checkbox = <HTMLInputElement>this.categoriesContainer.querySelector(
       `[name="${ProductCategoryMap.checkboxName(categoryId)}"]`,
     );
 
@@ -351,8 +356,8 @@ export default class CategoriesManager {
    * Typeahead data require to have only one array level, we also build the breadcrumb as we go through the
    * categories.
    */
-  initTypeaheadData(data, parentBreadcrumb) {
-    data.forEach((category) => {
+  initTypeaheadData(data: Record<string, any>, parentBreadcrumb: string): void {
+    data.forEach((category: Record<string, any>) => {
       category.breadcrumb = parentBreadcrumb ? `${parentBreadcrumb} > ${category.name}` : category.name;
       this.typeaheadDatas.push(category);
 
@@ -362,10 +367,10 @@ export default class CategoriesManager {
     });
   }
 
-  initTypeahead() {
+  initTypeahead(): void {
     const source = new Bloodhound({
       datumTokenizer: Tokenizers.obj.letters(
-        'breadcrumb',
+        <any>'breadcrumb',
       ),
       queryTokenizer: Bloodhound.tokenizers.nonword,
       local: this.typeaheadDatas,
@@ -375,7 +380,7 @@ export default class CategoriesManager {
       source,
       display: 'breadcrumb',
       value: 'id',
-      onSelect: (selectedItem, e, $searchInput) => {
+      onSelect: (selectedItem: Record<string, any>, e: any, $searchInput: JQuery) => {
         this.selectCategory(selectedItem.id);
 
         // This resets the search input or else previous search is cached and can be added again
@@ -386,15 +391,19 @@ export default class CategoriesManager {
     new AutoCompleteSearch($(ProductCategoryMap.searchInput), dataSetConfig);
   }
 
-  updateCategoriesTags() {
-    const checkedCheckboxes = this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
+  updateCategoriesTags(): void {
+    const checkedCheckboxes = <NodeListOf<HTMLInputElement>>this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
     const tagsContainer = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer);
-    tagsContainer.innerHTML = '';
+
+    if (tagsContainer) {
+      tagsContainer.innerHTML = '';
+    }
+
     const defaultCategoryId = this.getDefaultCategoryId();
 
     checkedCheckboxes.forEach((checkboxInput) => {
       const categoryId = this.getIdFromCheckbox(checkboxInput);
-      const category = this.getCategoryById(categoryId);
+      const category = this.getCategoryById(<string><unknown>categoryId);
 
       if (!category) {
         return;
@@ -412,23 +421,26 @@ export default class CategoriesManager {
 
       // Trim is important here or the first child could be some text (whitespace, or \n)
       const frag = document.createRange().createContextualFragment(template.trim());
-      tagsContainer.append(frag.firstChild);
+      tagsContainer?.append(<Node>frag.firstChild);
     });
 
-    tagsContainer.querySelectorAll('.pstaggerClosingCross').forEach((closeLink) => {
-      closeLink.addEventListener('click', (event) => {
+    tagsContainer?.querySelectorAll('.pstaggerClosingCross').forEach((closeLink) => {
+      closeLink.addEventListener('click', (event: Event) => {
         event.preventDefault();
         event.stopImmediatePropagation();
+        let categoryId;
 
-        const categoryId = Number(event.currentTarget.dataset.id);
+        if (event.currentTarget instanceof HTMLInputElement) {
+          categoryId = <string>event.currentTarget.dataset.id;
+        }
 
         if (categoryId !== defaultCategoryId) {
-          this.unselectCategory(categoryId);
+          this.unselectCategory(<string>categoryId);
         }
       });
     });
 
-    tagsContainer.classList.toggle('d-block', checkedCheckboxes.length > 0);
+    tagsContainer?.classList.toggle('d-block', checkedCheckboxes.length > 0);
   }
 
   /**
@@ -436,7 +448,7 @@ export default class CategoriesManager {
    *
    * @returns {Object|null}
    */
-  getCategoryById(categoryId) {
+  getCategoryById(categoryId: string): Record<string, any> | null {
     return this.searchCategory(categoryId, this.categories);
   }
 
@@ -445,9 +457,9 @@ export default class CategoriesManager {
    * @param {array} categories
    * @returns {Object|null}
    */
-  searchCategory(categoryId, categories) {
-    let searchedCategory = null;
-    categories.forEach((category) => {
+  searchCategory(categoryId: string, categories: Record<string, any>): Record<string, any> | null {
+    let searchedCategory: Record<string, any> | null = null;
+    categories.forEach((category: Record<string, any>) => {
       if (categoryId === category.id) {
         searchedCategory = category;
       }
@@ -463,7 +475,7 @@ export default class CategoriesManager {
   /**
    * @returns {number|undefined}
    */
-  getDefaultCategoryId() {
+  getDefaultCategoryId(): number | undefined {
     const radioInput = this.categoryTree.querySelector(ProductCategoryMap.defaultRadioInput);
 
     if (!radioInput) {
@@ -478,7 +490,7 @@ export default class CategoriesManager {
    *
    * @returns {number}
    */
-  getIdFromRadio(radioInput) {
+  getIdFromRadio(radioInput: Record<string, any>): number {
     const matches = radioInput.name.match(this.radioIdRegexp);
 
     return Number(matches[1]);
@@ -489,8 +501,8 @@ export default class CategoriesManager {
    *
    * @returns {number}
    */
-  getIdFromCheckbox(checkboxInput) {
-    const matches = checkboxInput.name.match(this.checkboxIdRegexp);
+  getIdFromCheckbox(checkboxInput: HTMLInputElement): number {
+    const matches = <RegExpMatchArray>checkboxInput.name.match(this.checkboxIdRegexp);
 
     return Number(matches[1]);
   }
@@ -499,7 +511,7 @@ export default class CategoriesManager {
    * @param {HTMLElement} checkboxInput
    * @param {boolean} checked
    */
-  updateCheckbox(checkboxInput, checked) {
+  updateCheckbox(checkboxInput: HTMLInputElement, checked: boolean): void {
     if (checkboxInput.checked !== checked) {
       checkboxInput.checked = checked;
       this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);

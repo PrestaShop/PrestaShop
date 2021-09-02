@@ -24,12 +24,19 @@
  */
 
 import BigNumber from 'bignumber.js';
+import EventEmitter from '@components/event-emitter';
 import ObjectFormMapper from '@components/form/form-object-mapper';
 import ProductFormMapping from '@pages/product/edit/product-form-mapping';
 import ProductEventMap from '@pages/product/product-event-map';
 
 export default class ProductFormModel {
-  constructor($form, eventEmitter) {
+  eventEmitter: typeof EventEmitter;
+
+  mapper: ObjectFormMapper;
+
+  precision: number;
+
+  constructor($form: JQuery, eventEmitter: typeof EventEmitter) {
     this.eventEmitter = eventEmitter;
 
     // Init form mapper
@@ -47,22 +54,17 @@ export default class ProductFormModel {
     // For now we get precision only in the component, but maybe it would deserve a more global configuration
     // BigNumber.set({DECIMAL_PLACES: someConfig}) But where can we define/inject this global config?
     const $priceTaxExcludedInput = this.mapper.getInputsFor('product.price.priceTaxExcluded');
-    this.precision = $priceTaxExcludedInput.data('displayPricePrecision');
+    this.precision = <number>$priceTaxExcludedInput?.data('displayPricePrecision');
 
     // Listens to event for product modification (registered after the model is constructed, because events are
     // triggered during the initial parsing but don't need them at first).
     this.eventEmitter.on(ProductEventMap.updatedProductField, (event) => this.productFieldUpdated(event));
-
-    return {
-      getProduct: () => this.getProduct(),
-      watch: (productModelKey, callback) => this.watchProductModel(productModelKey, callback),
-    };
   }
 
   /**
    * @returns {Object}
    */
-  getProduct() {
+  getProduct(): Record<string, any> {
     return this.mapper.getModel().product;
   }
 
@@ -70,7 +72,7 @@ export default class ProductFormModel {
    * @param {string} productModelKey
    * @param {function} callback
    */
-  watchProductModel(productModelKey, callback) {
+  watchProductModel(productModelKey: string, callback: (...args: any[]) => any): void {
     this.mapper.watch(`product.${productModelKey}`, callback);
   }
 
@@ -80,7 +82,7 @@ export default class ProductFormModel {
    * @param {Object} event
    * @private
    */
-  productFieldUpdated(event) {
+  private productFieldUpdated(event: Record<string, any>): void {
     this.updateProductPrices(event);
   }
 
@@ -90,7 +92,7 @@ export default class ProductFormModel {
    * @param {Object} event
    * @private
    */
-  updateProductPrices(event) {
+  private updateProductPrices(event: Record<string, any>) {
     const pricesFields = [
       'product.price.priceTaxIncluded',
       'product.price.priceTaxExcluded',
@@ -108,7 +110,7 @@ export default class ProductFormModel {
     try {
       taxRate = new BigNumber($selectedTaxOption.data('taxRate'));
     } catch (error) {
-      taxRate = BigNumber.NaN;
+      taxRate = new BigNumber(NaN);
     }
     if (taxRate.isNaN()) {
       taxRate = new BigNumber(0);

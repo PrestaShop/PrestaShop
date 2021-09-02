@@ -31,6 +31,16 @@ const {$} = window;
  * Renders the list of combinations in product edit page
  */
 export default class CombinationsGridRenderer {
+  $combinationsTable: JQuery;
+
+  $combinationsTableBody: JQuery;
+
+  $loadingSpinner: JQuery;
+
+  prototypeTemplate: string;
+
+  prototypeName: string;
+
   /**
    * @returns {{render: (function(*=): void)}}
    */
@@ -40,24 +50,19 @@ export default class CombinationsGridRenderer {
     this.$loadingSpinner = $(ProductMap.combinations.loadingSpinner);
     this.prototypeTemplate = this.$combinationsTable.data('prototype');
     this.prototypeName = this.$combinationsTable.data('prototypeName');
-
-    return {
-      render: (data) => this.render(data),
-      toggleLoading: (loading) => this.toggleLoading(loading),
-    };
   }
 
   /**
    * @param {Object} data expected structure: {combinations: [{Object}, {Object}...], total: {Number}}
    */
-  render(data) {
+  render(data: Record<string, any>): void {
     this.renderCombinations(data.combinations);
   }
 
   /**
    * @param {Boolean} loading
    */
-  toggleLoading(loading) {
+  toggleLoading(loading: boolean): void {
     this.$loadingSpinner.toggle(loading);
   }
 
@@ -66,23 +71,23 @@ export default class CombinationsGridRenderer {
    *
    * @private
    */
-  renderCombinations(combinations) {
+  renderCombinations(combinations: Record<string, any>): void {
     this.$combinationsTableBody.empty();
 
     let rowIndex = 0;
-    combinations.forEach((combination) => {
+    combinations.forEach((combination: Record<string, any>) => {
       const $row = $(this.getPrototypeRow(rowIndex));
 
       // fill inputs
-      const $combinationCheckbox = $(ProductMap.combinations.tableRow.combinationCheckbox(rowIndex), $row);
-      const $combinationIdInput = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex), $row);
-      const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex), $row);
-      const $quantityInput = $(ProductMap.combinations.tableRow.quantityInput(rowIndex), $row);
-      const $impactOnPriceInput = $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex), $row);
-      const $referenceInput = $(ProductMap.combinations.tableRow.referenceInput(rowIndex), $row);
+      const $combinationCheckbox = $(ProductMap.combinations.tableRow.combinationCheckbox(rowIndex.toString()), $row);
+      const $combinationIdInput = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex.toString()), $row);
+      const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex.toString()), $row);
+      const $quantityInput = $(ProductMap.combinations.tableRow.quantityInput(rowIndex.toString()), $row);
+      const $impactOnPriceInput = $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex.toString()), $row);
+      const $referenceInput = $(ProductMap.combinations.tableRow.referenceInput(rowIndex.toString()), $row);
       // @todo final price should be calculated based on price impact and product price,
       //    so it doesnt need to be in api response
-      const $finalPriceInput = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex), $row);
+      const $finalPriceInput = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex.toString()), $row);
       $combinationIdInput.val(combination.id);
       $combinationNameInput.val(combination.name);
       // This adds the ID in the checkbox label
@@ -96,14 +101,14 @@ export default class CombinationsGridRenderer {
       $quantityInput.data('initial-value', combination.quantity);
       $impactOnPriceInput.val(combination.impactOnPrice);
       $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
-      $(ProductMap.combinations.tableRow.editButton(rowIndex), $row).data('id', combination.id);
-      $(ProductMap.combinations.tableRow.deleteButton(rowIndex), $row).data('id', combination.id);
+      $(ProductMap.combinations.tableRow.editButton(rowIndex.toString()), $row).data('id', combination.id);
+      $(ProductMap.combinations.tableRow.deleteButton(rowIndex.toString()), $row).data('id', combination.id);
       $(ProductMap.combinations.tableRow.combinationImg, $row)
         .attr('src', combination.imageUrl)
         .attr('alt', combination.name);
 
       if (combination.isDefault) {
-        $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex), $row).prop('checked', true);
+        $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex.toString()), $row).prop('checked', true);
       }
 
       this.$combinationsTableBody.append($row);
@@ -118,7 +123,7 @@ export default class CombinationsGridRenderer {
    *
    * @private
    */
-  getPrototypeRow(rowIndex) {
-    return this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), rowIndex);
+  private getPrototypeRow(rowIndex: number): string {
+    return this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), rowIndex.toString());
   }
 }

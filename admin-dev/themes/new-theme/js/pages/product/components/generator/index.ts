@@ -22,34 +22,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
+import EventEmitter from '@components/event-emitter';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
-import CombinationModal from '@pages/product/components/combination-modal/CombinationModal.vue';
+import CombinationGenerator from '@pages/product/components/generator/CombinationGenerator.vue';
 
 Vue.use(VueI18n);
 
-/**
- * @param {string} combinationModalSelector
- * @param {int} productId
- * @param {Object} eventEmitter
- *
- * @returns {Vue|CombinedVueInstance<Vue, {eventEmitter, productId}, object, object, Record<never, any>>|null}
- */
-export default function initCombinationModal(
-  combinationModalSelector,
-  productId,
-  eventEmitter,
-) {
-  const container = document.querySelector(combinationModalSelector);
-  const {emptyImage} = container.dataset;
+export default function initCombinationGenerator(combinationGeneratorSelector: string, eventEmitter: typeof EventEmitter, productId: number) {
+  const container = <HTMLElement> document.querySelector(combinationGeneratorSelector);
 
-  if (!container) {
-    return null;
-  }
-
-  const translations = JSON.parse(container.dataset.translations);
+  const translations = JSON.parse(<string>container.dataset.translations);
   const i18n = new VueI18n({
     locale: 'en',
     formatter: new ReplaceFormatter(),
@@ -57,15 +41,13 @@ export default function initCombinationModal(
   });
 
   return new Vue({
-    el: combinationModalSelector,
-    template:
-      '<combination-modal :productId=productId :emptyImageUrl="emptyImage" :eventEmitter=eventEmitter />',
-    components: {CombinationModal},
+    el: combinationGeneratorSelector,
+    template: '<combination-generator :productId=productId :eventEmitter=eventEmitter />',
+    components: {CombinationGenerator},
     i18n,
     data: {
       productId,
       eventEmitter,
-      emptyImage,
     },
   });
 }
