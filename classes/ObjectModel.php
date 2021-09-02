@@ -406,12 +406,16 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             // E.g. if only lang fields are filtered, ignore fields without lang => true
             if (($type == self::FORMAT_LANG && empty($data['lang']))
                 || ($type == self::FORMAT_SHOP && empty($data['shop']))
-                || ($type == self::FORMAT_COMMON && ((!empty($data['shop']) && $data['shop'] != 'both') || !empty($data['lang'])))) {
+                || ($type == self::FORMAT_COMMON && ((!empty($data['shop']) && $data['shop'] !== 'both') || !empty($data['lang'])))) {
                 continue;
             }
 
             if (is_array($this->update_fields)) {
-                if ((!empty($data['lang']) || (!empty($data['shop']) && $data['shop'] != 'both')) && (empty($this->update_fields[$field]) || ($type == self::FORMAT_LANG && empty($this->update_fields[$field][$id_lang])))) {
+                if (!empty($data['lang']) && $type == self::FORMAT_LANG && empty($this->update_fields[$field][$id_lang])) {
+                    continue;
+                } elseif (!empty($data['shop']) && $type == self::FORMAT_SHOP && $data['shop'] !== 'both' && empty($this->update_fields[$field])) {
+                    continue;
+                } elseif ($type == self::FORMAT_COMMON && empty($this->update_fields[$field])) {
                     continue;
                 }
             }
@@ -755,14 +759,15 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
         }
         // Database update
-        if (!$result = Db::getInstance()->update($this->def['table'], $this->getFields(), '`' . pSQL($this->def['primary']) . '` = ' . (int) $this->id, 0, $null_values)) {
+        $updatedFields = $this->getFields();
+        if (!$result = Db::getInstance()->update($this->def['table'], $updatedFields, '`' . pSQL($this->def['primary']) . '` = ' . (int) $this->id, 0, $null_values)) {
             return false;
         }
 
         // Database insertion for multishop fields related to the object
         if (Shop::isTableAssociated($this->def['table'])) {
-            $fields = $this->getFieldsShop();
-            $fields[$this->def['primary']] = (int) $this->id;
+            $updatedShopFields = $this->getFieldsShop();
+            $updatedShopFields[$this->def['primary']] = (int) $this->id;
             if (is_array($this->update_fields)) {
                 $update_fields = $this->update_fields;
                 $this->update_fields = null;
@@ -770,11 +775,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 $all_fields[$this->def['primary']] = (int) $this->id;
                 $this->update_fields = $update_fields;
             } else {
-                $all_fields = $fields;
+                $all_fields = $updatedShopFields;
             }
 
             foreach ($id_shop_list as $id_shop) {
-                $fields['id_shop'] = (int) $id_shop;
+                $updatedShopFields['id_shop'] = (int) $id_shop;
                 $all_fields['id_shop'] = (int) $id_shop;
                 $where = $this->def['primary'] . ' = ' . (int) $this->id . ' AND id_shop = ' . (int) $id_shop;
 
@@ -782,7 +787,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 // only if we are in a shop context (if we are in all context, we just want to update entries that alread exists)
                 $shop_exists = Db::getInstance()->getValue('SELECT ' . $this->def['primary'] . ' FROM ' . _DB_PREFIX_ . $this->def['table'] . '_shop WHERE ' . $where);
                 if ($shop_exists) {
-                    $result &= Db::getInstance()->update($this->def['table'] . '_shop', $fields, $where, 0, $null_values);
+                    $result &= Db::getInstance()->update($this->def['table'] . '_shop', $updatedShopFields, $where, 0, $null_values);
                 } elseif (Shop::getContext() == Shop::CONTEXT_SHOP) {
                     $result &= Db::getInstance()->insert($this->def['table'] . '_shop', $all_fields, $null_values);
                 }
@@ -791,9 +796,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // Database update for multilingual fields related to the object
         if (isset($this->def['multilang']) && $this->def['multilang']) {
-            $fields = $this->getFieldsLang();
-            if (is_array($fields)) {
-                foreach ($fields as $field) {
+            $updatedLangFields = $this->getFieldsLang();
+            if (is_array($updatedLangFields)) {
+                foreach ($updatedLangFields as $field) {
                     foreach (array_keys($field) as $key) {
                         if (!Validate::isTableOrIdentifier($key)) {
                             throw new PrestaShopException('key ' . $key . ' is not a valid table or identifier');
