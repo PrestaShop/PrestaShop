@@ -17,6 +17,7 @@ admin_mail_theme_generate:
     _controller: PrestaShopBundle\Controller\Admin\Improve\Design\MailThemeController:generateMailsAction
     _legacy_controller: AdminMailTheme
     _legacy_link: AdminMailTheme:postGenerateMails
+    themes_dir: '%themes_dir%'
 
 admin_mail_theme_save_configuration:
   path: /save-configuration

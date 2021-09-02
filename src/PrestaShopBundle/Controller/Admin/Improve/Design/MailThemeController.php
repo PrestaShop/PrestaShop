@@ -96,10 +96,11 @@ class MailThemeController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
+     * @param string $themes_dir
      *
      * @return Response
      */
-    public function generateMailsAction(Request $request)
+    public function generateMailsAction(Request $request, string $themes_dir)
     {
         $generateThemeMailsForm = $this->createForm(GenerateMailsType::class);
         $generateThemeMailsForm->handleRequest($request);
@@ -117,7 +118,7 @@ class MailThemeController extends FrameworkBundleAdminController
                 $modulesMailFolder = '';
                 //Overwrite theme folder if selected
                 if (!empty($data['theme'])) {
-                    $themeFolder = $this->getParameter('themes_dir') . '/' . $data['theme'];
+                    $themeFolder = $themes_dir . '/' . $data['theme'];
                     if (is_dir($themeFolder . '/mails')) {
                         $coreMailsFolder = $themeFolder . '/mails';
                     }
