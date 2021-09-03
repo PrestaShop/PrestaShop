@@ -167,7 +167,6 @@ class ProductSupplierUpdater
     public function resetDefaultSupplier(Product $product): void
     {
         $product->supplier_reference = '';
-        $product->wholesale_price = '0';
         $product->id_supplier = 0;
 
         $this->productRepository->partialUpdate(
