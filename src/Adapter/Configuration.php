@@ -380,8 +380,8 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             if ($shopGroupId === false) {
                 throw new ShopException(
                     sprintf(
-                        'Shop group with id %s was not found.',
-                        $shopGroupId
+                        'Shop group was not found for the shop with id %d.',
+                        $shopConstraint->getShopId()->getValue()
                     )
                 );
             }
