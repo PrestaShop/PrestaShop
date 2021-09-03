@@ -26,6 +26,7 @@
 
 namespace Tests\TestCase;
 
+use Context;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -40,7 +41,7 @@ abstract class ContextStateTestCase extends TestCase
      */
     protected function createContextMock(array $contextFields)
     {
-        $contextMock = $this->getMockBuilder(\Context::class)
+        $contextMock = $this->getMockBuilder(Context::class)
             ->disableOriginalConstructor()
             ->getMock();
 
