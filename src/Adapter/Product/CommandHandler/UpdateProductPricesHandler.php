@@ -28,12 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPricePropertiesFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPricesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 
 /**
@@ -52,15 +56,22 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
     private $productPricePropertiesFiller;
 
     /**
+     * @var ProductSupplierRepository
+     */
+    private $productSupplierRepository;
+
+    /**
      * @param ProductRepository $productRepository
      * @param ProductPricePropertiesFiller $productPricePropertiesFiller
      */
     public function __construct(
         ProductRepository $productRepository,
-        ProductPricePropertiesFiller $productPricePropertiesFiller
+        ProductPricePropertiesFiller $productPricePropertiesFiller,
+        ProductSupplierRepository $productSupplierRepository
     ) {
         $this->productRepository = $productRepository;
         $this->productPricePropertiesFiller = $productPricePropertiesFiller;
+        $this->productSupplierRepository = $productSupplierRepository;
     }
 
     /**
@@ -81,6 +92,25 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
             $command->getShopConstraint(),
             CannotUpdateProductException::FAILED_UPDATE_PRICES
         );
+
+        if (null !== $command->getWholesalePrice()) {
+            $this->updateDefaultSupplier($command->getProductId(), $command->getWholesalePrice());
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param DecimalNumber $wholesalePrice
+     */
+    private function updateDefaultSupplier(ProductId $productId, DecimalNumber $wholesalePrice): void
+    {
+        try {
+            $defaultProductSupplier = $this->productSupplierRepository->getDefaultProductSupplier($productId);
+            $defaultProductSupplier->product_supplier_price_te = (string) $wholesalePrice;
+            $this->productSupplierRepository->update($defaultProductSupplier);
+        } catch (ProductSupplierNotFoundException $e) {
+            // No need to update since there is no default supplier associated
+        }
     }
 
     /**
