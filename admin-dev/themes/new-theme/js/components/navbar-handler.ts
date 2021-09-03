@@ -35,11 +35,11 @@
  * and of course the hash is kept in sync when the navbar or alternative links are used.
  */
 export default class NavbarHandler {
-  tabPrefix: string;
+  tabPrefix?: string;
 
   $navigationContainer: JQuery;
 
-  constructor($navigationContainer: JQuery, tabPrefix: string) {
+  constructor($navigationContainer: JQuery, tabPrefix?: string) {
     // We use a tab prefix for hastag so that on reload the page doesn't auto scroll to the anchored element
     this.tabPrefix = tabPrefix || 'tab-';
     this.$navigationContainer = $navigationContainer;

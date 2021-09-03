@@ -32,6 +32,7 @@ import ProductEventMap from '@pages/product/product-event-map';
 import initCombinationModal from '@pages/product/components/combination-modal';
 import initFilters from '@pages/product/components/filters';
 import ConfirmModal from '@components/modal';
+import EventEmitter from '@components/event-emitter';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
 
@@ -40,11 +41,45 @@ const CombinationEvents = ProductEventMap.combinations;
 const CombinationsMap = ProductMap.combinations;
 
 export default class CombinationsManager {
+  productId: number;
+
+  eventEmitter: typeof EventEmitter;
+
+  $productForm: JQuery;
+
+  $combinationsContainer: JQuery;
+
+  combinationIdInputsSelector: string;
+
+  $externalCombinationTab: JQuery;
+
+  $preloader: JQuery;
+
+  $paginatedList: JQuery;
+
+  $emptyState: JQuery;
+
+  paginator: DynamicPaginator | null;
+
+  combinationsRenderer: CombinationsGridRenderer | null;
+
+  filtersApp: Record<string, any> | null; 
+
+  combinationModalApp: Record<string, any> | null; 
+
+  combinationGeneratorApp: Record<string, any> | null; 
+
+  initialized: boolean;
+
+  combinationsService: CombinationsService;
+
+  productAttributeGroups: Array<Record<string, any>>;
+
   /**
    * @param {int} productId
    * @returns {{}}
    */
-  constructor(productId) {
+  constructor(productId: number) {
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$productForm = $(ProductMap.productForm);
@@ -71,14 +106,12 @@ export default class CombinationsManager {
     this.productAttributeGroups = [];
 
     this.init();
-
-    return {};
   }
 
   /**
    * @private
    */
-  init() {
+  private init(): void {
     // Paginate to first page when tab is shown
     this.$productForm
       .find(CombinationsMap.navigationTab)
@@ -94,7 +127,7 @@ export default class CombinationsManager {
   /**
    * @private
    */
-  showCombinationTab() {
+  private showCombinationTab(): void {
     this.$externalCombinationTab.removeClass('d-none');
     this.firstInit();
   }
@@ -102,14 +135,14 @@ export default class CombinationsManager {
   /**
    * @private
    */
-  hideCombinationTab() {
+  private hideCombinationTab(): void {
     this.$externalCombinationTab.addClass('d-none');
   }
 
   /**
    * @private
    */
-  firstInit() {
+  private firstInit(): void {
     if (this.initialized) {
       return;
     }
@@ -142,7 +175,7 @@ export default class CombinationsManager {
    *
    * @private
    */
-  async refreshCombinationList(firstTime) {
+  private async refreshCombinationList(firstTime: boolean): void {
     // Preloader is only shown on first load
     this.$preloader.toggleClass('d-none', !firstTime);
     this.$paginatedList.toggleClass('d-none', firstTime);
