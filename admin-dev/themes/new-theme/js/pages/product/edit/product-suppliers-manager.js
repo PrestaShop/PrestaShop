@@ -32,10 +32,12 @@ export default class ProductSuppliersManager {
    *
    * @param {string} suppliersFormId
    * @param {boolean} forceUpdateDefault
+   * @param {ProductFormModel|null} productFormModel
    *
    * @returns {{}}
    */
-  constructor(suppliersFormId, forceUpdateDefault) {
+  constructor(suppliersFormId, forceUpdateDefault, productFormModel = null) {
+    this.productFormModel = productFormModel;
     this.forceUpdateDefault = forceUpdateDefault;
     this.suppliersMap = SuppliersMap(suppliersFormId);
     this.$productSuppliersCollection = $(this.suppliersMap.productSuppliersCollection);
@@ -86,6 +88,39 @@ export default class ProductSuppliersManager {
       this.toggleTableVisibility();
       this.refreshDefaultSupplierBlock();
     });
+
+    if (this.productFormModel !== null) {
+      this.productFormModel.watch('price.wholesalePrice', (event) => {
+        this.updateDefaultProductSupplierPrice(event.value);
+      });
+    }
+  }
+
+  /**
+   * @param {string} newPrice
+   */
+  updateDefaultProductSupplierPrice(newPrice) {
+    const defaultProductSupplierId = this.getDefaultProductSupplierId();
+
+    if (defaultProductSupplierId) {
+      // Update default price value and trigger change so that memorizeCurrentSuppliers is triggered (along with other
+      // potential listeners)
+      const rowMap = this.suppliersMap.productSupplierRow;
+      $(rowMap.priceInput(defaultProductSupplierId)).val(newPrice).trigger('change');
+    }
+  }
+
+  /**
+   * @returns {null|int}
+   */
+  getDefaultProductSupplierId() {
+    const defaultSupplier = this.$defaultSupplierGroup.find('input:checked');
+
+    if (!defaultSupplier.length) {
+      return null;
+    }
+
+    return defaultSupplier.first().val();
   }
 
   toggleTableVisibility() {
@@ -230,6 +265,13 @@ export default class ProductSuppliersManager {
         removed: false,
       };
     });
+
+    const defaultProductSupplierId = this.getDefaultProductSupplierId();
+
+    if (defaultProductSupplierId) {
+      const newDefaultPrice = $(this.suppliersMap.productSupplierRow.priceInput(defaultProductSupplierId)).val();
+      this.productFormModel.set('price.wholesalePrice', newDefaultPrice);
+    }
   }
 
   /**
