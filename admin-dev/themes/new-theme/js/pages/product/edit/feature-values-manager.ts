@@ -24,6 +24,7 @@
  */
 
 import ProductMap from '@pages/product/product-map';
+import EventEmitter from '@components/event-emitter';
 import Router from '@components/router';
 import ConfirmModal from '@components/modal';
 import ProductEventMap from '@pages/product/product-event-map';
@@ -31,10 +32,19 @@ import ProductEventMap from '@pages/product/product-event-map';
 const {$} = window;
 
 export default class FeatureValuesManager {
+  router: Router;
+
+  eventEmitter: typeof EventEmitter;
+
+  $collectionContainer: JQuery;
+
+  $collectionRowsContainer: JQuery;
+
+
   /**
    * @param eventEmitter {EventEmitter}
    */
-  constructor(eventEmitter) {
+  constructor(eventEmitter: typeof EventEmitter) {
     this.router = new Router();
     this.eventEmitter = eventEmitter;
     this.$collectionContainer = $(ProductMap.featureValues.collectionContainer);
@@ -46,7 +56,7 @@ export default class FeatureValuesManager {
     this.watchAddButton();
   }
 
-  watchAddButton() {
+  watchAddButton(): void {
     $(ProductMap.featureValues.addFeatureValue).on('click', () => {
       const prototype = this.$collectionContainer.data('prototype');
       const prototypeName = this.$collectionContainer.data('prototypeName');
@@ -58,11 +68,11 @@ export default class FeatureValuesManager {
     });
   }
 
-  watchDeleteButtons() {
+  watchDeleteButtons(): void {
     $(this.$collectionContainer).on('click', ProductMap.featureValues.deleteFeatureValue, (event) => {
       const $deleteButton = $(event.currentTarget);
       const $collectionRow = $deleteButton.closest(ProductMap.featureValues.collectionRow);
-      const modal = new ConfirmModal(
+      const modal = new (ConfirmModal as any)(
         {
           id: 'modal-confirm-delete-feature-value',
           confirmTitle: $deleteButton.data('modal-title'),
@@ -81,7 +91,7 @@ export default class FeatureValuesManager {
     });
   }
 
-  watchCustomInputs() {
+  watchCustomInputs(): void {
     $(this.$collectionContainer).on('keyup change', ProductMap.featureValues.customValueInput, (event) => {
       const $changedInput = $(event.target);
       const $collectionRow = $changedInput.closest(ProductMap.featureValues.collectionRow);
@@ -104,7 +114,7 @@ export default class FeatureValuesManager {
     });
   }
 
-  watchFeatureSelectors() {
+  watchFeatureSelectors(): void {
     $(this.$collectionContainer).on('change', ProductMap.featureValues.featureSelect, (event) => {
       const $selector = $(event.target);
       const idFeature = $selector.val();
@@ -125,6 +135,7 @@ export default class FeatureValuesManager {
           $.each(featureValuesData, (index, featureValue) => {
             // The placeholder shouldn't be posted.
             if (featureValue.id === '0') {
+              // eslint-disable-next-line
               featureValue.id = '';
             }
 
