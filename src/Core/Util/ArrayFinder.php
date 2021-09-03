@@ -123,14 +123,14 @@ class ArrayFinder implements \ArrayAccess, \Countable
     public function offsetExists($offset)
     {
         if (is_int($offset)) {
-            $offset = (string)$offset;
+            $offset = (string) $offset;
         }
 
-        return ($this->propertyAccessor->isReadable(
+        return $this->propertyAccessor->isReadable(
                 $this->array,
                 $this->convertDotPathToArrayPath($offset))
             && ($this->get($offset) !== null)
-        );
+        ;
     }
 
     /**
@@ -143,7 +143,7 @@ class ArrayFinder implements \ArrayAccess, \Countable
     public function offsetGet($offset)
     {
         if (is_int($offset)) {
-            $offset = (string)$offset;
+            $offset = (string) $offset;
         }
 
         return $this->get($offset);
@@ -157,7 +157,7 @@ class ArrayFinder implements \ArrayAccess, \Countable
     public function offsetSet($offset, $value)
     {
         if (is_int($offset)) {
-            $offset = (string)$offset;
+            $offset = (string) $offset;
         }
 
         if ($offset === null) {
@@ -175,7 +175,7 @@ class ArrayFinder implements \ArrayAccess, \Countable
     public function offsetUnset($offset)
     {
         if (is_int($offset)) {
-            $offset = (string)$offset;
+            $offset = (string) $offset;
         }
 
         $this->set($offset, null);
