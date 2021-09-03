@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import EventEmitter from '@components/event-emitter';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import ConfirmModal from '@components/modal';
@@ -30,6 +31,16 @@ import ConfirmModal from '@components/modal';
 const {$} = window;
 
 export default class CustomizationsManager {
+  $customizationsContainer: JQuery;
+
+  $customizationFieldsList: JQuery;
+
+  eventEmitter: typeof EventEmitter;
+
+  prototypeTemplate: string;
+
+  prototypeName: string;
+
   constructor() {
     this.$customizationsContainer = $(ProductMap.customizations.customizationsContainer);
     this.$customizationFieldsList = $(ProductMap.customizations.customizationFieldsList);
@@ -40,7 +51,7 @@ export default class CustomizationsManager {
     this.init();
   }
 
-  init() {
+  init(): void {
     this.$customizationsContainer.on('click', ProductMap.customizations.addCustomizationBtn, () => {
       this.addCustomizationField();
     });
@@ -49,7 +60,7 @@ export default class CustomizationsManager {
     });
   }
 
-  addCustomizationField() {
+  addCustomizationField(): void {
     const index = this.getIndex();
     const newItem = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), this.getIndex());
 
@@ -60,9 +71,9 @@ export default class CustomizationsManager {
     this.eventEmitter.emit(ProductEventMap.customizations.rowAdded, {index});
   }
 
-  removeCustomizationField(event) {
-    const $deleteButton = $(event.currentTarget);
-    const modal = new ConfirmModal(
+  removeCustomizationField(event: Event): void {
+    const $deleteButton = $(<HTMLElement>event.currentTarget);
+    const modal = new (ConfirmModal as any)(
       {
         id: 'modal-confirm-delete-customization',
         confirmTitle: $deleteButton.data('modal-title'),
@@ -82,7 +93,7 @@ export default class CustomizationsManager {
     modal.show();
   }
 
-  getIndex() {
-    return this.$customizationFieldsList.find(ProductMap.customizations.customizationFieldRow).length;
+  getIndex(): string {
+    return this.$customizationFieldsList.find(ProductMap.customizations.customizationFieldRow).length.toString();
   }
 }

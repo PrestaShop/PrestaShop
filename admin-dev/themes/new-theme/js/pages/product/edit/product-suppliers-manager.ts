@@ -28,6 +28,30 @@ import SuppliersMap from '@pages/product/suppliers-map';
 const {$} = window;
 
 export default class ProductSuppliersManager {
+  forceUpdateDefault: boolean;
+
+  suppliersMap: Record<string, any>;
+
+  $productSuppliersCollection: JQuery;
+
+  $defaultSupplierGroup: JQuery;
+
+  $supplierIdsGroup: JQuery;
+
+  $productsTable: JQuery;
+
+  $productsTableBody: JQuery;
+
+  suppliers: Array<Record<string, any>>;
+
+  prototypeTemplate: string;
+
+  prototypeName: string;
+
+  defaultDataForSupplier: Record<string, any>;
+
+  $initialDefault!: JQuery;
+
   /**
    *
    * @param {string} suppliersFormId
@@ -35,7 +59,7 @@ export default class ProductSuppliersManager {
    *
    * @returns {{}}
    */
-  constructor(suppliersFormId, forceUpdateDefault) {
+  constructor(suppliersFormId: string, forceUpdateDefault: boolean) {
     this.forceUpdateDefault = forceUpdateDefault;
     this.suppliersMap = SuppliersMap(suppliersFormId);
     this.$productSuppliersCollection = $(this.suppliersMap.productSuppliersCollection);
@@ -50,11 +74,9 @@ export default class ProductSuppliersManager {
     this.defaultDataForSupplier = this.getDefaultDataForSupplier();
 
     this.init();
-
-    return {};
   }
 
-  init() {
+  init(): void {
     this.memorizeCurrentSuppliers();
     this.toggleTableVisibility();
     this.refreshDefaultSupplierBlock();
@@ -88,7 +110,7 @@ export default class ProductSuppliersManager {
     });
   }
 
-  toggleTableVisibility() {
+  toggleTableVisibility(): void {
     if (this.getSelectedSuppliers().length === 0) {
       this.hideTable();
 
@@ -101,7 +123,7 @@ export default class ProductSuppliersManager {
   /**
    * @param {Object} supplier
    */
-  addSupplier(supplier) {
+  addSupplier(supplier: Record<string, any>): void {
     if (typeof this.suppliers[supplier.supplierId] === 'undefined') {
       const newSupplier = Object.create(this.defaultDataForSupplier);
       newSupplier.supplierId = supplier.supplierId;
@@ -116,11 +138,11 @@ export default class ProductSuppliersManager {
   /**
    * @param {int} supplierId
    */
-  removeSupplier(supplierId) {
+  removeSupplier(supplierId: number): void {
     this.suppliers[supplierId].removed = true;
   }
 
-  renderSuppliers() {
+  renderSuppliers(): void {
     this.$productsTableBody.empty();
 
     // Loop through select suppliers so that we use the same order as in the select list
@@ -149,19 +171,21 @@ export default class ProductSuppliersManager {
     });
   }
 
-  getSelectedSuppliers() {
-    const selectedSuppliers = [];
+  getSelectedSuppliers(): Array<Record<string, any>> {
+    const selectedSuppliers: Array<Record<string, any>> = [];
     this.$supplierIdsGroup.find('input:checked').each((index, input) => {
+      const inputElement = <HTMLInputElement> input;
+
       selectedSuppliers.push({
-        supplierName: input.dataset.label,
-        supplierId: input.value,
+        supplierName: inputElement.dataset.label,
+        supplierId: inputElement.value,
       });
     });
 
     return selectedSuppliers;
   }
 
-  refreshDefaultSupplierBlock() {
+  refreshDefaultSupplierBlock(): void {
     const suppliers = this.getSelectedSuppliers();
 
     if (suppliers.length === 0) {
@@ -177,12 +201,13 @@ export default class ProductSuppliersManager {
     const selectedSupplierIds = suppliers.map((supplier) => supplier.supplierId);
 
     this.$defaultSupplierGroup.find('input').each((key, input) => {
+      const inputElement = <HTMLInputElement> input;
       const isValid = selectedSupplierIds.includes(input.value);
 
       if (this.forceUpdateDefault && !isValid) {
-        input.checked = false;
+        inputElement.checked = false;
       }
-      input.disabled = !isValid;
+      inputElement.disabled = !isValid;
     });
 
     if (this.$defaultSupplierGroup.find('input:checked').length === 0 && this.forceUpdateDefault) {
@@ -190,27 +215,27 @@ export default class ProductSuppliersManager {
     }
   }
 
-  hideDefaultSuppliers() {
+  hideDefaultSuppliers(): void {
     this.$defaultSupplierGroup.addClass('d-none');
   }
 
-  showDefaultSuppliers() {
+  showDefaultSuppliers(): void {
     this.$defaultSupplierGroup.removeClass('d-none');
   }
 
   /**
    * @param {int[]} selectedSupplierIds
    */
-  checkFirstAvailableDefaultSupplier(selectedSupplierIds) {
+  checkFirstAvailableDefaultSupplier(selectedSupplierIds: Array<number>): void {
     const firstSupplierId = selectedSupplierIds[0];
     this.$defaultSupplierGroup.find(`input[value="${firstSupplierId}"]`).prop('checked', true);
   }
 
-  showTable() {
+  showTable(): void {
     this.$productsTable.removeClass('d-none');
   }
 
-  hideTable() {
+  hideTable(): void {
     this.$productsTable.addClass('d-none');
   }
 
@@ -218,7 +243,7 @@ export default class ProductSuppliersManager {
    * Memorize suppliers to be able to re-render them later.
    * Flag `removed` allows identifying whether supplier was removed from list or should be rendered
    */
-  memorizeCurrentSuppliers() {
+  memorizeCurrentSuppliers(): void {
     this.getSelectedSuppliers().forEach((supplier) => {
       this.suppliers[supplier.supplierId] = {
         supplierId: supplier.supplierId,
@@ -238,7 +263,7 @@ export default class ProductSuppliersManager {
    *
    * @returns {{reference, removed: boolean, price, currencyId, productSupplierId}}
    */
-  getDefaultDataForSupplier() {
+  getDefaultDataForSupplier(): Record<string, any> {
     const rowPrototype = new DOMParser().parseFromString(
       this.prototypeTemplate,
       'text/html',
@@ -259,7 +284,7 @@ export default class ProductSuppliersManager {
    *
    * @returns {*}
    */
-  getDataFromRow(selectorGenerator, rowPrototype) {
-    return rowPrototype.querySelector(selectorGenerator(this.prototypeName)).value;
+  getDataFromRow(selectorGenerator: (name: string) => string, rowPrototype: Document): any {
+    return (<HTMLInputElement> rowPrototype?.querySelector(selectorGenerator(this.prototypeName)))?.value;
   }
 }

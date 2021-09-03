@@ -28,8 +28,13 @@ import Router from '@components/router';
 const router = new Router();
 const {$} = window;
 
-export const getCategories = async () => $.get(router.generate('admin_categories_get_categories_tree'));
+export const getProductAttributeGroups = async (productId: string): Promise<Record<string, any>> => $.get(router.generate('admin_products_attribute_groups', {
+  productId,
+}));
+
+export const getAllAttributeGroups = async (): Promise<Record<string, any>> => $.get(router.generate('admin_all_attribute_groups'));
 
 export default {
-  getCategories,
+  getProductAttributeGroups,
+  getAllAttributeGroups,
 };

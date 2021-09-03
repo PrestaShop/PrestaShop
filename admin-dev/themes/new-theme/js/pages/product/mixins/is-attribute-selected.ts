@@ -22,8 +22,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import Vue from 'vue';
 
-export default {
+export default Vue.extend({
   methods: {
     /**
      * The selected attribute is provided as a parameter instead od using this reference because it helps the
@@ -35,7 +36,7 @@ export default {
      *
      * @returns {boolean}
      */
-    isSelected(attribute, attributeGroup, attributeGroups) {
+    isSelected(attribute: Record<string, any>, attributeGroup: Record<string, any>, attributeGroups: Record<string, any>) {
       if (!Object.prototype.hasOwnProperty.call(attributeGroups, attributeGroup.id)) {
         return false;
       }
@@ -43,4 +44,4 @@ export default {
       return attributeGroups[attributeGroup.id].attributes.includes(attribute);
     },
   },
-};
+});
