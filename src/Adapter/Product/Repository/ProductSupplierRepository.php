@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotAddProduc
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotBulkDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\DefaultProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -157,6 +158,41 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
         }
 
         return new ProductSupplierId((int) $result['default_supplier_id']);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return ProductSupplier
+     *
+     * @throws ProductSupplierNotFoundException
+     */
+    public function getDefaultProductSupplier(ProductId $productId): ProductSupplier
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('ps.id_product_supplier AS default_supplier_id')
+            ->from($this->dbPrefix . 'product_supplier', 'ps')
+            ->innerJoin(
+                'ps',
+                $this->dbPrefix . 'product',
+                'p',
+                'ps.id_supplier = p.id_supplier'
+            )
+            ->where('ps.id_product = :productId')
+            ->andWhere('ps.id_supplier = p.id_supplier')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetch();
+
+        if (empty($result['default_supplier_id'])) {
+            throw new DefaultProductSupplierNotAssociatedException(sprintf(
+                'Cannot find default ProductSupplier for product %d',
+                $productId->getValue()
+            ));
+        }
+
+        return $this->get(new ProductSupplierId((int) $result['default_supplier_id']));
     }
 
     /**
