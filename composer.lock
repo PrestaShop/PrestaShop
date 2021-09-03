@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e15ae18c0acb959a50a67bfe7d03406b",
+    "content-hash": "5fac55b0d3ed0e95c3b61add7d6084cf",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -7289,7 +7289,7 @@
             "description": "Welcome module for PrestaShop helping the users to create products.",
             "homepage": "https://github.com/PrestaShop/welcome",
             "support": {
-                "source": "https://github.com/PrestaShop/welcome/tree/v6.0.5"
+                "source": "https://github.com/PrestaShop/welcome/tree/v6.0.6"
             },
             "time": "2021-06-09T13:39:20+00:00"
         },
@@ -12080,6 +12080,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-11-30T07:30:19+00:00"
         },
         {
