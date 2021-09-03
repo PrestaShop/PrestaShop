@@ -82,6 +82,124 @@ class ConfigurationTest extends KernelTestCase
     }
 
     /**
+     * @param array $setParams
+     * @param array $getParams
+     * @param string $expectedResult
+     * @dataProvider hasProvider
+     */
+    public function testHas(array $setParams, array $getParams, string $expectedResult): void
+    {
+        if (!empty($setParams)) {
+            $this->configuration->set($setParams['key'], $setParams['value'], $setParams['shopConstraint']);
+        }
+        $result = $this->configuration->has($getParams['key'], $getParams['shopConstraint']);
+
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    public function hasProvider(): Generator
+    {
+        // simple test in all shop context, when value is set for this context
+        yield [
+            [
+                'key' => 'has_key_test_1',
+                'value' => 'has_value_test_1',
+                'shopConstraint' => ShopConstraint::allShops(),
+            ],
+            [
+                'key' => 'has_key_test_1',
+                'default' => false,
+                'shopConstraint' => ShopConstraint::allShops(),
+            ],
+            true,
+        ];
+        // simple test in group context, when value is set for this context
+        yield [
+            [
+                'key' => 'has_key_test_2',
+                'value' => 'has_value_test_2',
+                'shopConstraint' => ShopConstraint::shopGroup(1),
+            ],
+            [
+                'key' => 'has_key_test_2',
+                'default' => false,
+                'shopConstraint' => ShopConstraint::shopGroup(1),
+            ],
+            true,
+        ];
+        // simple test in single shop context, when value is set for this context
+        yield [
+            [
+                'key' => 'has_key_test_3',
+                'value' => 'has_value_test_3',
+                'shopConstraint' => ShopConstraint::shop(2),
+            ],
+            [
+                'key' => 'has_key_test_3',
+                'default' => false,
+                'shopConstraint' => ShopConstraint::shop(2),
+            ],
+            true,
+        ];
+        // test in group context, value is set for all shop context (not strict)
+        yield [
+            [
+                'key' => 'has_key_test_4',
+                'value' => 'has_value_test_4',
+                'shopConstraint' => ShopConstraint::allShops(),
+            ],
+            [
+                'key' => 'has_key_test_4',
+                'default' => false,
+                'shopConstraint' => ShopConstraint::shopGroup(1),
+            ],
+            true,
+        ];
+        // test in single shop context, value is set for parent group context (not strict)
+        yield [
+            [
+                'key' => 'has_key_test_5',
+                'value' => 'has_value_test_5',
+                'shopConstraint' => ShopConstraint::shopGroup(1),
+            ],
+            [
+                'key' => 'has_key_test_5',
+                'default' => false,
+                'shopConstraint' => ShopConstraint::shop(2),
+            ],
+            true,
+        ];
+        // test in group context with $isStrict = true, when value is set for all shop context
+        yield [
+            [
+                'key' => 'has_key_test_6',
+                'value' => 'has_value_test_6',
+                'shopConstraint' => ShopConstraint::allShops(),
+            ],
+            [
+                'key' => 'has_key_test_6',
+                'default' => false,
+                'shopConstraint' => ShopConstraint::shopGroup(1, true),
+            ],
+            false,
+        ];
+        // test in single shop context with $isStrict = true, when value is set for parent group
+        yield [
+            [
+                'key' => 'has_key_test_7',
+                'value' => 'has_value_test_7',
+                'shopConstraint' => ShopConstraint::shopGroup(1),
+            ],
+            [
+                'key' => 'has_key_test_7',
+                'default' => false,
+                'shopConstraint' => ShopConstraint::shopGroup(2, true),
+            ],
+            false,
+        ];
+    }
+
+    /**
      * @return Generator
      */
     public function getProvider(): Generator
@@ -89,11 +207,9 @@ class ConfigurationTest extends KernelTestCase
         // simple case: get an all shop config value
         yield [
             [
-                [
-                    'key' => 'key_test_1',
-                    'value' => 'value_test_1',
-                    'shopConstraint' => ShopConstraint::allShops(),
-                ],
+                'key' => 'key_test_1',
+                'value' => 'value_test_1',
+                'shopConstraint' => ShopConstraint::allShops(),
             ],
             [
                 'key' => 'key_test_1',
@@ -105,11 +221,9 @@ class ConfigurationTest extends KernelTestCase
         // simple case: get a group shop config value
         yield [
             [
-                [
-                    'key' => 'key_test_2',
-                    'value' => 'value_test_2',
-                    'shopConstraint' => ShopConstraint::shop(2),
-                ],
+                'key' => 'key_test_2',
+                'value' => 'value_test_2',
+                'shopConstraint' => ShopConstraint::shop(2),
             ],
             [
                 'key' => 'key_test_2',
@@ -121,11 +235,9 @@ class ConfigurationTest extends KernelTestCase
         // simple case: get a single shop config value
         yield [
             [
-                [
-                    'key' => 'key_test_3',
-                    'value' => 'value_test_3',
-                    'shopConstraint' => ShopConstraint::shopGroup(1),
-                ],
+                'key' => 'key_test_3',
+                'value' => 'value_test_3',
+                'shopConstraint' => ShopConstraint::shopGroup(1),
             ],
             [
                 'key' => 'key_test_3',
@@ -167,11 +279,9 @@ class ConfigurationTest extends KernelTestCase
         // get value for a group shop, inherited from all shop
         yield [
             [
-                [
-                    'key' => 'all_shop_key_1',
-                    'value' => 'all_shop_value_1',
-                    'shopConstraint' => ShopConstraint::allShops(),
-                ],
+                'key' => 'all_shop_key_1',
+                'value' => 'all_shop_value_1',
+                'shopConstraint' => ShopConstraint::allShops(),
             ],
             [
                 'key' => 'all_shop_key_1',
@@ -183,11 +293,9 @@ class ConfigurationTest extends KernelTestCase
         // get value for shop 2, inherited from parent group shop
         yield [
             [
-                [
-                    'key' => 'parent_group_key_1',
-                    'value' => 'parent_group_value',
-                    'shopConstraint' => ShopConstraint::shopGroup(1),
-                ],
+                'key' => 'parent_group_key_1',
+                'value' => 'parent_group_value',
+                'shopConstraint' => ShopConstraint::shopGroup(1),
             ],
             [
                 'key' => 'parent_group_key_1',
@@ -206,11 +314,9 @@ class ConfigurationTest extends KernelTestCase
         // try getting a non existing value for a aingle shop, with is strict = true => should not inherit from parent group
         yield [
             [
-                [
-                    'key' => 'parent_group_key_2',
-                    'value' => 'parent_group_value_2',
-                    'shopConstraint' => ShopConstraint::shopGroup(1),
-                ],
+                'key' => 'parent_group_key_2',
+                'value' => 'parent_group_value_2',
+                'shopConstraint' => ShopConstraint::shopGroup(1),
             ],
             [
                 'key' => 'parent_group_key_2',
@@ -222,11 +328,9 @@ class ConfigurationTest extends KernelTestCase
         // try getting a non existing value for a group, with is strict = true => should not inherit from all shop
         yield [
             [
-                [
-                    'key' => 'all_shop_key_1',
-                    'value' => 'all_shop_value_1',
-                    'shopConstraint' => ShopConstraint::allShops(),
-                ],
+                'key' => 'all_shop_key_1',
+                'value' => 'all_shop_value_1',
+                'shopConstraint' => ShopConstraint::allShops(),
             ],
             [
                 'key' => 'all_shop_key_1',
@@ -254,11 +358,10 @@ class ConfigurationTest extends KernelTestCase
      */
     private function setAndGetValuesForTesting(array $setParams, array $getParams, $expectedResult): void
     {
-        foreach ($setParams as $values) {
-            $this->configuration->set($values['key'], $values['value'], $values['shopConstraint']);
+        if (!empty($setParams)) {
+            $this->configuration->set($setParams['key'], $setParams['value'], $setParams['shopConstraint']);
         }
         $result = $this->configuration->get($getParams['key'], $getParams['default'], $getParams['shopConstraint']);
-
         $this->assertEquals($expectedResult, $result);
     }
 
