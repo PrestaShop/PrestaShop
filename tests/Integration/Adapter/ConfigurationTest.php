@@ -99,6 +99,33 @@ class ConfigurationTest extends KernelTestCase
 
     public function hasProvider(): Generator
     {
+        // simple test when value doesn't exist and we ask for it in all shop context
+        yield [
+            [],
+            [
+                'key' => 'does_not_exist',
+                'shopConstraint' => ShopConstraint::allShops(),
+            ],
+            false,
+        ];
+        // simple test when value doesn't exist and we ask for it in group context
+        yield [
+            [],
+            [
+                'key' => 'does_not_exist',
+                'shopConstraint' => ShopConstraint::shopGroup(1),
+            ],
+            false,
+        ];
+        // simple test when value doesn't exist and we ask for it in single shop context
+        yield [
+            [],
+            [
+                'key' => 'does_not_exist',
+                'shopConstraint' => ShopConstraint::shop(2),
+            ],
+            false,
+        ];
         // simple test in all shop context, when value is set for this context
         yield [
             [
@@ -108,7 +135,6 @@ class ConfigurationTest extends KernelTestCase
             ],
             [
                 'key' => 'has_key_test_1',
-                'default' => false,
                 'shopConstraint' => ShopConstraint::allShops(),
             ],
             true,
@@ -122,7 +148,6 @@ class ConfigurationTest extends KernelTestCase
             ],
             [
                 'key' => 'has_key_test_2',
-                'default' => false,
                 'shopConstraint' => ShopConstraint::shopGroup(1),
             ],
             true,
@@ -136,7 +161,6 @@ class ConfigurationTest extends KernelTestCase
             ],
             [
                 'key' => 'has_key_test_3',
-                'default' => false,
                 'shopConstraint' => ShopConstraint::shop(2),
             ],
             true,
@@ -150,7 +174,6 @@ class ConfigurationTest extends KernelTestCase
             ],
             [
                 'key' => 'has_key_test_4',
-                'default' => false,
                 'shopConstraint' => ShopConstraint::shopGroup(1),
             ],
             true,
@@ -164,7 +187,6 @@ class ConfigurationTest extends KernelTestCase
             ],
             [
                 'key' => 'has_key_test_5',
-                'default' => false,
                 'shopConstraint' => ShopConstraint::shop(2),
             ],
             true,
@@ -178,7 +200,6 @@ class ConfigurationTest extends KernelTestCase
             ],
             [
                 'key' => 'has_key_test_6',
-                'default' => false,
                 'shopConstraint' => ShopConstraint::shopGroup(1, true),
             ],
             false,
@@ -192,7 +213,6 @@ class ConfigurationTest extends KernelTestCase
             ],
             [
                 'key' => 'has_key_test_7',
-                'default' => false,
                 'shopConstraint' => ShopConstraint::shopGroup(2, true),
             ],
             false,
