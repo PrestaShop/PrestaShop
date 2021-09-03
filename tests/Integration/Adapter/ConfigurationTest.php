@@ -223,7 +223,7 @@ class ConfigurationTest extends KernelTestCase
         $this->entityManager->remove($shop);
         $this->entityManager->flush();
         // remove multistore feature enabling configuration
-        $this->configuration->remove('PS_MULTISHOP_FEATURE_ACTIVE');
+        $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', 0);
         // remove flag
         $this->configuration->remove('CONFIGURATION_INTEGRATION_TEST_FLAG');
     }
