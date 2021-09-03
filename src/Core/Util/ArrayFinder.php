@@ -67,17 +67,17 @@ class ArrayFinder implements \ArrayAccess, \Countable
     }
 
     /**
-     * @param string|int|null $path selector to find the desired value. if empty, will return full array
+     * @param string|null $path selector to find the desired value. if empty, will return full array
      * @param mixed|null $default default value to be returned if selector matches nothing
      *
      * @return mixed|null
      *
      * Examples of use:
      * $arrayFinder->get('a');
-     * $arrayFinder->get(4);
-     * $arrayFinder[4];
+     * $arrayFinder->get('a.e.9');
+     * $arrayFinder->get('4');
      */
-    public function get($path = null, $default = null)
+    public function get(string $path = null, $default = null)
     {
         if ($path === null) {
             return $this->array;
@@ -94,12 +94,17 @@ class ArrayFinder implements \ArrayAccess, \Countable
     }
 
     /**
-     * @param string|int $path selector for the value to be set
+     * @param string $path selector for the value to be set
      * @param mixed $value input value to be set inside array
      *
      * @return self
+     *
+     * Examples of use:
+     * $arrayFinder->set('a', $aNewValue);
+     * $arrayFinder->set('a.e.9', $aNewValue);
+     * $arrayFinder->set('4', $aNewValue);
      */
-    public function set($path, $value): self
+    public function set(string $path, $value): self
     {
         $this->propertyAccessor->setValue(
             $this->array,
@@ -112,29 +117,49 @@ class ArrayFinder implements \ArrayAccess, \Countable
 
     /**
      * {@inheritdoc}
+     *
+     * Example of use: isset($this->arrayFinder['a']
      */
     public function offsetExists($offset)
     {
+        if (is_int($offset)) {
+            $offset = (string)$offset;
+        }
+
         return ($this->propertyAccessor->isReadable(
-            $this->array,
-            $this->convertDotPathToArrayPath($offset))
+                $this->array,
+                $this->convertDotPathToArrayPath($offset))
             && ($this->get($offset) !== null)
         );
     }
 
     /**
      * {@inheritdoc}
+     *
+     * Examples of use:
+     * $arrayFinder[4];
+     * $arrayFinder['a'];
      */
     public function offsetGet($offset)
     {
+        if (is_int($offset)) {
+            $offset = (string)$offset;
+        }
+
         return $this->get($offset);
     }
 
     /**
      * {@inheritdoc}
+     *
+     * Example of use: $this->arrayFinder['a'] = $value;
      */
     public function offsetSet($offset, $value)
     {
+        if (is_int($offset)) {
+            $offset = (string)$offset;
+        }
+
         if ($offset === null) {
             $this->array[] = $value;
         } else {
@@ -144,9 +169,15 @@ class ArrayFinder implements \ArrayAccess, \Countable
 
     /**
      * {@inheritdoc}
+     *
+     * Example of use: unset($this->arrayFinder['a']);
      */
     public function offsetUnset($offset)
     {
+        if (is_int($offset)) {
+            $offset = (string)$offset;
+        }
+
         $this->set($offset, null);
     }
 
@@ -154,18 +185,14 @@ class ArrayFinder implements \ArrayAccess, \Countable
      * Converts paths following format 'dot' structure a.4.9.d.10
      * to Symfony format [a][4][9][d][10]
      *
-     * @param string|int $dotPath
+     * @param string $dotPath
      *
      * @return string
      */
-    private function convertDotPathToArrayPath($dotPath): string
+    private function convertDotPathToArrayPath(string $dotPath): string
     {
         if ($dotPath === '[]') {
             return '[0]';
-        }
-
-        if (is_int($dotPath)) {
-            $dotPath = (string)$dotPath;
         }
 
         $expl = explode('.', $dotPath);
