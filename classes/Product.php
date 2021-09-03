@@ -3415,8 +3415,8 @@ class ProductCore extends ObjectModel
                     $array_tmp = [
                         'price' => $row['price'],
                         'ecotax' => $row['ecotax'],
-                        'attribute_price' => $row['attribute_price'] ?: null,
-                        'attribute_ecotax' => $row['attribute_ecotax'] ?: null,
+                        'attribute_price' => $row['attribute_price'] ?? null,
+                        'attribute_ecotax' => $row['attribute_ecotax'] ?? null,
                     ];
                     self::$_pricesLevel2[$cache_id_2][(int) $row['id_product_attribute']] = $array_tmp;
 
