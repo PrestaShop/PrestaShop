@@ -205,12 +205,12 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         }
 
         $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId, $shopId);
-        if ($hasKey || $shopConstraint->isStrict()) {
+        if (null !== $shopId && ($hasKey || $shopConstraint->isStrict())) {
             return $hasKey;
         }
 
         $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId);
-        if ($hasKey) {
+        if (null !== $shopGroupId && ($shopConstraint->isStrict() || $hasKey)) {
             return $hasKey;
         }
 
