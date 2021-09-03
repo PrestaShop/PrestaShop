@@ -104,7 +104,7 @@ class ArrayFinderTest extends TestCase
     public function testSimpleGet()
     {
         $this->assertEquals('hello', $this->arrayFinder->get('0'));
-        $this->assertEquals('hello', $this->arrayFinder->get(0));
+        $this->assertEquals('is_a_key', $this->arrayFinder->get('here'));
     }
 
     public function testGetWithStringPath()
