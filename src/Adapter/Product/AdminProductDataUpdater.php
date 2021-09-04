@@ -235,6 +235,7 @@ class AdminProductDataUpdater implements ProductInterface
                     Search::indexation(false, $product->id);
                 }
                 StockAvailable::setProductOutOfStock($product->id, StockAvailable::outOfStock($id_product_old));
+                
                 return $product->id;
             }
         } else {
