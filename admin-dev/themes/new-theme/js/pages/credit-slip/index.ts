@@ -43,4 +43,12 @@ $(() => {
   creditSlipGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
   new TranslatableInput();
+
+  $(() => {
+    window.prestashop.component.initComponents(
+      [
+        'MultistoreConfigField',
+      ],
+    );
+  });
 });

@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -43,12 +45,35 @@ final class CreditSlipOptionsType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->setMethod('POST');
         $builder->add('slip_prefix', TranslatableType::class, [
             'label' => $this->trans('Credit slip prefix', 'Admin.Orderscustomers.Feature'),
             'help' => $this->trans('Prefix used for credit slips.', 'Admin.Orderscustomers.Help'),
             'required' => false,
             'error_bubbling' => true,
             'type' => TextType::class,
+            'options' => [
+                'constraints' => [
+                    new TypedRegex([
+                        'type' => 'file_name',
+                        'message' => $this->trans(
+                            '%s is invalid.',
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ],
+            'multistore_configuration_key' => 'PS_CREDIT_SLIP_PREFIX',
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

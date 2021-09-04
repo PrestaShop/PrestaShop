@@ -26,27 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\CreditSlip;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 
 /**
  * Responsible for saving configuration options for credit slip
  */
-final class CreditSlipOptionsConfiguration implements DataConfigurationInterface
+final class CreditSlipOptionsConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @param ConfigurationInterface $configuration
-     */
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -63,7 +49,18 @@ final class CreditSlipOptionsConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_CREDIT_SLIP_PREFIX', $configuration['slip_prefix']);
+            if (
+                array_key_exists('multistore_slip_prefix', $configuration)
+                && $configuration['multistore_slip_prefix'] === false) {
+                unset($configuration['multistore_slip_prefix']);
+            }
+
+            $this->updateConfigurationValue(
+                'PS_CREDIT_SLIP_PREFIX',
+                'slip_prefix',
+                $configuration,
+                $this->getShopConstraint()
+            );
         }
 
         return [];
