@@ -35,7 +35,7 @@ const {$} = window;
 export default class SubmittableInput {
   inputSelector: string;
 
-  callback: (input: Element) => any;
+  callback: (input: HTMLInputElement) => any;
 
   wrapperSelector: string;
 
@@ -47,7 +47,7 @@ export default class SubmittableInput {
    *
    * @returns {{}}
    */
-  constructor(wrapperSelector: string, callback: () => any) {
+  constructor(wrapperSelector: string, callback: (input?: HTMLInputElement) => any) {
     this.inputSelector = '.submittable-input';
     this.callback = callback;
     this.wrapperSelector = wrapperSelector;

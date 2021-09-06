@@ -71,7 +71,7 @@ export default class CustomizationsManager {
     this.eventEmitter.emit(ProductEventMap.customizations.rowAdded, {index});
   }
 
-  removeCustomizationField(event: Event): void {
+  removeCustomizationField(event: JQuery.ClickEvent<HTMLElement, undefined, any, any>): void {
     const $deleteButton = $(<HTMLElement>event.currentTarget);
     const modal = new (ConfirmModal as any)(
       {

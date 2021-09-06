@@ -28,7 +28,7 @@ import Router from '@components/router';
 const router = new Router();
 const {$} = window;
 
-export const getProductAttributeGroups = async (productId: string): Promise<Record<string, any>> => $.get(router.generate('admin_products_attribute_groups', {
+export const getProductAttributeGroups = async (productId: number): Promise<Array<Record<string, any>>> => $.get(router.generate('admin_products_attribute_groups', {
   productId,
 }));
 
