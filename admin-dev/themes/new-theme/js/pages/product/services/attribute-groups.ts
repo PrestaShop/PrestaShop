@@ -32,7 +32,7 @@ export const getProductAttributeGroups = async (productId: number): Promise<Arra
   productId,
 }));
 
-export const getAllAttributeGroups = async (): Promise<Record<string, any>> => $.get(router.generate('admin_all_attribute_groups'));
+export const getAllAttributeGroups = async (): Promise<Array<Record<string, any>>> => $.get(router.generate('admin_all_attribute_groups'));
 
 export default {
   getProductAttributeGroups,
