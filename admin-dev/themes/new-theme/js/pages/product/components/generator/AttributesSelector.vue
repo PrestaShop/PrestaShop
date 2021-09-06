@@ -119,7 +119,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
   import isSelected from '@pages/product/mixins/is-attribute-selected';
   import ProductMap from '@pages/product/product-map';
   import PerfectScrollbar from 'perfect-scrollbar';
@@ -131,7 +132,7 @@
 
   const CombinationsMap = ProductMap.combinations;
 
-  export default {
+  export default isSelected.extend({
     name: 'AttributesSelector',
     props: {
       attributeGroups: {
@@ -143,8 +144,7 @@
         default: () => {},
       },
     },
-    mixins: [isSelected],
-    data() {
+    data(): {dataSetConfig: Record<string, any>, searchSource: Record<string, any>, scrollbar: null | PerfectScrollBar, hasGeneratedCombinations: boolean, checkboxList: Array<Record<string, any>>} {
       return {
         dataSetConfig: {},
         searchSource: {},
@@ -160,7 +160,7 @@
       new AutoCompleteSearch($searchInput, this.dataSetConfig);
     },
     watch: {
-      selectedAttributeGroups(value) {
+      selectedAttributeGroups(value: any): void {
         const attributes = Object.keys(value);
 
         if (attributes.length <= 0) {
@@ -169,13 +169,14 @@
       },
     },
     methods: {
-      initDataSetConfig() {
+      initDataSetConfig(): void {
         const searchItems = this.getSearchableAttributes();
         this.searchSource = new Bloodhound({
-          datumTokenizer: Tokenizers.obj.letters(
-            'name',
-            'value',
-            'group_name',
+          datumTokenizer: Tokenizers.obj.letters([
+              'name',
+              'value',
+              'group_name',
+            ] as any
           ),
           queryTokenizer: Bloodhound.tokenizers.nonword,
           local: searchItems,
@@ -183,10 +184,10 @@
 
         this.dataSetConfig = {
           source: this.searchSource,
-          display: (item) => `${item.group_name}: ${item.name}`,
+          display: (item: Record<string, any>) => `${item.group_name}: ${item.name}`,
           value: 'name',
           minLength: 1,
-          onSelect: (attribute, e, $searchInput) => {
+          onSelect: (attribute: Record<string, any>, e: Record<string, any>, $searchInput: JQuery) => {
             const attributeGroup = {
               id: attribute.group_id,
               name: attribute.group_name,
@@ -201,10 +202,10 @@
       /**
        * @returns {Array}
        */
-      getSearchableAttributes() {
-        const searchableAttributes = [];
-        this.attributeGroups.forEach((attributeGroup) => {
-          attributeGroup.attributes.forEach((attribute) => {
+      getSearchableAttributes(): Array<Record<string, any>> {
+        const searchableAttributes: Array<Record<string, any>> = [];
+        (<Array<Record<string, any>>> this.attributeGroups).forEach((attributeGroup: Record<string, any>) => {
+          (<Array<Record<string, any>>> attributeGroup.attributes).forEach((attribute: Record<string, any>) => {
             if (
               this.isSelected(
                 attribute,
@@ -229,7 +230,7 @@
        *
        * @returns {string}
        */
-      getSelectedClass(attribute, attributeGroup) {
+      getSelectedClass(attribute: Record<string, any>, attributeGroup: Record<string, any>): string {
         return this.isSelected(
           attribute,
           attributeGroup,
@@ -238,7 +239,7 @@
           ? 'selected'
           : 'unselected';
       },
-      sendRemoveEvent(selectedAttribute, selectedAttributeGroup) {
+      sendRemoveEvent(selectedAttribute: Record<string, any>, selectedAttributeGroup: Record<string, any>): void {
         this.$emit('removeSelected', {
           selectedAttribute,
           selectedAttributeGroup,
@@ -246,12 +247,12 @@
         this.updateSearchableAttributes();
         this.updateCheckboxes(selectedAttributeGroup);
       },
-      sendChangeEvent(selectedAttribute, attributeGroup) {
+      sendChangeEvent(selectedAttribute: Record<string, any>, attributeGroup: Record<string, any>): void {
         this.$emit('changeSelected', {selectedAttribute, attributeGroup});
         this.updateSearchableAttributes();
         this.updateCheckboxes(attributeGroup);
       },
-      sendAddEvent(selectedAttribute, attributeGroup) {
+      sendAddEvent(selectedAttribute: Record<string, any>, attributeGroup: Record<string, any>): void {
         this.$emit('addSelected', {selectedAttribute, attributeGroup});
         this.updateSearchableAttributes();
         this.updateCheckboxes(attributeGroup);
@@ -259,12 +260,12 @@
       /**
        * Update Bloodhound engine so that it does not include already selected attributes
        */
-      updateSearchableAttributes() {
+      updateSearchableAttributes(): void {
         const searchableAttributes = this.getSearchableAttributes();
         this.searchSource.clear();
         this.searchSource.add(searchableAttributes);
       },
-      toggleAll(attributeGroup) {
+      toggleAll(attributeGroup: Record<string, any>): void {
         if (this.checkboxList.includes(attributeGroup)) {
           this.checkboxList = this.checkboxList.filter(
             (e) => e.id !== attributeGroup.id,
@@ -278,7 +279,7 @@
           select: this.checkboxList.includes(attributeGroup),
         });
       },
-      updateCheckboxes(attributeGroup) {
+      updateCheckboxes(attributeGroup: Record<string, any>): void {
         if (
           this.selectedAttributeGroups[attributeGroup.id]
           && !this.checkboxList.includes(attributeGroup)
@@ -293,7 +294,7 @@
         }
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">
