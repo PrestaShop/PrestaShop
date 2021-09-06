@@ -60,6 +60,8 @@ class TextPreviewType extends HiddenType
 
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver
             ->setRequired(['preview_class'])
             ->setAllowedTypes('preview_class', 'string')
