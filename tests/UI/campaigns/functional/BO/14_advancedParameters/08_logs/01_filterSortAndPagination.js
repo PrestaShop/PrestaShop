@@ -34,14 +34,14 @@ let numberOfLogs = 0;
 const today = new Date();
 
 // Current day
-const day = (`0${today.getDate()}`).slice(-2);
+const dd = (`0${today.getDate()}`).slice(-2);
 // Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
+const mm = (`0${today.getMonth() + 1}`).slice(-2);
 // Current year
-const year = today.getFullYear();
+const yyyy = today.getFullYear();
 
 // Date today (yyy-mm-dd)
-const dateToday = `${year}-${month}-${day}`;
+const dateToday = `${mm}/${dd}/${yyyy}`;
 
 /*
 Erase all logs

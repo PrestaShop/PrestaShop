@@ -28,7 +28,7 @@ const today = new Date();
 const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
 const dd = (`0${today.getDate()}`).slice(-2); // Current day
 const yyyy = today.getFullYear(); // Current year
-const dateToday = `${yyyy}-${mm}-${dd}`;
+const dateToday = `${mm}/${dd}/${yyyy}`;
 
 // Filter and quick edit customers
 describe('BO - Customers : Filter and quick edit customers', async () => {
