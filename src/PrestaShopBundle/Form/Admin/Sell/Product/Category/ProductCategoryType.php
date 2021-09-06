@@ -40,6 +40,9 @@ class ProductCategoryType extends TranslatorAwareType
         $builder
             ->add('name', TextPreviewType::class, [
                 'preview_class' => 'category-name-preview',
+                'attr' => [
+                    'class' => 'category-name-input',
+                ],
             ])
             ->add('id', HiddenType::class)
         ;
