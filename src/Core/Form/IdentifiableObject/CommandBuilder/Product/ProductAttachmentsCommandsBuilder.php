@@ -48,7 +48,11 @@ class ProductAttachmentsCommandsBuilder implements ProductCommandsBuilderInterfa
         $attachmentIds = [];
 
         foreach ($attachedFiles as $attachedFile) {
-            $attachmentIds[] = (int) $attachedFile['attachment_id'];
+            $attachmentId = (int) $attachedFile['attachment_id'];
+            // Just avoid duplicate IDs from the form
+            if (!in_array($attachmentId, $attachmentIds)) {
+                $attachmentIds[] = $attachmentId;
+            }
         }
 
         return [new SetAssociatedProductAttachmentsCommand($productId->getValue(), $attachmentIds)];

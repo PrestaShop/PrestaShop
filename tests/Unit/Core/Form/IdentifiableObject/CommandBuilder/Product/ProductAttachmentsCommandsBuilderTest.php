@@ -131,5 +131,42 @@ class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilde
             ],
             [new SetAssociatedProductAttachmentsCommand($this->getProductId()->getValue(), [1, 2, 3])],
         ];
+
+        // Filter duplicate IDs
+        yield [
+            [
+                'specifications' => [
+                    'attachments' => [
+                        'attached_files' => [
+                            [
+                                'attachment_id' => '1',
+                                'name' => 'test1',
+                                'filename' => 'filenametest1',
+                                'mime_type' => 'image/jpeg',
+                            ],
+                            [
+                                'attachment_id' => '2',
+                                'name' => 'test2',
+                                'filename' => 'filenametest2',
+                                'mime_type' => 'image/png',
+                            ],
+                            [
+                                'attachment_id' => '1',
+                                'name' => 'test1',
+                                'filename' => 'filenametest1',
+                                'mime_type' => 'image/jpeg',
+                            ],
+                            [
+                                'attachment_id' => 3,
+                                'name' => 'test1',
+                                'filename' => 'filenametest1',
+                                'mime_type' => 'image/jpeg',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [new SetAssociatedProductAttachmentsCommand($this->getProductId()->getValue(), [1, 2, 3])],
+        ];
     }
 }
