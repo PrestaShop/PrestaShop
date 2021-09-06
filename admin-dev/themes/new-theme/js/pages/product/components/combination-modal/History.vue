@@ -73,13 +73,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import ProductEventMap from '@pages/product/product-event-map';
   import Pagination from '@vue/components/Pagination';
+  import Vue from 'vue';
 
   const CombinationsEventMap = ProductEventMap.combinations;
 
-  export default {
+  export default Vue.extend({
     name: 'CombinationHistory',
     data() {
       return {
@@ -105,12 +106,12 @@
       },
     },
     computed: {
-      areCombinationsNotEmpty() {
+      areCombinationsNotEmpty(): boolean {
         return this.combinationsList.length > 0;
       },
     },
     mounted() {
-      this.$parent.$on(CombinationsEventMap.selectCombination, (id) => {
+      this.$parent.$on(CombinationsEventMap.selectCombination, (id: number) => {
         this.selectedCombination = {id};
       });
     },
@@ -120,13 +121,13 @@
        *
        * @param {object} combination
        */
-      selectCombination(combination) {
+      selectCombination(combination: Record<string, any>): void {
         this.$emit(CombinationsEventMap.selectCombination, combination);
       },
       /**
        * This events comes from the pagination component as
        */
-      preventClose(event) {
+      preventClose(event: Event): void {
         event.stopPropagation();
         event.preventDefault();
       },
@@ -136,21 +137,21 @@
        *
        * @param {array} datas
        */
-      constructDatas(datas) {
+      constructDatas(datas: Record<string, any>): void {
         this.paginatedDatas = datas.paginatedDatas;
         this.currentPage = datas.currentPage;
       },
       /**
        * Used to avoid having too much logic in the markup
        */
-      isSelected(idCombination) {
+      isSelected(idCombination: number): null | string {
         return this.selectedCombination === idCombination
           || this.combinationsList.length === 1
           ? 'selected'
           : null;
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">

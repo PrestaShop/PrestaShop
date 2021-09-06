@@ -171,7 +171,7 @@ export default class CombinationsManager {
    *
    * @private
    */
-  private async refreshCombinationList(firstTime: boolean): void {
+  private async refreshCombinationList(firstTime: boolean): Promise<void> {
     // Preloader is only shown on first load
     this.$preloader.toggleClass('d-none', !firstTime);
     this.$paginatedList.toggleClass('d-none', firstTime);
@@ -181,7 +181,10 @@ export default class CombinationsManager {
     this.productAttributeGroups = await getProductAttributeGroups(
       this.productId,
     );
-    this.filtersApp.filters = this.productAttributeGroups;
+
+    if (this.filtersApp) {
+      this.filtersApp.filters = this.productAttributeGroups;
+    }
 
     // When attributes are refreshed we show first page (the component will trigger a updateAttributeGroups event
     // which will itself be caught by this manager which will in turn refresh to first page)
@@ -191,7 +194,7 @@ export default class CombinationsManager {
     const hasCombinations = this.productAttributeGroups && this.productAttributeGroups.length;
     this.$paginatedList.toggleClass('d-none', !hasCombinations);
 
-    if (!hasCombinations) {
+    if (!hasCombinations && this.combinationsRenderer) {
       // Empty list
       this.combinationsRenderer.render({combinations: []});
       this.$emptyState.removeClass('d-none');
@@ -201,14 +204,16 @@ export default class CombinationsManager {
   /**
    * @private
    */
-  refreshPage() {
-    this.paginator.paginate(this.paginator.getCurrentPage());
+  private refreshPage(): void {
+    if (this.paginator) {
+      this.paginator.paginate(this.paginator.getCurrentPage());
+    }
   }
 
   /**
    * @private
    */
-  initPaginatedList() {
+  private initPaginatedList(): void {
     this.combinationsRenderer = new CombinationsGridRenderer();
     // Initial page is zero, we will load the first page after several other init functions
     this.paginator = new DynamicPaginator(
@@ -245,7 +250,7 @@ export default class CombinationsManager {
   /**
    * @private
    */
-  watchEvents() {
+  private watchEvents(): void {
     /* eslint-disable */
     this.eventEmitter.on(CombinationEvents.refreshCombinationList, () =>
       this.refreshCombinationList(false)
@@ -262,13 +267,16 @@ export default class CombinationsManager {
         Object.keys(attributeGroups).forEach(attributeGroupId => {
           currentFilters.attributes[attributeGroupId] = [];
           const attributes = attributeGroups[attributeGroupId];
-          attributes.forEach(attribute => {
+          attributes.forEach((attribute: Record<string, any>) => {
             currentFilters.attributes[attributeGroupId].push(attribute.id);
           });
         });
 
         this.combinationsService.setFilters(currentFilters);
-        this.paginator.paginate(1);
+
+        if(this.paginator) {
+          this.paginator.paginate(1);
+        }
       }
     );
 
@@ -337,7 +345,7 @@ export default class CombinationsManager {
   /**
    * @private
    */
-  initSortingColumns() {
+  private initSortingColumns(): void {
     this.$combinationsContainer.on(
       'click',
       CombinationsMap.sortableColumns,
@@ -383,7 +391,10 @@ export default class CombinationsManager {
 
         // Finally update list
         this.combinationsService.setOrderBy(columnName, direction);
-        this.paginator.paginate(1);
+
+        if (this.paginator) {
+          this.paginator.paginate(1);
+        }
       },
     );
   }
@@ -393,10 +404,10 @@ export default class CombinationsManager {
    *
    * @private
    */
-  async deleteCombination(button) {
+  private async deleteCombination(button: HTMLButtonElement): Promise<void> {
     try {
       const $deleteButton = $(button);
-      const modal = new ConfirmModal(
+      const modal = new (ConfirmModal as any)(
         {
           id: 'modal-confirm-delete-combination',
           confirmTitle: $deleteButton.data('modal-title'),
@@ -428,7 +439,7 @@ export default class CombinationsManager {
    *
    * @private
    */
-  async updateDefaultCombination(checkedInput) {
+  private async updateDefaultCombination(checkedInput: HTMLInputElement): Promise<void> {
     const checkedInputs = this.$combinationsContainer.find(
       `${CombinationsMap.isDefaultInputsSelector}:checked`,
     );
@@ -449,7 +460,7 @@ export default class CombinationsManager {
   /**
    * @returns {String}
    */
-  getCombinationToken() {
+  getCombinationToken(): string {
     return $(CombinationsMap.combinationsContainer).data('combinationToken');
   }
 
@@ -460,7 +471,7 @@ export default class CombinationsManager {
    *
    * @private
    */
-  findCombinationId(input) {
+  private findCombinationId(input: HTMLElement): any {
     return $(input)
       .closest('tr')
       .find(CombinationsMap.combinationIdInputsSelector)
