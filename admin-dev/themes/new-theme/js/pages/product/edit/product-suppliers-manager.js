@@ -89,6 +89,11 @@ export default class ProductSuppliersManager {
       this.refreshDefaultSupplierBlock();
     });
 
+    // Default supplier changed
+    this.$defaultSupplierGroup.on('change', 'input', () => {
+      this.updateProductWholesalePrice();
+    });
+
     if (this.productFormModel !== null) {
       this.productFormModel.watch('price.wholesalePrice', (event) => {
         this.updateDefaultProductSupplierPrice(event.value);
@@ -107,6 +112,15 @@ export default class ProductSuppliersManager {
       // potential listeners)
       const rowMap = this.suppliersMap.productSupplierRow;
       $(rowMap.priceInput(defaultProductSupplierId)).val(newPrice).trigger('change');
+    }
+  }
+
+  updateProductWholesalePrice() {
+    const defaultProductSupplierId = this.getDefaultProductSupplierId();
+
+    if (defaultProductSupplierId) {
+      const newDefaultPrice = $(this.suppliersMap.productSupplierRow.priceInput(defaultProductSupplierId)).val();
+      this.productFormModel.set('price.wholesalePrice', newDefaultPrice);
     }
   }
 
@@ -266,12 +280,7 @@ export default class ProductSuppliersManager {
       };
     });
 
-    const defaultProductSupplierId = this.getDefaultProductSupplierId();
-
-    if (defaultProductSupplierId) {
-      const newDefaultPrice = $(this.suppliersMap.productSupplierRow.priceInput(defaultProductSupplierId)).val();
-      this.productFormModel.set('price.wholesalePrice', newDefaultPrice);
-    }
+    this.updateProductWholesalePrice();
   }
 
   /**
