@@ -97,7 +97,7 @@ class ConfigurationTest extends KernelTestCase
         $this->assertEquals($expectedResult, $result);
     }
 
-    public function hasProvider(): Generator
+    public function hasProvider(): iterable
     {
         // simple test when value doesn't exist and we ask for it in all shop context
         yield [
