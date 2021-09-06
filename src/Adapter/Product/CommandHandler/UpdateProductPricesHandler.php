@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPricesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\DefaultProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 
@@ -108,7 +108,7 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
             $defaultProductSupplier = $this->productSupplierRepository->getDefaultProductSupplier($productId);
             $defaultProductSupplier->product_supplier_price_te = (string) $wholesalePrice;
             $this->productSupplierRepository->update($defaultProductSupplier);
-        } catch (ProductSupplierNotFoundException $e) {
+        } catch (DefaultProductSupplierNotAssociatedException $e) {
             // No need to update since there is no default supplier associated
         }
     }
