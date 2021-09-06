@@ -227,7 +227,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
             $categories[] = [
                 'id' => $categoryId,
-                'name' => $localizedNames[$this->contextLangId] ?? reset($localizedNames),
+                'name' => $localizedNames[$this->contextLangId],
             ];
         }
 

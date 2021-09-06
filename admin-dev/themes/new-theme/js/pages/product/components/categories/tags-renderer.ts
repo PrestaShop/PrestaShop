@@ -78,6 +78,9 @@ export default class TagsRenderer {
 
         if (namePreviewElement) {
           namePreviewElement.innerHTML = category.name;
+
+          const nameInput = frag.querySelector(ProductCategoryMap.categoryNameInput) as HTMLInputElement;
+          nameInput.value = category.name;
         }
 
         this.container.append(frag);

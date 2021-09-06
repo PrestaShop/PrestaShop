@@ -188,6 +188,7 @@ export default {
     tagCategoryIdInput: '.category-id-input',
     tagItem: '.tag-item',
     categoryNamePreview: '.category-name-preview',
+    categoryNameInput: '.category-name-input',
     searchInput: '#ps-select-product-category',
     fieldset: '.tree-fieldset',
     loader: '.categories-tree-loader',
