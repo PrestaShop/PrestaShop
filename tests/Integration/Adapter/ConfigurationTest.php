@@ -76,7 +76,7 @@ class ConfigurationTest extends KernelTestCase
      *
      * @dataProvider getWithStrictParameterProvider
      */
-    public function testGetWithSrictParameter(array $setParams, array $getParams, $expectedResult)
+    public function testGetWithSrictParameter(array $setParams, array $getParams, $expectedResult): void
     {
         $this->setAndGetValuesForTesting($setParams, $getParams, $expectedResult);
     }
