@@ -139,7 +139,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from vue;
   import Router from '@components/router';
   import {
     getProductImages,
@@ -160,7 +161,7 @@
   const DropzoneMap = ProductMap.dropzone;
   const DropzoneEvents = ProductEventMap.dropzone;
 
-  export default {
+  export default Vue.extend({
     name: 'Dropzone',
     data() {
       return {
@@ -543,7 +544,7 @@
         this.galleryOpened = !this.galleryOpened;
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">
