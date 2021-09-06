@@ -28,7 +28,7 @@ import Router from '@components/router';
 const router = new Router();
 const {$} = window;
 
-export const getCategories = async (): Promise<Record<string, any>> => $.get(router.generate('admin_categories_get_categories_tree'));
+export const getCategories = async (): Promise<Array<Record<string, any>>> => $.get(router.generate('admin_categories_get_categories_tree'));
 
 export default {
   getCategories,
