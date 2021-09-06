@@ -238,9 +238,9 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
     public function getShopConstraint(bool $strict = false): ShopConstraint
     {
         if ($this->isShopContext()) {
-            return ShopConstraint::shop($this->getContextShopID(), $strict);
+            return ShopConstraint::shop((int) $this->getContextShopID(), $strict);
         } elseif ($this->isGroupShopContext()) {
-            return ShopConstraint::shopGroup($this->getContextShopGroup()->id, $strict);
+            return ShopConstraint::shopGroup((int) $this->getContextShopGroup()->id, $strict);
         }
 
         return ShopConstraint::allShops();
