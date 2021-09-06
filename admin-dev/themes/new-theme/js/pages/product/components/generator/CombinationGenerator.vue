@@ -77,7 +77,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import CombinationsService from '@pages/product/services/combinations-service';
   import AttributesSelector from '@pages/product/components/generator/AttributesSelector';
   import isSelected from '@pages/product/mixins/is-attribute-selected';
@@ -89,9 +89,19 @@
 
   const CombinationEvents = ProductEventMap.combinations;
 
-  export default {
+  interface States {
+    attributeGroups: Array<Record<string, any>>,
+    selectedAttributeGroups: Record<string, any>,
+    combinationsService: CombinationsService,
+    isModalShown: boolean,
+    preLoading: boolean,
+    loading: boolean,
+    hasGeneratedCombinations: boolean,
+  }
+
+  export default isSelected.extend({
     name: 'CombinationGenerator',
-    data() {
+    data(): States {
       return {
         attributeGroups: [],
         selectedAttributeGroups: {},
@@ -99,7 +109,6 @@
         isModalShown: false,
         preLoading: true,
         loading: false,
-        scrollbar: null,
         hasGeneratedCombinations: false,
       };
     },
@@ -113,13 +122,12 @@
         required: true,
       },
     },
-    mixins: [isSelected],
     components: {
       Modal,
       AttributesSelector,
     },
     computed: {
-      generatedCombinationsNb() {
+      generatedCombinationsNb(): number {
         const groupIds = Object.keys(this.selectedAttributeGroups);
         let combinationsNumber = 0;
 
@@ -149,7 +157,7 @@
       /**
        * This methods is used to initialize combinations definitions
        */
-      async initAttributeGroups() {
+      async initAttributeGroups(): Promise<void> {
         try {
           this.attributeGroups = await getAllAttributeGroups();
           window.prestaShopUiKit.init();
@@ -162,11 +170,11 @@
       /**
        * Show the modal, and execute PerfectScrollBar and Typehead
        */
-      showModal() {
+      showModal(): void {
         if (this.preLoading) {
           return;
         }
-        document.querySelector('body').classList.add('overflow-hidden');
+        document.querySelector('body')?.classList.add('overflow-hidden');
         this.hasGeneratedCombinations = false;
         this.selectedAttributeGroups = {};
         this.isModalShown = true;
@@ -174,9 +182,9 @@
       /**
        * Handle modal closing
        */
-      closeModal() {
+      closeModal(): void {
         this.isModalShown = false;
-        document.querySelector('body').classList.remove('overflow-hidden');
+        document.querySelector('body')?.classList.remove('overflow-hidden');
         if (this.hasGeneratedCombinations) {
           this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
         }
@@ -184,15 +192,15 @@
       /**
        * Used when the user clicks on the Generate button of the modal
        */
-      async generateCombinations() {
+      async generateCombinations(): Promise<void> {
         this.loading = true;
-        const data = {
+        const data: Record<string, any> = {
           attributes: {},
         };
         Object.keys(this.selectedAttributeGroups).forEach((attributeGroupId) => {
           data.attributes[attributeGroupId] = [];
           this.selectedAttributeGroups[attributeGroupId].attributes.forEach(
-            (attribute) => {
+          (attribute: Record<string, any>) => {
               data.attributes[attributeGroupId].push(attribute.id);
             },
           );
@@ -225,7 +233,7 @@
        * @param {Object} selectedAttribute
        * @param {{id: int, name: string}} attributeGroup
        */
-      changeSelected({selectedAttribute, attributeGroup}) {
+      changeSelected({selectedAttribute, attributeGroup}: {selectedAttribute: Record<string, any>, attributeGroup: Record<string, any>}): void {
         if (
           !this.isSelected(
             selectedAttribute,
@@ -245,7 +253,7 @@
        * @param {Object} selectedAttribute
        * @param {{id: int, name: string}} attributeGroup
        */
-      addSelected({selectedAttribute, attributeGroup}) {
+      addSelected({selectedAttribute, attributeGroup}: {selectedAttribute: Record<string, any>, attributeGroup: Record<string, any>}) {
         // Extra check to avoid adding same attribute twice which would cause a duplicate key error
         if (
           this.isSelected(
@@ -282,7 +290,7 @@
        * @param {Object} selectedAttribute
        * @param {Object} selectedAttributeGroup
        */
-      removeSelected({selectedAttribute, selectedAttributeGroup}) {
+      removeSelected({selectedAttribute, selectedAttributeGroup}: {selectedAttribute: Record<string, any>, selectedAttributeGroup: Record<string, any>}) {
         if (
           !Object.prototype.hasOwnProperty.call(
             this.selectedAttributeGroups,
@@ -294,7 +302,7 @@
 
         const group = this.selectedAttributeGroups[selectedAttributeGroup.id];
         group.attributes = group.attributes.filter(
-          (attribute) => attribute.id !== selectedAttribute.id,
+        (attribute: Record<string, any>) => attribute.id !== selectedAttribute.id,
         );
       },
       /**
@@ -303,13 +311,13 @@
        * @param {Object} selectedAttribute
        * @param {{id: int, name: string}} attributeGroup
        */
-      toggleAll({attributeGroup, select}) {
+      toggleAll({attributeGroup, select}: {attributeGroup: Record<string, any>, select: Record<string, any>}) {
         if (select) {
-          attributeGroup.attributes.forEach((attribute) => {
+          attributeGroup.attributes.forEach((attribute: Record<string, any>) => {
             this.addSelected({selectedAttribute: attribute, attributeGroup});
           });
         } else {
-          attributeGroup.attributes.forEach((attribute) => {
+          attributeGroup.attributes.forEach((attribute: Record<string, any>) => {
             this.removeSelected({
               selectedAttribute: attribute,
               selectedAttributeGroup: attributeGroup,
@@ -318,5 +326,5 @@
         }
       },
     },
-  };
+  });
 </script>
