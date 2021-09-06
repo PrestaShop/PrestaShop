@@ -174,12 +174,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import ProductMap from '@pages/product/product-map';
+  import Vue from 'vue';
 
   const DropzoneMap = ProductMap.dropzone;
 
-  export default {
+  export default Vue.extend({
     name: 'DropzoneWindow',
     props: {
       selectedFiles: {
@@ -203,7 +204,7 @@
         default: false,
       },
     },
-    data() {
+    data(): {captionValue: Record<string, any>, coverData: boolean | string} {
       return {
         captionValue: {},
         coverData: false,
@@ -215,26 +216,28 @@
        * of only one file or multiple files then the value is sent
        * on save.
        */
-      selectedFiles(value) {
+      selectedFiles(value: Array<Record<string, any>>): void {
         if (value.length > 1) {
           this.captionValue = {};
           this.locales.forEach((locale) => {
-            this.captionValue[locale] = '';
+            this.captionValue[<string>locale] = '';
           });
         } else {
-          this.captionValue = this.selectedFile.legends;
-          this.coverData = this.selectedFile.is_cover;
+          if(this.selectedFile) {
+            this.captionValue = this.selectedFile.legends;
+            this.coverData = this.selectedFile.is_cover;
+          }
         }
       },
     },
     computed: {
-      selectedFile() {
+      selectedFile(): any {
         return this.selectedFiles.length === 1 ? this.selectedFiles[0] : null;
       },
-      isCover() {
+      isCover(): boolean {
         return !!(this.selectedFile && this.selectedFile.is_cover);
       },
-      showCoverTooltip() {
+      showCoverTooltip(): boolean | string {
         if (this.isCover) {
           return 'pstooltip';
         }
@@ -245,8 +248,10 @@
     mounted() {
       window.prestaShopUiKit.initToolTips();
       // We set the intial value of the first item in order to use the computed
-      this.captionValue = this.selectedFile.legends;
-      this.coverData = this.selectedFile.is_cover;
+      if(this.selectedFile) {
+        this.captionValue = this.selectedFile.legends;
+        this.coverData = this.selectedFile.is_cover;
+      }
     },
     updated() {
       window.prestaShopUiKit.initToolTips();
@@ -255,28 +260,30 @@
       /**
        * Watch file change and send an event to the smart component
        */
-      watchFiles(event) {
+      watchFiles(event: Event): void {
         this.$emit('replacedFile', event);
       },
       /**
        * Used to open the native file manager
        */
-      openFileManager() {
-        const fileInput = document.querySelector(DropzoneMap.windowFileManager);
-        fileInput.click();
+      openFileManager(): void {
+        const fileInput = <HTMLInputElement> document.querySelector(DropzoneMap.windowFileManager);
+        fileInput?.click();
       },
       /**
        * Cache cover data
        */
-      coverChanged(event) {
-        this.coverData = event.target.value;
+      coverChanged(event: Event): void {
+        if ((<HTMLInputElement> event.target)?.value) {
+          this.coverData = (<HTMLInputElement> event.target).value;
+        }
       },
-      prevent(event) {
+      prevent(event: Event): void {
         event.preventDefault();
         event.stopPropagation();
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">

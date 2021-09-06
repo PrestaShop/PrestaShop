@@ -82,10 +82,11 @@
 
   export default Vue.extend({
     name: 'CombinationHistory',
-    data() {
+    data(): {paginatedDatas: Array<Record<string, any>>, currentPage: number, currentCombination: Record<string, any> | null} {
       return {
         paginatedDatas: [],
         currentPage: 1,
+        currentCombination: null,
       };
     },
     components: {
@@ -112,7 +113,7 @@
     },
     mounted() {
       this.$parent.$on(CombinationsEventMap.selectCombination, (id: number) => {
-        this.selectedCombination = {id};
+        this.currentCombination = {id};
       });
     },
     methods: {
@@ -125,7 +126,7 @@
         this.$emit(CombinationsEventMap.selectCombination, combination);
       },
       /**
-       * This events comes from the pagination component as
+       * This events comes from the pagination component
        */
       preventClose(event: Event): void {
         event.stopPropagation();
@@ -145,7 +146,7 @@
        * Used to avoid having too much logic in the markup
        */
       isSelected(idCombination: number): null | string {
-        return this.selectedCombination === idCombination
+        return this.currentCombination?.id === idCombination
           || this.combinationsList.length === 1
           ? 'selected'
           : null;

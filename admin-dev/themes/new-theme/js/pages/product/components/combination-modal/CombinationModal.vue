@@ -137,23 +137,43 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import CombinationsService from '@pages/product/services/combinations-service';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
   import Modal from '@vue/components/Modal';
   import Router from '@components/router';
   import History from './History';
+  import Vue from 'vue';
+
+  interface States {
+    combinationsService: null | CombinationsService,
+    combinationIds: Array<number>,
+    selectedCombinationId: null | number,
+    selectedCombinationName: null | string,
+    previousCombinationId: null | number,
+    nextCombinationId: null | number,
+    editCombinationUrl: null | string,
+    loadingCombinationForm: boolean,
+    submittingCombinationForm: boolean,
+    combinationList: null | JQuery,
+    hasSubmittedCombinations: boolean,
+    combinationsHistory: Array<Record<string, any>>,
+    showConfirm: boolean,
+    temporarySelection: null | number,
+    isFormUpdated: boolean,
+    isClosing: boolean,
+  }
 
   const {$} = window;
   const CombinationEvents = ProductEventMap.combinations;
 
   const router = new Router();
 
-  export default {
+  export default Vue.extend({
     name: 'CombinationModal',
     components: {Modal, History},
-    data() {
+    data(): States {
       return {
         combinationsService: null,
         combinationIds: [],
@@ -196,8 +216,8 @@
       );
     },
     methods: {
-      watchEditButtons() {
-        this.combinationList.on(
+      watchEditButtons(): void {
+        this.combinationList?.on(
           'click',
           ProductMap.combinations.editCombinationButtons,
           (event) => {
@@ -210,26 +230,28 @@
           },
         );
       },
-      async initCombinationIds() {
-        this.combinationIds = await this.combinationsService.getCombinationIds();
+      async initCombinationIds(): Promise<void> {
+        this.combinationIds = await this.combinationsService?.getCombinationIds();
       },
-      frameLoading() {
+      frameLoading(): void {
         this.applyIframeStyling();
       },
-      onFrameLoaded() {
+      onFrameLoaded(): void {
         this.loadingCombinationForm = false;
         this.submittingCombinationForm = false;
-        const iframeBody = this.$refs.iframe.contentDocument.body;
-        this.applyIframeStyling();
-        this.selectedCombinationName = iframeBody.querySelector(
-          ProductMap.combinations.combinationName,
-        ).innerHTML;
+        const iframeBody = (<HTMLIFrameElement> this.$refs.iframe).contentDocument?.body;
 
-        const iframeInputs = iframeBody.querySelectorAll(
+        this.applyIframeStyling();
+
+        this.selectedCombinationName = iframeBody!.querySelector(
+          ProductMap.combinations.combinationName,
+        )!.innerHTML;
+
+        const iframeInputs = iframeBody!.querySelectorAll(
           ProductMap.combinations.editionFormInputs,
         );
 
-        iframeInputs.forEach((input) => {
+        iframeInputs?.forEach((input: Element) => {
           input.addEventListener('keyup', () => {
             this.isFormUpdated = true;
           });
@@ -238,15 +260,15 @@
             this.isFormUpdated = true;
           });
 
-          this.$refs.iframe.contentDocument.addEventListener('datepickerChange', () => {
+          (<HTMLIFrameElement> this.$refs.iframe)?.contentDocument?.addEventListener('datepickerChange', () => {
             this.isFormUpdated = true;
           });
         });
       },
-      applyIframeStyling() {
-        this.$refs.iframe.contentDocument.body.style.overflowX = 'hidden';
+      applyIframeStyling(): void {
+        (<HTMLIFrameElement> this.$refs.iframe).contentDocument!.body.style.overflowX = 'hidden';
       },
-      tryClose() {
+      tryClose(): void {
         if (this.isFormUpdated) {
           this.isClosing = true;
 
@@ -255,7 +277,7 @@
           this.closeModal();
         }
       },
-      closeModal() {
+      closeModal(): void {
         if (this.submittingCombinationForm) {
           return;
         }
@@ -272,7 +294,7 @@
         // Reset history on close
         this.combinationsHistory = [];
       },
-      navigateToCombination(combinationId) {
+      navigateToCombination(combinationId: number): void {
         if (combinationId !== null) {
           if (this.isFormUpdated) {
             this.temporarySelection = combinationId;
@@ -282,16 +304,20 @@
           }
         }
       },
-      showPrevious() {
-        this.navigateToCombination(this.previousCombinationId);
+      showPrevious(): void {
+        if(this.previousCombinationId) {
+          this.navigateToCombination(this.previousCombinationId);
+        }
       },
-      showNext() {
-        this.navigateToCombination(this.nextCombinationId);
+      showNext(): void {
+        if(this.nextCombinationId) {
+          this.navigateToCombination(this.nextCombinationId);
+        }
       },
-      selectCombination(combination) {
+      selectCombination(combination: Record<string, any>): void {
         this.navigateToCombination(combination.id);
       },
-      confirmSelection() {
+      confirmSelection(): void {
         if (this.isClosing) {
           this.closeModal();
           this.isClosing = false;
@@ -301,17 +327,17 @@
           this.hideConfirmModal();
         }
       },
-      submitForm() {
+      submitForm(): void {
         this.submittingCombinationForm = true;
-        const iframeBody = this.$refs.iframe.contentDocument.body;
-        const editionForm = iframeBody.querySelector(
+        const iframeBody = (<HTMLIFrameElement> this.$refs.iframe)?.contentDocument!.body;
+        const editionForm = <HTMLFormElement> iframeBody.querySelector(
           ProductMap.combinations.editionForm,
         );
         editionForm.submit();
         this.hasSubmittedCombinations = true;
         const selectedCombination = {
           id: this.selectedCombinationId,
-          title: iframeBody.querySelector(ProductMap.combinations.combinationName)
+          title: iframeBody!.querySelector(ProductMap.combinations.combinationName)!
             .innerHTML,
         };
 
@@ -329,20 +355,20 @@
 
         this.isFormUpdated = false;
       },
-      showConfirmModal() {
+      showConfirmModal(): void {
         this.showConfirm = true;
       },
-      hideConfirmModal() {
+      hideConfirmModal(): void {
         this.isClosing = false;
         this.showConfirm = false;
       },
-      preventClose(event) {
+      preventClose(event: Event): void {
         event.stopPropagation();
         event.preventDefault();
       },
     },
     watch: {
-      selectedCombinationId(combinationId) {
+      selectedCombinationId(combinationId: number): void {
         this.isFormUpdated = false;
 
         if (combinationId === null) {
@@ -375,7 +401,7 @@
         }
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">
