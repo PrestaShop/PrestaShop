@@ -40,7 +40,7 @@ Vue.use(VueI18n);
  */
 export default function initCombinationModal(
   combinationModalSelector: string,
-  productId: string,
+  productId: number,
   eventEmitter: typeof EventEmitter,
 ): Vue | null {
   const container = <HTMLElement> document.querySelector(combinationModalSelector);
