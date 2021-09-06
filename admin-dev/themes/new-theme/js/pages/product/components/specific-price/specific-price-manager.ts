@@ -26,7 +26,7 @@
 import ProductMap from '@pages/product/product-map';
 import SpecificPriceModal from '@pages/product/components/specific-price/specific-price-modal';
 import initSpecificPriceModal from '@pages/product/components/specific-price';
-import {EventEmitter} from "events";
+import {EventEmitter} from 'events';
 
 const SpecificPriceMap = ProductMap.specificPrice;
 

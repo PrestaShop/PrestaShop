@@ -49,7 +49,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/create.html.twig', [
-//            'specificPriceForm' => $form->createView(),
+            'specificPriceForm' => $form->createView(),
         ]);
     }
 
