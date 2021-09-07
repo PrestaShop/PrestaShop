@@ -86,7 +86,7 @@ class ConfigurationTest extends KernelTestCase
      * @param string $expectedResult
      * @dataProvider hasProvider
      */
-    public function testHas(array $setParams, array $getParams, string $expectedResult): void
+    public function testHas(array $setParams, array $getParams, bool $expectedResult): void
     {
         if (!empty($setParams)) {
             $this->configuration->set($setParams['key'], $setParams['value'], $setParams['shopConstraint']);
