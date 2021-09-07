@@ -222,11 +222,9 @@
           this.locales.forEach((locale) => {
             this.captionValue[<string>locale] = '';
           });
-        } else {
-          if(this.selectedFile) {
-            this.captionValue = this.selectedFile.legends;
-            this.coverData = this.selectedFile.is_cover;
-          }
+        } else if (this.selectedFile) {
+          this.captionValue = this.selectedFile.legends;
+          this.coverData = this.selectedFile.is_cover;
         }
       },
     },
@@ -248,7 +246,7 @@
     mounted() {
       window.prestaShopUiKit.initToolTips();
       // We set the intial value of the first item in order to use the computed
-      if(this.selectedFile) {
+      if (this.selectedFile) {
         this.captionValue = this.selectedFile.legends;
         this.coverData = this.selectedFile.is_cover;
       }
