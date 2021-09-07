@@ -95,14 +95,15 @@ class ProductFormDataProvider implements FormDataProviderInterface
         int $mostUsedTaxRulesGroupId,
         int $defaultCategoryId,
         int $contextLangId,
-        int $shopId
+        int $defaultShopId,
+        ?int $shopId
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
         $this->defaultCategoryId = $defaultCategoryId;
         $this->contextLangId = $contextLangId;
-        $this->shopId = new ShopId($shopId);
+        $this->shopId = null !== $shopId ? new ShopId($shopId) : new ShopId($defaultShopId);
     }
 
     /**

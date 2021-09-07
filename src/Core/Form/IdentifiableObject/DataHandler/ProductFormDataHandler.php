@@ -57,15 +57,18 @@ class ProductFormDataHandler implements FormDataHandlerInterface
     /**
      * @param CommandBusInterface $bus
      * @param ProductCommandsBuilder $commandsBuilder
+     * @param int $defaultShopId
+     * @param int|null $contextShopId
      */
     public function __construct(
         CommandBusInterface $bus,
         ProductCommandsBuilder $commandsBuilder,
-        int $shopId
+        int $defaultShopId,
+        ?int $contextShopId
     ) {
         $this->bus = $bus;
         $this->commandsBuilder = $commandsBuilder;
-        $this->shopId = new ShopId($shopId);
+        $this->shopId = null !== $contextShopId ? new ShopId($contextShopId) : new ShopId($defaultShopId);
     }
 
     /**
