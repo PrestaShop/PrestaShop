@@ -59,11 +59,11 @@ class ConfigurationTest extends KernelTestCase
     /**
      * @param array $setParams
      * @param array $getParams
-     * @param $expectedResult
+     * @param string $expectedResult
      *
      * @dataProvider getProvider
      */
-    public function testGet(array $setParams, array $getParams, $expectedResult): void
+    public function testGet(array $setParams, array $getParams, string $expectedResult): void
     {
         $this->setAndGetValuesForTesting($setParams, $getParams, $expectedResult);
     }
