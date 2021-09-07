@@ -28,7 +28,6 @@ import ProductMap from '@pages/product/product-map';
 const {$} = window;
 
 export default class ImageSelector {
-
   $selectorContainer: JQuery;
 
   constructor() {

@@ -78,11 +78,17 @@
   import Pagination from '@vue/components/Pagination';
   import Vue from 'vue';
 
+  interface States {
+    paginatedDatas: Array<Record<string, any>>;
+    currentPage: number;
+    currentCombination: Record<string, any> | null
+  }
+
   const CombinationsEventMap = ProductEventMap.combinations;
 
   export default Vue.extend({
     name: 'CombinationHistory',
-    data(): {paginatedDatas: Array<Record<string, any>>, currentPage: number, currentCombination: Record<string, any> | null} {
+    data(): States {
       return {
         paginatedDatas: [],
         currentPage: 1,

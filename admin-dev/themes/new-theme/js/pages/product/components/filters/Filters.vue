@@ -113,7 +113,7 @@
         }
 
         this.selectedFilters[parentId] = this.selectedFilters[parentId].filter(
-        (e: Record<string, any>) => filter.id !== e.id,
+          (e: Record<string, any>) => filter.id !== e.id,
         );
         this.updateFilters();
       },

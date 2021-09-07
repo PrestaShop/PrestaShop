@@ -25,6 +25,7 @@
 
 export default (suppliersFormId: string): Record<string, any> => {
   const productSuppliersId = `${suppliersFormId}_product_suppliers`;
+  /* eslint-disable-next-line */
   const productSupplierInputId = (supplierIndex: string, inputName: string): string => `${productSuppliersId}_${supplierIndex}_${inputName}`;
 
   return {

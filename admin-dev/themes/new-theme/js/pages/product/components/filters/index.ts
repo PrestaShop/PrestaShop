@@ -37,7 +37,11 @@ Vue.use(VueI18n);
  * @param {array} filters
  * @returns {Vue | CombinedVueInstance<Vue, {eventEmitter, filters}, object, object, Record<never, any>>}
  */
-export default function initCombinationsFilters(combinationsFiltersSelector: string, eventEmitter: typeof EventEmitter, filters: Record<string, any>): Vue {
+export default function initCombinationsFilters(
+  combinationsFiltersSelector: string,
+  eventEmitter: typeof EventEmitter,
+  filters: Record<string, any>,
+): Vue {
   const container = <HTMLElement> document.querySelector(combinationsFiltersSelector);
 
   const translations = JSON.parse(<string>container.dataset.translations);

@@ -200,7 +200,7 @@
         Object.keys(this.selectedAttributeGroups).forEach((attributeGroupId) => {
           data.attributes[attributeGroupId] = [];
           this.selectedAttributeGroups[attributeGroupId].attributes.forEach(
-          (attribute: Record<string, any>) => {
+            (attribute: Record<string, any>) => {
               data.attributes[attributeGroupId].push(attribute.id);
             },
           );
@@ -233,7 +233,12 @@
        * @param {Object} selectedAttribute
        * @param {{id: int, name: string}} attributeGroup
        */
-      changeSelected({selectedAttribute, attributeGroup}: {selectedAttribute: Record<string, any>, attributeGroup: Record<string, any>}): void {
+      changeSelected(
+        {selectedAttribute, attributeGroup}: {
+          selectedAttribute: Record<string, any>,
+          attributeGroup: Record<string, any>
+        },
+      ): void {
         if (
           !this.isSelected(
             selectedAttribute,
@@ -253,7 +258,10 @@
        * @param {Object} selectedAttribute
        * @param {{id: int, name: string}} attributeGroup
        */
-      addSelected({selectedAttribute, attributeGroup}: {selectedAttribute: Record<string, any>, attributeGroup: Record<string, any>}) {
+      addSelected({selectedAttribute, attributeGroup}: {
+        selectedAttribute: Record<string, any>,
+        attributeGroup: Record<string, any>
+      }) {
         // Extra check to avoid adding same attribute twice which would cause a duplicate key error
         if (
           this.isSelected(
@@ -290,7 +298,10 @@
        * @param {Object} selectedAttribute
        * @param {Object} selectedAttributeGroup
        */
-      removeSelected({selectedAttribute, selectedAttributeGroup}: {selectedAttribute: Record<string, any>, selectedAttributeGroup: Record<string, any>}) {
+      removeSelected({selectedAttribute, selectedAttributeGroup}: {
+        selectedAttribute: Record<string, any>,
+        selectedAttributeGroup: Record<string, any>
+      }) {
         if (
           !Object.prototype.hasOwnProperty.call(
             this.selectedAttributeGroups,
@@ -302,7 +313,7 @@
 
         const group = this.selectedAttributeGroups[selectedAttributeGroup.id];
         group.attributes = group.attributes.filter(
-        (attribute: Record<string, any>) => attribute.id !== selectedAttribute.id,
+          (attribute: Record<string, any>) => attribute.id !== selectedAttribute.id,
         );
       },
       /**
