@@ -39,7 +39,7 @@ abstract class ContextStateTestCase extends TestCase
      *
      * @return MockObject|Context
      */
-    protected function createContextMock(array $contextFields)
+    protected function createContextMock(array $contextFields): Context
     {
         $contextMock = $this->getMockBuilder(Context::class)
             ->disableOriginalConstructor()
