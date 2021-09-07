@@ -440,7 +440,7 @@ class ConfigurationTest extends KernelTestCase
     /**
      * @param array $setParams
      * @param array $getParams
-     * @param $expectedResult
+     * @param string|null $expectedResult
      */
     private function setAndGetValuesForTesting(array $setParams, array $getParams, ?string $expectedResult): void
     {
