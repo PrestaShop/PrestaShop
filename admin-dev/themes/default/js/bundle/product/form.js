@@ -1798,17 +1798,17 @@ window.priceCalculation = (function () {
       });
 
       /** combinations : update TTC price field on HT change */
-      $(document).on('blur', '.combination-form .attribute_priceTE', function() {
+      $(document).on('blur', '.combination-form .attribute_priceTE', function () {
         priceCalculation.impactTaxInclude($(this));
         priceCalculation.impactFinalPrice($(this));
       });
       /** combinations : update HT price field on TTC change */
-      $(document).on('blur', '.combination-form .attribute_priceTI', function() {
+      $(document).on('blur', '.combination-form .attribute_priceTI', function () {
         priceCalculation.impactTaxExclude($(this));
         priceCalculation.impactFinalPrice($(this));
       });
       /** combinations : update price fields on ecotax change */
-      $(document).on('blur', '.combination-form .attribute_ecotaxTi', function() {
+      $(document).on('blur', '.combination-form .attribute_ecotaxTi', function () {
         priceCalculation.impactPricesForEcotax($(this));
         priceCalculation.impactFinalPrice($(this));
       });
