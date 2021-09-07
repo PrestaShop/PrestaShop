@@ -36,6 +36,7 @@ use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\Filesystem\Filesystem as SfFileSystem;
 use Symfony\Component\Finder\Finder;
 
 abstract class ModuleCore implements ModuleInterface
@@ -2787,12 +2788,18 @@ abstract class ModuleCore implements ModuleInterface
             file_put_contents($path_override, preg_replace('#(\r\n|\r)#ism', "\n", file_get_contents($path_override)));
         }
 
+        $psOverrideDir = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'override';
+
         $pattern_escape_com = '#(^\s*?\/\/.*?\n|\/\*(?!\n\s+\* module:.*?\* date:.*?\* version:.*?\*\/).*?\*\/)#ism';
         // Check if there is already an override file, if not, we just need to copy the file
-        if ($file = PrestaShopAutoload::getInstance()->getClassPath($classname)) {
-            // Check if override file is writable
-            $override_path = _PS_ROOT_DIR_ . '/' . $file;
+        $file = PrestaShopAutoload::getInstance()->getClassPath($classname);
+        $override_path = _PS_ROOT_DIR_ . '/' . $file;
 
+        if ($file && file_exists($override_path)) {
+            // Create directory if not exists
+            $this->createOverrideDirectory($psOverrideDir, dirname($override_path));
+
+            // Check if override file is writable
             if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path))) {
                 throw new Exception(Context::getContext()->getTranslator()->trans('file (%s) not writable', [$override_path], 'Admin.Notifications.Error'));
             }
@@ -2866,6 +2873,7 @@ abstract class ModuleCore implements ModuleInterface
                 }
             }
 
+            // Check if none of the constants already exists in the override class
             foreach ($module_class->getConstants() as $constant => $value) {
                 if ($override_class->hasConstant($constant)) {
                     throw new Exception(Context::getContext()->getTranslator()->trans('The constant %1$s in the class %2$s is already defined.', [$constant, $classname], 'Admin.Modules.Notification'));
@@ -2886,12 +2894,11 @@ abstract class ModuleCore implements ModuleInterface
         } else {
             $override_src = $path_override;
 
-            $override_dest = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR . $path;
+            $override_dest = $psOverrideDir . DIRECTORY_SEPARATOR . $path;
             $dir_name = dirname($override_dest);
 
-            if (!$orig_path && !is_dir($dir_name)) {
-                @mkdir($dir_name, FileSystem::DEFAULT_MODE_FOLDER);
-            }
+            // Create directory if not exists
+            $this->createOverrideDirectory($psOverrideDir, $dir_name);
 
             if (!is_writable($dir_name)) {
                 throw new Exception(Context::getContext()->getTranslator()->trans('directory (%s) not writable', [$dir_name], 'Admin.Notifications.Error'));
@@ -2950,6 +2957,38 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         return true;
+    }
+
+    /**
+     * Create override directory and add index.php in all tree
+     *
+     * @param string $directoryOverride Absolute path of the override directory
+     * @param string $directoryPath Absolute path of the overriden file directory
+     *
+     * @return void
+     */
+    private function createOverrideDirectory(string $directoryOverride, string $directoryPath): void
+    {
+        if (is_dir($directoryPath)) {
+            return;
+        }
+        $fs = new SfFileSystem();
+
+        // Create directory (in recursive mode)
+        $fs->mkdir($directoryPath, FileSystem::DEFAULT_MODE_FOLDER);
+
+        // Copy index.php to each directory
+        $splDir = new SplFileInfo($directoryPath . DIRECTORY_SEPARATOR . 'index.php');
+        do {
+            // Copy file
+            $fs->copy(
+                $directoryOverride . DIRECTORY_SEPARATOR . 'index.php',
+                $splDir->getPath() . DIRECTORY_SEPARATOR . 'index.php'
+            );
+
+            // Get Parent directory
+            $splDir = $splDir->getPathInfo();
+        } while ($splDir->getPath() !== $directoryOverride);
     }
 
     /**
@@ -3038,7 +3077,6 @@ abstract class ModuleCore implements ModuleInterface
                 $length = $method->getEndLine() - $method->getStartLine() + 1;
 
                 $module_method = $module_class->getMethod($method->getName());
-                $module_length = $module_method->getEndLine() - $module_method->getStartLine() + 1;
 
                 $override_file_orig = $override_file;
 
@@ -3121,10 +3159,42 @@ abstract class ModuleCore implements ModuleInterface
             }
 
             $to_delete = preg_match('/<\?(?:php)?\s+(?:abstract|interface)?\s*?class\s+' . $classname . '\s+extends\s+' . $classname . 'Core\s*?[{]\s*?[}]/ism', $code);
+
+            if (!$to_delete) {
+                // To detect if the class has remaining code, we dynamically create a class which contains the remaining code.
+                eval(
+                    preg_replace(
+                        [
+                            '#^\s*<\?(?:php)?#',
+                            '#class\s+' . $classname . '\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i',
+                        ],
+                        [
+                            ' ',
+                            'class ' . $classname . 'OverrideOriginal_check' . $uniq . ' extends \stdClass',
+                        ],
+                        $code
+                    )
+                );
+
+                // Then we use ReflectionClass to analyze what this code actually contains
+                $override_class = new ReflectionClass($classname . 'OverrideOriginal_check' . $uniq);
+
+                // If no valuable code remains then we can delete it
+                $to_delete = $override_class->getConstants() === []
+                    && $override_class->getProperties() === []
+                    && $override_class->getMethods() === [];
+            }
         }
 
         if (!isset($to_delete) || $to_delete) {
+            // Remove file
             unlink($override_path);
+
+            // Remove directory
+            $this->removeOverrideDirectory(
+                _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'override',
+                dirname($override_path)
+            );
         } else {
             file_put_contents($override_path, $code);
         }
@@ -3133,6 +3203,45 @@ abstract class ModuleCore implements ModuleInterface
         Tools::generateIndex();
 
         return true;
+    }
+
+    /**
+     * Remove override directory tree if the tree is empty
+     *
+     * @param string $directoryOverride
+     * @param string $directoryPath
+     *
+     * @return void
+     */
+    private function removeOverrideDirectory(string $directoryOverride, string $directoryPath): void
+    {
+        if (!is_dir($directoryPath)) {
+            return;
+        }
+
+        $fs = new SfFileSystem();
+
+        $splDir = new SplFileInfo($directoryPath);
+        do {
+            // Check if there is only index.php in directory
+            $finder = new Finder();
+            $finder
+                ->files()
+                ->in($splDir->getPathname())
+                ->notName('index.php');
+            if ($finder->hasResults()) {
+                break;
+            }
+
+            // Remove index.php
+            $fs->remove($splDir->getPathname() . DIRECTORY_SEPARATOR . 'index.php');
+
+            // Remove directory
+            $fs->remove($splDir->getPathname());
+
+            // Get Parent directory
+            $splDir = $splDir->getPathInfo();
+        } while ($splDir->getPathname() !== $directoryOverride);
     }
 
     private function getWidgetHooks()

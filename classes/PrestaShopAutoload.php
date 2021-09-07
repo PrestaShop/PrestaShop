@@ -275,9 +275,12 @@ class PrestaShopAutoload
      */
     protected function getClassesFromDir($path)
     {
-        $classes = [];
         $rootDir = $this->root_dir;
+        if (!is_dir($rootDir . $path)) {
+            return [];
+        }
 
+        $classes = [];
         foreach (scandir($rootDir . $path, SCANDIR_SORT_NONE) as $file) {
             if ($file[0] != '.') {
                 if (is_dir($rootDir . $path . $file)) {
