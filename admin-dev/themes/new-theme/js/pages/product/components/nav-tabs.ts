@@ -41,7 +41,7 @@ export default function (): void {
 
   $navTabs.find('li').each((index: number, item: HTMLElement): void => {
     const itemWidth = <number>$(item).width();
-      $navWidth += itemWidth;
+    $navWidth += itemWidth;
   });
 
   $widthWithTabs = $navWidth + $defaultArrowWidth * 2;
