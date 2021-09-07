@@ -132,7 +132,7 @@
       },
     },
     mounted() {
-      const pswpElement = document.querySelector(PhotoSwipeMap.element);
+      const pswpElement = <HTMLElement> document.querySelector(PhotoSwipeMap.element);
 
       if (pswpElement) {
         const options = {
@@ -161,7 +161,7 @@
           pswpElement,
           PhotoSwipeUIDefault,
           items,
-          options,
+          <PhotoSwipe.Options> options,
         );
 
         gallery.init();
