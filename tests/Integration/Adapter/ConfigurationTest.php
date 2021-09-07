@@ -442,7 +442,7 @@ class ConfigurationTest extends KernelTestCase
      * @param array $getParams
      * @param $expectedResult
      */
-    private function setAndGetValuesForTesting(array $setParams, array $getParams, $expectedResult): void
+    private function setAndGetValuesForTesting(array $setParams, array $getParams, ?string $expectedResult): void
     {
         if (!empty($setParams) && isset($setParams['key'])) {
             $this->configuration->set($setParams['key'], $setParams['value'], $setParams['shopConstraint']);
