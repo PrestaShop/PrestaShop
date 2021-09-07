@@ -143,8 +143,8 @@
   import ProductEventMap from '@pages/product/product-event-map';
   import Modal from '@vue/components/Modal';
   import Router from '@components/router';
-  import History from './History';
   import Vue from 'vue';
+  import History from './History';
 
   interface States {
     combinationsService: null | CombinationsService,
@@ -305,12 +305,12 @@
         }
       },
       showPrevious(): void {
-        if(this.previousCombinationId) {
+        if (this.previousCombinationId) {
           this.navigateToCombination(this.previousCombinationId);
         }
       },
       showNext(): void {
-        if(this.nextCombinationId) {
+        if (this.nextCombinationId) {
           this.navigateToCombination(this.nextCombinationId);
         }
       },

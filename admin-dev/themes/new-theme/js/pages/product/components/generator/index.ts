@@ -30,7 +30,11 @@ import CombinationGenerator from '@pages/product/components/generator/Combinatio
 
 Vue.use(VueI18n);
 
-export default function initCombinationGenerator(combinationGeneratorSelector: string, eventEmitter: typeof EventEmitter, productId: number) {
+export default function initCombinationGenerator(
+  combinationGeneratorSelector: string,
+  eventEmitter: typeof EventEmitter,
+  productId: number,
+): Vue {
   const container = <HTMLElement> document.querySelector(combinationGeneratorSelector);
 
   const translations = JSON.parse(<string>container.dataset.translations);

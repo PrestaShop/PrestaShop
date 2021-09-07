@@ -63,11 +63,11 @@ export default class CombinationsManager {
 
   combinationsRenderer: CombinationsGridRenderer | null;
 
-  filtersApp: Record<string, any> | null; 
+  filtersApp: Record<string, any> | null;
 
-  combinationModalApp: Record<string, any> | null; 
+  combinationModalApp: Record<string, any> | null;
 
-  combinationGeneratorApp: Record<string, any> | null; 
+  combinationGeneratorApp: Record<string, any> | null;
 
   initialized: boolean;
 

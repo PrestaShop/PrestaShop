@@ -120,10 +120,10 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import isSelected from '@pages/product/mixins/is-attribute-selected';
   import ProductMap from '@pages/product/product-map';
   import PerfectScrollbar from 'perfect-scrollbar';
+  // @ts-ignore
   import Bloodhound from 'typeahead.js';
   import AutoCompleteSearch from '@components/auto-complete-search';
   import Tokenizers from '@components/bloodhound/tokenizers';
@@ -131,6 +131,14 @@
   const {$} = window;
 
   const CombinationsMap = ProductMap.combinations;
+
+  interface States {
+    dataSetConfig: Record<string, any>;
+    searchSource: Record<string, any>;
+    scrollbar: null | PerfectScrollbar;
+    hasGeneratedCombinations: boolean;
+    checkboxList: Array<Record<string, any>>
+  }
 
   export default isSelected.extend({
     name: 'AttributesSelector',
@@ -144,7 +152,7 @@
         default: () => {},
       },
     },
-    data(): {dataSetConfig: Record<string, any>, searchSource: Record<string, any>, scrollbar: null | PerfectScrollBar, hasGeneratedCombinations: boolean, checkboxList: Array<Record<string, any>>} {
+    data(): States {
       return {
         dataSetConfig: {},
         searchSource: {},
@@ -173,10 +181,10 @@
         const searchItems = this.getSearchableAttributes();
         this.searchSource = new Bloodhound({
           datumTokenizer: Tokenizers.obj.letters([
-              'name',
-              'value',
-              'group_name',
-            ] as any
+            'name',
+            'value',
+            'group_name',
+          ] as any,
           ),
           queryTokenizer: Bloodhound.tokenizers.nonword,
           local: searchItems,

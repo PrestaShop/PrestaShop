@@ -139,14 +139,15 @@ export default class CategoriesManager {
       });
     });
 
-    (<NodeListOf<HTMLInputElement>> this.categoryTree.querySelectorAll(ProductCategoryMap.radioInput)).forEach((radioInput: HTMLInputElement) => {
-      radioInput.addEventListener('click', () => {
-        this.selectedDefaultCategory(radioInput);
+    (<NodeListOf<HTMLInputElement>> this.categoryTree.querySelectorAll(ProductCategoryMap.radioInput))
+      .forEach((radioInput: HTMLInputElement) => {
+        radioInput.addEventListener('click', () => {
+          this.selectedDefaultCategory(radioInput);
+        });
+        if (radioInput.checked) {
+          this.updateDefaultCheckbox(radioInput);
+        }
       });
-      if (radioInput.checked) {
-        this.updateDefaultCheckbox(radioInput);
-      }
-    });
 
     // Tree is initialized we can show it and hide loader
     (<HTMLElement> this.categoriesContainer
@@ -235,11 +236,12 @@ export default class CategoriesManager {
    */
   selectedDefaultCategory(radioInput: HTMLInputElement): void {
     // Uncheck all other radio inputs when one is selected
-    (<NodeListOf<HTMLInputElement>> this.categoryTree.querySelectorAll(ProductCategoryMap.radioInput)).forEach((radioTreeElement: HTMLInputElement) => {
-      if (radioTreeElement !== radioInput) {
-        radioTreeElement.checked = false;
-      }
-    });
+    (<NodeListOf<HTMLInputElement>> this.categoryTree.querySelectorAll(ProductCategoryMap.radioInput))
+      .forEach((radioTreeElement: HTMLInputElement) => {
+        if (radioTreeElement !== radioInput) {
+          radioTreeElement.checked = false;
+        }
+      });
 
     this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkboxTreeElement) => {
       const materialCheckbox = (<HTMLElement> checkboxTreeElement.parentNode).closest(ProductCategoryMap.materialCheckbox);
@@ -340,7 +342,7 @@ export default class CategoriesManager {
    * @param {int} categoryId
    */
   unselectCategory(categoryId: string): void {
-    const checkbox = <HTMLInputElement>this.categoriesContainer.querySelector(
+    const checkbox = <HTMLInputElement> this.categoriesContainer.querySelector(
       `[name="${ProductCategoryMap.checkboxName(categoryId)}"]`,
     );
 
@@ -392,7 +394,8 @@ export default class CategoriesManager {
   }
 
   updateCategoriesTags(): void {
-    const checkedCheckboxes = <NodeListOf<HTMLInputElement>>this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
+    // eslint-disable-next-line
+    const checkedCheckboxes = <NodeListOf<HTMLInputElement>> this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
     const tagsContainer = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer);
 
     if (tagsContainer) {
