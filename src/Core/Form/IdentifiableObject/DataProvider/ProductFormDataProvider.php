@@ -131,6 +131,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     {
         //@todo: next PR -> refactor this. Legacy object model cannot stay in Core
         $defaultCategory = new Category($this->defaultCategoryId);
+        $localizedNames = $defaultCategory->name;
 
         return $this->addShortcutData([
             'header' => [
@@ -141,7 +142,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                     'product_categories' => [
                         [
                             'id' => $this->defaultCategoryId,
-                            'name' => $defaultCategory->name[$this->contextLangId],
+                            'name' => $localizedNames[$this->contextLangId],
                         ],
                     ],
                     'default_category_id' => $this->defaultCategoryId,

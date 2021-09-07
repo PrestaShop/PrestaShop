@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller;
 
-use http\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
