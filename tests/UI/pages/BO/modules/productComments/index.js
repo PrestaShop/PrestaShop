@@ -40,7 +40,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * Get the review count for a table
    * @param page {Page} Browser tab
    * @param table {String} The review table (3 options available: 'waiting-approval', 'reported', 'approved')
-   * @returns {Promise<number|*>}
+   * @returns {Promise<number>}
    */
   async getTableReviewCount(page, table) {
     if (await this.elementVisible(page, this.reviewsTableEmptyRows(table), 3000)) {
@@ -53,7 +53,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   /**
    * Get the review count for the 'waiting approval' table
    * @param page {Page} Browser tab
-   * @returns {Promise<number|*>}
+   * @returns {Promise<number>}
    */
   getWaitingApprovalReviewCount(page) {
     return this.getTableReviewCount(page, 'waiting-approval');
@@ -62,7 +62,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   /**
    * Get the review count for the 'reported review' table
    * @param page {Page} Browser tab
-   * @returns {Promise<number|*>}
+   * @returns {Promise<number>}
    */
   getReportedReviewCount(page) {
     return this.getTableReviewCount(page, 'reported');
@@ -71,7 +71,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   /**
    * Get the review count for the 'approved review' table
    * @param page {Page} Browser tab
-   * @returns {Promise<number|*>}
+   * @returns {Promise<number>}
    */
   getApprovedReviewCount(page) {
     return this.getTableReviewCount(page, 'approved');
@@ -81,7 +81,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * Open  the button dropdown to perform some action
    * @param page {Page} Browser tab
    * @param table {String} The review table (2 options available: 'waiting-approval', 'reported')
-   * @param row {Number} The review row
+   * @param row {number} The review row
    * @returns {Promise<void>}
    */
   async openProductReviewDropdown(page, table, row = 1) {
@@ -93,8 +93,9 @@ class ProductComments extends ModuleConfiguration.constructor {
    * Get all the content for a review in review table
    * @param page {Page} The browser tab
    * @param table {String} The review table (3 options available: 'waiting-approval', 'reported', 'approved')
-   * @param row {Number} The review row (default is set to 1)
-   * @returns {Promise<{Object}>}
+   * @param row {number} The review row (default is set to 1)
+   * @returns {Promise<{id: string, title: string, content: string, rating: string, author: string,
+   * product: string, date: string}>}
    */
   async getReviewDataFromTable(page, table, row = 1) {
     return {
@@ -111,7 +112,8 @@ class ProductComments extends ModuleConfiguration.constructor {
   /**
    * Get all the content for a review in 'waiting approval' table
    * @param page {Page} Browser tab
-   * @returns {Promise<{Object}>}
+   * @returns {Promise<{id: string, title: string, content: string, rating: string, author: string,
+   * product: string, date: string}>}
    */
   getReviewDataFromWaitingApprovalTable(page) {
     return this.getReviewDataFromTable(page, 'waiting-approval');
@@ -120,7 +122,8 @@ class ProductComments extends ModuleConfiguration.constructor {
   /**
    * Get all the content for a review in 'reported review' table
    * @param page {Page} Browser tab
-   * @returns {Promise<{Object}>}
+   * @returns {Promise<{id: string, title: string, content: string, rating: string, author: string,
+   * product: string, date: string}>}
    */
   getReviewDataFromReportedReviewTable(page) {
     return this.getReviewDataFromTable(page, 'reported');
@@ -129,7 +132,8 @@ class ProductComments extends ModuleConfiguration.constructor {
   /**
    * Get all the content for a review in 'approved review' table
    * @param page {Page} Browser tab
-   * @returns {Promise<{Object}>}
+   * @returns {Promise<{id: string, title: string, content: string, rating: string, author: string,
+   * product: string, date: string}>}
    */
   getReviewDataFromApprovedReviewTable(page) {
     return this.getReviewDataFromTable(page, 'approved');
@@ -138,7 +142,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   /**
   * Approve a review in the "waiting for approval table"
   * @param page {Page} Browser tab
-  * @param row {Number} The review row
+  * @param row {number} The review row
   * @returns {Promise<void>}
   */
   async approveReview(page, row = 1) {
@@ -149,7 +153,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * Delete a review in a table
    * @param page {Page} Browser tab
    * @param table {String} The reviews table
-   * @param row {Number} The review row
+   * @param row {number} The review row
    * @returns {Promise<void>}
    */
   async deleteReview(page, table, row = 1) {
@@ -160,7 +164,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   /**
    * Delete a review in the "waiting approval" table
    * @param page {Page} Browser tab
-   * @param row {Number} The review row
+   * @param row {number} The review row
    * @returns {Promise<void>}
    */
   async deleteWaitingApprovalReview(page, row = 1) {
@@ -172,7 +176,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   /**
    * Delete a review in the "reported review" table
    * @param page {Page} Browser tab
-   * @param row {Number} The review row
+   * @param row {number} The review row
    * @returns {Promise<void>}
    */
   async deleteReportedReview(page, row = 1) {
@@ -182,7 +186,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   /**
    * Delete a review in the "approved review" table
    * @param page {Page} Browser tab
-   * @param row {Number} The review row
+   * @param row {number} The review row
    * @returns {Promise<void>}
    */
   async deleteApprovedReview(page, row = 1) {
@@ -192,7 +196,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   /**
   * Confirm a review in the "reported review" table
   * @param page {Page} Browser tab
-  * @param row {Number} The review row
+  * @param row {number} The review row
   * @returns {Promise<void>}
   */
   async confirmNotAbusiveReview(page, row = 1) {

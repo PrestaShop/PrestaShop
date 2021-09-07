@@ -34,7 +34,7 @@ class AddCategory extends BOBasePage {
   /**
    * Fill form for add/edit category
    * @param page {Page} Browser tab
-   * @param categoryData {categoryData} Data to set on new/edit category form
+   * @param categoryData {CategoryData} Data to set on new/edit category form
    * @returns {Promise<string>}
    */
   async createEditCategory(page, categoryData) {
@@ -54,7 +54,7 @@ class AddCategory extends BOBasePage {
   /**
    * Edit home category
    * @param page {Page} Browser tab
-   * @param categoryData {categoryData} Data to set on edit home category form
+   * @param categoryData {CategoryData} Data to set on edit home category form
    * @returns {Promise<string>}
    */
   async editHomeCategory(page, categoryData) {

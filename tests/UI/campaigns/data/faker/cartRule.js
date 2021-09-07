@@ -104,7 +104,7 @@ class CartRuleData {
     this.freeGift = cartRuleToCreate.freeGift === undefined ? false : cartRuleToCreate.freeGift;
 
     if (this.freeGift) {
-      /** @type {string} Product to set for the free gift */
+      /** @type {{name: string, price: number}} Product to set for the free gift */
       this.freeGiftProduct = cartRuleToCreate.freeGiftProduct;
     }
   }

@@ -33,7 +33,7 @@ class AddShopGroup extends BOBasePage {
   /**
    * Fill form for add/edit shop group
    * @param page {Page} Browser tab
-   * @param shopGroupData {shopGroupData} Data to set on add/edit shop group form
+   * @param shopGroupData {ShopGroupData} Data to set on add/edit shop group form
    * @returns {Promise<string>}
    */
   async setShopGroup(page, shopGroupData) {

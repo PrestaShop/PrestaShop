@@ -451,7 +451,7 @@ class Brands extends BOBasePage {
    * @param page {Page} Browser tab
    * @param tableName {string} Table name to get all rows content
    * @param column {string} Column to get all rows content
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, tableName, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page, tableName);
@@ -469,7 +469,7 @@ class Brands extends BOBasePage {
         default:
         // Nothing to do
       }
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

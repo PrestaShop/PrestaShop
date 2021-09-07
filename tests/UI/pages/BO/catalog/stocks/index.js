@@ -187,7 +187,7 @@ class Stocks extends BOBasePage {
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @param column {string} Column to get text value
-   * @return {Promise<integer|string>}
+   * @return {Promise<number|string>}
    */
   async getTextColumnFromTableStocks(page, row, column) {
     switch (column) {
@@ -212,7 +212,7 @@ class Stocks extends BOBasePage {
    * Get stocks quantities for a product
    * @param page {Page} Browser tab
    * @param row {number} Row on table
-   * @return {Promise<{reserved: (integer), available: (integer), physical: (integer)}>}
+   * @return {Promise<{reserved: number, available: number, physical: number}>}
    */
   async getStockQuantityForProduct(page, row) {
     return {

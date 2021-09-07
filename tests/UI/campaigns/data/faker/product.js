@@ -47,7 +47,7 @@ class ProductData {
     /** @type {boolean} True to create product with combination */
     this.productHasCombinations = productToCreate.productHasCombinations || false;
 
-    /** @type {{color: Array<string>, size: Array<string>}} Combinations of the product */
+    /** @type {Object|{color: Array<string>, size: Array<string>}} Combinations of the product */
     this.combinations = productToCreate.combinations || {
       color: ['White', 'Black'],
       size: ['S', 'M'],
@@ -62,7 +62,7 @@ class ProductData {
     /** @type {string} Tac rule to apply the product */
     this.taxRule = productToCreate.taxRule || 'FR Taux standard (20%)';
 
-    /** @type {string} Specific price of the product */
+    /** @type {Object|{combinations: ?string, discount: ?number, startingAt: ?number}} Specific price of the product */
     this.specificPrice = productToCreate.specificPrice || {
       combinations: 'Size - S, Color - White',
       discount: faker.random.number({min: 10, max: 100}),

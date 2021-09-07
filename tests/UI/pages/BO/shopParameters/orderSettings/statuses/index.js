@@ -181,7 +181,6 @@ class Statuses extends BOBasePage {
    * @param tableName {string} Table name to get text column
    * @param row {number} Row on table
    * @param columnName {string} Column name of the value to return
-   * @param columnID {number} Id of column in table
    * @return {Promise<string>}
    */
   getTextColumn(page, tableName, row, columnName) {
@@ -276,7 +275,7 @@ class Statuses extends BOBasePage {
    * @param page {Page} Browser tab
    * @param tableName {string} Table name to get all rows column content
    * @param columnName {string} Column name of the value to return
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, tableName, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page, tableName);
@@ -284,7 +283,7 @@ class Statuses extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, tableName, i, columnName);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

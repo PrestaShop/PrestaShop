@@ -137,7 +137,7 @@ class CommonPage {
    * @param page {Page} Browser tab
    * @param selector, element to check
    * @param timeout {number} Time to wait on milliseconds before throwing an error
-   * @returns {Promise<boolean>}, true if visible, false if not
+   * @returns {Promise<boolean>} True if not visible, false if visible
    */
   async elementNotVisible(page, selector, timeout = 10) {
     try {
@@ -153,7 +153,7 @@ class CommonPage {
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the element for the click
    * @param newPageSelector {string} String to locate the element on the opened page (default to FO logo)
-   * @return newPage {Promise<Page>} Opened tab after the click
+   * @return {Promise<Page>} Opened tab after the click
    */
   async openLinkWithTargetBlank(page, selector, newPageSelector = 'body .logo') {
     const [newPage] = await Promise.all([
@@ -192,7 +192,7 @@ class CommonPage {
    * Delete the existing text from input then set a value
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the input to set its value
-   * @param value {string} Value to set on the input
+   * @param value {?string|number} Value to set on the input
    * @return {Promise<void>}
    */
   async setValue(page, selector, value) {

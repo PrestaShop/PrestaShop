@@ -32,7 +32,7 @@ class AddWebserviceKey extends BOBasePage {
   /**
    * Fill form for add/edit webservice key
    * @param page {Page} Browser tab
-   * @param webserviceData {webserviceData} Data to set on add/edit webservice form
+   * @param webserviceData {WebserviceData} Data to set on add/edit webservice form
    * @param toGenerate
    * @returns {Promise<string>}
    */

@@ -33,7 +33,7 @@ class AddPageCategory extends BOBasePage {
   /**
    * Fill form for add/edit page category
    * @param page {Page} Browser tab
-   * @param pageCategoryData {pageCategoryData} Data to set on page category form
+   * @param pageCategoryData {CMSCategoryData} Data to set on page category form
    * @returns {Promise<string>}
    */
   async createEditPageCategory(page, pageCategoryData) {

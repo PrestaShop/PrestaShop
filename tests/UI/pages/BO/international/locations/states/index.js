@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * States page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class States extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on states page
+   */
   constructor() {
     super();
 
@@ -75,7 +84,7 @@ class States extends BOBasePage {
   /* Header methods */
   /**
    * Go To add new state page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewStatePage(page) {
@@ -85,7 +94,7 @@ class States extends BOBasePage {
   /* Filter Methods */
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -96,8 +105,8 @@ class States extends BOBasePage {
   }
 
   /**
-   * Get Number of states
-   * @param page
+   * Get number of states
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -106,20 +115,21 @@ class States extends BOBasePage {
 
   /**
    * Reset and get number of states
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 
   /**
    * Filter states
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
   async filterStates(page, filterType, filterBy, value) {
@@ -152,9 +162,9 @@ class States extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Column to get text value
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -190,8 +200,8 @@ class States extends BOBasePage {
 
   /**
    * Get state status
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
   getStateStatus(page, row) {
@@ -200,9 +210,9 @@ class States extends BOBasePage {
 
   /**
    * Set state status
-   * @param page
-   * @param row
-   * @param wantedStatus
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param wantedStatus {boolean} True if we need to enable status, false if not
    * @return {Promise<void>}
    */
   async setStateStatus(page, row, wantedStatus) {
@@ -214,8 +224,8 @@ class States extends BOBasePage {
 
   /**
    * Go to edit state page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async goToEditStatePage(page, row) {
@@ -224,8 +234,8 @@ class States extends BOBasePage {
 
   /**
    * Delete state
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table to delete
    * @return {Promise<string>}
    */
   async deleteState(page, row) {
@@ -244,9 +254,9 @@ class States extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name to get all rows content
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -254,7 +264,7 @@ class States extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -264,7 +274,7 @@ class States extends BOBasePage {
 
   /**
    * Select all rows
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async bulkSelectRows(page) {
@@ -278,7 +288,7 @@ class States extends BOBasePage {
 
   /**
    * Bulk delete states
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async bulkDeleteStates(page) {
@@ -298,8 +308,8 @@ class States extends BOBasePage {
 
   /**
    * Bulk set states status
-   * @param page
-   * @param wantedStatus
+   * @param page {Page} Browser tab
+   * @param wantedStatus {boolean} True if we need to bulk enable status, false if not
    * @return {Promise<void>}
    */
   async bulkSetStatus(page, wantedStatus) {
@@ -322,9 +332,9 @@ class States extends BOBasePage {
 
   /**
    * Sort table
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -362,7 +372,7 @@ class States extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -371,8 +381,8 @@ class States extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -384,7 +394,7 @@ class States extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -395,7 +405,7 @@ class States extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {

@@ -30,7 +30,7 @@ class StateData {
     this.zone = stateToCreate.zone || faker.random.arrayElement(zones);
 
     /** @type {boolean} Status of the state */
-    this.active = stateToCreate.active === undefined ? false : stateToCreate.active;
+    this.status = stateToCreate.active === undefined ? false : stateToCreate.status;
   }
 }
 

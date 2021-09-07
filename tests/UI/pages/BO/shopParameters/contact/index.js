@@ -125,7 +125,7 @@ class Contacts extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column name to get
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -133,7 +133,7 @@ class Contacts extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableContacts(page, i, column);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

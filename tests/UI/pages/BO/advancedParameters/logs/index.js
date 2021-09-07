@@ -133,7 +133,7 @@ class Logs extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column name to get all rows content
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -144,7 +144,8 @@ class Logs extends BOBasePage {
       if (column === 'employee' && rowContent === 'N/A') {
         rowContent = '';
       }
-      await allRowsContentTable.push(rowContent);
+
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

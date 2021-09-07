@@ -135,7 +135,7 @@ class Email extends BOBasePage {
     await this.resetFilter(page);
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.emailFilterColumnInput(filterBy), value.toString());
+        await this.setValue(page, this.emailFilterColumnInput(filterBy), value);
         break;
       case 'select':
         await this.selectByVisibleText(page, this.emailFilterColumnInput(filterBy), value);
@@ -250,7 +250,8 @@ class Email extends BOBasePage {
   async resetDefaultParameters(page) {
     // Click on smtp radio button
     await page.click(this.sendMailParametersRadioButton);
-    await page.waitForSelector(this.smtpServerFormField, {state: 'hidden'});
+    await this.waitForHiddenSelector(page, this.smtpServerFormField);
+
     // Click on Save button
     await this.clickAndWaitForNavigation(page, this.saveEmailFormButton);
 
@@ -342,7 +343,7 @@ class Email extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column name to get all rows column
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -350,7 +351,7 @@ class Email extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, column, i);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

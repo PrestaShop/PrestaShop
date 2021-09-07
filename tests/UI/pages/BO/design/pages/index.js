@@ -294,7 +294,7 @@ class Pages extends BOBasePage {
    * @param page {Page} Browser tab
    * @param tableName {string} Table name to get all rows column content
    * @param column {string} Column name to get all rows column content
-   * @return {Promise<string[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, tableName, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page, tableName);
@@ -307,7 +307,7 @@ class Pages extends BOBasePage {
       } else if (tableName === 'cms_page') {
         rowContent = await this.getTextColumnFromTableCmsPage(page, i, column);
       }
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -317,7 +317,7 @@ class Pages extends BOBasePage {
    * Get content from all rows table cms page category
    * @param page {Page} Browser tab
    * @param column {string} Column name to get all rows column content
-   * @return {Promise<string[]>}
+   * @return {Promise<Array<string>>}
    */
   getAllRowsColumnContentTableCmsPageCategory(page, column) {
     return this.getAllRowsColumnContent(page, 'cms_page_category', column);
@@ -327,7 +327,7 @@ class Pages extends BOBasePage {
    * Get content from all rows table cms page
    * @param page {Page} Browser tab
    * @param column {string} Column name to get all rows column content
-   * @returns {Promise<string[]>}
+   * @returns {Promise<Array<string>>}
    */
   getAllRowsColumnContentTableCmsPage(page, column) {
     return this.getAllRowsColumnContent(page, 'cms_page', column);
