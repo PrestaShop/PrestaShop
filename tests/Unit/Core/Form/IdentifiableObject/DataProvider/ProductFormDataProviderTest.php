@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 
+use Category;
 use DateTime;
 use DateTimeImmutable;
 use Generator;
@@ -35,6 +36,7 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
@@ -79,12 +81,13 @@ class ProductFormDataProviderTest extends TestCase
     private const PRODUCT_ID = 42;
     private const HOME_CATEGORY_ID = 49;
     private const DEFAULT_CATEGORY_ID = 51;
+    private const HOME_CATEGORY_NAME = 'Home';
     private const DEFAULT_VIRTUAL_PRODUCT_FILE_ID = 69;
     private const CONTEXT_LANG_ID = 1;
     private const DEFAULT_QUANTITY = 12;
     private const COVER_URL = 'http://localhost/cover.jpg';
 
-    public function testGetDefaultData()
+    public function testGetDefaultData(): void
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
 
@@ -97,7 +100,10 @@ class ProductFormDataProviderTest extends TestCase
             'description' => [
                 'categories' => [
                     'product_categories' => [
-                        ['id' => self::HOME_CATEGORY_ID],
+                        [
+                            'id' => self::HOME_CATEGORY_ID,
+                            'name' => self::HOME_CATEGORY_NAME,
+                        ],
                     ],
                     'default_category_id' => self::HOME_CATEGORY_ID,
                 ],
@@ -152,6 +158,7 @@ class ProductFormDataProviderTest extends TestCase
         ];
 
         $defaultData = $provider->getDefaultData();
+
         // assertSame is very important here We can't assume null and 0 are the same thing
         $this->assertSame($expectedDefaultData, $defaultData);
 
@@ -164,7 +171,10 @@ class ProductFormDataProviderTest extends TestCase
             'description' => [
                 'categories' => [
                     'product_categories' => [
-                        ['id' => self::HOME_CATEGORY_ID],
+                        [
+                            'id' => self::HOME_CATEGORY_ID,
+                            'name' => self::HOME_CATEGORY_NAME,
+                        ],
                     ],
                     'default_category_id' => self::HOME_CATEGORY_ID,
                 ],
@@ -219,6 +229,7 @@ class ProductFormDataProviderTest extends TestCase
         ];
 
         $defaultData = $provider->getDefaultData();
+
         // assertSame is very important here We can't assume null and 0 are the same thing
         $this->assertSame($expectedDefaultData, $defaultData);
     }
@@ -514,8 +525,8 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
             'categories' => [
-                ['id' => 42, 'localized_names' => [1 => 'test1', 2 => 'test2']],
-                ['id' => 51, 'localized_names' => [2 => 'test22', 3 => 'test3']],
+                ['id' => 42, 'localized_names' => [self::CONTEXT_LANG_ID => 'test1', 2 => 'test2']],
+                ['id' => 51, 'localized_names' => [self::CONTEXT_LANG_ID => 'test22', 3 => 'test3']],
             ],
             'default_category' => 51,
         ];
@@ -1357,7 +1368,22 @@ class ProductFormDataProviderTest extends TestCase
             $activation,
             42,
             self::HOME_CATEGORY_ID,
+            $this->mockCategoryDataProvider(),
             self::CONTEXT_LANG_ID
         );
+    }
+
+    private function mockCategoryDataProvider(): CategoryDataProvider
+    {
+        $defaultCategoryMock = $this->createMock(Category::class);
+        $defaultCategoryMock->id = self::HOME_CATEGORY_ID;
+        $defaultCategoryMock->name = [
+            self::CONTEXT_LANG_ID => self::HOME_CATEGORY_NAME,
+        ];
+
+        $categoryDataProvider = $this->createMock(CategoryDataProvider::class);
+        $categoryDataProvider->method('getCategory')->willReturn($defaultCategoryMock);
+
+        return $categoryDataProvider;
     }
 }

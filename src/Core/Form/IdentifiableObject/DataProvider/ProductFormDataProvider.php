@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-use Category;
+use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
@@ -72,6 +72,11 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $defaultCategoryId;
 
     /**
+     * @var CategoryDataProvider
+     */
+    private $categoryDataProvider;
+
+    /**
      * @var int
      */
     private $contextLangId;
@@ -81,6 +86,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
      * @param int $defaultCategoryId
+     * @param CategoryDataProvider $categoryDataProvider
      * @param int $contextLangId
      */
     public function __construct(
@@ -88,6 +94,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         bool $defaultProductActivation,
         int $mostUsedTaxRulesGroupId,
         int $defaultCategoryId,
+        CategoryDataProvider $categoryDataProvider,
         int $contextLangId
     ) {
         $this->queryBus = $queryBus;
@@ -95,12 +102,13 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
         $this->defaultCategoryId = $defaultCategoryId;
         $this->contextLangId = $contextLangId;
+        $this->categoryDataProvider = $categoryDataProvider;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData($id)
+    public function getData($id): array
     {
         $productId = (int) $id;
         /** @var ProductForEditing $productForEditing */
@@ -127,11 +135,10 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultData()
+    public function getDefaultData(): array
     {
-        //@todo: next PR -> refactor this. Legacy object model cannot stay in Core
-        $defaultCategory = new Category($this->defaultCategoryId);
-        $localizedNames = $defaultCategory->name;
+        //@todo: next PR -> refactor this. Legacy object model cannot stay in Core. Don't forget related test
+        $defaultCategory = $this->categoryDataProvider->getCategory($this->defaultCategoryId);
 
         return $this->addShortcutData([
             'header' => [
@@ -142,7 +149,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                     'product_categories' => [
                         [
                             'id' => $this->defaultCategoryId,
-                            'name' => $localizedNames[$this->contextLangId],
+                            'name' => $defaultCategory->name[$this->contextLangId],
                         ],
                     ],
                     'default_category_id' => $this->defaultCategoryId,
