@@ -28,17 +28,52 @@ namespace PrestaShop\PrestaShop\Adapter\Configuration;
 
 use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
-use Context;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 
 /**
  * This class will manage Logs configuration for a Shop.
  */
 class LogsConfiguration extends AbstractMultistoreConfiguration
 {
+
+    /**
+     * @var Configuration
+     */
+    protected $configuration;
+
+    /**
+     * @var Context
+     */
+    protected $shopContext;
+
+     /**
+     * @var FeatureInterface
+     */
+    protected $multistoreFeature;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var Validate
+     */
+    private $validate;
+
+    public function __construct(Configuration $configuration, Context $shopContext, FeatureInterface $multistoreFeature, TranslatorInterface $translator, Validate $validate)
+    {
+        $this->configuration = $configuration;
+        $this->shopContext = $shopContext;
+        $this->multistoreFeature = $multistoreFeature;
+        $this->translator = $translator;
+        $this->validate = $validate;
+    }
 
     /**
      * {@inheritdoc}
@@ -57,16 +92,12 @@ class LogsConfiguration extends AbstractMultistoreConfiguration
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-
-            $validate = new Validate();
-            $context = Context::getContext();
-            $translator = $context->getTranslator();
             $checkEmails = explode(',', $configuration['logs_email_receivers']);
             $errors = [];
             $invalidEmails = [];
 
             foreach ($checkEmails as $email) {
-                if (!$validate->isEmail($email)) {
+                if (!$this->validate->isEmail($email)) {
                     $invalidEmails[] = $email;
                 }
             }
@@ -75,13 +106,13 @@ class LogsConfiguration extends AbstractMultistoreConfiguration
                 $nbInvalidEmails = count($invalidEmails);
 
                 if ($nbInvalidEmails > 1) {
-                    $errors[] = $translator->trans(
+                    $errors[] = $this->translator->trans(
                         'Invalid emails: %invalid_emails%.',
                         ['%invalid_emails%' => implode(',', $invalidEmails)],
                         'Admin.Notifications.Error'
                     );
                 } else {
-                    $errors[] = $translator->trans(
+                    $errors[] = $this->translator->trans(
                         'Invalid email: %invalid_email%.',
                         ['%invalid_email%' => implode(',', $invalidEmails)],
                         'Admin.Notifications.Error'
