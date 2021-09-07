@@ -175,7 +175,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'field' => 'active',
                         'primary_field' => 'id_product',
-                        'route' => 'admin_products_v2_index',
+                        'route' => 'admin_products_v2_toggle_status',
                         'route_param_name' => 'productId',
                     ])
             )
