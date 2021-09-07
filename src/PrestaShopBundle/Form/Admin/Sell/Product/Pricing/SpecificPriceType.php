@@ -105,24 +105,29 @@ class SpecificPriceType extends TranslatorAwareType
             // without product id in form we cannot use FormHandler and benefit from its hooks
             ->add('product_id', HiddenType::class)
             ->add('currency_id', ChoiceType::class, [
+                'label' => $this->trans('Currency', 'Admin.Global'),
                 'required' => false,
                 'placeholder' => false,
                 'choices' => $this->getModifiedCurrencyChoices(),
             ])
             ->add('country_id', ChoiceType::class, [
+                'label' => $this->trans('Country', 'Admin.Global'),
                 'required' => false,
                 'placeholder' => false,
                 'choices' => $this->getModifiedCountryChoices(),
             ])
             ->add('group_id', ChoiceType::class, [
+                'label' => $this->trans('Group', 'Admin.Global'),
                 'required' => false,
                 'placeholder' => false,
                 'choices' => $this->getModifiedGroupChoices(),
             ])
             ->add('customer_id', EntitySearchInputType::class, [
+                'label' => $this->trans('Customer', 'Admin.Global'),
                 //@todo: provide options to search customer and add js side if needed
             ])
             ->add('from_quantity', NumberType::class, [
+                'label' => $this->trans('From quantity', 'Admin.Catalog.Feature'),
                 'scale' => 0,
                 'constraints' => [
                     new GreaterThanOrEqual([
@@ -135,6 +140,7 @@ class SpecificPriceType extends TranslatorAwareType
                 ],
             ])
             ->add('price', NumberType::class, [
+                'label' => $this->trans('Product price (tax excl.)', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'scale' => 6,
                 'constraints' => [
@@ -148,9 +154,11 @@ class SpecificPriceType extends TranslatorAwareType
                 ],
             ])
             ->add('leave_initial_price', CheckboxType::class, [
+                'label' => $this->trans('Leave initial price', 'Admin.Catalog.Feature'),
                 'required' => false,
             ])
             ->add('date_range', DateRangeType::class, [
+                'label' => $this->trans('Available from', 'Admin.Catalog.Feature'),
                 'constraints' => [
                     new DateRange([
                         'message' => $this->trans(
@@ -160,12 +168,8 @@ class SpecificPriceType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('include_tax', ChoiceType::class, [
-                'placeholder' => false,
-                'required' => false,
-                'choices' => $this->taxInclusionChoiceProvider->getChoices(),
-            ])
             ->add('reduction', ReductionType::class, [
+                'label' => $this->trans('Reduction', 'Admin.Catalog.Feature'),
                 'constraints' => [
                     new Reduction([
                         'invalidPercentageValueMessage' => $this->trans(
@@ -179,6 +183,12 @@ class SpecificPriceType extends TranslatorAwareType
                         ),
                     ]),
                 ],
+            ])
+            //@todo: handle field removal when % reduction type is selected
+            ->add('include_tax', ChoiceType::class, [
+                'placeholder' => false,
+                'required' => false,
+                'choices' => $this->taxInclusionChoiceProvider->getChoices(),
             ])
         ;
 
