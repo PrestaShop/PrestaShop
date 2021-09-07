@@ -3161,7 +3161,8 @@ abstract class ModuleCore implements ModuleInterface
             $override_dest = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR . $path;
             $dir_name = dirname($override_dest);
 
-            if (!$orig_path && !is_dir($dir_name)) {
+            // Create directory if not exists
+            if (!is_dir($dir_name)) {
                 @mkdir($dir_name, FileSystem::DEFAULT_MODE_FOLDER);
             }
 
