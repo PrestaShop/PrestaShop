@@ -4011,6 +4011,12 @@ class CartCore extends ObjectModel
             'invoice' => AddressFormat::getFormattedLayoutData($invoice),
         ];
 
+        /**
+         * @see https://github.com/PrestaShop/PrestaShop/issues/25579#issuecomment-914269727
+         * we first get the cartRules with autoAdd = true.
+         * That will apply all applicable cartRules to the cart and then we calculate the totals and the discounts
+         */
+        $cartRules = $this->getCartRules();
         $base_total_tax_inc = $this->getOrderTotal(true);
         $base_total_tax_exc = $this->getOrderTotal(false);
 
@@ -4048,7 +4054,7 @@ class CartCore extends ObjectModel
             'invoice_state' => State::getNameById($invoice->id_state),
             'formattedAddresses' => $formatted_addresses,
             'products' => array_values($products),
-            'discounts' => array_values($this->getCartRules()),
+            'discounts' => array_values($cartRules),
             'is_virtual_cart' => (int) $this->isVirtualCart(),
             'total_discounts' => $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS),
             'total_discounts_tax_exc' => $this->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
