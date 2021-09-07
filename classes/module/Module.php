@@ -3065,6 +3065,11 @@ abstract class ModuleCore implements ModuleInterface
             // Check if override file is writable
             $override_path = _PS_ROOT_DIR_ . '/' . $file;
 
+            // Create directory if not exists
+            if (!is_dir(dirname($override_path))) {
+                $this->createOverrideDirectory(dirname($override_path));
+            }
+
             if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path))) {
                 throw new Exception(Context::getContext()->getTranslator()->trans('file (%s) not writable', [$override_path], 'Admin.Notifications.Error'));
             }
@@ -3138,6 +3143,7 @@ abstract class ModuleCore implements ModuleInterface
                 }
             }
 
+            // Check if none of the constants already exists in the override class
             foreach ($module_class->getConstants() as $constant => $value) {
                 if ($override_class->hasConstant($constant)) {
                     throw new Exception(Context::getContext()->getTranslator()->trans('The constant %1$s in the class %2$s is already defined.', [$constant, $classname], 'Admin.Modules.Notification'));
@@ -3161,8 +3167,9 @@ abstract class ModuleCore implements ModuleInterface
             $override_dest = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR . $path;
             $dir_name = dirname($override_dest);
 
-            if (!$orig_path && !is_dir($dir_name)) {
-                @mkdir($dir_name, FileSystem::DEFAULT_MODE_FOLDER);
+            // Create directory if not exists
+            if (!is_dir($dir_name)) {
+                $this->createOverrideDirectory($dir_name);
             }
 
             if (!is_writable($dir_name)) {
@@ -3222,6 +3229,22 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         return true;
+    }
+
+    private function createOverrideDirectory(string $directoryPath): void
+    {
+        // Create directory (with recurrence)
+        @mkdir($directoryPath, FileSystem::DEFAULT_MODE_FOLDER, true);
+
+        // Copy index.php to each directory
+        $directoryOverride = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR;
+        $fileIndexOverride = $directoryOverride . 'index.php';
+        $directories = str_replace($directoryOverride, '', $directoryPath);
+        $directories = explode(DIRECTORY_SEPARATOR, $directories);
+        foreach ($directories as $directory) {
+            $directoryOverride .= $directory . DIRECTORY_SEPARATOR;
+            copy($fileIndexOverride, $directoryOverride . 'index.php');
+        }
     }
 
     /**

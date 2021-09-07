@@ -73,8 +73,13 @@ class MetaCore extends ObjectModel
             die(Tools::displayError(Context::getContext()->getTranslator()->trans('Cannot scan root directory', [], 'Admin.Notifications.Error')));
         }
 
-        if (!$overrideFiles = Tools::scandir(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'front' . DIRECTORY_SEPARATOR, 'php', '', true)) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Cannot scan "override" directory', [], 'Admin.Notifications.Error')));
+        $overrideDir = _PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'front' . DIRECTORY_SEPARATOR;
+        if (!is_dir($overrideDir)) {
+            $overrideFiles = [];
+        } else {
+            if (!$overrideFiles = Tools::scandir($overrideDir, 'php', '', true)) {
+                die(Tools::displayError(Context::getContext()->getTranslator()->trans('Cannot scan "override" directory', [], 'Admin.Notifications.Error')));
+            }
         }
 
         $files = array_values(array_unique(array_merge($files, $overrideFiles)));
