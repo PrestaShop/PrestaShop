@@ -124,6 +124,8 @@ abstract class GridControllerTestCase extends WebTestCase
 
         /** Asserts that list contains as many entities as expected */
         $crawler = $this->client->request('GET', $this->getIndexRoute($this->client->getKernel()->getContainer()->get('router')));
+        $this->assertResponseIsSuccessful();
+
         $entities = $this->getEntityList($crawler);
         $this->initialEntityCount = $entities->count();
 
@@ -153,6 +155,8 @@ abstract class GridControllerTestCase extends WebTestCase
          */
         $deleteUrl = $router->generate($this->deleteEntityRoute, [$this->testEntityName . 'Id' => $this->testEntityId]);
         $this->client->request('POST', $deleteUrl);
+        $this->assertResponseIsSuccessful();
+
         $crawler = $this->client->request('GET', $this->getIndexRoute($this->client->getKernel()->getContainer()->get('router')));
 
         $entities = $this->getEntityList($crawler);
@@ -170,6 +174,7 @@ abstract class GridControllerTestCase extends WebTestCase
         $createEntityUrl = $router->generate($this->createEntityRoute);
 
         $crawler = $this->client->request('GET', $createEntityUrl);
+        $this->assertResponseIsSuccessful();
 
         $submitButton = $crawler->selectButton($this->saveButtonId);
         /** If you get "InvalidArgumentException: The current node list is empty" error here it means save button was not found */
@@ -200,6 +205,7 @@ abstract class GridControllerTestCase extends WebTestCase
     protected function assertFiltersFindOnlyTestEntity(array $testFilters): void
     {
         $crawler = $this->client->request('GET', $this->getIndexRoute($this->client->getKernel()->getContainer()->get('router')));
+        $this->assertResponseIsSuccessful();
 
         /** Assert that list contains all entities and thus not affected by anything */
         $entities = $this->getEntityList($crawler);
