@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\CommandAccessor;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\CommandAccessorConfig;
@@ -76,8 +76,8 @@ class PricesCommandsBuilder implements MultistoreProductCommandsBuilderInterface
         ;
 
         $commandAccessor = new CommandAccessor($config);
-        $shopCommand = new UpdateProductPricesCommand($productId->getValue(), ShopConstraint::shop($shopId->getValue()));
-        $allShopsCommand = new UpdateProductPricesCommand($productId->getValue(), ShopConstraint::allShops());
+        $shopCommand = new UpdateProductPricesCommand($productId->getValue(), ProductShopConstraint::shop($shopId->getValue()));
+        $allShopsCommand = new UpdateProductPricesCommand($productId->getValue(), ProductShopConstraint::allShops());
 
         return $commandAccessor->buildCommands($priceData, $shopCommand, $allShopsCommand);
     }
