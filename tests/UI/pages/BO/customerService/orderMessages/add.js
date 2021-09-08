@@ -50,7 +50,7 @@ class AddOrderMessage extends BOBasePage {
   /**
    * Add/Edit order message
    * @param page {Page} Browser tab
-   * @param orderMessageData {OrderMessage} Data to set order message form
+   * @param orderMessageData {OrderMessageData} Data to set order message form
    * @returns {Promise<string>}
    */
   async addEditOrderMessage(page, orderMessageData) {

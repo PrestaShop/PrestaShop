@@ -59,7 +59,7 @@ class SiteMap extends FOBasePage {
   /**
    * Is suppliers link visible
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isSuppliersLinkVisible(page) {
     return this.elementVisible(page, this.suppliersPageLink, 2000);
@@ -68,7 +68,7 @@ class SiteMap extends FOBasePage {
   /**
    * Is brands link visible
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isBrandsLinkVisible(page) {
     return this.elementVisible(page, this.brandsPageLink, 2000);

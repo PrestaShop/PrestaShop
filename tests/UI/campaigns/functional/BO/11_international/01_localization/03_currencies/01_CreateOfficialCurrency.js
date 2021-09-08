@@ -5,11 +5,13 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const localizationPage = require('@pages/BO/international/localization');
 const currenciesPage = require('@pages/BO/international/currencies');
 const addCurrencyPage = require('@pages/BO/international/currencies/add');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 
 // Import Data
@@ -30,7 +32,7 @@ Check data created in table
 Check Creation of currency in FO
 Delete currency
  */
-describe('Create official currency and check it in FO', async () => {
+describe('BO - International - Currencies : Create official currency and check it in FO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -45,7 +47,7 @@ describe('Create official currency and check it in FO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to localization page', async function () {
+  it('should go to \'International > Localization\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -60,7 +62,7 @@ describe('Create official currency and check it in FO', async () => {
     await expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
-  it('should go to currencies page', async function () {
+  it('should go to \'Currencies\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
 
     await localizationPage.goToSubTabCurrencies(page);
@@ -121,17 +123,31 @@ describe('Create official currency and check it in FO', async () => {
       },
     );
 
-    it('should go to FO and check the new currency', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCurrencyInFO', baseContext);
+    it('should go to FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFo1', baseContext);
 
       // View my shop and int pages
       page = await currenciesPage.viewMyShop(page);
 
+      const isHomePage = await foHomePage.isHomePage(page);
+      await expect(isHomePage).to.be.true;
+    });
+
+    it('should change FO currency', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeFoCurrency1', baseContext);
+
       // Check currency
       await foHomePage.changeCurrency(page, Currencies.mad.isoCode, Currencies.mad.symbol);
+      const shopCurrency = await foHomePage.getDefaultCurrency(page);
+      await expect(shopCurrency).to.contain(Currencies.mad.isoCode);
+    });
 
-      // Go back to BO
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
+
       page = await foHomePage.closePage(browserContext, page, 0);
+      const pageTitle = await currenciesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(currenciesPage.pageTitle);
     });
 
     it('should reset filters', async function () {
@@ -174,13 +190,20 @@ describe('Create official currency and check it in FO', async () => {
       await expect(currencyStatus).to.be.equal(false);
     });
 
-    it('should go to FO and check the new currency', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDisabledCurrency', baseContext);
+    it('should go to FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFo2', baseContext);
 
       // View my shop and init pages
       page = await currenciesPage.viewMyShop(page);
 
-      // Check currency non existence
+      const isHomePage = await foHomePage.isHomePage(page);
+      await expect(isHomePage).to.be.true;
+    });
+
+    it('should check currency non existence', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCurrency2', baseContext);
+
+      // Check currency
       let textError = '';
 
       try {
@@ -192,9 +215,14 @@ describe('Create official currency and check it in FO', async () => {
       await expect(textError).to.contains(
         `${Currencies.mad.isoCode} was not found as option of select`,
       );
+    });
 
-      // Go back to BO
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo2', baseContext);
+
       page = await foHomePage.closePage(browserContext, page, 0);
+      const pageTitle = await currenciesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(currenciesPage.pageTitle);
     });
 
     it('should reset filters', async function () {

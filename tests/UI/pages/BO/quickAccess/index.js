@@ -65,8 +65,8 @@ class QuickAccess extends BOBasePage {
   /**
    * Get text from column in table
    * @param page {Page} Browser tab
-   * @param row {Number} Row index in the table
-   * @param columnName {String} Column name in the table
+   * @param row {number} Row index in the table
+   * @param columnName {string} Column name in the table
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -99,15 +99,15 @@ class QuickAccess extends BOBasePage {
   /**
    * Filter quick access table
    * @param page {Page} Browser tab
-   * @param filterType {String} Type of the filter (input or select)
-   * @param filterBy {String} Value to use for the select type filter
-   * @param value {String} Value for the select filter
+   * @param filterType {string} Type of the filter (input or select)
+   * @param filterBy {string} Value to use for the select type filter
+   * @param value {string|number} Value for the select filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(filterBy), value);
         await this.clickAndWaitForNavigation(page, this.filterSearchButton);
         break;
 

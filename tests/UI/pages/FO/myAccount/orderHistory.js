@@ -42,7 +42,7 @@ class OrderHistory extends FOBasePage {
    * Is reorder link visible
    * @param page {Page} Browser tab
    * @param idOrder {Number} database id of the order
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isReorderLinkVisible(page, idOrder = 1) {
     return this.elementVisible(page, this.reorderLink(idOrder), 1000);

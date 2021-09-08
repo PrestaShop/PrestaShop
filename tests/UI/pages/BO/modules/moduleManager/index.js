@@ -106,8 +106,8 @@ class ModuleManager extends BOBasePage {
     const allModulesNames = await this.getAllModulesNames(page);
 
     for (let i = 0; i < allModulesNames.length; i++) {
-      const moduleStatus = await this.isModuleEnabled(page);
-      await modulesStatus.push({name: allModulesNames[i], status: moduleStatus});
+      const moduleStatus = await this.isModuleEnabled(page, allModulesNames[i]);
+      modulesStatus.push({name: allModulesNames[i], status: moduleStatus});
     }
 
     return modulesStatus;
@@ -116,7 +116,7 @@ class ModuleManager extends BOBasePage {
   /**
    * Get All modules names
    * @param page {Page} Browser tab
-   * @return {Promise<<Array<string>>}
+   * @return {Promise<Array<string>>}
    */
   async getAllModulesNames(page) {
     return page.$$eval(

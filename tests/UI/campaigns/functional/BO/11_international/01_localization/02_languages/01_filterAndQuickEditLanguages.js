@@ -28,7 +28,7 @@ Filter languages by id, name, iso code, date_format and enabled columns
 Disable main language 'en' and check error
 Disable then enable other language
  */
-describe('Filter and quick edit languages', async () => {
+describe('BO - International - Languages : Filter and quick edit languages', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -43,7 +43,7 @@ describe('Filter and quick edit languages', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to localization page', async function () {
+  it('should go to \'International > Localization\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -58,7 +58,7 @@ describe('Filter and quick edit languages', async () => {
     await expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
-  it('should go to languages page', async function () {
+  it('should go to \'Languages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
 
     await localizationPage.goToSubTabLanguages(page);

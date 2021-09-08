@@ -19,7 +19,7 @@ const countriesToTest = [countries.netherlands.name, countries.france.name];
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_localization_defaultCurrency';
+const baseContext = 'functional_BO_international_localization_defaultCountry';
 
 let browserContext;
 let page;
@@ -34,7 +34,7 @@ Reset default country to 'France'
 Go to add address page
 Check that selected country is 'France'
  */
-describe('Update default country', async () => {
+describe('BO - International - Localization : Update default country', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -51,7 +51,7 @@ describe('Update default country', async () => {
 
   countriesToTest.forEach((country, index) => {
     describe(`Set default country to '${country}' and check result`, async () => {
-      it('should go to localisation page', async function () {
+      it('should go to \'International > Localization\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToLocalizationPage${index}`, baseContext);
 
         await dashboardPage.goToSubMenu(

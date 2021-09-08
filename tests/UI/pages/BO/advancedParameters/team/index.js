@@ -142,7 +142,7 @@ class Employees extends BOBasePage {
   async filterEmployees(page, filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.employeeFilterInput(filterBy), value.toString());
+        await this.setValue(page, this.employeeFilterInput(filterBy), value);
         break;
       case 'select':
         await this.selectByVisibleText(page, this.employeeFilterInput(filterBy), value ? 'Yes' : 'No');
@@ -277,7 +277,7 @@ class Employees extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column to filter
-   * @returns {Promise<[]>}
+   * @returns {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -287,9 +287,9 @@ class Employees extends BOBasePage {
       let rowContent = await this.getTextContent(page, this.employeesListTableColumn(i, column));
 
       if (column === 'active') {
-        rowContent = await this.getStatus(page, i).toString();
+        rowContent = (await this.getStatus(page, i)).toString();
       }
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

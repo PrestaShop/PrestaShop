@@ -1,12 +1,12 @@
 require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
 
 /**
  * Add language page, contains functions that can be used on the page
  * @class
- * @extends BOBasePage
+ * @extends LocalizationBasePage
  */
-class AddLanguage extends BOBasePage {
+class AddLanguage extends LocalizationBasePage {
   /**
    * @constructs
    * Setting up texts and selectors to use on add language page
@@ -35,7 +35,7 @@ class AddLanguage extends BOBasePage {
   /**
    * Create or edit language
    * @param page {Page} Browser tab
-   * @param languageData {languageData} Data to set on add/edit language form
+   * @param languageData {LanguageData} Data to set on add/edit language form
    * @return {Promise<string>}
    */
   async createEditLanguage(page, languageData) {

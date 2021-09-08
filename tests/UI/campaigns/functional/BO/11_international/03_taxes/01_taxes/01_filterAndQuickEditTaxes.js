@@ -14,14 +14,17 @@ const taxesPage = require('@pages/BO/international/taxes');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_localization_taxes_filterAndQuickEditTaxes';
+const baseContext = 'functional_BO_international_taxes_taxes_filterAndQuickEditTaxes';
 
 let browserContext;
 let page;
 let numberOfTaxes = 0;
 
-// Filter And Quick Edit taxes
-describe('Filter And Quick Edit taxes', async () => {
+/*
+Filter taxes by : id, name, rate, status
+Quick edit taxes
+ */
+describe('BO - International - Taxes : Filter And Quick Edit', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -36,7 +39,7 @@ describe('Filter And Quick Edit taxes', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to Taxes page', async function () {
+  it('should go to \'International > Taxes\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -119,6 +122,7 @@ describe('Filter And Quick Edit taxes', async () => {
       });
     });
   });
+
   // 2 : Edit taxes in list
   describe('Quick Edit Taxes', async () => {
     it('should filter by name', async function () {
@@ -133,12 +137,10 @@ describe('Filter And Quick Edit taxes', async () => {
       await expect(textColumn).to.contains(DefaultFrTax.name);
     });
 
-    const tests = [
+    [
       {args: {action: 'disable', column: 'active', enabledValue: false}},
       {args: {action: 'enable', column: 'active', enabledValue: true}},
-    ];
-
-    tests.forEach((test) => {
+    ].forEach((test) => {
       it(`should ${test.args.action} first tax`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Tax`, baseContext);
 

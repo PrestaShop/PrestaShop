@@ -16,7 +16,7 @@ const TaxRuleFaker = require('@data/faker/taxRuleGroup');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_localization_taxes_quickEditAndBulkActions';
+const baseContext = 'functional_BO_international_taxes_quickEditAndBulkActions';
 
 let browserContext;
 let page;
@@ -31,7 +31,7 @@ Create 2 tax rules
 Enable/Disable by quick edit
 Enable/Disable/Delete by bulk actions
  */
-describe('Enable/Disable/delete tax rules by quick edit and bulk actions', async () => {
+describe('BO - International - Tax rules : Bulk actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -46,7 +46,7 @@ describe('Enable/Disable/delete tax rules by quick edit and bulk actions', async
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to Taxes page', async function () {
+  it('should go to \'International > Taxes\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -123,12 +123,11 @@ describe('Enable/Disable/delete tax rules by quick edit and bulk actions', async
       const textResult = await taxRulesPage.getTextColumnFromTable(page, 1, 'name');
       await expect(textResult).to.contains(firstTaxRuleData.name);
     });
-    const tests = [
+
+    [
       {args: {action: 'disable', enabledValue: false}},
       {args: {action: 'enable', enabledValue: true}},
-    ];
-
-    tests.forEach((test) => {
+    ].forEach((test) => {
       it(`should ${test.args.action} tax rule`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Category`, baseContext);
 
@@ -154,12 +153,10 @@ describe('Enable/Disable/delete tax rules by quick edit and bulk actions', async
 
   // 3 : Enable/Disable by bulk actions
   describe('Enable and Disable Tax rules by Bulk Actions', async () => {
-    const tests = [
+    [
       {args: {taxRule: firstTaxRuleData.name, action: 'disable', enabledValue: false}},
       {args: {taxRule: secondTaxRuleData.name, action: 'enable', enabledValue: true}},
-    ];
-
-    tests.forEach((test, index) => {
+    ].forEach((test, index) => {
       it('should filter list by name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterTaxesToChangeStatus${index}`, baseContext);
 

@@ -43,7 +43,7 @@ Disable 'Restrict country selections in front office to those covered by active 
 Go to FO > Address page and check that the country exist
 Disable the country 'Afghanistan'
  */
-describe('Enable/Disable Restrict country selections in front office', async () => {
+describe('BO - International - Countries : Restrict country selections in front office', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -58,7 +58,7 @@ describe('Enable/Disable Restrict country selections in front office', async () 
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to locations page', async function () {
+  it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -73,7 +73,7 @@ describe('Enable/Disable Restrict country selections in front office', async () 
     await expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
-  it('should go to countries page', async function () {
+  it('should go to \'Countries\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
     await zonesPage.goToSubTabCountries(page);

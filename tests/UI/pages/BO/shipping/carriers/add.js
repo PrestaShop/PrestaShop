@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add carrier page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddCarrier extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on add carrier page
+   */
   constructor() {
     super();
 

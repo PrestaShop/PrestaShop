@@ -115,7 +115,7 @@ class Product extends FOBasePage {
    * Get product attributes from a Ul selector
    * @param page {Page} Browser tab
    * @param ulSelector {string} Selector to locate the element
-   * @returns {Promise<[]>}
+   * @returns {Promise<Array<string>>}
    */
   getProductsAttributesFromUl(page, ulSelector) {
     return page.$$eval(`${ulSelector} li .attribute-name`, all => all.map(el => el.textContent));
@@ -136,7 +136,7 @@ class Product extends FOBasePage {
   /**
    * Get selected product attributes
    * @param page {Page} Browser tab
-   * @returns {Promise<{size: *, color: *}>}
+   * @returns {Promise<{size: string, color: string}>}
    */
   async getSelectedProductAttributes(page) {
     return {
@@ -236,7 +236,7 @@ class Product extends FOBasePage {
    * Select product combination
    * @param page {Page} Browser tab
    * @param quantity {number} Quantity of the product that customer wants
-   * @param combination {object}  Product's combination data to select
+   * @param combination {{size: ?string, color: ?string}}  Product's combination data to select
    * @returns {Promise<void>}
    */
   async selectCombination(page, quantity, combination) {
@@ -259,15 +259,16 @@ class Product extends FOBasePage {
    * Click on Add to cart button then on Proceed to checkout button in the modal
    * @param page {Page} Browser tab
    * @param quantity {number} Quantity of the product that customer wants
-   * @param combination {object}  Product's combination data to add to cart
+   * @param combination {{size: ?string, color: ?string}}  Product's combination data to add to cart
    * @param proceedToCheckout {boolean} True to click on proceed to checkout button on modal
    * @returns {Promise<void>}
    */
   async addProductToTheCart(page, quantity = 1, combination = {color: null, size: null}, proceedToCheckout = true) {
     await this.selectCombination(page, quantity, combination);
     if (quantity !== 1) {
-      await this.setValue(page, this.productQuantity, quantity);
+      await this.setValue(page, this.productQuantity, quantity.toString());
     }
+
     await this.waitForSelectorAndClick(page, this.addToCartButton);
     await this.waitForVisibleSelector(page, `${this.blockCartModal}[style*='display: block;']`);
 
@@ -315,7 +316,7 @@ class Product extends FOBasePage {
    * @returns {Promise<void>}
    */
   async setQuantity(page, quantity) {
-    await this.setValue(page, this.productQuantity, quantity);
+    await this.setValue(page, this.productQuantity, quantity.toString());
   }
 
   /**
@@ -331,7 +332,7 @@ class Product extends FOBasePage {
   /**
    * Is availability product displayed
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isAvailabilityQuantityDisplayed(page) {
     return this.elementVisible(page, this.productAvailabilityIcon, 1000);
@@ -340,7 +341,7 @@ class Product extends FOBasePage {
   /**
    * Is price displayed
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isPriceDisplayed(page) {
     return this.elementVisible(page, this.productPrice, 1000);
@@ -349,7 +350,7 @@ class Product extends FOBasePage {
   /**
    * Is add to cart button displayed
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isAddToCartButtonDisplayed(page) {
     return this.elementVisible(page, this.addToCartButton, 1000);
@@ -370,7 +371,7 @@ class Product extends FOBasePage {
    * Is unavailable product color displayed
    * @param page {Page} Browser tab
    * @param color {string} Product's color to check
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isUnavailableProductColorDisplayed(page, color) {
     return this.elementVisible(page, this.productColorInput(color), 1000);
@@ -379,7 +380,7 @@ class Product extends FOBasePage {
   /**
    * Is add to cart button enabled
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isAddToCartButtonEnabled(page) {
     return this.elementNotVisible(page, `${this.addToCartButton}:disabled`, 1000);
@@ -388,7 +389,7 @@ class Product extends FOBasePage {
   /**
    * Check if delivery information text is visible
    * @param page {Page} Browser tab
-   * @return {boolean}
+   * @return {Promise<boolean>}
    */
   isDeliveryInformationVisible(page) {
     return this.elementVisible(page, this.deliveryInformationSpan, 1000);

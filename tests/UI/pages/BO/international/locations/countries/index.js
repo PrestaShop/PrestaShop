@@ -232,7 +232,7 @@ class Countries extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param columnName {string} Column name to get all content
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -245,7 +245,7 @@ class Countries extends BOBasePage {
         rowContent = '0';
       }
 
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -361,7 +361,7 @@ class Countries extends BOBasePage {
   /**
    * Select pagination limit
    * @param page {Page} Browser tab
-   * @param number {number} Pagination number lumit to select
+   * @param number {number} Pagination number limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {

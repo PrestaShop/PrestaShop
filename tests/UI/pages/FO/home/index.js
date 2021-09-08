@@ -193,15 +193,14 @@ class Home extends FOBasePage {
   /**
    * Get product details from quick view modal
    * @param page {Page} Browser tab
-   * @returns {Promise<{discountPercentage: *, thumbImage: *, size: *, color: *, price: *, taxShippingDeliveryLabel: *,
-   * regularPrice: *, coverImage: *, name: *, shortDescription: *}>}
+   * @returns {Promise<{discountPercentage: string, thumbImage: string, price: number, taxShippingDeliveryLabel: string,
+   * regularPrice: number, coverImage: string, name: string, shortDescription: string}>}
    */
   async getProductDetailsFromQuickViewModal(page) {
     return {
       name: await this.getTextContent(page, this.quickViewProductName),
       regularPrice: parseFloat((await this.getTextContent(page, this.quickViewRegularPrice)).replace('€', '')),
       price: parseFloat((await this.getTextContent(page, this.quickViewProductPrice)).replace('€', '')),
-      discountPercentage: await this.getTextContent(page, this.quickViewDiscountPercentage),
       taxShippingDeliveryLabel: await this.getTextContent(page, this.quickViewTaxShippingDeliveryLabel),
       shortDescription: await this.getTextContent(page, this.quickViewShortDescription),
       coverImage: await this.getAttributeContent(page, this.quickViewCoverImage, 'src'),
@@ -212,7 +211,7 @@ class Home extends FOBasePage {
   /**
    * Get product attributes from quick view modal
    * @param page {Page} Browser tab
-   * @returns {Promise<{size: *, color: *}>}
+   * @returns {Promise<{size: string, color: string}>}
    */
   async getProductAttributesFromQuickViewModal(page) {
     return {
@@ -274,8 +273,8 @@ class Home extends FOBasePage {
   /**
    * Get product details from blockCart modal
    * @param page {Page} Browser tab
-   * @returns {Promise<{quantity: number, size: *, color: *, price: *, name: *, cartShipping: *, cartSubtotal: *,
-   * totalTaxIncl: *, cartProductsCount: number}>}
+   * @returns {Promise<{quantity: number, price: number, name: string, cartShipping: string, cartSubtotal: number,
+   * totalTaxIncl: number, cartProductsCount: number}>}
    */
   async getProductDetailsFromBlockCartModal(page) {
     return {
@@ -292,7 +291,7 @@ class Home extends FOBasePage {
   /**
    * Get product attributes from block cart modal
    * @param page {Page} Browser tab
-   * @returns {Promise<{size: *, color: *}>}
+   * @returns {Promise<{size: string, color: string}>}
    */
   async getProductAttributesFromBlockCartModal(page) {
     return {

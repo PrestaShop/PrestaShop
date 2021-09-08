@@ -5,14 +5,18 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const localizationPage = require('@pages/BO/international/localization');
 const currenciesPage = require('@pages/BO/international/currencies');
+const languagesPage = require('@pages/BO/international/languages');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 
 // Import Data
 const {Currencies} = require('@data/demo/currencies');
+const {Languages} = require('@data/demo/languages');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -32,7 +36,7 @@ Choose default currency Euro then check in FO
 Delete localization pack
  */
 
-describe('Update default currency', async () => {
+describe('BO - International - Localization : Update default currency', async () => {
   describe('Import a localization pack', async () => {
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -47,7 +51,7 @@ describe('Update default currency', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to localization page', async function () {
+    it('should go to \'International > Localization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPageToImportPack', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -100,7 +104,7 @@ describe('Update default currency', async () => {
         await loginCommon.loginBO(this, page);
       });
 
-      it('should go to localization page', async function () {
+      it('should go to \'International > Localization\' page', async function () {
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -136,9 +140,14 @@ describe('Update default currency', async () => {
 
         const defaultCurrency = await foHomePage.getDefaultCurrency(page);
         await expect(defaultCurrency).to.equal(test.args.currency);
+      });
 
-        // Go back to BO
+      it('should go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
+
         page = await foHomePage.closePage(browserContext, page, 0);
+        const pageTitle = await localizationPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(localizationPage.pageTitle);
       });
 
       if (index === (tests.length - 1)) {
@@ -171,6 +180,42 @@ describe('Update default currency', async () => {
 
             const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
             await expect(numberOfCurrenciesAfterReset).to.be.at.least(1);
+          });
+        });
+
+        describe('Delete language added by importing localization pack', async () => {
+          it('should go to languages page', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
+
+            await localizationPage.goToSubTabLanguages(page);
+            const pageTitle = await languagesPage.getPageTitle(page);
+            await expect(pageTitle).to.contains(languagesPage.pageTitle);
+          });
+
+          it(`should filter language by name '${Languages.spanish.name}'`, async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'filterLanguages', baseContext);
+
+            await languagesPage.filterTable(page, 'input', 'name', Languages.spanish.name);
+
+            const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
+            await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
+
+            const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
+            await expect(textColumn).to.contains(Languages.spanish.name);
+          });
+
+          it('should delete language', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'deleteLanguage', baseContext);
+
+            const textResult = await languagesPage.deleteLanguage(page, 1);
+            await expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
+          });
+
+          it('should reset all filters', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'resetLanguages', baseContext);
+
+            const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
+            await expect(numberOfLanguagesAfterReset).to.be.at.least(1);
           });
         });
       }
