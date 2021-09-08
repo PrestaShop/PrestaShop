@@ -130,7 +130,7 @@ class Categories extends BOBasePage {
   async filterCategories(page, filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.categoryFilterInput(filterBy), value.toString());
+        await this.setValue(page, this.categoryFilterInput(filterBy), value);
         break;
       case 'select':
         await this.selectByVisibleText(page, this.categoryFilterInput(filterBy), value ? 'Yes' : 'No');
@@ -197,7 +197,7 @@ class Categories extends BOBasePage {
    * Get all information from categories table
    * @param page {Page} Browser tab
    * @param row {number} Row on table
-   * @returns {Promise<{name: string, description: string, id: string, position: *, status: boolean}>}
+   * @returns {Promise<{name: string, description: string, id: string, position: number, status: boolean}>}
    */
   async getCategoryFromTable(page, row) {
     return {
@@ -213,7 +213,7 @@ class Categories extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column to get all rows column
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -221,7 +221,7 @@ class Categories extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableCategories(page, i, column);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

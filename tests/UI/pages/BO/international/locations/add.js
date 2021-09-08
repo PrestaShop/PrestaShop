@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add zone page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddZone extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add zone page
+   */
   constructor() {
     super();
 
@@ -19,8 +28,8 @@ class AddZone extends BOBasePage {
    */
   /**
    * Fill form for add/edit zone
-   * @param page
-   * @param zoneData
+   * @param page {Page} Browser tab
+   * @param zoneData {ZoneData} Data to set on new/edit zone page
    * @returns {Promise<string>}
    */
   async createEditZone(page, zoneData) {

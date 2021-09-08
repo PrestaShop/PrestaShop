@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Tax rules page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class TaxRules extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on tax rules page
+   */
   constructor() {
     super();
 
@@ -72,7 +81,7 @@ class TaxRules extends BOBasePage {
 
   /**
    * Go to add tax Rules group Page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewTaxRulesGroupPage(page) {
@@ -81,17 +90,17 @@ class TaxRules extends BOBasePage {
 
   /**
    * Go to edit tax rule page
-   * @param page
-   * @param id
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table to edit
    * @returns {Promise<void>}
    */
-  async goToEditTaxRulePage(page, id = 1) {
-    await this.clickAndWaitForNavigation(page, this.editRowLink(id));
+  async goToEditTaxRulePage(page, row = 1) {
+    await this.clickAndWaitForNavigation(page, this.editRowLink(row));
   }
 
   /**
    * Reset filter
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
@@ -103,7 +112,7 @@ class TaxRules extends BOBasePage {
 
   /**
    * Get number of element in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -112,9 +121,9 @@ class TaxRules extends BOBasePage {
 
   /**
    * Get text column from table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Column name to get text column from table
    * @returns {Promise<string>}
    */
   async getTextColumnFromTable(page, row, columnName) {
@@ -146,20 +155,21 @@ class TaxRules extends BOBasePage {
 
   /**
    * Reset and get number of lines
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 
   /**
    * Filter table
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to filter with
    * @returns {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
@@ -179,8 +189,8 @@ class TaxRules extends BOBasePage {
 
   /**
    * Delete Tax Rule
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async deleteTaxRule(page, row = 1) {
@@ -190,6 +200,7 @@ class TaxRules extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
     // Confirm delete action
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
     // Get successful message
     return this.getAlertSuccessBlockContent(page);
   }
@@ -197,9 +208,9 @@ class TaxRules extends BOBasePage {
   // Sort methods
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name to get all rows column content
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -207,7 +218,7 @@ class TaxRules extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTable(page, i, columnName);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -215,9 +226,9 @@ class TaxRules extends BOBasePage {
 
   /**
    * Sort table
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -243,7 +254,7 @@ class TaxRules extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -252,8 +263,8 @@ class TaxRules extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -265,7 +276,7 @@ class TaxRules extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -276,7 +287,7 @@ class TaxRules extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -288,7 +299,7 @@ class TaxRules extends BOBasePage {
   /* Bulk actions methods */
   /**
    * Select all rows
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async bulkSelectRows(page) {
@@ -302,7 +313,7 @@ class TaxRules extends BOBasePage {
 
   /**
    * Delete tax rules by bulk action
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async bulkDeleteTaxRules(page) {
@@ -315,13 +326,14 @@ class TaxRules extends BOBasePage {
 
     // Click on delete
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+
     return this.getAlertSuccessBlockContent(page);
   }
 
   /**
    * Enable / disable tax rules by Bulk Actions
-   * @param page
-   * @param enable
+   * @param page {Page} Browser tab
+   * @param enable {boolean} True if we need to bulk enable status, false if not
    * @returns {Promise<string>}
    */
   async bulkSetStatus(page, enable = true) {
@@ -338,21 +350,22 @@ class TaxRules extends BOBasePage {
   }
 
   /**
-   * Get Value of columns enabled
-   * @param page
-   * @param row, row in table
+   * Get value of columns enabled
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
   async getStatus(page, row) {
     await this.waitForVisibleSelector(page, this.tableColumnActive(row), 2000);
+
     return this.elementVisible(page, this.tableColumnCheckIcon(row), 100);
   }
 
   /**
    * Quick edit toggle column value
-   * @param page
-   * @param row, row in table
-   * @param valueWanted, Value wanted in column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param valueWanted {boolean} True if we need to enable status, false if not
    * @return {Promise<boolean>}, return true if action is done, false otherwise
    */
   async setStatus(page, row, valueWanted = true) {

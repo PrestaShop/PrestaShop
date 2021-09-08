@@ -149,8 +149,8 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Enable/ Disable display available quantities
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} Status to set to display available quantity
    * @returns {Promise<string>}
    */
   async setDisplayAvailableQuantitiesStatus(page, toEnable = true) {

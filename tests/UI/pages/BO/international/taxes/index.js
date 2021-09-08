@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Taxes page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Taxes extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on taxes page
+   */
   constructor() {
     super();
 
@@ -11,11 +20,14 @@ class Taxes extends BOBasePage {
     // Selectors
     // SubTab
     this.taxRulesSubTab = '#subtab-AdminTaxRulesGroup';
+
     // HEADER buttons
     this.addNewTaxLink = 'a#page-header-desc-configuration-add';
+
     // Grid
     this.taxesGridPanelDiv = '#tax_grid_panel';
     this.gridHeaderTitle = `${this.taxesGridPanelDiv} h3.card-header-title`;
+
     // Bulk Actions
     this.bulkActionsToggleButton = `${this.taxesGridPanelDiv} button.js-bulk-actions-btn`;
     this.enableSelectionButton = `${this.taxesGridPanelDiv} #tax_grid_bulk_action_enable_selection`;
@@ -25,6 +37,7 @@ class Taxes extends BOBasePage {
     this.taxesGridTable = `${this.taxesGridPanelDiv} #tax_grid_table`;
     this.confirmDeleteModal = '#tax-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
+
     // Filters
     this.taxesFilterColumnInput = filterBy => `${this.taxesGridTable} #tax_${filterBy}`;
     this.resetFilterButton = `${this.taxesGridTable} .grid-reset-button`;
@@ -64,7 +77,7 @@ class Taxes extends BOBasePage {
 
   /**
    * Reset Filter in table
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
@@ -75,7 +88,7 @@ class Taxes extends BOBasePage {
 
   /**
    * Get number of elements in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -83,21 +96,22 @@ class Taxes extends BOBasePage {
   }
 
   /**
-   * Reset Filter And get number of elements in list
-   * @param page
+   * Reset filter and get number of elements in list
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 
   /**
    * Filter list of Taxes
-   * @param page
-   * @param filterType, input or select to choose method of filter
-   * @param filterBy, column to filter
-   * @param value, value to filter with
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
   async filterTaxes(page, filterType, filterBy, value = '') {
@@ -118,8 +132,8 @@ class Taxes extends BOBasePage {
 
   /**
    * Get toggle column value for a row
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
   async getStatus(page, row) {
@@ -136,9 +150,9 @@ class Taxes extends BOBasePage {
 
   /**
    * Update Enable column for the value wanted
-   * @param page
-   * @param row
-   * @param valueWanted
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param valueWanted {boolean} True if we need to enable status, false if not
    * @return {Promise<boolean>}, true if click has been performed
    */
   async setStatus(page, row, valueWanted = true) {
@@ -152,9 +166,9 @@ class Taxes extends BOBasePage {
 
   /**
    * get text from a column
-   * @param page
-   * @param row, row in table
-   * @param column, which column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column to get text value
    * @returns {Promise<string>}
    */
   async getTextColumnFromTableTaxes(page, row, column) {
@@ -163,9 +177,9 @@ class Taxes extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param column
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @param column {string} Column to get text value
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -173,7 +187,7 @@ class Taxes extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableTaxes(page, i, column);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -181,7 +195,7 @@ class Taxes extends BOBasePage {
 
   /**
    * Go to add tax Page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewTaxPage(page) {
@@ -190,8 +204,8 @@ class Taxes extends BOBasePage {
 
   /**
    * Go to Edit tax page
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async goToEditTaxPage(page, row) {
@@ -200,8 +214,8 @@ class Taxes extends BOBasePage {
 
   /**
    * Delete Tax
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async deleteTax(page, row) {
@@ -224,8 +238,8 @@ class Taxes extends BOBasePage {
 
   /**
    * Enable / disable taxes by Bulk Actions
-   * @param page
-   * @param enable
+   * @param page {Page} Browser tab
+   * @param enable {boolean} True if we need to bulk enable status
    * @returns {Promise<string>}
    */
   async bulkSetStatus(page, enable = true) {
@@ -246,7 +260,7 @@ class Taxes extends BOBasePage {
 
   /**
    * Delete all Taxes with Bulk Actions
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async deleteTaxesBulkActions(page) {
@@ -271,7 +285,7 @@ class Taxes extends BOBasePage {
 
   /**
    * Confirm delete with in modal
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async confirmDeleteTaxes(page) {
@@ -280,8 +294,9 @@ class Taxes extends BOBasePage {
 
   /**
    * Update Tax Options
-   * @param page
-   * @param taxOptionData
+   * @param page {Page} Browser tab
+   * @param taxOptionData {{enabled: boolean, displayInShoppingCart: boolean, basedOn: string,
+   * useEcoTax: boolean, ecoTax: ?string}} Data to set on new/edit tax option
    * @returns {Promise<string>}
    */
   async updateTaxOption(page, taxOptionData) {
@@ -305,7 +320,7 @@ class Taxes extends BOBasePage {
 
   /**
    * Go to Tax Rules page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToTaxRulesPage(page) {
@@ -315,9 +330,9 @@ class Taxes extends BOBasePage {
   /* Sort functions */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection = 'asc') {
@@ -336,7 +351,7 @@ class Taxes extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -345,32 +360,37 @@ class Taxes extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value to select on pagination limit
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+
     return this.getPaginationLabel(page);
   }
 
   /**
    * Click on next
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
     return this.getPaginationLabel(page);
   }
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
     return this.getPaginationLabel(page);
   }
 }
+
 module.exports = new Taxes();

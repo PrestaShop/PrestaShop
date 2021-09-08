@@ -52,7 +52,7 @@ class AddSupplier extends BOBasePage {
   /**
    * Create or edit Supplier
    * @param page {Page} Browser tab
-   * @param supplierData {supplierData} Data to set on new/edit supplier form
+   * @param supplierData {SupplierData} Data to set on new/edit supplier form
    * @return {Promise<void>}
    */
   async createEditSupplier(page, supplierData) {

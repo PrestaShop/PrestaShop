@@ -4,7 +4,7 @@ const faker = require('faker');
  * Create new shop to use on shop creation form on BO
  * @class
  */
-class ShopGroupData {
+class ShopData {
   /**
    * Constructor for class ShopGroupData
    * @param shopToCreate {Object} Could be used to force the value of some members
@@ -21,4 +21,4 @@ class ShopGroupData {
   }
 }
 
-module.exports = ShopGroupData;
+module.exports = ShopData;

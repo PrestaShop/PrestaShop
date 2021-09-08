@@ -11,7 +11,7 @@ class BrandData {
    */
   constructor(brandToCreate = {}) {
     /** @type {string} Name of the brand */
-    this.name = brandToCreate.name || faker.company.companyName();
+    this.name = brandToCreate.name || faker.company.companyName('string');
 
     /** @type {string} Logo name of the brand */
     this.logo = `${this.name.replace(/[^\w\s]/gi, '')}.png`;
@@ -40,13 +40,13 @@ class BrandData {
     /** @type {string} French meta description of the brand */
     this.metaDescriptionFr = brandToCreate.metaDescriptionFr || this.metaDescription;
 
-    /** @type {string} Meta Keywords of the brand */
+    /** @type {Array<string>} Meta Keywords of the brand */
     this.metaKeywords = brandToCreate.metaKeywords || [faker.lorem.word(), faker.lorem.word()];
 
-    /** @type {string} French meta keywords of the brand */
+    /** @type {Array<string>} French meta keywords of the brand */
     this.metaKeywordsFr = brandToCreate.metaKeywordsFr || this.metaKeywords;
 
-    /** @type {string} Status of the brand */
+    /** @type {boolean} Status of the brand */
     this.enabled = brandToCreate.enabled === undefined ? true : brandToCreate.enabled;
 
     /** @type {number} How much addresses has the brand */

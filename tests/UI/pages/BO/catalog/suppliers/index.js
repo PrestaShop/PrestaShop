@@ -304,7 +304,7 @@ class Suppliers extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column name to get text content
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -314,9 +314,9 @@ class Suppliers extends BOBasePage {
       let rowContent = await this.getTextContent(page, this.tableColumn(i, column));
 
       if (column === 'active') {
-        rowContent = await this.getStatus(page, i).toString();
+        rowContent = (await this.getStatus(page, i)).toString();
       }
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

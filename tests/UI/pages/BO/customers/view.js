@@ -196,7 +196,7 @@ class ViewCustomer extends BOBasePage {
    * Go to view/edit page
    * @param page {Page} Browser tab
    * @param cardTitle {string} Value of page title to go
-   * @param row
+   * @param row {number} Row on table where to click
    * @returns {Promise<void>}
    */
   async goToPage(page, cardTitle, row = 1) {

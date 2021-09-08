@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add state page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddState extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add state page
+   */
   constructor() {
     super();
 
@@ -22,8 +31,8 @@ class AddState extends BOBasePage {
    */
   /**
    * Fill form for add/edit state
-   * @param page
-   * @param stateData
+   * @param page {Page} Browser tab
+   * @param stateData {StateData} Data to set on new/edit state form
    * @returns {Promise<string>}
    */
   async createEditState(page, stateData) {

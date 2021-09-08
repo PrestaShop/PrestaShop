@@ -160,7 +160,7 @@ class Order extends BOBasePage {
    * Modify product price
    * @param page {Page} Browser tab
    * @param row {number} Product row on table
-   * @param price {float} Price to edit
+   * @param price {number} Price to edit
    * @returns {Promise<void>}
    */
   async modifyProductPrice(page, row, price) {
@@ -236,7 +236,7 @@ class Order extends BOBasePage {
         })),
     );
 
-    options = await options.filter(option => statusName === option.textContent);
+    options = options.filter(option => statusName === option.textContent);
     return options.length !== 0;
   }
 
@@ -342,7 +342,7 @@ class Order extends BOBasePage {
   /**
    * Download delivery slip
    * @param page {Page} Browser tab
-   * @returns {Promise<*>}
+   * @returns {Promise<string>}
    */
   async downloadDeliverySlip(page) {
     /* eslint-disable no-return-assign, no-param-reassign */
@@ -401,7 +401,7 @@ class Order extends BOBasePage {
   /**
    * Edit existing shipping address
    * @param page {Page} Browser tab
-   * @param addressData {object} Shipping address data to edit
+   * @param addressData {AddressData} Shipping address data to edit
    * @returns {Promise<void>}
    */
   async editExistingShippingAddress(page, addressData) {
@@ -416,7 +416,7 @@ class Order extends BOBasePage {
 
     await Promise.all([
       addressFrame.click(addAddressPage.saveAddressButton),
-      page.waitForSelector(this.editAddressIframe, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.editAddressIframe),
     ]);
 
     return this.getShippingAddress(page);
@@ -441,7 +441,7 @@ class Order extends BOBasePage {
   /**
    * Edit existing shipping address
    * @param page {Page} Browser tab
-   * @param addressData {object} Invoice address data to edit
+   * @param addressData {AddressData} Invoice address data to edit
    * @returns {Promise<void>}
    */
   async editExistingInvoiceAddress(page, addressData) {
@@ -456,7 +456,7 @@ class Order extends BOBasePage {
 
     await Promise.all([
       addressFrame.click(addAddressPage.saveAddressButton),
-      page.waitForSelector(this.editAddressIframe, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.editAddressIframe),
     ]);
 
     return this.getInvoiceAddress(page);
@@ -543,7 +543,7 @@ class Order extends BOBasePage {
   /**
    * Get searched product details
    * @param page {Page} Browser tab
-   * @returns {Promise<[]>}
+   * @returns {Promise<{stockLocation: string, available: number}>}
    */
   async getSearchedProductDetails(page) {
     return {
@@ -599,7 +599,7 @@ class Order extends BOBasePage {
    * Get product details
    * @param page {Page} Browser tab
    * @param row {number} Product row on table
-   * @returns {Promise<[]>}
+   * @returns {Promise<{total: number, quantity: number, name: string, available: number, basePrice: number}>}
    */
   async getProductDetails(page, row) {
     return {

@@ -50,7 +50,7 @@ class AddProduct extends BOBasePage {
 
     // Form nav
     this.formNavList = '#form-nav';
-    this.forNavlistItemLink = id => `${this.formNavList} #tab_step${id} a`;
+    this.forNavListItemLink = id => `${this.formNavList} #tab_step${id} a`;
 
     // Selectors of Step 2 : Pricing
     this.addSpecificPriceButton = '#js-open-create-specific-price-form';
@@ -121,7 +121,7 @@ class AddProduct extends BOBasePage {
   /**
    * Add product images
    * @param page {Page} Browser tab
-   * @param imagesPaths {Array<string|null>} Paths of the images to add to the product
+   * @param imagesPaths {Array<?string>} Paths of the images to add to the product
    * @returns {Promise<void>}
    */
   async addProductImages(page, imagesPaths = []) {
@@ -142,7 +142,7 @@ class AddProduct extends BOBasePage {
   /**
    * Set Name, type of product, Reference, price ATI, description and short description
    * @param page {Page} Browser tab
-   * @param productData {productData} Data to set on basic settings form
+   * @param productData {ProductData} Data to set on basic settings form
    * @return {Promise<void>}
    */
   async setBasicSetting(page, productData) {
@@ -156,10 +156,10 @@ class AddProduct extends BOBasePage {
     await this.selectByVisibleText(page, this.productTypeSelect, productData.type);
     await this.setValue(page, this.productReferenceInput, productData.reference);
     if (await this.elementVisible(page, this.productQuantityInput, 500)) {
-      await this.setValue(page, this.productQuantityInput, productData.quantity.toString());
+      await this.setValue(page, this.productQuantityInput, productData.quantity);
     }
     await this.selectByVisibleText(page, this.productTaxRuleSelect, productData.taxRule);
-    await this.setValue(page, this.productPriceAtiInput, productData.price.toString());
+    await this.setValue(page, this.productPriceAtiInput, productData.price);
   }
 
   /**
@@ -193,7 +193,7 @@ class AddProduct extends BOBasePage {
   /**
    * Create basic product
    * @param page {Page} Browser tab
-   * @param productData {productData} Data to set on new/edit product form
+   * @param productData {ProductData} Data to set on new/edit product form
    * @returns {Promise<string>}
    */
   async createEditBasicProduct(page, productData) {
@@ -210,7 +210,7 @@ class AddProduct extends BOBasePage {
   /**
    * Set Combinations for product
    * @param page {Page} Browser tab
-   * @param productData {productData} Data to set on combination form
+   * @param productData {ProductData} Data to set on combination form
    * @returns {Promise<string>}
    */
   async setCombinationsInProduct(page, productData) {
@@ -232,7 +232,7 @@ class AddProduct extends BOBasePage {
   /**
    * Generate combinations in input
    * @param page {Page} Browser tab
-   * @param combinations {combinations} Data to set on combination form
+   * @param combinations {Object|{color: Array<string>, size: Array<string>}} Data to set on combination form
    * @return {Promise<void>}
    */
   async addCombinations(page, combinations) {
@@ -251,7 +251,7 @@ class AddProduct extends BOBasePage {
   /**
    * Add one combination
    * @param page {Page} Browser tab
-   * @param combination {combinations} Data to set on combination form
+   * @param combination {string} Data to set on combination form
    * @return {Promise<void>}
    */
   async addCombination(page, combination) {
@@ -295,7 +295,7 @@ class AddProduct extends BOBasePage {
     const newPage = await this.openLinkWithTargetBlank(page, this.previewProductLink, 'body a');
     const textBody = await this.getTextContent(newPage, 'body');
 
-    if (await textBody.includes('[Debug] This page has moved')) {
+    if (textBody.includes('[Debug] This page has moved')) {
       await this.clickAndWaitForNavigation(newPage, 'a');
     }
     return newPage;
@@ -322,7 +322,7 @@ class AddProduct extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToFormStep(page, id = 1) {
-    const selector = this.forNavlistItemLink(id);
+    const selector = this.forNavListItemLink(id);
     await Promise.all([
       this.waitForVisibleSelector(page, `${selector}[aria-selected='true']`),
       this.waitForSelectorAndClick(page, selector),
@@ -332,7 +332,7 @@ class AddProduct extends BOBasePage {
   /**
    * Return true if combinations table is displayed
    * @param page {Page} Browser tab
-   * @return {boolean}
+   * @return {Promise<boolean>}
    */
   hasCombinations(page) {
     return this.elementVisible(page, this.productCombinationTableRow(1), 2000);
@@ -404,7 +404,8 @@ class AddProduct extends BOBasePage {
   /**
    * Add specific prices
    * @param page {Page} Browser tab
-   * @param specificPriceData {specificPriceData} Data to set on specific price form
+   * @param specificPriceData {Object|{combinations: ?string, discount: ?number, startingAt: ?number,
+   * reductionType: ?string}} Data to set on specific price form
    * @return {Promise<string>}
    */
   async addSpecificPrices(page, specificPriceData) {
@@ -423,8 +424,8 @@ class AddProduct extends BOBasePage {
       await this.scrollTo(page, this.combinationSelect);
       await this.selectByVisibleText(page, this.combinationSelect, specificPriceData.combinations);
     }
-    await this.setValue(page, this.startingAtInput, specificPriceData.startingAt.toString());
-    await this.setValue(page, this.applyDiscountOfInput, specificPriceData.discount.toString());
+    await this.setValue(page, this.startingAtInput, specificPriceData.startingAt);
+    await this.setValue(page, this.applyDiscountOfInput, specificPriceData.discount);
     await this.selectByVisibleText(page, this.reductionType, specificPriceData.reductionType);
 
     // Apply specific price
@@ -452,7 +453,7 @@ class AddProduct extends BOBasePage {
   /**
    * Is quantity input visible
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isQuantityInputVisible(page) {
     return this.elementVisible(page, this.productQuantityInput, 1000);
@@ -477,14 +478,14 @@ class AddProduct extends BOBasePage {
   async addProductToPack(page, product, quantity) {
     await page.type(this.packItemsInput, product);
     await this.waitForSelectorAndClick(page, this.packsearchResult);
-    await this.setValue(page, this.packQuantityInput, quantity.toString());
+    await this.setValue(page, this.packQuantityInput, quantity);
     await page.click(this.addProductToPackButton);
   }
 
   /**
    * Add pack of products
    * @param page {Page} Browser tab
-   * @param pack {productData} Data to set on pack form
+   * @param pack {Object} Data to set on pack form
    * @returns {Promise<void>}
    */
   async addPackOfProducts(page, pack) {
@@ -507,7 +508,7 @@ class AddProduct extends BOBasePage {
   /**
    * Set quantities settings
    * @param page {Page} Browser tab
-   * @param productData {productData} Data to set on quantities setting form
+   * @param productData {ProductData} Data to set on quantities setting form
    * @returns {Promise<void>}
    */
   async setQuantitiesSettings(page, productData) {
@@ -550,7 +551,7 @@ class AddProduct extends BOBasePage {
   /**
    * Set product
    * @param page {Page} Browser tab
-   * @param productData {productData} Data to set on on add/edit product form
+   * @param productData {ProductData} Data to set on on add/edit product form
    * @returns {Promise<string>}
    */
   async setProduct(page, productData) {

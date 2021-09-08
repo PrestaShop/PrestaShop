@@ -67,8 +67,8 @@ class Invoice extends BOBasePage {
   /**
    * Get message error after generate invoice by status fail
    * @param page {Page} Browser tab
-   * @param dateFrom Value to set on filter date from input
-   * @param dateTo Value to set on filter date to input
+   * @param dateFrom {string} Value to set on filter date from input
+   * @param dateTo {string} Value to set on filter date to input
    * @returns {Promise<string>}
    */
   async generatePDFByDateAndFail(page, dateFrom = '', dateTo = '') {
@@ -81,8 +81,8 @@ class Invoice extends BOBasePage {
   /**
    * Set values to generate pdf by date
    * @param page {Page} Browser tab
-   * @param dateFrom Value to set on filter date from input
-   * @param dateTo Value to set on filter date to input
+   * @param dateFrom {string} Value to set on filter date from input
+   * @param dateTo {string} Value to set on filter date to input
    * @returns {Promise<void>}
    */
   async setValuesForGeneratingPDFByDate(page, dateFrom = '', dateTo = '') {

@@ -37,7 +37,7 @@ class AddValue extends BOBasePage {
   /**
    * Fill value form and save it
    * @param page {Page} Browser tab
-   * @param valueData {valueData} Data to set on add/edit value form
+   * @param valueData {ValueData} Data to set on add/edit value form
    * @param saveAndStay {boolean} True if we need to save and stay, false if not
    * @return {Promise<string>}
    */

@@ -36,7 +36,7 @@ class AddPage extends BOBasePage {
   /**
    * Fill form for add/edit page category
    * @param page {Page} Browser tab
-   * @param pageData {pageData} Data to set on new/edit page form
+   * @param pageData {CMSPageData} Data to set on new/edit page form
    * @return {Promise<void>}
    */
   async createEditPage(page, pageData) {
