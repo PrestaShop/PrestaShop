@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -22,11 +23,32 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-const {$} = window;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-$(() => {
-  window.prestashop.component.initComponents([
-    'EventEmitter',
-  ]);
-});
+class SpecificPriceFormDataProvider implements FormDataProviderInterface
+{
+    /**
+     * @param int $id
+     *
+     * @return array<string, mixed>
+     */
+    public function getData($id): array
+    {
+        //@todo: get SpecificPrice for editing
+        return [];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getDefaultData(): array
+    {
+        return [
+            'reduction' => [
+                'value' => 0,
+            ]
+        ];
+    }
+}

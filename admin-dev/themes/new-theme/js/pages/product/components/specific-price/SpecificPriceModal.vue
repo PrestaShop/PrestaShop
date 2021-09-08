@@ -80,7 +80,6 @@
 </template>
 
 <script>
-  import CombinationsService from '@pages/product/services/combinations-service';
   import ProductMap from '@pages/product/product-map';
   import Modal from '@vue/components/Modal';
   import Router from '@components/router';
@@ -116,7 +115,6 @@
     },
     mounted() {
       this.container = $(ProductMap.specificPrice.container);
-      this.combinationsService = new CombinationsService(this.productId);
       this.watchEditButtons();
     },
     methods: {
@@ -185,7 +183,7 @@
         margin: 0;
         background: #eaebec;
 
-        .combination-loading {
+        .specific-price-loading {
           position: absolute;
           width: 100%;
           height: 100%;

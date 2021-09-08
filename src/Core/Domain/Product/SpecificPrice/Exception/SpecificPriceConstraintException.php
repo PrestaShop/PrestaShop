@@ -97,4 +97,9 @@ class SpecificPriceConstraintException extends SpecificPriceException
      * When specific price relation ID is not valid
      */
     public const INVALID_RELATION_ID = 13;
+
+    /**
+     * When exactly same specific price already exists for product
+     */
+    public const NOT_UNIQUE_PER_PRODUCT = 14;
 }
