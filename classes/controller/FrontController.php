@@ -1224,7 +1224,7 @@ class FrontControllerCore extends Controller
 
         $this->registerStylesheet('jquery-ui-theme', $css_theme_path, ['media' => 'all', 'priority' => 95]);
         $this->registerStylesheet('jquery-ui', $css_path, ['media' => 'all', 'priority' => 90]);
-        $this->registerJavascript('jquery-ui', $js_path, ['position' => 'bottom', 'priority' => 90]);
+        $this->registerJavascript('jquery-ui', $js_path, ['position' => 'bottom', 'priority' => 49]);
     }
 
     /**
