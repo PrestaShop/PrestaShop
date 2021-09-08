@@ -31,7 +31,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShop;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use Webmozart\Assert\Assert;
 
 class ProductShopFeatureContext extends AbstractProductFeatureContext
@@ -51,7 +50,7 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
         try {
             $this->getCommandBus()->handle(new GetProductForEditing(
                 $productId,
-                new ShopId((int) $shop->id)
+                (int) $shop->id
             ));
         } catch (ShopAssociationNotFound $e) {
             $caughtException = $e;
@@ -75,7 +74,7 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
         try {
             $this->getCommandBus()->handle(new GetProductForEditing(
                 $productId,
-                new ShopId((int) $shop->id)
+                (int) $shop->id
             ));
         } catch (ShopAssociationNotFound $e) {
             $caughtException = $e;
