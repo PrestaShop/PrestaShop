@@ -28,10 +28,13 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShop;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use Webmozart\Assert\Assert;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 
 class ProductShopFeatureContext extends AbstractProductFeatureContext
 {
@@ -56,7 +59,7 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
             $caughtException = $e;
         }
 
-        Assert::notNull($caughtException);
+        Assert::assertNotNull($caughtException);
     }
 
     /**
@@ -80,7 +83,24 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
             $caughtException = $e;
         }
 
-        Assert::null($caughtException);
+        Assert::assertNull($caughtException);
+    }
+
+    /**
+     * @Then default shop for product :productReference is :shopReference
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     */
+    public function checkDefaultShop(string $productReference, string $shopReference): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        $shop = $this->getSharedStorage()->get($shopReference);
+
+        /** @var ProductRepository $productRepository */
+        $productRepository = CommonFeatureContext::getContainer()->get('prestashop.adapter.product.repository.product_repository');
+        $defaultShopId = $productRepository->getProductDefaultShopId(new ProductId($productId));
+        Assert::assertEquals((int) $shop->id, $defaultShopId->getValue());
     }
 
     /**
