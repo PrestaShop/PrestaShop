@@ -321,18 +321,19 @@ class ProductRepository extends AbstractObjectModelRepository
      *
      * @throws CannotAddProductException
      */
-    public function create(array $localizedNames, string $productType): Product
+    public function create(array $localizedNames, string $productType, ShopId $shopId): Product
     {
-        $product = new Product();
+        $product = new Product(null, false, null, $shopId->getValue());
         $product->active = false;
         $product->id_category_default = $this->defaultCategoryId;
         $product->name = $localizedNames;
         $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType;
         $product->cache_is_pack = ProductType::TYPE_PACK === $productType;
         $product->product_type = $productType;
+        $product->id_shop_default = $shopId->getValue();
 
         $this->productValidator->validateCreation($product);
-        $this->addObjectModel($product, CannotAddProductException::class);
+        $this->addObjectModelToShop($product, $shopId->getValue(), CannotAddProductException::class);
         $product->addToCategories([$product->id_category_default]);
 
         return $product;

@@ -13,10 +13,14 @@ Feature: Copy product from shop to shop.
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
     And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
     And single shop context is loaded
+
+  Scenario: I copy product to another shop that was not associated
+    # By default the product is created for default shop
     Given I add product "product1" with following information:
       | name[en-US] | magic staff |
       | type        | standard    |
     Then product product1 is associated to shop shop1
+    And default shop for product product1 is shop1
     When I update product "product1" prices with following information:
       | price              | 100.99          |
       | ecotax             | 0               |
@@ -38,11 +42,11 @@ Feature: Copy product from shop to shop.
     And product product1 is not associated to shop shop2
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
-
-  Scenario: I copy product to another shop that was not associated
     # Copy values to another shop which was not associated yet
     When I copy product product1 from shop shop1 to shop shop2
     Then product product1 is associated to shop shop2
+    And product product1 is associated to shop shop1
+    And default shop for product product1 is shop1
     And product product1 should have following prices information for shops "shop1,shop2":
       | price              | 100.99          |
       | price_tax_included | 105.0296        |
@@ -84,6 +88,7 @@ Feature: Copy product from shop to shop.
       | unit_price         | 10              |
       | unity              | bag of ten      |
       | unit_price_ratio   | 10.099          |
+    # Copy values to a shop which is already associated
     When I copy product product1 from shop shop1 to shop shop2
     Then product product1 is associated to shop shop2
     And product product1 should have following prices information for shops "shop1,shop2":
@@ -98,3 +103,13 @@ Feature: Copy product from shop to shop.
       | unit_price_ratio   | 10.0495           |
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
+
+  Scenario: Add products in specific shop
+    Given I add product "product2" to shop "shop2" with following information:
+      | name[en-US] | magic staff |
+      | type        | standard    |
+    Then product product2 is associated to shop shop2
+    And default shop for product product2 is shop2
+    And product product2 is not associated to shop shop1
+    And product product2 is not associated to shop shop3
+    And product product2 is not associated to shop shop4

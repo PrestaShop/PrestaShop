@@ -78,7 +78,8 @@ class ProductFormDataHandler implements FormDataHandlerInterface
     {
         $createCommand = new AddProductCommand(
             $data['header']['name'],
-            $data['header']['type']
+            $data['header']['type'],
+            $this->shopId->getValue()
         );
         // These are already set on creation no need to update them
         unset($data['header']['name']);
