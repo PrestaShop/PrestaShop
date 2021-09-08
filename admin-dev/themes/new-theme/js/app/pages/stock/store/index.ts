@@ -24,13 +24,13 @@
  */
 /* eslint-disable no-param-reassign */
 
-import Vue, {PluginObject} from 'vue';
+import Vue from 'vue';
 import Vuex from 'vuex';
 import _ from 'lodash';
 import * as actions from './actions';
 import mutations from './mutations';
 
-Vue.use(<PluginObject<any>><unknown>Vuex);
+Vue.use(Vuex);
 
 // root state object.
 
