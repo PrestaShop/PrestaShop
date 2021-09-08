@@ -249,9 +249,7 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function get(ProductId $productId): Product
     {
-        $defaultShopId = $this->getProductDefaultShopId($productId);
-
-        return $this->getForShop($productId, $defaultShopId);
+        return $this->getProductByDefaultShop($productId);
     }
 
     /**
@@ -284,33 +282,19 @@ class ProductRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param ShopId $shopId
+     * @param ShopConstraint $shopConstraint
      *
      * @return Product
      *
      * @throws CoreException
      */
-    public function getForShop(ProductId $productId, ShopId $shopId): Product
+    public function getByShopConstraint(ProductId $productId, ShopConstraint $shopConstraint): Product
     {
-        /** @var Product $product */
-        $product = $this->getObjectModelForShop(
-            $productId->getValue(),
-            Product::class,
-            ProductNotFoundException::class,
-            $shopId
-        );
+        if ($shopConstraint->forAllShops()) {
+            return $this->getProductByDefaultShop($productId);
+        }
 
-        return $this->loadProduct($product);
-    }
-
-    /**
-     * This override was needed because of the extra parameter in product constructor
-     *
-     * @inerhitDoc
-     */
-    protected function constructObjectModel(int $id, string $objectModelClass, ?int $shopId): ObjectModel
-    {
-        return new Product($id, false, null, $shopId);
+        return $this->getProductByShopId($productId, $shopConstraint->getShopId());
     }
 
     /**
@@ -517,6 +501,51 @@ class ProductRepository extends AbstractObjectModelRepository
         }
 
         return $shops;
+    }
+
+    /**
+     * This override was needed because of the extra parameter in product constructor
+     *
+     * @inerhitDoc
+     */
+    protected function constructObjectModel(int $id, string $objectModelClass, ?int $shopId): ObjectModel
+    {
+        return new Product($id, false, null, $shopId);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @return Product
+     *
+     * @throws CoreException
+     */
+    private function getProductByShopId(ProductId $productId, ShopId $shopId): Product
+    {
+        /** @var Product $product */
+        $product = $this->getObjectModelForShop(
+            $productId->getValue(),
+            Product::class,
+            ProductNotFoundException::class,
+            $shopId
+        );
+
+        return $this->loadProduct($product);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return Product
+     *
+     * @throws ProductNotFoundException
+     */
+    private function getProductByDefaultShop(ProductId $productId): Product
+    {
+        $defaultShopId = $this->getProductDefaultShopId($productId);
+
+        return $this->getProductByShopId($productId, $defaultShopId);
     }
 
     /**

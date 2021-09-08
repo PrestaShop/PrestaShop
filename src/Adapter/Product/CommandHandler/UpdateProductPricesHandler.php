@@ -78,12 +78,7 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
      */
     public function handle(UpdateProductPricesCommand $command): void
     {
-        if ($command->getShopConstraint()->forAllShops()) {
-            $product = $this->productRepository->get($command->getProductId());
-        } else {
-            $product = $this->productRepository->getForShop($command->getProductId(), $command->getShopConstraint()->getShopId());
-        }
-
+        $product = $this->productRepository->getByShopConstraint($command->getProductId(), $command->getShopConstraint());
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
         $this->productRepository->partialUpdateForShopConstraint(
             $product,
