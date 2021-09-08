@@ -53,6 +53,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use PrestaShopException;
 use SpecificPrice;
 
 /**
@@ -158,6 +159,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         $this->validateSpecificPriceProperty($specificPrice, 'id_shop_group', SpecificPriceConstraintException::INVALID_RELATION_ID);
         $this->validateSpecificPriceProperty($specificPrice, 'id_specific_price_rule', SpecificPriceConstraintException::INVALID_RELATION_ID);
         $this->assertRelatedEntitiesExist($specificPrice);
+        $this->assertSpecificPriceIsUniquePerProduct($specificPrice);
     }
 
     /**
@@ -202,42 +204,80 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
      */
     private function assertRelatedEntitiesExist(SpecificPrice $specificPrice): void
     {
-        $productId = (int) $specificPrice->id_product;
+        $productId = (int)$specificPrice->id_product;
         $this->productRepository->assertProductExists(new ProductId($productId));
 
-        $shopGroupId = (int) $specificPrice->id_shop_group;
+        $shopGroupId = (int)$specificPrice->id_shop_group;
         if ($shopGroupId) {
             $this->shopGroupRepository->assertShopGroupExists(new ShopGroupId($shopGroupId));
         }
 
-        $shopId = (int) $specificPrice->id_shop;
+        $shopId = (int)$specificPrice->id_shop;
         if ($shopId !== NoShopId::NO_SHOP_ID) {
             $this->shopRepository->assertShopExists(new ShopId($shopId));
         }
 
-        $combinationId = (int) $specificPrice->id_product_attribute;
+        $combinationId = (int)$specificPrice->id_product_attribute;
         if ($combinationId !== NoCombinationId::NO_COMBINATION_ID) {
             $this->combinationRepository->assertCombinationExists(new CombinationId($combinationId));
         }
 
-        $currencyId = (int) $specificPrice->id_currency;
+        $currencyId = (int)$specificPrice->id_currency;
         if ($currencyId !== NoCurrencyId::NO_CURRENCY_ID) {
             $this->currencyRepository->assertCurrencyExists(new CurrencyId($currencyId));
         }
 
-        $countryId = (int) $specificPrice->id_country;
+        $countryId = (int)$specificPrice->id_country;
         if ($countryId) {
             $this->countryRepository->assertCountryExists(new CountryId($countryId));
         }
 
-        $groupId = (int) $specificPrice->id_group;
+        $groupId = (int)$specificPrice->id_group;
         if ($groupId !== NoGroupId::NO_GROUP_ID) {
             $this->groupRepository->assertGroupExists(new GroupId($groupId));
         }
 
-        $customerId = (int) $specificPrice->id_customer;
+        $customerId = (int)$specificPrice->id_customer;
         if ($customerId) {
             $this->customerRepository->assertCustomerExists(new CustomerId($customerId));
+        }
+    }
+    
+    private function assertSpecificPriceIsUniquePerProduct(SpecificPrice $specificPrice): void
+    {
+        $productId = (int) $specificPrice->id_product;
+        $combinationId = (int) $specificPrice->id_product_attribute;
+
+        try {
+            $alreadyExists = SpecificPrice::exists(
+                $productId,
+                $combinationId,
+                $specificPrice->id_shop,
+                $specificPrice->id_group,
+                $specificPrice->id_country,
+                $specificPrice->id_currency,
+                $specificPrice->id_customer,
+                $specificPrice->from_quantity,
+                $specificPrice->from,
+                $specificPrice->to
+            );
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                'Something went wrong when checking specific price uniqueness',
+                0,
+                $e->getPrevious()
+            );
+        }
+
+        if ($alreadyExists) {
+            throw new SpecificPriceConstraintException(
+                sprintf(
+                    'Identical specific price already exists for product "%d" and combination "%d',
+                    $productId,
+                    $combinationId
+                ),
+                SpecificPriceConstraintException::NOT_UNIQUE_PER_PRODUCT
+            );
         }
     }
 }
