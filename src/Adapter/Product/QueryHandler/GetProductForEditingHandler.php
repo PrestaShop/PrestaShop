@@ -61,6 +61,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformatio
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
@@ -173,7 +174,10 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      */
     public function handle(GetProductForEditing $query): ProductForEditing
     {
-        $product = $this->productRepository->getForShop($query->getProductId(), $query->getShopId());
+        $product = $this->productRepository->getByShopConstraint(
+            $query->getProductId(),
+            ShopConstraint::shop($query->getShopId()->getValue())
+        );
 
         return new ProductForEditing(
             (int) $product->id,
