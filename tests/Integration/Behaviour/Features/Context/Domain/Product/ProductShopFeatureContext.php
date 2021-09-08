@@ -30,7 +30,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShop;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
@@ -46,15 +45,11 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
      */
     public function checkNoShopAssociation(string $productReference, string $shopReference): void
     {
-        $productId = $this->getSharedStorage()->get($productReference);
         $shop = $this->getSharedStorage()->get($shopReference);
 
         $caughtException = null;
         try {
-            $this->getCommandBus()->handle(new GetProductForEditing(
-                $productId,
-                (int) $shop->id
-            ));
+            $this->getProductForEditing($productReference, (int) $shop->id);
         } catch (ShopAssociationNotFound $e) {
             $caughtException = $e;
         }
@@ -75,10 +70,7 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
 
         $caughtException = null;
         try {
-            $this->getCommandBus()->handle(new GetProductForEditing(
-                $productId,
-                (int) $shop->id
-            ));
+            $this->getProductForEditing($productReference, (int) $shop->id);
         } catch (ShopAssociationNotFound $e) {
             $caughtException = $e;
         }
