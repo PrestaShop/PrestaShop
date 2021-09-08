@@ -249,14 +249,37 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function get(ProductId $productId): Product
     {
-        /** @var Product $product */
-        $product = $this->getObjectModel(
-            $productId->getValue(),
-            Product::class,
-            ProductNotFoundException::class
-        );
+        $defaultShopId = $this->getProductDefaultShopId($productId);
 
-        return $this->loadProduct($product);
+        return $this->getForShop($productId, $defaultShopId);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return ShopId
+     *
+     * @throws ProductNotFoundException
+     */
+    public function getProductDefaultShopId(ProductId $productId): ShopId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('id_shop_default')
+            ->from($this->dbPrefix . 'product')
+            ->where('id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetch();
+        if (empty($result['id_shop_default'])) {
+            throw new ProductNotFoundException(sprintf(
+                'Could not find Product with id %d',
+                $productId->getValue()
+            ));
+        }
+
+        return new ShopId((int) $result['id_shop_default']);
     }
 
     /**
