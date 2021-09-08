@@ -98,8 +98,7 @@
         createSpecificPriceUrl: router.generate(
           'admin_products_specific_prices_create',
           {
-            //@todo hardcoded
-            productId: 18,
+            productId: this.productId,
             liteDisplaying: 1,
           },
         ),
@@ -110,6 +109,10 @@
     props: {
       eventEmitter: {
         type: Object,
+        required: true,
+      },
+      productId: {
+        type: Number,
         required: true,
       },
     },
@@ -125,6 +128,8 @@
           ProductMap.specificPrice.form,
         );
         form.submit();
+        this.submittingForm = false;
+        this.loadingForm = false;
         //@todo: whats next?
       },
       watchEditButtons() {

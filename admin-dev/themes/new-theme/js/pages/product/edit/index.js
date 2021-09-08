@@ -39,12 +39,10 @@ import ProductSEOManager from '@pages/product/edit/product-seo-manager';
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
 import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
-
+import SpecificPricesManager from '@pages/product/edit/specific-prices-manager';
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
 import RelatedProductsManager from '@pages/product/edit/related-products-manager';
-import SpecificPriceManager from '@pages/product/components/specific-price/specific-price-manager';
-import SpecificPricesManager from '@pages/product/edit/specific-prices-manager';
 
 const {$} = window;
 
@@ -85,7 +83,6 @@ $(() => {
   new ProductFooterManager();
   new ProductModulesManager();
   new RelatedProductsManager(eventEmitter);
-  new SpecificPriceManager();
   new SpecificPricesManager();
 
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
@@ -106,6 +103,7 @@ $(() => {
   new FeatureValuesManager(eventEmitter);
   new CustomizationsManager();
   new AttachmentsManager();
+  new SpecificPricesManager(productId);
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
     new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true, productFormModel);
