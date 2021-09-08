@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Command for creating product with basic information
@@ -46,15 +47,22 @@ class AddProductCommand
     private $productType;
 
     /**
+     * @var ShopId
+     */
+    private $shopId;
+
+    /**
      * @param array $localizedNames
      * @param string $productType
      */
     public function __construct(
         array $localizedNames,
-        string $productType
+        string $productType,
+        int $shopId
     ) {
         $this->localizedNames = $localizedNames;
         $this->productType = new ProductType($productType);
+        $this->shopId = new ShopId($shopId);
     }
 
     /**
@@ -71,5 +79,13 @@ class AddProductCommand
     public function getProductType(): ProductType
     {
         return $this->productType;
+    }
+
+    /**
+     * @return ShopId
+     */
+    public function getShopId(): ShopId
+    {
+        return $this->shopId;
     }
 }
