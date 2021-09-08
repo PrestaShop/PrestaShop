@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
@@ -72,7 +71,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private $defaultCategoryId;
 
     /**
-     * @var ShopId
+     * @var int
      */
     private $shopId;
 
@@ -95,7 +94,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         $this->defaultProductActivation = $defaultProductActivation;
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
         $this->defaultCategoryId = $defaultCategoryId;
-        $this->shopId = new ShopId($contextShopId ?: $defaultShopId);
+        $this->shopId = $contextShopId ?: $defaultShopId;
     }
 
     /**
