@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -117,11 +116,11 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
 
     /**
      * @param string $reference
-     * @param ShopId|null $shopId
+     * @param int|null $shopId
      *
      * @return ProductForEditing
      */
-    protected function getProductForEditing(string $reference, ?ShopId $shopId = null): ProductForEditing
+    protected function getProductForEditing(string $reference, ?int $shopId = null): ProductForEditing
     {
         // @todo: For now, we handle a default fallback to avoid refactoring the whole tests, but ultimately this parameter should become mandatory
         if (null === $shopId) {
@@ -313,14 +312,14 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
      */
     protected function getDefaultShopConstraint(): ShopConstraint
     {
-        return ShopConstraint::shop((int) Configuration::get('PS_SHOP_DEFAULT'));
+        return ShopConstraint::shop($this->getDefaultShopId());
     }
 
     /**
-     * @return ShopId
+     * @return int
      */
-    protected function getDefaultShopId(): ShopId
+    protected function getDefaultShopId(): int
     {
-        return new ShopId((int) Configuration::get('PS_SHOP_DEFAULT'));
+        return (int) Configuration::get('PS_SHOP_DEFAULT');
     }
 }
