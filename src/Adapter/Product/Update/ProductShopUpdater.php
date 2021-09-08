@@ -181,7 +181,7 @@ class ProductShopUpdater
     {
         return [
             'id_category_default' => (int) $product->id_category_default,
-            'cache_default_attribute' => $product->cache_default_attribute,
+            'cache_default_attribute' => (int) $product->cache_default_attribute,
         ];
     }
 

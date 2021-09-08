@@ -111,7 +111,7 @@ class CommandAccessorConfig
     }
 
     /**
-     * @return CommandField[]
+     * @return array<int, CommandField>
      */
     public function getFields(): array
     {

@@ -85,9 +85,9 @@ class ProductFormDataProvider implements FormDataProviderInterface
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
-     * @param int $defaultCategoryId
      * @param int $contextLangId
-     * @param int $shopId
+     * @param int $defaultCategoryId
+     * @param int|null $contextShopId
      */
     public function __construct(
         CommandBusInterface $queryBus,
@@ -96,14 +96,14 @@ class ProductFormDataProvider implements FormDataProviderInterface
         int $defaultCategoryId,
         int $contextLangId,
         int $defaultShopId,
-        ?int $shopId
+        ?int $contextShopId
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
         $this->defaultCategoryId = $defaultCategoryId;
         $this->contextLangId = $contextLangId;
-        $this->shopId = null !== $shopId ? new ShopId($shopId) : new ShopId($defaultShopId);
+        $this->shopId = new ShopId($contextShopId ?: $defaultShopId);
     }
 
     /**
