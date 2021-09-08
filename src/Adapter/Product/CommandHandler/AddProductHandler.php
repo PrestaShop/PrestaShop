@@ -57,7 +57,11 @@ final class AddProductHandler implements AddProductHandlerInterface
      */
     public function handle(AddProductCommand $command): ProductId
     {
-        $product = $this->productRepository->create($command->getLocalizedNames(), $command->getProductType()->getValue());
+        $product = $this->productRepository->create(
+            $command->getLocalizedNames(),
+            $command->getProductType()->getValue(),
+            $command->getShopId()
+        );
 
         return new ProductId((int) $product->id);
     }
