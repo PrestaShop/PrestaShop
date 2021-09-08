@@ -32,7 +32,6 @@ use DateTime;
 use DateTimeImmutable;
 use Generator;
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
@@ -1174,9 +1173,9 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @param int $expectedShopId
      *
-     * @return MockObject|CommandBusInterface
+     * @return CommandBusInterface
      */
-    private function createQueryBusCheckingShopMock(int $expectedShopId)
+    private function createQueryBusCheckingShopMock(int $expectedShopId): CommandBusInterface
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
 
@@ -1203,9 +1202,9 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @param array $productData
      *
-     * @return MockObject|CommandBusInterface
+     * @return CommandBusInterface
      */
-    private function createQueryBusMock(array $productData)
+    private function createQueryBusMock(array $productData): CommandBusInterface
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
 
@@ -1226,10 +1225,10 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
-     * @param $query
+     * @param mixed $query
      * @param array $productData
      *
-     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|null
+     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]
      */
     private function createResultBasedOnQuery($query, array $productData)
     {
