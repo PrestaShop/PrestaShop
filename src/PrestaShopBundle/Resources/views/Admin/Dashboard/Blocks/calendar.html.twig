@@ -31,34 +31,36 @@
       <div class="form-inline row">
         <div class="btn-group flex-wrap">
           <button type="button" name="submitDateDay" class="btn btn-default submitDateDay{% if preselectDateRange == 'day' %} active{% endif %}">
-            {{ 'Day'|trans }}
+            {{ 'Today'|trans }}
           </button>
           <button type="button" name="submitDateMonth" class="btn btn-default submitDateMonth{% if preselectDateRange == 'month' or not preselectDateRange %} active{% endif %}">
-            {{ 'Month'|trans }}
+            {{ 'This month'|trans }}
           </button>
           <button type="button" name="submitDateYear" class="btn btn-default submitDateYear{% if preselectDateRange == 'year' %} active{% endif %}">
-            {{ 'Year'|trans }}
+            {{ 'This year'|trans }}
           </button>
           <button type="button" name="submitDateDayPrev" class="btn btn-default submitDateDayPrev{% if preselectDateRange == 'prev-day' %} active{% endif %}">
-            {{ 'Day'|trans }}-1
+            {{ 'Yesterday'|trans }}
           </button>
-          <button type="button" name="submitDateMonthPrev" class="btn btn-default submitDateMonthPrev{% if preselectDateRange == 'prev-month' %} active{% endif %}">
-            {{ 'Month'|trans }}-1
+          <button type="button" name="submitDateWeekPrev" class="btn btn-default submitDateWeekPrev{% if preselectDateRange == 'prev-week' %} active{% endif %}">
+            {{ 'Last week'|trans }}
           </button>
-          <button type="button" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev{% if preselectDateRange == 'prev-year' %} active{% endif %}">
-            {{ 'Year'|trans }}-1
+          <button type="button" name="submitCustom" class="btn btn-default submitCustom{% if preselectDateRange == 'custom' %} active{% endif %}">
+            {{ 'Custom'|trans }}
           </button>
         </div>
+
         <input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{{ dateFrom|escape }}">
         <input type="hidden" name="datepickerTo" id="datepickerTo" value="{{ dateTo|escape }}">
         <input type="hidden" name="preselectDateRange" value="{{ preselectDateRange|escape }}">
+
         <div class="form-group ml-auto">
+          <label for="datepickerExpand">{{ 'Compare with:'|trans }}</label>
           <button id="datepickerExpand" class="btn btn-default" type="button" data-toggle="collapse" data-target="#datepicker">
             <i class="material-icons">calendar_today</i>
             <span class="d-none d-sm-inline-block">
-              {{ 'From'|trans }}
               <strong class="text-info" id="datepicker-from-info">{{ dateFrom|escape }}</strong>
-              {{ 'To'|trans }}
+              -
               <strong class="text-info" id="datepicker-to-info">{{ dateTo|escape }}</strong>
               <strong class="text-info" id="datepicker-diff-info"></strong>
             </span>
@@ -66,6 +68,7 @@
           </button>
         </div>
       </div>
+
       <div class="row row-padding-top collapse mt-3" id="datepicker">
         <div class="col-lg-12">
           <div class="row">
