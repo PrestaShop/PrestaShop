@@ -3,7 +3,9 @@ require('module-alias/register');
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
 
-let screenshotNumber = 1;
+let failNumber = 1;
+const maxFailNumber = 250;
+const screenshotPath = number => `./screenshots/fail_test_${number}.png`;
 
 /**
  * Create unique browser for all mocha run
@@ -43,17 +45,26 @@ after(async function () {
 
 afterEach(async function () {
   // Take screenshot if demanded after failed step
-  if (global.TAKE_SCREENSHOT_AFTER_FAIL && this.currentTest.state === 'failed') {
-    const currentTab = await helper.getLastOpenedTab(this.browser);
+  if (this.currentTest.state === 'failed') {
+    if (global.TAKE_SCREENSHOT_AFTER_FAIL) {
+      const currentTab = await helper.getLastOpenedTab(this.browser);
 
-    // Take a screenshot
-    await currentTab.screenshot(
-      {
-        path: `./screenshots/fail_test_${screenshotNumber}.png`,
+      // Take a screenshot
+      const screenshotOptions = {
+        path: screenshotPath(failNumber),
         fullPage: true,
-      },
-    );
+      };
 
-    screenshotNumber += 1;
+      await currentTab.screenshot(screenshotOptions);
+    }
+
+    failNumber += 1;
+  }
+});
+
+beforeEach(async function () {
+  // Skipping tests if we reached the maximum of failing tests
+  if (failNumber > maxFailNumber && !global.GENERATE_FAILED_STEPS) {
+    this.skip();
   }
 });
