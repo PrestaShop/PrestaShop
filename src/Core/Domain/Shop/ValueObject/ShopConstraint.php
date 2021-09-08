@@ -35,19 +35,19 @@ class ShopConstraint
     /**
      * @var ShopId|null
      */
-    private $shopId;
+    protected $shopId;
 
     /**
      * @var ShopGroupId|null
      */
-    private $shopGroupId;
+    protected $shopGroupId;
 
     /**
      * Indicate if the value returned matches the constraints strictly, else it fallbacks to Shop > Group > Global value
      *
      * @var bool
      */
-    private $strict;
+    protected $strict;
 
     /**
      * Constraint to get configuration for a specific shop
