@@ -89,8 +89,8 @@ class OrderConfirmationControllerCore extends FrontController
             if ($this->order->module !== 'free_order') {
                 Tools::redirect($redirectLink);
             }
-        // Otherwise we run a normal check that module matches
         } else {
+            // Otherwise we run a normal check that module matches
             $module = Module::getInstanceById((int) ($this->id_module));
             if ($this->order->module !== $module->name) {
                 Tools::redirect($redirectLink);
