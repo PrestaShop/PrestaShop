@@ -51,6 +51,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 //@todo: where to redirect after submit?
                 return $this->redirectToRoute('admin_products_specific_prices_create', [
                     'productId' => $productId,
+                    'liteDisplaying' => $request->query->has('liteDisplaying'),
                 ]);
             }
         } catch (Exception $e) {

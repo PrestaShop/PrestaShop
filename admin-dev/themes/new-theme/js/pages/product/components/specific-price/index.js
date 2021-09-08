@@ -31,12 +31,14 @@ import SpecificPriceModal from '@pages/product/components/specific-price/Specifi
 Vue.use(VueI18n);
 
 /**
+ * @param {number} productId
  * @param {string} specificPriceModalSelector
  * @param {Object} eventEmitter
  *
  * @returns {Vue|CombinedVueInstance<Vue, {eventEmitter, productId}, object, object, Record<never, any>>|null}
  */
 export default function initSpecificPriceModal(
+  productId,
   specificPriceModalSelector,
   eventEmitter,
 ) {
@@ -56,11 +58,12 @@ export default function initSpecificPriceModal(
   return new Vue({
     el: specificPriceModalSelector,
     template:
-      '<specific-price-modal :eventEmitter=eventEmitter />',
+      '<specific-price-modal :productId=productId :eventEmitter=eventEmitter />',
     components: {SpecificPriceModal},
     i18n,
     data: {
       eventEmitter,
+      productId,
     },
   });
 }
