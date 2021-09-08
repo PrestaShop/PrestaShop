@@ -76,7 +76,10 @@ class ProductFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data): int
     {
-        $createCommand = new AddProductCommand($data['type']);
+        $createCommand = new AddProductCommand(
+            $data['type'],
+            $this->shopId->getValue()
+        );
 
         /** @var ProductId $productId */
         $productId = $this->bus->handle($createCommand);
