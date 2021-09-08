@@ -40,22 +40,6 @@ use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
  */
 class LogsConfiguration extends AbstractMultistoreConfiguration
 {
-
-    /**
-     * @var Configuration
-     */
-    protected $configuration;
-
-    /**
-     * @var Context
-     */
-    protected $shopContext;
-
-     /**
-     * @var FeatureInterface
-     */
-    protected $multistoreFeature;
-
     /**
      * @var TranslatorInterface
      */
@@ -68,11 +52,9 @@ class LogsConfiguration extends AbstractMultistoreConfiguration
 
     public function __construct(Configuration $configuration, Context $shopContext, FeatureInterface $multistoreFeature, TranslatorInterface $translator, Validate $validate)
     {
-        $this->configuration = $configuration;
-        $this->shopContext = $shopContext;
-        $this->multistoreFeature = $multistoreFeature;
         $this->translator = $translator;
-        $this->validate = $validate;
+        $this->validate = $validate; 
+        parent::__construct($configuration, $shopContext, $multistoreFeature);
     }
 
     /**
