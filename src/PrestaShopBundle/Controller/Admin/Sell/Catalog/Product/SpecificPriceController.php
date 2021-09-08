@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -40,18 +42,41 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $form = $this->getFormBuilder()->getForm(['product_id' => $productId]);
         $form->handleRequest($request);
 
-        $result = $this->getFormHandler()->handle($form);
+        try {
+            $result = $this->getFormHandler()->handle($form);
 
-        if ($result->isSubmitted() && $result->isValid()) {
-            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Creation successful', 'Admin.Notifications.Success'));
 
-            //@todo: where to redirect after submit?
-            return $this->redirectToRoute('admin_products_specific_prices_create');
+                //@todo: where to redirect after submit?
+                return $this->redirectToRoute('admin_products_specific_prices_create', [
+                    'productId' => $productId,
+                ]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/create.html.twig', [
             'specificPriceForm' => $form->createView(),
         ]);
+    }
+
+    /**
+     * Provides error messages for exceptions
+     *
+     * @return array<string, mixed>
+     */
+    private function getErrorMessages(): array
+    {
+        return [
+            SpecificPriceConstraintException::class => [
+                SpecificPriceConstraintException::NOT_UNIQUE_PER_PRODUCT => $this->trans(
+                    'A specific price already exists for these parameters.',
+                    'Admin.Catalog.Notification'
+                ),
+            ],
+        ];
     }
 
     private function getFormBuilder(): FormBuilderInterface

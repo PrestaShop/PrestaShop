@@ -23,36 +23,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-
 import ProductMap from '@pages/product/product-map';
-import ConfirmModal from '@components/modal';
+import initSpecificPriceModal from '@pages/product/components/specific-price';
+import {EventEmitter} from 'events';
 
 const SpecificPriceMap = ProductMap.specificPrice;
 
-export default class SpecificPriceModal {
-  public showModal(): void {
-    const modalTemplate = document.querySelector(SpecificPriceMap.modalTemplate) as HTMLTemplateElement;
-    const modalContent = modalTemplate.content?.firstElementChild?.cloneNode(true);
+export default class SpecificPricesManager {
+  container: HTMLElement;
 
-    if (!(modalContent instanceof HTMLElement)) {
-      console.error('Specific price modal content expected to be HTMLElement');
+  eventEmitter: EventEmitter;
 
-      return;
-    }
+  addSpecificPriceBtn: HTMLElement;
 
-    const modal = new (ConfirmModal as any)(
-      {
-        id: SpecificPriceMap.modalContentId,
-        confirmMessage: modalContent.innerHTML,
-        confirmButtonLabel: modalTemplate.dataset.confirmBtnText,
-        closeButtonLabel: modalTemplate.dataset.cancelBtnText,
-      },
-      () => {
-        //@todo;
-        console.log('confirmed');
-      },
+  specificPriceModalApp: null;
+
+  constructor() {
+    this.eventEmitter = window.prestashop.instance.eventEmitter;
+    this.specificPriceModalApp = initSpecificPriceModal(
+      SpecificPriceMap.formModal,
+      this.eventEmitter,
     );
-
-    modal.show();
+    this.container = document.querySelector(SpecificPriceMap.container) as HTMLElement;
+    this.addSpecificPriceBtn = this.container.querySelector(SpecificPriceMap.addSpecificPriceBtn) as HTMLElement;
+    // @todo: temporary commented. WIP - new modal using vue as in combinations example
+    // this.initSpecificPriceModal();
   }
+  //
+  // private initSpecificPriceModal() {
+  //   this.addSpecificPriceBtn.addEventListener('click', () => this.specificPriceModal.showModal());
+  // }
 }

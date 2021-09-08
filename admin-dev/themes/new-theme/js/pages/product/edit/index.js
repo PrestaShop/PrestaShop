@@ -44,6 +44,7 @@ import CreateProductModal from '@pages/product/components/create-product-modal';
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
 import SpecificPriceManager from '@pages/product/components/specific-price/specific-price-manager';
+import SpecificPricesManager from '@pages/product/edit/specific-prices-manager';
 
 const {$} = window;
 
@@ -86,6 +87,7 @@ $(() => {
   new RelatedProductsManager(eventEmitter);
   new CreateProductModal();
   new SpecificPriceManager();
+  new SpecificPricesManager();
 
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(

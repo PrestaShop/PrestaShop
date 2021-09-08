@@ -108,7 +108,6 @@ module.exports = {
     product_preferences: './js/pages/product-preferences',
     profiles: './js/pages/profiles',
     search_engine: './js/pages/search-engine',
-    specific_price_create: './js/pages/product/specificPrice/create',
     sql_manager: './js/pages/sql-manager',
     stock: './js/app/pages/stock',
     stock_page: './scss/pages/stock/stock_page.scss',
