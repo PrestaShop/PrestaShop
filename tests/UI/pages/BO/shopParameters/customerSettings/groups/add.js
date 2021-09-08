@@ -41,7 +41,7 @@ class AddGroup extends BOBasePage {
 
     await Promise.all([
       page.click(this.dropdownMenuItemLink(idLang)),
-      page.waitForSelector(this.dropdownMenuItemLink(idLang), {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.dropdownMenuItemLink(idLang)),
     ]);
   }
 
@@ -65,6 +65,22 @@ class AddGroup extends BOBasePage {
     await page.click(this.showPricesToggle(groupData ? 'on' : 'off'));
 
     // Save group
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+
+    // Return successful message
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Set price display method and save the form
+   * @param page
+   * @param priceDisplayMethod
+   * @returns {Promise<void>}
+   */
+  async setPriceDisplayMethod(page, priceDisplayMethod) {
+    await this.selectByVisibleText(page, this.priceDisplayMethodSelect, priceDisplayMethod);
+
+    // Save customer group
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     // Return successful message

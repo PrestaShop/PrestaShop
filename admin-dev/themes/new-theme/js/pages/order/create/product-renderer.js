@@ -73,6 +73,12 @@ export default class ProductRenderer {
         $template.find(createOrderMap.listedProductQtyInput).data('attribute-id', product.attributeId);
         $template.find(createOrderMap.listedProductQtyInput).data('customization-id', customizationId);
         $template.find(createOrderMap.listedProductQtyInput).data('prev-qty', product.quantity);
+        this.renderStock(
+          $template.find(createOrderMap.listedProductQtyStock),
+          $template.find(createOrderMap.listedProductQtyInput),
+          product.availableStock,
+          product.availableOutOfStock || (product.availableStock <= 0)
+        );
         $template.find(createOrderMap.productTotalPriceField).text(product.price);
         $template.find(createOrderMap.productRemoveBtn).data('product-id', product.productId);
         $template.find(createOrderMap.productRemoveBtn).data('attribute-id', product.attributeId);
@@ -160,7 +166,12 @@ export default class ProductRenderer {
    * @param {object} product
    */
   renderProductMetadata(product) {
-    this.renderStock(product.stock, product.availableOutOfStock || (product.stock <= 0));
+    this.renderStock(
+      $(createOrderMap.inStockCounter),
+      $(createOrderMap.quantityInput),
+      product.stock,
+      product.availableOutOfStock || (product.stock <= 0)
+    );
     this._renderCombinations(product.combinations);
     this._renderCustomizations(product.customizationFields);
   }
@@ -168,16 +179,18 @@ export default class ProductRenderer {
   /**
    * Updates stock text helper value
    *
-   * @param {number} stock
-   * @param {boolean} infinitMax
+   * @param {object} inputStockCounter Text Help with the stock counter
+   * @param {object} inputQuantity Input for the stock
+   * @param {number} stock Available stock for the product
+   * @param {boolean} infiniteMax If the product order has no limits
    */
-  renderStock(stock, infinitMax) {
-    $(createOrderMap.inStockCounter).text(stock);
+  renderStock(inputStockCounter, inputQuantity, stock, infiniteMax) {
+    inputStockCounter.text(stock);
 
-    if (!infinitMax) {
-      $(createOrderMap.quantityInput).attr('max', stock);
+    if (!infiniteMax) {
+      inputQuantity.attr('max', stock);
     } else {
-      $(createOrderMap.quantityInput).removeAttr('max');
+      inputQuantity.removeAttr('max');
     }
   }
 

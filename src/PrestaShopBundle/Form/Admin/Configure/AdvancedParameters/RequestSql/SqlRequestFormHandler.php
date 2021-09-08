@@ -30,8 +30,18 @@ use PrestaShop\PrestaShop\Adapter\SqlManager\SqlRequestFormDataValidator;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.7.5 and will be removed in the next major version.',
+        SqlRequestFormHandler::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
  * Class RequestSqlFormHandler is responsible for creating RequestSql form.
+ *
+ * @deprecated Since 1.7.7.5 and will be removed in the next major.
  */
 class SqlRequestFormHandler
 {

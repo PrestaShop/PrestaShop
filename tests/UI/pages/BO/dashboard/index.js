@@ -6,6 +6,8 @@ class Dashboard extends BOBasePage {
     super();
 
     this.pageTitle = 'Dashboard • ';
+
+    // Selectors
   }
 
   /*

@@ -149,6 +149,7 @@ export default class ProductManager {
     // on success
     EventEmitter.on(eventMap.productQtyChanged, cartInfo => {
       this.productRenderer.cleanCartBlockAlerts();
+      $(createOrderMap.createOrderButton).prop('disabled', false);
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
 
       enableQtyInputs();
@@ -157,6 +158,7 @@ export default class ProductManager {
     // on failure
     EventEmitter.on(eventMap.productQtyChangeFailed, e => {
       this.productRenderer.renderCartBlockErrorAlert(e.responseJSON.message);
+      $(createOrderMap.createOrderButton).prop('disabled', true);
       enableQtyInputs();
     });
   }
@@ -199,6 +201,7 @@ export default class ProductManager {
    * @private
    */
   _search(searchPhrase) {
+    // Search only if the search phrase length is greater than 2 characters
     if (searchPhrase.length < 2) {
       return;
     }
@@ -285,6 +288,8 @@ export default class ProductManager {
 
     this.selectedCombinationId = combinationId;
     this.productRenderer.renderStock(
+      $(createOrderMap.inStockCounter),
+      $(createOrderMap.quantityInput),
       combination.stock,
       this.selectedProduct.availableOutOfStock || combination.stock <= 0
     );

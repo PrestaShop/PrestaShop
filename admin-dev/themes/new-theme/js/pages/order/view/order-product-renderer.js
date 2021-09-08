@@ -56,6 +56,7 @@ export default class OrderProductRenderer {
     availableQuantity,
     availableOutOfStock,
     orderInvoiceId,
+    isOrderTaxIncluded,
   ) {
     const $orderEdit = new OrderProductEdit(orderDetailId);
     $orderEdit.displayProduct({
@@ -67,6 +68,7 @@ export default class OrderProductRenderer {
       availableQuantity,
       availableOutOfStock,
       orderInvoiceId,
+      isOrderTaxIncluded,
     });
     $(OrderViewPageMap.productAddActionBtn).addClass('d-none');
     $(OrderViewPageMap.productAddRow).addClass('d-none');

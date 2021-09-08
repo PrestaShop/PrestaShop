@@ -350,7 +350,7 @@ class OrderLazyArray extends AbstractLazyArray
     {
         $order = $this->order;
 
-        $carrier = new Carrier((int) $order->id_carrier, (int) $order->id_lang);
+        $carrier = new Carrier((int) $order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
         $orderCarrier = $this->objectPresenter->present($carrier);
         $orderCarrier['name'] = ($carrier->name == '0') ? Configuration::get('PS_SHOP_NAME') : $carrier->name;
         $orderCarrier['delay'] = $carrier->delay;

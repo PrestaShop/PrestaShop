@@ -26,6 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.7.5 and will be removed in the next major version. Use %s::%s instead.',
+        OrderInvoiceAddressForViewing::class,
+        OrderForViewing::class,
+        'getInvoiceAddressFormatted()'
+    ),
+    E_USER_DEPRECATED
+);
+
+/**
+ * @deprecated Since 1.7.7.5 and will be removed in the next major.
+ */
 class OrderInvoiceAddressForViewing
 {
     /**
@@ -47,6 +60,12 @@ class OrderInvoiceAddressForViewing
      * @var string
      */
     private $companyName;
+
+    /**
+     * @var string|null
+     */
+    private $vatNumber;
+
     /**
      * @var string
      */
@@ -88,6 +107,11 @@ class OrderInvoiceAddressForViewing
     private $mobilePhoneNumber;
 
     /**
+     * @var string|null
+     */
+    private $dni;
+
+    /**
      * @param int $addressId
      * @param string $firstName
      * @param string $lastName
@@ -100,6 +124,8 @@ class OrderInvoiceAddressForViewing
      * @param string $postCode
      * @param string $phone
      * @param string $phoneMobile
+     * @param string|null $vatNumber
+     * @param string|null $dni If null the DNI is not required for the country, else string
      */
     public function __construct(
         int $addressId,
@@ -113,12 +139,15 @@ class OrderInvoiceAddressForViewing
         string $countryName,
         string $postCode,
         string $phone,
-        string $phoneMobile
+        string $phoneMobile,
+        ?string $vatNumber = null,
+        ?string $dni = null
     ) {
         $this->addressId = $addressId;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->companyName = $companyName;
+        $this->vatNumber = $vatNumber;
         $this->address1 = $address1;
         $this->address2 = $address2;
         $this->stateName = $stateName;
@@ -127,6 +156,7 @@ class OrderInvoiceAddressForViewing
         $this->postCode = $postCode;
         $this->phoneNumber = $phone;
         $this->mobilePhoneNumber = $phoneMobile;
+        $this->dni = $dni;
     }
 
     /**
@@ -140,9 +170,25 @@ class OrderInvoiceAddressForViewing
     /**
      * @return string
      */
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @return string
+     */
     public function getFullName(): string
     {
-        return sprintf('%s %s', $this->firstName, $this->lastName);
+        return sprintf('%s %s', $this->getFirstName(), $this->getLastName());
     }
 
     /**
@@ -151,6 +197,14 @@ class OrderInvoiceAddressForViewing
     public function getCompanyName(): string
     {
         return $this->companyName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getVatNumber(): ?string
+    {
+        return $this->vatNumber;
     }
 
     /**
@@ -175,6 +229,16 @@ class OrderInvoiceAddressForViewing
     public function getCityName(): string
     {
         return $this->cityName;
+    }
+
+    /**
+     * If null the DNI is not required for the country, else string
+     *
+     * @return string|null
+     */
+    public function getDni(): ?string
+    {
+        return $this->dni;
     }
 
     /**

@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 
 use Address;
 use Carrier;
-use Configuration;
+use Cart;
 use ConnectionsSource;
 use Context;
 use Country;
@@ -43,8 +43,12 @@ use OrderPayment;
 use OrderSlip;
 use OrderState;
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\Address\AddressFormatter;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Address\AddressFormatterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\InvalidSortingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDocumentType;
@@ -78,6 +82,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderSourceForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderSourcesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -114,6 +119,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     private $customerDataProvider;
 
     /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
      * @var Context
      */
     private $context;
@@ -122,6 +132,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
      * @var GetOrderProductsForViewingHandlerInterface
      */
     private $getOrderProductsForViewingHandler;
+
+    /**
+     * @var AddressFormatterInterface
+     */
+    private $addressFormatter;
 
     /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
@@ -138,7 +153,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         Locale $locale,
         Context $context,
         CustomerDataProvider $customerDataProvider,
-        GetOrderProductsForViewingHandlerInterface $getOrderProductsForViewingHandler
+        GetOrderProductsForViewingHandlerInterface $getOrderProductsForViewingHandler,
+        Configuration $configuration,
+        AddressFormatterInterface $addressFormatter = null
     ) {
         $this->translator = $translator;
         $this->contextLanguageId = $contextLanguageId;
@@ -147,6 +164,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $this->context = $context;
         $this->customerDataProvider = $customerDataProvider;
         $this->getOrderProductsForViewingHandler = $getOrderProductsForViewingHandler;
+        $this->configuration = $configuration;
+        $this->addressFormatter = $addressFormatter ?? new AddressFormatter();
     }
 
     /**
@@ -164,7 +183,13 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->translator->trans('Tax included', [], 'Admin.Global') :
             $this->translator->trans('Tax excluded', [], 'Admin.Global');
 
-        $invoiceManagementIsEnabled = (bool) Configuration::get('PS_INVOICE', null, null, $order->id_shop);
+        $invoiceManagementIsEnabled = (bool) $this->configuration->get(
+            'PS_INVOICE',
+            null,
+            new ShopConstraint((int) $order->id_shop, (int) $order->id_shop_group)
+        );
+
+        $orderInvoiceAddress = $this->getOrderInvoiceAddress($order);
 
         return new OrderForViewing(
             (int) $order->id,
@@ -183,9 +208,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $order->hasBeenShipped(),
             $invoiceManagementIsEnabled,
             new DateTimeImmutable($order->date_add),
-            $this->getOrderCustomer($order),
+            $this->getOrderCustomer($order, $orderInvoiceAddress),
             $this->getOrderShippingAddress($order),
-            $this->getOrderInvoiceAddress($order),
+            $orderInvoiceAddress,
             $this->getOrderProducts($query->getOrderId(), $query->getProductsSorting()->getValue()),
             $this->getOrderHistory($order),
             $this->getOrderDocuments($order),
@@ -196,7 +221,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderPrices($order),
             $this->getOrderDiscounts($order),
             $this->getOrderSources($order),
-            $this->getLinkedOrders($order)
+            $this->getLinkedOrders($order),
+            $this->addressFormatter->format(new AddressId((int) $order->id_address_delivery)),
+            $this->addressFormatter->format(new AddressId((int) $order->id_address_invoice))
         );
     }
 
@@ -205,27 +232,30 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
      *
      * @return OrderCustomerForViewing|null
      */
-    private function getOrderCustomer(Order $order): ?OrderCustomerForViewing
+    private function getOrderCustomer(Order $order, OrderInvoiceAddressForViewing $invoiceAddress): ?OrderCustomerForViewing
     {
         $currency = new Currency($order->id_currency);
         $customer = new Customer($order->id_customer);
+        $genderName = '';
+        $totalSpentSinceRegistration = null;
 
         if (!Validate::isLoadedObject($customer)) {
-            return null;
+            $customer = $this->buildFakeCustomerObject($order, $invoiceAddress);
+            $customerStats = ['nb_orders' => 1]; // Count this current order as loaded
+        } else {
+            $gender = new Gender($customer->id_gender);
+            if (Validate::isLoadedObject($gender)) {
+                $genderName = $gender->name[(int) $order->getAssociatedLanguage()->getId()];
+            }
+
+            $customerStats = $customer->getStats();
+            $totalSpentSinceRegistration = Tools::convertPrice($customerStats['total_orders'], $order->id_currency);
         }
 
-        $gender = new Gender($customer->id_gender);
-        $genderName = '';
-
-        if (Validate::isLoadedObject($gender)) {
-            $genderName = $gender->name[$order->id_lang];
-        }
-
-        $customerStats = $customer->getStats();
-        $totalSpentSinceRegistration = Tools::convertPrice($customerStats['total_orders'], $order->id_currency);
+        $isB2BEnabled = $this->configuration->getBoolean('PS_B2B_ENABLE');
 
         return new OrderCustomerForViewing(
-            $customer->id,
+            (int) $customer->id,
             $customer->firstname,
             $customer->lastname,
             $genderName,
@@ -234,7 +264,10 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $totalSpentSinceRegistration !== null ? $this->locale->formatPrice($totalSpentSinceRegistration, $currency->iso_code) : '',
             $customerStats['nb_orders'],
             $customer->note,
-            (bool) $customer->is_guest
+            (bool) $customer->is_guest,
+            (int) $order->getAssociatedLanguage()->getId(),
+            $isB2BEnabled ? ($customer->ape ?: '') : '',
+            $isB2BEnabled ? ($customer->siret ?: '') : ''
         );
     }
 
@@ -255,6 +288,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $stateName = $state->name;
         }
 
+        $dni = Address::dniRequired($address->id_country) ? $address->dni : null;
+
         return new OrderShippingAddressForViewing(
             $address->id,
             $address->firstname,
@@ -264,10 +299,12 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $address->address2,
             $stateName,
             $address->city,
-            $country->name[$order->id_lang],
+            $country->name[(int) $order->getAssociatedLanguage()->getId()],
             $address->postcode,
             $address->phone,
-            $address->phone_mobile
+            $address->phone_mobile,
+            $address->vat_number,
+            $dni
         );
     }
 
@@ -288,6 +325,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $stateName = $state->name;
         }
 
+        $dni = Address::dniRequired($address->id_country) ? $address->dni : null;
+
         return new OrderInvoiceAddressForViewing(
             $address->id,
             $address->firstname,
@@ -297,10 +336,12 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $address->address2,
             $stateName,
             $address->city,
-            $country->name[$order->id_lang],
+            $country->name[(int) $order->getAssociatedLanguage()->getId()],
             $address->postcode,
             $address->phone,
-            $address->phone_mobile
+            $address->phone_mobile,
+            $address->vat_number,
+            $dni
         );
     }
 
@@ -355,7 +396,6 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $amount = null;
             $numericAmount = null;
             $amountMismatch = null;
-            $availableAction = null;
             $isAddPaymentAllowed = false;
 
             if ($document instanceof OrderInvoice) {
@@ -392,20 +432,23 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                     }
                 }
             } elseif (OrderDocumentType::DELIVERY_SLIP === $type) {
+                $conf = $this->configuration->get(
+                    'PS_DELIVERY_PREFIX',
+                    null,
+                    new ShopConstraint($order->id_shop, $order->id_shop_group)
+                );
                 $number = sprintf(
                     '%s%06d',
-                    Configuration::get('PS_DELIVERY_PREFIX', $this->contextLanguageId, null, $order->id_shop),
+                    $conf[$this->contextLanguageId] ?? '',
                     $document->delivery_number
                 );
-                $amount = $this->locale->formatPrice(
-                    $document->total_shipping_tax_incl,
-                    $currency->iso_code
-                );
-                $numericAmount = $document->total_shipping_tax_incl;
+                $amount = $this->locale->formatPrice($document->total_paid_tax_incl, $currency->iso_code);
+                $numericAmount = $document->total_paid_tax_incl;
             } elseif (OrderDocumentType::CREDIT_SLIP) {
+                $conf = $this->configuration->get('PS_CREDIT_SLIP_PREFIX');
                 $number = sprintf(
                     '%s%06d',
-                    Configuration::get('PS_CREDIT_SLIP_PREFIX', $this->contextLanguageId),
+                    $conf[$this->contextLanguageId] ?? '',
                     $document->id
                 );
                 $amount = $this->locale->formatPrice(
@@ -428,7 +471,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             );
         }
 
-        $canGenerateInvoice = Configuration::get('PS_INVOICE') &&
+        $canGenerateInvoice = $this->configuration->get('PS_INVOICE') &&
             count($order->getInvoicesCollection()) &&
             $order->invoice_number;
 
@@ -478,11 +521,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 $trackingUrl = null;
                 $trackingNumber = $item['tracking_number'];
 
-                if ($item['url'] && $item['tracking_number']) {
-                    $trackingUrl = str_replace('@', $item['tracking_number'], $item['url']);
+                if ($item['url'] && $trackingNumber) {
+                    $trackingUrl = str_replace('@', $trackingNumber, $item['url']);
                 }
 
-                $weight = sprintf('%.3f %s', $item['weight'], Configuration::get('PS_WEIGHT_UNIT'));
+                $weight = sprintf('%.3f %s', $item['weight'], $this->configuration->get('PS_WEIGHT_UNIT'));
 
                 $carriers[] = new OrderCarrierForViewing(
                     (int) $item['id_order_carrier'],
@@ -679,15 +722,14 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $wrappingPrice = (float) $order->total_wrapping_tax_excl;
             $shippingPrice = (float) $order->total_shipping_tax_excl;
             $shippingRefundable = max(0, $shipping_refundable_tax_excl);
-            $totalAmount = (float) $order->total_paid_tax_excl;
         } else {
             $productsPrice = (float) $order->total_products_wt;
             $discountsAmount = (float) $order->total_discounts_tax_incl;
             $wrappingPrice = (float) $order->total_wrapping_tax_incl;
             $shippingPrice = (float) $order->total_shipping_tax_incl;
             $shippingRefundable = max(0, $shipping_refundable_tax_incl);
-            $totalAmount = (float) $order->total_paid_tax_incl;
         }
+        $totalAmount = (float) $order->total_paid_tax_incl;
 
         $taxesAmount = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
 
@@ -803,5 +845,29 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         return $this->getOrderProductsForViewingHandler->handle(
             GetOrderProductsForViewing::all($orderId->getValue(), $productsOrder)
         );
+    }
+
+    /**
+     * If there is no valid customer attached to the order, the customer must have been deleted
+     * from the database. We then create a fake customer object, using the invoice address data
+     * and cart language.
+     *
+     * @param Order $order Order object
+     * @param OrderInvoiceAddressForViewing $invoiceAddress Invoice address information
+     *
+     * @return Customer The created customer
+     */
+    private function buildFakeCustomerObject(Order $order, OrderInvoiceAddressForViewing $invoiceAddress): Customer
+    {
+        $cart = new Cart($order->id_cart);
+
+        $customer = new Customer();
+        $customer->firstname = $invoiceAddress->getFirstName();
+        $customer->lastname = $invoiceAddress->getLastName();
+        $customer->email = '';
+        $customer->id_lang = $cart->getAssociatedLanguage()->getId();
+        $customer->is_guest = true;
+
+        return $customer;
     }
 }

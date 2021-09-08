@@ -110,18 +110,4 @@ SetEnv _TOKEN_ disabled
 npm run linkchecker
 ```
 
-## Upgrade test
-This test will upgrade Prestashop version with the Autoupgrade module
-
-### Launch script
-Before testing it, you should install Prestashop version to upgrade from
-If you want to run this test, you can use command **specific-test**
-
-#### With default values
-
-```bash
-# You need to set PS_VERSION to check after upgrade, default to 1.7.6.0 
-PS_VERSION=1.7.6.0 TEST_PATH="upgrade/upgradeShop" npm run specific-test
-```
-
 Enjoy :wink: :v:

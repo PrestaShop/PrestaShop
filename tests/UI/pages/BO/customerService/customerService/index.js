@@ -30,18 +30,15 @@ class CustomerService extends BOBasePage {
     // Actions buttons in Row
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
     this.tableColumnActionsViewLink = row => `${this.tableColumnActions(row)} a[title='View']`;
+    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
-    // Columns selectors
-    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnCustomer = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnEmail = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnType = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnLanguage = row => `${this.tableBodyColumn(row)}:nth-child(6)`;
-    this.tableColumnStatus = row => `${this.tableBodyColumn(row)}:nth-child(7)`;
-    this.tableColumnEmployee = row => `${this.tableBodyColumn(row)}:nth-child(8)`;
-    this.tableColumnMessages = row => `${this.tableBodyColumn(row)}:nth-child(9)`;
-    this.tableColumnPrivate = row => `${this.tableBodyColumn(row)}:nth-child(10)`;
-    this.tableColumnDate = row => `${this.tableBodyColumn(row)}:nth-child(11)`;
+    // Confirmation modal
+    this.deleteModalButtonYes = '#popup_ok';
+
+    // Columns selector
+    this.tableColumn = (row, column) => `${this.tableBodyColumn(row)}:nth-child(${column})`;
   }
 
   /* Header Methods */
@@ -94,47 +91,51 @@ class CustomerService extends BOBasePage {
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
+    let i = 0;
+    if (await this.elementVisible(page, this.filterColumn('id_customer_thread'), 2000)) {
+      i += 1;
+    }
     let columnSelector;
 
     switch (columnName) {
       case 'id_customer_thread':
-        columnSelector = this.tableColumnId(row);
+        columnSelector = this.tableColumn(row, i + 1);
         break;
 
       case 'customer':
-        columnSelector = this.tableColumnCustomer(row);
+        columnSelector = this.tableColumn(row, i + 2);
         break;
 
       case 'a!email':
-        columnSelector = this.tableColumnEmail(row);
+        columnSelector = this.tableColumn(row, i + 3);
         break;
 
       case 'cl!id_contact':
-        columnSelector = this.tableColumnType(row);
+        columnSelector = this.tableColumn(row, i + 4);
         break;
 
       case 'l!id_lang':
-        columnSelector = this.tableColumnLanguage(row);
+        columnSelector = this.tableColumn(row, i + 5);
         break;
 
       case 'a!status':
-        columnSelector = this.tableColumnStatus(row);
+        columnSelector = this.tableColumn(row, i + 6);
         break;
 
       case 'employee':
-        columnSelector = this.tableColumnEmployee(row);
+        columnSelector = this.tableColumn(row, i + 7);
         break;
 
       case 'message':
-        columnSelector = this.tableColumnMessages(row);
+        columnSelector = this.tableColumn(row, i + 8);
         break;
 
       case 'private':
-        columnSelector = this.tableColumnPrivate(row);
+        columnSelector = this.tableColumn(row, i + 9);
         break;
 
       case 'date':
-        columnSelector = this.tableColumnDate(row);
+        columnSelector = this.tableColumn(row, i + 10);
         break;
 
       default:
@@ -152,6 +153,27 @@ class CustomerService extends BOBasePage {
    */
   async goToViewMessagePage(page, row = 1) {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsViewLink(row));
+  }
+
+  /**
+   * Delete message
+   * @param page
+   * @param row
+   * @returns {Promise<string>}
+   */
+  async deleteMessage(page, row) {
+    await Promise.all([
+      page.click(this.tableColumnActionsToggleButton(row)),
+      this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
+    ]);
+
+    await page.click(this.tableColumnActionsDeleteLink(row));
+
+    // Confirm delete action
+    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
+    // Get successful message
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 

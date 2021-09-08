@@ -9,7 +9,8 @@ class OrderHistory extends FOBasePage {
 
     // Selectors
     this.ordersTable = '#content table';
-    this.ordersTableRow = row => `${this.ordersTable} tbody tr:nth-child(${row})`;
+    this.ordersTableRows = `${this.ordersTable} tbody tr`;
+    this.ordersTableRow = row => `${this.ordersTableRows}:nth-child(${row})`;
     this.orderTableColumn = (row, column) => `${this.ordersTableRow(row)} td:nth-child(${column})`;
     this.reorderLink = id => `${this.ordersTable} td.order-actions a[href*='Reorder=&id_order=${id}']`;
     this.detailsLink = row => `${this.ordersTableRow(row)} a[data-link-action='view-order-details']`;
@@ -18,6 +19,15 @@ class OrderHistory extends FOBasePage {
   /*
   Methods
    */
+
+  /**
+   * Get number of order in order history page
+   * @param page
+   * @returns {Promise<number>}
+   */
+  async getNumberOfOrders(page) {
+    return (await page.$$(this.ordersTableRows)).length;
+  }
 
   /**
    * Is reorder link visible

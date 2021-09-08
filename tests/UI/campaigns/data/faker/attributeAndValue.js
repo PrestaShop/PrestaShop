@@ -9,7 +9,7 @@ const attributeTypes = ['Drop-down list', 'Radio buttons', 'Color or texture'];
 module.exports = {
   Attribute: class Attribute {
     constructor(attributeToCreate = {}) {
-      this.name = attributeToCreate.name || faker.lorem.word();
+      this.name = attributeToCreate.name || `fake_attr_${faker.lorem.word()}`;
       this.publicName = attributeToCreate.publicName || this.name;
       this.url = attributeToCreate.url || this.name.replace(/\s/gi, '-');
       this.metaTitle = attributeToCreate.metaTitle || faker.lorem.word();

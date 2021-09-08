@@ -31,9 +31,11 @@ use Behat\Gherkin\Node\TableNode;
 use Cache;
 use CartRule;
 use Configuration;
+use Context;
 use DateInterval;
 use DateTime;
 use Db;
+use Order;
 
 class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -140,12 +142,13 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $cartRule->active = 1;
         $cartRule->add();
         $this->cartRules[$cartRuleName] = $cartRule;
+        SharedStorage::getStorage()->set($cartRuleName, $cartRule->id);
     }
 
     /**
      * @Given /^cart rule "(.+?)" is restricted to the category "(.+?)" with a quantity of (\d+)$/
      */
-    public function cartRuleWithProductRuleRestriction($cartRuleName, $categoryName)
+    public function cartRuleWithProductRuleRestriction(string $cartRuleName, string $categoryName, int $quantity)
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->categoryFeatureContext->checkCategoryWithNameExists($categoryName);
@@ -153,7 +156,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 
         Db::getInstance()->execute(
             'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`) ' .
-            'VALUES (' . (int) $this->cartRules[$cartRuleName]->id . ', 1)'
+            'VALUES (' . (int) $this->cartRules[$cartRuleName]->id . ', ' . $quantity . ')'
         );
         $idProductRuleGroup = Db::getInstance()->Insert_ID();
 
@@ -177,6 +180,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->cartRules[$cartRuleName]->code = $cartRuleCode;
         $this->cartRules[$cartRuleName]->save();
+        SharedStorage::getStorage()->set($cartRuleCode, $this->cartRules[$cartRuleName]->id);
     }
 
     /**
@@ -191,9 +195,13 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 
     /**
      * @Given /^cart rule "(.+)" is restricted to product "(.+)"$/
+     * @Given /^cart rule "(.+)" is restricted to product "(.+)" with a quantity of (\d+)$/
      */
-    public function cartRuleNamedIsRestrictedToProductNamed($cartRuleName, $productName)
-    {
+    public function cartRuleNamedIsRestrictedToProductNamed(
+        string $cartRuleName,
+        string $productName,
+        int $quantity = 1
+    ): void {
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->productFeatureContext->checkProductWithNameExists($productName);
 
@@ -203,11 +211,20 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->cartRules[$cartRuleName]->save();
 
         // The reduction_product is not enough, we need to define product rules for condition (this is done by the controller usually)
-        Db::getInstance()->insert('cart_rule_product_rule_group', ['id_cart_rule' => $this->cartRules[$cartRuleName]->id, 'quantity' => 1]);
+        Db::getInstance()->insert(
+            'cart_rule_product_rule_group',
+            ['id_cart_rule' => $this->cartRules[$cartRuleName]->id, 'quantity' => $quantity]
+        );
         $productRuleGroupId = Db::getInstance()->Insert_ID();
-        Db::getInstance()->insert('cart_rule_product_rule', ['id_product_rule_group' => $productRuleGroupId, 'type' => 'products']);
+        Db::getInstance()->insert(
+            'cart_rule_product_rule',
+            ['id_product_rule_group' => $productRuleGroupId, 'type' => 'products']
+        );
         $productRuleId = Db::getInstance()->Insert_ID();
-        Db::getInstance()->insert('cart_rule_product_rule_value', ['id_product_rule' => $productRuleId, 'id_item' => $restrictedProduct->id]);
+        Db::getInstance()->insert(
+            'cart_rule_product_rule_value',
+            ['id_product_rule' => $productRuleId, 'id_item' => $restrictedProduct->id]
+        );
     }
 
     /**
@@ -254,6 +271,16 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->cartRules[$cartRuleName]->product_restriction = 1;
         $this->cartRules[$cartRuleName]->reduction_product = -1;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
+     * @Given /^cart rule "(.+)" is restricted on the selection of products$/
+     */
+    public function cartRuleIsRestrictedToSelectionProducts(string $cartRuleName): void
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->reduction_product = -2;
         $this->cartRules[$cartRuleName]->save();
     }
 
@@ -454,6 +481,25 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 
         if (!empty($contextualReductionValues)) {
             throw new \RuntimeException(sprintf('The cart rule "%s" was not found', reset($contextualReductionValues)));
+        }
+    }
+
+    /**
+     * @Then usage limit per user for cart rule :cartRuleReference is detected
+     *
+     * @param string $cartRuleReference
+     */
+    public function checkCartRuleUsageLimitIsDetected(string $cartRuleReference)
+    {
+        // Using the string error message as a check value is far from ideal, but the legacy `checkValidity` method
+        // only returns an error string or a boolean, which would keep us from detecting the error returned
+        $expectedErrorMessage = 'You cannot use this voucher anymore (usage limit reached)';
+
+        $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference);
+        $cartRule = new CartRule($cartRuleId);
+        $result = $cartRule->checkValidity(Context::getContext(), true);
+        if ($result != $expectedErrorMessage) {
+            throw new \RuntimeException(sprintf('Expects "usage limit reached" error message, got %s instead', $result));
         }
     }
 }

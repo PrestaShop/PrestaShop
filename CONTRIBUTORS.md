@@ -72,6 +72,7 @@ GitHub contributors:
 - Atef Ben Ali
 - Aude
 - Aurélien Pelletier
+- Aurone local server
 - axi
 - Axome
 - Aylab
@@ -138,6 +139,7 @@ GitHub contributors:
 - Connie
 - Corentin Delcourt
 - Cosmin Hutanu
+- crezzur
 - Cristiano Verardi
 - Cyril Dussert
 - Damian Dominella
@@ -403,7 +405,9 @@ GitHub contributors:
 - Lucas CERDAN
 - Lucas Rolff
 - LucasC
+- Ludovic CHEVRAUX
 - Luis David de la Fuente
+- Lukas Laurinaitis
 - Lyo Nick
 - LyoNick
 - M-Mommsen
@@ -488,6 +492,7 @@ GitHub contributors:
 - Mirko Esposito
 - misthero
 - Mlanawo Mbechezi
+- Mohamed Ali Rajab
 - Moisés Gramary Barbosa
 - Molka DJEMAL
 - moncef102
@@ -523,6 +528,7 @@ GitHub contributors:
 - oleacorner
 - Oleg Rumyancev
 - Olivier Bonvalet
+- Olivier Le Corre
 - Olivier Monaco
 - OneDotIT
 - Oskar Andersson
@@ -611,12 +617,14 @@ GitHub contributors:
 - Rinku Kazeno
 - Robbie Thompson
 - robert
+- Robinson Christmann
 - Rodrigo Laurindo
 - Roja45
 - Rokas
 - Rokas Zygmantas
 - Roland Schütz
 - Rolige eCommerce Solutions
+- Romain BOCHEUX
 - Romain Soulard
 - romainberger
 - Roman Gusev
@@ -630,6 +638,7 @@ GitHub contributors:
 - sadlyblue
 - sagaradonis
 - sallemiines
+- Sam
 - Sam Sanchez
 - Samir Shah
 - Samuel
@@ -642,6 +651,7 @@ GitHub contributors:
 - Seb
 - Sebastian Madejski
 - Sebastien
+- Sébastien ALFAIATE
 - Sébastien Bareyre
 - Sebastien Bocahu
 - Sébastien LE BRUCHEC

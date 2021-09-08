@@ -32,11 +32,11 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
-    const VERSION = '1.7.7.1';
+    const VERSION = '1.7.7.8';
     const MAJOR_VERSION_STRING = '1.7';
     const MAJOR_VERSION = 17;
     const MINOR_VERSION = 7;
-    const RELEASE_VERSION = 1;
+    const RELEASE_VERSION = 8;
 
 
     /**
@@ -182,8 +182,9 @@ class AppKernel extends Kernel
      */
     private function enableComposerAutoloaderOnModules($modules)
     {
+        $moduleDirectoryPath = rtrim(_PS_MODULE_DIR_, '/') . '/';
         foreach ($modules as $module) {
-            $autoloader = __DIR__ . '/../modules/' . $module . '/vendor/autoload.php';
+            $autoloader = $moduleDirectoryPath . $module . '/vendor/autoload.php';
 
             if (file_exists($autoloader)) {
                 include_once $autoloader;

@@ -23,6 +23,318 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 
 Release Notes for PrestaShop 1.7
 --------------------------------
+####################################
+#   v1.7.7.7 - (2021-08-18)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #25634: [BC Break] Do not use name in admin_orders_display_customization_image_route (by @PierreRambaud)
+- Front Office:
+  - Bug fix:
+    - #25629: Use _DB_PREFIX_ constant instead of ps_ in SQL queries (by @PierreRambaud)
+- Core:
+  - Improvement:
+    - #25630: Bump version to 1.7.7.7 (by @PierreRambaud)
+
+####################################
+#   v1.7.7.6 - (2021-06-30)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #25489: Fixed selector for fetching if the tax is included  (by @Progi1984)
+    - #25495: Check variable before using it (by @Progi1984)
+    - #25428: Don't recalculate total when PS_ORDER_RECALCULATE_SHIPPING is 0 and editing a carrier (by @Progi1984)
+    - #24991: Fix combination ecotax display and edition (by @jolelievre)
+    - #25378: Order Product Search: Limit only if the search phrase length is greater than 2 characters and HTTP Code Error become a 400 (by @Progi1984)
+    - #25375: In Order view, set the lang of the order for order messages (by @Progi1984)
+    - #25326: Create empty Customer when the customer or the guest has been deleted (by @PierreRambaud)
+    - #25286: Fix cart rule that can be used more than once per user when it shouldn't (by @matthieu-rolland)
+    - #24339: Add number comma formatter (by @PierreRambaud)
+    - #25107: Fixed meta title in BO - Order View (by @Progi1984)
+    - #25200: In Invoice PDF, escape customization name (by @Progi1984)
+    - #24324: Orders View : Display right price depending configuration (by @Progi1984)
+    - #25106: Fixed management of INNER JOIN & GROUP BY in SqlQueryValidator (by @Progi1984)
+    - #25059: [BC Break] Fixed translated order messages in Order View (by @Progi1984)
+    - #24657: BO - New Order - Warn when product's stock of a pack are empty (by @Progi1984)
+    - #24762: Fixed adding a free shipping cart rule on a 0.00 order (by @Progi1984)
+    - #24765: Fix edit price modal showed when adding same product in multi-invoices (by @atomiix)
+    - #24770: Added currency BYN TO CLDR dataset (by @olecorre)
+    - #24773: BO - Order Preview : Added email (by @Progi1984)
+- Front Office:
+  - Bug fix:
+    - #25216: Fix brands links not clickable inside description (by @NeOMakinG)
+    - #24868: Fixed cart rule on selected product with product with ecotax (by @Progi1984)
+    - #24754: Removed free shipping from cumulative reduction (by @Progi1984)
+    - #24320: Bug fix for number of decimals in product price (by @samberrry)
+- Core:
+  - Improvement:
+    - #25449: Build assets on 1.7.7.x  (by @matthieu-rolland)
+    - #25447: Update prestashop modules on 1.7.7.x (by @matthieu-rolland)
+    - #24957: Bump modules Welcome to 6.0.5 & ProductComments to 4.2.2 (by @Progi1984)
+  - Bug fix:
+    - #25413: Fix performance issue on Smarty template caching (by @lukaslau)
+- Installer:
+  - Bug fix:
+    - #25306: Fix 1.7.7.2 upgrade (by @Seb33300)
+    - #24908: Fixed default value for Currency after upgrade (by @Progi1984)
+- Tests:
+  - Bug fix:
+    - #25281: Rise Apache Travis timeout to workaround addons module install issues (by @matks)
+  - Refactoring:
+    - #24951: Change attribute name to something more specific to fix filter (by @boubkerbribri)
+    - #24783: Fix pages name for link list module (by @boubkerbribri)
+
+####################################
+#   v1.7.7.5 - (2021-06-01)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #24679: Fix free shipping cart rule should not be recalculate when PS_ORDER_RECALCULATE_SHIPPING is false (by @atomiix)
+    - #24576: BO - New Order - Empty gift message is not a null value (by @Progi1984)
+    - #24565: Order View - Discount Modal - Disable submit until name is filled (by @Progi1984)
+    - #24579: BO - Order Messages - Avoid message with duplicate name (by @Progi1984)
+    - #24568: BO - Order Preview - Use the tracking number in tracking url (by @Progi1984)
+    - #24427: Fixed wrong price of the delivery slip of the document list (by @Progi1984)
+    - #24217: [BC Break] Restore check when using the SQL manager part (by @PierreRambaud)
+    - #24243: Fix escape in ps_1771_update_customer_note() (by @dali-rajab)
+    - #23138: [BC Break] Fix gift added/removed when editing order (product quantity/shipping address) (by @atomiix)
+    - #24353: Fix module activation checkbox in module configuration pages (by @IcarusSosie)
+    - #24273: Implement Address Format in the View Order Page (by @Progi1984)
+    - #23492: Fixed Ecotax when editing an Order ((Add/Update)ProductToOrder) (by @Progi1984)
+    - #24269: Fix already selected condition group on safari inside catalog price rules (by @NeOMakinG)
+    - #23902: [BC Break] Take customizations into account when performing operations on orders (by @atomiix)
+- Core:
+  - Improvement:
+    - #24717: Update native modules (by @atomiix)
+    - #24329: Bump version to 1.7.7.5 (by @Progi1984)
+  - Bug fix:
+    - #24443: Fix upgrade from 1.6.1.24 on certain installation (by @atomiix)
+- Tests:
+  - Refactoring:
+    - #24578: Fix test Handling charges and backport fixes for product quick view test (by @boubkerbribri)
+    - #24459: Wait For price to be updated on view order page (by @boubkerbribri)
+    - #24455: Remove forgotten function description (by @SD1982)
+    - #24366: Fix hooks tests (Nightly error) (by @boubkerbribri)
+    - #24305: Remove some modules when building docker for tests (by @boubkerbribri)
+
+####################################
+#   v1.7.7.4 - (2021-04-28)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #23625: Collapse option not working for the the BO category tree (by @crezzur)
+    - #24088: Fix Gift + discount cartRule calculation in cart summary (by @atomiix)
+    - #24161: Allow all characters when using combination, not only \w (by @PierreRambaud)
+    - #24015: Fix gift not added when changing carrier in Create order page (by @atomiix)
+    - #24072: Fix category filter not checked (by @atomiix)
+    - #24094: Fix OrderState deletion when not in default language context (by @atomiix)
+    - #23819: Open tracking url in a new tab and add the link to the order preview (by @atomiix)
+    - #23691: Fix notification refresh on migrated pages (by @NeOMakinG)
+    - #22228: Fixed Update Quantity in an order in multishop context (by @Progi1984)
+- Front Office:
+  - Bug fix:
+    - #23802: Fix jquery selector warning with ps_currencyselector (by @NeOMakinG)
+- Core:
+  - Bug fix:
+    - #24017: Update SHOP_LOGO_* configuration when changing shop logo (by @atomiix)
+    - #23925: Fix translator bug when iso code is unknown (by @atomiix)
+    - #23722: Add missing license headers (by @eternoendless)
+- Tests:
+  - Improvement:
+    - #24144: Use different instance name for 1.7.7.x branch (by @PierreRambaud)
+  - Refactoring:
+    - #24225: Fix nightly 177x for 27-04-2021 (by @boubkerbribri)
+    - #24176: Upgrade playwright to 1.8.1 (by @boubkerbribri)
+    - #24115: Backport fix on growl messages (by @boubkerbribri)
+    - #24086: Delete dashboad UI test (by @nesrineabdmouleh)
+    - #24030: Fix nightly - Separate enable and disable demo mode iteration (by @nesrineabdmouleh)
+    - #23852: Fix 'Add to cart' test (by @boubkerbribri)
+    - #23736: Add test 'Send a message with an ordered product' (by @RomainBocheux)
+    - #23778: Wrap playwright function waitForSelector (by @boubkerbribri)
+    - #23780: Delete unused functions on common page (by @boubkerbribri)
+    - #23792: Fix enable demo mode on dashboard and trim the message set on contact us page (by @boubkerbribri)
+    - #23740: Create message with only 35 characters for contact us test (by @boubkerbribri)
+
+####################################
+#   v1.7.7.3 - (2021-03-22)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #23694: Fix exception when adding only a space in the payment method in the orders page (by @atomiix)
+    - #22677: Fix errors when viewing an order in BackOffice when the language of the order no longer exists (by @atomiix)
+    - #23601: Take customization into account when updating an Order's product quantity (by @atomiix)
+    - #23584: Fix error when opening a cart rule containing a gift product that is not enabled in that store context (by @atomiix)
+    - #23142: Prevent setting duplicate order status names (by @Progi1984)
+    - #23040: Fix missing DNI Number in BackOffice Order View (by @Progi1984)
+    - #22920: [BC Break] Prevent adding out of stock products in Create order page (by @Progi1984)
+    - #22791: Add error message when the payment method is invalid in Back Office's Orders page (by @Progi1984)
+- Front Office:
+  - Bug fix:
+    - #23688: Fix display of color section on the add to cart modal on FO (by @NeOMakinG)
+    - #23388: Fix products not centered on home and search pages with classic theme (by @NeOMakinG)
+- Core:
+  - Improvement:
+    - #23343: Make autoloader suffix reproducible (by @atomiix)
+  - Bug fix:
+    - #GHSA-fhhq-4x46-qx77: Fix possible XSS injection through DataColumn Grid class (by @atomiix)
+- Tests:
+  - Refactoring:
+    - #23693: Add test 'Send message from contact us page with customer logged in' (by @boubkerbribri)
+    - #23674: Change functions and add more comments on install page  (by @boubkerbribri)
+    - #23679: Add test 'Check mailto link on contact us page' (by @boubkerbribri)
+    - #23627: Add test 'Search product and check autocomplete list on FO' (by @nesrineabdmouleh)
+    - #23624: Fix wait after choosing combination (by @boubkerbribri)
+    - #23614: Add test 'Quick edit and bulk actions shop URLs' (by @nesrineabdmouleh)
+    - #23542: Add test 'Check product details in product page FO' (by @nesrineabdmouleh)
+    - #23585: Fix nightly 09/03/2021 (by @nesrineabdmouleh)
+    - #23554: Click on logo link on checkout page to go to home page (by @boubkerbribri)
+    - #23503: Add test 'Check links in header page FO' (by @nesrineabdmouleh)
+    - #23519: Fix local sort for shop url on multistore (by @boubkerbribri)
+    - #23464: Add test  'Filter, sort and pagination shop urls' (by @nesrineabdmouleh)
+    - #23471: Backport test 'Check footer links' (by @nesrineabdmouleh)
+    - #23452: Add test 'Check product block in order page BO' (by @nesrineabdmouleh)
+    - #23410: Fix nightly 25/02/2021 (by @nesrineabdmouleh)
+    - #23382: Fix nightly - Add reset Step in 'Default Pack Stock Management' (by @nesrineabdmouleh)
+    - #23359: Fix nightly - Delete duplicates on selectors names (by @boubkerbribri)
+    - #23238: Add test - Quick view product on FO (by @nesrineabdmouleh)
+
+####################################
+#   v1.7.7.2 - (2021-02-18)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #23289: Use default currency when supplier currency setting is incorrect (by @atomiix)
+    - #23078: [BC Break] Fixed missing APE/SIRET Code in BackOffice Order View (by @Progi1984)
+    - #22980: Replaced hooks displayAdminList<Before|After> with displayAdminGridTable<Before|After> (by @Progi1984)
+    - #22997: Fix compare function of dashboard's calendar (by @NeOMakinG)
+    - #22947: Fix Shopping Cart page in BO throwing an exception (by @atomiix)
+    - #22909: BO - Create Order - Updated product list when adresses changed (by @Progi1984)
+    - #22863: Fix reference in Shopping carts view (by @kpodemski)
+    - #22805: BO - Orders page - Cannot delete a product restricted by a cart rule (by @Progi1984)
+    - #22688: Prevent HookDataCollector unserialize() to throw an exception (by @atomiix)
+    - #22685: Create Order - Cart details modal - Fix refresh for cart total (by @sowbiba)
+    - #22673: PerfectScrollBar needs available element (by @PierreRambaud)
+    - #22542: Handle case where product location is a boolean (by @atomiix)
+    - #22367: Order view - Refresh shipping tab when product is added, removed or updated (by @sowbiba)
+    - #22579: Prevent HookDataCollector unserialize() to throw an exception (by @atomiix)
+    - #22161: Fix group reduction when specific price is set (by @sowbiba)
+    - #22249: Create Order - Cart details modal - Fix refresh for cart total (by @sowbiba)
+- Front Office:
+  - Improvement:
+    - #22528: Better handle aliases with space in search (by @atomiix)
+  - Bug fix:
+    - #23024: Fixed BreadcrumbList Rich Result on FrontOffice (by @Progi1984)
+    - #22518: Define when a voucher should be displayed in 'Your vouchers' (by @atomiix)
+- Core:
+  - Improvement:
+    - #23224: Update PrestaShop's composer dependencies (by @atomiix)
+    - #23220: Update composer versions of native modules for 1.7.7.2 (by @matks)
+  - Bug fix:
+    - #GHSA-557h-hf3c-whcg: Improper session management for soft logout (by @PierreRambaud)
+    - #GHSA-2rw4-2p99-cmx9: CSV Injection via csv export (by @PierreRambaud)
+    - #23276: Update composer version of ps_categorytree (by @atomiix)
+    - #22682: Fix warning/errors from upgrade scripts (by @atomiix)
+    - #23139: Update pear/archive_tar to 1.4.12 (by @matks)
+    - #22768: Exclude gifts from getOrderTotal when selected ONLY_PRODUCTS (by @PierreRambaud)
+    - #22841: Bring back vat number to address on order view (by @kpodemski)
+- Installer:
+  - Bug fix:
+    - #22735: Fix installation carrier delay Error for Persian Language (by @matks)
+- Tests:
+  - Refactoring:
+    - #22875: Rename default account var name (by @boubkerbribri)
+    - #23129: Add test - Enable/Disable demo mode (by @nesrineabdmouleh)
+    - #23004: Add test 'Languages pagination' (by @nesrineabdmouleh)
+    - #23023: Add test 'Carrier options - order by ascending/descending ' (by @nesrineabdmouleh)
+    - #22953: Add test 'Filter, sort and paginaion shops' (by @nesrineabdmouleh)
+    - #22985: Add test 'Set required fields for address page' (by @nesrineabdmouleh)
+    - #22954: Add test 'Sort shop groups' (by @nesrineabdmouleh)
+    - #22925: Add test 'Add and delete shop URL' (by @nesrineabdmouleh)
+    - #22927: Fix nightly 21-01-2021 on 1.7.7.x (by @boubkerbribri)
+    - #22912: Fix nightly tests failing on 20-01-2021 (by @boubkerbribri)
+    - #22900: Add test 'Test handling charges for carriers in FO' (by @nesrineabdmouleh)
+    - #22856: Add test 'Check customer block' in order page (by @nesrineabdmouleh)
+    - #22855: Add test 'View vouchers on FO account Page' (by @boubkerbribri)
+    - #22874: Add test 'Check number of orders in order history page' (by @boubkerbribri)
+    - #22762: Add test 'Filter sort pagination shop groups' (by @nesrineabdmouleh)
+    - #22879: Add test 'CRUD shop group' (by @nesrineabdmouleh)
+    - #22876: Add test 'Filter,sort and pagination logs' (by @nesrineabdmouleh)
+    - #22792: Backport UI tests for 1.7.7.2 (by @boubkerbribri)
+    - #22556: Fix nightly 1.7.7.x - 23/12/2020 (by @nesrineabdmouleh)
+    - #22678: Fix nightly 1.7.7.x - 05/01/2021 (by @nesrineabdmouleh)
+    - #22656: Delete UI upgrade test (by @boubkerbribri)
+
+####################################
+#   v1.7.7.1 - (2021-01-11)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #22020: Take shop id into account when getting a language list for an order (by @matthieu-rolland)
+    - #22028: Update out of stock mail wording (by @jolelievre)
+  - Bug fix:
+    - #21692: Refresh order products when a product is added or deleted (by @sowbiba)
+    - #22535: Method assertCmsCategoryExists doesn't return anything, it throws an exception (by @PierreRambaud)
+    - #22082: Hide product quantity in Order view page when stock management is disabled (by @jolelievre)
+    - #22299: Use OrderDetail prices when modifying an Order (by @jolelievre)
+    - #21795: Fix wrong product quantity after adding a product triggering a free gift  (by @matthieu-rolland)
+    - #22175: Added error when a customization is not found (by @Progi1984)
+    - #21912: Use language_code when locale is empty to get CLDR data (by @atomiix)
+    - #22171: When refreshing an order, display shipping price if needed (by @Progi1984)
+    - #22406: Fixed pagination in Product Quick Navigation Popup (by @Progi1984)
+    - #21977: Add debounce to quantity change of order create product (by @NeOMakinG)
+    - #22291: Fixed Pagination of Sell > Orders > Credits Slips page (by @Progi1984)
+    - #22214: Fix numeric_iso_code in the upgrade to 1.7.7.1 (by @atomiix)
+    - #22126: Fix bug on displayed price's calculation in BO order page under specific conditions (by @matthieu-rolland)
+    - #22246: Integrate ContextStateManager into refund handlers (by @jolelievre)
+    - #21568: Fixed in Create Order the update of cart rules when changing adress  (by @Progi1984)
+    - #22189: Trigger input when a predefined message is applied (by @Progi1984)
+    - #22077: Create Order - Fix remove cart rule when amount is not reached (by @sowbiba)
+    - #22101: Fix product selections when creating/updating tags (by @atomiix)
+    - #22099: Fix employee filter for the Logs page (by @atomiix)
+    - #22059: Add Payments block refresher - Refresh when product is added or removed from Order (by @sowbiba)
+    - #21992: Make customer note TYPE_STRING instead of TYPE_HTML (by @atomiix)
+    - #21980: Fixed the error message for a combination with a min quantity for sale (by @Progi1984)
+- Front Office:
+  - Bug fix:
+    - #22296: Center products on category list on mobile (by @NeOMakinG)
+    - #22241: Fix duplicated hook data after product page refresh (by @Hlavtox)
+    - #22103: Display combination image in product pack list (by @jolelievre)
+- Core:
+  - Bug fix:
+    - #22532: Hook keys must be in lowercase (by @PierreRambaud)
+    - #22432: Don't redirect to http from https if it is homepage (by @ludoc)
+    - #22293: Use PS cache config as driver.cache (by @atomiix)
+    - #22274: Fix upgrade from ps < 1.7.0.0 (by @atomiix)
+    - #22289: Removed module Linklist update from upgrade script (by @Progi1984)
+    - #21988: Fix order detail total amount update when rounding is per item (by @matthieu-rolland)
+- Tests:
+  - Improvement:
+    - #22198: Add static cache resets (by @matthieu-rolland)
+  - Refactoring:
+    - #22543: Add test 'Page for terms and conditions' (by @nesrineabdmouleh)
+    - #22523: Add test 'Activate merchandise returns' (by @nesrineabdmouleh)
+    - #22521: Refactoring alert blocks in UI tests (by @boubkerbribri)
+    - #22491: Add test 'View customer service message page' (by @nesrineabdmouleh)
+    - #22490: Add new FO tests 'Edit account information' (by @boubkerbribri)
+    - #22433: Add test 'Check to delete shop groups' (by @nesrineabdmouleh)
+    - #22446: Add test 'Quick edit order status' (by @nesrineabdmouleh)
+    - #22454: Add test 'Quick edit alias status' (by @nesrineabdmouleh)
+    - #22455: Add requirement block to README in UI tests (by @boubkerbribri)
+    - #22434: Refactoring FO login page in UI tests and add new page for create account page (by @boubkerbribri)
+    - #22428: Add new command to run all UI tests and check step identifiers in all campaigns (by @boubkerbribri)
+    - #22423: Add new test 'Change carrier position' (by @boubkerbribri)
+    - #22408: Rename functions in UI tests (by @boubkerbribri)
+    - #22345: Add tests on products page (by @boubkerbribri)
+    - #22012: Fix random fails in travis CI (by @boubkerbribri)
+    - #22209: Backport fix on UI sort tests (by @boubkerbribri)
+    - #22172: Backport UI tests (by @boubkerbribri)
 
 ####################################
 #   v1.7.7.0 - (2020-12-02)

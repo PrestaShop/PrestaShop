@@ -2382,6 +2382,7 @@ class ProductCore extends ObjectModel
             $combinations[$k]['attribute_designation'] = $row['attribute_designation'];
         }
 
+        $computingPrecision = Context::getContext()->getComputingPrecision();
         //Get quantity of each variations
         foreach ($combinations as $key => $row) {
             $cache_key = $row['id_product'] . '_' . $row['id_product_attribute'] . '_quantity';
@@ -2396,6 +2397,10 @@ class ProductCore extends ObjectModel
             } else {
                 $combinations[$key]['quantity'] = Cache::retrieve($cache_key);
             }
+
+            $ecotax = (float) $combinations[$key]['ecotax'] ?? 0;
+            $combinations[$key]['ecotax_tax_excluded'] = $ecotax;
+            $combinations[$key]['ecotax_tax_included'] = Tools::ps_round($ecotax * (1 + Tax::getProductEcotaxRate() / 100), $computingPrecision);
         }
 
         return $combinations;
@@ -2479,6 +2484,7 @@ class ProductCore extends ObjectModel
 
         $res = Db::getInstance()->executeS($sql);
 
+        $computingPrecision = Context::getContext()->getComputingPrecision();
         //Get quantity of each variations
         foreach ($res as $key => $row) {
             $cache_key = $row['id_product'] . '_' . $row['id_product_attribute'] . '_quantity';
@@ -2493,6 +2499,10 @@ class ProductCore extends ObjectModel
             } else {
                 $res[$key]['quantity'] = Cache::retrieve($cache_key);
             }
+
+            $ecotax = (float) $res[$key]['ecotax'] ?? 0;
+            $res[$key]['ecotax_tax_excluded'] = $ecotax;
+            $res[$key]['ecotax_tax_included'] = Tools::ps_round($ecotax * (1 + Tax::getProductEcotaxRate() / 100), $computingPrecision);
         }
 
         return $res;
@@ -3392,7 +3402,7 @@ class ProductCore extends ObjectModel
             $sql->innerJoin('product_shop', 'product_shop', '(product_shop.id_product=p.id_product AND product_shop.id_shop = ' . (int) $id_shop . ')');
             $sql->where('p.`id_product` = ' . (int) $id_product);
             if (Combination::isFeatureActive()) {
-                $sql->select('IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute, product_attribute_shop.`price` AS attribute_price, product_attribute_shop.default_on');
+                $sql->select('IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute, product_attribute_shop.`price` AS attribute_price, product_attribute_shop.default_on, product_attribute_shop.`ecotax` AS attribute_ecotax');
                 $sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_product = p.id_product AND product_attribute_shop.id_shop = ' . (int) $id_shop . ')');
             } else {
                 $sql->select('0 as id_product_attribute');
@@ -3405,7 +3415,8 @@ class ProductCore extends ObjectModel
                     $array_tmp = [
                         'price' => $row['price'],
                         'ecotax' => $row['ecotax'],
-                        'attribute_price' => (isset($row['attribute_price']) ? $row['attribute_price'] : null),
+                        'attribute_price' => $row['attribute_price'] ?: null,
+                        'attribute_ecotax' => $row['attribute_ecotax'] ?: null,
                     ];
                     self::$_pricesLevel2[$cache_id_2][(int) $row['id_product_attribute']] = $array_tmp;
 
@@ -3597,11 +3608,10 @@ class ProductCore extends ObjectModel
             $tax_rate = $withTaxes ? (1 + ($orderDetail['tax_rate'] / 100)) : 1;
             $price = $orderDetail['original_product_price'] * $tax_rate;
         }
-        $ecoTaxValue = 0;
-        if ($withEcoTax) {
-            $ecoTaxValue = $withTaxes ? $orderDetail['ecotax'] * (1 + $orderDetail['ecotax_tax_rate']) : $orderDetail['ecotax'];
+        if (!$withEcoTax) {
+            // Remove the ecotax as the order detail contains already ecotax in the price
+            $price -= ($withTaxes ? $orderDetail['ecotax'] * (1 + $orderDetail['ecotax_tax_rate']) : $orderDetail['ecotax']);
         }
-        $price += $ecoTaxValue;
 
         return $price;
     }
@@ -3784,10 +3794,10 @@ class ProductCore extends ObjectModel
      * Get available product quantities (this method already have decreased products in cart).
      *
      * @param int $idProduct Product id
-     * @param int $idProductAttribute Product attribute id (optional)
+     * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack
      * @param Cart|null $cart
-     * @param int $idCustomization Product customization id (optional)
+     * @param int|null $idCustomization Product customization id (optional)
      *
      * @return int Available quantities
      */
@@ -3887,6 +3897,11 @@ class ProductCore extends ObjectModel
         return false;
     }
 
+    /**
+     * @param int $out_of_stock
+     *
+     * @return bool|int Returns false is Stock Management is disabled, or the (int) configuration if it's enabled
+     */
     public static function isAvailableWhenOutOfStock($out_of_stock)
     {
         /** @TODO 1.5.0 Update of STOCK_MANAGEMENT & ORDER_OUT_OF_STOCK */
@@ -4955,7 +4970,7 @@ class ProductCore extends ObjectModel
             (int) $row['id_product'],
             false,
             $id_product_attribute,
-            (self::$_taxCalculationMethod == PS_TAX_EXC ? 2 : 6),
+            (self::$_taxCalculationMethod == PS_TAX_EXC ? Context::getContext()->getComputingPrecision() : 6),
             null,
             false,
             true,
@@ -6776,7 +6791,7 @@ class ProductCore extends ObjectModel
         $this->quantity = StockAvailable::getQuantityAvailableByProduct($this->id, 0);
         $this->out_of_stock = StockAvailable::outOfStock($this->id);
         $this->depends_on_stock = StockAvailable::dependsOnStock($this->id);
-        $this->location = StockAvailable::getLocation($this->id);
+        $this->location = StockAvailable::getLocation($this->id) ?: '';
 
         if (Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP && Context::getContext()->shop->getContextShopGroup()->share_stock == 1) {
             $this->advanced_stock_management = $this->useAdvancedStockManagement();

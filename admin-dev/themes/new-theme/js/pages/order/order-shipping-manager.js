@@ -32,7 +32,7 @@ export default class OrderShippingManager {
   }
 
   _initOrderShippingUpdateEventHandler() {
-    $(OrderViewPageMap.showOrderShippingUpdateModalBtn).on('click', (event) => {
+    $(OrderViewPageMap.mainDiv).on('click', OrderViewPageMap.showOrderShippingUpdateModalBtn, (event) => {
       const $btn = $(event.currentTarget);
 
       $(OrderViewPageMap.updateOrderShippingTrackingNumberInput).val($btn.data('order-tracking-number'));

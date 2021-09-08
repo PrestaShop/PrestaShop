@@ -66,8 +66,10 @@ function migrate_tabs_17()
 
     /* update remaining idParent */
     foreach($moduleParents as $idParent => $className) {
-        $idTab = Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name='.pSQL($className));
-        Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'tab SET id_parent='.(int)$idTab.' WHERE id_parent='.(int)$idParent);
+        if (!empty($className)) {
+            $idTab = Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name="'.pSQL($className).'"');
+            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'tab SET id_parent='.(int)$idTab.' WHERE id_parent='.(int)$idParent);
+        }
     }
 
     return true;

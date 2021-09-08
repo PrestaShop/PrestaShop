@@ -28,6 +28,7 @@ class AddCarrier extends BOBasePage {
     this.zonesTable = '#zones_table';
     this.rangeSupInput = `${this.zonesTable} tr.range_sup td.range_data input[name*='range_sup']`;
     this.allZonesRadioButton = `${this.zonesTable} tr.fees_all input[onclick*='checkAllZones']`;
+    this.allZonesValueInput = `${this.zonesTable} tr.fees_all .input-group input`;
     this.zoneRadioButton = zoneID => `${this.zonesTable} #zone_${zoneID}`;
 
     // Size, weight and group access
@@ -61,7 +62,7 @@ class AddCarrier extends BOBasePage {
     await page.click(this.nextButton);
 
     // Set shipping locations and costs
-    await page.click(this.freeShippingToggle(carrierData.handlingCosts ? 'on' : 'off'));
+    await page.click(this.addHandlingCostsToggle(carrierData.handlingCosts ? 'on' : 'off'));
     await page.click(this.freeShippingToggle(carrierData.freeShipping ? 'on' : 'off'));
 
     if (carrierData.billing === 'According to total price') {
@@ -79,6 +80,7 @@ class AddCarrier extends BOBasePage {
 
     if (carrierData.allZones) {
       await page.click(this.allZonesRadioButton);
+      await this.setValue(page, this.allZonesValueInput, carrierData.allZonesValue);
     } else {
       await page.click(this.zoneRadioButton(carrierData.zoneID));
     }
@@ -93,6 +95,22 @@ class AddCarrier extends BOBasePage {
 
     // Summary
     await page.click(this.enableToggle(carrierData.enable ? 'on' : 'off'));
+    await page.click(this.finishButton);
+
+    // Return successful message
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Set handling cost
+   * @param page
+   * @param toEnable
+   * @returns {Promise<string>}
+   */
+  async setHandlingCosts(page, toEnable = true) {
+    await page.click(this.nextButton);
+    await page.click(this.addHandlingCostsToggle(toEnable ? 'on' : 'off'));
+
     await page.click(this.finishButton);
 
     // Return successful message

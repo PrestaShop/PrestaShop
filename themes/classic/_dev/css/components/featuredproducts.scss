@@ -114,7 +114,19 @@ $product-description-height: 70px;
     height: $product-description-height;
   }
 
+  .product {
+    padding: 0;
+
+    @at-root .page-index &, .page-search & {
+      width: 25%;
+      min-width: 250px;
+    }
+  }
+
   .product-miniature {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 0 .8125rem;
     .product-flags {
       li.product-flag {

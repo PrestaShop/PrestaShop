@@ -1,5 +1,5 @@
 require('module-alias/register');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 /**
  * Login into BO to access BO Urls
@@ -30,8 +30,8 @@ const loginBO = async function (page) {
  * @return {Promise<void>}
  */
 const loginFO = async function (page) {
-  await page.type('#login-form input[name=email]', DefaultAccount.email);
-  await page.type('#login-form input[name=password]', DefaultAccount.password);
+  await page.type('#login-form input[name=email]', DefaultCustomer.email);
+  await page.type('#login-form input[name=password]', DefaultCustomer.password);
 
   await Promise.all([
     page.click('#submit-login'),

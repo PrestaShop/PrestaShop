@@ -141,7 +141,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             throw new OrderException('Cart linked to the order cannot be found.');
         }
 
-        $product = $this->getProduct($command->getProductId(), (int) $order->id_lang);
+        $product = $this->getProduct($command->getProductId(), (int) $order->getAssociatedLanguage()->getId());
         $combination = null !== $command->getCombinationId() ? $this->getCombination($command->getCombinationId()->getValue()) : null;
         $combinationId = null !== $combination ? (int) $combination->id : 0;
 
@@ -311,9 +311,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         foreach ($creationUpdates as $additionalUpdate) {
             $updateProductId = $additionalUpdate->getProductId()->getValue();
             $updateCombinationId = null !== $additionalUpdate->getCombinationId() ? $additionalUpdate->getCombinationId()->getValue() : 0;
+            $updateCustomizationId = null !== $additionalUpdate->getCustomizationId() ? $additionalUpdate->getCustomizationId()->getValue() : 0;
             $cartProduct = $this->getMatchingProduct($cartProducts, [
                 'id_product' => $updateProductId,
                 'id_product_attribute' => $updateCombinationId,
+                'id_customization' => $updateCustomizationId,
             ]);
             $cartProduct['cart_quantity'] = $additionalUpdate->getDeltaQuantity();
             $additionalProducts[] = $cartProduct;
@@ -339,8 +341,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             $productMatch = $item['id_product'] == $searchedProduct['id_product'];
             $combinationMatch = $item['id_product_attribute'] == $searchedProduct['id_product_attribute'];
+            $customizationMatch = $item['id_customization'] == $searchedProduct['id_customization'];
 
-            return $productMatch && $combinationMatch ? $item : null;
+            return $productMatch && $combinationMatch && $customizationMatch ? $item : null;
         });
     }
 

@@ -138,7 +138,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         await foHomePage.changeLanguage(page, 'en');
 
         // Go to sitemap page
-        await foHomePage.goToSitemapPage(page);
+        await foHomePage.goToFooterLink(page, 'Sitemap');
         const pageTitle = await siteMapPage.getPageTitle(page);
         await expect(pageTitle).to.equal(siteMapPage.pageTitle);
 
@@ -203,7 +203,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         await foHomePage.changeLanguage(page, 'en');
 
         // Go to sitemap page
-        await foHomePage.goToSitemapPage(page);
+        await foHomePage.goToFooterLink(page, 'Sitemap');
         const pageTitle = await siteMapPage.getPageTitle(page);
         await expect(pageTitle).to.equal(siteMapPage.pageTitle);
 
@@ -350,7 +350,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       // Go to sitemap page
-      await foHomePage.goToSiteMapPage(page);
+      await foHomePage.goToFooterLink(page, 'Sitemap');
       const pageTitle = await siteMapPage.getPageTitle(page);
       await expect(pageTitle).to.equal(siteMapPage.pageTitle);
 

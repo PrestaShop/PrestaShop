@@ -136,6 +136,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.databaseLink = '#subtab-AdminParentRequestSql';
     // Webservice
     this.webserviceLink = '#subtab-AdminWebservice';
+    // Logs
+    this.logsLink = '#subtab-AdminLogs';
     // Multistore
     this.multistoreLink = '#subtab-AdminShopGroup';
 
@@ -145,7 +147,7 @@ module.exports = class BOBasePage extends CommonPage {
 
     // Growls
     this.growlDefaultDiv = '#growls-default';
-    this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message:last-of-type`;
+    this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message`;
     this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
 
     // Alert Text
@@ -326,13 +328,19 @@ module.exports = class BOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async closeGrowlMessage(page) {
-    // Close growl message if exist
-    try {
-      await page.click(this.growlCloseButton);
-      await page.waitForSelector(this.growlMessageBlock, {state: 'hidden'});
-    } catch (e) {
-      // If element does not exist it's already not visible
+    let growlNotVisible = await this.elementNotVisible(page, this.growlMessageBlock, 10000);
+
+    while (!growlNotVisible) {
+      try {
+        await page.click(this.growlCloseButton);
+      } catch (e) {
+        // If element does not exist it's already not visible
+      }
+
+      growlNotVisible = await this.elementNotVisible(page, this.growlMessageBlock, 2000);
     }
+
+    await this.waitForHiddenSelector(page, this.growlMessageBlock);
   }
 
   /**

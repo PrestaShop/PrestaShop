@@ -472,10 +472,11 @@ class CartCore extends ObjectModel
      *                    - FILTER_ACTION_GIFT
      *                    - FILTER_ACTION_ALL_NOCAP
      * @param bool $autoAdd automaticaly adds cart ruls without code to cart
+     * @param bool $useOrderPrices
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null Database result
      */
-    public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true)
+    public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true, $useOrderPrices = false)
     {
         // Define virtual context to prevent case where the cart is not the in the global context
         $virtual_context = Context::getContext()->cloneContext();
@@ -486,7 +487,7 @@ class CartCore extends ObjectModel
             return [];
         }
         if ($autoAdd) {
-            CartRule::autoAddToCart($virtual_context);
+            CartRule::autoAddToCart($virtual_context, $useOrderPrices);
         }
 
         $cache_key = 'Cart::getCartRules_' . $this->id . '-' . $filter;
@@ -497,7 +498,7 @@ class CartCore extends ObjectModel
                 LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
                 LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (
                     cd.`id_cart_rule` = crl.`id_cart_rule`
-                    AND crl.id_lang = ' . (int) $this->id_lang . '
+                    AND crl.id_lang = ' . (int) $this->getAssociatedLanguage()->getId() . '
                 )
                 WHERE `id_cart` = ' . (int) $this->id . '
                 ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
@@ -567,7 +568,7 @@ class CartCore extends ObjectModel
                 LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
                 LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (
                     cd.`id_cart_rule` = crl.`id_cart_rule`
-                    AND crl.id_lang = ' . (int) $this->id_lang . '
+                    AND crl.id_lang = ' . (int) $this->getAssociatedLanguage()->getId() . '
                 )
                 WHERE `id_cart` = ' . (int) $this->id . '
                 ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
@@ -694,14 +695,14 @@ class CartCore extends ObjectModel
             'product_lang',
             'pl',
             'p.`id_product` = pl.`id_product`
-            AND pl.`id_lang` = ' . (int) $this->id_lang . Shop::addSqlRestrictionOnLang('pl', 'cp.id_shop')
+            AND pl.`id_lang` = ' . (int) $this->getAssociatedLanguage()->getId() . Shop::addSqlRestrictionOnLang('pl', 'cp.id_shop')
         );
 
         $sql->leftJoin(
             'category_lang',
             'cl',
             'product_shop.`id_category_default` = cl.`id_category`
-            AND cl.`id_lang` = ' . (int) $this->id_lang . Shop::addSqlRestrictionOnLang('cl', 'cp.id_shop')
+            AND cl.`id_lang` = ' . (int) $this->getAssociatedLanguage()->getId() . Shop::addSqlRestrictionOnLang('cl', 'cp.id_shop')
         );
 
         $sql->leftJoin('product_supplier', 'ps', 'ps.`id_product` = cp.`id_product` AND ps.`id_product_attribute` = cp.`id_product_attribute` AND ps.`id_supplier` = p.`id_supplier`');
@@ -756,7 +757,7 @@ class CartCore extends ObjectModel
 
         $sql->select('image_shop.`id_image` id_image, il.`legend`');
         $sql->leftJoin('image_shop', 'image_shop', 'image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $this->id_shop);
-        $sql->leftJoin('image_lang', 'il', 'il.`id_image` = image_shop.`id_image` AND il.`id_lang` = ' . (int) $this->id_lang);
+        $sql->leftJoin('image_lang', 'il', 'il.`id_image` = image_shop.`id_image` AND il.`id_lang` = ' . (int) $this->getAssociatedLanguage()->getId());
 
         $result = Db::getInstance()->executeS($sql);
 
@@ -779,7 +780,7 @@ class CartCore extends ObjectModel
         }
         // Thus you can avoid one query per product, because there will be only one query for all the products of the cart
         Product::cacheProductsFeatures($products_ids);
-        Cart::cacheSomeAttributesLists($pa_ids, $this->id_lang);
+        Cart::cacheSomeAttributesLists($pa_ids, (int) $this->getAssociatedLanguage()->getId());
 
         if (empty($result)) {
             $this->_products = [];
@@ -965,7 +966,7 @@ class CartCore extends ObjectModel
 
         // check if a image associated with the attribute exists
         if ($row['id_product_attribute']) {
-            $row2 = Image::getBestImageAttribute($row['id_shop'], $this->id_lang, $row['id_product'], $row['id_product_attribute']);
+            $row2 = Image::getBestImageAttribute($row['id_shop'], $this->getAssociatedLanguage()->getId(), $row['id_product'], $row['id_product_attribute']);
             if ($row2) {
                 $row = array_merge($row, $row2);
             }
@@ -973,12 +974,13 @@ class CartCore extends ObjectModel
 
         $row['reduction_applies'] = ($specific_price_output && (float) $specific_price_output['reduction']);
         $row['quantity_discount_applies'] = ($specific_price_output && $productQuantity >= (int) $specific_price_output['from_quantity']);
-        $row['id_image'] = Product::defineProductImage($row, $this->id_lang);
+        $row['id_image'] = Product::defineProductImage($row, $this->getAssociatedLanguage()->getId());
         $row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
         $row['features'] = Product::getFeaturesStatic((int) $row['id_product']);
 
-        if (array_key_exists($row['id_product_attribute'] . '-' . $this->id_lang, self::$_attributesLists)) {
-            $row = array_merge($row, self::$_attributesLists[$row['id_product_attribute'] . '-' . $this->id_lang]);
+        $productAttributeKey = $row['id_product_attribute'] . '-' . $this->getAssociatedLanguage()->getId();
+        if (array_key_exists($productAttributeKey, self::$_attributesLists)) {
+            $row = array_merge($row, self::$_attributesLists[$productAttributeKey]);
         }
 
         return Product::getTaxesInformations($row, $shopContext);
@@ -1068,7 +1070,7 @@ class CartCore extends ObjectModel
      * @param Context $shopContext
      * @param array|false|null $specificPriceOutput
      *
-     * @return float
+     * @return float|null
      */
     private function getCartPriceFromCatalog(
         int $productId,
@@ -1081,7 +1083,7 @@ class CartCore extends ObjectModel
         ?int $addressId,
         Context $shopContext,
         &$specificPriceOutput
-    ): float {
+    ): ?float {
         return Product::getPriceStatic(
             $productId,
             $withTaxes,
@@ -1299,10 +1301,11 @@ class CartCore extends ObjectModel
      * Add a CartRule to the Cart.
      *
      * @param int $id_cart_rule CartRule ID
+     * @param bool $useOrderPrices
      *
      * @return bool Whether the CartRule has been successfully added
      */
-    public function addCartRule($id_cart_rule)
+    public function addCartRule($id_cart_rule, bool $useOrderPrices = false)
     {
         // You can't add a cart rule that does not exist
         $cartRule = new CartRule($id_cart_rule, Context::getContext()->language->id);
@@ -1334,7 +1337,19 @@ class CartCore extends ObjectModel
         Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT . '-ids');
 
         if ((int) $cartRule->gift_product) {
-            $this->updateQty(1, $cartRule->gift_product, $cartRule->gift_product_attribute, false, 'up', 0, null, false);
+            $this->updateQty(
+                1,
+                $cartRule->gift_product,
+                $cartRule->gift_product_attribute,
+                false,
+                'up',
+                0,
+                null,
+                false,
+                false,
+                true,
+                $useOrderPrices
+            );
         }
 
         return true;
@@ -1447,6 +1462,7 @@ class CartCore extends ObjectModel
      * @param bool $auto_add_cart_rule
      * @param bool $skipAvailabilityCheckOutOfStock
      * @param bool $preserveGiftRemoval
+     * @param bool $useOrderPrices
      *
      * @return bool Whether the quantity has been successfully updated
      */
@@ -1460,7 +1476,8 @@ class CartCore extends ObjectModel
         Shop $shop = null,
         $auto_add_cart_rule = true,
         $skipAvailabilityCheckOutOfStock = false,
-        bool $preserveGiftRemoval = true
+        bool $preserveGiftRemoval = true,
+        bool $useOrderPrices = false
     ) {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -1531,7 +1548,7 @@ class CartCore extends ObjectModel
         Hook::exec('actionCartUpdateQuantityBefore', $data);
 
         if ((int) $quantity <= 0) {
-            return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval);
+            return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval, $useOrderPrices);
         }
 
         if (!$product->available_for_order
@@ -1574,7 +1591,7 @@ class CartCore extends ObjectModel
                 if ($cartFirstLevelProductQuantity['quantity'] <= 1
                     || $cartProductQuantity['quantity'] - $quantity <= 0
                 ) {
-                    return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval);
+                    return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval, $useOrderPrices);
                 }
             } else {
                 return false;
@@ -1636,9 +1653,9 @@ class CartCore extends ObjectModel
         $context = Context::getContext()->cloneContext();
         $context->cart = $this;
         Cache::clean('getContextualValue_*');
-        CartRule::autoRemoveFromCart();
+        CartRule::autoRemoveFromCart(null, $useOrderPrices);
         if ($auto_add_cart_rule) {
-            CartRule::autoAddToCart($context);
+            CartRule::autoAddToCart($context, $useOrderPrices);
         }
 
         if ($product->customizable) {
@@ -1803,10 +1820,11 @@ class CartCore extends ObjectModel
      * Remove the CartRule from the Cart.
      *
      * @param int $id_cart_rule CartRule ID
+     * @param bool $useOrderPrices
      *
      * @return bool Whether the Cart rule has been successfully removed
      */
-    public function removeCartRule($id_cart_rule)
+    public function removeCartRule($id_cart_rule, bool $useOrderPrices = false)
     {
         Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_ALL);
         Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_SHIPPING);
@@ -1821,8 +1839,8 @@ class CartCore extends ObjectModel
         $result = Db::getInstance()->delete('cart_cart_rule', '`id_cart_rule` = ' . (int) $id_cart_rule . ' AND `id_cart` = ' . (int) $this->id, 1);
 
         $cart_rule = new CartRule($id_cart_rule, Configuration::get('PS_LANG_DEFAULT'));
-        if ((int) $cart_rule->gift_product) {
-            $this->updateQty(1, $cart_rule->gift_product, $cart_rule->gift_product_attribute, null, 'down', 0, null, false);
+        if ((bool) $result && (int) $cart_rule->gift_product) {
+            $this->updateQty(1, $cart_rule->gift_product, $cart_rule->gift_product_attribute, null, 'down', 0, null, false, false, true, $useOrderPrices);
         }
 
         return $result;
@@ -1836,6 +1854,7 @@ class CartCore extends ObjectModel
      * @param int $id_customization Customization id
      * @param int $id_address_delivery Delivery Address id
      * @param bool $preserveGiftsRemoval If true gift are not removed so product is still in cart
+     * @param bool $useOrderPrices If true, will use order prices to re-calculate cartRules after the product is deleted
      *
      * @return bool Whether the product has been successfully deleted
      */
@@ -1844,7 +1863,8 @@ class CartCore extends ObjectModel
         $id_product_attribute = 0,
         $id_customization = 0,
         $id_address_delivery = 0,
-        bool $preserveGiftsRemoval = true
+        bool $preserveGiftsRemoval = true,
+        bool $useOrderPrices = false
     ) {
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
@@ -1885,10 +1905,11 @@ class CartCore extends ObjectModel
             );
         }
 
+        $preservedGifts = [];
+        $giftKey = (int) $id_product . '-' . (int) $id_product_attribute;
         if ($preserveGiftsRemoval) {
             $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
-            if (isset($preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute])
-                && $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] > 0) {
+            if (isset($preservedGifts[$giftKey]) && $preservedGifts[$giftKey] > 0) {
                 return Db::getInstance()->execute(
                     'UPDATE `' . _DB_PREFIX_ . 'cart_product`
                     SET `quantity` = ' . (int) $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] . '
@@ -1912,8 +1933,10 @@ class CartCore extends ObjectModel
             $return = $this->update();
             // refresh cache of self::_products
             $this->_products = $this->getProducts(true);
-            CartRule::autoRemoveFromCart();
-            CartRule::autoAddToCart();
+            if (!isset($preservedGifts[$giftKey]) || $preservedGifts[$giftKey] <= 0) {
+                CartRule::autoRemoveFromCart(null, $useOrderPrices);
+                CartRule::autoAddToCart(null, $useOrderPrices);
+            }
 
             return $return;
         }
@@ -2113,11 +2136,19 @@ class CartCore extends ObjectModel
 
         if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING) {
             foreach ($products as $key => $product) {
-                if ($product['is_virtual']) {
+                if (!empty($product['is_virtual'])) {
                     unset($products[$key]);
                 }
             }
             $type = Cart::ONLY_PRODUCTS;
+        }
+
+        if ($type == Cart::ONLY_PRODUCTS) {
+            foreach ($products as $key => $product) {
+                if (!empty($product['is_gift'])) {
+                    unset($products[$key]);
+                }
+            }
         }
 
         if (Tax::excludeTaxeOption()) {
@@ -2303,7 +2334,7 @@ class CartCore extends ObjectModel
     protected function getTotalCalculationCartRules($type, $withShipping)
     {
         if ($withShipping || $type == Cart::ONLY_DISCOUNTS) {
-            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_ALL);
+            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_ALL, false);
         } else {
             $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_REDUCTION, false);
             // Cart Rules array are merged manually in order to avoid doubles
@@ -5154,6 +5185,7 @@ class CartCore extends ObjectModel
     protected function splitGiftsProductsQuantity()
     {
         $this->shouldSplitGiftProductsQuantity = true;
+        $this->_products = null;
 
         return $this;
     }
@@ -5164,6 +5196,7 @@ class CartCore extends ObjectModel
     protected function mergeGiftsProductsQuantity()
     {
         $this->shouldSplitGiftProductsQuantity = false;
+        $this->_products = null;
 
         return $this;
     }
@@ -5171,6 +5204,7 @@ class CartCore extends ObjectModel
     protected function excludeGiftsDiscountFromTotal()
     {
         $this->shouldExcludeGiftsDiscount = true;
+        $this->_products = null;
 
         return $this;
     }
@@ -5178,6 +5212,7 @@ class CartCore extends ObjectModel
     protected function includeGiftsDiscountInTotal()
     {
         $this->shouldExcludeGiftsDiscount = false;
+        $this->_products = null;
 
         return $this;
     }
@@ -5311,5 +5346,28 @@ class CartCore extends ObjectModel
         $summary['gift_products'] = $gift_products;
 
         return $summary;
+    }
+
+    /**
+     * @param Cart $cart
+     *
+     * @return float
+     */
+    public function getCartTotalPrice()
+    {
+        $summary = $this->getSummaryDetails();
+
+        $id_order = (int) Order::getIdByCartId($this->id);
+        $order = new Order($id_order);
+
+        if (Validate::isLoadedObject($order)) {
+            $taxCalculationMethod = $order->getTaxCalculationMethod();
+        } else {
+            $taxCalculationMethod = Group::getPriceDisplayMethod(Group::getCurrent()->id);
+        }
+
+        return $taxCalculationMethod == PS_TAX_EXC ?
+            $summary['total_price_without_tax'] :
+            $summary['total_price'];
     }
 }

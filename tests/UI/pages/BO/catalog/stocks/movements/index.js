@@ -48,7 +48,7 @@ class Movements extends BOBasePage {
       page.click(this.searchButton),
       this.waitForVisibleSelector(page, this.productListLoading),
     ]);
-    await page.waitForSelector(this.productListLoading, {state: 'hidden'});
+    await this.waitForHiddenSelector(page, this.productListLoading);
   }
 
   /* Table methods */

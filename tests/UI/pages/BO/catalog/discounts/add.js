@@ -36,8 +36,8 @@ class AddCartRule extends BOBasePage {
     this.singleCustomerResultItem = `${this.singleCustomerResultBlock} ul li`;
 
     // Valid date selectors
-    this.dateFromInput = 'input[name=dateFrom]';
-    this.dateToInput = 'input[name=dateTo]';
+    this.dateFromInput = 'input[name=date_from]';
+    this.dateToInput = 'input[name=date_To]';
 
     // Minimum amount selectors
     this.minimumAmountInput = 'input[name=minimum_amount]';
@@ -131,11 +131,13 @@ class AddCartRule extends BOBasePage {
     // Fill date from if its changed
     if (cartRuleData.dateFrom) {
       await this.setValue(page, this.dateFromInput, cartRuleData.dateFrom);
+      await page.press(this.dateFromInput, 'Enter');
     }
 
     // Fill date to if its changed
     if (cartRuleData.dateTo) {
       await this.setValue(page, this.dateToInput, cartRuleData.dateTo);
+      await page.press(this.dateToInput, 'Enter');
     }
 
     // Fill minimum amount values

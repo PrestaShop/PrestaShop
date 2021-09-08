@@ -12,7 +12,7 @@ const ordersPage = require('@pages/BO/orders');
 const viewCustomerPage = require('@pages/BO/customers/view');
 
 // Import customer 'J. DOE'
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -76,7 +76,7 @@ describe('View customer from orders page', async () => {
       page,
       'input',
       'customer',
-      DefaultAccount.lastName,
+      DefaultCustomer.lastName,
     );
 
     const numberOfOrders = await ordersPage.getNumberOfElementInGrid(page);
@@ -91,6 +91,6 @@ describe('View customer from orders page', async () => {
 
     const pageTitle = await viewCustomerPage.getPageTitle(page);
     await expect(pageTitle).to
-      .contains(`${viewCustomerPage.pageTitle} ${DefaultAccount.firstName[0]}. ${DefaultAccount.lastName}`);
+      .contains(`${viewCustomerPage.pageTitle} ${DefaultCustomer.firstName[0]}. ${DefaultCustomer.lastName}`);
   });
 });

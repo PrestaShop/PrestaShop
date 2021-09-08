@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 use Cart;
 use Currency;
 use Customer;
-use Language;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
@@ -66,7 +65,7 @@ final class DuplicateOrderCartHandler implements DuplicateOrderCartHandlerInterf
             ->setCart($cart)
             ->setCustomer(new Customer($cart->id_customer))
             ->setCurrency(new Currency($cart->id_currency))
-            ->setLanguage(new Language($cart->id_lang))
+            ->setLanguage($cart->getAssociatedLanguage())
             ->setShop(new Shop($cart->id_shop))
         ;
         $result = $cart->duplicate();

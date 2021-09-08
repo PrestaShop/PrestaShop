@@ -79,7 +79,7 @@ class Order extends BOBasePage {
     const [download] = await Promise.all([
       page.waitForEvent('download'),
       page.click(this.gridActionExportLink),
-      page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
     return download.path();
   }
@@ -320,7 +320,7 @@ class Order extends BOBasePage {
     // Click on change order status button
     await Promise.all([
       page.click(this.bulkUpdateOrdersStatusButton),
-      this.waitForVisibleSelector(page, `${this.updateOrdersStatusModal}:not([aria-hidden='true']`),
+      this.waitForVisibleSelector(page, `${this.updateOrdersStatusModal}:not([aria-hidden='true'])`),
     ]);
     // Select new orders status in modal and confirm update
     await this.selectByVisibleText(page, this.updateOrdersStatusModalSelect, status);

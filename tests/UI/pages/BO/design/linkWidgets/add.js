@@ -5,7 +5,7 @@ class AddLinkWidget extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Link Widget •';
+    this.pageTitle = 'Link List •';
 
     // Selectors
     this.changeNamelangButton = '#form_link_block_block_name';
