@@ -52,8 +52,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstrai
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
@@ -282,15 +282,15 @@ class ProductRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param ShopConstraint $shopConstraint
+     * @param ProductShopConstraint $shopConstraint
      *
      * @return Product
      *
      * @throws CoreException
      */
-    public function getByShopConstraint(ProductId $productId, ShopConstraint $shopConstraint): Product
+    public function getByShopConstraint(ProductId $productId, ProductShopConstraint $shopConstraint): Product
     {
-        if ($shopConstraint->forAllShops()) {
+        if ($shopConstraint->forAllShops() || $shopConstraint->forDefaultProductShop()) {
             return $this->getProductByDefaultShop($productId);
         }
 
@@ -343,10 +343,10 @@ class ProductRepository extends AbstractObjectModelRepository
     /**
      * @param Product $product
      * @param array $propertiesToUpdate
-     * @param ShopConstraint $shopConstraint
+     * @param ProductShopConstraint $shopConstraint
      * @param int $errorCode
      */
-    public function partialUpdateForShopConstraint(Product $product, array $propertiesToUpdate, ShopConstraint $shopConstraint, int $errorCode): void
+    public function partialUpdateForShopConstraint(Product $product, array $propertiesToUpdate, ProductShopConstraint $shopConstraint, int $errorCode): void
     {
         $this->validateProduct($product, $propertiesToUpdate);
 
@@ -356,6 +356,8 @@ class ProductRepository extends AbstractObjectModelRepository
             foreach ($shops as $shopId) {
                 $shopIds[] = $shopId->getValue();
             }
+        } elseif ($shopConstraint->forDefaultProductShop()) {
+            $shopIds = [$this->getProductDefaultShopId(new ProductId((int) $product->id))->getValue()];
         } else {
             $shopIds = [$shopConstraint->getShopId()->getValue()];
         }
