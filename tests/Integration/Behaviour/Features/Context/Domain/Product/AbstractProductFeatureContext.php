@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCust
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -122,16 +122,17 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
      */
     protected function getProductForEditing(string $reference, ?int $shopId = null): ProductForEditing
     {
-        // @todo: For now, we handle a default fallback to avoid refactoring the whole tests, but ultimately this parameter should become mandatory
         if (null === $shopId) {
-            $shopId = $this->getDefaultShopId();
+            $shopConstraint = ProductShopConstraint::defaultProductShop();
+        } else {
+            $shopConstraint = ProductShopConstraint::shop($shopId);
         }
 
         $productId = $this->getSharedStorage()->get($reference);
 
         return $this->getQueryBus()->handle(new GetProductForEditing(
             $productId,
-            $shopId
+            $shopConstraint
         ));
     }
 
@@ -305,14 +306,6 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         return $propertyAccessor->getValue($productForEditing, $pathsByNames[$propertyName]);
-    }
-
-    /**
-     * @return ShopConstraint
-     */
-    protected function getDefaultShopConstraint(): ShopConstraint
-    {
-        return ShopConstraint::shop($this->getDefaultShopId());
     }
 
     /**
