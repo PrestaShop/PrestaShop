@@ -34,7 +34,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use Product;
@@ -90,7 +90,7 @@ class ProductShopUpdater
         $this->shopRepository->assertShopExists($targetShopId);
 
         /** @var Product $sourceProduct */
-        $sourceProduct = $this->productRepository->getByShopConstraint($productId, ShopConstraint::shop($sourceShopId->getValue()));
+        $sourceProduct = $this->productRepository->getByShopConstraint($productId, ProductShopConstraint::shop($sourceShopId->getValue()));
 
         // @todo: for now only fields from product_shop table ar handed, we still need to handle multilang, stock_available, and probably other things (in another PR)
         // @todo: do not forget to copy customization_field_lang, this part was not handled in the legacy import (fixed in this PR)
