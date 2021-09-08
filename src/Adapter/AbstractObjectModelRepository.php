@@ -179,6 +179,25 @@ abstract class AbstractObjectModelRepository
      * @param string $exceptionClass
      * @param int $errorCode
      *
+     * @return int
+     */
+    protected function addObjectModelToShop(ObjectModel $objectModel, int $shopId, string $exceptionClass, int $errorCode = 0): int
+    {
+        // Store object's list of shop ID to reset it appropriately after the update
+        $savedShopIds = $objectModel->id_shop_list;
+        $objectModel->id_shop_list = [$shopId];
+
+        $object = $this->addObjectModel($objectModel, $exceptionClass, $errorCode);
+        $objectModel->id_shop_list = $savedShopIds;
+
+        return $object;
+    }
+
+    /**
+     * @param ObjectModel $objectModel
+     * @param string $exceptionClass
+     * @param int $errorCode
+     *
      * @throws CoreException
      */
     protected function updateObjectModel(ObjectModel $objectModel, string $exceptionClass, int $errorCode = 0): void
