@@ -110,9 +110,11 @@ abstract class AbstractObjectModelRepository
      * @param string $objectModelClassName
      * @param ShopId $shopId
      *
+     * @return bool
+     *
      * @throws ShopAssociationNotFound
      */
-    protected function checkShopAssociation(int $id, string $objectModelClassName, ShopId $shopId): void
+    protected function hasShopAssociation(int $id, string $objectModelClassName, ShopId $shopId): bool
     {
         $modelDefinition = $objectModelClassName::$definition;
         $objectTable = $modelDefinition['table'];
@@ -132,7 +134,19 @@ abstract class AbstractObjectModelRepository
             $row = false;
         }
 
-        if (empty($row['id'])) {
+        return !empty($row['id']);
+    }
+
+    /**
+     * @param int $id
+     * @param string $objectModelClassName
+     * @param ShopId $shopId
+     *
+     * @throws ShopAssociationNotFound
+     */
+    protected function checkShopAssociation(int $id, string $objectModelClassName, ShopId $shopId): void
+    {
+        if (!$this->hasShopAssociation($id, $objectModelClassName, $shopId)) {
             throw new ShopAssociationNotFound(sprintf(
                 'Could not find association between %s %d and Shop %d',
                 $objectModelClassName,
