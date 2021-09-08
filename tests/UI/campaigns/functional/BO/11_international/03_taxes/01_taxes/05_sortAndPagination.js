@@ -12,14 +12,13 @@ const taxesPage = require('@pages/BO/international/taxes');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_taxes_pagination';
+const baseContext = 'functional_BO_international_taxes_taxes_sortAndPagination';
 
 let browserContext;
 let page;
-
 let numberOfTaxes = 0;
 
-describe('Taxes pagination', async () => {
+describe('BO - International - Taxes : Sort and pagination', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -34,7 +33,7 @@ describe('Taxes pagination', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to taxes page', async function () {
+  it('should go to \'International > Taxes\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -43,20 +42,81 @@ describe('Taxes pagination', async () => {
       dashboardPage.taxesLink,
     );
 
-    await taxesPage.closeSfToolBar(page);
-
     const pageTitle = await taxesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(taxesPage.pageTitle);
   });
 
-  it('should reset all filters and get number of taxes in BO', async function () {
+  it('should reset all filters and get Number of Taxes in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfTaxes = await taxesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfTaxes).to.be.at.least(11);
+    await expect(numberOfTaxes).to.be.above(0);
+  });
 
-    const paginationLabelText = await taxesPage.getPaginationLabel(page);
-    await expect(paginationLabelText).to.contains('(page 1 / 1)');
+  describe('Sort taxes', async () => {
+    [
+      {
+        args:
+          {
+            testIdentifier: 'sortByIdDesc', sortBy: 'id_tax', sortDirection: 'desc', isFloat: true,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc', isFloat: false,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc', isFloat: false,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByRateAsc', sortBy: 'rate', sortDirection: 'asc', isFloat: true,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByRateDesc', sortBy: 'rate', sortDirection: 'desc', isFloat: true,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByIdAsc', sortBy: 'id_tax', sortDirection: 'asc', isFloat: true,
+          },
+      },
+    ].forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        // Get non sorted table
+        let nonSortedTable = await taxesPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        // Get sorted table
+        await taxesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        let sortedTable = await taxesPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        // Sort Array with javascript
+        const expectedResult = await taxesPage.sortArray(nonSortedTable, test.args.isFloat);
+
+        if (test.args.sortDirection === 'asc') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
+    });
   });
 
   describe('Pagination next and previous', async () => {

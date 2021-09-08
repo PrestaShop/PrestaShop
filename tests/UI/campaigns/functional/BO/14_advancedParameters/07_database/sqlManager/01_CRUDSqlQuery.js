@@ -25,8 +25,9 @@ let browserContext;
 let page;
 let numberOfSQLQuery = 0;
 
-const sqlQueryData = new SQLQueryFaker({tableName: 'ps_alias'});
-const editSqlQueryData = new SQLQueryFaker({name: `edit${sqlQueryData.name}`, tableName: 'ps_access'});
+const dbPrefix = global.INSTALL.DB_PREFIX;
+const sqlQueryData = new SQLQueryFaker({tableName: `${dbPrefix}alias`});
+const editSqlQueryData = new SQLQueryFaker({name: `edit${sqlQueryData.name}`, tableName: `${dbPrefix}access`});
 
 describe('CRUD SQL query', async () => {
   // before and after functions

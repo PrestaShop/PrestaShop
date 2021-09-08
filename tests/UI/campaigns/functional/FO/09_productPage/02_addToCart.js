@@ -41,7 +41,7 @@ const productData = new ProductFaker(productToCreate);
 /*
 Check product details
 Change product quantity
-Choose combination( size, color)
+Choose combination (size, color)
 Edit combination and add to cart
 Check product details on the cart
 Change image from product page

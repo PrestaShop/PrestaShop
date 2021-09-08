@@ -1,5 +1,7 @@
 require('module-alias/register');
 
+const {expect} = require('chai');
+
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
 
@@ -16,9 +18,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_locations_states_sortAndPagination';
 
-// Using chai
-const {expect} = require('chai');
-
 let browserContext;
 let page;
 
@@ -26,7 +25,7 @@ let page;
 Sort states table
 Paginate between pages
  */
-describe('Sort and pagination states table', async () => {
+describe('BO - International - States : Sort and pagination', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -41,7 +40,7 @@ describe('Sort and pagination states table', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Locations\' page', async function () {
+  it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(

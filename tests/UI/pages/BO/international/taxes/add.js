@@ -52,7 +52,7 @@ class AddTax extends BOBasePage {
   /**
    * Fill form for add/edit tax
    * @param page {Page} Browser tab
-   * @param taxData {taxData} Data to set on new/edit tax page
+   * @param taxData {TaxData} Data to set on new/edit tax page
    * @returns {Promise<string>}
    */
   async createEditTax(page, taxData) {

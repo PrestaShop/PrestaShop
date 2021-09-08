@@ -195,7 +195,8 @@ class Order extends BOBasePage {
    * Get all row information from orders table
    * @param page {Page} Browser tab
    * @param row {number} Order row on table
-   * @returns {Promise<[]>}
+   * @returns {Promise<{id: number, reference: string, newClient:string, delivery: string, customer: string,
+   * totalPaid: string, payment: string, status: string}>}
    */
   async getOrderFromTable(page, row) {
     return {
@@ -214,7 +215,7 @@ class Order extends BOBasePage {
    * Get column content in all rows
    * @param page {Page} Browser tab
    * @param column {string} Column name on table
-   * @returns {Promise<[]>}
+   * @returns {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -222,7 +223,7 @@ class Order extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, column, i);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -251,7 +252,7 @@ class Order extends BOBasePage {
    * Set order status
    * @param page {Page} Browser tab
    * @param row {number} Order row in table
-   * @param status {string} Order status on table
+   * @param status {{id: number, name: string}} Order status on table
    * @returns {Promise<string>}
    */
   async setOrderStatus(page, row, status) {
@@ -290,7 +291,7 @@ class Order extends BOBasePage {
    * Click on customer link to open view page in a new tab
    * @param page {Page} Browser tab
    * @param row {number} Order row on table
-   * @returns {Promise<*>}, new browser tab to work with
+   * @returns {Promise<Page>} New browser tab to work with
    */
   viewCustomer(page, row) {
     return this.openLinkWithTargetBlank(
@@ -319,7 +320,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @param status {string} New status to give to orders
    * @param isAllOrders {boolean} True if want to update all orders status
-   * @param rows {array} Array of which orders rows to change (if allOrders = false)
+   * @param rows {Array<number>|boolean} Array of which orders rows to change (if allOrders = false)
    * @returns {Promise<string>}
    */
   async bulkUpdateOrdersStatus(page, status, isAllOrders = true, rows = []) {

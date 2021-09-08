@@ -11,14 +11,14 @@ class SqlQueryData {
    * @param sqlQueryToCreate {Object} Could be used to force the value of some members
    */
   constructor(sqlQueryToCreate = {}) {
-    /** @member {string} Name of the query */
+    /** @type {string} Name of the query */
     this.name = sqlQueryToCreate.name || faker.random.word();
 
-    /** @member {string} Table to use on the query */
+    /** @type {string} Table to use on the query */
     this.tableName = sqlQueryToCreate.tableName
       || faker.random.arrayElement((Object.values(Tables).map(table => table.key)));
 
-    /** @member {string} Value of the query */
+    /** @type {string} Value of the query */
     this.sqlQuery = sqlQueryToCreate.sqlQuery || `select * from ${this.tableName}`;
   }
 }

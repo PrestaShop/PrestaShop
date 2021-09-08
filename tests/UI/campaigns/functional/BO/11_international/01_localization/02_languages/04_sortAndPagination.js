@@ -23,7 +23,7 @@ let browserContext;
 let page;
 let numberOfLanguages = 0;
 
-describe('Sort and pagination Languages table', async () => {
+describe('BO - International - Languages : Sort and pagination', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -49,7 +49,7 @@ describe('Sort and pagination Languages table', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to localization page', async function () {
+  it('should go to \'International > Localization\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -64,7 +64,7 @@ describe('Sort and pagination Languages table', async () => {
     await expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
-  it('should go to languages page', async function () {
+  it('should go to \'Languages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
 
     await localizationPage.goToSubTabLanguages(page);

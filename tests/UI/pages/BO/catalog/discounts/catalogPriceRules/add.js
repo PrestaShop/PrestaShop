@@ -36,7 +36,7 @@ class AddCatalogPriceRule extends BOBasePage {
   /**
    * Create/edit price rule
    * @param page {Page} Browser tab
-   * @param priceRuleData {priceRuleData} Data to set on new/edit catalog price rule form
+   * @param priceRuleData {CatalogPriceRuleData} Data to set on new/edit catalog price rule form
    * @returns {Promise<string>}
    */
   async setCatalogPriceRule(page, priceRuleData) {
@@ -44,7 +44,7 @@ class AddCatalogPriceRule extends BOBasePage {
     await this.selectByVisibleText(page, this.currencySelect, priceRuleData.currency);
     await this.selectByVisibleText(page, this.countrySelect, priceRuleData.country);
     await this.selectByVisibleText(page, this.groupSelect, priceRuleData.group);
-    await this.setValue(page, this.fromQuantityInput, priceRuleData.fromQuantity.toString());
+    await this.setValue(page, this.fromQuantityInput, priceRuleData.fromQuantity);
     if (priceRuleData.fromDate !== '') {
       await page.type(this.fromDateInput, priceRuleData.fromDate);
     }
@@ -53,7 +53,7 @@ class AddCatalogPriceRule extends BOBasePage {
     }
     await this.selectByVisibleText(page, this.reductionTypeSelect, priceRuleData.reductionType);
     await this.selectByVisibleText(page, this.reductionTaxSelect, priceRuleData.reductionTax);
-    await this.setValue(page, this.reductionInput, priceRuleData.reduction.toString());
+    await this.setValue(page, this.reductionInput, priceRuleData.reduction);
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     return this.getAlertSuccessBlockContent(page);

@@ -37,7 +37,7 @@ class AddImageType extends BOBasePage {
   /**
    * Fill image type form in create or edit page and save
    * @param page {Page} Browser tab
-   * @param imageTypeData {imageTypeData} Data to set on new/edit image type form
+   * @param imageTypeData {ImageTypeData} Data to set on new/edit image type form
    * @return {Promise<string>}
    */
   async createEditImageType(page, imageTypeData) {

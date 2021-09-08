@@ -4,7 +4,7 @@ const LocalizationBasePage = require('@pages/BO/international/localization/local
 /**
  * Localization page, contains functions that can be used on the page
  * @class
- * @extends BOBasePage
+ * @extends LocalizationBasePage
  */
 class Localization extends LocalizationBasePage {
   /**
@@ -42,7 +42,9 @@ class Localization extends LocalizationBasePage {
    * Import a localization pack
    * @param page {Page} Browser tab
    * @param country {string} Country to select
-   * @param contentToImport {contentToImport} Data of content to import to choose
+   * @param contentToImport {{importStates: boolean, importTaxes: boolean, importCurrencies: boolean,
+   * importLanguages: boolean, importUnits: boolean,
+   * updatePriceDisplayForGroups: boolean}} Data of content to import to choose
    * @param downloadPackData {boolean} True if we need to download pack data
    * @return {Promise<void>}
    */

@@ -29,7 +29,7 @@ class AddFeature extends BOBasePage {
   /**
    * Fill feature form and save it
    * @param page {Page} Browser tab
-   * @param featureData {object} Values to set on add feature form inputs
+   * @param featureData {FeatureData} Values to set on add feature form inputs
    * @return {Promise<string>}
    */
   async setFeature(page, featureData) {

@@ -156,8 +156,8 @@ class Products extends BOBasePage {
   /**
    * Filter price Min - Max
    * @param page {Page} Browser tab
-   * @param priceMin {float} Value of min price to set on filter input
-   * @param priceMax {float} Value of max price to set on filter input
+   * @param priceMin {number} Value of min price to set on filter input
+   * @param priceMax {number} Value of max price to set on filter input
    * @return {Promise<void>}
    */
   async filterPriceProducts(page, priceMin, priceMax) {
@@ -224,7 +224,7 @@ class Products extends BOBasePage {
    * Filter products
    * @param page {Page} Browser tab
    * @param filterBy {string} Column to filter
-   * @param value {string} Value to put on filter
+   * @param value {{min: number, max:number}|string} Value to put on filter
    * @param filterType {string} Input or select to choose method of filter
    * @return {Promise<void>}
    */
@@ -292,7 +292,7 @@ class Products extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column name to get all rows text content
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfProductsFromList(page);
@@ -300,7 +300,7 @@ class Products extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, column, i);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -471,7 +471,7 @@ class Products extends BOBasePage {
   /**
    * Delete product with dropdown Menu
    * @param page {Page} Browser tab
-   * @param productData {productData} Data to set to filter product
+   * @param productData {ProductData} Data to set to filter product
    * @returns {Promise<string>}
    */
   async deleteProduct(page, productData) {

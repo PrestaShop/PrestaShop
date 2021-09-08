@@ -29,7 +29,7 @@ class AddProfile extends BOBasePage {
   /**
    * Fill form for add/edit page profile
    * @param page {Page} Browser tab
-   * @param profileData {profileData} Data to set on add/edit profile form
+   * @param profileData {ProfileData} Data to set on add/edit profile form
    * @return {Promise<string>}
    */
   async createEditProfile(page, profileData) {

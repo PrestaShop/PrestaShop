@@ -99,7 +99,7 @@ class AddOrder extends BOBasePage {
   /**
    * Click on add new customer and new customer iFrame
    * @param page {Page} Browser tab
-   * @param customerData {object} Customer data fake object
+   * @param customerData {CustomerData} Customer data fake object
    * @returns {Promise<string>}
    */
   async addNewCustomer(page, customerData) {
@@ -138,7 +138,7 @@ class AddOrder extends BOBasePage {
   /**
    * Add product to cart
    * @param page {Page} Browser tab
-   * @param product {object} Product data to search with
+   * @param product {ProductData} Product data to search with
    * @param quantity {number} Product quantity to add to the cart
    * @returns {Promise<void>}
    */
@@ -199,7 +199,7 @@ class AddOrder extends BOBasePage {
   /**
    * Set order status
    * @param page {Page} Browser tab
-   * @param orderStatus {string} Order status to choose
+   * @param orderStatus {{id: number, status: string}} Order status to choose
    * @returns {Promise<void>}
    */
   async setOrderStatus(page, orderStatus) {

@@ -89,7 +89,7 @@ class Movements extends BOBasePage {
   /**
    * Get number of element in movements grid
    * @param page {Page} Browser tab
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
     return (await page.$$(this.tableRows)).length;

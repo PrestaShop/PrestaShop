@@ -90,7 +90,7 @@ class AddCartRule extends BOBasePage {
   /**
    * Fill form in information tab
    * @param page {Page} Browser tab
-   * @param cartRuleData {cartRuleData} Data to set on information form
+   * @param cartRuleData {CartRuleData} Data to set on information form
    * @return {Promise<void>}
    */
   async fillInformationForm(page, cartRuleData) {
@@ -124,7 +124,7 @@ class AddCartRule extends BOBasePage {
   /**
    * Fill form in condition tab
    * @param page {Page} Browser tab
-   * @param cartRuleData {cartRuleData} Data to set on conditions form
+   * @param cartRuleData {CartRuleData} Data to set on conditions form
    * @return {Promise<void>}
    */
   async fillConditionsForm(page, cartRuleData) {
@@ -152,21 +152,21 @@ class AddCartRule extends BOBasePage {
     }
 
     // Fill minimum amount values
-    await this.setValue(page, this.minimumAmountInput, cartRuleData.minimumAmount.value.toString());
+    await this.setValue(page, this.minimumAmountInput, cartRuleData.minimumAmount.value);
     await this.selectByVisibleText(page, this.minimumAmountCurrencySelect, cartRuleData.minimumAmount.currency);
     await this.selectByVisibleText(page, this.minimumAmountTaxSelect, cartRuleData.minimumAmount.tax);
     await this.selectByVisibleText(page, this.minimumAmountShippingSelect, cartRuleData.minimumAmount.shipping);
 
     // Fill quantities
-    await this.setValue(page, this.quantityInput, cartRuleData.quantity.toString());
-    await this.setValue(page, this.quantityPerUserInput, cartRuleData.quantityPerUser.toString());
+    await this.setValue(page, this.quantityInput, cartRuleData.quantity);
+    await this.setValue(page, this.quantityPerUserInput, cartRuleData.quantityPerUser);
   }
 
 
   /**
    * Fill actions tab
    * @param page {Page} Browser tab
-   * @param cartRuleData {cartRuleData} Data to set on actions form
+   * @param cartRuleData {CartRuleData} Data to set on actions form
    * @return {Promise<void>}
    */
   async fillActionsForm(page, cartRuleData) {
@@ -179,12 +179,12 @@ class AddCartRule extends BOBasePage {
     switch (cartRuleData.discountType) {
       case 'Percent':
         await page.check(this.discountPercentRadioButton);
-        await this.setValue(page, this.discountPercentInput, cartRuleData.discountPercent.toString());
+        await this.setValue(page, this.discountPercentInput, cartRuleData.discountPercent);
         await page.check(this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'));
         break;
       case 'Amount':
         await page.check(this.discountAmountRadioButton);
-        await this.setValue(page, this.discountAmountInput, cartRuleData.discountAmount.value.toString());
+        await this.setValue(page, this.discountAmountInput, cartRuleData.discountAmount.value);
         await this.selectByVisibleText(page, this.discountAmountCurrencySelect, cartRuleData.discountAmount.currency);
         await this.selectByVisibleText(page, this.discountAmountTaxSelect, cartRuleData.discountAmount.tax);
         break;
@@ -215,7 +215,7 @@ class AddCartRule extends BOBasePage {
   /**
    * Create/edit cart rule
    * @param page {Page} Browser tab
-   * @param cartRuleData {cartRuleData} Data to set on add/edit cart rule form
+   * @param cartRuleData {CartRuleData} Data to set on add/edit cart rule form
    * @returns {Promise<string>}
    */
   async createEditCartRules(page, cartRuleData) {

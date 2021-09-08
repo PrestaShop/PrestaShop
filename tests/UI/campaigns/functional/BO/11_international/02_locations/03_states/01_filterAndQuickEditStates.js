@@ -1,5 +1,7 @@
 require('module-alias/register');
 
+const {expect} = require('chai');
+
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
 
@@ -19,17 +21,17 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_locations_states_filterAndQuickEditStates';
 
-// Import expect from chai
-const {expect} = require('chai');
-
-
 // Browser and tab
 let browserContext;
 let page;
 
 let numberOfStates = 0;
 
-describe('Filter and quick edit states', async () => {
+/*
+Filter states by : id, name, iso code, id, country, id zone, status
+Quick edit state
+ */
+describe('BO - International - States : Filter and quick edit', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -44,7 +46,7 @@ describe('Filter and quick edit states', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to locations page', async function () {
+  it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -59,7 +61,7 @@ describe('Filter and quick edit states', async () => {
     await expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
-  it('should go to states page', async function () {
+  it('should go to \'States\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStatesPage', baseContext);
 
     await zonesPage.goToSubTabStates(page);

@@ -32,7 +32,7 @@ class Vouchers extends FOBasePage {
    * Get voucher code from table
    * @param page {Page} Browser tab
    * @param row {number} Row number in vouchers table
-   * @returns {string}
+   * @returns {Promise<string>}
    */
   getVoucherCodeFromTable(page, row) {
     return this.getTextContent(page, this.vouchersTableCodeColumn(row));

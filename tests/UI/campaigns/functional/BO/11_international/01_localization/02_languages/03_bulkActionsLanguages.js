@@ -33,7 +33,7 @@ Enable them with bulk actions
 Disable them with bulk actions
 Delete them with bulk actions
  */
-describe('Disable, enable and delete with bulk actions languages', async () => {
+describe('BO - International - Languages : Bulk disable, enable and delete languages', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -62,7 +62,7 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to localization page', async function () {
+  it('should go to \'International > Localization\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -77,7 +77,7 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
     await expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
-  it('should go to languages page', async function () {
+  it('should go to \'Languages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
 
     await localizationPage.goToSubTabLanguages(page);

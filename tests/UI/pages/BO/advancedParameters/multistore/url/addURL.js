@@ -29,8 +29,8 @@ class AddUrl extends BOBasePage {
   /**
    * Add shop URL
    * @param page {Page} Browser tab
-   * @param shopData {shopData} Data to set on edit/add shop form
-   * @returns {Promise<*>}
+   * @param shopData {ShopData} Data to set on edit/add shop form
+   * @returns {Promise<string>}
    */
   async setVirtualUrl(page, shopData) {
     await this.setValue(page, this.virtualUrlInput, shopData.name);

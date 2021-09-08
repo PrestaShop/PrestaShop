@@ -32,7 +32,7 @@ class AddState extends BOBasePage {
   /**
    * Fill form for add/edit state
    * @param page {Page} Browser tab
-   * @param stateData {stateDate} Data to set on new/edit state form
+   * @param stateData {StateData} Data to set on new/edit state form
    * @returns {Promise<string>}
    */
   async createEditState(page, stateData) {

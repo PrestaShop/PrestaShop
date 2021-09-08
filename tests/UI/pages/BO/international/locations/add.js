@@ -29,7 +29,7 @@ class AddZone extends BOBasePage {
   /**
    * Fill form for add/edit zone
    * @param page {Page} Browser tab
-   * @param zoneData {zoneData} Data to set on new/edit zone page
+   * @param zoneData {ZoneData} Data to set on new/edit zone page
    * @returns {Promise<string>}
    */
   async createEditZone(page, zoneData) {

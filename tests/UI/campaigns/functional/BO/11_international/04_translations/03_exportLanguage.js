@@ -15,12 +15,12 @@ const {Languages} = require('@data/demo/languages');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_localization_translations_exportLanguage';
+const baseContext = 'functional_BO_international_translations_exportLanguage';
 
 let browserContext;
 let page;
 
-describe('Export languages in translations page', async () => {
+describe('BO - International - Translation : Export languages', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -35,7 +35,7 @@ describe('Export languages in translations page', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to translations page', async function () {
+  it('should go to \'International > Translations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
