@@ -48,14 +48,14 @@ class GetProductForEditing
      * GetProductForEditing constructor.
      *
      * @param int $productId
-     * @param ShopId $shopId
+     * @param int $shopId
      */
     public function __construct(
         int $productId,
-        ShopId $shopId
+        int $shopId
     ) {
         $this->productId = new ProductId($productId);
-        $this->shopId = $shopId;
+        $this->shopId = new ShopId($shopId);
     }
 
     /**
