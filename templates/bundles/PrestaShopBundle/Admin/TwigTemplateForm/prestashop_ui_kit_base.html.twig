@@ -1221,3 +1221,32 @@
   {{- block('form_widget_simple') -}}
   <img src="{{ form.vars.value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" />
 {% endblock %}
+
+{% block delta_quantity_widget %}
+  {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity')|trim, 'data-initial-quantity': form.quantity.vars.value}) -%}
+  <div {{ block('widget_container_attributes') }}>
+    {{ form_widget(form.quantity) }}
+    {{ form_row(form.delta) }}
+  </div>
+{% endblock %}
+
+{% block delta_quantity_quantity_widget %}
+  {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity-quantity')|trim}) -%}
+  <div {{ block('widget_container_attributes') }}>
+    {{- block('form_widget_simple') -}}
+    <span class="initial-quantity">
+      {{ form.vars.value|e('html') }}
+    </span>
+    <span class="quantity-update">
+      <i class="material-icons">trending_flat</i>
+      <span class="new-quantity"></span>
+    </span>
+  </div>
+
+{% endblock %}
+
+{% block delta_quantity_delta_widget %}
+  {%- set type = 'number' -%}
+  {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity-delta')|trim}) -%}
+  {{- block('form_widget_simple') -}}
+{% endblock %}
