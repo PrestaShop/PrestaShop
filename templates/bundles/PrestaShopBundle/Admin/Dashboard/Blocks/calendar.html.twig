@@ -1,0 +1,128 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% trans_default_domain 'Admin.Global' %}
+
+<div 
+  id="dashboard-calendar"
+  class="card dashboard-calendar"
+  data-preselected-filter="{% if not preselectDateRange %}month{% else %}{{preselectDateRange}}{% endif %}"
+  data-date-from="{{ dateFrom|escape }}"
+  data-date-to="{{ dateTo|escape }}"
+  data-custom-date-from=""
+  data-custom-date-to=""
+>
+  <div class="card-block">
+    <form action="{{ path('admin_dashboard_submit_date_range') }}" method="post" id="calendar-form" name="calendar-form" class="container-fluid">
+      <div class="form-inline row">
+        <div class="btn-group flex-wrap">
+          <button type="button" name="submitDateDay" :class="['btn', 'btn-default', 'submitDateDay', activeFilter === 'day' ? 'active' : null]" @click="setFilter('day')">
+            {{ 'Today'|trans }}
+          </button>
+          <button type="button" name="submitDateMonth" :class="['btn', 'btn-default', 'submitDateMonth', activeFilter === 'month' ? 'active' : null]" @click="setFilter('month')">
+            {{ 'This month'|trans }}
+          </button>
+          <button type="button" name="submitDateYear" :class="['btn', 'btn-default', 'submitDateYear', activeFilter === 'year' ? 'active' : null]" @click="setFilter('year')">
+            {{ 'This year'|trans }}
+          </button>
+          <button type="button" name="submitDateDayPrev" :class="['btn', 'btn-default', 'submitDateDayPrev', activeFilter === 'prev-day' ? 'active' : null]" @click="setFilter('prev-day')">
+            {{ 'Yesterday'|trans }}
+          </button>
+          <button type="button" name="submitDateWeekPrev" :class="['btn', 'btn-default', 'submitDateWeekPrev', activeFilter === 'prev-week' ? 'active' : null]" @click="setFilter('prev-week')">
+            {{ 'Last week'|trans }}
+          </button>
+
+          <vc-date-picker
+            v-model="customRange"
+            mode="date"
+            :masks="masks"
+            :columns="$screens({ default: 1, lg: 2 })"
+            is-range
+          >
+            <template v-slot="{ inputValue, inputEvents, isDragging, togglePopover }">
+              <button type="button" name="submitCustom" :class="['btn', 'btn-default', 'submit-custom', activeFilter === 'custom' ? 'active' : null]" @click="togglePopover">
+                <span class="d-none d-sm-inline-block" v-if="inputValue.start" >
+                  <strong id="datepicker-from-info">(( inputValue.start ))</strong>
+                  -
+                  <strong id="datepicker-to-info">(( inputValue.end ))</strong>
+                </span>
+                <span v-else>
+                  {{ 'Custom'|trans }}
+                </span>
+              </button>
+            </template>
+          </vc-date-picker>
+        </div>
+
+        <input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{{ dateFrom|escape }}">
+        <input type="hidden" name="datepickerTo" id="datepickerTo" value="{{ dateTo|escape }}">
+        <input type="hidden" name="preselectDateRange" value="{{ preselectDateRange|escape }}">
+
+        <div class="form-group ml-auto">
+          <label for="datepickerExpand">{{ 'Compare with:'|trans }}</label>
+
+          <vc-date-picker
+            v-model="range"
+            mode="date"
+            :masks="masks"
+            :columns="$screens({ default: 1, lg: 2 })"
+            is-range
+          >
+            <template v-slot="{ inputValue, inputEvents, isDragging, togglePopover }">
+              <button id="datepickerExpand" class="btn btn-default" type="button" @click="togglePopover">
+                <span class="d-none d-sm-inline-block">
+                  <strong id="datepicker-from-info">(( inputValue.start ))</strong>
+                  -
+                  <strong id="datepicker-to-info">(( inputValue.end ))</strong>
+                </span>
+                <i class="material-icons">arrow_drop_down</i>
+              </button>
+            </template>
+          </vc-date-picker>
+        </div>
+      </div>
+
+      <div class="row row-padding-top collapse mt-3" id="datepicker">
+        <div class="col-lg-12">
+          <div class="row">
+            <div class="col-sm-6 col-lg-4 container-fluid">
+              <div class="form-inline">
+                <div class="form-group">
+                  <label for="date-from" class="m-1">{{ 'From'|trans }}</label>
+                  <input type="text" class="form-control m-1" id="date-from">
+                </div>
+
+                <div class="form-group">
+                  <label for="date-to" class="m-1">{{ 'To'|trans }}</label>
+                  <input type="text" class="form-control m-1" id="date-to">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -25,8 +25,17 @@
 import Vue from 'vue';
 import DashboardCalendar from './DashboardCalendar';
 
-new Vue({
+const calendarElement = <HTMLElement> document.querySelector('#dashboard-calendar');
+const Calendar = Vue.extend(DashboardCalendar);
+
+new Calendar({
+  delimiters: ['((', '))'],
   el: '#dashboard-calendar',
-  template: '<dashboard-calendar />',
-  components: {DashboardCalendar}
+  propsData: {
+    preselectedFilter: calendarElement.dataset.preselectedFilter,
+    dateFrom: calendarElement.dataset.dateFrom,
+    dateTo: calendarElement.dataset.dateTo,
+    customDateFrom: calendarElement.dataset.customDateFrom,
+    customDateTo: calendarElement.dataset.customDateTo
+  }
 });
