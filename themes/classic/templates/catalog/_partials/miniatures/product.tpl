@@ -30,6 +30,7 @@
         {if $product.cover}
           <a href="{$product.url}" class="thumbnail product-thumbnail">
             <img
+              class="img-fluid"
               src="{$product.cover.bySize.home_default.url}"
               alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
               loading="lazy"
