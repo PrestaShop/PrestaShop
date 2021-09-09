@@ -30,5 +30,5 @@
       {l s='%s other products in the same category:' sprintf=[$products|@count] d='Shop.Theme.Catalog'}
     {/if}
   </h2>
-  {include file="catalog/_partials/productlist.tpl" products=$products productClass="col-sm-6 col-md-6 col-lg-4 col-xl-3"}
+  {include file="catalog/_partials/productlist.tpl" products=$products productClass="col-6 col-lg-4 col-xl-3"}
 </section>
