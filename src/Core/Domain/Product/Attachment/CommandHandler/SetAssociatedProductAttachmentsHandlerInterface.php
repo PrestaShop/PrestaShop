@@ -24,38 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
-
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetAssociatedProductAttachmentsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\SetAssociatedProductAttachmentsCommand;
 
 /**
- * Handles @see SetAssociatedProductAttachmentsCommand using legacy object model
+ * Defines contract to handle @see SetAssociatedProductAttachmentsCommand
  */
-final class SetAssociatedProductAttachmentsHandler implements SetAssociatedProductAttachmentsHandlerInterface
+interface SetAssociatedProductAttachmentsHandlerInterface
 {
     /**
-     * @var ProductAttachmentUpdater
+     * @param SetAssociatedProductAttachmentsCommand $command
+     *
+     * @return void
      */
-    private $productAttachmentUpdater;
-
-    /**
-     * @param ProductAttachmentUpdater $productUpdater
-     */
-    public function __construct(
-        ProductAttachmentUpdater $productUpdater
-    ) {
-        $this->productAttachmentUpdater = $productUpdater;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(SetAssociatedProductAttachmentsCommand $command): void
-    {
-        $this->productAttachmentUpdater->setAttachments($command->getProductId(), $command->getAttachmentIds());
-    }
+    public function handle(SetAssociatedProductAttachmentsCommand $command): void;
 }

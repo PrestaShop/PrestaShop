@@ -1077,6 +1077,12 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
+#modal-create-product-attachment {
+  .modal-dialog {
+    max-width: 810px;
+  }
+}
+
 #external-combination-tab {
   padding-bottom: $product-page-padding-bottom;
   margin-top: -$product-page-padding-bottom;
@@ -1352,11 +1358,9 @@ $product-page-padding-bottom: 80px !default;
 
 #related-product,
 #id-product-redirected,
-.redirect-option-widget,
-.entity-search-widget {
+.redirect-option-widget {
   // list of added related products
-  .typeahead-list,
-  .entities-list {
+  .typeahead-list {
     li {
       @extend .p-1;
       @extend .mt-1;
@@ -1388,8 +1392,7 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
-  .autocomplete-search,
-  .entity-search-widget {
+  .autocomplete-search {
     .search-suggestion {
       img {
         width: 50px;

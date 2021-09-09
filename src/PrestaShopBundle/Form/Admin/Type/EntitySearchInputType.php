@@ -51,6 +51,9 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class EntitySearchInputType extends CollectionType
 {
+    public const LIST_LAYOUT = 'list';
+    public const TABLE_LAYOUT = 'table';
+
     /**
      * @var TranslatorInterface
      */
@@ -95,14 +98,16 @@ class EntitySearchInputType extends CollectionType
 
             // This mapping array indicate which field from the entity must be used and what placeholder use to replace
             // it (the placeholder must be used in the prototype so that the value is in the right place)
-            'prototype_mapping' => [
-                'id' => EntityItemType::ID_PLACEHOLDER,
-                'name' => EntityItemType::NAME_PLACEHOLDER,
-                'image' => EntityItemType::IMAGE_PLACEHOLDER,
-            ],
+            'prototype_mapping' => null,
+
+            // Layout
+            'layout' => static::LIST_LAYOUT,
 
             // Remove modal wording
             'remove_modal' => null,
+
+            // Empty state wording
+            'empty_state' => null,
         ]);
 
         $resolver->setAllowedTypes('search_attr', ['array']);
@@ -113,7 +118,7 @@ class EntitySearchInputType extends CollectionType
         $resolver->setAllowedTypes('limit', ['int']);
         $resolver->setAllowedTypes('entity_type', ['string', 'null']);
 
-        $resolver->setAllowedTypes('prototype_mapping', ['array']);
+        $resolver->setAllowedTypes('prototype_mapping', ['array', 'null']);
 
         $resolver->setAllowedTypes('remove_modal', ['array', 'null']);
         $resolver->setNormalizer('remove_modal', function (Options $options, $value) {
@@ -121,6 +126,10 @@ class EntitySearchInputType extends CollectionType
 
             return $resolver->resolve($value ?? []);
         });
+
+        $resolver->setAllowedTypes('layout', ['string']);
+        $resolver->setAllowedValues('layout', [static::LIST_LAYOUT, static::TABLE_LAYOUT]);
+        $resolver->setAllowedTypes('empty_state', ['string', 'null']);
     }
 
     /**
@@ -128,6 +137,21 @@ class EntitySearchInputType extends CollectionType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        // If no mapping has been defined it is built based on the prototype field names
+        /** @var FormInterface $prototype */
+        $prototype = $form->getConfig()->getAttribute('prototype');
+        if (empty($options['prototype_mapping'])) {
+            $options['prototype_mapping'] = [];
+            foreach ($prototype->all() as $prototypeChild) {
+                $options['prototype_mapping'][$prototypeChild->getName()] = sprintf(
+                    '__%s__',
+                    $prototypeChild->getName()
+                );
+            }
+        }
+
+        // Force the data in prototype so that placeholders are injected in the prototype template then render the view
+        $prototype->setData($options['prototype_mapping']);
         parent::buildView($view, $form, $options);
 
         // Reformat parameter name for javascript (PHP and JS don't have same naming conventions)
@@ -143,6 +167,8 @@ class EntitySearchInputType extends CollectionType
             'placeholder' => $options['placeholder'],
             'prototype_mapping' => $options['prototype_mapping'],
             'remove_modal' => $removeModal,
+            'list_layout' => $options['layout'],
+            'empty_state' => $options['empty_state'],
         ]);
     }
 

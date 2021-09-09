@@ -1732,3 +1732,19 @@ services:
             - '@translator'
         tags:
             - { name: form.type }
+
+    form.type.sell.product.options.product_attachments_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductAttachmentsType'
+        arguments:
+            - '@prestashop.core.admin.url_generator'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.options.attached_file_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\AttachedFileType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }

@@ -24,20 +24,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformationList;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
 
-/**
- * Defines contract to handle @see GetAttachmentInformationList query
- */
-interface GetAttachmentsForListingHandlerInterface
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchInputException;
+
+class SearchAttachment
 {
     /**
-     * @param GetAttachmentInformationList $query
-     *
-     * @return AttachmentInformation[]
+     * @var string
      */
-    public function handle(GetAttachmentInformationList $query): array;
+    private $searchPhrase;
+
+    public function __construct(
+        string $searchPhrase
+    ) {
+        if (empty($searchPhrase)) {
+            throw new EmptySearchInputException('Search parameter cannot be empty');
+        }
+        $this->searchPhrase = $searchPhrase;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSearchPhrase(): string
+    {
+        return $this->searchPhrase;
+    }
 }

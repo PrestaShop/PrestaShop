@@ -36,6 +36,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
@@ -80,6 +81,7 @@ class ProductFormDataProviderTest extends TestCase
     private const DEFAULT_VIRTUAL_PRODUCT_FILE_ID = 69;
     private const DEFAULT_QUANTITY = 12;
     private const COVER_URL = 'http://localhost/cover.jpg';
+    private const CONTEXT_LANG_ID = 1;
 
     public function testGetDefaultData()
     {
@@ -600,9 +602,13 @@ class ProductFormDataProviderTest extends TestCase
             $expectedOutputData,
         ];
 
-        $localizedValues = [
-            1 => 'english',
-            2 => 'french',
+        $localizedNames = [
+            1 => 'english name',
+            2 => 'french name',
+        ];
+        $localizedDescriptions = [
+            1 => 'english description',
+            2 => 'french description',
         ];
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
@@ -618,6 +624,16 @@ class ProductFormDataProviderTest extends TestCase
             'ean13' => 'ean13_2',
             'mpn' => 'mpn_2',
             'reference' => 'reference_2',
+            'attachments' => [
+                new AttachmentInformation(
+                    1,
+                    $localizedNames,
+                    $localizedDescriptions,
+                    'test1',
+                    'image/jpeg',
+                    1042
+                ),
+            ],
         ];
         $expectedOutputData['footer']['active'] = false;
         $expectedOutputData['options']['visibility']['visibility'] = ProductVisibility::VISIBLE_IN_CATALOG;
@@ -632,6 +648,15 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['specifications']['references']['ean_13'] = 'ean13_2';
         $expectedOutputData['specifications']['references']['mpn'] = 'mpn_2';
         $expectedOutputData['specifications']['references']['reference'] = 'reference_2';
+
+        $expectedOutputData['specifications']['attachments']['attached_files'] = [
+            [
+                'attachment_id' => 1,
+                'name' => 'english name',
+                'file_name' => 'test1',
+                'mime_type' => 'image/jpeg',
+            ],
+        ];
 
         $datasets[] = [
             $productData,
@@ -1212,8 +1237,6 @@ class ProductFormDataProviderTest extends TestCase
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'specifications' => [
-                'features' => [],
-                'customizations' => [],
                 'references' => [
                     'mpn' => 'mpn',
                     'upc' => 'upc',
@@ -1221,6 +1244,9 @@ class ProductFormDataProviderTest extends TestCase
                     'isbn' => 'isbn',
                     'reference' => 'reference',
                 ],
+                'features' => [],
+                'attachments' => [],
+                'customizations' => [],
             ],
             'stock' => [
                 'quantities' => [
@@ -1324,7 +1350,8 @@ class ProductFormDataProviderTest extends TestCase
             $queryBusMock,
             $activation,
             42,
-            self::HOME_CATEGORY_ID
+            self::HOME_CATEGORY_ID,
+            self::CONTEXT_LANG_ID
         );
     }
 }

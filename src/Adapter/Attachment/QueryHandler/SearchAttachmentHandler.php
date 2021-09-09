@@ -28,46 +28,56 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AttachmentDataProvider;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformationList;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentsForListingHandlerInterface;
+use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\SearchAttachmentHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 
 /**
- * Provides list of attachments information
+ * Handles @see SearchAttachment query using legacy object model
  */
-final class GetAttachmentInformationListHandler implements GetAttachmentsForListingHandlerInterface
+class SearchAttachmentHandler implements SearchAttachmentHandlerInterface
 {
     /**
-     * @var AttachmentDataProvider
+     * @var AttachmentRepository
      */
-    private $attachmentDataProvider;
+    private $repository;
 
     /**
-     * @param AttachmentDataProvider $attachmentDataProvider
+     * @param AttachmentRepository $repository
      */
-    public function __construct(AttachmentDataProvider $attachmentDataProvider)
+    public function __construct(AttachmentRepository $repository)
     {
-        $this->attachmentDataProvider = $attachmentDataProvider;
+        $this->repository = $repository;
     }
 
     /**
-     * {@inheritdoc}
+     * @param SearchAttachment $query
+     *
+     * @return array
+     *
+     * @throws EmptySearchException
      */
-    public function handle(GetAttachmentInformationList $query): array
+    public function handle(SearchAttachment $query): array
     {
-        $allAttachments = $this->attachmentDataProvider->getAllAttachments($query->getLanguageId()->getValue());
-        $attachmentInformationList = [];
+        $attachments = $this->repository->search($query->getSearchPhrase());
+        if (empty($attachments)) {
+            throw new EmptySearchException(sprintf('No attachments found with search "%s"', $query->getSearchPhrase()));
+        }
 
-        foreach ($allAttachments as $attachment) {
-            $attachmentInformationList[] = new AttachmentInformation(
+        $attachmentInfos = [];
+        foreach ($attachments as $attachment) {
+            $attachmentInfos[] = new AttachmentInformation(
                 (int) $attachment['id_attachment'],
                 $attachment['name'],
+                $attachment['description'],
                 $attachment['file_name'],
-                $attachment['mime']
+                $attachment['mime'],
+                (int) $attachment['file_size']
             );
         }
 
-        return $attachmentInformationList;
+        return $attachmentInfos;
     }
 }

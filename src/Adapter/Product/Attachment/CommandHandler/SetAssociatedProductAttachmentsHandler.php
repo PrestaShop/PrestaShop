@@ -26,16 +26,16 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Attachment\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllAssociatedProductAttachmentsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\SetAssociatedProductAttachmentsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\CommandHandler\SetAssociatedProductAttachmentsHandlerInterface;
 
 /**
- * Removes all product-attachment associations for given product
+ * Handles @see SetAssociatedProductAttachmentsCommand using legacy object model
  */
-final class RemoveAllAssociatedProductAttachmentsHandler implements RemoveAllAssociatedProductAttachmentsHandlerInterface
+final class SetAssociatedProductAttachmentsHandler implements SetAssociatedProductAttachmentsHandlerInterface
 {
     /**
      * @var ProductAttachmentUpdater
@@ -43,19 +43,19 @@ final class RemoveAllAssociatedProductAttachmentsHandler implements RemoveAllAss
     private $productAttachmentUpdater;
 
     /**
-     * @param ProductAttachmentUpdater $productAttachmentUpdater
+     * @param ProductAttachmentUpdater $productUpdater
      */
     public function __construct(
-        ProductAttachmentUpdater $productAttachmentUpdater
+        ProductAttachmentUpdater $productUpdater
     ) {
-        $this->productAttachmentUpdater = $productAttachmentUpdater;
+        $this->productAttachmentUpdater = $productUpdater;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(RemoveAllAssociatedProductAttachmentsCommand $command): void
+    public function handle(SetAssociatedProductAttachmentsCommand $command): void
     {
-        $this->productAttachmentUpdater->setAttachments($command->getProductId(), []);
+        $this->productAttachmentUpdater->setAttachments($command->getProductId(), $command->getAttachmentIds());
     }
 }

@@ -23,36 +23,32 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
-/**
- * Removes all product-attachment associations for provided product
- */
-class RemoveAllAssociatedProductAttachmentsCommand
+class GetAttachmentInformation
 {
     /**
-     * @var ProductId
+     * @var AttachmentId
      */
-    private $productId;
+    private $attachmentId;
 
     /**
-     * @param int $productId
+     * @param int $attachmentId
      */
-    public function __construct(int $productId)
+    public function __construct(int $attachmentId)
     {
-        $this->productId = new ProductId($productId);
+        $this->attachmentId = new AttachmentId($attachmentId);
     }
 
     /**
-     * @return ProductId
+     * @return AttachmentId
      */
-    public function getProductId(): ProductId
+    public function getAttachmentId(): AttachmentId
     {
-        return $this->productId;
+        return $this->attachmentId;
     }
 }

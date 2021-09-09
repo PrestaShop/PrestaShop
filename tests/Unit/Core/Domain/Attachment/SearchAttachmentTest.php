@@ -26,36 +26,23 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace Tests\Unit\Core\Domain\Attachment;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AssociateProductAttachmentHandlerInterface;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchInputException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment;
 
-/**
- * Handles @see AssociateProductAttachmentCommand using legacy object model
- */
-final class AssociateProductAttachmentHandler implements AssociateProductAttachmentHandlerInterface
+class SearchAttachmentTest extends TestCase
 {
-    /**
-     * @var ProductAttachmentUpdater
-     */
-    private $productAttachmentUpdater;
-
-    /**
-     * @param ProductAttachmentUpdater $productAttachmentUpdater
-     */
-    public function __construct(
-        ProductAttachmentUpdater $productAttachmentUpdater
-    ) {
-        $this->productAttachmentUpdater = $productAttachmentUpdater;
+    public function testConstructor(): void
+    {
+        $search = new SearchAttachment('search');
+        $this->assertNotNull($search);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(AssociateProductAttachmentCommand $command): void
+    public function testEmptySearch(): void
     {
-        $this->productAttachmentUpdater->associateProductAttachment($command->getProductId(), $command->getAttachmentId());
+        $this->expectException(EmptySearchInputException::class);
+        new SearchAttachment('');
     }
 }

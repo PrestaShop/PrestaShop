@@ -26,33 +26,36 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
+namespace PrestaShop\PrestaShop\Adapter\Product\Attachment\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\RemoveAllAssociatedProductAttachmentsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\CommandHandler\RemoveAllAssociatedProductAttachmentsHandlerInterface;
 
 /**
- * Query providing attachments information
+ * Removes all product-attachment associations for given product
  */
-class GetAttachmentInformationList
+final class RemoveAllAssociatedProductAttachmentsHandler implements RemoveAllAssociatedProductAttachmentsHandlerInterface
 {
     /**
-     * @var LanguageId
+     * @var ProductAttachmentUpdater
      */
-    private $languageId;
+    private $productAttachmentUpdater;
 
     /**
-     * @param int $languageId
+     * @param ProductAttachmentUpdater $productAttachmentUpdater
      */
-    public function __construct(int $languageId)
-    {
-        $this->languageId = new LanguageId($languageId);
+    public function __construct(
+        ProductAttachmentUpdater $productAttachmentUpdater
+    ) {
+        $this->productAttachmentUpdater = $productAttachmentUpdater;
     }
 
     /**
-     * @return LanguageId
+     * {@inheritdoc}
      */
-    public function getLanguageId(): LanguageId
+    public function handle(RemoveAllAssociatedProductAttachmentsCommand $command): void
     {
-        return $this->languageId;
+        $this->productAttachmentUpdater->setAttachments($command->getProductId(), []);
     }
 }

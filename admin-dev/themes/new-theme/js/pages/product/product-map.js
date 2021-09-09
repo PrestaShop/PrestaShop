@@ -24,6 +24,7 @@
  */
 
 const combinationListId = '#combination_list';
+const attachmentsBlockId = '#product_specifications_attachments';
 
 export default {
   productForm: 'form[name=product]',
@@ -196,5 +197,10 @@ export default {
     contentContainer: '.module-contents',
     moduleContents: '.module-contents .module-render-container',
     moduleContent: (moduleId) => `.module-contents .module-render-container.${moduleId}`,
+  },
+  attachments: {
+    attachmentsContainer: attachmentsBlockId,
+    searchAttributeInput: `${attachmentsBlockId}_attached_files`,
+    addAttachmentBtn: '.add-attachment',
   },
 };

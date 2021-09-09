@@ -231,27 +231,6 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param FormInterface $productForm
-     * @param int|null $productId
-     *
-     * @return Response
-     */
-    private function renderProductForm(FormInterface $productForm, ?int $productId = null): Response
-    {
-        $shopContext = $this->get('prestashop.adapter.shop.context');
-        $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
-
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
-            'showContentHeader' => false,
-            'productForm' => $productForm->createView(),
-            'statsLink' => $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null,
-            'helpLink' => $this->generateSidebarLink('AdminProducts'),
-            'isMultiShopContext' => $isMultiShopContext,
-            'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
-        ]);
-    }
-
-    /**
      * Download the content of the virtual product.
      *
      * @param int $virtualProductFileId
@@ -277,6 +256,27 @@ class ProductController extends FrameworkBundleAdminController
         );
 
         return $response;
+    }
+
+    /**
+     * @param FormInterface $productForm
+     * @param int|null $productId
+     *
+     * @return Response
+     */
+    private function renderProductForm(FormInterface $productForm, ?int $productId = null): Response
+    {
+        $shopContext = $this->get('prestashop.adapter.shop.context');
+        $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
+            'showContentHeader' => false,
+            'productForm' => $productForm->createView(),
+            'statsLink' => $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null,
+            'helpLink' => $this->generateSidebarLink('AdminProducts'),
+            'isMultiShopContext' => $isMultiShopContext,
+            'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
+        ]);
     }
 
     /**

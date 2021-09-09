@@ -49,16 +49,65 @@
       <input {{ block('widget_container_attributes') }} />
     </div>
     {{- block('form_help') -}}
-    {%- set attr = list_attr|merge({'class': (list_attr.class|default('') ~ ' entities-list')|trim }) -%}
     {%- set id = form.vars.id ~ '_list' -%}
-    <ul {{ block('widget_container_attributes') }}>
-      {{- block('form_rows') -}}
-    </ul>
+    {% if list_layout == 'table' %}
+      {{- block('entity_search_table_layout') -}}
+    {% else %}
+      {{- block('entity_search_list_layout') -}}
+    {% endif %}
+    {% if empty_state is not null %}
+      <div class="alert alert-info empty-entity-list mt-2" role="alert">
+        <p class="alert-text">
+          {{ empty_state|raw('html') }}
+        </p>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block entity_search_list_layout %}
+  {%- set attr = list_attr|merge({'class': (list_attr.class|default('') ~ ' entities-list entities-list-container')|trim }) -%}
+  <ul {{ block('widget_container_attributes') }}>
+    {{- block('form_rows') -}}
+  </ul>
+{% endblock %}
+
+{% block entity_search_table_layout %}
+  {%- set attr = list_attr|merge({'class': (list_attr.class|default('') ~ ' entities-list-container')|trim }) -%}
+  <div {{ block('widget_attributes') }}>
+    <div class="row">
+      <div class="col-sm">
+        <table class="table">
+          <thead class="thead-default">
+          <tr>
+          {% for child in prototype.children %}
+            {% set childType = child.vars.block_prefixes.1 %}
+            {% if childType != 'hidden' %}
+              <th>{{ child.vars.label }}</th>
+            {% endif %}
+          {% endfor %}
+            <th></th>
+          </tr>
+          </thead>
+          <tbody class="entities-list">
+          {{- block('form_rows') -}}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 {% endblock %}
 
 {% block entity_item_row %}
-  <li class="media entity-item">
+  {% if form.parent.vars.list_layout == 'table' %}
+    {{- block('entity_item_table_row') -}}
+  {% else %}
+    {{- block('entity_item_list_row') -}}
+  {% endif %}
+{% endblock %}
+
+{% block entity_item_list_row %}
+  <li class="media entity-item" id="{{ form.vars.name }}">
     <div class="media-left">
       {{ form_widget(form.image) }}
     </div>
@@ -69,3 +118,21 @@
     {{ form_widget(form.id) }}
   </li>
 {% endblock %}
+
+{%- block entity_item_table_row -%}
+  <tr class="entity-item" id="{{ form.vars.name }}">
+  {% for child in form.children %}
+    {% set childType = child.vars.block_prefixes.1 %}
+    {% if childType == 'hidden'%}
+      {{ form_widget(child) }}
+    {% else %}
+    <td>
+      {{ form_widget(child) }}
+    </td>
+    {% endif %}
+  {% endfor %}
+    <td>
+      <i class="material-icons delete entity-item-delete">clear</i>
+    </td>
+  </tr>
+{%- endblock -%}

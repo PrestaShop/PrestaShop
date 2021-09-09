@@ -71,21 +71,29 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $defaultCategoryId;
 
     /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
      * @param int $defaultCategoryId
+     * @param int $contextLangId
      */
     public function __construct(
         CommandBusInterface $queryBus,
         bool $defaultProductActivation,
         int $mostUsedTaxRulesGroupId,
-        int $defaultCategoryId
+        int $defaultCategoryId,
+        int $contextLangId
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
         $this->defaultCategoryId = $defaultCategoryId;
+        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -285,8 +293,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $details = $productForEditing->getDetails();
 
         return [
-            'features' => $this->extractFeatureValues($productForEditing->getProductId()),
-            'customizations' => $this->extractCustomizationsData($productForEditing),
             'references' => [
                 'mpn' => $details->getMpn(),
                 'upc' => $details->getUpc(),
@@ -294,6 +300,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'isbn' => $details->getIsbn(),
                 'reference' => $details->getReference(),
             ],
+            'features' => $this->extractFeatureValues($productForEditing->getProductId()),
+            'attachments' => $this->extractAttachmentsData($productForEditing),
+            'customizations' => $this->extractCustomizationsData($productForEditing),
         ];
     }
 
@@ -473,6 +482,29 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'condition' => $options->getCondition(),
             'suppliers' => $this->extractSuppliersData($productForEditing),
         ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, array<int, array<string, mixed>>>
+     */
+    private function extractAttachmentsData(ProductForEditing $productForEditing): array
+    {
+        $productAttachments = $productForEditing->getAssociatedAttachments();
+
+        $attachmentsData = [];
+        foreach ($productAttachments as $productAttachment) {
+            $localizedNames = $productAttachment->getLocalizedNames();
+            $attachmentsData['attached_files'][] = [
+                'attachment_id' => $productAttachment->getAttachmentId(),
+                'name' => $localizedNames[$this->contextLangId] ?? reset($localizedNames),
+                'file_name' => $productAttachment->getFilename(),
+                'mime_type' => $productAttachment->getMimeType(),
+            ];
+        }
+
+        return $attachmentsData;
     }
 
     /**

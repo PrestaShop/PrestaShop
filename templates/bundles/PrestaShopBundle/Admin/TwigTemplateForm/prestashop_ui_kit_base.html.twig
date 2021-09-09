@@ -95,12 +95,13 @@
   <div class="form-group{{ block('widget_type_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}">
     {{- form_label(form) -}}
     {{- block('form_prepend_alert') -}}
+    {{- block('form_prepend_external_link') -}}
 
     {{- form_widget(form) -}}
     {{- form_errors(form) -}}
 
-    {{- block('form_external_link') -}}
     {{- block('form_append_alert') -}}
+    {{- block('form_append_external_link') -}}
   </div>
 
   {% if column_breaker %}
@@ -168,7 +169,7 @@
     {% endif %}
     </{{ labelTag }}>
     {% if label_subtitle is defined %}
-      <p class="subtitle">{{ label_subtitle }}</p>
+      <p class="subtitle">{{ label_subtitle|raw('html') }}</p>
     {% endif %}
   {%- endif -%}
 {%- endblock form_label -%}
@@ -1092,6 +1093,18 @@
     {{ warning }}
   {% endif %}
 {% endblock form_help %}
+
+{% block form_prepend_external_link %}
+  {% if external_link is defined and external_link.position == 'prepend' %}
+    {{- block('form_external_link') -}}
+  {% endif %}
+{% endblock %}
+
+{% block form_append_external_link %}
+  {% if external_link is defined and external_link.position == 'append' %}
+    {{- block('form_external_link') -}}
+  {% endif %}
+{% endblock %}
 
 {% block form_external_link %}
   {% if external_link is defined %}

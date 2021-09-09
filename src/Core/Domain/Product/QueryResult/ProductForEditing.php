@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 
 /**
@@ -86,9 +87,9 @@ class ProductForEditing
     private $productSeoOptions;
 
     /**
-     * @var int[]
+     * @var AttachmentInformation[]
      */
-    private $associatedAttachmentIds;
+    private $associatedAttachments;
 
     /**
      * @var ProductStockInformation
@@ -116,7 +117,7 @@ class ProductForEditing
      * @param ProductDetails $details
      * @param ProductShippingInformation $shippingInformation
      * @param ProductSeoOptions $productSeoOptions
-     * @param array $associatedAttachmentIds
+     * @param AttachmentInformation[] $associatedAttachments
      * @param ProductStockInformation $stockInformation
      * @param VirtualProductFileForEditing|null $virtualProductFile
      * @param string $coverThumbnailUrl
@@ -132,7 +133,7 @@ class ProductForEditing
         ProductDetails $details,
         ProductShippingInformation $shippingInformation,
         ProductSeoOptions $productSeoOptions,
-        array $associatedAttachmentIds,
+        array $associatedAttachments,
         ProductStockInformation $stockInformation,
         ?VirtualProductFileForEditing $virtualProductFile,
         string $coverThumbnailUrl
@@ -147,7 +148,7 @@ class ProductForEditing
         $this->details = $details;
         $this->shippingInformation = $shippingInformation;
         $this->productSeoOptions = $productSeoOptions;
-        $this->associatedAttachmentIds = $associatedAttachmentIds;
+        $this->associatedAttachments = $associatedAttachments;
         $this->stockInformation = $stockInformation;
         $this->virtualProductFile = $virtualProductFile;
         $this->coverThumbnailUrl = $coverThumbnailUrl;
@@ -234,11 +235,11 @@ class ProductForEditing
     }
 
     /**
-     * @return int[]
+     * @return AttachmentInformation[]
      */
-    public function getAssociatedAttachmentIds(): array
+    public function getAssociatedAttachments(): array
     {
-        return $this->associatedAttachmentIds;
+        return $this->associatedAttachments;
     }
 
     /**

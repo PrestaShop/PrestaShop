@@ -119,6 +119,7 @@ tests/Resources/img/tmp/*
 tests/Resources/img/tmp/.gitkeep
 !tests/Resources/download/.gitkeep
 tests/Resources/download/*
+tests/Unit/.phpunit.result.cache
 
 /admin-dev/autoupgrade/*
 !/admin-dev/autoupgrade/index.php

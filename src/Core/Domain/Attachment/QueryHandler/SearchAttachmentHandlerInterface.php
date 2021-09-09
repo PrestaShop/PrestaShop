@@ -24,19 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 
-/**
- * Defines contract to handle @see SetAssociatedProductAttachmentsCommand
- */
-interface SetAssociatedProductAttachmentsHandlerInterface
+interface SearchAttachmentHandlerInterface
 {
     /**
-     * @param SetAssociatedProductAttachmentsCommand $command
+     * @param SearchAttachment $query
      *
-     * @return void
+     * @return AttachmentInformation[]
      */
-    public function handle(SetAssociatedProductAttachmentsCommand $command): void;
+    public function handle(SearchAttachment $query): array;
 }

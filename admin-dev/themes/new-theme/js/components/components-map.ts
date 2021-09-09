@@ -61,9 +61,11 @@ export default {
   },
   entitySearchInput: {
     searchInputSelector: '.entity-search-input',
-    listSelector: '.entities-list',
-    entityItemSelector: 'li.entity-item',
+    entitiesContainerSelector: '.entities-list',
+    listContainerSelector: '.entities-list-container',
+    entityItemSelector: '.entity-item',
     entityDeleteSelector: '.entity-item-delete',
+    emptyStateSelector: '.empty-entity-list',
   },
   form: {
     selectChoice: (language: string): string => `select.translatable_choice[data-language="${language}"]`,
