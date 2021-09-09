@@ -237,6 +237,7 @@ class ProductFormDataProviderTest extends TestCase
             false,
             42,
             self::HOME_CATEGORY_ID,
+            self::CONTEXT_LANG_ID,
             $defaultShopId,
             null
         );
@@ -250,6 +251,7 @@ class ProductFormDataProviderTest extends TestCase
             false,
             42,
             self::HOME_CATEGORY_ID,
+            self::CONTEXT_LANG_ID,
             $defaultShopId,
             $contextShopId
         );
