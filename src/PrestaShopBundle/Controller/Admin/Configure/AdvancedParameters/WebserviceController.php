@@ -316,7 +316,7 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @return Response|RedirectResponse
      */
-    public function saveSettingsAction(Request $request, WebserviceKeyFilters $filters)
+    public function saveSettingsAction(Request $request, WebserviceKeyFilters $filters): Response
     {
         $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', ['controller' => $this]);
 
