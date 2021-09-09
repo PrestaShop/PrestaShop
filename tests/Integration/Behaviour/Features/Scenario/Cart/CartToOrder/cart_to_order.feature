@@ -268,3 +268,19 @@ Feature: Check cart to order data copy
     Then current cart order shipping fees should be 7.0 tax excluded
     Then current cart order should have a discount in position 1 with an amount of 36.989680 tax included and 35.567000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
+
+  Scenario: Applicable cart rules with no code are automatically applied to cart for order
+    Given I have an empty default cart
+    Given email sending is disabled
+    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
+    And I add 2 items of product "product1" in my cart
+    Given there is a cart rule named "cartrule1" that applies an amount discount of 5.0 with priority 1, quantity of 1000 and quantity per user 1000
+    Given there is a customer named "customer1" whose email is "fake@prestashop.com"
+    When I am logged in as "customer1"
+    And the current cart should have the following informations:
+      | total_discounts               | -$5.00   |
+      | total_price_without_taxes     | $41.62   |
+      | total_price_with_taxes        | $41.62   |
+      | total_products_price          | $39.62   |
+      | total_taxes                   | $0.00    |
+      | total_shipping_prices         | $7.00    |
