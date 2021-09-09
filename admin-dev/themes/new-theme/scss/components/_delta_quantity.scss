@@ -10,15 +10,15 @@ $component-name: delta-quantity;
     font-weight: $font-weight-semibold;
 
     .quantity-update {
-      display: none;
       color: $brand-primary;
+      visibility: hidden;
 
       .material-icons {
         vertical-align: middle;
       }
 
       &.quantity-modified {
-        display: inline;
+        visibility: visible;
       }
     }
   }

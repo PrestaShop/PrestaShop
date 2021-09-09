@@ -1239,7 +1239,9 @@
     </span>
     <span class="quantity-update">
       <i class="material-icons">trending_flat</i>
-      <span class="new-quantity"></span>
+      <span class="new-quantity">
+        {{ form.vars.value|e('html') }}
+      </span>
     </span>
   </div>
 
