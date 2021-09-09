@@ -32,6 +32,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Class MerchandiseReturnController responsible for "Sell > Customer Service > Merchandise Returns" page
@@ -49,7 +50,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * @param Request $request
      * @param MerchandiseReturnFilters $filters
      *
-     * @return Response
+     * @return Response|RedirectResponse
      */
     public function indexAction(Request $request, MerchandiseReturnFilters $filters): Response
     {
@@ -67,6 +68,8 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             } else {
                 $this->flashErrors($errors);
             }
+
+            return $this->redirectToRoute('admin_merchandise_returns_index');
         }
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/index.html.twig', [
