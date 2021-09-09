@@ -4008,7 +4008,7 @@ class CartCore extends ObjectModel
             'invoice' => AddressFormat::getFormattedLayoutData($invoice),
         ];
 
-        /**
+        /*
          * First add all applicable cartRules before calculating the totals and the discounts
          */
         if (CartRule::isFeatureActive() && $this->id) {

@@ -26,9 +26,13 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Context;
 use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
+use PHPUnit\Framework\Assert as Assert;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 
 class CartFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -196,5 +200,86 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
         if ($expectedTotal != $shippingFees) {
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $shippingFees));
         }
+    }
+
+    /**
+     * @Then /^cart rule "(.+)" should be applied to my cart$/
+     */
+    public function assertCartRuleIsAppliedToCart(string $cartRuleReference)
+    {
+        $cartInfo = $this->getCurrentCartInfos();
+        $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference);
+
+        foreach ($cartInfo->getCartRules() as $cartRule) {
+            if ($cartRule->getCartRuleId() === $cartRuleId) {
+                return;
+            }
+        }
+
+        throw new \RuntimeException(sprintf(
+            'Cart rule %s is not applied to cart',
+            $cartRuleReference
+        ));
+    }
+
+    /**
+     * @Then the current cart should have the following informations:
+     *
+     * @param TableNode $table
+     */
+    public function checkCartToOrderValues(TableNode $table)
+    {
+        $cartInfo = $this->getCurrentCartInfos();
+        $expectedInformations = $table->getRowsHash();
+        $cartInfoSummary = $this->convertCartInfosToArray($cartInfo);
+
+        foreach ($expectedInformations as $infoName => $infoValue) {
+            if (!array_key_exists($infoName, $cartInfoSummary)) {
+                throw new \RuntimeException(sprintf(
+                    "%s is not in cart infos, you should implement it into CartFeatureContext::convertCartInfosToArray if it's relevant",
+                    $infoName
+                ));
+            }
+
+            Assert::assertEquals(
+                $cartInfoSummary[$infoName],
+                $infoValue,
+                sprintf(
+                    'Value not expected %s, expected %s instead of %s',
+                    $infoName,
+                    $infoValue,
+                    $cartInfoSummary[$infoName]
+                )
+            );
+        }
+    }
+
+    private function getCurrentCartInfos(): CartForOrderCreation
+    {
+        $cart = $this->getCurrentCart();
+
+        return $this->getCommandBus()->handle(
+            (new GetCartForOrderCreation((int) $cart->id))
+                ->setHideDiscounts(true)
+        );
+    }
+
+    private function getCommandBus()
+    {
+        return CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
+    }
+
+    private function convertCartInfosToArray(CartForOrderCreation $cartInfo): array
+    {
+        $summary = $cartInfo->getSummary();
+
+        return [
+            'total_discounts' => $summary->getTotalDiscount(),
+            'total_price_without_taxes' => $summary->getTotalPriceWithoutTaxes(),
+            'total_price_with_taxes' => $summary->getTotalPriceWithTaxes(),
+            'total_products_price' => $summary->getTotalProductsPrice(),
+            'total_taxes' => $summary->getTotalTaxes(),
+            'total_shipping_prices' => $summary->getTotalShippingPrice(),
+        ];
     }
 }
