@@ -103,6 +103,8 @@ class ProductFormDataProvider implements FormDataProviderInterface
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
         $this->contextLangId = $contextLangId;
         $this->defaultCategoryId = $defaultCategoryId;
+
+        // Usually context shop ID is null when multistore feature is disabled, in this case we use the default shop as fallback
         $this->shopId = $contextShopId ?: $defaultShopId;
     }
 

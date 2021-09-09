@@ -29,6 +29,10 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
+/**
+ * This interface is similar to ProductCommandsBuilderInterface except it handles the product commands
+ * which are related to multistore fields, so it has an extra shopId parameter.
+ */
 interface MultistoreProductCommandsBuilderInterface
 {
     /**

@@ -31,6 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
+/**
+ * Command to copy the content of a product from a shop to another.
+ */
 class CopyProductToShop
 {
     /**

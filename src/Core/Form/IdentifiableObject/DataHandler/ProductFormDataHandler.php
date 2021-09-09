@@ -68,6 +68,8 @@ class ProductFormDataHandler implements FormDataHandlerInterface
     ) {
         $this->bus = $bus;
         $this->commandsBuilder = $commandsBuilder;
+
+        // Usually context shop ID is null when multistore feature is disabled, in this case we use the default shop as fallback
         $this->shopId = new ShopId($contextShopId ?: $defaultShopId);
     }
 

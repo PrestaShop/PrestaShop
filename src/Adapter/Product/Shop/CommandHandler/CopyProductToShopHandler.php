@@ -32,6 +32,9 @@ use PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShop;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\CopyProductToShopHandlerInterface;
 
+/**
+ * Handles @see CopyProductToShop using dedicated service
+ */
 class CopyProductToShopHandler implements CopyProductToShopHandlerInterface
 {
     /**
@@ -39,6 +42,9 @@ class CopyProductToShopHandler implements CopyProductToShopHandlerInterface
      */
     private $productShopUpdater;
 
+    /**
+     * @param ProductShopUpdater $productShopUpdater
+     */
     public function __construct(
         ProductShopUpdater $productShopUpdater
     ) {
