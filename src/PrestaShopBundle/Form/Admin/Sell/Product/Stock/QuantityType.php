@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
+use PrestaShopBundle\Form\Admin\Type\DeltaQuantityType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -64,9 +65,9 @@ class QuantityType extends TranslatorAwareType
     {
         if ($this->stockManagementEnabled) {
             $builder
-                ->add('quantity', NumberType::class, [
+                ->add('quantity', DeltaQuantityType::class, [
                     'required' => false,
-                    'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
+                    'label' => $this->trans('Edit quantity', 'Admin.Catalog.Feature'),
                     'constraints' => [
                         new NotBlank(),
                         new Type(['type' => 'numeric']),
@@ -100,7 +101,6 @@ class QuantityType extends TranslatorAwareType
             'label' => $this->trans('Quantities', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h2',
             'required' => false,
-            'columns_number' => 3,
         ]);
     }
 }
