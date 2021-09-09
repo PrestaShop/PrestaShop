@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PricesCommandsBuilder;
 
 class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
@@ -326,11 +326,11 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 
     private function getSingleShopCommand(): UpdateProductPricesCommand
     {
-        return new UpdateProductPricesCommand($this->getProductId()->getValue(), ShopConstraint::shop(self::SHOP_ID));
+        return new UpdateProductPricesCommand($this->getProductId()->getValue(), ProductShopConstraint::shop(self::SHOP_ID));
     }
 
     private function getAllShopsCommand(): UpdateProductPricesCommand
     {
-        return new UpdateProductPricesCommand($this->getProductId()->getValue(), ShopConstraint::allShops());
+        return new UpdateProductPricesCommand($this->getProductId()->getValue(), ProductShopConstraint::allShops());
     }
 }
