@@ -30,8 +30,6 @@ $product-description-height: 70px;
 
   .thumbnail-container {
     position: relative;
-    width: 100%;
-    max-width: $thumbnail-size;
     height: auto;
     margin-bottom: 1.563rem;
     overflow: hidden;
@@ -139,8 +137,8 @@ $product-description-height: 70px;
     position: relative;
     bottom: 0;
     z-index: 3;
-    width: $thumbnail-size;
     height: auto;
+    padding: 0.25rem;
     padding-bottom: 0.7rem;
     overflow: hidden;
     background: $white;
