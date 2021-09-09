@@ -71,6 +71,16 @@ class SlipOptionsType extends MultistoreConfigurationType
 
     /**
      * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getBlockPrefix()
     {
