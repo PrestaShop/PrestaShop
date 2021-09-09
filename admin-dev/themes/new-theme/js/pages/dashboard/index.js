@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import '@vue/components/DashboardCalendar';
 import dashboardMap from '@pages/dashboard/dashboardMap';
 import getBlogRss from '@pages/dashboard/news';
 import refreshDashboard from '@pages/dashboard/refresh';

@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import Vue from 'vue';
-import DashboardCalendar from './components/DashboardCalendar/DashboardCalendar';
+import DashboardCalendar from './DashboardCalendar';
 
 new Vue({
   el: '#dashboard-calendar',
