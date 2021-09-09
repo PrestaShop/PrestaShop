@@ -1354,7 +1354,7 @@ class ProductFormDataProviderTest extends TestCase
             ))
             ->willReturnCallback(function ($query) use ($expectedShopId) {
                 if ($query instanceof GetProductForEditing) {
-                    $this->assertEquals($expectedShopId, $query->getShopId()->getValue());
+                    $this->assertEquals($expectedShopId, $query->getShopConstraint()->getShopId()->getValue());
                 }
 
                 return $this->createResultBasedOnQuery($query, []);
