@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierO
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
@@ -126,7 +127,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     {
         $productId = (int) $id;
         /** @var ProductForEditing $productForEditing */
-        $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId, $this->shopId));
+        $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId, ProductShopConstraint::shop($this->shopId)));
 
         $productData = [
             'id' => $productId,
