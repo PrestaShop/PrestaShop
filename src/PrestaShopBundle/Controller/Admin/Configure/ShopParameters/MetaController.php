@@ -243,14 +243,14 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function processSetUpUrlsFormAction(MetaFilters $filters, Request $request)
     {
-        $setUpUrlsForm = $this->processForm(
-                $request,
-                $this->getSetUpUrlsFormHandler(),
-                'SetUpUrls'
-            );
+        $formProcessResult = $this->processForm(
+            $request,
+            $this->getSetUpUrlsFormHandler(),
+            'SetUpUrls'
+        );
 
-        if ($setUpUrlsForm instanceof RedirectResponse) {
-            return $setUpUrlsForm;
+        if ($formProcessResult instanceof RedirectResponse) {
+            return $formProcessResult;
         }
 
         $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
@@ -262,7 +262,7 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->renderForm($request, $filters, $formProcessResult, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
     }
 
     /**
@@ -276,14 +276,14 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function processShopUrlsFormAction(MetaFilters $filters, Request $request)
     {
-        $shopUrlsForm = $this->processForm(
-                $request,
-                $this->getShopUrlsFormHandler(),
-                'ShopUrls'
-            );
+        $formProcessResult = $this->processForm(
+            $request,
+            $this->getShopUrlsFormHandler(),
+            'ShopUrls'
+        );
 
-        if ($shopUrlsForm instanceof RedirectResponse) {
-            return $shopUrlsForm;
+        if ($formProcessResult instanceof RedirectResponse) {
+            return $formProcessResult;
         }
 
         $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
@@ -295,7 +295,7 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->renderForm($request, $filters, $setUpUrlsForm, $formProcessResult, $seoOptionsForm, $urlSchemaForm);
     }
 
     /**
@@ -309,21 +309,21 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function processUrlSchemaFormAction(MetaFilters $filters, Request $request)
     {
-        $urlSchemaForm = $this->processForm(
-                $request,
-                $this->getUrlSchemaFormHandler(),
-                'UrlSchema'
-            );
+        $formProcessResult = $this->processForm(
+            $request,
+            $this->getUrlSchemaFormHandler(),
+            'UrlSchema'
+        );
 
-        if ($urlSchemaForm instanceof RedirectResponse) {
-            return $urlSchemaForm;
+        if ($formProcessResult instanceof RedirectResponse) {
+            return $formProcessResult;
         }
 
         $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
         $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $formProcessResult);
     }
 
     /**
@@ -337,14 +337,14 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function processSeoOptionsFormAction(MetaFilters $filters, Request $request)
     {
-        $seoOptionsForm = $this->processForm(
-                $request,
-                $this->getSeoOptionsFormHandler(),
-                'SeoOptions'
-            );
+        $formProcessResult = $this->processForm(
+            $request,
+            $this->getSeoOptionsFormHandler(),
+            'SeoOptions'
+        );
 
-        if ($seoOptionsForm instanceof RedirectResponse) {
-            return $seoOptionsForm;
+        if ($formProcessResult instanceof RedirectResponse) {
+            return $formProcessResult;
         }
 
         $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
@@ -356,7 +356,7 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $formProcessResult, $urlSchemaForm);
     }
 
     /**
