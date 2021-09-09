@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Delivery;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -36,7 +37,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 /**
  * This form class generates the "Options" form in Delivery slips page.
  */
-class SlipOptionsType extends TranslatorAwareType
+class SlipOptionsType extends MultistoreConfigurationType
 {
     /**
      * {@inheritdoc}
@@ -49,15 +50,22 @@ class SlipOptionsType extends TranslatorAwareType
                 TranslatableType::class,
                 [
                     'type' => TextType::class,
+                    'multistore_configuration_key' => 'PS_DELIVERY_PREFIX',
                 ]
             )
             ->add(
                 'number',
-                FormType\NumberType::class
+                FormType\NumberType::class,
+                [
+                    'multistore_configuration_key' => 'PS_DELIVERY_NUMBER',
+                ]
             )
             ->add(
                 'enable_product_image',
-                SwitchType::class
+                SwitchType::class,
+                [
+                    'multistore_configuration_key' => 'PS_PDF_IMG_DELIVERY',
+                ]
             );
     }
 

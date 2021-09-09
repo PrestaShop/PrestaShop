@@ -26,27 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\Delivery;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 
 /**
  * This class manages Order delivery slip options configuration.
  */
-final class SlipOptionsConfiguration implements DataConfigurationInterface
+final class SlipOptionsConfiguration extends AbstractMultistoreConfiguration
 {
     public const PREFIX = 'PS_DELIVERY_PREFIX';
     public const NUMBER = 'PS_DELIVERY_NUMBER';
     public const ENABLE_PRODUCT_IMAGE = 'PS_PDF_IMG_DELIVERY';
-
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
 
     /**
      * Returns configuration used to manage slip options in back office.
@@ -68,9 +57,9 @@ final class SlipOptionsConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set(self::PREFIX, $configuration['prefix']);
-            $this->configuration->set(self::NUMBER, $configuration['number']);
-            $this->configuration->set(self::ENABLE_PRODUCT_IMAGE, $configuration['enable_product_image']);
+            $this->updateConfigurationValue(self::PREFIX, 'prefix', $configuration, $this->getShopConstraint());
+            $this->updateConfigurationValue(self::NUMBER, 'number', $configuration, $this->getShopConstraint());
+            $this->updateConfigurationValue(self::ENABLE_PRODUCT_IMAGE, 'enable_product_image', $configuration, $this->getShopConstraint());
         }
 
         return [];
