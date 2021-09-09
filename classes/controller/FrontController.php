@@ -1514,7 +1514,7 @@ class FrontControllerCore extends Controller
 
             $pages = [];
             $p = [
-                'address', 'addresses', 'authentication', 'cart', 'category', 'cms', 'contact',
+                'address', 'addresses', 'authentication', 'manufacturer', 'cart', 'category', 'cms', 'contact',
                 'discount', 'guest-tracking', 'history', 'identity', 'index', 'my-account',
                 'order-confirmation', 'order-detail', 'order-follow', 'order', 'order-return',
                 'order-slip', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
@@ -1524,6 +1524,7 @@ class FrontControllerCore extends Controller
                 $index = str_replace('-', '_', $page_name);
                 $pages[$index] = $this->context->link->getPageLink($page_name, $this->ssl);
             }
+            $pages['brands'] = $pages['manufacturer'];
             $pages['register'] = $this->context->link->getPageLink('authentication', true, null, ['create_account' => '1']);
             $pages['order_login'] = $this->context->link->getPageLink('order', true, null, ['login' => '1']);
             $urls['pages'] = $pages;
