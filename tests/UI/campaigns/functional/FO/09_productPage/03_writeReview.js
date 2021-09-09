@@ -5,40 +5,40 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_FO_productPage_writeReview';
 
 // Import pages
-// BO pages
+// BO
 const dashboardPage = require('@pages/BO/dashboard');
 const moduleManagerPage = require('@pages/BO/modules/moduleManager');
+const moduleCatalogPage = require('@pages/BO/modules/moduleCatalog');
 const moduleConfigurationPage = require('@pages/BO/modules/moduleConfiguration');
 const productCommentsModulePage = require('@pages/BO/modules/productComments');
-// FO pages
+// FO
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const productPage = require('@pages/FO/product');
 
-// Import datas
+// Import and init data
 const {DefaultCustomer} = require('@data/demo/customer');
 const ProductReviewData = require('@data/faker/productReview');
 const ProductData = require('@data/FO/product');
 
 const productReviewData = new ProductReviewData();
+const moduleInformation = {
+  name: 'Product Comments',
+  tag: 'productcomments',
+};
 
-
-// Import test context
-const testContext = require('@utils/testContext');
-
-
-// context
-const baseContext = 'functional_FO_productPage_writeReview';
+// Init test vars
+let foCommentCount = 0;
+let waitingApprovalReviewCount = 0;
+let approvedReviewCount = 0;
 
 let browserContext;
 let page;
-let foCommentCount;
-let waitingApprovalReviewCount;
-let approvedReviewCount;
-const moduleName = 'Product Comments';
-const moduleTag = 'productcomments';
 
 /*
 Go to the FO and login
@@ -68,11 +68,46 @@ describe('FO - product page : Write a review', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
+  describe(`Install '${moduleInformation.name}' module`, async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go to module catalog page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleCatalogPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.modulesParentLink,
+        dashboardPage.moduleCatalogueLink,
+      );
+
+      await moduleCatalogPage.closeSfToolBar(page);
+
+      const pageTitle = await moduleCatalogPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(moduleCatalogPage.pageTitle);
+    });
+
+    it('should install the module', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
+
+      try {
+        await moduleCatalogPage.searchModule(page, moduleInformation.tag, moduleInformation.name);
+        const successfulMessage = await moduleCatalogPage.installModule(page, moduleInformation.name);
+        await expect(successfulMessage).to.contain(
+          moduleCatalogPage.installMessageSuccessful(moduleInformation.tag),
+        );
+      } catch (e) {
+        // Module already installed, continue test
+      }
+    });
+  });
+
   describe('Go to FO product detail page and add a review', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openFoShop', baseContext);
 
-      await foHomePage.goTo(page, global.FO.URL);
+      page = await moduleCatalogPage.viewMyShop(page);
 
       const result = await foHomePage.isHomePage(page);
       await expect(result).to.be.true;
@@ -135,13 +170,18 @@ describe('FO - product page : Write a review', async () => {
       const isCustomerConnected = await productPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
+
+    it('should go back to module catalog page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
+
+      page = await productPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await moduleCatalogPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(moduleCatalogPage.pageTitle);
+    });
   });
 
   describe('Go to BO and go to \'product comments\' module configuration page', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
-    });
-
     it('should go to module manager page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
@@ -151,8 +191,6 @@ describe('FO - product page : Write a review', async () => {
         dashboardPage.moduleManagerLink,
       );
 
-      await moduleManagerPage.closeSfToolBar(page);
-
       const pageTitle = await moduleManagerPage.getPageTitle(page);
       await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
@@ -160,17 +198,17 @@ describe('FO - product page : Write a review', async () => {
     it('should search product comments module in module manager page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, moduleTag, moduleName);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, moduleInformation.tag, moduleInformation.name);
       await expect(isModuleVisible).to.be.true;
     });
 
     it('should go to \'product comments\' module configuration page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleConfigurationPage', baseContext);
 
-      await moduleManagerPage.goToConfigurationPage(page, moduleName);
+      await moduleManagerPage.goToConfigurationPage(page, moduleInformation.name);
 
       const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
-      await expect(moduleConfigurationPageSubtitle).to.contains(moduleName);
+      await expect(moduleConfigurationPageSubtitle).to.contains(moduleInformation.name);
     });
   });
 
@@ -290,17 +328,17 @@ describe('FO - product page : Write a review', async () => {
     it('should search product comments module in module manager page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProductCommentsModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, moduleTag, moduleName);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, moduleInformation.tag, moduleInformation.name);
       await expect(isModuleVisible).to.be.true;
     });
 
     it('should go to \'product comments\' module configuration page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleConfigPage', baseContext);
 
-      await moduleManagerPage.goToConfigurationPage(page, moduleName);
+      await moduleManagerPage.goToConfigurationPage(page, moduleInformation.name);
 
       const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
-      await expect(moduleConfigurationPageSubtitle).to.contains(moduleName);
+      await expect(moduleConfigurationPageSubtitle).to.contains(moduleInformation.name);
     });
 
     it('should get the approved review count', async function () {
