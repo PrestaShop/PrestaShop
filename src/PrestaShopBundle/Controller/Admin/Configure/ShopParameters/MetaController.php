@@ -239,25 +239,17 @@ class MetaController extends FrameworkBundleAdminController
      * @param MetaFilters $filters
      * @param Request $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
-    public function processSetUpUrlsFormAction(MetaFilters $filters, Request $request)
+    public function processSetUpUrlsFormAction(MetaFilters $filters, Request $request): RedirectResponse
     {
-        $setUpUrlsForm = $this->processForm(
+        $this->processForm(
             $request,
             $this->getSetUpUrlsFormHandler(),
             'SetUpUrls'
         );
-        $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
-        $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
-        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->getBoolean('PS_REWRITING_SETTINGS');
 
-        $urlSchemaForm = null;
-        if ($isRewriteSettingEnabled) {
-            $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
-        }
-
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->redirectToRoute('admin_metas_index');
     }
 
     /**
@@ -267,25 +259,17 @@ class MetaController extends FrameworkBundleAdminController
      * @param MetaFilters $filters
      * @param Request $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
-    public function processShopUrlsFormAction(MetaFilters $filters, Request $request)
+    public function processShopUrlsFormAction(MetaFilters $filters, Request $request): RedirectResponse
     {
-        $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
-        $shopUrlsForm = $this->processForm(
+        $this->processForm(
             $request,
             $this->getShopUrlsFormHandler(),
             'ShopUrls'
         );
-        $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
-        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->getBoolean('PS_REWRITING_SETTINGS');
 
-        $urlSchemaForm = null;
-        if ($isRewriteSettingEnabled) {
-            $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
-        }
-
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->redirectToRoute('admin_metas_index');
     }
 
     /**
@@ -295,21 +279,17 @@ class MetaController extends FrameworkBundleAdminController
      * @param MetaFilters $filters
      * @param Request $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
-    public function processUrlSchemaFormAction(MetaFilters $filters, Request $request)
+    public function processUrlSchemaFormAction(MetaFilters $filters, Request $request): RedirectResponse
     {
-        $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
-        $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
-        $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
-
-        $urlSchemaForm = $this->processForm(
+        $this->processForm(
             $request,
             $this->getUrlSchemaFormHandler(),
             'UrlSchema'
         );
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->redirectToRoute('admin_metas_index');
     }
 
     /**
@@ -319,25 +299,17 @@ class MetaController extends FrameworkBundleAdminController
      * @param MetaFilters $filters
      * @param Request $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
-    public function processSeoOptionsFormAction(MetaFilters $filters, Request $request)
+    public function processSeoOptionsFormAction(MetaFilters $filters, Request $request): RedirectResponse
     {
-        $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
-        $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
-        $seoOptionsForm = $this->processForm(
+        $this->processForm(
             $request,
             $this->getSeoOptionsFormHandler(),
             'SeoOptions'
         );
-        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->getBoolean('PS_REWRITING_SETTINGS');
 
-        $urlSchemaForm = null;
-        if ($isRewriteSettingEnabled) {
-            $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
-        }
-
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->redirectToRoute('admin_metas_index');
     }
 
     /**
