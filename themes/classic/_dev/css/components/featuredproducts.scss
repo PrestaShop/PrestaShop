@@ -11,6 +11,11 @@ $product-description-height: 70px;
     justify-content: flex-start;
   }
 
+  .product {
+    display: flex;
+    justify-content: center;
+  }
+
   .product-thumbnail {
     display: block;
   }
@@ -141,21 +146,7 @@ $product-description-height: 70px;
     background: $white;
   }
 
-  .product {
-    padding: 0;
-
-    @at-root .page-index &, .page-search & {
-      width: 25%;
-
-      @include media-breakpoint-down(xl) {
-        width: auto;
-      }
-    }
-  }
-
   .product-miniature {
-    margin: 0 0.8125rem;
-
     .product-flags {
       li.product-flag {
         min-width: 3.125rem;
