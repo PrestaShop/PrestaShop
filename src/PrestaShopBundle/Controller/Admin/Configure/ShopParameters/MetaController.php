@@ -241,7 +241,7 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processSetUpUrlsFormAction(MetaFilters $filters, Request $request): RedirectResponse
+    public function processSetUpUrlsFormAction(MetaFilters $filters, Request $request)
     {
         $this->processForm(
             $request,
@@ -261,7 +261,7 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processShopUrlsFormAction(MetaFilters $filters, Request $request): RedirectResponse
+    public function processShopUrlsFormAction(MetaFilters $filters, Request $request)
     {
         $this->processForm(
             $request,
@@ -281,7 +281,7 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processUrlSchemaFormAction(MetaFilters $filters, Request $request): RedirectResponse
+    public function processUrlSchemaFormAction(MetaFilters $filters, Request $request)
     {
         $this->processForm(
             $request,
@@ -301,7 +301,7 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processSeoOptionsFormAction(MetaFilters $filters, Request $request): RedirectResponse
+    public function processSeoOptionsFormAction(MetaFilters $filters, Request $request)
     {
         $this->processForm(
             $request,
