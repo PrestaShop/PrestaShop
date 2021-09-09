@@ -60,7 +60,7 @@
 
         <div>
           {block name='product_list'}
-            {include file='catalog/_partials/products.tpl' listing=$listing}
+            {include file='catalog/_partials/products.tpl' listing=$listing productClass="col-sm-6 col-md-6 col-lg-6 col-xl-4"}
           {/block}
         </div>
 
