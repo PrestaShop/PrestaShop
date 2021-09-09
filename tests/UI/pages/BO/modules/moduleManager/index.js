@@ -24,6 +24,7 @@ class ModuleManager extends BOBasePage {
     this.allModulesBlock = `${this.modulesListBlock} .module-item-list`;
     this.moduleBlock = moduleName => `${this.allModulesBlock}[data-name='${moduleName}']`;
     this.disableModuleButton = moduleName => `${this.moduleBlock(moduleName)} button.module_action_menu_disable`;
+    this.enableModuleButton = moduleName => `${this.moduleBlock(moduleName)} button.module_action_menu_enable`;
     this.configureModuleButton = moduleName => `${this.moduleBlock(moduleName)}`
       + ' div.module-actions a[href*=\'/action/configure\']';
     this.actionsDropdownButton = moduleName => `${this.moduleBlock(moduleName)} button.dropdown-toggle`;
@@ -93,13 +94,13 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async isModuleEnabled(page, moduleName) {
-    return this.elementNotVisible(page, this.disableModuleButton(moduleName), 1000);
+    return this.elementNotVisible(page, this.enableModuleButton(moduleName), 1000);
   }
 
   /**
    * Get all modules status
    * @param page {Page} Browser tab
-   * @returns {Promise<Array<boolean>>}
+   * @returns {Promise<Array<{name: string, status: boolean}>>}
    */
   async getAllModulesStatus(page) {
     const modulesStatus = [];
@@ -109,7 +110,6 @@ class ModuleManager extends BOBasePage {
       const moduleStatus = await this.isModuleEnabled(page, allModulesNames[i]);
       modulesStatus.push({name: allModulesNames[i], status: moduleStatus});
     }
-
     return modulesStatus;
   }
 
