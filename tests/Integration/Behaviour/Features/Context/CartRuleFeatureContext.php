@@ -140,6 +140,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $now->add(new DateInterval('P1Y'));
         $cartRule->date_to = $now->format('Y-m-d H:i:s');
         $cartRule->active = 1;
+        $cartRule->code = '';
         $cartRule->add();
         $this->cartRules[$cartRuleName] = $cartRule;
         SharedStorage::getStorage()->set($cartRuleName, $cartRule->id);
