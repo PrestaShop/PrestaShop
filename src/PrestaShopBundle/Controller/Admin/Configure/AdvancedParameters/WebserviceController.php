@@ -328,14 +328,12 @@ class WebserviceController extends FrameworkBundleAdminController
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_webservice_keys_index');
             } else {
                 $this->flashErrors($saveErrors);
             }
-
-            return $this->redirectToRoute('admin_webservice_keys_index');
         }
-
-        $form = $this->getFormHandler()->getForm();
 
         return $this->renderPage($request, $filters, $form);
     }
