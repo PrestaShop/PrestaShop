@@ -1189,7 +1189,7 @@ class ProductFormDataProviderTest extends TestCase
             ))
             ->willReturnCallback(function ($query) use ($expectedShopId) {
                 if ($query instanceof GetProductForEditing) {
-                    $this->assertEquals($expectedShopId, $query->getShopId()->getValue());
+                    $this->assertEquals($expectedShopId, $query->getShopConstraint()->getShopId()->getValue());
                 }
 
                 return $this->createResultBasedOnQuery($query, []);
@@ -1372,11 +1372,11 @@ class ProductFormDataProviderTest extends TestCase
 
     /**
      * @param CommandBusInterface $queryBusMock
-     * @param $activation
+     * @param bool $activation
      *
      * @return ProductFormDataProvider
      */
-    private function buildProvider(CommandBusInterface $queryBusMock, $activation): ProductFormDataProvider
+    private function buildProvider(CommandBusInterface $queryBusMock, bool $activation): ProductFormDataProvider
     {
         return new ProductFormDataProvider(
             $queryBusMock,
