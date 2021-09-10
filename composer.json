@@ -183,7 +183,7 @@
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "create-test-db": [
-            "@php ./tests-legacy/create-test-db.php"
+            "@php ./tests/bin/create-test-db.php"
         ],
         "git-hook-install": "@php .github/contrib/install.php",
         "git-hook-uninstall": "@php .github/contrib/uninstall.php",
