@@ -329,7 +329,6 @@ $baseline = [
     'PrestaShopBundle\Install\System',
     'PhpEncryptionEngine',
     'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerPreferencesController',
-    'PhpEncryptionLegacyEngine',
     'PhpEncryption',
     'PrestaShopBundle\Install\Upgrade',
     'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\ContactsController',
