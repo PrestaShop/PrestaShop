@@ -34,6 +34,9 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     private $giftCost = 0;
     private $includeTaxes = false;
     private $displayTaxesLabel = false;
+    /**
+     * @var bool
+     */
     private $separatePackagesAllowed = false;
 
     public function setRecyclablePackAllowed($recyclablePackAllowed)
