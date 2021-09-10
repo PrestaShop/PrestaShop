@@ -398,7 +398,7 @@ class OrderControllerCore extends FrontController
                         $checkoutDeliveryStep->getIncludeTaxes()
                     )
                 )
-                ->setSeparatePackagesAllowed((bool)Configuration::get('PS_SHIP_WHEN_AVAILABLE'));
+                ->setSeparatePackagesAllowed((bool) Configuration::get('PS_SHIP_WHEN_AVAILABLE'));
 
             $checkoutProcess->addStep($checkoutDeliveryStep);
         }
