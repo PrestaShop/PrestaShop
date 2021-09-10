@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShopBundle\Install\DatabaseDump;
+
 /*
  * This is the bootstrap file to setup required dependencies for Behat tests
  */
@@ -36,3 +38,12 @@ if (!defined('_PS_ADMIN_DIR_')) {
 }
 require_once $rootDirectory . 'config/config.inc.php';
 require_once $rootDirectory . 'app/AppKernel.php';
+
+function restoreTestDB(): void
+{
+    if (!file_exists(sprintf('%s/ps_dump_%s.sql', sys_get_temp_dir(), AppKernel::VERSION))) {
+        throw new Exception('You need to run \'composer create-test-db\' to create the initial test database');
+    }
+
+    DatabaseDump::restoreDb();
+}

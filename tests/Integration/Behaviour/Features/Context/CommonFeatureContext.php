@@ -63,7 +63,6 @@ use Hook;
 use Image;
 use ImageType;
 use Language;
-use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 use LegacyTests\Unit\ContextMocker;
 use Mail;
 use Manufacturer;
@@ -161,7 +160,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function cleanDatabaseHardPrepareFeature()
     {
-        DatabaseCreator::restoreTestDB();
+        restoreTestDB();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
@@ -274,7 +273,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function cleanDatabaseHardPrepareScenario()
     {
-        DatabaseCreator::restoreTestDB();
+        restoreTestDB();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
@@ -285,7 +284,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cleanDatabaseHardPrepare()
     {
-        DatabaseCreator::restoreTestDB();
+        restoreTestDB();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 

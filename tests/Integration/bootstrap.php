@@ -23,6 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShopBundle\Install\DatabaseDump;
+
 define('_PS_IN_TEST_', true);
 define('_PS_ROOT_DIR_', dirname(__DIR__, 2));
 define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests/Resources/modules/');
@@ -35,4 +38,13 @@ require_once dirname(__DIR__, 2) . '/admin-dev/bootstrap.php';
  */
 if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
     define('PHPUNIT_COMPOSER_INSTALL', dirname(__DIR__, 2) . '/vendor/autoload.php');
+}
+
+function restoreTestDB(): void
+{
+    if (!file_exists(sprintf('%s/ps_dump_%s.sql', sys_get_temp_dir(), AppKernel::VERSION))) {
+        throw new Exception('You need to run \'composer create-test-db\' to create the initial test database');
+    }
+
+    DatabaseDump::restoreDb();
 }
