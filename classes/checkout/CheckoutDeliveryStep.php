@@ -150,7 +150,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                 ($useGift && isset($requestParams['gift_message'])) ? $requestParams['gift_message'] : ''
             );
             $this->getCheckoutSession()->setSeparatePackagesAllowed(
-                isset($requestParams['allow_seperated_package']) ? $requestParams['allow_seperated_package'] : false
+                isset($requestParams['allow_separated_package']) ? $requestParams['allow_separated_package'] : false
             );
         }
 
