@@ -110,7 +110,7 @@
                 <input class="js-gift-checkbox" id="allow_separated_package" name="allow_separated_package"
                        type="checkbox" value="1" {if $separatePackages.isSeparatePackage}checked="checked"{/if}>
                 <span><i class="material-icons rtl-no-flip checkbox-checked">&#xE5CA;</i></span>
-                <label for="allow_separated_package">{l s='Send available products first' d='Shop.Theme.Checkout'}</label>
+                <label for="allow_separated_package">{l s='Receive available products first' d='Shop.Theme.Checkout'}</label>
               </span>
             {/if}
 
