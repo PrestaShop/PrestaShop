@@ -53,7 +53,7 @@ class UpdateProductStockInformationCommand
     /**
      * @var int|null
      */
-    private $quantity;
+    private $deltaQuantity;
 
     /**
      * @var OutOfStockType|null
@@ -136,19 +136,19 @@ class UpdateProductStockInformationCommand
     /**
      * @return int|null
      */
-    public function getQuantity(): ?int
+    public function getDeltaQuantity(): ?int
     {
-        return $this->quantity;
+        return $this->deltaQuantity;
     }
 
     /**
-     * @param int $quantity
+     * @param int $deltaQuantity
      *
      * @return UpdateProductStockInformationCommand
      */
-    public function setQuantity(int $quantity): UpdateProductStockInformationCommand
+    public function setDeltaQuantity(int $deltaQuantity): UpdateProductStockInformationCommand
     {
-        $this->quantity = $quantity;
+        $this->deltaQuantity = $deltaQuantity;
 
         return $this;
     }
