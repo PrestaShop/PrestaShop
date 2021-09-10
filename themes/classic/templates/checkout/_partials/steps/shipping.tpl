@@ -79,6 +79,15 @@
             </div>
           {/block}
           <div class="order-options">
+            {if $separatePackages.allowed}
+              <span class="custom-checkbox">
+              <input class="js-gift-checkbox" id="allow_separated_package" name="allow_separated_package"
+                     type="checkbox" value="1" {if $separatePackages.isSeparatePackage}checked="checked"{/if}>
+              <span><i class="material-icons rtl-no-flip checkbox-checked">&#xE5CA;</i></span>
+              <label for="allow_separated_package">{l s='Receive available products first' d='Shop.Theme.Checkout'}</label>
+            </span>
+            {/if}
+
             <div id="delivery">
               <label for="delivery_message">{l s='If you would like to add a comment about your order, please write it in the field below.' d='Shop.Theme.Checkout'}</label>
               <textarea rows="2" cols="120" id="delivery_message" name="delivery_message">{$delivery_message}</textarea>
@@ -103,15 +112,6 @@
                 <label for="gift_message">{l s='If you\'d like, you can add a note to the gift:' d='Shop.Theme.Checkout'}</label>
                 <textarea rows="2" cols="120" id="gift_message" name="gift_message">{$gift.message}</textarea>
               </div>
-            {/if}
-
-            {if $separatePackages.allowed}
-              <span class="custom-checkbox">
-                <input class="js-gift-checkbox" id="allow_separated_package" name="allow_separated_package"
-                       type="checkbox" value="1" {if $separatePackages.isSeparatePackage}checked="checked"{/if}>
-                <span><i class="material-icons rtl-no-flip checkbox-checked">&#xE5CA;</i></span>
-                <label for="allow_separated_package">{l s='Receive available products first' d='Shop.Theme.Checkout'}</label>
-              </span>
             {/if}
 
           </div>
