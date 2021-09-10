@@ -26,35 +26,50 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 
 /**
- * Thrown when product stock constraints are violated
+ * Stock identity.
  */
-class ProductStockConstraintException extends ProductStockException
+class StockId
 {
     /**
-     * Code is sent when invalid out of stock type is used
+     * @var int
      */
-    public const INVALID_OUT_OF_STOCK_TYPE = 10;
+    private $stockId;
 
     /**
-     * When quantity is invalid
+     * @param int $stockId
+     *
+     * @throws ProductStockConstraintException
      */
-    public const INVALID_QUANTITY = 20;
+    public function __construct($stockId)
+    {
+        $this->assertIntegerIsGreaterThanZero($stockId);
+
+        $this->stockId = $stockId;
+    }
 
     /**
-     * When location is invalid
+     * @return int
      */
-    public const INVALID_LOCATION = 30;
+    public function getValue()
+    {
+        return $this->stockId;
+    }
 
     /**
-     * When out_of_stock is invalid
+     * @param int $stockId
      */
-    public const INVALID_OUT_OF_STOCK = 40;
-
-    /**
-     * When id is invalid
-     */
-    public const INVALID_ID = 50;
+    private function assertIntegerIsGreaterThanZero($stockId)
+    {
+        if (!is_int($stockId) || 0 > $stockId) {
+            throw new ProductStockConstraintException(
+                sprintf('Stock id %s is invalid. Stock id must be number that is greater than zero.', var_export($stockId, true)),
+                ProductStockConstraintException::INVALID_ID
+            );
+        }
+    }
 }
