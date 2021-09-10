@@ -114,12 +114,12 @@ Feature: Update product stock from Back Office (BO)
     And product "product1" should have following stock information:
       | quantity | 0 |
     When I update product "product1" stock with following information:
-      | quantity | 51 |
+      | delta_quantity | 51 |
     Then product "product1" should have following stock information:
       | quantity | 51 |
     And product "product1" last stock movement increased by 51
     When I update product "product1" stock with following information:
-      | quantity | 42 |
+      | delta_quantity | -9 |
     Then product "product1" should have following stock information:
       | quantity | 42 |
     And product "product1" last stock movement decreased by 9
