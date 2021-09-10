@@ -203,7 +203,7 @@ class CheckoutSessionCore
         return $this->context->cart->update();
     }
 
-    public function isSeparatePackagesAllowed()
+    public function isSeparatePackagesAllowed(): bool
     {
         return $this->context->cart->allow_seperated_package;
     }
