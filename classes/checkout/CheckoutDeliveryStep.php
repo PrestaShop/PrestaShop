@@ -124,7 +124,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
         return '';
     }
 
-    public function setSeparatePackagesAllowed($separatePackagesAllowed)
+    public function setSeparatePackagesAllowed(bool $separatePackagesAllowed): self
     {
         $this->separatePackagesAllowed = $separatePackagesAllowed;
 
