@@ -239,9 +239,9 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
             unset($data['out_of_stock_type']);
         }
 
-        if (isset($data['quantity'])) {
-            $command->setQuantity((int) $data['quantity']);
-            unset($data['quantity']);
+        if (isset($data['delta_quantity'])) {
+            $command->setDeltaQuantity((int) $data['delta_quantity']);
+            unset($data['delta_quantity']);
         }
 
         if (isset($data['minimal_quantity'])) {
