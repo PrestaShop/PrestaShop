@@ -1241,6 +1241,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         if ($_FIELDS === null && file_exists(_PS_TRANSLATIONS_DIR_ . $context->language->iso_code . '/fields.php')) {
+            @trigger_error(
+                 'Translating ObjectModel fields using fields.php is deprecated since version 8.0.0.',
+                E_USER_DEPRECATED
+            );
+
             include_once _PS_TRANSLATIONS_DIR_ . $context->language->iso_code . '/fields.php';
         }
 
