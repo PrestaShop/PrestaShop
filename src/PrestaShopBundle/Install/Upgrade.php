@@ -27,18 +27,9 @@
 namespace {
     $root_dir = realpath(__DIR__ . '/../../..');
 
-    require_once $root_dir . '/vendor/paragonie/random_compat/lib/random.php';
-
     if (!class_exists('PhpEncryptionEngine')) {
         require_once $root_dir . '/classes/PhpEncryptionEngine.php';
         class PhpEncryptionEngine extends \PhpEncryptionEngineCore
-        {
-        }
-    }
-
-    if (!class_exists('PhpEncryptionLegacyEngine')) {
-        require_once $root_dir . '/classes/PhpEncryptionLegacyEngine.php';
-        class PhpEncryptionLegacyEngine extends \PhpEncryptionLegacyEngineCore
         {
         }
     }
