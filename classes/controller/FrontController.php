@@ -1622,24 +1622,25 @@ class FrontControllerCore extends Controller
         return $cust;
     }
 
+    /**
+     * Get the shop logo with its dimensions
+     *
+     * @return array
+     */
     public function getShopLogo(): array
     {
-        $logoData = [];
-        $urls = $this->getTemplateVarUrls();
-        $psImageUrl = $urls['img_ps_url'] ?? _PS_IMG_;
-        $logoDir = _PS_IMG_DIR_;
-
-        if (Configuration::hasKey('PS_LOGO')) {
-            $logoFileName = Configuration::get('PS_LOGO');
-            $logoFileDir = $logoDir . $logoFileName;
-            $logoSizes = getimagesize($logoFileDir);
-
-            $logoData['src'] = $psImageUrl . $logoFileName;
-            $logoData['width'] = $logoSizes[0];
-            $logoData['height'] = $logoSizes[1];
+        if (!Configuration::hasKey('PS_LOGO')) {
+            return [];
         }
 
-        return $logoData;
+        $logoFileName = Configuration::get('PS_LOGO');
+        list($logoWidth, $logoHeight) = getimagesize(_PS_IMG_DIR_ . $logoFileName);
+
+        return [
+            'src' => ($this->getTemplateVarUrls()['img_ps_url'] ?? _PS_IMG_) . $logoFileName,
+            'width' => $logoWidth,
+            'height' => $logoHeight
+        ];
     }
 
     public function getTemplateVarShop()
