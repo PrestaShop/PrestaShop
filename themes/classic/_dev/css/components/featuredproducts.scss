@@ -3,17 +3,45 @@ $product-description-height: 70px;
 
 #products,
 .featured-products,
-.product-accessories,
-.product-miniature {
+.product-accessories {
   .products {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
   }
 
+  .products-section-title {
+    margin: 2.5rem 0;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .all-product-link {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    clear: both;
+    font-weight: 500;
+    color: $gray;
+
+    @at-root .lang-rtl & {
+      .material-icons {
+        transform: rotate(-180deg);
+      }
+    }
+  }
+}
+
+.product-miniature {
   .product {
     display: flex;
     justify-content: center;
+    padding: 0;
+    margin: 0 0.8125rem;
+
+    @at-root .page-index &, .page-search & {
+      width: 25%;
+      min-width: 250px;
+    }
   }
 
   .product-thumbnail {
@@ -38,16 +66,14 @@ $product-description-height: 70px;
     &:hover,
     &:focus {
       .highlighted-informations {
-        top: calc(250px - 4.4rem);
-        bottom: 5.5rem;
+        top: calc(100% - 4.4rem);
 
         &::after {
           opacity: 1;
         }
 
         &.no-variants {
-          top: calc(250px - 2.5rem);
-          bottom: 2.2rem;
+          top: calc(100% - 2.5rem);
         }
       }
 
@@ -79,12 +105,6 @@ $product-description-height: 70px;
     }
   }
 
-  .products-section-title {
-    margin: 2.5rem 0;
-    font-weight: 500;
-    text-align: center;
-  }
-
   .product-title {
     margin-top: 0.7rem;
     text-align: center;
@@ -111,17 +131,21 @@ $product-description-height: 70px;
     background: $white;
   }
 
+  .thumbnail-top {
+    position: relative;
+    overflow: hidden;
+  }
+
   .highlighted-informations {
     position: absolute;
-    top: $thumbnail-size;
-    bottom: 1.25rem;
     z-index: 2;
     width: $thumbnail-size;
+    top: 100%;
     height: auto;
-    padding-top: 0.625rem;
+    padding: 0.625rem 0;
     text-align: center;
     background: $white;
-    transition: top 0.3s, bottom 0.3s;
+    transition: 0.3s;
 
     .quick-view {
       font-size: $base-font-size;
@@ -144,16 +168,14 @@ $product-description-height: 70px;
     background: $white;
   }
 
-  .product-miniature {
-    .product-flags {
-      li.product-flag {
-        min-width: 3.125rem;
-        min-height: 1.875rem;
-        font-weight: 600;
+  .product-flags {
+    li.product-flag {
+      min-width: 3.125rem;
+      min-height: 1.875rem;
+      font-weight: 600;
 
-        &.online-only {
-          top: 13.1rem;
-        }
+      &.online-only {
+        top: 13.1rem;
       }
     }
   }
@@ -175,20 +197,6 @@ $product-description-height: 70px;
     bottom: 0.5rem;
     font-weight: 700;
     color: $gray;
-  }
-
-  .all-product-link {
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
-    clear: both;
-    font-weight: 500;
-    color: $gray;
-
-    @at-root .lang-rtl & {
-      .material-icons {
-        transform: rotate(-180deg);
-      }
-    }
   }
 }
 
