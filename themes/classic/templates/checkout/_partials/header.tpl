@@ -28,7 +28,13 @@
       <div class="row">
         <div class="col-md-6 hidden-sm-down" id="_desktop_logo">
           <a href="{$urls.pages.index}">
-            <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name} {l s='logo' d='Shop.Theme.Global'}" loading="lazy">
+            <img
+              class="logo img-fluid"
+              src="{$shop.logo.src}"
+              alt="{$shop.name}"
+              loading="lazy"
+              width="{$shop.logo.width}"
+              height="{$shop.logo.height}">
           </a>
         </div>
         <div class="col-md-6 text-xs-right hidden-sm-down">

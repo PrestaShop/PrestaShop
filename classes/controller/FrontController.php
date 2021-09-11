@@ -1622,6 +1622,26 @@ class FrontControllerCore extends Controller
         return $cust;
     }
 
+    public function getShopLogo(): array
+    {
+        $logoData = [];
+        $urls = $this->getTemplateVarUrls();
+        $psImageUrl = $urls['img_ps_url'] ?? _PS_IMG_;
+        $logoDir = _PS_IMG_DIR_;
+
+        if (Configuration::hasKey('PS_LOGO')) {
+            $logoFileName = Configuration::get('PS_LOGO');
+            $logoFileDir = $logoDir . $logoFileName;
+            $logoSizes = getimagesize($logoFileDir);
+
+            $logoData['src'] = $psImageUrl . $logoFileName;
+            $logoData['width'] = $logoSizes[0];
+            $logoData['height'] = $logoSizes[1];
+        }
+
+        return $logoData;
+    }
+
     public function getTemplateVarShop()
     {
         $address = $this->context->shop->getAddress();
@@ -1638,7 +1658,7 @@ class FrontControllerCore extends Controller
             'long' => Configuration::get('PS_STORES_CENTER_LONG'),
             'lat' => Configuration::get('PS_STORES_CENTER_LAT'),
 
-            'logo' => Configuration::hasKey('PS_LOGO') ? $psImageUrl . Configuration::get('PS_LOGO') : '',
+            'logo' => $this->getShopLogo(),
             'stores_icon' => Configuration::hasKey('PS_STORES_ICON') ? $psImageUrl . Configuration::get('PS_STORES_ICON') : '',
             'favicon' => Configuration::hasKey('PS_FAVICON') ? $psImageUrl . Configuration::get('PS_FAVICON') : '',
             'favicon_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
