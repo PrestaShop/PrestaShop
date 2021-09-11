@@ -1017,7 +1017,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $str_errors = '';
         $str_error_delete = '';
 
-        if (count($errors) && is_array($errors)) {
+        if (!empty($errors)) {
             $str_errors = '';
             foreach ($errors as $error) {
                 $str_errors .= $error . ', ';
