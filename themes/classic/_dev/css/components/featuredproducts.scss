@@ -138,9 +138,9 @@ $product-description-height: 70px;
 
   .highlighted-informations {
     position: absolute;
+    top: 100%;
     z-index: 2;
     width: $thumbnail-size;
-    top: 100%;
     height: auto;
     padding: 0.625rem 0;
     text-align: center;
