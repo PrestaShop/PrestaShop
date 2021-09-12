@@ -571,7 +571,7 @@ class OrderHistoryCore extends ObjectModel
                     null,
                     $file_attachement,
                     null,
-                    $result['module_name'] ? _PS_MODULE_DIR_ . $result['module_name'] . '/mails/' : _PS_MAIL_DIR_ ,
+                    $result['module_name'] ? _PS_MODULE_DIR_ . $result['module_name'] . '/mails/' : _PS_MAIL_DIR_,
                     false,
                     (int) $order->id_shop
                 )) {
