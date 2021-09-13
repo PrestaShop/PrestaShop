@@ -242,7 +242,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
             $this->customerRepository->assertCustomerExists(new CustomerId($customerId));
         }
     }
-    
+
     private function assertSpecificPriceIsUniquePerProduct(SpecificPrice $specificPrice): void
     {
         $productId = (int) $specificPrice->id_product;
