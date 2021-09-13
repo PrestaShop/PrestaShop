@@ -79,14 +79,13 @@ class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @var int
      */
-    private $shopId;
+    private $contextShopId;
 
     /**
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
      * @param int $contextLangId
-     * @param int $defaultCategoryId
      * @param int|null $contextShopId
      */
     public function __construct(
@@ -95,7 +94,6 @@ class ProductFormDataProvider implements FormDataProviderInterface
         int $mostUsedTaxRulesGroupId,
         int $defaultCategoryId,
         int $contextLangId,
-        int $defaultShopId,
         ?int $contextShopId
     ) {
         $this->queryBus = $queryBus;
@@ -103,9 +101,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
         $this->contextLangId = $contextLangId;
         $this->defaultCategoryId = $defaultCategoryId;
-
-        // Usually context shop ID is null when multistore feature is disabled, in this case we use the default shop as fallback
-        $this->shopId = $contextShopId ?: $defaultShopId;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -114,8 +110,9 @@ class ProductFormDataProvider implements FormDataProviderInterface
     public function getData($id)
     {
         $productId = (int) $id;
+        $shopConstraint = null !== $this->contextShopId ? ProductShopConstraint::shop($this->contextShopId) : ProductShopConstraint::defaultProductShop();
         /** @var ProductForEditing $productForEditing */
-        $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId, ProductShopConstraint::shop($this->shopId)));
+        $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId, $shopConstraint));
 
         $productData = [
             'id' => $productId,
