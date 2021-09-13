@@ -290,10 +290,14 @@ export default class EntitySearchInput {
     if (this.options.mappingValue !== undefined) {
       autoSearchConfig.value = <string> this.options.mappingValue;
     }
-    this.autoSearch = new AutoCompleteSearch(
-      this.$entitySearchInput,
-      autoSearchConfig,
-    );
+
+    // The search feature may be disabled so the search input won't be present
+    if (this.$entitySearchInput.length) {
+      this.autoSearch = new AutoCompleteSearch(
+        this.$entitySearchInput,
+        autoSearchConfig,
+      );
+    }
   }
 
   /**
