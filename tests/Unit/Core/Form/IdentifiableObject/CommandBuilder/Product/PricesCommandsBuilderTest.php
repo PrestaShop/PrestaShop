@@ -45,7 +45,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
         $builder = new PricesCommandsBuilder(self::MULTI_SHOP_PREFIX);
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->shopId);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->singleShopConstraint);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -196,7 +196,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
     public function testBuildCommandMultistore(array $formData, array $expectedCommands): void
     {
         $builder = new PricesCommandsBuilder(self::MULTI_SHOP_PREFIX);
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->shopId);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->singleShopConstraint);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
