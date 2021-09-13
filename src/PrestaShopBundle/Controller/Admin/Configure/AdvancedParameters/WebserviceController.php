@@ -327,7 +327,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param Request $request
      * @param WebserviceKeyFilters $filters
      *
-     * @return Response
+     * @return Response|RedirectResponse
      */
     public function saveSettingsAction(Request $request, WebserviceKeyFilters $filters)
     {
@@ -341,12 +341,12 @@ class WebserviceController extends FrameworkBundleAdminController
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_webservice_keys_index');
             } else {
                 $this->flashErrors($saveErrors);
             }
         }
-
-        $form = $this->getFormHandler()->getForm();
 
         return $this->renderPage($request, $filters, $form);
     }

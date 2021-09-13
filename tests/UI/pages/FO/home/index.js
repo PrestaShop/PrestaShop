@@ -201,6 +201,7 @@ class Home extends FOBasePage {
       name: await this.getTextContent(page, this.quickViewProductName),
       regularPrice: parseFloat((await this.getTextContent(page, this.quickViewRegularPrice)).replace('€', '')),
       price: parseFloat((await this.getTextContent(page, this.quickViewProductPrice)).replace('€', '')),
+      discountPercentage: await this.getTextContent(page, this.quickViewDiscountPercentage),
       taxShippingDeliveryLabel: await this.getTextContent(page, this.quickViewTaxShippingDeliveryLabel),
       shortDescription: await this.getTextContent(page, this.quickViewShortDescription),
       coverImage: await this.getAttributeContent(page, this.quickViewCoverImage, 'src'),
