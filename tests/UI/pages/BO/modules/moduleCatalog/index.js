@@ -14,7 +14,7 @@ class ModuleCatalog extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Module Catalog •';
+    this.pageTitle = 'Modules catalog •';
     this.installMessageSuccessful = moduleTag => `Install action on module ${moduleTag} succeeded.`;
 
     // Selectors
