@@ -3279,8 +3279,9 @@ class ProductCore extends ObjectModel
         
         foreach ($ids_product as $product) {
             if (is_array($product)) {
-                if(!in_array($product['id_product'], $tab_id_product)){
-                    $tab_id_product[] = (int) $product['id_product'];
+                $productId = (int) $product['id_product'];
+                if(!in_array($productId, $tab_id_product)){
+                    $tab_id_product[] = $productId;
                 }
             } else {
                 if(!in_array((int) $product, $tab_id_product)){
