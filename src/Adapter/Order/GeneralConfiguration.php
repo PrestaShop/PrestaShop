@@ -58,15 +58,17 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_FINAL_SUMMARY_ENABLED', $configuration['enable_final_summary']);
-            $this->configuration->set('PS_GUEST_CHECKOUT_ENABLED', $configuration['enable_guest_checkout']);
-            $this->configuration->set('PS_DISALLOW_HISTORY_REORDERING', $configuration['disable_reordering_option']);
-            $this->configuration->set('PS_PURCHASE_MINIMUM', $configuration['purchase_minimum_value']);
-            $this->configuration->set('PS_ORDER_RECALCULATE_SHIPPING', $configuration['recalculate_shipping_cost']);
-            $this->configuration->set('PS_ALLOW_MULTISHIPPING', $configuration['allow_multishipping']);
-            $this->configuration->set('PS_SHIP_WHEN_AVAILABLE', $configuration['allow_delayed_shipping']);
-            $this->configuration->set('PS_CONDITIONS', $configuration['enable_tos']);
-            $this->configuration->set('PS_CONDITIONS_CMS_ID', $configuration['tos_cms_id']);
+            $shopConstraint = $this->getShopConstraint();
+
+            $this->updateConfigurationValue('PS_FINAL_SUMMARY_ENABLED', 'enable_final_summary', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_GUEST_CHECKOUT_ENABLED', 'enable_guest_checkout', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_DISALLOW_HISTORY_REORDERING', 'disable_reordering_option', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_PURCHASE_MINIMUM', 'purchase_minimum_value', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_ORDER_RECALCULATE_SHIPPING', 'recalculate_shipping_cost', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_ALLOW_MULTISHIPPING', 'allow_multishipping', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_SHIP_WHEN_AVAILABLE', 'allow_delayed_shipping', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_CONDITIONS', 'enable_tos', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_CONDITIONS_CMS_ID', 'tos_cms_id', $configuration, $shopConstraint);
         }
 
         return [];

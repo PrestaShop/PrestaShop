@@ -53,10 +53,12 @@ class GiftOptionsConfiguration extends AbstractMultistoreConfiguration
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_GIFT_WRAPPING', $configuration['enable_gift_wrapping']);
-            $this->configuration->set('PS_GIFT_WRAPPING_PRICE', $configuration['gift_wrapping_price']);
-            $this->configuration->set('PS_GIFT_WRAPPING_TAX_RULES_GROUP', $configuration['gift_wrapping_tax_rules_group']);
-            $this->configuration->set('PS_RECYCLABLE_PACK', $configuration['offer_recyclable_pack']);
+            $shopConstraint = $this->getShopConstraint();
+
+            $this->updateConfigurationValue('PS_GIFT_WRAPPING', 'enable_gift_wrapping', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_GIFT_WRAPPING_PRICE', 'gift_wrapping_price', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_GIFT_WRAPPING_TAX_RULES_GROUP', 'gift_wrapping_tax_rules_group', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_RECYCLABLE_PACK', 'offer_recyclable_pack', $configuration, $shopConstraint);
         }
 
         return [];
