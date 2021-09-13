@@ -81,12 +81,13 @@
 
 <script>
   import ProductMap from '@pages/product/product-map';
+  import ProductEventMap from '@pages/product/product-event-map';
   import Modal from '@vue/components/Modal';
   import Router from '@components/router';
 
   const {$} = window;
-
   const router = new Router();
+  const SpecificPriceMap = ProductMap.specificPrice;
 
   export default {
     name: 'SpecificPriceModal',
@@ -117,25 +118,22 @@
       },
     },
     mounted() {
-      this.container = $(ProductMap.specificPrice.container);
+      this.container = $(SpecificPriceMap.container);
       this.watchEditButtons();
     },
     methods: {
       submitForm() {
         this.submittingForm = true;
         const iframeBody = this.$refs.iframe.contentDocument.body;
-        const form = iframeBody.querySelector(
-          ProductMap.specificPrice.form,
-        );
+        const form = iframeBody.querySelector(SpecificPriceMap.form);
         form.submit();
-        this.submittingForm = false;
-        this.loadingForm = false;
-        //@todo: whats next?
+        this.submittingForm = true;
+        this.loadingForm = true;
       },
       watchEditButtons() {
         this.container.on(
           'click',
-          ProductMap.specificPrice.addSpecificPriceBtn,
+          SpecificPriceMap.addSpecificPriceBtn,
           (event) => {
             event.stopImmediatePropagation();
             this.loadingForm = true;
@@ -144,8 +142,14 @@
         );
       },
       onFrameLoaded() {
-        this.loadingForm = false;
         this.applyIframeStyling();
+        const form = this.$refs.iframe.contentDocument.querySelector(SpecificPriceMap.form);
+
+        if (this.openForCreate && form.dataset.specificPriceId) {
+          this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceCreated);
+          this.closeModal();
+        }
+        this.loadingForm = false;
       },
       applyIframeStyling() {
         this.$refs.iframe.contentDocument.body.style.overflowX = 'hidden';
@@ -196,7 +200,7 @@
           align-items: center;
           justify-content: center;
           z-index: 1;
-          background: rgba(255, 255, 255, 0.8);
+          background: white;
         }
 
         .specific-price-iframe {
