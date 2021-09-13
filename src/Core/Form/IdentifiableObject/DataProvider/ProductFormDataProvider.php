@@ -38,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFe
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
@@ -161,6 +163,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'stock' => [
                 'quantities' => [
                     'quantity' => 0,
+                    'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
             ],
@@ -372,6 +375,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'quantities' => [
                 'quantity' => $stockInformation->getQuantity(),
+                'stock_movements' => $this->getStockMovements($productForEditing->getProductId()),
                 'minimal_quantity' => $stockInformation->getMinimalQuantity(),
             ],
             'options' => [
@@ -388,6 +392,28 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
             ],
         ];
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return array
+     */
+    private function getStockMovements(int $productId): array
+    {
+        /** @var EmployeeStockMovement[] $stockMovements */
+        $stockMovements = $this->queryBus->handle(new GetEmployeesStockMovements($productId));
+
+        $movementData = [];
+        foreach ($stockMovements as $stockMovement) {
+            $movementData[] = [
+                'date_add' => $stockMovement->getDateAdd()->format(DateTime::DEFAULT_DATETIME_FORMAT),
+                'employee' => $stockMovement->getFirstName() . ' ' . $stockMovement->getLastName(),
+                'delta_quantity' => $stockMovement->getDeltaQuantity(),
+            ];
+        }
+
+        return $movementData;
     }
 
     /**
