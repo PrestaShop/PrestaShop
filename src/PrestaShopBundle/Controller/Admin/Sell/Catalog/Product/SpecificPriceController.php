@@ -48,10 +48,9 @@ class SpecificPriceController extends FrameworkBundleAdminController
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Creation successful', 'Admin.Notifications.Success'));
 
-                //@todo: where to redirect after submit?
-                return $this->redirectToRoute('admin_products_specific_prices_create', [
-                    'productId' => $productId,
+                return $this->redirectToRoute('admin_products_specific_prices_edit', [
                     'liteDisplaying' => $request->query->has('liteDisplaying'),
+                    'specificPriceId' => $result->getIdentifiableObjectId(),
                 ]);
             }
         } catch (Exception $e) {
@@ -60,6 +59,31 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/create.html.twig', [
             'specificPriceForm' => $form->createView(),
+        ]);
+    }
+
+    public function editAction(Request $request, int $specificPriceId): Response
+    {
+        $form = $this->getFormBuilder()->getFormFor($specificPriceId);
+        $form->handleRequest($request);
+
+        try {
+            $result = $this->getFormHandler()->handle($form);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_products_specific_prices_edit', [
+                    'liteDisplaying' => $request->query->has('liteDisplaying'),
+                ]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/edit.html.twig', [
+            'specificPriceForm' => $form->createView(),
+            'specificPriceId' => $specificPriceId,
         ]);
     }
 
