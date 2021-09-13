@@ -29,4 +29,10 @@ const {$} = window;
 
 $(() => {
   new TermsAndConditionsOptionHandler();
+
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );
 });
