@@ -55,7 +55,7 @@ class StylesheetGeneratorTest extends TestCase
     {
         $this->filesystem = new Filesystem();
         $this->sandboxDirectory = sys_get_temp_dir() . '/StylesheetGeneratorTest';
-        $this->cssSamplesDirectory = __DIR__ . '/../../../Resources/assets/css';
+        $this->cssSamplesDirectory = dirname(__DIR__, 3) . '/Resources/assets/css';
 
         $this->filesystem->mkdir($this->sandboxDirectory);
         $this->filesystem->copy(
@@ -70,7 +70,7 @@ class StylesheetGeneratorTest extends TestCase
         $this->filesystem->remove($this->sandboxDirectory . '/' . self::RTL_INPUT_FILENAME_WITH_SUFFIX);
     }
 
-    public function test()
+    public function testGeneration(): void
     {
         $generator = new StylesheetGenerator();
         $generator->generateInDirectory($this->sandboxDirectory);
