@@ -3284,8 +3284,9 @@ class ProductCore extends ObjectModel
                     $tab_id_product[] = $productId;
                 }
             } else {
-                if(!in_array((int) $product, $tab_id_product)){
-                    $tab_id_product[] = (int) $product;
+                $productId = (int) $product;
+                if(!in_array($productId , $tab_id_product)){
+                    $tab_id_product[] = $productId;
                 }
             }
         }
