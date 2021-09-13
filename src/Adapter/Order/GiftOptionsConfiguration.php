@@ -27,23 +27,13 @@
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 
 /**
  * Gift Settings configuration available in ShopParameters > Order Preferences.
  */
-class GiftOptionsConfiguration implements DataConfigurationInterface
+class GiftOptionsConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * {@inheritdoc}
      */
