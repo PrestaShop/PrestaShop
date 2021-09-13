@@ -197,7 +197,7 @@ class CheckoutSessionCore
         return $this->context->link->getPageLink('order');
     }
 
-    public function setSeparatePackagesAllowed($separatePackagesAllowed)
+    public function setSeparatePackagesAllowed(bool $separatePackagesAllowed): bool
     {
         $this->context->cart->allow_separated_package = (bool) $separatePackagesAllowed;
 
