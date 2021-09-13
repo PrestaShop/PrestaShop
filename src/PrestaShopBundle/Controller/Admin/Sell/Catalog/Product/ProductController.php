@@ -459,7 +459,7 @@ class ProductController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig', [
             'errorMessage' => $this->trans(
                 'This product is not associated to the store selected in the current context, please select another one.',
-                'Admin.Notifications.Info',
+                'Admin.Notifications.Info'
             ),
             'standardPageUrl' => $this->generateUrl(
                 !empty($productId) ? 'admin_product_form' : 'admin_product_new',
