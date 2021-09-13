@@ -74,14 +74,15 @@
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
-          {foreach from=$breadcrumb.links item=path name=breadcrumb}
-            {
-              "@type": "ListItem",
-              "position": {$smarty.foreach.breadcrumb.iteration},
-              "name": "{$path.title}",
-              "item": "{$path.url}"
-              }{if !$smarty.foreach.breadcrumb.last},{/if}
-            {/foreach}]
-          }
+        {foreach from=$breadcrumb.links item=path name=breadcrumb}
+          {
+            "@type": "ListItem",
+            "position": {$smarty.foreach.breadcrumb.iteration},
+            "name": "{$path.title}",
+            "item": "{$path.url}"
+          }{if !$smarty.foreach.breadcrumb.last},{/if}
+        {/foreach}
+      ]
+    }
   </script>
 {/if}
