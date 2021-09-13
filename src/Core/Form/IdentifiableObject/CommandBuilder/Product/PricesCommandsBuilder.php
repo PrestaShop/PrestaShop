@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\CommandAccessor;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\CommandAccessorConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\CommandField;
@@ -57,7 +56,7 @@ class PricesCommandsBuilder implements MultistoreProductCommandsBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData, ShopId $shopId): array
+    public function buildCommands(ProductId $productId, array $formData, ProductShopConstraint $singleShopConstraint): array
     {
         if (!isset($formData['pricing'])) {
             return [];
@@ -76,7 +75,7 @@ class PricesCommandsBuilder implements MultistoreProductCommandsBuilderInterface
         ;
 
         $commandAccessor = new CommandAccessor($config);
-        $shopCommand = new UpdateProductPricesCommand($productId->getValue(), ProductShopConstraint::shop($shopId->getValue()));
+        $shopCommand = new UpdateProductPricesCommand($productId->getValue(), $singleShopConstraint);
         $allShopsCommand = new UpdateProductPricesCommand($productId->getValue(), ProductShopConstraint::allShops());
 
         return $commandAccessor->buildCommands($priceData, $shopCommand, $allShopsCommand);
