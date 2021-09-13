@@ -67,7 +67,7 @@ class FormListenerTestCase extends KernelTestCase
     /**
      * @param string $type
      * @param array $options
-     * @param null $data
+     * @param mixed|null $data
      *
      * @return FormInterface
      */

@@ -134,18 +134,64 @@ class ProductTypeListenerTest extends FormListenerTestCase
     }
 
     /**
+     * @dataProvider getStockMovements
+     *
+     * @param string $productType
+     * @param array $movementsData
+     * @param bool $shouldExist
+     */
+    public function testStockMovementsRemovedBasedOnItsContent(string $productType, array $movementsData, bool $shouldExist): void
+    {
+        $formData = [
+            'stock' => [
+                'quantities' => [
+                    'stock_movements' => $movementsData,
+                ],
+            ],
+        ];
+        $form = $this->createForm(SimpleProductFormTest::class, [], $formData);
+
+        $this->assertFormTypeExistsInForm($form, 'stock.quantities.stock_movements', true);
+        $this->adaptProductFormBasedOnProductType($form, $productType, $formData);
+        $this->assertFormTypeExistsInForm($form, 'stock.quantities.stock_movements', $shouldExist);
+    }
+
+    public function getStockMovements(): iterable
+    {
+        yield [ProductType::TYPE_STANDARD, [], false];
+        yield [ProductType::TYPE_COMBINATIONS, [], false];
+        yield [ProductType::TYPE_PACK, [], false];
+        yield [ProductType::TYPE_VIRTUAL, [], false];
+
+        $stockMovements = [
+            [
+                'employee' => 'John Doe',
+                'delta_quantity' => 42,
+            ],
+            [
+                'employee' => 'John Doe',
+                'delta_quantity' => -15,
+            ],
+        ];
+
+        yield [ProductType::TYPE_STANDARD, $stockMovements, true];
+        yield [ProductType::TYPE_COMBINATIONS, $stockMovements, false];
+        yield [ProductType::TYPE_PACK, $stockMovements, true];
+        yield [ProductType::TYPE_VIRTUAL, $stockMovements, true];
+    }
+
+    /**
      * @param FormInterface $form
      * @param string $productType
+     * @param array $extraData
      */
-    private function adaptProductFormBasedOnProductType(FormInterface $form, string $productType): void
+    private function adaptProductFormBasedOnProductType(FormInterface $form, string $productType, array $extraData = []): void
     {
         $listener = new ProductTypeListener();
 
-        $formData = [
-            'header' => [
-                'type' => $productType,
-            ],
-        ];
+        $formData = empty($extraData) ? [] : $extraData;
+        $formData['header']['type'] = $productType;
+
         $eventMock = $this->createEventMock($formData, $form);
         $listener->adaptProductForm($eventMock);
     }
@@ -194,8 +240,14 @@ class SimpleProductFormTest extends CommonAbstractType
             ->add('options', FormType::class)
         ;
         $builder->get('shortcuts')->add('stock', FormType::class);
-        $builder->get('stock')->add('pack_stock_type', ChoiceType::class);
-        $builder->get('stock')->add('virtual_product_file', FormType::class);
+
+        $stock = $builder->get('stock');
+        $stock->add('pack_stock_type', ChoiceType::class);
+        $stock->add('virtual_product_file', FormType::class);
+        $stock->add('quantities', FormType::class);
+        $quantities = $stock->get('quantities');
+        $quantities->add('stock_movements', FormType::class);
+
         $builder->get('options')->add('suppliers', ChoiceType::class);
     }
 }
