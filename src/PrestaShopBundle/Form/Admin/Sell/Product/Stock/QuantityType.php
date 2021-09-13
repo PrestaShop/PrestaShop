@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
 use PrestaShopBundle\Form\Admin\Type\DeltaQuantityType;
+use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -68,11 +69,23 @@ class QuantityType extends TranslatorAwareType
                 ->add('quantity', DeltaQuantityType::class, [
                     'required' => false,
                     'label' => $this->trans('Edit quantity', 'Admin.Catalog.Feature'),
+                    'label_tag_name' => 'h4',
                     'constraints' => [
                         new NotBlank(),
                         new Type(['type' => 'numeric']),
                     ],
                     'default_empty_data' => 0,
+                ])
+                ->add('stock_movements', EntitySearchInputType::class, [
+                    'required' => false,
+                    'label' => $this->trans('Recent stock movements', 'Admin.Catalog.Feature'),
+                    'label_tag_name' => 'h4',
+                    'layout' => 'table',
+                    'entry_type' => StockMovementType::class,
+                    // No search input
+                    'allow_search' => false,
+                    // No delete button
+                    'allow_delete' => false,
                 ])
             ;
         }
