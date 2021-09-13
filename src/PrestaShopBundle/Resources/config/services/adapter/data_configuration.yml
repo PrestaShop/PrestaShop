@@ -31,11 +31,15 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Order\GeneralConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.order_gift.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Order\GiftOptionsConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.debug_mode.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugModeConfiguration'
@@ -43,7 +47,6 @@ services:
       - '@prestashop.adapter.debug_mode'
       - '@prestashop.adapter.legacy.configuration'
       - '%ps_config_dir%/defines.inc.php'
-      - '@prestashop.adapter.cache.clearer.class_index_cache_clearer'
 
   prestashop.adapter.optional_features.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\OptionalFeatures\OptionalFeaturesConfiguration'
@@ -64,7 +67,7 @@ services:
 
   prestashop.adapter.media_servers.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Media\MediaServerConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    arguments: ['@prestashop.adapter.legacy.configuration']
 
   prestashop.adapter.caching.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Cache\CachingConfiguration'
@@ -91,23 +94,23 @@ services:
 
   prestashop.adapter.preferences.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    arguments: ['@prestashop.adapter.legacy.configuration']
 
   prestashop.adapter.upload_quota.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    arguments: ['@prestashop.adapter.legacy.configuration']
 
   prestashop.adapter.notifications.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Admin\NotificationsConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    arguments: ['@prestashop.adapter.legacy.configuration']
 
   prestashop.adapter.smarty_cache.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    arguments: ['@prestashop.adapter.legacy.configuration']
 
   prestashop.adapter.logs.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
-    arguments:
+    arguments: 
       - '@prestashop.adapter.legacy.configuration'
       - '@translator'
       - '@prestashop.adapter.validate'
@@ -173,15 +176,15 @@ services:
 
   prestashop.adapter.geolocation_by_ip_address.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationByIpAddressConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    arguments: ['@prestashop.adapter.legacy.configuration']
 
   prestashop.adapter.geolocation_ip_address_whitelist.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationIpAddressWhitelistConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    arguments: ['@prestashop.adapter.legacy.configuration']
 
   prestashop.adapter.geolocation_options.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationOptionsConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    arguments: ['@prestashop.adapter.legacy.configuration']
 
   prestashop.adapter.payment_module_preferences.configuration:
     class: 'PrestaShop\PrestaShop\Core\Payment\PaymentModulePreferencesConfiguration'
