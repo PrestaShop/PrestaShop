@@ -32,6 +32,7 @@ import ProductEventMap from '@pages/product/product-event-map';
 import {getCategories} from '@pages/product/services/categories';
 import TagsRenderer from '@pages/product/components/categories/tags-renderer';
 import {EventEmitter} from 'events';
+import Modal, {ModalType} from '@components/modal/modal';
 
 const {$} = window;
 
@@ -48,7 +49,9 @@ export default class CategoryTreeSelector {
 
   defaultCategoryId: number;
 
-  modalContainer: HTMLElement|null
+  modalContentContainer: HTMLElement|null
+
+  modal: ModalType|null
 
   categoryTree: HTMLElement|null;
 
@@ -60,7 +63,8 @@ export default class CategoryTreeSelector {
     this.typeaheadCategories = [];
     this.selectedCategories = [];
     this.defaultCategoryId = 0;
-    this.modalContainer = null;
+    this.modalContentContainer = null;
+    this.modal = null;
     this.categoryTree = null;
     this.tagsRenderer = null;
   }
@@ -76,27 +80,25 @@ export default class CategoryTreeSelector {
     this.defaultCategoryId = defaultCategoryId;
 
     const modalContent = $(ProductCategoryMap.categoriesModalTemplate);
-    // @todo: replace fancybox with Modal after following PR is merged:
-    //    https://github.com/PrestaShop/PrestaShop/pull/25184
-    $.fancybox({
-      type: 'iframe',
-      width: '90%',
-      height: '90%',
-      fitToView: false,
-      autoSize: false,
-      content: modalContent.html(),
-      afterShow: () => {
-        this.initModal();
+    const modal = new Modal({
+      id: ProductCategoryMap.categoriesModalId,
+      dialogStyle: {
+        maxWidth: '90%',
       },
     });
+
+    modal.render(modalContent.html());
+    this.initModal();
+    modal.show();
+    this.modal = modal;
   }
 
   private async initModal(): Promise<void> {
-    this.modalContainer = document.querySelector(ProductCategoryMap.categoriesModalContainer) as HTMLElement;
-    this.categoryTree = this.modalContainer.querySelector(ProductCategoryMap.categoryTree) as HTMLElement;
+    this.modalContentContainer = document.querySelector(ProductCategoryMap.modalContentContainer) as HTMLElement;
+    this.categoryTree = this.modalContentContainer.querySelector(ProductCategoryMap.categoryTree) as HTMLElement;
     this.tagsRenderer = new TagsRenderer(
       this.eventEmitter,
-      `${ProductCategoryMap.categoriesModalContainer} ${ProductCategoryMap.tagsContainer}`,
+      `${ProductCategoryMap.modalContentContainer} ${ProductCategoryMap.tagsContainer}`,
     );
     this.tagsRenderer.render(this.selectedCategories, this.defaultCategoryId);
     this.treeCategories = await getCategories();
@@ -110,11 +112,11 @@ export default class CategoryTreeSelector {
   }
 
   private listenApplyChanges(): void {
-    if (!this.modalContainer) {
+    if (!this.modalContentContainer) {
       return;
     }
 
-    const applyBtn = this.modalContainer.querySelector(ProductCategoryMap.applyCategoriesBtn) as HTMLElement;
+    const applyBtn = this.modalContentContainer.querySelector(ProductCategoryMap.applyCategoriesBtn) as HTMLElement;
 
     applyBtn.addEventListener('click', () => {
       this.eventEmitter.emit(ProductEventMap.categories.applyCategoryTreeChanges, {
@@ -125,11 +127,11 @@ export default class CategoryTreeSelector {
   }
 
   private listenCancelChanges(): void {
-    if (!this.modalContainer) {
+    if (!this.modalContentContainer) {
       return;
     }
 
-    const cancelBtn = this.modalContainer.querySelector(ProductCategoryMap.cancelCategoriesBtn) as HTMLElement;
+    const cancelBtn = this.modalContentContainer.querySelector(ProductCategoryMap.cancelCategoriesBtn) as HTMLElement;
     cancelBtn.addEventListener('click', () => this.closeModal());
   }
 
@@ -178,9 +180,9 @@ export default class CategoryTreeSelector {
       }
     }, this);
     // Tree is initialized we can show it and hide loader
-    if (this.modalContainer) {
-      const fieldset = this.modalContainer.querySelector(ProductCategoryMap.fieldset) as HTMLElement;
-      const loader = this.modalContainer.querySelector(ProductCategoryMap.loader) as HTMLElement;
+    if (this.modalContentContainer) {
+      const fieldset = this.modalContentContainer.querySelector(ProductCategoryMap.fieldset) as HTMLElement;
+      const loader = this.modalContentContainer.querySelector(ProductCategoryMap.loader) as HTMLElement;
 
       fieldset.classList.remove('d-none');
       loader.classList.add('d-none');
@@ -368,21 +370,10 @@ export default class CategoryTreeSelector {
   }
 
   private closeModal(): void {
-    if (!this.modalContainer) {
+    if (!(this.modal)) {
       return;
     }
 
-    //@todo: these selectors shouldn't need a map, as fancybox will be replaced with custom modal in other PR
-    const modal = this.modalContainer.closest('.fancybox-opened');
-
-    if (!modal) {
-      return;
-    }
-
-    const closeBtn = modal.querySelector('.fancybox-close') as HTMLElement;
-
-    if (closeBtn) {
-      closeBtn.click();
-    }
+    this.modal.hide();
   }
 }

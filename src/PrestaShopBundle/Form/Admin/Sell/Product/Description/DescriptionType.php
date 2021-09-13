@@ -105,6 +105,8 @@ class DescriptionType extends TranslatorAwareType
                 'label_tag_name' => 'h2',
             ])
             ->add('categories', CategoriesType::class, [
+                'label' => $this->trans('Categories', 'Admin.Global'),
+                'label_tag_name' => 'h2',
                 'product_id' => $productId,
             ])
             ->add('manufacturer', ManufacturerType::class)
