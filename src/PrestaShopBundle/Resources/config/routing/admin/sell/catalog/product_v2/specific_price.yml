@@ -8,3 +8,14 @@ admin_products_specific_prices_create:
         _legacy_controller: AdminProducts
     requirements:
         productId: \d+
+
+admin_products_specific_prices_edit:
+    path: /specific-prices/{specificPriceId}/edit
+    methods: [GET, POST]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\SpecificPriceController::editAction
+        _legacy_controller: AdminProducts
+    requirements:
+        specificPriceId: \d+

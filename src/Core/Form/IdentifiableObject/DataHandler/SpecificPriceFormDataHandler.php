@@ -77,6 +77,6 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
 
     public function update($id, array $data)
     {
-        // TODO: Implement update() method.
+        //@todo we don't have UpdateSpecificPrice command?
     }
 }
