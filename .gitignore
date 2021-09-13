@@ -156,6 +156,9 @@ themes/*/cache/*
 themes/core.js.map
 themes/core.js
 
+# Install folder
+/install-dev/theme/custom/*
+!/install-dev/theme/custom/.gitkeep
 
 # Config
 

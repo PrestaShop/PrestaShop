@@ -24,41 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-/**
- * Step 2 : display license form
- */
-class InstallControllerHttpLicense extends InstallControllerHttp implements HttpConfigureInterface
-{
-    /**
-     * Process license form
-     *
-     * @see HttpConfigureInterface::process()
-     */
-    public function processNextStep()
-    {
-        $this->session->licence_agrement = Tools::getValue('licence_agrement');
-        $this->session->configuration_agrement = Tools::getValue('configuration_agrement');
-    }
+$documentationLink = 'https://devdocs.prestashop.com/';
+$blogLink = 'https://build.prestashop.com/';
 
-    /**
-     * Licence agrement must be checked to validate this step
-     *
-     * @see HttpConfigureInterface::validate()
-     */
-    public function validate()
-    {
-        return $this->session->licence_agrement;
-    }
-
-    public function process()
-    {
-    }
-
-    /**
-     * Display license step
-     */
-    public function display()
-    {
-        $this->displayContent('license');
-    }
-}
+return [
+    'links' => [
+        'documentation' => $documentationLink,
+    ],
+    'header.links' => [
+        $documentationLink => $this->translator->trans('Documentation', array(), 'Install'),
+        $blogLink => $this->translator->trans('Blog', array(), 'Install'),
+    ],
+    'footer.links' => [
+        'http://prestashop-project.org/' => 'PrestaShop Project',
+        $documentationLink => $this->translator->trans('Documentation', array(), 'Install'),
+    ],
+];
