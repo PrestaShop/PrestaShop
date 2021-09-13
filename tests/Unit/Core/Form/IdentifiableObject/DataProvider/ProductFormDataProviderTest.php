@@ -81,7 +81,6 @@ class ProductFormDataProviderTest extends TestCase
 {
     private const PRODUCT_ID = 42;
     private const HOME_CATEGORY_ID = 49;
-    private const SHOP_ID = 1;
     private const DEFAULT_CATEGORY_ID = 51;
     private const HOME_CATEGORY_NAME = 'Home';
     private const DEFAULT_VIRTUAL_PRODUCT_FILE_ID = 69;
@@ -240,24 +239,21 @@ class ProductFormDataProviderTest extends TestCase
 
     public function testSwitchDefaultContextShop(): void
     {
-        $defaultShopId = 42;
-        $contextShopId = 51;
-
         // The real test is performed my the mock here, which assert the correct shopId is used
-        $queryBusMock = $this->createQueryBusCheckingShopMock($defaultShopId);
+        $queryBusMock = $this->createQueryBusCheckingShopMock(null);
         $provider = new ProductFormDataProvider(
             $queryBusMock,
             false,
             42,
             self::HOME_CATEGORY_ID,
             self::CONTEXT_LANG_ID,
-            $defaultShopId,
             null
         );
 
         $formData = $provider->getData(static::PRODUCT_ID);
         $this->assertNotNull($formData);
 
+        $contextShopId = 51;
         $queryBusMock = $this->createQueryBusCheckingShopMock($contextShopId);
         $provider = new ProductFormDataProvider(
             $queryBusMock,
@@ -265,7 +261,6 @@ class ProductFormDataProviderTest extends TestCase
             42,
             self::HOME_CATEGORY_ID,
             self::CONTEXT_LANG_ID,
-            $defaultShopId,
             $contextShopId
         );
 
@@ -1281,11 +1276,11 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
-     * @param int $expectedShopId
+     * @param int|null $expectedShopId
      *
      * @return CommandBusInterface
      */
-    private function createQueryBusCheckingShopMock(int $expectedShopId): CommandBusInterface
+    private function createQueryBusCheckingShopMock(?int $expectedShopId): CommandBusInterface
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
 
@@ -1299,7 +1294,11 @@ class ProductFormDataProviderTest extends TestCase
             ))
             ->willReturnCallback(function ($query) use ($expectedShopId) {
                 if ($query instanceof GetProductForEditing) {
-                    $this->assertEquals($expectedShopId, $query->getShopConstraint()->getShopId()->getValue());
+                    if (!empty($expectedShopId)) {
+                        $this->assertEquals($expectedShopId, $query->getShopConstraint()->getShopId()->getValue());
+                    } else {
+                        $this->assertTrue($query->getShopConstraint()->forDefaultProductShop());
+                    }
                 }
 
                 return $this->createResultBasedOnQuery($query, []);
@@ -1495,7 +1494,6 @@ class ProductFormDataProviderTest extends TestCase
             self::HOME_CATEGORY_ID,
             $this->mockCategoryDataProvider(),
             self::CONTEXT_LANG_ID,
-            self::SHOP_ID,
             null
         );
     }

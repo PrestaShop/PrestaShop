@@ -87,7 +87,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @var int
      */
-    private $shopId;
+    private $contextShopId;
 
     /**
      * @param CommandBusInterface $queryBus
@@ -96,7 +96,6 @@ class ProductFormDataProvider implements FormDataProviderInterface
      * @param int $defaultCategoryId
      * @param CategoryDataProvider $categoryDataProvider
      * @param int $contextLangId
-     * @param int $defaultShopId
      * @param int|null $contextShopId
      */
     public function __construct(
@@ -106,7 +105,6 @@ class ProductFormDataProvider implements FormDataProviderInterface
         int $defaultCategoryId,
         CategoryDataProvider $categoryDataProvider,
         int $contextLangId,
-        int $defaultShopId,
         ?int $contextShopId
     ) {
         $this->queryBus = $queryBus;
@@ -115,9 +113,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         $this->defaultCategoryId = $defaultCategoryId;
         $this->contextLangId = $contextLangId;
         $this->categoryDataProvider = $categoryDataProvider;
-
-        // Usually context shop ID is null when multistore feature is disabled, in this case we use the default shop as fallback
-        $this->shopId = $contextShopId ?: $defaultShopId;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -126,8 +122,9 @@ class ProductFormDataProvider implements FormDataProviderInterface
     public function getData($id): array
     {
         $productId = (int) $id;
+        $shopConstraint = null !== $this->contextShopId ? ProductShopConstraint::shop($this->contextShopId) : ProductShopConstraint::defaultProductShop();
         /** @var ProductForEditing $productForEditing */
-        $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId, ProductShopConstraint::shop($this->shopId)));
+        $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId, $shopConstraint));
 
         $productData = [
             'id' => $productId,
