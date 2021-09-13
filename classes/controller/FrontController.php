@@ -1621,7 +1621,7 @@ class FrontControllerCore extends Controller
     /**
      * Get the shop logo with its dimensions
      *
-     * @return array
+     * @return array<string, string|int>
      */
     public function getShopLogo(): array
     {
@@ -1630,7 +1630,13 @@ class FrontControllerCore extends Controller
         }
 
         $logoFileName = Configuration::get('PS_LOGO');
-        list($logoWidth, $logoHeight) = getimagesize(_PS_IMG_DIR_ . $logoFileName);
+        $logoFileDir = _PS_IMG_DIR_ . $logoFileName;
+
+        if (!file_exists($logoFileDir)) {
+            return [];
+        }
+
+        list($logoWidth, $logoHeight) = getimagesize($logoFileDir);
 
         return [
             'src' => ($this->getTemplateVarUrls()['img_ps_url'] ?? _PS_IMG_) . $logoFileName,
