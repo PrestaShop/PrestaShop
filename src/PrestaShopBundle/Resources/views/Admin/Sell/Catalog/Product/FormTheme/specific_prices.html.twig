@@ -22,21 +22,15 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
 {% block specific_prices_widget %}
   <div id="specific-prices-container">
-    {{ form_row(form.add_specific_price_btn) }}
+    {{ form_widget(form) }}
+    {{ block('specific_prices_list') }}
   </div>
 {% endblock %}
 
-{#{% block specific_price_row %}#}
-{#  <template#}
-{#    id="specific-price-modal-template"#}
-{#    data-confirm-btn-text="{{ 'Save and publish'|trans({}, 'Admin.Actions') }}"#}
-{#    data-cancel-btn-text="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"#}
-{#  >#}
-{#    {{ form_row(form) }}#}
-{#  </template>#}
-{#{% endblock %}#}
+{% block specific_prices_list %}
+  {% include '@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/list.html.twig' %}
+{% endblock %}
