@@ -235,6 +235,6 @@ export default {
     editBtn: '.specific-price-edit-btn',
     deleteBtn: '.specific-price-delete-btn',
     listContainer: '#specific-price-list-container',
-    listMountPoint: '#specific-price-list',
+    listRowTemplate: '#specific-price-tr-template',
   },
 };
