@@ -148,6 +148,7 @@ class SecurityController extends FrameworkBundleAdminController
                 'href' => $this->generateUrl('admin_security_sessions_employee_clear'),
                 'desc' => $this->trans('Clear outdated sessions', 'Admin.Advparameters.Feature'),
                 'icon' => 'delete',
+                'class' => 'btn-primary pointer btn-confirm-security-modal',
             ],
         ];
 
