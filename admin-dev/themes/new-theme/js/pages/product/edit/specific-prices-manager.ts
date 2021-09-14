@@ -24,7 +24,7 @@
  */
 
 import ProductMap from '@pages/product/product-map';
-import initSpecificPriceModal from '@pages/product/components/specific-price';
+import {initSpecificPriceModal, initSpecificPriceList} from '@pages/product/components/specific-price';
 import {EventEmitter} from 'events';
 
 const SpecificPriceMap = ProductMap.specificPrice;
@@ -34,11 +34,19 @@ export default class SpecificPricesManager {
 
   specificPriceModalApp: null;
 
+  specificPriceListApp: null;
+
   constructor(productId: number) {
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.specificPriceModalApp = initSpecificPriceModal(
       productId,
       SpecificPriceMap.formModal,
+      this.eventEmitter,
+    );
+
+    this.specificPriceListApp = initSpecificPriceList(
+      productId,
+      SpecificPriceMap.listMountPoint,
       this.eventEmitter,
     );
   }

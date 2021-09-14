@@ -27,6 +27,7 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 import SpecificPriceModal from '@pages/product/components/specific-price/SpecificPriceModal';
+import SpecificPriceList from '@pages/product/components/specific-price/SpecificPriceList';
 
 Vue.use(VueI18n);
 
@@ -37,7 +38,7 @@ Vue.use(VueI18n);
  *
  * @returns {Vue|CombinedVueInstance<Vue, {eventEmitter, productId}, object, object, Record<never, any>>|null}
  */
-export default function initSpecificPriceModal(
+export function initSpecificPriceModal(
   productId,
   specificPriceModalSelector,
   eventEmitter,
@@ -61,6 +62,36 @@ export default function initSpecificPriceModal(
       '<specific-price-modal :productId=productId :eventEmitter=eventEmitter />',
     components: {SpecificPriceModal},
     i18n,
+    data: {
+      eventEmitter,
+      productId,
+    },
+  });
+}
+
+/**
+ * @param {number} productId
+ * @param {string} specificPriceListSelector
+ * @param {Object} eventEmitter
+ *
+ * @returns {Vue|CombinedVueInstance<Vue, {eventEmitter, productId}, object, object, Record<never, any>>|null}
+ */
+export function initSpecificPriceList(
+  productId,
+  specificPriceListSelector,
+  eventEmitter,
+) {
+  const container = document.querySelector(specificPriceListSelector);
+
+  if (!container) {
+    return null;
+  }
+
+  return new Vue({
+    el: specificPriceListSelector,
+    template:
+      '<specific-price-list :productId=productId :eventEmitter=eventEmitter />',
+    components: {SpecificPriceList},
     data: {
       eventEmitter,
       productId,
