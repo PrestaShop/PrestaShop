@@ -1798,17 +1798,17 @@ window.priceCalculation = (function () {
       });
 
       /** combinations : update TTC price field on HT change */
-      $(document).on('blur', '.combination-form .attribute_priceTE', function() {
+      $(document).on('blur', '.combination-form .attribute_priceTE', function () {
         priceCalculation.impactTaxInclude($(this));
         priceCalculation.impactFinalPrice($(this));
       });
       /** combinations : update HT price field on TTC change */
-      $(document).on('blur', '.combination-form .attribute_priceTI', function() {
+      $(document).on('blur', '.combination-form .attribute_priceTI', function () {
         priceCalculation.impactTaxExclude($(this));
         priceCalculation.impactFinalPrice($(this));
       });
       /** combinations : update price fields on ecotax change */
-      $(document).on('blur', '.combination-form .attribute_ecotaxTi', function() {
+      $(document).on('blur', '.combination-form .attribute_ecotaxTi', function () {
         priceCalculation.impactPricesForEcotax($(this));
         priceCalculation.impactFinalPrice($(this));
       });
@@ -1981,8 +1981,8 @@ window.priceCalculation = (function () {
 
       if (!isNaN(priceTE) && priceTE !== 0) {
         const rates = this.getRates();
-        const computation_method = taxElem.find('option:selected').attr('data-computation-method');
-        priceTI = ps_round(addTaxes(priceTE, rates, computation_method), displayPricePrecision);
+        const computationMethod = taxElem.find('ocption:selected').attr('data-computation-method');
+        priceTI = ps_round(addTaxes(priceTE, rates, computationMethod), displayPricePrecision);
       }
 
       return priceTI;
@@ -1998,8 +1998,8 @@ window.priceCalculation = (function () {
 
       if (!isNaN(priceTI) && priceTI !== 0) {
         const rates = this.getRates();
-        const computation_method = taxElem.find('option:selected').attr('data-computation-method');
-        priceTE = ps_round(removeTaxes(priceTI, rates, computation_method), displayPricePrecision);
+        const computationMethod = taxElem.find('option:selected').attr('data-computation-method');
+        priceTE = ps_round(removeTaxes(priceTI, rates, computationMethod), displayPricePrecision);
       }
 
       return priceTE;
