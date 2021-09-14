@@ -426,7 +426,5 @@ services:
   prestashop.adapter.product.update.product_shop_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater
     arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
       - '@prestashop.adapter.product.repository.product_repository'
       - '@prestashop.adapter.shop.repository.shop_repository'
