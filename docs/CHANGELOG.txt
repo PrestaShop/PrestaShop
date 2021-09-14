@@ -24,6 +24,18 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.7.8 - (2021-09-03)
+####################################
+- Back Office:
+  - Bug fix:
+    - #25749: Product combination price edit : Use blur instead of onkeyup to avoid price flip (by @sowbiba and @atomiix)
+- Core:
+  - Improvement:
+    - #25757: Define version to 1778 (by @sowbiba)
+  - Bug fix:
+    - #25784: Use null coalescing operator to fix notice (by @kpodemski)
+
+####################################
 #   v1.7.7.7 - (2021-08-18)
 ####################################
 
