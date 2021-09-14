@@ -121,7 +121,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     }
 
     /**
-     * @return int[] IDs of non configurable tabs
+     * @return array<int> IDs of non configurable tabs
      */
     private function getNonConfigurableTabs(): array
     {
@@ -133,7 +133,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     }
 
     /**
-     * @return array
+     * @return array<array<string, int|string|bool>>
      */
     private function getProfilesForPermissionsConfiguration(): array
     {
