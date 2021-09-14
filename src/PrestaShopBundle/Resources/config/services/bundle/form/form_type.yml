@@ -1290,6 +1290,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Description\DescriptionType'
         parent: 'form.type.translatable.aware'
         public: true
+        arguments:
+            - '@prestashop.adapter.legacy.context'
         tags:
             - { name: form.type }
 
