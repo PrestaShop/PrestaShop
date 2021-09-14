@@ -23,31 +23,28 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
 <div id="specific-price-list-container">
-  <div id="specific-price-list"></div>
-  <template id="specific-price-table-template">
-    <table class="table seo-table">
-      <thead class="thead-default">
-      <tr>
-        {#@todo: trans#}
-        <th>ID</th>
-        <th>Combination</th>
-        <th>Currency</th>
-        <th>Country</th>
-        <th>Group</th>
-        <th>Customer</th>
-        <th>Fixed price</th>
-        <th>Impact</th>
-        <th>Period</th>
-        <th>From</th>
-        <th></th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      {# template rows dynamically generated using javascript #}
-      </tbody>
-    </table>
-  </template>
+  <table class="table seo-table">
+    <thead class="thead-default">
+    <tr>
+      {# @todo: trans #}
+      <th>ID</th>
+      <th>Combination</th>
+      <th>Currency</th>
+      <th>Country</th>
+      <th>Group</th>
+      <th>Customer</th>
+      <th>Fixed price</th>
+      <th>Impact</th>
+      <th>Period</th>
+      <th>From</th>
+      <th></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {# template rows dynamically generated using javascript #}
+    </tbody>
+  </table>
   <template id="specific-price-tr-template">
     <tr>
       <td class="specific-price-id"></td>
@@ -60,8 +57,12 @@
       <td class="impact"></td>
       <td class="period"></td>
       <td class="from-qty"></td>
-      <td><button class="js-delete-specific-price-btn"><i class="material-icons">delete</i></button></td>
-      <td><button class="js-edit-specific-price-btn"><i class="material-icons">edit</i></button></td>
+      <td>
+        <button class="js-delete-specific-price-btn"><i class="material-icons">delete</i></button>
+      </td>
+      <td>
+        <button class="js-edit-specific-price-btn"><i class="material-icons">edit</i></button>
+      </td>
     </tr>
   </template>
 </div>

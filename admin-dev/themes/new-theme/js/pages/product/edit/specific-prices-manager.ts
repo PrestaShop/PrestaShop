@@ -24,7 +24,7 @@
  */
 
 import ProductMap from '@pages/product/product-map';
-import {initSpecificPriceModal, initSpecificPriceList} from '@pages/product/components/specific-price';
+import initSpecificPriceModal from '@pages/product/components/specific-price';
 import {EventEmitter} from 'events';
 
 const SpecificPriceMap = ProductMap.specificPrice;
@@ -36,18 +36,58 @@ export default class SpecificPricesManager {
 
   specificPriceListApp: null;
 
+  listContainer: HTMLElement
+
   constructor(productId: number) {
+    this.listContainer = document.querySelector(SpecificPriceMap.listContainer) as HTMLElement;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.specificPriceModalApp = initSpecificPriceModal(
       productId,
       SpecificPriceMap.formModal,
       this.eventEmitter,
     );
+    this.renderList(productId);
+  }
 
-    this.specificPriceListApp = initSpecificPriceList(
-      productId,
-      SpecificPriceMap.listMountPoint,
-      this.eventEmitter,
-    );
+  renderList(productId: number): void {
+    const tbody = this.listContainer.querySelector(`${SpecificPriceMap.listContainer} tbody`) as HTMLElement;
+    const trTemplate = this.listContainer.querySelector(SpecificPriceMap.listRowTemplate) as HTMLTemplateElement;
+    tbody.innerHTML = '';
+
+    this.getSpecificPrices().forEach((specificPrice) => {
+      const trClone = trTemplate.content.cloneNode(true) as HTMLElement;
+
+      //@todo; could loop through all td and put content based on css class. (class = object key?)
+      const idField = trClone.querySelector('.specific-price-id') as HTMLElement;
+      const combinationField = trClone.querySelector('.combination') as HTMLElement;
+      const currencyField = trClone.querySelector('.currency') as HTMLElement;
+      idField.textContent = specificPrice.id;
+      combinationField.textContent = specificPrice.combination;
+      currencyField.textContent = specificPrice.currency;
+      tbody.append(trClone);
+    });
+  }
+
+  /**
+   * @todo: temporary method. Use specificPriceService (to retrieve the data by ajax) instead when ready
+   */
+  private getSpecificPrices(): Array<any> {
+    return [
+      {
+        id: 1,
+        combination: 'All',
+        currency: 'All',
+      },
+      {
+        id: 2,
+        combination: 'All',
+        currency: 'EUR',
+      },
+      {
+        id: 3,
+        combination: 'All',
+        currency: 'USD',
+      },
+    ];
   }
 }
