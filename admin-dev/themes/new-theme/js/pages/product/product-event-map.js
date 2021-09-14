@@ -53,7 +53,6 @@ export default {
   },
   categories: {
     applyCategoryTreeChanges: 'applyCategoryTreeChanges',
-    tagsRendered: 'tagsRendered',
     tagRemoved: 'tagRemoved',
     categoriesUpdated: 'categoriesUpdated',
   },

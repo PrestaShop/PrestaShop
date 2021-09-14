@@ -94,7 +94,6 @@ export default class TagsRenderer {
     });
 
     this.listenTagRemoval();
-    this.eventEmitter.emit(ProductEventMap.categories.tagsRendered);
   }
 
   private listenTagRemoval(): void {
