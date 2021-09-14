@@ -41,3 +41,11 @@
   <script src="{{ asset('themes/new-theme/public/security.bundle.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
 {% endblock %}
+
+{% set js_translatable = {
+  "ModalTitle": 'Delete'|trans({}, 'Admin.Notifications.Warning'),
+  "ModalMessage": 'Are you sure you want to delete outdated sessions?'|trans({}, 'Admin.Notifications.Warning'),
+  "ModalApply": 'Delete'|trans({}, 'Admin.Actions'),
+  "ModalCancel": 'Cancel'|trans({}, 'Admin.Actions'),
+  }|merge(js_translatable)
+%}
