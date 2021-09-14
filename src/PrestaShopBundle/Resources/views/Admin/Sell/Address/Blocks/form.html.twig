@@ -34,32 +34,30 @@
     {{ 'Addresses'|trans({}, 'Admin.Navigation.Menu') }}
   </div>
 
-  <div class="card-block row">
-    <div class="card-text">
-      {{ form_errors(addressForm) }}
+  <div class="card-body">
+    {{ form_errors(addressForm) }}
 
-      {% block customer_information %}
-        {% if customerInformation is not null %}
-          {% if addressForm.id_customer is defined %}
-            {{ ps.form_widget_with_error(addressForm.id_customer) }}
-          {% endif %}
-          <div class="form-group row">
-            <label class="form-control-label">
-              {{ 'Customer'|trans({}, 'Admin.Global') }}
-            </label>
-            <div class="col-sm">
-              <a href="{{ path('admin_customers_view', {'customerId': customerId}) }}" class="btn btn-outline-secondary">
-                <i class="material-icons">remove_red_eye</i>
-                {{ customerInformation }}
-              </a>
-            </div>
-          </div>
+    {% block customer_information %}
+      {% if customerInformation is not null %}
+        {% if addressForm.id_customer is defined %}
+          {{ ps.form_widget_with_error(addressForm.id_customer) }}
         {% endif %}
-      {% endblock %}
-      {% block address_form_widget %}
-        {{ form_widget(addressForm) }}
-      {% endblock %}
-    </div>
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Customer'|trans({}, 'Admin.Global') }}
+          </label>
+          <div class="col-sm">
+            <a href="{{ path('admin_customers_view', {'customerId': customerId}) }}" class="btn btn-outline-secondary">
+              <i class="material-icons">remove_red_eye</i>
+              {{ customerInformation }}
+            </a>
+          </div>
+        </div>
+      {% endif %}
+    {% endblock %}
+    {% block address_form_widget %}
+      {{ form_widget(addressForm) }}
+    {% endblock %}
   </div>
 
   <div class="card-footer">

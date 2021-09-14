@@ -31,23 +31,21 @@
     <i class="material-icons">star</i>
     {{ 'Brands'|trans({}, 'Admin.Catalog.Feature') }}
   </h3>
-  <div class="card-block row">
-    <div class="card-text">
-      {{ form_row(manufacturerForm.name) }}
-      {{ form_row(manufacturerForm.short_description) }}
-      {{ form_row(manufacturerForm.description) }}
-      {{ form_row(manufacturerForm.logo) }}
-      {% if logoImage is defined and logoImage is not null %}
-        <div class="form-group row">
-          <label for="" class="form-control-label"></label>
-          <div class="col-sm">
-            {% include '@PrestaShop/Admin/Sell/Catalog/Manufacturer/logo_image.html.twig' %}
-          </div>
+  <div class="card-body">
+    {{ form_row(manufacturerForm.name) }}
+    {{ form_row(manufacturerForm.short_description) }}
+    {{ form_row(manufacturerForm.description) }}
+    {{ form_row(manufacturerForm.logo) }}
+    {% if logoImage is defined and logoImage is not null %}
+      <div class="form-group row">
+        <label for="" class="form-control-label"></label>
+        <div class="col-sm">
+          {% include '@PrestaShop/Admin/Sell/Catalog/Manufacturer/logo_image.html.twig' %}
         </div>
-      {% endif %}
+      </div>
+    {% endif %}
 
-      {{ form_widget(manufacturerForm) }}
-    </div>
+    {{ form_widget(manufacturerForm) }}
   </div>
   <div class="card-footer">
     <a href="{{ path('admin_manufacturers_index') }}" class="btn btn-outline-secondary">

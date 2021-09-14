@@ -31,14 +31,12 @@
       {{ 'Referrer'|trans({}, 'Admin.Shopparameters.Feature') }}
     </div>
 
-    <div class="card-block row">
-      <div class="card-text">
-        {{ form_errors(searchEngineForm) }}
+    <div class="card-body">
+      {{ form_errors(searchEngineForm) }}
 
-        {% block search_engine_form_widget %}
-          {{ form_widget(searchEngineForm) }}
-        {% endblock %}
-      </div>
+      {% block search_engine_form_widget %}
+        {{ form_widget(searchEngineForm) }}
+      {% endblock %}
     </div>
 
     <div class="card-footer">

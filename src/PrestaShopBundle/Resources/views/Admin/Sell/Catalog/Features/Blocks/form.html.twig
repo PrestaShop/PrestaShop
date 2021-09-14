@@ -33,25 +33,23 @@
       {{ 'Feature'|trans({}, 'Admin.Catalog.Feature') }}
     </h3>
 
-    <div class="card-block row">
-      <div class="card-text">
-        {{ ps.form_group_row(featureForm.name, {}, {
-          'label': 'Name'|trans({}, 'Admin.Global'),
-          'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>={}'
+    <div class="card-body">
+      {{ ps.form_group_row(featureForm.name, {}, {
+        'label': 'Name'|trans({}, 'Admin.Global'),
+        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>={}'
+      }) }}
+
+      {{ renderhook('displayFeatureForm', {'id_feature': featureId}) }}
+
+      {% if featureForm.shop_association is defined %}
+        {{ ps.form_group_row(featureForm.shop_association, {}, {
+          'label': 'Shop association'|trans({}, 'Admin.Global')
         }) }}
+      {% endif %}
 
-        {{ renderhook('displayFeatureForm', {'id_feature': featureId}) }}
-
-        {% if featureForm.shop_association is defined %}
-          {{ ps.form_group_row(featureForm.shop_association, {}, {
-            'label': 'Shop association'|trans({}, 'Admin.Global')
-          }) }}
-        {% endif %}
-
-        {% block feature_form_rest %}
-          {{ form_rest(featureForm) }}
-        {% endblock %}
-      </div>
+      {% block feature_form_rest %}
+        {{ form_rest(featureForm) }}
+      {% endblock %}
     </div>
 
     <div class="card-footer">

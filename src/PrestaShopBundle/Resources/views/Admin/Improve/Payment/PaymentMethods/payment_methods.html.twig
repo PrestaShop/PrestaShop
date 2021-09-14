@@ -29,14 +29,12 @@
   <div class="container">
 
     {% if paymentModules|length < 2 %}
-      <div class="card-block row alert-block">
-        <div class="card-text">
-          <div class="row">
-            <div class="col-sm">
-              <div class="alert alert-info" role="alert">
-                <div class="alert-text">
-                  {{ 'We recommend providing at least two different payment methods. Only one payment method could be problematic if this option cannot be used by a customer because it will prevent him/her from ordering.'|trans({}, 'Admin.Payment.Notification') }}
-                </div>
+      <div class="card-body  alert-block">
+        <div class="row">
+          <div class="col-sm">
+            <div class="alert alert-info" role="alert">
+              <div class="alert-text">
+                {{ 'We recommend providing at least two different payment methods. Only one payment method could be problematic if this option cannot be used by a customer because it will prevent him/her from ordering.'|trans({}, 'Admin.Payment.Notification') }}
               </div>
             </div>
           </div>
@@ -51,7 +49,7 @@
             <h3 class="card-header">
               <i class="material-icons">credit_card</i> {{ 'Active payment'|trans }}
             </h3>
-            <div class="card-block">
+            <div class="card-body">
               {% include '@PrestaShop/Admin/Improve/Payment/PaymentMethods/Blocks/payment_modules_list.html.twig' %}
             </div>
           </div>

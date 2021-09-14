@@ -31,31 +31,29 @@
     <i class="material-icons">group</i>
     {{ 'Profile'|trans({}, 'Admin.Advparameters.Feature') }}
   </h3>
-  <div class="card-block row">
-    <div class="card-text">
-      {{ form_errors(profileForm) }}
+  <div class="card-body">
+    {{ form_errors(profileForm) }}
 
-      {{ ps.form_group_row(profileForm.name, {}, {
-        'label': 'Name'|trans({}, 'Admin.Global')
-      }) }}
+    {{ ps.form_group_row(profileForm.name, {}, {
+      'label': 'Name'|trans({}, 'Admin.Global')
+    }) }}
 
-      {{ ps.form_group_row(profileForm.avatarUrl, {}, {
-        'label': 'Avatar'|trans({}, 'Admin.Global')
-      }) }}
+    {{ ps.form_group_row(profileForm.avatarUrl, {}, {
+      'label': 'Avatar'|trans({}, 'Admin.Global')
+    }) }}
 
-      {% if avatarUrl|default('') is not empty %}
-      <div class="form-group row">
-        <label class="form-control-label"></label>
-        <div class="col-sm">
-          <img class="img-thumbnail clickable-avatar" src="{{ avatarUrl }}" alt="">
-        </div>
+    {% if avatarUrl|default('') is not empty %}
+    <div class="form-group row">
+      <label class="form-control-label"></label>
+      <div class="col-sm">
+        <img class="img-thumbnail clickable-avatar" src="{{ avatarUrl }}" alt="">
       </div>
-      {% endif %}
-
-      {% block profile_form_rest %}
-        {{ form_rest(profileForm) }}
-      {% endblock %}
     </div>
+    {% endif %}
+
+    {% block profile_form_rest %}
+      {{ form_rest(profileForm) }}
+    {% endblock %}
   </div>
   <div class="card-footer">
     <a href="{{ path('admin_profiles_index') }}" class="btn btn-outline-secondary">

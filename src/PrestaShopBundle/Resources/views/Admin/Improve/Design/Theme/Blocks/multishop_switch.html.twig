@@ -27,11 +27,9 @@
   <h3 class="card-header">
     {{ 'Multistore'|trans({}, 'Admin.Global') }}
   </h3>
-  <div class="card-block row">
-    <div class="card-text">
-      {{ ps.multistore_switch(shopLogosForm, {
-        'label': 'Multistore'|trans({}, 'Admin.Global'),
-      }) }}
-    </div>
+  <div class="card-body">
+    {{ ps.multistore_switch(shopLogosForm, {
+      'label': 'Multistore'|trans({}, 'Admin.Global'),
+    }) }}
   </div>
 </div>

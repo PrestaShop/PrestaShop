@@ -32,10 +32,8 @@
         <i class="material-icons">mail_outline</i>
         {{ 'Contacts'|trans({}, 'Admin.Shopparameters.Feature') }}
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
-          {{ form_widget(contactForm) }}
-        </div>
+      <div class="card-body">
+        {{ form_widget(contactForm) }}
       </div>
       <div class="card-footer">
         <a href="{{ path('admin_contacts_index') }}" class="btn btn-outline-secondary">

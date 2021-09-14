@@ -56,27 +56,25 @@
       <div class="card-header">
         {{ 'Currencies'|trans({}, 'Admin.Global') }}
       </div>
-      <div class="card-block row">
-        <div class="card-text">
-          {{ form_errors(currencyForm) }}
+      <div class="card-body">
+        {{ form_errors(currencyForm) }}
 
-          {% if not currencyForm.vars.data.id is defined %}
+        {% if not currencyForm.vars.data.id is defined %}
 
-            {{ form_row(currencyForm.selected_iso_code) }}
-            <div class="form-group row type-checkbox ">
-              <label for="currency_unofficial" class="form-control-label ">
-                {{ 'or'|trans({}, 'Admin.Global') }}
-              </label>
-              {{ form_widget(currencyForm.unofficial) }}
-            </div>
-          {% endif %}
+          {{ form_row(currencyForm.selected_iso_code) }}
+          <div class="form-group row type-checkbox ">
+            <label for="currency_unofficial" class="form-control-label ">
+              {{ 'or'|trans({}, 'Admin.Global') }}
+            </label>
+            {{ form_widget(currencyForm.unofficial) }}
+          </div>
+        {% endif %}
 
-          {{ form_row(currencyForm.names) }}
+        {{ form_row(currencyForm.names) }}
 
-          {% set symbolsClass = currencyForm.symbols.vars.errors|length ? '' : 'd-none' %}
-          {{ form_row(currencyForm.symbols, {'row_attr': {'class': symbolsClass}}) }}
-          {{ form_widget(currencyForm) }}
-        </div>
+        {% set symbolsClass = currencyForm.symbols.vars.errors|length ? '' : 'd-none' %}
+        {{ form_row(currencyForm.symbols, {'row_attr': {'class': symbolsClass}}) }}
+        {{ form_widget(currencyForm) }}
       </div>
 
       <div class="card-footer">

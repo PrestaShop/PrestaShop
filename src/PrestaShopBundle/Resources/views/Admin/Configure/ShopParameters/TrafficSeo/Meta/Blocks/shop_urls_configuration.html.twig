@@ -34,14 +34,12 @@
       <h3 class="card-header">
         <i class="material-icons">settings</i> {{ cardHeaderLabel }}
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
-          <div class="row">
-            <div class="col-sm">
-              <div class="alert alert-info" role="alert">
-                <div class="alert-text">
-                  {{ 'The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.'|trans({}, 'Admin.Shopparameters.Notification') }}
-                </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm">
+            <div class="alert alert-info" role="alert">
+              <div class="alert-text">
+                {{ 'The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.'|trans({}, 'Admin.Shopparameters.Notification') }}
               </div>
             </div>
           </div>
@@ -66,10 +64,8 @@
       >
         </span>
     </h3>
-    <div class="card-block row">
-      <div class="card-text">
-        {{ form_widget(shopUrlsForm) }}
-      </div>
+    <div class="card-body">
+      {{ form_widget(shopUrlsForm) }}
     </div>
 
     <div class="card-footer">

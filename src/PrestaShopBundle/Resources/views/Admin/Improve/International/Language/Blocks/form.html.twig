@@ -31,10 +31,8 @@
     <i class="material-icons">language</i>
     {{ 'Languages'|trans({}, 'Admin.Global') }}
   </h3>
-  <div class="card-block row">
-    <div class="card-text">
-      {{ form_widget(languageForm) }}
-    </div>
+  <div class="card-body">
+    {{ form_widget(languageForm) }}
   </div>
   <div class="card-footer">
     <a href="{{ path('admin_languages_index') }}" class="btn btn-outline-secondary">

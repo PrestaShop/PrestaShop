@@ -32,10 +32,8 @@
       <h3 class="card-header">
         {{ 'SQL query'|trans }}
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
-          {{ form_widget(requestSqlForm) }}
-        </div>
+      <div class="card-body">
+        {{ form_widget(requestSqlForm) }}
       </div>
       <div class="card-footer">
         <a href="{{ path('admin_sql_requests_index') }}" class="btn btn-outline-secondary">

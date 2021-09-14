@@ -33,15 +33,13 @@
         <h3 class="card-header">
           <i class="material-icons">settings</i> {{ 'Test your email configuration'|trans }}
         </h3>
-        <div class="card-block row">
-          <div class="card-text">
-            {{ form_widget(testEmailSendingForm) }}
-            <div class="row">
-              <div class="col">
-                <div class="alert alert-danger d-none js-test-email-errors" role="alert"></div>
-                <div class="alert alert-success d-none js-test-email-success" role="alert">
-                  <p class="alert-text">{{ 'A test email has been sent to the email address you provided.'|trans({}, 'Admin.Advparameters.Feature') }}</p>
-                </div>
+        <div class="card-body">
+          {{ form_widget(testEmailSendingForm) }}
+          <div class="row">
+            <div class="col">
+              <div class="alert alert-danger d-none js-test-email-errors" role="alert"></div>
+              <div class="alert alert-success d-none js-test-email-success" role="alert">
+                <p class="alert-text">{{ 'A test email has been sent to the email address you provided.'|trans({}, 'Admin.Advparameters.Feature') }}</p>
               </div>
             </div>
           </div>

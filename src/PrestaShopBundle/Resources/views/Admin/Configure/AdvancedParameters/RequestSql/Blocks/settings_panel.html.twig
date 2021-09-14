@@ -32,10 +32,8 @@
         <i class="material-icons">settings</i>
         {{ 'Settings'|trans({}, 'Admin.Global') }}
     </h3>
-    <div class="card-block row">
-      <div class="card-text">
-        {{ form_widget(requestSqlSettingsForm) }}
-      </div>
+    <div class="card-body">
+      {{ form_widget(requestSqlSettingsForm) }}
     </div>
     <div class="card-footer">
       <div class="d-flex justify-content-end">

@@ -30,22 +30,20 @@
   <div class="card-header">
     {{ 'Addresses'|trans({}, 'Admin.Catalog.Feature') }}
   </div>
-  <div class="card-block row">
-    <div class="card-text">
-      {{ form_row(addressForm.id_manufacturer) }}
-      {{ form_row(addressForm.last_name) }}
-      {{ form_row(addressForm.first_name) }}
-      {{ form_row(addressForm.address) }}
-      {{ form_row(addressForm.address2) }}
-      {{ form_row(addressForm.post_code) }}
-      {{ form_row(addressForm.city) }}
-      {{ form_row(addressForm.id_country) }}
-      <div class="js-manufacturer-address-state{% if addressForm.id_state.vars.choices is empty %} d-none{% endif %}">
-        {{ form_row(addressForm.id_state) }}
-      </div>
-
-      {{ form_widget(addressForm) }}
+  <div class="card-body">
+    {{ form_row(addressForm.id_manufacturer) }}
+    {{ form_row(addressForm.last_name) }}
+    {{ form_row(addressForm.first_name) }}
+    {{ form_row(addressForm.address) }}
+    {{ form_row(addressForm.address2) }}
+    {{ form_row(addressForm.post_code) }}
+    {{ form_row(addressForm.city) }}
+    {{ form_row(addressForm.id_country) }}
+    <div class="js-manufacturer-address-state{% if addressForm.id_state.vars.choices is empty %} d-none{% endif %}">
+      {{ form_row(addressForm.id_state) }}
     </div>
+
+    {{ form_widget(addressForm) }}
   </div>
 
   <div class="card-footer">

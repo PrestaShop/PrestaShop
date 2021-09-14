@@ -31,13 +31,11 @@
     {{ 'Taxes'|trans({}, 'Admin.Global') }}
   </div>
 
-  <div class="card-block row">
-    <div class="card-text">
-      {{ form_errors(taxForm) }}
-      {% block tax_form_widget %}
-        {{ form_widget(taxForm) }}
-      {% endblock %}
-    </div>
+  <div class="card-body">
+    {{ form_errors(taxForm) }}
+    {% block tax_form_widget %}
+      {{ form_widget(taxForm) }}
+    {% endblock %}
   </div>
 
   <div class="card-footer">

@@ -31,13 +31,11 @@
       {{ 'Zones'|trans({}, 'Admin.International.Feature') }}
     </div>
 
-    <div class="card-block row">
-      <div class="card-text">
-        {{ form_errors(zoneForm) }}
-        {% block form_zone_widget %}
-          {{ form_widget(zoneForm) }}
-        {% endblock %}
-      </div>
+    <div class="card-body">
+      {{ form_errors(zoneForm) }}
+      {% block form_zone_widget %}
+        {{ form_widget(zoneForm) }}
+      {% endblock %}
     </div>
 
     <div class="card-footer">

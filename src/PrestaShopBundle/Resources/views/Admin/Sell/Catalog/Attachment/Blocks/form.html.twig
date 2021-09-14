@@ -33,22 +33,20 @@
         <i class="material-icons">attachment</i>
         {{ 'File'|trans({}, 'Admin.Global') }}
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
-          {{ form_errors(attachmentForm) }}
-          {{ form_widget(attachmentForm) }}
+      <div class="card-body">
+        {{ form_errors(attachmentForm) }}
+        {{ form_widget(attachmentForm) }}
 
-          {% if attachmentId is defined %}
-            <div class="form-group row">
-              <div class="col-sm float-right">
-                <a href="{{ path('admin_attachments_view', {'attachmentId': attachmentId}) }}" class="btn btn-primary float-right">
-                  <i class="material-icons">cloud_download</i>
-                  {{'Download current file'|trans({}, 'messages')}}
-                </a>
-              </div>
+        {% if attachmentId is defined %}
+          <div class="form-group row">
+            <div class="col-sm float-right">
+              <a href="{{ path('admin_attachments_view', {'attachmentId': attachmentId}) }}" class="btn btn-primary float-right">
+                <i class="material-icons">cloud_download</i>
+                {{'Download current file'|trans({}, 'messages')}}
+              </a>
             </div>
-          {% endif %}
-        </div>
+          </div>
+        {% endif %}
       </div>
       <div class="card-footer">
           <a href="{{ pathWithBackUrl('admin_attachments_index') }}" class="btn btn-outline-secondary cancel-btn">

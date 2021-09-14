@@ -31,12 +31,11 @@
     <h3 class="card-header">
       {{ 'Webservice Accounts'|trans({}, 'Admin.Advparameters.Feature') }}
     </h3>
-    <div class="card-block row">
-      <div class="card-text">
-        {{ form_row(webserviceKeyForm.key) }}
-        {{ form_row(webserviceKeyForm.description) }}
-        {{ form_row(webserviceKeyForm.status) }}
-        <div class="form-group row mb-0">
+    <div class="card-body">
+      {{ form_row(webserviceKeyForm.key) }}
+      {{ form_row(webserviceKeyForm.description) }}
+      {{ form_row(webserviceKeyForm.status) }}
+      <div class="form-group row mb-0">
         <label class="form-control-label"></label>
         <div class="col-sm mb-0">
           <div class="alert alert-info" role="alert">
@@ -44,8 +43,7 @@
           </div>
         </div>
       </div>
-        {{ form_widget(webserviceKeyForm) }}
-      </div>
+      {{ form_widget(webserviceKeyForm) }}
     </div>
     <div class="card-footer">
       <a href="{{ path('admin_webservice_keys_index') }}" class="btn btn-outline-secondary">

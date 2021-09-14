@@ -32,27 +32,25 @@
         <i class="material-icons">schedule</i>
         {{ 'Return statuses'|trans({}, 'Admin.Shopparameters.Feature') }}
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
-          {{ form_errors(orderReturnStateForm) }}
+      <div class="card-body">
+        {{ form_errors(orderReturnStateForm) }}
 
-          {{ ps.form_group_row(orderReturnStateForm.name, {}, {
-            'label': 'Status name'|trans({}, 'Admin.Shopparameters.Feature'),
-            'help': 'Order\'s return status name.'|trans({}, 'Admin.Shopparameters.Help')
-                    ~ ' '
-                    ~ 'Invalid characters: numbers and'|trans({}, 'Admin.Shopparameters.Help')
-                    ~ ' !<>,;?=+()@#"{}_$%:'
-          }) }}
+        {{ ps.form_group_row(orderReturnStateForm.name, {}, {
+          'label': 'Status name'|trans({}, 'Admin.Shopparameters.Feature'),
+          'help': 'Order\'s return status name.'|trans({}, 'Admin.Shopparameters.Help')
+                  ~ ' '
+                  ~ 'Invalid characters: numbers and'|trans({}, 'Admin.Shopparameters.Help')
+                  ~ ' !<>,;?=+()@#"{}_$%:'
+        }) }}
 
-          {{ ps.form_group_row(orderReturnStateForm.color, {}, {
-            'label': 'Color'|trans({}, 'Admin.Shopparameters.Feature'),
-            'help': 'Status will be highlighted in this color. HTML colors only.'|trans({}, 'Admin.Shopparameters.Help') ~ ' "lightblue", "#CC6600")'
-          }) }}
+        {{ ps.form_group_row(orderReturnStateForm.color, {}, {
+          'label': 'Color'|trans({}, 'Admin.Shopparameters.Feature'),
+          'help': 'Status will be highlighted in this color. HTML colors only.'|trans({}, 'Admin.Shopparameters.Help') ~ ' "lightblue", "#CC6600")'
+        }) }}
 
-          {% block order_return_state_form_reset %}
-            {{ form_rest(orderReturnStateForm) }}
-          {% endblock %}
-        </div>
+        {% block order_return_state_form_reset %}
+          {{ form_rest(orderReturnStateForm) }}
+        {% endblock %}
       </div>
       <div class="card-footer">
           <a href="{{ pathWithBackUrl('admin_order_states') }}" class="btn btn-outline-secondary">

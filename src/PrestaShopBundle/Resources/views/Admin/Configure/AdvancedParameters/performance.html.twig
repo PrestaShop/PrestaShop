@@ -42,12 +42,10 @@
             <h3 class="card-header">
               <i class="material-icons">business_center</i> {{ 'Smarty'|trans }}
             </h3>
-            <div class="card-block row">
-              <div class="card-text">
-                {% block perfs_form_smarty_cache_form %}
-                  {{ form_widget(smartyForm) }}
-                {% endblock %}
-              </div>
+            <div class="card-body">
+              {% block perfs_form_smarty_cache_form %}
+                {{ form_widget(smartyForm) }}
+              {% endblock %}
             </div>
             <div class="card-footer">
               <div class="d-flex justify-content-end">
@@ -68,12 +66,10 @@
             <h3 class="card-header">
               <i class="material-icons">bug_report</i> {{ 'Debug mode'|trans }}
             </h3>
-            <div class="card-block row">
-              <div class="card-text">
-                {% block perfs_form_debug_mode_form %}
-                  {{ form_widget(debugModeForm) }}
-                {% endblock %}
-              </div>
+            <div class="card-body">
+              {% block perfs_form_debug_mode_form %}
+                {{ form_widget(debugModeForm) }}
+              {% endblock %}
             </div>
             <div class="card-footer">
               <div class="d-flex justify-content-end">
@@ -105,12 +101,10 @@
               >
               </span>
             </h3>
-            <div class="card-block row">
-              <div class="card-text">
-                {% block perfs_form_optional_features_form %}
-                  {{ form_widget(optionalFeaturesForm) }}
-                {% endblock %}
-              </div>
+            <div class="card-body">
+              {% block perfs_form_optional_features_form %}
+                {{ form_widget(optionalFeaturesForm) }}
+              {% endblock %}
             </div>
             <div class="card-footer">
               <div class="d-flex justify-content-end">
@@ -143,12 +137,10 @@
             >
             </span>
             </h3>
-            <div class="card-block row">
-              <div class="card-text">
-                {% block perfs_form_ccc_form %}
-                  {{ form_widget(combineCompressCacheForm) }}
-                {% endblock %}
-              </div>
+            <div class="card-body">
+              {% block perfs_form_ccc_form %}
+                {{ form_widget(combineCompressCacheForm) }}
+              {% endblock %}
             </div>
             <div class="card-footer">
               <div class="d-flex justify-content-end">
@@ -180,12 +172,10 @@
               >
               </span>
             </h3>
-            <div class="card-block row">
-              <div class="card-text">
-                {% block perfs_form_media_servers_form %}
-                  {{ form_widget(mediaServersForm) }}
-                {% endblock %}
-              </div>
+            <div class="card-body">
+              {% block perfs_form_media_servers_form %}
+                {{ form_widget(mediaServersForm) }}
+              {% endblock %}
             </div>
             <div class="card-footer">
               <div class="d-flex justify-content-end">
@@ -206,14 +196,12 @@
             <h3 class="card-header">
               <i class="material-icons">link</i> {{ 'Caching'|trans }}
             </h3>
-            <div class="card-block row">
-              <div class="card-text">
-                {% block perfs_form_caching_form %}
-                  {{ form_widget(cachingForm) }}
-                {% endblock %}
+            <div class="card-body">
+              {% block perfs_form_caching_form %}
+                {{ form_widget(cachingForm) }}
+              {% endblock %}
 
-                {{ include('@AdvancedParameters/memcache_servers.html.twig', {'form': memcacheForm}) }}
-              </div>
+              {{ include('@AdvancedParameters/memcache_servers.html.twig', {'form': memcacheForm}) }}
             </div>
             <div class="card-footer">
               <div class="d-flex justify-content-end">
