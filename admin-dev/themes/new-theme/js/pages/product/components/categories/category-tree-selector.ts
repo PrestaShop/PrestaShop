@@ -99,6 +99,7 @@ export default class CategoryTreeSelector {
     this.tagsRenderer = new TagsRenderer(
       this.eventEmitter,
       `${ProductCategoryMap.modalContentContainer} ${ProductCategoryMap.tagsContainer}`,
+      ProductEventMap.categories.tagRemoved,
     );
     this.tagsRenderer.render(this.selectedCategories, this.defaultCategoryId);
     this.treeCategories = await getCategories();
@@ -108,7 +109,7 @@ export default class CategoryTreeSelector {
     this.initTree();
     this.listenCancelChanges();
     this.listenApplyChanges();
-    this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, (categoryId) => this.updateCategory(categoryId, false));
+    this.eventEmitter.on(ProductEventMap.categories.tagRemoved, (categoryId) => this.updateCategory(categoryId, false));
   }
 
   private listenApplyChanges(): void {

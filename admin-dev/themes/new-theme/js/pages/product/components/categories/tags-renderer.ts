@@ -34,12 +34,16 @@ export default class TagsRenderer {
 
   container: HTMLElement;
 
+  tagRemovedEventName: string;
+
   constructor(
     eventEmitter: EventEmitter,
     containerSelector: string,
+    tagRemovedEventName: string,
   ) {
     this.eventEmitter = eventEmitter;
     this.container = document.querySelector(containerSelector) as HTMLElement;
+    this.tagRemovedEventName = tagRemovedEventName;
     this.listenTagRemoval();
   }
 
@@ -90,7 +94,7 @@ export default class TagsRenderer {
     });
 
     this.listenTagRemoval();
-    this.eventEmitter.emit(ProductEventMap.categories.categoriesUpdated);
+    this.eventEmitter.emit(ProductEventMap.categories.tagsRendered);
   }
 
   private listenTagRemoval(): void {
@@ -104,7 +108,7 @@ export default class TagsRenderer {
         if (tagItem) {
           const idInput = tagItem.querySelector(ProductCategoryMap.tagCategoryIdInput) as HTMLInputElement;
           tagItem.remove();
-          this.eventEmitter.emit(ProductEventMap.categories.categoryRemoved, Number(idInput.value));
+          this.eventEmitter.emit(this.tagRemovedEventName, Number(idInput.value));
         }
       });
     });

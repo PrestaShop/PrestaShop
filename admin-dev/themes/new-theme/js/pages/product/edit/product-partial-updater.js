@@ -81,8 +81,7 @@ export default class ProductPartialUpdater {
    * Watch events specifically related to categories subform
    */
   watchCategories() {
-    this.eventEmitter.on(ProductEventMap.categories.categoryRemoved, () => this.updateSubmitButtonState());
-    this.eventEmitter.on(ProductEventMap.categories.applyCategoryTreeChanges, () => this.updateSubmitButtonState());
+    this.eventEmitter.on(ProductEventMap.categories.categoriesUpdated, () => this.updateSubmitButtonState());
   }
 
   /**
