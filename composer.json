@@ -29,7 +29,7 @@
         "beberlei/doctrineextensions": "^1.0",
         "composer/ca-bundle": "^1.0",
         "composer/installers": "^1.0.21",
-        "cssjanus/cssjanus": "dev-patch-1",
+        "cssjanus/cssjanus": "^2.0",
         "curl/curl": "^2.3.2",
         "defuse/php-encryption": "^2.3.1",
         "doctrine/cache": "^2.0",
@@ -174,13 +174,6 @@
             "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
         ]
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/PrestaShop/php-cssjanus",
-            "canonical": false
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
