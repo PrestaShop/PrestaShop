@@ -116,21 +116,23 @@ Feature: Update product stock from Back Office (BO)
     And product "product1" should have no stock movements
     When I update product "product1" stock with following information:
       | delta_quantity | 51 |
-    Then product "product1" should have following stock information:
+    Then I should get no error
+    And product "product1" should have following stock information:
       | quantity | 51 |
-    And product "product1" last stock movement increased by 51
     And product "product1" last employees stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 51             |
+    And product "product1" last stock movement increased by 51
     When I update product "product1" stock with following information:
       | delta_quantity | -9 |
-    Then product "product1" should have following stock information:
+    Then I should get no error
+    And product "product1" should have following stock information:
       | quantity | 42 |
-    And product "product1" last stock movement decreased by 9
     And product "product1" last employees stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | -9             |
       | Puff       | Daddy     | 51             |
+    And product "product1" last stock movement decreased by 9
 
   Scenario: I update product simple stock fields
     Given language "french" with locale "fr-FR" exists

@@ -70,6 +70,7 @@ class StockMovementRepository
             ->where('id_stock = :stockId')
             ->setParameter('stockId', $stockId->getValue())
             ->addOrderBy('sm.date_add', 'DESC')
+            ->addOrderBy('sm.id_stock_mvt', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
         ;
