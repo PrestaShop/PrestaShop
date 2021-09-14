@@ -23,20 +23,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
+import ConfirmModal from '@components/modal';
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import FiltersSubmitButtonEnablerExtension
+  from '@components/grid/extension/filters-submit-button-enabler-extension';
 import FormSubmitButton from '@components/form-submit-button';
+import Grid from '@components/grid/grid';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
 import SortingExtension from '@components/grid/extension/sorting-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
 
 const {$} = window;
 
@@ -70,4 +71,25 @@ $(() => {
   customerSessionsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
   new FormSubmitButton();
+
+
+  $('.btn-confirm-security-modal').on('click', function (e) {
+    e.preventDefault();
+
+    const $button = $(this);
+    const modal = new ConfirmModal(
+      {
+        id: 'modal-confirm-submit-feature-flag',
+        confirmTitle: window.translate_javascripts.ModalTitle,
+        confirmMessage: window.translate_javascripts.ModalMessage,
+        confirmButtonLabel: window.translate_javascripts.ModalApply,
+        closeButtonLabel: window.translate_javascripts.ModalCancel,
+      },
+      () => {
+        document.location.href = <string> $button.attr('href');
+      },
+    );
+
+    modal.show();
+  });
 });
