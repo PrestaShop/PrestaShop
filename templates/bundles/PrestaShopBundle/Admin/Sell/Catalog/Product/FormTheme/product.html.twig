@@ -39,3 +39,16 @@
   <div {{ block('widget_attributes') }}>
   </div>
 {% endblock %}
+
+{% block related_product_row %}
+  <li class="related-product entity-item" id="{{ form.vars.name }}">
+    <div class="related-product-image">
+      {{ form_widget(form.image) }}
+    </div>
+    <div class="related-product-legend">
+      <i class="material-icons delete entity-item-delete">delete</i>
+      {{ form_widget(form.name) }}
+    </div>
+    {{ form_widget(form.id) }}
+  </li>
+{% endblock %}
