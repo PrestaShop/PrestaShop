@@ -24,7 +24,7 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
-#   v1.7.8.0-rc.1 - (2021-08-20)
+#   v1.7.8.0-rc.1 - (2021-09-15)
 ####################################
 
 - Back Office:
@@ -42,6 +42,9 @@ Release Notes for PrestaShop 1.7
     - #24661: Display tab for extra modules in product page (by @jolelievre)
     - #24876: Add classes for sort links on legacy pages (by @boubkerbribri)
   - Bug fix:
+    - #25874: Apply PR #25833 into 1.7.8.0-build (by @matthieu-rolland)
+    - #25875: Apply PR #25690 to 1.7.8.0-build (by @matthieu-rolland)
+    - #25749: Product combination price edit : Use blur instead of onkeyup to avoid price flip (by @sowbiba)
     - #25634: [BC Break] Do not use name in admin_orders_display_customization_image_route (by @PierreRambaud)
     - #25489: Fixed selector for fetching if the tax is included  (by @Progi1984)
     - #25495: Check variable before using it (by @Progi1984)
@@ -91,6 +94,7 @@ Release Notes for PrestaShop 1.7
     - #24594: Fix order create page on product qty update (by @NeOMakinG)
     - #24718: The addProductNewInvoiceInfo is not displayed when creating new invoice (by @PierreRambaud)
     - #24679: Fix free shipping cart rule should not be recalculate when PS_ORDER_RECALCULATE_SHIPPING is false (by @atomiix)
+    - #24576: BO - New Order - Empty gift message is not a null value (by @Progi1984)
 - Front Office:
   - Improvement:
     - #23480: Improve accessibility of classic theme forms by adding for and ids (by @NeOMakinG)
@@ -113,7 +117,11 @@ Release Notes for PrestaShop 1.7
     - #24680: Fix unclosed div in product-list.tpl (by @kpodemski)
 - Core:
   - Improvement:
+    - #25778: Changelog for 1.7.7.8 (by @sowbiba)
+    - #25757: Define version to 1778 (by @sowbiba)
+    - #25630: Bump version to 1.7.7.7 (by @PierreRambaud)
     - #25484: Update ps_linklist to 5.0.4 and ps_searchbar to 2.1.1 (by @sowbiba)
+    - #25449: Build assets on 1.7.7.x  (by @matthieu-rolland)
     - #25447: Update prestashop modules on 1.7.7.x (by @matthieu-rolland)
     - #25141: Upgrade ps_linklist to 5.0.3 (by @sowbiba)
     - #25131: Bump module ps_linklist to 5.0.2 (by @sowbiba)
@@ -124,6 +132,7 @@ Release Notes for PrestaShop 1.7
     - #24729: Update linklist to v4 (by @atomiix)
     - #24717: Update native modules (by @atomiix)
   - Bug fix:
+    - #25784: Use null coalescing operator to fix notice (by @kpodemski)
     - #25613: Fix missing hook behavior when we want an array return (by @kpodemski)
     - #25413: Fix performance issue on Smarty template caching (by @lukaslau)
     - #25111: Fix compiled legacy container (by @atomiix)
@@ -142,6 +151,7 @@ Release Notes for PrestaShop 1.7
 - Localization:
   - Bug fix:
     - #24902: Wording corrections before RC (by @jolelievre)
+    - #24723: Fix domain wordings (by @jolelievre)
 - Tests:
   - Improvement:
     - #25365: Re-enable Behat test about product duplicate translation (by @matks)
