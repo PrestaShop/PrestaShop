@@ -30,7 +30,6 @@ namespace PrestaShopBundle\Service\Form;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -143,13 +142,8 @@ class MultistoreCheckboxEnabler
     private function isOverriddenInCurrentContext(string $configurationKey): bool
     {
         // Check if current configuration is overridden by current shop / group shop context
-        $shopConstraint = new ShopConstraint(
-            $this->multiStoreContext->getContextShopId(),
-            $this->multiStoreContext->getContextShopGroup()->id,
-            true // important: will return a value only if it's present, skipping the hierarchical fallback system
-        );
-
-        return $this->configuration->has($configurationKey, $shopConstraint);
+        // The $isStrict parameter is important: it will return a value only if it's present, skipping the hierarchical fallback system
+        return $this->configuration->has($configurationKey, $this->multiStoreContext->getShopConstraint(true));
     }
 
     /**
