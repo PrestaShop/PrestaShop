@@ -251,6 +251,35 @@ abstract class AbstractObjectModelRepository
 
     /**
      * @param ObjectModel $objectModel
+     * @param array $shopIds
+     * @param string $exceptionClass
+     * @param int $errorCode
+     *
+     * @throws CoreException
+     */
+    protected function updateObjectModelForShops(
+        ObjectModel $objectModel,
+        array $shopIds,
+        string $exceptionClass,
+        int $errorCode = 0
+    ): void {
+        // Store object's list of shop ID to reset it appropriately after the update
+        $savedShopIds = $objectModel->id_shop_list;
+        $objectModel->id_shop_list = $shopIds;
+
+        try {
+            $this->updateObjectModel($objectModel, $exceptionClass, $errorCode);
+        } catch (Exception $e) {
+            // Even if an error occurs we reset the initial object's inner data, but without blocking the exception
+            $objectModel->id_shop_list = $savedShopIds;
+            throw $e;
+        }
+
+        $objectModel->id_shop_list = $savedShopIds;
+    }
+
+    /**
+     * @param ObjectModel $objectModel
      * @param array $propertiesToUpdate
      * @param string $exceptionClass
      * @param int $errorCode
@@ -284,20 +313,7 @@ abstract class AbstractObjectModelRepository
         int $errorCode = 0
     ): void {
         $objectModel->setFieldsToUpdate($this->formatPropertiesToUpdate($propertiesToUpdate));
-
-        // Store object's list of shop ID to reset it appropriately after the update
-        $savedShopIds = $objectModel->id_shop_list;
-        $objectModel->id_shop_list = $shopIds;
-
-        try {
-            $this->updateObjectModel($objectModel, $exceptionClass, $errorCode);
-        } catch (Exception $e) {
-            // Even if an error occurs we reset the initial object's inner data, but without blocking the exception
-            $objectModel->id_shop_list = $savedShopIds;
-            throw $e;
-        }
-
-        $objectModel->id_shop_list = $savedShopIds;
+        $this->updateObjectModelForShops($objectModel, $shopIds, $exceptionClass, $errorCode);
     }
 
     /**
