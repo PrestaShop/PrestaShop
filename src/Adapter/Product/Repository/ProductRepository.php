@@ -349,22 +349,29 @@ class ProductRepository extends AbstractObjectModelRepository
     public function partialUpdateForShopConstraint(Product $product, array $propertiesToUpdate, ProductShopConstraint $shopConstraint, int $errorCode): void
     {
         $this->validateProduct($product, $propertiesToUpdate);
-
-        $shopIds = [];
-        if ($shopConstraint->forAllShops()) {
-            $shops = $this->getAssociatedShopIds(new ProductId((int) $product->id));
-            foreach ($shops as $shopId) {
-                $shopIds[] = $shopId->getValue();
-            }
-        } elseif ($shopConstraint->forDefaultProductShop()) {
-            $shopIds = [$this->getProductDefaultShopId(new ProductId((int) $product->id))->getValue()];
-        } else {
-            $shopIds = [$shopConstraint->getShopId()->getValue()];
-        }
+        $shopIds = $this->getShopIdsByConstraint($product, $shopConstraint);
 
         $this->partiallyUpdateObjectModelForShops(
             $product,
             $propertiesToUpdate,
+            $shopIds,
+            CannotUpdateProductException::class,
+            $errorCode
+        );
+    }
+
+    /**
+     * @param Product $product
+     * @param ProductShopConstraint $shopConstraint
+     * @param int $errorCode
+     */
+    public function updateForShopConstraint(Product $product, ProductShopConstraint $shopConstraint, int $errorCode): void
+    {
+        $this->validateProduct($product);
+        $shopIds = $this->getShopIdsByConstraint($product, $shopConstraint);
+
+        $this->updateObjectModelForShops(
+            $product,
             $shopIds,
             CannotUpdateProductException::class,
             $errorCode
@@ -557,6 +564,29 @@ class ProductRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @param Product $product
+     * @param ProductShopConstraint $shopConstraint
+     *
+     * @return int[]
+     */
+    private function getShopIdsByConstraint(Product $product, ProductShopConstraint $shopConstraint): array
+    {
+        $shopIds = [];
+        if ($shopConstraint->forAllShops()) {
+            $shops = $this->getAssociatedShopIds(new ProductId((int) $product->id));
+            foreach ($shops as $shopId) {
+                $shopIds[] = $shopId->getValue();
+            }
+        } elseif ($shopConstraint->forDefaultProductShop()) {
+            $shopIds = [$this->getProductDefaultShopId(new ProductId((int) $product->id))->getValue()];
+        } else {
+            $shopIds = [$shopConstraint->getShopId()->getValue()];
+        }
+
+        return $shopIds;
+    }
+
+    /**
      * @param ProductId $productId
      * @param ShopId $shopId
      *
@@ -603,11 +633,11 @@ class ProductRepository extends AbstractObjectModelRepository
      * @throws ManufacturerException
      * @throws TaxRulesGroupException
      */
-    private function validateProduct(Product $product, array $propertiesToUpdate): void
+    private function validateProduct(Product $product, array $propertiesToUpdate = []): void
     {
-        $taxRulesGroupIdIsBeingUpdated = in_array('id_tax_rules_group', $propertiesToUpdate, true);
+        $taxRulesGroupIdIsBeingUpdated = empty($propertiesToUpdate) || in_array('id_tax_rules_group', $propertiesToUpdate, true);
         $taxRulesGroupId = (int) $product->id_tax_rules_group;
-        $manufacturerIdIsBeingUpdated = in_array('id_manufacturer', $propertiesToUpdate, true);
+        $manufacturerIdIsBeingUpdated = empty($propertiesToUpdate) || in_array('id_manufacturer', $propertiesToUpdate, true);
         $manufacturerId = (int) $product->id_manufacturer;
 
         if ($taxRulesGroupIdIsBeingUpdated && $taxRulesGroupId !== ProductTaxRulesGroupSettings::NONE_APPLIED) {
