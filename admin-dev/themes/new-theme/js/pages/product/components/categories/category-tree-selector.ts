@@ -261,7 +261,6 @@ export default class CategoryTreeSelector {
     const checkbox = treeElement.querySelector(ProductCategoryMap.inputByValue(categoryId)) as HTMLInputElement;
     checkbox.checked = check;
     this.openCategoryParents(checkbox);
-    this.openCategoryParents(checkbox);
     this.updateSelectedCategories();
   }
 

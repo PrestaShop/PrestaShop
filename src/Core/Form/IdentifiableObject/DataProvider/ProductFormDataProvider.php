@@ -137,7 +137,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData(): array
     {
-        //@todo: next PR -> refactor this. Legacy object model cannot stay in Core. Don't forget related test
+        //@todo: If the create product page is decided to be removed anyway (replaced by a creation modal as now discussed)
+        //  then this whole method content can be removed
+        //  If not - don't forget to refactor this - legacy object model cannot stay in Core. Don't forget related test.
         $defaultCategory = $this->categoryDataProvider->getCategory($this->defaultCategoryId);
 
         return $this->addShortcutData([

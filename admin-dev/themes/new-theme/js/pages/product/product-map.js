@@ -180,7 +180,6 @@ export default {
     checkboxInput: '[type=checkbox]',
     checkedCheckboxInputs: '[type=checkbox]:checked',
     inputByValue: (value) => `input[value="${value}"]`,
-    defaultCategoryCheckbox: '.is-default-category-checkbox',
     defaultCategorySelectInput: '#product_description_categories_default_category_id',
     materialCheckbox: '.md-checkbox',
     defaultRadioInput: '[type=radio]:checked',
