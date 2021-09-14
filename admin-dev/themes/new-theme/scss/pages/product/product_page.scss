@@ -1075,6 +1075,40 @@ $product-page-padding-bottom: 80px !default;
       max-width: 415px;
     }
   }
+
+  #product_description_related_products {
+    .search-with-icon {
+      max-width: 377px;
+    }
+
+    .entities-list-container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin: 0.5rem -0.5rem;
+    }
+
+    .related-product {
+      display: flex;
+      flex-direction: column;
+      width: 180px;
+      margin: 0.5rem;
+
+      &-image {
+        width: 100%;
+
+        img {
+          display: block;
+          width: auto;
+          max-width: 170px;
+          height: auto;
+          max-height: 170px;
+          margin: 0 auto;
+        }
+      }
+    }
+  }
+
 }
 
 #modal-create-product-attachment {
