@@ -43,6 +43,10 @@ class SpecificPriceListForEditing
      */
     private $totalSpecificPricesCount;
 
+    /**
+     * @param SpecificPriceForEditing[] $specificPrices
+     * @param int $totalSpecificPricesCount
+     */
     public function __construct(
         array $specificPrices,
         int $totalSpecificPricesCount
