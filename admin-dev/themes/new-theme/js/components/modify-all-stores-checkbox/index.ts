@@ -53,6 +53,11 @@ export default class ModifyAllStoresCheckbox {
       const widgetCheckbox: HTMLInputElement = <HTMLInputElement>widget.querySelector(MultiStoreModifyAllMap.widgetCheckbox);
 
       if (widgetCheckbox) {
+        // If checkbox is already checked on page load (after submit with errors for example) it is considered updated and visible
+        if (widgetCheckbox.checked) {
+          widget.classList.add(MultiStoreModifyAllMap.updatedClass);
+        }
+
         const multiStoreFieldId: string = widgetCheckbox.id.replace(this.modifyAllNamePrefix, '');
         const multiStoreField: HTMLInputElement = <HTMLInputElement>document.getElementById(multiStoreFieldId);
 
