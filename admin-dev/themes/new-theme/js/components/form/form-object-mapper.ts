@@ -265,7 +265,7 @@ export default class FormObjectMapper {
     this.$form.on(
       'keyup change dp.change',
       '[type="text"], textarea',
-      _.debounce((event: JQuery.TriggeredEvent) => this.inputUpdated(event), 1000, {
+      _.debounce((event: JQuery.TriggeredEvent) => this.inputUpdated(event), 500, {
         maxWait: 1500,
       }),
     );
