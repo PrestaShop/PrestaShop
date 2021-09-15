@@ -30,16 +30,16 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetEditableSpecificPricesList;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetEditableSpecificPricesListHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 /**
- * Handles @see GetEditableSpecificPricesList using legacy object model
+ * Handles @see GetSpecificPriceList using legacy object model
  */
-class GetEditableSpecificPricesListHandler implements GetEditableSpecificPricesListHandlerInterface
+class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandlerInterface
 {
     /**
      * @var SpecificPriceRepository
@@ -58,7 +58,7 @@ class GetEditableSpecificPricesListHandler implements GetEditableSpecificPricesL
     /**
      * {@inheritdoc}
      */
-    public function handle(GetEditableSpecificPricesList $query): SpecificPriceListForEditing
+    public function handle(GetSpecificPriceList $query): SpecificPriceListForEditing
     {
         $specificPriceData = $this->specificPriceRepository->getProductSpecificPrices(
             $query->getProductId(),
@@ -76,12 +76,13 @@ class GetEditableSpecificPricesListHandler implements GetEditableSpecificPricesL
     /**
      * @param array $specificPrices
      *
-     * @return SpecificPriceForEditing[]
+     * @return SpecificPriceForListing[]
      */
     private function formatSpecificPricesForEditing(array $specificPrices): array
     {
-        return array_map(function (array $specificPrice): SpecificPriceForEditing {
-            return new SpecificPriceForEditing(
+        return array_map(function (array $specificPrice): SpecificPriceForListing {
+            return new SpecificPriceForListing(
+                //@todo: missing combination
                 (int) $specificPrice['id_specific_price'],
                 $specificPrice['reduction_type'],
                 new DecimalNumber($specificPrice['reduction']),

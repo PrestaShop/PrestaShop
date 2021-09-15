@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 /**
  * Retrieves product specific prices
  */
-class GetEditableSpecificPricesList
+class GetSpecificPriceList
 {
     /**
      * @var ProductId

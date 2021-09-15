@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSp
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetEditableSpecificPricesList;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
@@ -130,7 +130,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     {
         $productId = (int) $this->getSharedStorage()->get($productReference);
         /** @var SpecificPriceListForEditing $productSpecificPrices */
-        $productSpecificPrices = $this->getQueryBus()->handle(new GetEditableSpecificPricesList($productId));
+        $productSpecificPrices = $this->getQueryBus()->handle(new GetSpecificPriceList($productId));
 
         Assert::assertEquals($expectedCount, $productSpecificPrices->getTotalSpecificPricesCount());
         Assert::assertEquals($expectedCount, count($productSpecificPrices->getSpecificPrices()));
