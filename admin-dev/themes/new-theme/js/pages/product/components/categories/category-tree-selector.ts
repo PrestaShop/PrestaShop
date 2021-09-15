@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-// @ts-ignore
+// @ts-ignore-next-line
 import Bloodhound from 'typeahead.js';
 import AutoCompleteSearch from '@components/auto-complete-search';
 import Tokenizers from '@components/bloodhound/tokenizers';
