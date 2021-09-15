@@ -247,8 +247,13 @@ $(document).ready(() => {
       return;
     }
 
-    $target.attr('value', targetValue);
-    sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, getRequestData(qty), $target);
+    if (targetValue === '0') {
+      console.log($target.closest('[data-link-action="delete-from-cart"]'));
+      $target.closest('.product-line-actions').find('[data-link-action="delete-from-cart"]').click();
+    } else {
+      $target.attr('value', targetValue);
+      sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, getRequestData(qty), $target);
+    }
   }
 
   $body.on('focusout keyup', productLineInCartSelector, (event) => {
