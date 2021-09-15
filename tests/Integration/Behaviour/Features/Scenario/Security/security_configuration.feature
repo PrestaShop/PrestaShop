@@ -24,13 +24,16 @@ Feature: Security configuration form
     And a session for customer named "John Doe" is created 10 hours ago
     # Means two hours
     And shop configuration for "PS_COOKIE_LIFETIME_FO" is set to 2
+    Then there is 2 customer sessions left
     When I clear outdated customer sessions
     Then there is 1 customer session left
 
   Scenario: Clear outdated employee sessions
     Given a session for the employee is created 1 hour ago
     And a session for the employee is created 20 hours ago
+    And a session for the employee is created 2 hours ago
     # Means one hour
-    And shop configuration for "PS_COOKIE_LIFETIME_BO" is set to 2
+    And shop configuration for "PS_COOKIE_LIFETIME_BO" is set to 1
+    Then there is 3 employee sessions left
     When I clear outdated employee sessions
-    Then there is 1 employee session left
+    Then there is 2 employee session left
