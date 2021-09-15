@@ -28,15 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetEditableSpecificPricesList;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
 
 interface GetEditableSpecificPricesListHandlerInterface
 {
     /**
-     * @param GetEditableSpecificPricesList $query
+     * @param GetSpecificPriceList $query
      *
      * @return SpecificPriceListForEditing
      */
-    public function handle(GetEditableSpecificPricesList $query): SpecificPriceListForEditing;
+    public function handle(GetSpecificPriceList $query): SpecificPriceListForEditing;
 }
