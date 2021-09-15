@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
+use DateTime;
 use Exception;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\Specific
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -134,21 +136,21 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 'id' => $specificPrice->getSpecificPriceId(),
                 //@todo: missing combination id in specificPriceForEditing
                 'combination' => null,
-                'currency' => $specificPrice->getCurrency(),
-                'country' => $specificPrice->getCountry(),
-                'group' => $specificPrice->getGroup(),
-                'customer' => $specificPrice->getCustomer(),
+                'currency' => $specificPrice->getCurrency() ?? $this->trans('All currencies', 'Admin.Global'),
+                'country' => $specificPrice->getCountry() ?? $this->trans('All countries', 'Admin.Global'),
+                'group' => $specificPrice->getGroup() ?? $this->trans('All groups', 'Admin.Global'),
+                'customer' => $specificPrice->getCustomer() ?? $this->trans('All customers', 'Admin.Global'),
                 //@todo: CLDR format currency?
                 'price' => (string) $specificPrice->getPrice(),
                 'impact' => $this->formatImpact($specificPrice->getReductionType(), $specificPrice->getReductionValue()),
-                'dateTimeFrom' => $specificPrice->getDateTimeFrom(),
-                'dateTimeTo' => $specificPrice->getDateTimeTo(),
+                'period' => $this->formatPeriod($specificPrice->getDateTimeFrom(), $specificPrice->getDateTimeFrom()),
                 'fromQuantity' => $specificPrice->getFromQuantity()
             ];
         }
 
         return $list;
     }
+
     private function formatImpact(string $reductionType, DecimalNumber $reductionValue): string
     {
         if ($reductionType === Reduction::TYPE_AMOUNT) {
@@ -157,5 +159,30 @@ class SpecificPriceController extends FrameworkBundleAdminController
         }
 
         return sprintf('-%s %%', (string) $reductionValue);
+    }
+
+    private function formatPeriod(?DateTime $from, ?DateTime $to): string
+    {
+        if (!$from && !$to) {
+            return $this->trans('Unlimited', 'Admin.Catalog.Features');
+        }
+
+        $fromParam = $this->trans('Unlimited', 'Admin.Catalog.Features');
+        $toParam = $this->trans('Unlimited', 'Admin.Catalog.Features');
+
+        if ($from && !$to) {
+            $fromParam = $from->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+        }
+
+        if ($to && !$from) {
+            $toParam = $from->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+        }
+
+        if ($from && $to) {
+            $fromParam = $from->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+            $toParam = $to->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+        }
+
+        return $this->trans('From %s to %s', 'Admin.Catalog.Feature', [$fromParam, $toParam]);
     }
 }
