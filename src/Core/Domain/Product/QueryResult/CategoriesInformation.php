@@ -26,25 +26,46 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
-
-class ProductCategoryType extends TranslatorAwareType
+/**
+ * Contains information about product categories
+ */
+class CategoriesInformation
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @var int
+     */
+    private $defaultCategoryId;
+
+    /**
+     * @var CategoryInformation[]
+     */
+    private $categoriesInformation;
+
+    /**
+     * @param CategoryInformation[] $categoriesInformation
+     * @param int $defaultCategoryId
+     */
+    public function __construct(array $categoriesInformation, int $defaultCategoryId)
     {
-        $builder
-            ->add('name', TextPreviewType::class, [
-                'preview_class' => 'category-name-preview',
-                'attr' => [
-                    'class' => 'category-name-input',
-                ],
-            ])
-            ->add('id', HiddenType::class)
-        ;
+        $this->categoriesInformation = $categoriesInformation;
+        $this->defaultCategoryId = $defaultCategoryId;
+    }
+
+    /**
+     * @return CategoryInformation[]
+     */
+    public function getCategoriesInformation(): array
+    {
+        return $this->categoriesInformation;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefaultCategoryId(): int
+    {
+        return $this->defaultCategoryId;
     }
 }

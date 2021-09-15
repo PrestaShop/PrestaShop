@@ -1338,11 +1338,14 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType'
         parent: 'form.type.translatable.aware'
         public: true
+        arguments:
+            - '@prestashop.adapter.form.choice_provider.product_default_category_choice_provider'
+            - '@form.type.sell.product.event_listener.categories_listener'
         tags:
             - { name: form.type }
 
-    form.type.sell.product.category.categories_collection_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesCollectionType'
+    form.type.sell.product.category.category_tags_collection_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryTagsCollectionType'
         arguments:
             - "@translator"
         public: true
@@ -1390,6 +1393,14 @@ services:
     form.type.sell.product.specification.customizations_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Specification\CustomizationsType'
         parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.category.category_tree_selector_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryTreeSelectorType'
+        arguments:
+            - '@translator'
         public: true
         tags:
             - { name: form.type }
@@ -1609,6 +1620,12 @@ services:
 
     form.type.sell.product.event_listener.redirect_option_listener:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
+        public: true
+
+    form.type.sell.product.event_listener.categories_listener:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
+        arguments:
+            - '@form.form_cloner'
         public: true
 
     # Combination form types

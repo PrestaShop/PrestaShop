@@ -9,6 +9,8 @@ Feature: Add basic product from Back Office (BO)
 
   Background:
     Given language with iso code "en" is the default one
+    And category "home" in default language named "Home" exists
+    And category "home" is the default one
     And attribute group "Size" named "Size" in en language exists
     And attribute group "Color" named "Color" in en language exists
     And attribute "S" named "S" in en language exists
@@ -28,7 +30,9 @@ Feature: Add basic product from Back Office (BO)
     And product "product1" localized "name" should be:
       | locale | value          |
       | en-US  | bottle of beer |
-    And product "product1" should be assigned to default category
+    And product "product1" should be assigned to following categories:
+      | id reference | name[en-US] | is default |
+      | home         | Home        | true       |
     When I update product "product1" type to combinations
     Then product "product1" type should be combinations
 
@@ -41,7 +45,9 @@ Feature: Add basic product from Back Office (BO)
     And product "product1" localized "name" should be:
       | locale | value          |
       | en-US  | bottle of beer |
-    And product "product1" should be assigned to default category
+    And product "product1" should be assigned to following categories:
+      | id reference | name[en-US] | is default |
+      | home         | Home        | true       |
     When I update product "product1" type to virtual
     Then product "product1" type should be virtual
 
@@ -54,7 +60,9 @@ Feature: Add basic product from Back Office (BO)
     And product "product1" localized "name" should be:
       | locale | value          |
       | en-US  | bottle of beer |
-    And product "product1" should be assigned to default category
+    And product "product1" should be assigned to following categories:
+      | id reference | name[en-US] | is default |
+      | home         | Home        | true       |
     When I update product "product1" type to pack
     Then product "product1" type should be pack
 
@@ -67,7 +75,9 @@ Feature: Add basic product from Back Office (BO)
     And product "product1" localized "name" should be:
       | locale | value          |
       | en-US  | bottle of beer |
-    And product "product1" should be assigned to default category
+    And product "product1" should be assigned to following categories:
+      | id reference | name[en-US] | is default |
+      | home         | Home        | true       |
     When I update product "product1" type to standard
     Then product "product1" type should be standard
 

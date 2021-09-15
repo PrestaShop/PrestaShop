@@ -23,6 +23,7 @@ npm-debug.log.*
 !/cache/smarty/compile/index.php
 !/cache/smarty/index.php
 !/cache/tcpdf/index.php
+/tests/Integration/.phpunit.result.cache
 
 # Download
 /download/*

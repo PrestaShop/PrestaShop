@@ -32,7 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class CategoriesCollectionType extends CollectionType
+class CategoryTagsCollectionType extends CollectionType
 {
     /**
      * @var TranslatorInterface
@@ -55,11 +55,13 @@ class CategoriesCollectionType extends CollectionType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'label' => $this->trans('Categories', 'Admin.Catalog.Feature'),
-            'label_help_box' => $this->trans('Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page\'s URL. Disabled categories are written in italics.', 'Admin.Catalog.Help'),
-            'label_tag_name' => 'h2',
+            'label' => false,
             'required' => false,
+            'block_prefix' => 'category_tags_collection',
             'entry_type' => ProductCategoryType::class,
+            'entry_options' => [
+                'block_prefix' => 'category_tags_collection_entry',
+            ],
             'allow_add' => true,
             'allow_delete' => true,
             'prototype_name' => '__CATEGORY_INDEX__',

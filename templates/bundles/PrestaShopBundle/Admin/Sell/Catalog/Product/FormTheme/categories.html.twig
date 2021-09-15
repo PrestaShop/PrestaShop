@@ -24,49 +24,70 @@
  *#}
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
+{% block category_tags_collection_row %}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTagsWrapper form-group d-block')|trim }) -%}
+  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+  <div {{ block('widget_attributes') }}>
+    {{ block('form_rows') }}
+  </div>
+{% endblock %}
+
 {% block product_category_row %}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTag tag-item')|trim }) -%}
+
+  <span {{ block('widget_attributes') }}>
+    {{ form_widget(form.name) }}
+    {% set hideCross = (form.vars.data.id is defined) and (form.vars.data.id == form.parent.parent.vars.data.default_category_id) %}
+    <a class="pstaggerClosingCross {% if hideCross %}d-none{% endif %}" href="#">x</a>
+    {{ form_widget(form.id, {'attr': {'class': 'category-id-input'}}) }}
+  </span>
+{% endblock %}
+
+{% block category_tree_selector_row %}
+  <template id="categories-modal-template">
+    <div id="categories-modal-content">
+      {{ form_row(form.product_categories) }}
+
+      <fieldset class="form-group tree-fieldset d-none">
+        <div class="ui-widget">
+          <div class="search search-with-icon">
+            <input type="text" id="ps-select-product-category" class="form-control autocomplete search mb-1 ui-autocomplete-input" placeholder="{{ 'Search categories'|trans({}, 'Admin.Catalog.Help') }}" autocomplete="off">
+          </div>
+
+          <label class="form-control-label text-uppercase">{{ 'Associated categories'|trans({}, 'Admin.Catalog.Feature') }}</label>
+          {{ form_row(form.category_tree) }}
+        </div>
+      </fieldset>
+
+      <div class="categories-tree-loader">
+        <div class="spinner m-auto d-block"></div>
+      </div>
+
+      <div class="category-tree-footer">
+        {{ form_widget(form.cancel_btn) }}
+        {{ form_widget(form.apply_btn) }}
+      </div>
+    </div>
+  </template>
+{% endblock %}
+
+{% block category_tree_entry_row %}
   <li class="category-tree-element">
     <div class="checkbox category-tree-inputs">
-      {{ form_widget(form.is_associated) }}
-      {{ form_widget(form.is_default) }}
+      {{ form_widget(form) }}
     </div>
     <ul class="children-list"></ul>
   </li>
 {% endblock %}
 
-{% block collection_widget %}
-  <div class="categories-tree js-categories-container">
-    <fieldset class="form-group tree-fieldset d-none">
-      <div class="ui-widget">
-        <div class="search search-with-icon">
-          <input type="text" id="ps-select-product-category" class="form-control autocomplete search mb-1 ui-autocomplete-input" placeholder="{{ 'Search categories'|trans({}, 'Admin.Catalog.Help') }}" autocomplete="off">
-        </div>
-
-        <label class="form-control-label text-uppercase">{{ 'Associated categories'|trans({}, 'Admin.Catalog.Feature') }}</label>
-
-        <div id="categories-tags-container" class="pstaggerTagsWrapper">
-        </div>
-
-        <div class="categories-tree-actions js-categories-tree-actions">
-          <span class="form-control-label" id="categories-tree-expand"><i class="material-icons">expand_more</i>{{ 'Expand All'|trans({}, 'Admin.Actions') }}</span>
-          <span class="form-control-label" id="categories-tree-reduce"><i class="material-icons">expand_less</i>{{ 'Collapse All'|trans({}, 'Admin.Actions') }}</span>
-        </div>
-
-        <div class="category-tree-overflow js-category-tree-overflow">
-          {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
-          {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' js-categories-tree category-tree')|trim }) -%}
-          <label class="main-category">
-            {{ 'Main category'|trans({}, 'Admin.Catalog.Feature') }}
-          </label>
-          <ul {{ block('widget_attributes') }}>
-            {{- block('form_rows') -}}
-          </ul>
-        </div>
-      </div>
-    </fieldset>
-
-    <div class="categories-tree-loader">
-      <div class="spinner m-auto d-block"></div>
-    </div>
+{% block category_tree_collection_row %}
+<div class="category-tree-container">
+  <div class="category-tree-overflow js-category-tree-overflow">
+    {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' js-category-tree-list category-tree')|trim }) -%}
+    <ul {{ block('widget_attributes') }}>
+      {{- block('form_rows') -}}
+    </ul>
   </div>
+</div>
 {% endblock %}

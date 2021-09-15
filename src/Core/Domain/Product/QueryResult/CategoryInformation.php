@@ -23,28 +23,50 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
-
-class ProductCategoryType extends TranslatorAwareType
+/**
+ * Information about category
+ */
+class CategoryInformation
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @var array<int, string>
+     */
+    private $localizedNames;
+
+    /**
+     * @param int $id
+     * @param array<int, string> $localizedNames
+     */
+    public function __construct(
+        int $id,
+        array $localizedNames
+    ) {
+        $this->id = $id;
+        $this->localizedNames = $localizedNames;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
     {
-        $builder
-            ->add('name', TextPreviewType::class, [
-                'preview_class' => 'category-name-preview',
-                'attr' => [
-                    'class' => 'category-name-input',
-                ],
-            ])
-            ->add('id', HiddenType::class)
-        ;
+        return $this->id;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
     }
 }

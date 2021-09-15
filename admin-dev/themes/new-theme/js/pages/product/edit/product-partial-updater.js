@@ -65,6 +65,7 @@ export default class ProductPartialUpdater {
     this.eventEmitter.on(ProductEventMap.updateSubmitButtonState, () => this.updateSubmitButtonState());
 
     this.watchCustomizations();
+    this.watchCategories();
     this.initFormattedTextarea();
   }
 
@@ -74,6 +75,13 @@ export default class ProductPartialUpdater {
   watchCustomizations() {
     this.eventEmitter.on(ProductEventMap.customizations.rowAdded, () => this.updateSubmitButtonState());
     this.eventEmitter.on(ProductEventMap.customizations.rowRemoved, () => this.updateSubmitButtonState());
+  }
+
+  /**
+   * Watch events specifically related to categories subform
+   */
+  watchCategories() {
+    this.eventEmitter.on(ProductEventMap.categories.categoriesUpdated, () => this.updateSubmitButtonState());
   }
 
   /**

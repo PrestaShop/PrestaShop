@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
@@ -71,6 +72,11 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $defaultCategoryId;
 
     /**
+     * @var CategoryDataProvider
+     */
+    private $categoryDataProvider;
+
+    /**
      * @var int
      */
     private $contextLangId;
@@ -80,6 +86,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
      * @param int $defaultCategoryId
+     * @param CategoryDataProvider $categoryDataProvider
      * @param int $contextLangId
      */
     public function __construct(
@@ -87,6 +94,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         bool $defaultProductActivation,
         int $mostUsedTaxRulesGroupId,
         int $defaultCategoryId,
+        CategoryDataProvider $categoryDataProvider,
         int $contextLangId
     ) {
         $this->queryBus = $queryBus;
@@ -94,12 +102,13 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
         $this->defaultCategoryId = $defaultCategoryId;
         $this->contextLangId = $contextLangId;
+        $this->categoryDataProvider = $categoryDataProvider;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData($id)
+    public function getData($id): array
     {
         $productId = (int) $id;
         /** @var ProductForEditing $productForEditing */
@@ -126,8 +135,13 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultData()
+    public function getDefaultData(): array
     {
+        //@todo: If the create product page is decided to be removed anyway (replaced by a creation modal as now discussed)
+        //  then this whole method content can be removed
+        //  If not - don't forget to refactor this - legacy object model cannot stay in Core. Don't forget related test.
+        $defaultCategory = $this->categoryDataProvider->getCategory($this->defaultCategoryId);
+
         return $this->addShortcutData([
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
@@ -135,11 +149,12 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'description' => [
                 'categories' => [
                     'product_categories' => [
-                        $this->defaultCategoryId => [
-                            'is_associated' => true,
-                            'is_default' => true,
+                        [
+                            'id' => $this->defaultCategoryId,
+                            'name' => $defaultCategory->name[$this->contextLangId],
                         ],
                     ],
+                    'default_category_id' => $this->defaultCategoryId,
                 ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
@@ -213,16 +228,22 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private function extractCategoriesData(ProductForEditing $productForEditing): array
     {
         $categoriesInformation = $productForEditing->getCategoriesInformation();
+        $defaultCategoryId = $categoriesInformation->getDefaultCategoryId();
+
         $categories = [];
-        foreach ($categoriesInformation->getCategoryIds() as $categoryId) {
-            $categories[$categoryId] = [
-                'is_associated' => true,
-                'is_default' => $categoryId === $categoriesInformation->getDefaultCategoryId(),
+        foreach ($categoriesInformation->getCategoriesInformation() as $categoryInformation) {
+            $localizedNames = $categoryInformation->getLocalizedNames();
+            $categoryId = $categoryInformation->getId();
+
+            $categories[] = [
+                'id' => $categoryId,
+                'name' => $localizedNames[$this->contextLangId],
             ];
         }
 
         return [
             'product_categories' => $categories,
+            'default_category_id' => $defaultCategoryId,
         ];
     }
 
@@ -278,8 +299,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
-            'categories' => $this->extractCategoriesData($productForEditing),
             'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
+            'categories' => $this->extractCategoriesData($productForEditing),
         ];
     }
 
