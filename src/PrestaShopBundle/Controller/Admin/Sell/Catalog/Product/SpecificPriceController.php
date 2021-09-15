@@ -29,14 +29,24 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetEditableSpecificPricesList;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class SpecificPriceController extends FrameworkBundleAdminController
 {
+    public function listAction(int $productId): JsonResponse
+    {
+        $specificPricesList = $this->getQueryBus()->handle(new GetEditableSpecificPricesList($productId));
+
+        return $this->json(['specificPrices' => $this->formatSpecificPricesList($specificPricesList)]);
+    }
+
     public function createAction(Request $request, int $productId): Response
     {
         $form = $this->getFormBuilder()->getForm(['product_id' => $productId]);
@@ -112,5 +122,31 @@ class SpecificPriceController extends FrameworkBundleAdminController
     private function getFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.handler.specific_price_form_handler');
+    }
+
+    private function formatSpecificPricesList(SpecificPriceListForEditing $specificPriceListForEditing): array
+    {
+        $list = [];
+        foreach ($specificPriceListForEditing->getSpecificPrices() as $specificPriceForEditing) {
+            $list[] = [
+                'id' => $specificPriceForEditing->getSpecificPriceId(),
+                //@todo: missing combination id in specificPriceForEditing
+                'combination' => 'All combinations',
+                //@todo: Name instead of id already in query handler?
+                'currency' => $specificPriceForEditing->getCurrencyId(),
+                'country' => $specificPriceForEditing->getCountryId(),
+                'group' => $specificPriceForEditing->getGroupId(),
+                'customer' => $specificPriceForEditing->getCustomerId(),
+                //@todo: format with currency icon?
+                'price' => (string) $specificPriceForEditing->getPrice(),
+                //@todo: format impact based on reduction type (% or currency icon)
+                'impact' => $specificPriceForEditing->getReductionAmount(),
+                //@todo: format period from $from - to $to
+                'period' => $specificPriceForEditing->getDateTimeFrom(),
+                'fromQuantity' => $specificPriceForEditing->getFromQuantity()
+            ];
+        }
+
+        return $list;
     }
 }
