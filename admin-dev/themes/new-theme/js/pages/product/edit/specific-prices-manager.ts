@@ -26,19 +26,23 @@
 import ProductMap from '@pages/product/product-map';
 import initSpecificPriceModal from '@pages/product/components/specific-price';
 import {EventEmitter} from 'events';
+import {getSpecificPrices} from '@pages/product/services/specific-price-service';
 
 const SpecificPriceMap = ProductMap.specificPrice;
 
 export default class SpecificPricesManager {
   eventEmitter: EventEmitter;
 
-  specificPriceModalApp: null;
+  productId: number;
 
-  specificPriceListApp: null;
+  specificPriceModalApp: null;
 
   listContainer: HTMLElement
 
-  constructor(productId: number) {
+  constructor(
+    productId: number,
+  ) {
+    this.productId = productId;
     this.listContainer = document.querySelector(SpecificPriceMap.listContainer) as HTMLElement;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.specificPriceModalApp = initSpecificPriceModal(
@@ -46,48 +50,40 @@ export default class SpecificPricesManager {
       SpecificPriceMap.formModal,
       this.eventEmitter,
     );
-    this.renderList(productId);
+    this.renderList();
   }
 
-  renderList(productId: number): void {
+  renderList(): void {
     const tbody = this.listContainer.querySelector(`${SpecificPriceMap.listContainer} tbody`) as HTMLElement;
     const trTemplate = this.listContainer.querySelector(SpecificPriceMap.listRowTemplate) as HTMLTemplateElement;
     tbody.innerHTML = '';
 
-    this.getSpecificPrices().forEach((specificPrice) => {
-      const trClone = trTemplate.content.cloneNode(true) as HTMLElement;
+    getSpecificPrices(this.productId).then((response) => {
+      const specificPrices = response.specificPrices as Array<SpecificPriceForListing>;
 
-      //@todo; could loop through all td and put content based on css class. (class = object key?)
-      const idField = trClone.querySelector('.specific-price-id') as HTMLElement;
-      const combinationField = trClone.querySelector('.combination') as HTMLElement;
-      const currencyField = trClone.querySelector('.currency') as HTMLElement;
-      idField.textContent = specificPrice.id;
-      combinationField.textContent = specificPrice.combination;
-      currencyField.textContent = specificPrice.currency;
-      tbody.append(trClone);
+      specificPrices.forEach((specificPrice: SpecificPriceForListing) => {
+        const trClone = trTemplate.content.cloneNode(true) as HTMLElement;
+        const idField = trClone.querySelector('.specific-price-id') as HTMLElement;
+        const combinationField = trClone.querySelector('.combination') as HTMLElement;
+        const currencyField = trClone.querySelector('.currency') as HTMLElement;
+        const groupField = trClone.querySelector('.group') as HTMLElement;
+        const customerField = trClone.querySelector('.customer') as HTMLElement;
+        const priceField = trClone.querySelector('.price') as HTMLElement;
+        const impactField = trClone.querySelector('.impact') as HTMLElement;
+        const periodField = trClone.querySelector('.period') as HTMLElement;
+        const fromQtyField = trClone.querySelector('.from-qty') as HTMLElement;
+        idField.textContent = String(specificPrice.id);
+        combinationField.textContent = specificPrice.combination;
+        currencyField.textContent = specificPrice.currency;
+        groupField.textContent = specificPrice.group;
+        customerField.textContent = specificPrice.customer;
+        priceField.textContent = specificPrice.price;
+        impactField.textContent = specificPrice.impact;
+        periodField.textContent = specificPrice.period;
+        fromQtyField.textContent = specificPrice.fromQuantity;
+
+        tbody.append(trClone);
+      });
     });
-  }
-
-  /**
-   * @todo: temporary method. Use specificPriceService (to retrieve the data by ajax) instead when ready
-   */
-  private getSpecificPrices(): Array<any> {
-    return [
-      {
-        id: 1,
-        combination: 'All',
-        currency: 'All',
-      },
-      {
-        id: 2,
-        combination: 'All',
-        currency: 'EUR',
-      },
-      {
-        id: 3,
-        combination: 'All',
-        currency: 'USD',
-      },
-    ];
   }
 }
