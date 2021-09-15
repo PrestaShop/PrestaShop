@@ -44,7 +44,7 @@ class FormDataProviderTest extends TestCase
      */
     protected $object;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->config = $this->getMockBuilder(DataConfigurationInterface::class)
             ->setMethods([
