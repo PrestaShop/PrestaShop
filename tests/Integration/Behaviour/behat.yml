@@ -324,7 +324,7 @@ default:
 
         security:
             paths:
-                - %paths.base%/Features/Scenario/Security
+                - "%paths.base%/Features/Scenario/Security"
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
