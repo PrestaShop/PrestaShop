@@ -28,9 +28,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetEditableSpecificPricesList;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -42,7 +44,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
 {
     public function listAction(int $productId): JsonResponse
     {
-        $specificPricesList = $this->getQueryBus()->handle(new GetEditableSpecificPricesList($productId));
+        $specificPricesList = $this->getQueryBus()->handle(new GetSpecificPriceList($productId));
 
         return $this->json(['specificPrices' => $this->formatSpecificPricesList($specificPricesList)]);
     }
@@ -127,26 +129,33 @@ class SpecificPriceController extends FrameworkBundleAdminController
     private function formatSpecificPricesList(SpecificPriceListForEditing $specificPriceListForEditing): array
     {
         $list = [];
-        foreach ($specificPriceListForEditing->getSpecificPrices() as $specificPriceForEditing) {
+        foreach ($specificPriceListForEditing->getSpecificPrices() as $specificPrice) {
             $list[] = [
-                'id' => $specificPriceForEditing->getSpecificPriceId(),
+                'id' => $specificPrice->getSpecificPriceId(),
                 //@todo: missing combination id in specificPriceForEditing
-                'combination' => 'All combinations',
-                //@todo: Name instead of id already in query handler?
-                'currency' => $specificPriceForEditing->getCurrencyId(),
-                'country' => $specificPriceForEditing->getCountryId(),
-                'group' => $specificPriceForEditing->getGroupId(),
-                'customer' => $specificPriceForEditing->getCustomerId(),
-                //@todo: format with currency icon?
-                'price' => (string) $specificPriceForEditing->getPrice(),
-                //@todo: format impact based on reduction type (% or currency icon)
-                'impact' => $specificPriceForEditing->getReductionAmount(),
-                //@todo: format period from $from - to $to
-                'period' => $specificPriceForEditing->getDateTimeFrom(),
-                'fromQuantity' => $specificPriceForEditing->getFromQuantity()
+                'combination' => null,
+                'currency' => $specificPrice->getCurrency(),
+                'country' => $specificPrice->getCountry(),
+                'group' => $specificPrice->getGroup(),
+                'customer' => $specificPrice->getCustomer(),
+                //@todo: CLDR format currency?
+                'price' => (string) $specificPrice->getPrice(),
+                'impact' => $this->formatImpact($specificPrice->getReductionType(), $specificPrice->getReductionValue()),
+                'dateTimeFrom' => $specificPrice->getDateTimeFrom(),
+                'dateTimeTo' => $specificPrice->getDateTimeTo(),
+                'fromQuantity' => $specificPrice->getFromQuantity()
             ];
         }
 
         return $list;
+    }
+    private function formatImpact(string $reductionType, DecimalNumber $reductionValue): string
+    {
+        if ($reductionType === Reduction::TYPE_AMOUNT) {
+            //@todo: hardcoded $ sign. Use CLDR formatting instead
+            return sprintf('-%s $', (string) $reductionValue);
+        }
+
+        return sprintf('-%s %%', (string) $reductionValue);
     }
 }
