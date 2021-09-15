@@ -33,7 +33,7 @@ export default class MultistoreConfigField {
   }
 
   updateMultistoreFieldOnChange(): void {
-    $(document).on('change', ComponentsMap.multistoreCheckbox, () => {
+    $(document).on('change', ComponentsMap.multistoreCheckbox, function () {
       const input = $(this)
         .closest(ComponentsMap.formGroup)
         .find(ComponentsMap.inputNotCheckbox);
