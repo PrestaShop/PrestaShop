@@ -34,7 +34,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult;
 class SpecificPriceListForEditing
 {
     /**
-     * @var SpecificPriceForEditing[]
+     * @var SpecificPriceForListing[]
      */
     private $specificPrices;
 
@@ -44,7 +44,7 @@ class SpecificPriceListForEditing
     private $totalSpecificPricesCount;
 
     /**
-     * @param SpecificPriceForEditing[] $specificPrices
+     * @param SpecificPriceForListing[] $specificPrices
      * @param int $totalSpecificPricesCount
      */
     public function __construct(
@@ -56,7 +56,7 @@ class SpecificPriceListForEditing
     }
 
     /**
-     * @return SpecificPriceForEditing[]
+     * @return SpecificPriceForListing[]
      */
     public function getSpecificPrices(): array
     {
