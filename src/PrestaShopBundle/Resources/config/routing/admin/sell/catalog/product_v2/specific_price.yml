@@ -1,3 +1,15 @@
+admin_products_specific_prices_list:
+    path: /{productId}/specific-prices/list
+    methods: [GET]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\SpecificPriceController::listAction
+        _legacy_controller: AdminProducts
+    requirements:
+        productId: \d+
+
+
 admin_products_specific_prices_create:
     path: /{productId}/specific-prices/create
     methods: [GET, POST]

@@ -142,7 +142,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
             ->setMaxResults($limit)
         ;
 
-        return $qb->execute()->fetchAll();
+        return $qb->execute()->fetchAllAssociative();
     }
 
     /**
