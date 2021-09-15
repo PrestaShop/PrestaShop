@@ -209,7 +209,7 @@ class SpecificPriceForListing
     /**
      * @return string|null
      */
-    public function getShop(): string
+    public function getShop(): ?string
     {
         return $this->shop;
     }
@@ -217,7 +217,7 @@ class SpecificPriceForListing
     /**
      * @return string|null
      */
-    public function getCurrency(): string
+    public function getCurrency(): ?string
     {
         return $this->currency;
     }
@@ -225,7 +225,7 @@ class SpecificPriceForListing
     /**
      * @return string|null
      */
-    public function getCountry(): string
+    public function getCountry(): ?string
     {
         return $this->country;
     }
@@ -233,7 +233,7 @@ class SpecificPriceForListing
     /**
      * @return string|null
      */
-    public function getGroup(): string
+    public function getGroup(): ?string
     {
         return $this->group;
     }
@@ -241,7 +241,7 @@ class SpecificPriceForListing
     /**
      * @return string|null
      */
-    public function getCustomer(): string
+    public function getCustomer(): ?string
     {
         return $this->customer;
     }

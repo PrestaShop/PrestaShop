@@ -68,7 +68,7 @@ class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandle
         );
 
         return new SpecificPriceListForEditing(
-            $this->formatSpecificPricesForEditing($specificPriceData),
+            $this->formatSpecificPricesForListing($specificPriceData),
             $this->specificPriceRepository->getProductSpecificPricesCount($query->getProductId(), $query->getFilters())
         );
     }
@@ -78,7 +78,7 @@ class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandle
      *
      * @return SpecificPriceForListing[]
      */
-    private function formatSpecificPricesForEditing(array $specificPrices): array
+    private function formatSpecificPricesForListing(array $specificPrices): array
     {
         return array_map(function (array $specificPrice): SpecificPriceForListing {
             return new SpecificPriceForListing(
