@@ -24,7 +24,6 @@
  */
 
 import ProductMap from '@pages/product/product-map';
-import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
 
 const ProductCategoryMap = ProductMap.categories;

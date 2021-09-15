@@ -154,7 +154,6 @@ export default class CategoryTreeSelector {
       if (checkbox instanceof HTMLInputElement) {
         const categoryId = Number(checkbox.value);
 
-        //@todo: out of scope - this behavior is not ux friendly. Implement automatic closest parent selection instead (both in tree and in tags)?
         // disable main category checkbox
         if (categoryId === this.defaultCategoryId) {
           // eslint-disable-next-line no-param-reassign
