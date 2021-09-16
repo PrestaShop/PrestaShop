@@ -66,7 +66,7 @@
                 {l s='Reference' d='Shop.Theme.Catalog'}: {$product.product_reference}<br/>
               {/if}
               {if isset($product.download_link)}
-                <a href="{$product.download_link}">{l s='Download' d='Shop.Theme.Actions'}</a><br/>
+                <a href="{$product.download_link}">{l s='Download virtual product' d='Shop.Theme.Actions'}</a><br/>
               {/if}
               {if $product.is_virtual}
                 {l s='Virtual products can\'t be returned.' d='Shop.Theme.Customeraccount'}</br>
@@ -74,7 +74,7 @@
               {if $product.customizations}
                 {foreach from=$product.customizations item="customization"}
                   <div class="customization">
-                    <a href="#" data-toggle="modal" data-target="#product-customizations-modal-{$customization.id_customization}">{l s='Product customization' d='Shop.Theme.Catalog'}</a>
+                    <a href="#" data-toggle="modal" data-target="#product-customizations-modal-{$customization.id_customization}">{l s='See customization' d='Shop.Theme.Catalog'}</a>
                   </div>
                   <div id="_desktop_product_customization_modal_wrapper_{$customization.id_customization}">
                     <div class="modal fade customization-modal" id="product-customizations-modal-{$customization.id_customization}" tabindex="-1" role="dialog" aria-hidden="true">
