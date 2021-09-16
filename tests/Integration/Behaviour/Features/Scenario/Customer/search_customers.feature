@@ -47,4 +47,3 @@ Feature: Search customers given a search term (BO)
       | Mathieu   | Napoler  | napoler.dev@prestashop.com | 1996-05-04 |
       | Mathieu   | Polarn   | polarn.dev@prestashop.com  | 1998-10-12 |
     When I search for the phrases "test" I should not get any results
-    
