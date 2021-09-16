@@ -40,24 +40,38 @@ class ObjectModelTest extends TestCase
     private const DEFAULT_LANGUAGE_PLACEHOLDER = 'default_language';
     private const SECOND_LANGUAGE_PLACEHOLDER = 'second_language';
 
-    /**
-     * @var int
-     */
-    protected $defaultLanguageId;
+    private const DEFAULT_SHOP_PLACEHOLDER = 'default_shop';
+    private const SECOND_SHOP_PLACEHOLDER = 'second_shop';
 
     /**
      * @var int
      */
-    protected $secondLanguageId;
+    private $defaultLanguageId;
+
+    /**
+     * @var int
+     */
+    private $secondLanguageId;
+
+    /**
+     * @var int
+     */
+    private $defaultShopId;
+
+    /**
+     * @var int
+     */
+    private $secondShopId;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->installTestableObjectTables();
         $this->installLanguages();
+        $this->installShops();
     }
 
-    protected function installTestableObjectTables(): void
+    private function installTestableObjectTables(): void
     {
         $testableObjectSqlFile = dirname(__DIR__, 2) . '/Resources/sql/install_testable_object.sql';
         $sqlRequest = file_get_contents($testableObjectSqlFile);
@@ -74,7 +88,7 @@ class ObjectModelTest extends TestCase
         $db->execute($sqlRequest);
     }
 
-    protected function installLanguages(): void
+    private function installLanguages(): void
     {
         $this->defaultLanguageId = (int) Configuration::get('PS_LANG_DEFAULT');
         $this->secondLanguageId = (int) Language::getIdByIso('fr');
@@ -89,6 +103,24 @@ class ObjectModelTest extends TestCase
         $language->language_code = 'fr-FR';
         $language->add();
         $this->secondLanguageId = (int) $language->id;
+    }
+
+    private function installShops(): void
+    {
+        $this->defaultShopId = (int) Configuration::get('PS_SHOP_DEFAULT');
+        $this->secondShopId = Shop::getIdByName('Shop 2');
+        if ($this->secondShopId) {
+            return;
+        }
+
+        $shop = new Shop();
+        $shop->name = 'Shop 2';
+        $shop->id_category = 1;
+        $shop->id_shop_group = 1;
+        $shop->domain = Configuration::get('PS_SHOP_DOMAIN');
+        $shop->physical_uri = '/';
+        $shop->add();
+        $this->secondShopId = (int) $shop->id;
     }
 
     public function testAdd(): void
@@ -180,25 +212,13 @@ class ObjectModelTest extends TestCase
     public function testPartialUpdate(array $initialProperties, array $updatedProperties, array $fieldsToUpdate, array $expectedProperties): void
     {
         $newObject = new TestableObjectModel();
-        foreach ($initialProperties as $field => $value) {
-            if (is_array($value)) {
-                $newObject->{$field} = $this->convertLocalizedValue($value);
-            } else {
-                $newObject->{$field} = $value;
-            }
-        }
+        $this->applyModifications($newObject, $initialProperties);
         $this->assertTrue((bool) $newObject->add());
         $this->assertNotNull($newObject->id);
         $createdId = (int) $newObject->id;
 
         $objectToUpdate = new TestableObjectModel($createdId);
-        foreach ($updatedProperties as $field => $value) {
-            if (is_array($value)) {
-                $objectToUpdate->{$field} = $this->convertLocalizedValue($value);
-            } else {
-                $objectToUpdate->{$field} = $value;
-            }
-        }
+        $this->applyModifications($objectToUpdate, $updatedProperties);
         if (isset($fieldsToUpdate['name'])) {
             $fieldsToUpdate['name'] = $this->convertLocalizedValue($fieldsToUpdate['name']);
         }
@@ -206,12 +226,7 @@ class ObjectModelTest extends TestCase
         $this->assertTrue((bool) $objectToUpdate->update());
 
         $updatedObject = new TestableObjectModel($createdId);
-        foreach ($expectedProperties as $field => $expectedValue) {
-            if (is_array($expectedValue)) {
-                $expectedValue = $this->convertLocalizedValue($expectedValue);
-            }
-            $this->assertEquals($expectedValue, $updatedObject->{$field});
-        }
+        $this->checkObjectFields($updatedObject, $expectedProperties);
     }
 
     public function getPartialUpdates(): iterable
@@ -334,6 +349,134 @@ class ObjectModelTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    /**
+     * @dataProvider getMultiShopValues
+     *
+     * @param array $initialProperties
+     * @param array $multiShopValues
+     * @param array $expectedMultiShopValues
+     */
+    public function testMultiShopUpdate(array $initialProperties, array $initialShops, array $multiShopValues, array $expectedMultiShopValues): void
+    {
+        $newObject = new TestableObjectModel();
+        $initialShopIds = [];
+        if (in_array(static::DEFAULT_SHOP_PLACEHOLDER, $initialShops)) {
+            $initialShopIds[] = $this->defaultShopId;
+        }
+        if (in_array(static::SECOND_SHOP_PLACEHOLDER, $initialShops)) {
+            $initialShopIds[] = $this->secondShopId;
+        }
+        $newObject->id_shop_list = $initialShopIds;
+        $this->applyModifications($newObject, $initialProperties);
+        $this->assertTrue((bool) $newObject->add());
+        $this->assertNotNull($newObject->id);
+        $createdId = (int) $newObject->id;
+
+        foreach ($multiShopValues as $shopId => $updateValues) {
+            $shopId = $shopId === static::DEFAULT_SHOP_PLACEHOLDER ? $this->defaultShopId : $this->secondShopId;
+            $objectToUpdate = new TestableObjectModel($createdId, null, $shopId);
+            $objectToUpdate->id_shop_list = [$shopId];
+            $this->applyModifications($objectToUpdate, $updateValues);
+            $this->assertTrue((bool) $objectToUpdate->update());
+        }
+
+        foreach ($expectedMultiShopValues as $shopId => $expectedValues) {
+            $shopId = $shopId === static::DEFAULT_SHOP_PLACEHOLDER ? $this->defaultShopId : $this->secondShopId;
+            $updatedObject = new TestableObjectModel($createdId, null, $shopId);
+            $this->checkObjectFields($updatedObject, $expectedValues);
+        }
+    }
+
+    public function getMultiShopValues(): iterable
+    {
+        $initQuantity = 42;
+        $localizedNames = [
+            self::DEFAULT_LANGUAGE_PLACEHOLDER => 'Default name',
+            self::SECOND_LANGUAGE_PLACEHOLDER => 'Second name',
+        ];
+        $updatedLocalizedNames = [
+            self::DEFAULT_LANGUAGE_PLACEHOLDER => 'Updated Default name',
+            self::SECOND_LANGUAGE_PLACEHOLDER => 'Updated Second name',
+        ];
+
+        $initialValues = [
+            'quantity' => $initQuantity,
+            'enabled' => true,
+            'name' => $localizedNames,
+        ];
+
+        yield [
+            $initialValues,
+            [self::DEFAULT_SHOP_PLACEHOLDER, self::SECOND_SHOP_PLACEHOLDER],
+            [
+                self::DEFAULT_SHOP_PLACEHOLDER => [
+                    'enabled' => false,
+                ],
+                self::SECOND_LANGUAGE_PLACEHOLDER => [
+                    'enabled' => false,
+                ],
+            ],
+            [
+                self::DEFAULT_SHOP_PLACEHOLDER => [
+                    'enabled' => 0,
+                ],
+                self::SECOND_LANGUAGE_PLACEHOLDER => [
+                    'enabled' => 0,
+                ],
+            ],
+        ];
+
+        yield [
+            $initialValues,
+            [self::DEFAULT_SHOP_PLACEHOLDER, self::SECOND_SHOP_PLACEHOLDER],
+            [
+                self::DEFAULT_SHOP_PLACEHOLDER => [
+                    'name' => $updatedLocalizedNames,
+                ],
+                self::SECOND_LANGUAGE_PLACEHOLDER => [
+                    'enabled' => false,
+                ],
+            ],
+            [
+                self::DEFAULT_SHOP_PLACEHOLDER => [
+                    'name' => $updatedLocalizedNames,
+                ],
+                self::SECOND_LANGUAGE_PLACEHOLDER => [
+                    'enabled' => 0,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @param TestableObjectModel $object
+     * @param array $expectedProperties
+     */
+    private function checkObjectFields(TestableObjectModel $object, array $expectedProperties): void
+    {
+        foreach ($expectedProperties as $field => $expectedValue) {
+            if (is_array($expectedValue)) {
+                $expectedValue = $this->convertLocalizedValue($expectedValue);
+            }
+            $this->assertEquals($expectedValue, $object->{$field});
+        }
+    }
+
+    /**
+     * @param TestableObjectModel $object
+     * @param array $updatedProperties
+     */
+    private function applyModifications(TestableObjectModel $object, array $updatedProperties): void
+    {
+        foreach ($updatedProperties as $field => $value) {
+            if (is_array($value)) {
+                $object->{$field} = $this->convertLocalizedValue($value);
+            } else {
+                $object->{$field} = $value;
+            }
+        }
     }
 
     /**
