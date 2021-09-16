@@ -105,7 +105,7 @@ class ObjectModelTest extends TestCase
         $this->assertNotNull($newObject->id);
         // Only the id field is filled, the identified primary key should also be updated
         // $this->assertNotNull($object->id_testable_object);
-        $createdId = $newObject->id;
+        $createdId = (int) $newObject->id;
 
         $multiLangObject = new TestableObjectModel($createdId);
         $this->assertEquals($createdId, $multiLangObject->id);
@@ -113,6 +113,51 @@ class ObjectModelTest extends TestCase
         $this->assertEquals($quantity, $multiLangObject->quantity);
         $this->assertTrue((bool) $multiLangObject->enabled);
         $this->assertEquals($localizedNames, $multiLangObject->name);
+
+        $defaultLangObject = new TestableObjectModel($createdId, $this->defaultLanguageId);
+        $this->assertEquals($localizedNames[$this->defaultLanguageId], $defaultLangObject->name);
+
+        $secondLangObject = new TestableObjectModel($createdId, $this->secondLanguageId);
+        $this->assertEquals($localizedNames[$this->secondLanguageId], $secondLangObject->name);
+    }
+
+    public function testUpdate(): void
+    {
+        $quantity = 42;
+        $localizedNames = [
+            $this->defaultLanguageId => 'Default name',
+            $this->secondLanguageId => 'Second name',
+        ];
+
+        $newObject = new TestableObjectModel();
+        $newObject->quantity = $quantity;
+        $newObject->enabled = true;
+        $newObject->name = $localizedNames;
+
+        $this->assertTrue((bool) $newObject->add());
+        $this->assertNotNull($newObject->id);
+        $createdId = (int) $newObject->id;
+
+        $newLocalizedNames = [
+            $this->defaultLanguageId => 'New Default name',
+            $this->secondLanguageId => 'New Second name',
+        ];
+        $newObject->enabled = false;
+        $newObject->quantity = 51;
+        $newObject->name = $newLocalizedNames;
+        $this->assertTrue((bool) $newObject->update());
+
+        $multiLangObject = new TestableObjectModel($createdId);
+        $this->assertEquals($createdId, $multiLangObject->id);
+        $this->assertEquals($createdId, $multiLangObject->id_testable_object);
+        $this->assertEquals(51, $multiLangObject->quantity);
+        $this->assertFalse((bool) $multiLangObject->enabled);
+        $this->assertEquals($newLocalizedNames, $multiLangObject->name);
+
+        $multiLangObject->quantity = $quantity;
+        $multiLangObject->enabled = true;
+        $multiLangObject->name = $localizedNames;
+        $this->assertTrue((bool) $multiLangObject->update());
 
         $defaultLangObject = new TestableObjectModel($createdId, $this->defaultLanguageId);
         $this->assertEquals($localizedNames[$this->defaultLanguageId], $defaultLangObject->name);
