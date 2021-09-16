@@ -82,7 +82,9 @@ class SecurityController extends FrameworkBundleAdminController
     /**
      * Process the Security general configuration form.
      *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     * )
      *
      * @param Request $request
      *
