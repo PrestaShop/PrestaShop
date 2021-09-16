@@ -26,23 +26,23 @@
 import BigNumber from 'bignumber.js';
 
 export const calculateTax = (taxRate: string): BigNumber => {
-    let newTaxRate;
+  let newTaxRate;
 
-    try {
-      newTaxRate = new BigNumber(taxRate);
-    } catch (error) {
-      newTaxRate = new BigNumber(NaN);
-    }
+  try {
+    newTaxRate = new BigNumber(taxRate);
+  } catch (error) {
+    newTaxRate = new BigNumber(NaN);
+  }
 
-    if (newTaxRate.isNaN()) {
-      newTaxRate = new BigNumber(0);
-    }
+  if (newTaxRate.isNaN()) {
+    newTaxRate = new BigNumber(0);
+  }
 
-    const taxRatio = newTaxRate.dividedBy(100).plus(1);
+  const taxRatio = newTaxRate.dividedBy(100).plus(1);
 
   return taxRatio;
-}
+};
 
 export default {
-  calculateTax
-}
+  calculateTax,
+};
