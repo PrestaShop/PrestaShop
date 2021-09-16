@@ -63,6 +63,7 @@ class WebserviceConfigurationType extends TranslatorAwareType
                     'Admin.Advparameters.Feature'
                 ),
                 'help' => $enableWebservicesHelp,
+                'multistore_configuration_key' => 'PS_WEBSERVICE',
                 'required' => true,
             ])
             ->add('enable_cgi', SwitchType::class, [
@@ -74,6 +75,7 @@ class WebserviceConfigurationType extends TranslatorAwareType
                     'Before choosing "Yes", check that PHP is not configured as an Apache module on your server.',
                     'Admin.Advparameters.Help'
                 ),
+                'multistore_configuration_key' => 'PS_WEBSERVICE_CGI_HOST',
                 'required' => true,
             ]);
     }
@@ -94,5 +96,15 @@ class WebserviceConfigurationType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'webservice_configuration';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }
