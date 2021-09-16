@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 /**
  * Class HandlingConfiguration is responsible for saving and loading Handling options configuration.
  */
-class HandlingConfiguration implements DataConfigurationInterface
+class HandlingConfiguration extends AbstractMultistoreConfiguration
 {
     /**
      * {@inheritdoc}
