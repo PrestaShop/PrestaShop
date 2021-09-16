@@ -232,6 +232,7 @@ class ProductFormDataProviderTest extends TestCase
             false,
             42,
             self::HOME_CATEGORY_ID,
+            $this->mockCategoryDataProvider(),
             self::CONTEXT_LANG_ID,
             null
         );
@@ -246,6 +247,7 @@ class ProductFormDataProviderTest extends TestCase
             false,
             42,
             self::HOME_CATEGORY_ID,
+            $this->mockCategoryDataProvider(),
             self::CONTEXT_LANG_ID,
             $contextShopId
         );
