@@ -26,27 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Webservice;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 
 /**
  * Manages the configuration data about upload quota options.
  */
-final class WebserviceConfiguration implements DataConfigurationInterface
+final class WebserviceConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
-     * @param Configuration $configuration
-     */
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -64,8 +50,9 @@ final class WebserviceConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_WEBSERVICE', $configuration['enable_webservice']);
-            $this->configuration->set('PS_WEBSERVICE_CGI_HOST', $configuration['enable_cgi']);
+            $shopConstraint = $this->getShopConstraint();
+            $this->updateConfigurationValue('PS_WEBSERVICE', 'enable_webservice', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_WEBSERVICE_CGI_HOST', 'enable_cgi', $configuration, $shopConstraint);
         }
 
         return [];
