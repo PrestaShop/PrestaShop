@@ -26,29 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Carrier;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 
 /**
  * Class CarrierOptionsConfiguration is responsible for saving and loading Carrier Options configuration.
  */
-class CarrierOptionsConfiguration implements DataConfigurationInterface
+class CarrierOptionsConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
-     * CarrierOptionsConfiguration constructor.
-     *
-     * @param Configuration $configuration
-     */
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -67,9 +51,10 @@ class CarrierOptionsConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_CARRIER_DEFAULT', $configuration['default_carrier']);
-            $this->configuration->set('PS_CARRIER_DEFAULT_SORT', $configuration['carrier_default_order_by']);
-            $this->configuration->set('PS_CARRIER_DEFAULT_ORDER', $configuration['carrier_default_order_way']);
+            $shopConstraint = $this->getShopConstraint();
+            $this->updateConfigurationValue('PS_CARRIER_DEFAULT', 'default_carrier', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_CARRIER_DEFAULT_SORT', 'carrier_default_order_by', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_CARRIER_DEFAULT_ORDER', 'carrier_default_order_way', $configuration, $shopConstraint);
         }
 
         return [];

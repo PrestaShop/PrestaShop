@@ -58,3 +58,10 @@ $(() => {
   const showcaseCard = new ShowcaseCard('carriersShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 });
+$(() => {
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );
+});
