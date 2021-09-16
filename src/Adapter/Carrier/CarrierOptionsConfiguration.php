@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 /**
  * Class CarrierOptionsConfiguration is responsible for saving and loading Carrier Options configuration.
  */
-class CarrierOptionsConfiguration extends AbstractMultistoreConfiguration 
+class CarrierOptionsConfiguration extends AbstractMultistoreConfiguration
 {
     /**
      * {@inheritdoc}

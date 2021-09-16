@@ -131,7 +131,7 @@ class HandlingType extends TranslatorAwareType
     {
         return 'shipping_preferences_handling_block';
     }
-    
+
     /**
      * {@inheritdoc}
      *
