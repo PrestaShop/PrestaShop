@@ -141,5 +141,4 @@ class HandlingType extends TranslatorAwareType
     {
         return MultistoreConfigurationType::class;
     }
-
 }
