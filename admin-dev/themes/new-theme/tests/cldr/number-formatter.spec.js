@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import { expect } from 'chai';
-import NumberFormatter from '../../js/app/cldr/number-formatter';
-import PriceSpecification from '../../js/app/cldr/specifications/price';
-import NumberSymbol from '../../js/app/cldr/number-symbol';
+import NumberFormatter from '@app/cldr/number-formatter';
+import PriceSpecification from '@app/cldr/specifications/price';
+import NumberSymbol from '@app/cldr/number-symbol';
 
 describe('NumberFormatter', () => {
   let currency;

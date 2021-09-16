@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import { expect } from 'chai';
-import NumberSymbol from '../../js/app/cldr/number-symbol';
+import NumberSymbol from '@app/cldr/number-symbol';
 
 describe('NumberSymbol', () => {
   describe('validateData', () => {

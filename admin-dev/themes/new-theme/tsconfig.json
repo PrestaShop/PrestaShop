@@ -25,7 +25,7 @@
   },
   "ts-node": {
     "compilerOptions": {
-      "module": "commonjs"
+      "module": "commonjs",
     }
   }
 }

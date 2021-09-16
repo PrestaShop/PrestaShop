@@ -23,34 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import {expect} from 'chai';
-import {transform} from '@app/utils/number-comma-transformer';
+import {calculateTax} from '@pages/product/edit/helpers/product-form';
+import BigNumber from 'bignumber.js';
 
-describe('NumberCommaTransformer', () => {
-  describe('transform', () => {
+describe('Product Price Calculation', () => {
+  describe('calculateTax', () => {
     const assertions = [
-      ['12', '12'],
-      ['-12', '-12'],
-      ['-12,20', '-12.20'],
-      ['-12,,20', '-12.20'],
-      ['-----12,20', '12.20'],
-      ['----12,20', '12.20'],
-      ['12alizdjalzjdf20', '12.20'],
-      ['-12alizdjalzjdf20', '-12.20'],
-      ['12345.678', '12345.678'],
-      ['12345dd.dd678', '12345.678'],
-      ['12...40', '12.40'],
-      ['12,,', '12.'],
-      ['1.000,2', '1000.2'],
-      ['1N000,2', '1000.2'],
-      ['100,2', '100.2'],
-      ['1,000,2', '10002'],
-      ['1,000,200.5', '1000200.5'],
-      ['100,002', '100.002'],
+      ['24.000', new BigNumber(1.24)],
+      ['10.000', new BigNumber(1.1)],
+      ['5.5', new BigNumber(1.055)],
+      ['20.000', new BigNumber(1.200)],
+      ['2.10', new BigNumber(1.021)],
     ];
 
     assertions.forEach((assertion) => {
-      it(`test ${assertion[0]}`, () => {
-        expect(transform(assertion[0])).to.eql(assertion[1]);
+      it(`test ${assertion[0]} should return ${assertion[1]}`, () => {
+        expect(calculateTax(assertion[0])).to.eql(assertion[1]);
       });
     });
   });

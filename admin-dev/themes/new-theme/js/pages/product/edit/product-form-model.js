@@ -27,6 +27,7 @@ import BigNumber from 'bignumber.js';
 import ObjectFormMapper from '@components/form/form-object-mapper';
 import ProductFormMapping from '@pages/product/edit/product-form-mapping';
 import ProductEventMap from '@pages/product/product-event-map';
+import {calculateTax} from '@pages/product/edit/helpers/product-form';
 
 export default class ProductFormModel {
   constructor($form, eventEmitter) {
@@ -104,17 +105,7 @@ export default class ProductFormModel {
     const $taxRulesGroupIdInput = this.mapper.getInputsFor('product.price.taxRulesGroupId');
     const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
 
-    let taxRate;
-    try {
-      taxRate = new BigNumber($selectedTaxOption.data('taxRate'));
-    } catch (error) {
-      taxRate = BigNumber.NaN;
-    }
-    if (taxRate.isNaN()) {
-      taxRate = new BigNumber(0);
-    }
-
-    const taxRatio = taxRate.dividedBy(100).plus(1);
+    const taxRatio = calculateTax($selectedTaxOption.data('taxRate'));
 
     switch (event.modelKey) {
       case 'product.price.priceTaxIncluded': {
