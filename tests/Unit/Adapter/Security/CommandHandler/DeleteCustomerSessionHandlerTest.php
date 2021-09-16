@@ -48,8 +48,7 @@ class DeleteCustomerSessionHandlerTest extends TestCase
 
         $repo->expects($this->once())
             ->method('delete')
-            ->with($sessionId->getCustomerSessionId())
-            ->willReturn([]);
+            ->with($sessionId->getCustomerSessionId());
 
         $commandHandler = new DeleteCustomerSessionHandler($repo);
         $commandHandler->handle($sessionId);
