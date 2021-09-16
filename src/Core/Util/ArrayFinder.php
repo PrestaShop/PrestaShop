@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Util;
 
+use ArrayAccess;
+use Countable;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -36,8 +38,10 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
  *
  * This class replaces https://github.com/Shudrum/ArrayFinder/blob/master/ArrayFinder.php that
  * was used in previous PrestaShop versions.
+ *
+ * Credits to Julien Martin https://github.com/Shudrum for the original class
  */
-class ArrayFinder implements \ArrayAccess, \Countable
+class ArrayFinder implements ArrayAccess, Countable
 {
     /**
      * @var array

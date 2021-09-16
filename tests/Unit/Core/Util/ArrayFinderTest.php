@@ -41,7 +41,7 @@ class ArrayFinderTest extends TestCase
     /**
      * @before
      */
-    public function setupComplexArrayFinder()
+    public function setupComplexArrayFinder(): void
     {
         $this->sampleArray = [
             'hello',
@@ -60,160 +60,160 @@ class ArrayFinderTest extends TestCase
         $this->arrayFinder = new ArrayFinder($this->sampleArray);
     }
 
-    public function testArrayAccessReading()
+    public function testArrayAccessReading(): void
     {
         $this->assertEquals('hello', $this->arrayFinder[0]);
         $this->assertEquals('world', $this->arrayFinder[1]);
     }
 
-    public function testArrayAccessInsertValueWithoutKey()
+    public function testArrayAccessInsertValueWithoutKey(): void
     {
         $this->arrayFinder[] = 't';
         $this->assertEquals('t', $this->arrayFinder[2]);
     }
 
-    public function testArrayAccessInsertValueWithKey()
+    public function testArrayAccessInsertValueWithKey(): void
     {
         $this->arrayFinder['last'] = '!';
         $this->assertEquals('!', $this->arrayFinder['last']);
     }
 
-    public function testArrayAccessUnset()
+    public function testArrayAccessUnset(): void
     {
         unset($this->arrayFinder[1]);
         $this->assertNull($this->arrayFinder[1]);
     }
 
-    public function testArrayAccessIsset()
+    public function testArrayAccessIsset(): void
     {
         $this->assertEquals(true, isset($this->arrayFinder['here']));
         $this->assertEquals(false, isset($this->arrayFinder['out']));
     }
 
-    public function testArrayAccessIssetRecursive()
+    public function testArrayAccessIssetRecursive(): void
     {
         $this->assertEquals(true, isset($this->arrayFinder['a.b']));
         $this->assertEquals(true, isset($this->arrayFinder['a.b.c']));
     }
 
-    public function testArrayAccessIssetRecursiveOnNonExistingPath()
+    public function testArrayAccessIssetRecursiveOnNonExistingPath(): void
     {
         $this->assertEquals(false, isset($this->arrayFinder['a.b.c.d.e']));
     }
 
-    public function testSimpleGet()
+    public function testSimpleGet(): void
     {
         $this->assertEquals('hello', $this->arrayFinder->get('0'));
         $this->assertEquals('is_a_key', $this->arrayFinder->get('here'));
     }
 
-    public function testGetWithStringPath()
+    public function testGetWithStringPath(): void
     {
         $this->assertEquals('end', $this->arrayFinder->get('a.b.c'));
     }
 
-    public function testGetRoot()
+    public function testGetRoot(): void
     {
         $this->assertEquals('hello', $this->arrayFinder->get('[]'));
     }
 
-    public function testGetWithoutArgument()
+    public function testGetWithoutArgument(): void
     {
         $this->assertEquals($this->sampleArray, $this->arrayFinder->get());
     }
 
-    public function testGetWithIndexPath()
+    public function testGetWithIndexPath(): void
     {
         $this->assertEquals('value_without_key', $this->arrayFinder->get('a.0'));
         $this->assertEquals('value_without_key_bis', $this->arrayFinder->get('a.1.0'));
     }
 
-    public function testArrayAccessReadingWithPath()
+    public function testArrayAccessReadingWithPath(): void
     {
         $this->assertEquals('end', $this->arrayFinder['a.b.c']);
     }
 
-    public function testGetReturnNullIfDoesNotExist()
+    public function testGetReturnNullIfDoesNotExist(): void
     {
         $this->assertNull($this->arrayFinder->get('a.b.d'));
     }
 
-    public function testSetCorrectlyAddValueToRoot()
+    public function testSetCorrectlyAddValueToRoot(): void
     {
         $this->arrayFinder->set('new', 'yeah');
         $this->assertEquals('yeah', $this->arrayFinder['new']);
     }
 
-    public function testSetCorrectlyAddValueIfPathExist()
+    public function testSetCorrectlyAddValueIfPathExist(): void
     {
         $this->arrayFinder->set('a.b.c', 'c_replaced');
         $this->assertEquals('c_replaced', $this->arrayFinder['a.b.c']);
     }
 
-    public function testSetCorrectlyReturnTheInstance()
+    public function testSetCorrectlyReturnTheInstance(): void
     {
         $this->assertInstanceOf('\PrestaShop\PrestaShop\Core\Util\ArrayFinder', $this->arrayFinder->set('a', 'b'));
     }
 
-    public function testSetCorrectlyAddValueIfPathDoesNotExist()
+    public function testSetCorrectlyAddValueIfPathDoesNotExist(): void
     {
         $this->arrayFinder->set('d.e.f', 'f_setted');
         $this->assertEquals('f_setted', $this->arrayFinder['d.e.f']);
     }
 
-    public function testSetCorrectlyAddAnArray()
+    public function testSetCorrectlyAddAnArray(): void
     {
         $this->arrayFinder->set('b', ['it' => ['works' => ['cool']]]);
         $this->assertEquals('cool', $this->arrayFinder['b.it.works.0']);
     }
 
-    public function testSetCorrectlyReplaceArray()
+    public function testSetCorrectlyReplaceArray(): void
     {
         $this->arrayFinder->set('a', 'value');
         $this->assertEquals('value', $this->arrayFinder['a']);
     }
 
-    public function testSetEmptyValue()
+    public function testSetEmptyValue(): void
     {
         $this->arrayFinder->set('a', null);
         $this->assertNull($this->arrayFinder['a']);
     }
 
-    public function testSetEmptyArray()
+    public function testSetEmptyArray(): void
     {
         $this->arrayFinder->set('this.is.empty', []);
         $this->assertEmpty($this->arrayFinder['this.is.empty']);
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->assertEquals(4, count($this->arrayFinder));
     }
 
-    public function testArrayAccessReference()
+    public function testArrayAccessReference(): void
     {
         $this->arrayFinder['access'] = 'work';
         $this->assertEquals('work', $this->arrayFinder->get('access'));
     }
 
-    public function testArrayAccessUnsetWithPath()
+    public function testArrayAccessUnsetWithPath(): void
     {
         unset($this->arrayFinder['a.b']);
         $this->assertNull($this->arrayFinder['a.b']);
     }
 
-    public function testArrayAccessUnsetWithInt()
+    public function testArrayAccessUnsetWithInt(): void
     {
         unset($this->arrayFinder['a.1']);
         $this->assertNull($this->arrayFinder['a.1']);
     }
 
-    public function testCountOnFirstAccess()
+    public function testCountOnFirstAccess(): void
     {
         $this->assertCount(1, $this->arrayFinder['a.b']);
     }
 
-    public function testArrayAccessAddValueToRoot()
+    public function testArrayAccessAddValueToRoot(): void
     {
         $arrayFinder = new ArrayFinder();
         $arrayFinder[] = 'added';
@@ -222,14 +222,14 @@ class ArrayFinderTest extends TestCase
         $this->assertEquals('added', $arrayFinder[0]);
     }
 
-    public function testGetWithoutParamWillReturnAllTheArray()
+    public function testGetWithoutParamWillReturnAllTheArray(): void
     {
         $content = $this->arrayFinder->get();
 
         $this->assertEquals('end', $content['a']['b']['c']);
     }
 
-    public function testGetAcceptsADefaultArgument()
+    public function testGetAcceptsADefaultArgument(): void
     {
         // ensure the default value is not returned when
         // the array does have the key
