@@ -37,10 +37,12 @@ export interface EntitySearchInputOptions extends OptionsObject {
   prototypeTemplate: string,
   prototypeIndex: string,
   prototypeMapping: OptionsObject,
+  identifierField: string;
 
   allowDelete: boolean,
   dataLimit: number,
   remoteUrl: string,
+  filterSelected: boolean,
 
   removeModal: ModalOptions,
 
@@ -170,10 +172,12 @@ export default class EntitySearchInput {
         name: '__name__',
         image: '__image__',
       },
+      identifierField: 'id',
 
       allowDelete: true,
       dataLimit: 0,
       remoteUrl: undefined,
+      filterSelected: true,
 
       removeModal: {
         id: 'modal-confirm-remove-entity',
@@ -287,9 +291,7 @@ export default class EntitySearchInput {
     };
 
     // Can be used to format value depending on selected item
-    if (this.options.mappingValue !== undefined) {
-      autoSearchConfig.value = <string> this.options.mappingValue;
-    }
+    autoSearchConfig.value = <string> this.options.identifierField;
 
     // The search feature may be disabled so the search input won't be present
     if (this.$entitySearchInput.length) {
@@ -307,26 +309,32 @@ export default class EntitySearchInput {
    * @returns {Bloodhound}
    */
   private buildRemoteSource(): void {
-    const sourceConfig = {
-      mappingValue: this.options.mappingValue,
-      remoteUrl: this.options.remoteUrl,
-    };
-
     this.entityRemoteSource = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.whitespace,
       queryTokenizer: Bloodhound.tokenizers.whitespace,
       identify(obj: any) {
-        return obj[sourceConfig.mappingValue];
+        return obj[this.options.identifierField];
       },
       remote: {
-        url: sourceConfig.remoteUrl,
+        url: this.options.remoteUrl,
         cache: false,
         wildcard: this.options.queryWildcard,
-        transform(response: any) {
+        transform: (response: any) => {
           if (!response) {
             return [];
           }
-          return response;
+
+          const selectedIds: any[] = this.getSelectedIds();
+          const filteredItems: any[] = [];
+          response.forEach((responseItem: any) => {
+            const responseIdentifier = responseItem[this.options.identifierField];
+
+            if (!selectedIds.includes(responseIdentifier)) {
+              filteredItems.push(responseItem);
+            }
+          });
+
+          return filteredItems;
         },
       },
     });
@@ -421,5 +429,21 @@ export default class EntitySearchInput {
     });
 
     return template;
+  }
+
+  private getSelectedIds(): any[] {
+    const selectedIds: any[] = [];
+    const selectedChildren = this.$entitiesContainer.children();
+    selectedChildren.each((index: number, selectedChild: HTMLElement) => {
+      const identifierNameRegexp: string = `\\[${index}\\].*\\[${this.options.identifierField}\\]`;
+      const inputs = $(selectedChild).find('input');
+      inputs.each((inputIndex: number, input: HTMLInputElement): void => {
+        if (input.name.match(identifierNameRegexp)) {
+          selectedIds.push(input.value);
+        }
+      });
+    });
+
+    return selectedIds;
   }
 }
