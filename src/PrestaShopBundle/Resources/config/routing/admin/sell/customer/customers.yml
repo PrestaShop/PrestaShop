@@ -66,7 +66,7 @@ admin_customers_toggle_status:
   path: /{customerId}/toggle-status
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Customer\CustomerController::toggleStatusThenReturnJsonAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Customer\CustomerController::toggleStatusAction
     _legacy_controller: AdminCustomers
     _legacy_link: AdminCustomers:statuscustomer
     _legacy_parameters:
@@ -88,7 +88,7 @@ admin_customers_toggle_newsletter_subscription:
   path: /{customerId}/toggle-newsletter-subscription
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Customer\CustomerController::toggleNewsletterSubscriptionThenReturnJsonAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Customer\CustomerController::toggleNewsletterSubscriptionAction
     _legacy_controller: AdminCustomers
     _legacy_link: AdminCustomers:changeNewsletterVal
     _legacy_parameters:
@@ -108,7 +108,7 @@ admin_customers_toggle_partner_offer_subscription:
   path: /{customerId}/toggle-partner-offer-subscription
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Customer\CustomerController::togglePartnerOfferSubscriptionThenReturnJsonAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Customer\CustomerController::togglePartnerOfferSubscriptionAction
     _legacy_controller: AdminCustomers
     _legacy_link: AdminCustomers:changeOptinVal
     _legacy_parameters:
