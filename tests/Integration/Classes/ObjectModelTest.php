@@ -30,13 +30,16 @@ namespace Tests\Integration\Classes;
 
 use Configuration;
 use Db;
-use ObjectModel;
 use Language;
+use ObjectModel;
 use PHPUnit\Framework\TestCase;
 use Shop;
 
 class ObjectModelTest extends TestCase
 {
+    private const DEFAULT_LANGUAGE_PLACEHOLDER = 'default_language';
+    private const SECOND_LANGUAGE_PLACEHOLDER = 'second_language';
+
     /**
      * @var int
      */
@@ -50,7 +53,7 @@ class ObjectModelTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->installTestableObjectTables();;
+        $this->installTestableObjectTables();
         $this->installLanguages();
     }
 
@@ -165,9 +168,195 @@ class ObjectModelTest extends TestCase
         $secondLangObject = new TestableObjectModel($createdId, $this->secondLanguageId);
         $this->assertEquals($localizedNames[$this->secondLanguageId], $secondLangObject->name);
     }
+
+    /**
+     * @dataProvider getPartialUpdates
+     *
+     * @param array $initialProperties
+     * @param array $updatedProperties
+     * @param array $fieldsToUpdate
+     * @param array $expectedProperties
+     */
+    public function testPartialUpdate(array $initialProperties, array $updatedProperties, array $fieldsToUpdate, array $expectedProperties): void
+    {
+        $newObject = new TestableObjectModel();
+        foreach ($initialProperties as $field => $value) {
+            if (is_array($value)) {
+                $newObject->{$field} = $this->convertLocalizedValue($value);
+            } else {
+                $newObject->{$field} = $value;
+            }
+        }
+        $this->assertTrue((bool) $newObject->add());
+        $this->assertNotNull($newObject->id);
+        $createdId = (int) $newObject->id;
+
+        $objectToUpdate = new TestableObjectModel($createdId);
+        foreach ($updatedProperties as $field => $value) {
+            if (is_array($value)) {
+                $objectToUpdate->{$field} = $this->convertLocalizedValue($value);
+            } else {
+                $objectToUpdate->{$field} = $value;
+            }
+        }
+        if (isset($fieldsToUpdate['name'])) {
+            $fieldsToUpdate['name'] = $this->convertLocalizedValue($fieldsToUpdate['name']);
+        }
+        $objectToUpdate->setFieldsToUpdate($fieldsToUpdate);
+        $this->assertTrue((bool) $objectToUpdate->update());
+
+        $updatedObject = new TestableObjectModel($createdId);
+        foreach ($expectedProperties as $field => $expectedValue) {
+            if (is_array($expectedValue)) {
+                $expectedValue = $this->convertLocalizedValue($expectedValue);
+            }
+            $this->assertEquals($expectedValue, $updatedObject->{$field});
+        }
+    }
+
+    public function getPartialUpdates(): iterable
+    {
+        $initQuantity = 42;
+        $updatedQuantity = 51;
+        $localizedNames = [
+            self::DEFAULT_LANGUAGE_PLACEHOLDER => 'Default name',
+            self::SECOND_LANGUAGE_PLACEHOLDER => 'Second name',
+        ];
+        $updatedLocalizedNames = [
+            self::DEFAULT_LANGUAGE_PLACEHOLDER => 'Updated Default name',
+            self::SECOND_LANGUAGE_PLACEHOLDER => 'Updated Second name',
+        ];
+
+        $initialValues = [
+            'quantity' => $initQuantity,
+            'enabled' => true,
+            'name' => $localizedNames,
+        ];
+
+        yield [
+            $initialValues,
+            [
+                'quantity' => $updatedQuantity,
+                'enabled' => false,
+                'name' => $updatedLocalizedNames,
+            ],
+            [
+                'quantity' => true,
+                'enabled' => true,
+                'name' => [
+                    self::DEFAULT_LANGUAGE_PLACEHOLDER => true,
+                    self::SECOND_LANGUAGE_PLACEHOLDER => true,
+                ],
+            ],
+            [
+                'quantity' => $updatedQuantity,
+                'enabled' => 0,
+                'name' => $updatedLocalizedNames,
+            ],
+        ];
+
+        // Modify multiple fields but only update quantity (classic value)
+        yield [
+            $initialValues,
+            [
+                'quantity' => $updatedQuantity,
+                'enabled' => false,
+                'name' => $updatedLocalizedNames,
+            ],
+            [
+                'quantity' => true,
+            ],
+            [
+                'quantity' => $updatedQuantity,
+                'enabled' => 1,
+                'name' => $localizedNames,
+            ],
+        ];
+
+        // Modify multiple fields but only update enabled (multishop value)
+        yield [
+            $initialValues,
+            [
+                'quantity' => $updatedQuantity,
+                'enabled' => false,
+                'name' => $updatedLocalizedNames,
+            ],
+            [
+                'enabled' => true,
+            ],
+            [
+                'quantity' => $initQuantity,
+                'enabled' => 0,
+                'name' => $localizedNames,
+            ],
+        ];
+
+        // Modify multiple fields but only update name (multilang value)
+        yield [
+            $initialValues,
+            [
+                'quantity' => $updatedQuantity,
+                'enabled' => false,
+                'name' => $updatedLocalizedNames,
+            ],
+            [
+                'name' => [
+                    self::DEFAULT_LANGUAGE_PLACEHOLDER => true,
+                    self::SECOND_LANGUAGE_PLACEHOLDER => true,
+                ],
+            ],
+            [
+                'quantity' => $initQuantity,
+                'enabled' => 1,
+                'name' => $updatedLocalizedNames,
+            ],
+        ];
+
+        // Modify multiple fields but only update one language for name (multilang value)
+        yield [
+            $initialValues,
+            [
+                'quantity' => $updatedQuantity,
+                'enabled' => false,
+                'name' => $updatedLocalizedNames,
+            ],
+            [
+                'name' => [
+                    self::SECOND_LANGUAGE_PLACEHOLDER => true,
+                ],
+            ],
+            [
+                'quantity' => $initQuantity,
+                'enabled' => 1,
+                'name' => [
+                    self::DEFAULT_LANGUAGE_PLACEHOLDER => $localizedNames[self::DEFAULT_LANGUAGE_PLACEHOLDER],
+                    self::SECOND_LANGUAGE_PLACEHOLDER => $updatedLocalizedNames[self::SECOND_LANGUAGE_PLACEHOLDER],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @param array $value
+     *
+     * @return array
+     */
+    private function convertLocalizedValue(array $value): array
+    {
+        $localizedValue = [];
+        if (isset($value[self::DEFAULT_LANGUAGE_PLACEHOLDER])) {
+            $localizedValue[$this->defaultLanguageId] = $value[self::DEFAULT_LANGUAGE_PLACEHOLDER];
+        }
+        if (isset($value[self::SECOND_LANGUAGE_PLACEHOLDER])) {
+            $localizedValue[$this->secondLanguageId] = $value[self::SECOND_LANGUAGE_PLACEHOLDER];
+        }
+
+        return $localizedValue;
+    }
 }
 
-class TestableObjectModel extends ObjectModel {
+class TestableObjectModel extends ObjectModel
+{
     /**
      * @var int
      */
@@ -206,7 +395,7 @@ class TestableObjectModel extends ObjectModel {
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => false, 'size' => 128],
             // Shop fields
             'enabled' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
-        ]
+        ],
     ];
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
