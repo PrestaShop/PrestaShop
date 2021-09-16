@@ -355,6 +355,7 @@ class ObjectModelTest extends TestCase
      * @dataProvider getMultiShopValues
      *
      * @param array $initialProperties
+     * @param array $initialShops
      * @param array $multiShopValues
      * @param array $expectedMultiShopValues
      */
@@ -414,16 +415,18 @@ class ObjectModelTest extends TestCase
                 self::DEFAULT_SHOP_PLACEHOLDER => [
                     'enabled' => false,
                 ],
-                self::SECOND_LANGUAGE_PLACEHOLDER => [
+                self::SECOND_SHOP_PLACEHOLDER => [
                     'enabled' => false,
                 ],
             ],
             [
                 self::DEFAULT_SHOP_PLACEHOLDER => [
                     'enabled' => 0,
+                    'name' => $localizedNames,
                 ],
-                self::SECOND_LANGUAGE_PLACEHOLDER => [
+                self::SECOND_SHOP_PLACEHOLDER => [
                     'enabled' => 0,
+                    'name' => $localizedNames,
                 ],
             ],
         ];
@@ -435,16 +438,154 @@ class ObjectModelTest extends TestCase
                 self::DEFAULT_SHOP_PLACEHOLDER => [
                     'name' => $updatedLocalizedNames,
                 ],
-                self::SECOND_LANGUAGE_PLACEHOLDER => [
+                self::SECOND_SHOP_PLACEHOLDER => [
                     'enabled' => false,
                 ],
             ],
             [
                 self::DEFAULT_SHOP_PLACEHOLDER => [
+                    'enabled' => 1,
                     'name' => $updatedLocalizedNames,
                 ],
-                self::SECOND_LANGUAGE_PLACEHOLDER => [
+                self::SECOND_SHOP_PLACEHOLDER => [
                     'enabled' => 0,
+                    'name' => $localizedNames,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getPartialMultiShopValues
+     *
+     * @param array $initialProperties
+     * @param array $initialShops
+     * @param array $multiShopValues
+     * @param array $multiShopFieldsToUpdate
+     * @param array $expectedMultiShopValues
+     */
+    public function testPartialMultiShopUpdate(
+        array $initialProperties,
+        array $initialShops,
+        array $multiShopValues,
+        array $multiShopFieldsToUpdate,
+        array $expectedMultiShopValues
+    ): void {
+        $newObject = new TestableObjectModel();
+        $initialShopIds = [];
+        if (in_array(static::DEFAULT_SHOP_PLACEHOLDER, $initialShops)) {
+            $initialShopIds[] = $this->defaultShopId;
+        }
+        if (in_array(static::SECOND_SHOP_PLACEHOLDER, $initialShops)) {
+            $initialShopIds[] = $this->secondShopId;
+        }
+        $newObject->id_shop_list = $initialShopIds;
+        $this->applyModifications($newObject, $initialProperties);
+        $this->assertTrue((bool) $newObject->add());
+        $this->assertNotNull($newObject->id);
+        $createdId = (int) $newObject->id;
+
+        foreach ($multiShopValues as $shopId => $updateValues) {
+            $fieldsToUpdate = $multiShopFieldsToUpdate[$shopId];
+            $shopId = $shopId === static::DEFAULT_SHOP_PLACEHOLDER ? $this->defaultShopId : $this->secondShopId;
+            $objectToUpdate = new TestableObjectModel($createdId, null, $shopId);
+            $objectToUpdate->id_shop_list = [$shopId];
+            $this->applyModifications($objectToUpdate, $updateValues);
+            if (isset($fieldsToUpdate['name'])) {
+                $fieldsToUpdate['name'] = $this->convertLocalizedValue($fieldsToUpdate['name']);
+            }
+            $objectToUpdate->setFieldsToUpdate($fieldsToUpdate);
+            $this->assertTrue((bool) $objectToUpdate->update());
+        }
+
+        foreach ($expectedMultiShopValues as $shopId => $expectedValues) {
+            $shopId = $shopId === static::DEFAULT_SHOP_PLACEHOLDER ? $this->defaultShopId : $this->secondShopId;
+            $updatedObject = new TestableObjectModel($createdId, null, $shopId);
+            $this->checkObjectFields($updatedObject, $expectedValues);
+        }
+    }
+
+    public function getPartialMultiShopValues(): iterable
+    {
+        $initQuantity = 42;
+        $localizedNames = [
+            self::DEFAULT_LANGUAGE_PLACEHOLDER => 'Default name',
+            self::SECOND_LANGUAGE_PLACEHOLDER => 'Second name',
+        ];
+        $updatedLocalizedNames = [
+            self::DEFAULT_LANGUAGE_PLACEHOLDER => 'Updated Default name',
+            self::SECOND_LANGUAGE_PLACEHOLDER => 'Updated Second name',
+        ];
+
+        $initialValues = [
+            'quantity' => $initQuantity,
+            'enabled' => true,
+            'name' => $localizedNames,
+        ];
+
+        yield [
+            $initialValues,
+            [self::DEFAULT_SHOP_PLACEHOLDER, self::SECOND_SHOP_PLACEHOLDER],
+            [
+                self::DEFAULT_SHOP_PLACEHOLDER => [
+                    'enabled' => false,
+                ],
+                self::SECOND_SHOP_PLACEHOLDER => [
+                    'enabled' => false,
+                ],
+            ],
+            [
+                self::DEFAULT_SHOP_PLACEHOLDER => [
+                    'enabled' => true,
+                ],
+                self::SECOND_SHOP_PLACEHOLDER => [
+                    'enabled' => true,
+                ],
+            ],
+            [
+                self::DEFAULT_SHOP_PLACEHOLDER => [
+                    'enabled' => 0,
+                    'name' => $localizedNames,
+                ],
+                self::SECOND_SHOP_PLACEHOLDER => [
+                    'enabled' => 0,
+                    'name' => $localizedNames,
+                ],
+            ],
+        ];
+
+        yield [
+            $initialValues,
+            [self::DEFAULT_SHOP_PLACEHOLDER, self::SECOND_SHOP_PLACEHOLDER],
+            [
+                self::DEFAULT_SHOP_PLACEHOLDER => [
+                    'name' => $updatedLocalizedNames,
+                    'enabled' => false,
+                ],
+                self::SECOND_SHOP_PLACEHOLDER => [
+                    'name' => $updatedLocalizedNames,
+                    'enabled' => false,
+                ],
+            ],
+            [
+                self::DEFAULT_SHOP_PLACEHOLDER => [
+                    'name' => [
+                        self::DEFAULT_LANGUAGE_PLACEHOLDER => true,
+                        self::SECOND_LANGUAGE_PLACEHOLDER => true,
+                    ],
+                ],
+                self::SECOND_SHOP_PLACEHOLDER => [
+                    'enabled' => true,
+                ],
+            ],
+            [
+                self::DEFAULT_SHOP_PLACEHOLDER => [
+                    'enabled' => 1,
+                    'name' => $updatedLocalizedNames,
+                ],
+                self::SECOND_SHOP_PLACEHOLDER => [
+                    'enabled' => 0,
+                    'name' => $localizedNames,
                 ],
             ],
         ];
@@ -544,6 +685,7 @@ class TestableObjectModel extends ObjectModel
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
         Shop::addTableAssociation('testable_object', ['type' => 'shop']);
+        Shop::addTableAssociation('testable_object_lang', ['type' => 'fk_shop']);
         parent::__construct($id, $id_lang, $id_shop);
     }
 }
