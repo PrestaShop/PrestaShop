@@ -48,8 +48,7 @@ class BulkDeleteCustomerSessionHandlerTest extends TestCase
 
         $repo->expects($this->once())
             ->method('bulkDelete')
-            ->with($sessionId->getCustomerSessionIds())
-            ->willReturn([]);
+            ->with($sessionId->getCustomerSessionIds());
 
         $commandHandler = new BulkDeleteCustomerSessionsHandler($repo);
         $commandHandler->handle($sessionId);
