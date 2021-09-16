@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 
 /**
- * Stock identity.
+ * Stock identifier.
  */
 class StockId
 {
