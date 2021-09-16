@@ -61,7 +61,7 @@ class DeltaQuantityType extends TranslatorAwareType
         ;
         $builder->get('quantity')->addViewTransformer(new NumberToLocalizedStringTransformer(0, false));
 
-        // Thanks tot his transformer the input data is the quantity value (as integer) and the output is the
+        // Thanks to this transformer the input data is the quantity value (as integer) and the output is the
         // edited delta (as an integer as well)
         $builder->addModelTransformer(new CallbackTransformer(
             function (int $initialQuantity) {
