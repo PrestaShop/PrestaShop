@@ -1981,7 +1981,7 @@ window.priceCalculation = (function () {
 
       if (!isNaN(priceTE) && priceTE !== 0) {
         const rates = this.getRates();
-        const computationMethod = taxElem.find('ocption:selected').attr('data-computation-method');
+        const computationMethod = taxElem.find('option:selected').attr('data-computation-method');
         priceTI = ps_round(addTaxes(priceTE, rates, computationMethod), displayPricePrecision);
       }
 
