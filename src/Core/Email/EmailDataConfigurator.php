@@ -28,13 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Email;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 
-
 /**
  * Class EmailDataConfigurator is responsible for configuring email data.
  */
 final class EmailDataConfigurator extends AbstractMultistoreConfiguration
 {
-
     /**
      * {@inheritdoc}
      */
