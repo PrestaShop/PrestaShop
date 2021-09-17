@@ -47,9 +47,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatu
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoriesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoryInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
@@ -176,7 +176,6 @@ class ProductFormDataProviderTest extends TestCase
                 'type' => ProductType::TYPE_STANDARD,
             ],
             'description' => [
-                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
                 'categories' => [
                     'product_categories' => [
                         [
@@ -186,6 +185,7 @@ class ProductFormDataProviderTest extends TestCase
                     ],
                     'default_category_id' => self::HOME_CATEGORY_ID,
                 ],
+                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
                 'related_products' => [],
             ],
             'stock' => [
@@ -1388,11 +1388,11 @@ class ProductFormDataProviderTest extends TestCase
             'description' => [
                 'description' => [],
                 'description_short' => [],
-                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
                 'categories' => [
                     'product_categories' => [],
                     'default_category_id' => self::HOME_CATEGORY_ID,
                 ],
+                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
                 'related_products' => [],
             ],
             'specifications' => [

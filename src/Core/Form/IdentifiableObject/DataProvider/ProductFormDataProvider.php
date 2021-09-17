@@ -335,8 +335,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
-            'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
             'categories' => $this->extractCategoriesData($productForEditing),
+            'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
             'related_products' => $this->extractRelatedProducts($productForEditing->getProductId()),
         ];
     }
