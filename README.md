@@ -24,7 +24,7 @@ This repository contains the source code of PrestaShop, which is intended for de
 About the 'develop' branch
 --------
 
-The 'develop' branch of this repository contains the work in progress source code for the next version of PrestaShop 1.7.
+The 'develop' branch of this repository contains the work in progress source code for the next version of PrestaShop.
  
 For more information on our branch system, read our guide on [installing PrestaShop for development][install-guide-dev].
 
@@ -78,7 +78,7 @@ First-time users will be particularly interested in the following guides:
 * [User Guide][user-guide]: All there is to know to put PrestaShop to good use.
 * [Updating Guide][updating-guide]: Switching to the newest version is not trivial. Make sure you do it right.
 * [Merchant's Guide][merchant-guide]: Tips and tricks for first-time online sellers.
-* The [FAQ][faq-17] and the [Troubleshooting][troubleshooting] pages should also be of tremendous help to you.
+* The [FAQ][faq-17] page should also be of tremendous help to you.
 
 
 Contributing
@@ -119,8 +119,6 @@ Extending PrestaShop
 
 PrestaShop is a very extensible e-commerce platform, both through modules and themes. Developers can even override the default components and behaviors. Learn more about this on the [Modules documentation][modules-devdocs] and the [Themes documentation][themes-devdocs].
 
-Themes and modules can be obtained (and sold!) on [PrestaShop Addons][addons], the official marketplace for PrestaShop.
-
 
 Community forums
 --------
@@ -132,7 +130,7 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [available-features]: https://www.prestashop.com/en/online-store-builder
 [download]: https://www.prestashop.com/en/download
 [forums]: https://www.prestashop.com/forums/
-[chat]: https://github.com/PrestaShop/open-source/blob/master/slack/readme.md
+[chat]: https://www.prestashop-project.org/slack/
 [user-doc]: https://doc.prestashop.com
 [contributing-md]: CONTRIBUTING.md
 [contributing-tutorial]: https://devdocs.prestashop.com/1.7/contribute/
@@ -142,9 +140,7 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [updating-guide]: https://doc.prestashop.com/display/PS16/Updating+PrestaShop
 [merchant-guide]: https://doc.prestashop.com/display/PS16/Merchant%27s+Guide
 [faq-17]: https://devdocs.prestashop.com/1.7/faq/
-[troubleshooting]: https://doc.prestashop.com/display/PS16/Troubleshooting
 [sysadmin-guide]: https://doc.prestashop.com/display/PS16/System+Administrator+Guide
-[addons]: https://addons.prestashop.com/
 [contributors-md]: CONTRIBUTORS.md
 [example-nginx]: https://devdocs.prestashop.com/1.7/basics/installation/nginx/
 [docker-compose]: https://docs.docker.com/compose/
