@@ -26,29 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Email;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 
 /**
  * Class SmtpDataConfigurator is responsible for configuring SMTP data.
  *
  * @deprecated since 1.7.8, will be removed in the next major version
  */
-final class SmtpDataConfigurator implements DataConfigurationInterface
+final class SmtpDataConfigurator extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @param ConfigurationInterface $configuration
-     */
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -70,16 +56,17 @@ final class SmtpDataConfigurator implements DataConfigurationInterface
     public function updateConfiguration(array $config)
     {
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_MAIL_DOMAIN', $config['domain']);
-            $this->configuration->set('PS_MAIL_SERVER', $config['server']);
-            $this->configuration->set('PS_MAIL_USER', $config['username']);
-            $this->configuration->set('PS_MAIL_SMTP_ENCRYPTION', $config['encryption']);
-            $this->configuration->set('PS_MAIL_SMTP_PORT', $config['port']);
+            $shopConstraint = $this->getShopConstraint();
+            $this->updateConfigurationValue('PS_MAIL_DOMAIN', 'domain', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_SERVER', 'server', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_USER', 'username', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_SMTP_ENCRYPTION', 'encryption', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_SMTP_PORT', 'port', $config, $shopConstraint);
 
             $smtpPassword = (string) $config['password'];
 
             if ('' !== $smtpPassword || !$this->configuration->get('PS_MAIL_PASSWD')) {
-                $this->configuration->set('PS_MAIL_PASSWD', $smtpPassword);
+                $this->updateConfigurationValue('PS_MAIL_PASSWD', 'password', $config, $shopConstraint);
             }
         }
 

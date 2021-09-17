@@ -26,26 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Core\Email;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+
 
 /**
  * Class EmailDataConfigurator is responsible for configuring email data.
  */
-final class EmailDataConfigurator implements DataConfigurationInterface
+final class EmailDataConfigurator extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @param ConfigurationInterface $configuration
-     */
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
-    }
 
     /**
      * {@inheritdoc}
@@ -80,19 +68,20 @@ final class EmailDataConfigurator implements DataConfigurationInterface
     public function updateConfiguration(array $config)
     {
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_MAIL_EMAIL_MESSAGE', $config['send_emails_to']);
-            $this->configuration->set('PS_MAIL_METHOD', $config['mail_method']);
-            $this->configuration->set('PS_MAIL_TYPE', $config['mail_type']);
-            $this->configuration->set('PS_LOG_EMAILS', $config['log_emails']);
-            $this->configuration->set('PS_MAIL_DKIM_ENABLE', $config['dkim_enable']);
-            $this->configuration->set('PS_MAIL_DKIM_DOMAIN', $config['dkim_config']['domain']);
-            $this->configuration->set('PS_MAIL_DKIM_SELECTOR', $config['dkim_config']['selector']);
-            $this->configuration->set('PS_MAIL_DKIM_KEY', $config['dkim_config']['key']);
-            $this->configuration->set('PS_MAIL_DOMAIN', $config['smtp_config']['domain']);
-            $this->configuration->set('PS_MAIL_SERVER', $config['smtp_config']['server']);
-            $this->configuration->set('PS_MAIL_USER', $config['smtp_config']['username']);
-            $this->configuration->set('PS_MAIL_SMTP_ENCRYPTION', $config['smtp_config']['encryption']);
-            $this->configuration->set('PS_MAIL_SMTP_PORT', $config['smtp_config']['port']);
+            $shopConstraint = $this->getShopConstraint();
+            $this->updateConfigurationValue('PS_MAIL_EMAIL_MESSAGE', 'send_emails_to', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_METHOD', 'mail_method', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_TYPE', 'mail_type', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LOG_EMAILS', 'log_emails', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_DKIM_ENABLE', 'dkim_enable', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_DKIM_DOMAIN', 'domain', $config['dkim_config'], $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_DKIM_SELECTOR', 'selector', $config['dkim_config'], $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_DKIM_KEY', 'key', $config['dkim_config'], $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_DOMAIN', 'domain', $config['smtp_config'], $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_SERVER', 'server', $config['smtp_config'], $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_USER', 'username', $config['smtp_config'], $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_SMTP_ENCRYPTION', 'encryption', $config['smtp_config'], $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_SMTP_PORT', 'port', $config['smtp_config'], $shopConstraint);
             $smtpPassword = (string) $config['smtp_config']['password'];
 
             if ('' !== $smtpPassword || !$this->configuration->get('PS_MAIL_PASSWD')) {

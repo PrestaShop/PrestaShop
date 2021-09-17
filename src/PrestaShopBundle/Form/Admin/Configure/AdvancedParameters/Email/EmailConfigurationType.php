@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
 
 use PrestaShop\PrestaShop\Core\Email\MailOption;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -78,6 +79,7 @@ class EmailConfigurationType extends TranslatorAwareType
                 'help' => $this->trans('Where customers send messages from the order page.', 'Admin.Advparameters.Help'),
                 'choices' => $this->contactsChoiceProvider->getChoices(),
                 'choice_translation_domain' => false,
+                'multistore_configuration_key' => 'PS_MAIL_EMAIL_MESSAGE',
             ])
             ->add('mail_method', ChoiceType::class, [
                 'attr' => [
@@ -87,6 +89,7 @@ class EmailConfigurationType extends TranslatorAwareType
                 'expanded' => true,
                 'multiple' => false,
                 'choices' => $this->mailMethodChoiceProvider->getChoices(),
+                'multistore_configuration_key' => 'PS_MAIL_METHOD',
             ])
             ->add('mail_type', ChoiceType::class, [
                 'expanded' => true,
@@ -96,9 +99,11 @@ class EmailConfigurationType extends TranslatorAwareType
                     $this->trans('Send email in text format', 'Admin.Advparameters.Feature') => MailOption::TYPE_TXT,
                     $this->trans('Both', 'Admin.Advparameters.Feature') => MailOption::TYPE_BOTH,
                 ],
+                'multistore_configuration_key' => 'PS_MAIL_TYPE',
             ])
             ->add('log_emails', SwitchType::class, [
                 'label' => $this->trans('Log Emails', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_LOG_EMAILS',
             ])
             ->add('dkim_enable', SwitchType::class, [
                 'attr' => ['class' => 'js-dkim-enable'],
@@ -107,9 +112,20 @@ class EmailConfigurationType extends TranslatorAwareType
                     'Enabled' => true,
                 ],
                 'label' => $this->trans('DKIM signing', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_MAIL_DKIM_ENABLE',
                 'help' => $this->trans('Enable DKIM, fill in the fields and give it a try. If no email is sent, check logs.', 'Admin.Advparameters.Help'),
             ])
             ->add('smtp_config', SmtpConfigurationType::class)
             ->add('dkim_config', DkimConfigurationType::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

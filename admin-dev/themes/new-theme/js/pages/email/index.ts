@@ -58,4 +58,9 @@ $(() => {
   new EmailSendingTest();
   new SmtpConfigurationToggler();
   new DkimConfigurationToggler();
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );  
 });
