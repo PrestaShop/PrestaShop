@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Configuration;
 
 use InvalidArgumentException;
-use Shudrum\Component\ArrayFinder\ArrayFinder;
+use PrestaShop\PrestaShop\Core\Util\ArrayFinder;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 

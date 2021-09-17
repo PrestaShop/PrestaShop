@@ -8,6 +8,8 @@ $finder = PhpCsFixer\Finder::create()->in([
     __DIR__.'/controllers',
     __DIR__.'/tests',
     __DIR__.'/tools/profiling',
+])->exclude([
+    'Unit/Resources',
 ]);
 
 return (new PhpCsFixer\Config())
