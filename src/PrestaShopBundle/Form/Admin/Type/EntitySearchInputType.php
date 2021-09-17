@@ -104,6 +104,7 @@ class EntitySearchInputType extends CollectionType
             // This mapping array indicate which field from the entity must be used and what placeholder use to replace
             // it (the placeholder must be used in the prototype so that the value is in the right place)
             'prototype_mapping' => null,
+            'identifier_field' => 'id',
 
             // Layout
             'layout' => static::LIST_LAYOUT,
@@ -125,6 +126,7 @@ class EntitySearchInputType extends CollectionType
         $resolver->setAllowedTypes('entity_type', ['string', 'null']);
 
         $resolver->setAllowedTypes('prototype_mapping', ['array', 'null']);
+        $resolver->setAllowedTypes('identifier_field', ['string']);
 
         $resolver->setAllowedTypes('remove_modal', ['array', 'null']);
         $resolver->setNormalizer('remove_modal', function (Options $options, $value) {
@@ -176,6 +178,7 @@ class EntitySearchInputType extends CollectionType
             'remove_modal' => $removeModal,
             'list_layout' => $options['layout'],
             'empty_state' => $options['empty_state'],
+            'identifier_field' => $options['identifier_field'],
         ]);
     }
 
