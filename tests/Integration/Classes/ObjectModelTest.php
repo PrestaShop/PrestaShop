@@ -31,9 +31,9 @@ namespace Tests\Integration\Classes;
 use Configuration;
 use Db;
 use Language;
-use ObjectModel;
 use PHPUnit\Framework\TestCase;
 use Shop;
+use Tests\Resources\classes\TestableObjectModel;
 
 class ObjectModelTest extends TestCase
 {
@@ -66,6 +66,7 @@ class ObjectModelTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->installTestableObjectTables();
         $this->installLanguages();
         $this->installShops();
@@ -93,6 +94,8 @@ class ObjectModelTest extends TestCase
         $this->defaultLanguageId = (int) Configuration::get('PS_LANG_DEFAULT');
         $this->secondLanguageId = (int) Language::getIdByIso('fr');
         if ($this->secondLanguageId) {
+            $this->cleanUndesiredLanguages();
+
             return;
         }
 
@@ -103,6 +106,7 @@ class ObjectModelTest extends TestCase
         $language->language_code = 'fr-FR';
         $language->add();
         $this->secondLanguageId = (int) $language->id;
+        $this->cleanUndesiredLanguages();
     }
 
     private function installShops(): void
@@ -110,6 +114,8 @@ class ObjectModelTest extends TestCase
         $this->defaultShopId = (int) Configuration::get('PS_SHOP_DEFAULT');
         $this->secondShopId = Shop::getIdByName('Shop 2');
         if ($this->secondShopId) {
+            $this->cleanUndesiredShops();
+
             return;
         }
 
@@ -121,6 +127,42 @@ class ObjectModelTest extends TestCase
         $shop->physical_uri = '/';
         $shop->add();
         $this->secondShopId = (int) $shop->id;
+        $this->cleanUndesiredShops();
+    }
+
+    /**
+     * We need to remove extra languages because they would mess with the expected content,
+     * but we don't want to use DatabaseDump::restoredDB because all the tests are process
+     * isolated and it would be dumped on each test which would take too long.
+     */
+    private function cleanUndesiredLanguages(): void
+    {
+        // Clean undesired languages
+        $db = Db::getInstance();
+        $db->execute(sprintf(
+            'DELETE FROM %slang WHERE id_lang != %d AND id_lang != %d',
+            _DB_PREFIX_,
+            $this->defaultLanguageId,
+            $this->secondLanguageId
+        ));
+        Language::resetCache();
+    }
+
+    /**
+     * We need to remove extra shops because they would mess with the expected content,
+     * but we don't want to use DatabaseDump::restoredDB because all the tests are process
+     * isolated and it would be dumped on each test which would take too long.
+     */
+    private function cleanUndesiredShops(): void
+    {
+        // Clean undesired shops
+        $db = Db::getInstance();
+        $db->execute(sprintf(
+            'DELETE FROM %sshop WHERE id_shop != %d AND id_shop != %d',
+            _DB_PREFIX_,
+            $this->defaultShopId,
+            $this->secondShopId
+        ));
     }
 
     public function testAdd(): void
@@ -612,11 +654,7 @@ class ObjectModelTest extends TestCase
     private function applyModifications(TestableObjectModel $object, array $updatedProperties): void
     {
         foreach ($updatedProperties as $field => $value) {
-            if (is_array($value)) {
-                $object->{$field} = $this->convertLocalizedValue($value);
-            } else {
-                $object->{$field} = $value;
-            }
+            $object->{$field} = is_array($value) ? $this->convertLocalizedValue($value) : $value;
         }
     }
 
@@ -636,56 +674,5 @@ class ObjectModelTest extends TestCase
         }
 
         return $localizedValue;
-    }
-}
-
-class TestableObjectModel extends ObjectModel
-{
-    /**
-     * @var int
-     */
-    public $id_testable_object;
-
-    /**
-     * This field is multilang and multi shop
-     *
-     * @var string|string[]
-     */
-    public $name;
-
-    /**
-     * This field is global to all shops
-     *
-     * @var int
-     */
-    public $quantity;
-
-    /**
-     * This field is multishop
-     *
-     * @var bool
-     */
-    public $enabled;
-
-    public static $definition = [
-        'table' => 'testable_object',
-        'primary' => 'id_testable_object',
-        'multilang' => true,
-        'multilang_shop' => true,
-        'fields' => [
-            // Classic fields
-            'quantity' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedFloat'],
-            // Multi lang fields
-            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => false, 'size' => 128],
-            // Shop fields
-            'enabled' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
-        ],
-    ];
-
-    public function __construct($id = null, $id_lang = null, $id_shop = null)
-    {
-        Shop::addTableAssociation('testable_object', ['type' => 'shop']);
-        Shop::addTableAssociation('testable_object_lang', ['type' => 'fk_shop']);
-        parent::__construct($id, $id_lang, $id_shop);
     }
 }

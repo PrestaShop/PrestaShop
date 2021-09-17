@@ -23,3 +23,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_testable_object_shop` (
   PRIMARY KEY (`id_testable_object`, `id_shop`),
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+TRUNCATE `PREFIX_testable_object_shop`;
+TRUNCATE `PREFIX_testable_object_lang`;
+TRUNCATE `PREFIX_testable_object`;
