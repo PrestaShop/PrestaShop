@@ -740,7 +740,7 @@ class CarrierCore extends ObjectModel
                 if ($row['range_behavior']) {
                     // Get id zone
                     if (!$id_zone) {
-                        $id_zone = (int) Country::getIdZone(Country::getDefaultCountryId());
+                        $id_zone = (int) Country::getIdZone(Configuration::get('PS_COUNTRY_DEFAULT'));
                     }
 
                     // Get only carriers that have a range compatible with cart

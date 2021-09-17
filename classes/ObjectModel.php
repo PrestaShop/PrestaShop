@@ -572,7 +572,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         // Database insertion
-        if (Shop::checkIdShopDefault($this->def['table'])) {
+        if (Shop::checkIdShopDefault($this->def['table']) && array_key_exists('id_shop_default', get_object_vars($this))) {
+            /* @phpstan-ignore-next-line  */
             $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
         }
         if (!$result = Db::getInstance()->insert($this->def['table'], $this->getFields(), $null_values)) {
@@ -751,7 +752,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $id_shop_list = $this->id_shop_list;
         }
 
-        if (Shop::checkIdShopDefault($this->def['table']) && !$this->id_shop_default) {
+        /* @phpstan-ignore-next-line  */
+        if (Shop::checkIdShopDefault($this->def['table']) && array_key_exists('id_shop_default', get_object_vars($this)) && !$this->id_shop_default) {
+            /* @phpstan-ignore-next-line  */
             $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
         }
         // Database update
@@ -927,6 +930,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         if (!array_key_exists('deleted', get_object_vars($this))) {
             throw new PrestaShopException('Property "deleted" is missing in object model ' . get_class($this));
         }
+        /* @phpstan-ignore-next-line */
         $this->deleted = true;
 
         return $this->update();
