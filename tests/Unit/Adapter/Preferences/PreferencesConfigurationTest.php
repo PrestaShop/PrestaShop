@@ -65,7 +65,7 @@ class PreferencesConfigurationTest extends TestCase
      */
     private $mockMultistoreFeature;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mockConfiguration = $this->getMockBuilder(Configuration::class)
             ->setMethods(['get', 'getBoolean', 'set'])
