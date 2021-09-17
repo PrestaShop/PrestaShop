@@ -24,7 +24,7 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
-#   v1.7.8.0-rc.1 - (2021-09-15)
+#   v1.7.8.0-rc.1 - (2021-09-17)
 ####################################
 
 - Back Office:
@@ -42,6 +42,7 @@ Release Notes for PrestaShop 1.7
     - #24661: Display tab for extra modules in product page (by @jolelievre)
     - #24876: Add classes for sort links on legacy pages (by @boubkerbribri)
   - Bug fix:
+    - #25898: Fixed selector in computePriceTaxIncluded (by @Progi1984)
     - #25874: Apply PR #25833 into 1.7.8.0-build (by @matthieu-rolland)
     - #25875: Apply PR #25690 to 1.7.8.0-build (by @matthieu-rolland)
     - #25749: Product combination price edit : Use blur instead of onkeyup to avoid price flip (by @sowbiba)
@@ -99,6 +100,7 @@ Release Notes for PrestaShop 1.7
   - Improvement:
     - #23480: Improve accessibility of classic theme forms by adding for and ids (by @NeOMakinG)
   - Bug fix:
+    - #25388: FrontOffice : Use formatted ecotax price (by @Progi1984)
     - #25635: Fix html lang attribute to use the locale instead of ISO code (by @NeOMakinG)
     - #25665: Load medium size thumbnail on click on FO product page, instead of large (by @matthieu-rolland)
     - #25629: Use _DB_PREFIX_ constant instead of ps_ in SQL queries (by @PierreRambaud)
