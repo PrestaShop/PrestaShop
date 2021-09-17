@@ -62,5 +62,5 @@ $(() => {
     [
       'MultistoreConfigField',
     ],
-  );  
+  );
 });
