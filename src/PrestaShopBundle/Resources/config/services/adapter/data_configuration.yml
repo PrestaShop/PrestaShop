@@ -203,11 +203,15 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.core.email.smtp_configurator:
     class: 'PrestaShop\PrestaShop\Core\Email\SmtpDataConfigurator'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.webservice.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
