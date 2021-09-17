@@ -325,7 +325,18 @@ export default class EntitySearchInput {
           response.forEach((responseItem: any) => {
             const responseIdentifier = responseItem[this.options.identifierField];
 
-            if (!selectedIds.includes(responseIdentifier)) {
+            /**
+             * We need this method instead of relying on a built in Array.includes because it is based on
+             * strict equality. Since we can't be sure that the API format and the input field types will
+             * match we need to use loose equality here.
+             */
+            // eslint-disable-next-line arrow-body-style
+            const isIdContained = selectedIds.some((id: any) => {
+              // eslint-disable-next-line eqeqeq
+              return id == responseIdentifier;
+            });
+
+            if (!isIdContained) {
               filteredItems.push(responseItem);
             }
           });
