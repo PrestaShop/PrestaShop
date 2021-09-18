@@ -28,21 +28,6 @@ class StoresControllerCore extends FrontController
     public $php_self = 'stores';
 
     /**
-     * Initialize stores controller.
-     *
-     * @see FrontController::init()
-     */
-    public function init()
-    {
-        parent::init();
-
-        if (!extension_loaded('Dom')) {
-            $this->errors[] = $this->trans('PHP "Dom" extension has not been loaded.', [], 'Shop.Notifications.Error');
-            $this->context->smarty->assign('errors', $this->errors);
-        }
-    }
-
-    /**
      * Get formatted string address.
      *
      * @param array $store
