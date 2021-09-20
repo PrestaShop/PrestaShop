@@ -69,11 +69,6 @@ class AddProductSpecificPriceCommand
     /**
      * @var int|null
      */
-    private $shopGroupId;
-
-    /**
-     * @var int|null
-     */
     private $shopId;
 
     /**
@@ -193,26 +188,6 @@ class AddProductSpecificPriceCommand
     public function setDateTimeFrom(?DateTime $dateTimeFrom): self
     {
         $this->dateTimeFrom = $dateTimeFrom;
-
-        return $this;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getShopGroupId(): ?int
-    {
-        return $this->shopGroupId;
-    }
-
-    /**
-     * @param int $shopGroupId
-     *
-     * @return $this
-     */
-    public function setShopGroupId(int $shopGroupId): self
-    {
-        $this->shopGroupId = $shopGroupId;
 
         return $this;
     }

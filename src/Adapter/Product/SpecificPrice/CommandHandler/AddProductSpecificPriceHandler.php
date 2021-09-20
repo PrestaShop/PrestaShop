@@ -85,7 +85,6 @@ final class AddProductSpecificPriceHandler implements AddProductSpecificPriceHan
         $specificPrice->reduction_tax = $command->includesTax();
         $specificPrice->price = $command->getPrice();
         $specificPrice->from_quantity = $command->getFromQuantity();
-        $specificPrice->id_shop_group = $command->getShopGroupId() ?? 0;
         $specificPrice->id_shop = $command->getShopId() ?? 0;
         $specificPrice->id_product_attribute = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
         $specificPrice->id_currency = $command->getCurrencyId() ?? 0;

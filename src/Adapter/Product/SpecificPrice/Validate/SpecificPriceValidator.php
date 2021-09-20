@@ -50,7 +50,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -209,7 +208,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         $this->productRepository->assertProductExists(new ProductId($productId));
 
         $shopGroupId = (int) $specificPrice->id_shop_group;
-        if ($shopGroupId !== NoShopGroupId::NO_SHOP_GROUP_ID) {
+        if ($shopGroupId) {
             $this->shopGroupRepository->assertShopGroupExists(new ShopGroupId($shopGroupId));
         }
 

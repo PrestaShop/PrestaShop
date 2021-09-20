@@ -164,7 +164,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         $specificPricePropertyNames = [
-            'reductionType', 'includesTax', 'fromQuantity', 'shopGroupId',
+            'reductionType', 'includesTax', 'fromQuantity',
             'shopId', 'currencyId', 'countryId', 'groupId', 'customerId',
         ];
         foreach ($specificPricePropertyNames as $propertyName) {
@@ -275,9 +275,6 @@ class SpecificPriceContext extends AbstractProductFeatureContext
 
         if (!empty($dataRows['combination'])) {
             $addCommand->setCombinationId($this->getStoredId($dataRows, 'combination'));
-        }
-        if (!empty($dataRows['shop group'])) {
-            $addCommand->setShopGroupId($this->getStoredId($dataRows, 'shop group'));
         }
         if (!empty($dataRows['shop'])) {
             $addCommand->setShopId($this->getStoredId($dataRows, 'shop'));

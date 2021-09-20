@@ -7,8 +7,7 @@ Feature: Update product options from Back Office (BO)
   I need to be able to update product options from BO
 
   Background:
-    Given shop group "default" with name "Default" exists
-    And shop "testShop" with name "test_shop" exists
+    Given shop "testShop" with name "test_shop" exists
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And country "UnitedStates" with iso code "US" exists
     And group "visitor" named "Visitor" exists
@@ -109,7 +108,6 @@ Feature: Update product options from Back Office (BO)
       | from quantity   | 1      |
       | from            |        |
       | to              |        |
-      | shop group      |        |
       | shop            |        |
       | currency        |        |
       | country         |        |
@@ -125,7 +123,6 @@ Feature: Update product options from Back Office (BO)
       | from quantity         | 1      |
       | from                  |        |
       | to                    |        |
-      | shop group            |        |
       | shop                  |        |
       | currency              |        |
       | country               |        |
@@ -145,7 +142,6 @@ Feature: Update product options from Back Office (BO)
       | from quantity   | 1            |
       | from            |              |
       | to              |              |
-      | shop group      | default      |
       | shop            | testShop     |
       | currency        | usd          |
       | country         | UnitedStates |
@@ -161,7 +157,6 @@ Feature: Update product options from Back Office (BO)
       | from quantity         | 1            |
       | from                  |              |
       | to                    |              |
-      | shop group            | default      |
       | shop                  | testShop     |
       | currency              | usd          |
       | country               | UnitedStates |

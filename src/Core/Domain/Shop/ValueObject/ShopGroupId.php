@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 
-class ShopGroupId implements ShopGroupIdInterface
+class ShopGroupId
 {
     /**
      * @var int

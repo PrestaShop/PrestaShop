@@ -7,8 +7,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
   As an employee I want to be able to edit existing specific price for a product
 
   Background:
-    Given shop group "default" with name "Default" exists
-    And shop "testShop" with name "test_shop" exists
+    Given shop "testShop" with name "test_shop" exists
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And country "UnitedStates" with iso code "US" exists
     And group "visitor" named "Visitor" exists
@@ -111,14 +110,12 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | from quantity         | 1      |
       | from                  |        |
       | to                    |        |
-      | shop group            |        |
       | shop                  |        |
       | currency              |        |
       | country               |        |
       | group                 |        |
       | customer              |        |
     When I edit specific price "price1" with following details:
-      | shop group | default      |
       | shop       | testShop     |
       | currency   | usd          |
       | country    | UnitedStates |
@@ -133,14 +130,12 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | from quantity         | 1            |
       | from                  |              |
       | to                    |              |
-      | shop group            | default      |
       | shop                  | testShop     |
       | currency              | usd          |
       | country               | UnitedStates |
       | group                 | visitor      |
       | customer              | testCustomer |
     When I edit specific price "price1" with following details:
-      | shop group |  |
       | shop       |  |
       | currency   |  |
       | country    |  |
@@ -155,7 +150,6 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | from quantity         | 1      |
       | from                  |        |
       | to                    |        |
-      | shop group            |        |
       | shop                  |        |
       | currency              |        |
       | country               |        |

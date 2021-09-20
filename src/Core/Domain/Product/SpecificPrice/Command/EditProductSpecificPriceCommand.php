@@ -45,10 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
@@ -79,12 +76,6 @@ class EditProductSpecificPriceCommand
      * @var int|null
      */
     private $fromQuantity;
-
-    /**
-     * @todo: shop group is not handled for product specific price. Remove this field. (only shop id is handled)
-     * @var ShopGroupIdInterface|null
-     */
-    private $shopGroupId;
 
     /**
      * @var ShopIdInterface|null
@@ -219,26 +210,6 @@ class EditProductSpecificPriceCommand
     public function setFromQuantity(int $fromQuantity): EditProductSpecificPriceCommand
     {
         $this->fromQuantity = $fromQuantity;
-
-        return $this;
-    }
-
-    /**
-     * @return ShopGroupIdInterface|null
-     */
-    public function getShopGroupId(): ?ShopGroupIdInterface
-    {
-        return $this->shopGroupId;
-    }
-
-    /**
-     * @param int|null $shopGroupId
-     *
-     * @return EditProductSpecificPriceCommand
-     */
-    public function setShopGroupId(?int $shopGroupId): EditProductSpecificPriceCommand
-    {
-        $this->shopGroupId = NoShopGroupId::NO_SHOP_GROUP_ID === $shopGroupId ? new NoShopGroupId() : new ShopGroupId($shopGroupId);
 
         return $this;
     }
