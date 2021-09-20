@@ -177,3 +177,39 @@ Feature: Search products to associate them in the BO
       | product  | name                | reference | image url                                             |
       | product3 | bottle of champaign | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
       | product4 | bottle of wine      |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+
+  Scenario: Search results include the appropriate images
+    Given following image types should be applicable to products:
+      | reference     | name           | width | height |
+      | cartDefault   | cart_default   | 125   | 125    |
+      | homeDefault   | home_default   | 250   | 250    |
+      | largeDefault  | large_default  | 800   | 800    |
+      | mediumDefault | medium_default | 452   | 452    |
+      | smallDefault  | small_default  | 98    | 98     |
+    When I add product "product5" with following information:
+      | name[en-US] | can of lemonade     |
+      | name[fr-FR] | canette de limonade |
+      | type        | standard            |
+    And I add product "product6" with following information:
+      | name[en-US] | can of coke     |
+      | name[fr-FR] | canette de coca |
+      | type        | standard        |
+    # Note: search results are ordered by name
+    When I search for products with locale "english" matching "can" I should get following results:
+      | product  | name            | reference | image url                                             |
+      | product6 | can of coke     |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product5 | can of lemonade |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And product "product6" should have no images
+    When I add new image "image1" named "app_icon.png" to product "product6"
+    And I add new image "image2" named "logo.jpg" to product "product6"
+    And I update image "image2" with following information:
+      | cover | true |
+    Then product "product6" should have following images:
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
+      | image1          | false    |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | true     |               |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+    # Search returns the cover image url when present
+    When I search for products with locale "english" matching "can" I should get following results:
+      | product  | name            | reference | image url                                             |
+      | product6 | can of coke     |           | http://myshop.com/img/p/{image2}-home_default.jpg     |
+      | product5 | can of lemonade |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
