@@ -12,6 +12,11 @@
     word-break: normal;
   }
 
+  // Do not break order status change button
+  .column-osname .btn {
+    white-space: nowrap;
+  }
+
   .order-preview-content {
     .details th,
     .product th,
