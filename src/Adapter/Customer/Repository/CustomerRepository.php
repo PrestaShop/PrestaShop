@@ -27,12 +27,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Customer\Repository;
 
-use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
 
 /**
  * Provides methods to access Customer data storage

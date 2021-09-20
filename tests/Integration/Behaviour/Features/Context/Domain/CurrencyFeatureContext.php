@@ -208,7 +208,6 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         }
 
         $this->getSharedStorage()->set($reference, self::NON_EXISTING_CURRENCY_ID);
-
     }
 
     /**

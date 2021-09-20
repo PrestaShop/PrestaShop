@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCusto
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Domain\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -163,7 +162,6 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
         $id = $commandBus->handle($command);
         SharedStorage::getStorage()->set($customerReference, $id->getValue());
     }
-
 
     /**
      * @Given customer :reference does not exist

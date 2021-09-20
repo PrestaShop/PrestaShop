@@ -1135,8 +1135,8 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assignCustomerToCart(string $customerReference, string $cartReference)
     {
-        $cartId = (int)SharedStorage::getStorage()->get($cartReference);
-        $customerId = (int)SharedStorage::getStorage()->get($customerReference);
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+        $customerId = (int) SharedStorage::getStorage()->get($customerReference);
 
         $cart = new Cart($cartId);
         $cart->id_guest = null;
