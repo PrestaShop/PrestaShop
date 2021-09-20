@@ -245,6 +245,19 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
+            if ('id_category' === $filterName) {
+                $qb->rightJoin(
+                    'p',
+                    $this->dbPrefix . 'category_product',
+                    'pc',
+                    'p.`id_product` = pc.`id_product` AND pc.id_category = :categoryId'
+                );
+
+                $qb->setParameter('categoryId', $filter);
+
+                continue;
+            }
+
             if ('reference' === $filterName) {
                 $qb->andWhere('p.`reference` LIKE :reference');
                 $qb->setParameter('reference', '%' . $filter . '%');

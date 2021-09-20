@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
+use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
@@ -46,11 +47,13 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Grid\Filter\HiddenFilter;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
@@ -259,6 +262,13 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         ],
                     ])
                     ->setAssociatedColumn('reference')
+            )
+            ->add(
+                (new HiddenFilter('id_category', HiddenType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('id_category')
             )
             ->add(
                 (new Filter('category', TextType::class))

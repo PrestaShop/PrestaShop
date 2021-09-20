@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
@@ -60,6 +61,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\ProductDownload;
+use PrestaShopBundle\Form\Admin\Product\ProductCategories;
 use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -108,8 +110,19 @@ class ProductController extends FrameworkBundleAdminController
     {
         $productGridFactory = $this->get('prestashop.core.grid.factory.product');
         $productGrid = $productGridFactory->getGrid($filters);
+        $categoryName = null;
+
+        if (isset($filters->getFilters()['id_category'])) {
+            $idFilteredCategory = (int)$filters->getFilters()['id_category'];
+            $category = $this->getCommandBus()->handle(new GetCategoryForEditing($idFilteredCategory));
+            $categoryName = $category->getName()[$this->getContextLangId()];
+        }
+
+        $categoriesForm = $this->createForm(ProductCategories::class);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/index.html.twig', [
+            'categories' => $categoriesForm->createView(),
+            'selectedCategoryName' => $categoryName,
             'productGrid' => $this->presentGrid($productGrid),
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons(),
