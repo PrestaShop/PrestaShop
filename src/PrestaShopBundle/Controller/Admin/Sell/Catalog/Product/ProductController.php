@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -42,10 +44,12 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\ProductDownload;
+use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -256,6 +260,67 @@ class ProductController extends FrameworkBundleAdminController
         );
 
         return $response;
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param string $languageCode
+     *
+     * @return JsonResponse
+     *
+     * @throws ProductConstraintException
+     */
+    public function getAjaxProductsAction(Request $request, string $languageCode): JsonResponse
+    {
+        /** @var LangRepository $langRepository */
+        $langRepository = $this->get('prestashop.core.admin.lang.repository');
+        $lang = $langRepository->getOneByLocaleOrIsoCode($languageCode);
+
+        $shopContext = $this->get('prestashop.adapter.shop.context');
+        $shopId = (int) $shopContext->getContextShopID();
+        if (empty($shopId)) {
+            $configuration = $this->get('prestashop.adapter.legacy.configuration');
+            $shopId = $configuration->getInt('PS_SHOP_DEFAULT');
+        }
+
+        try {
+            /** @var ProductForAssociation[] $products */
+            $products = $this->getQueryBus()->handle(new SearchProductsForAssociation(
+                $request->get('query', ''),
+                $lang->getId(),
+                $shopId
+            ));
+        } catch (ProductConstraintException $e) {
+            return $this->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (empty($products)) {
+            return $this->json([], Response::HTTP_NOT_FOUND);
+        }
+
+        $productsData = [];
+        foreach ($products as $product) {
+            $productName = $product->getName();
+            if (!empty($product->getReference())) {
+                $productName .= sprintf(
+                    ' (ref: %s)',
+                    $product->getReference()
+                );
+            }
+
+            $productsData[] = [
+                'id' => $product->getProductId(),
+                'name' => $productName,
+                'image' => $product->getImageUrl(),
+            ];
+        }
+
+        return $this->json($productsData);
     }
 
     /**

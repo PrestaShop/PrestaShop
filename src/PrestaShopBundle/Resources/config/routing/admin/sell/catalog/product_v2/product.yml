@@ -65,3 +65,12 @@ admin_products_v2_delete:
             id_product: productId
     requirements:
         productId: \d+
+
+admin_get_ajax_products:
+    path: /search/{languageCode}
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::getAjaxProductsAction
+        _legacy_controller: AdminProducts
+    requirements:
+        languageCode: ^[a-zA-Z]{2}(-[a-zA-Z]{2})?$
