@@ -28,10 +28,16 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Group;
+use PrestaShop\PrestaShop\Core\Domain\Group\Exception\GroupNotFoundException;
 use RuntimeException;
 
 class GroupFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * Random integer representing group id which should never exist in test database
+     */
+    public const NON_EXISTING_GROUP_ID = 74011211;
+
     /**
      * @Given group :groupReference named :name exists
      *
@@ -46,5 +52,27 @@ class GroupFeatureContext extends AbstractDomainFeatureContext
         }
 
         $this->getSharedStorage()->set($groupReference, (int) $group['id_group']);
+    }
+
+    /**
+     * @Given group :reference does not exist
+     *
+     * @param string $reference
+     */
+    public function setNonExistingGroupReference(string $reference): void
+    {
+        if ($this->getSharedStorage()->exists($reference) && $this->getSharedStorage()->get($reference)) {
+            throw new RuntimeException(sprintf('Expected that group "%s" should not exist', $reference));
+        }
+
+        $this->getSharedStorage()->set($reference, self::NON_EXISTING_GROUP_ID);
+    }
+
+    /**
+     * @Then I should get error that group was not found
+     */
+    public function assertGroupNotFound(): void
+    {
+        $this->assertLastErrorIs(GroupNotFoundException::class);
     }
 }

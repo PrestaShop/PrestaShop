@@ -51,6 +51,11 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
 {
     /**
+     * Random integer which should never exist in test database as currency id
+     */
+    public const NON_EXISTING_CURRENCY_ID = 1234567;
+
+    /**
      * @var ReferenceCurrency
      */
     private $currencyData;
@@ -189,6 +194,21 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         } catch (CannotDeleteDefaultCurrencyException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @Given currency :reference does not exist
+     *
+     * @param string $reference
+     */
+    public function setNonExistingCurrencyReference(string $reference): void
+    {
+        if ($this->getSharedStorage()->exists($reference) && $this->getCurrency($reference)->id) {
+            throw new RuntimeException(sprintf('Expected that currency "%s" should not exist', $reference));
+        }
+
+        $this->getSharedStorage()->set($reference, self::NON_EXISTING_CURRENCY_ID);
+
     }
 
     /**

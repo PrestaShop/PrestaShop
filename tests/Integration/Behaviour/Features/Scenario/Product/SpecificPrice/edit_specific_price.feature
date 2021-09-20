@@ -116,11 +116,11 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | group                 |        |
       | customer              |        |
     When I edit specific price "price1" with following details:
-      | shop       | testShop     |
-      | currency   | usd          |
-      | country    | UnitedStates |
-      | group      | visitor      |
-      | customer   | testCustomer |
+      | shop     | testShop     |
+      | currency | usd          |
+      | country  | UnitedStates |
+      | group    | visitor      |
+      | customer | testCustomer |
     Then specific price price1 should have following details:
       | specific price detail | value        |
       | reduction type        | amount       |
@@ -136,12 +136,62 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | group                 | visitor      |
       | customer              | testCustomer |
     When I edit specific price "price1" with following details:
-      | shop       |  |
-      | currency   |  |
-      | country    |  |
-      | group      |  |
-      | customer   |  |
+      | shop     |  |
+      | currency |  |
+      | country  |  |
+      | group    |  |
+      | customer |  |
     Then specific price price1 should have following details:
+      | specific price detail | value  |
+      | reduction type        | amount |
+      | reduction value       | 12.56  |
+      | includes tax          | true   |
+      | price                 | 45.78  |
+      | from quantity         | 1      |
+      | from                  |        |
+      | to                    |        |
+      | shop                  |        |
+      | currency              |        |
+      | country               |        |
+      | group                 |        |
+      | customer              |        |
+
+  Scenario: I edit specific price with non-existing relations
+    Given currency "jen" does not exist
+    And shop "nonExistingShop" does not exist
+    And country "Simsalabim" does not exist
+    And group "pirates" does not exist
+    And customer "Rick - the pickle" does not exist
+    And specific price price1 should have following details:
+      | specific price detail | value  |
+      | reduction type        | amount |
+      | reduction value       | 12.56  |
+      | includes tax          | true   |
+      | price                 | 45.78  |
+      | from quantity         | 1      |
+      | from                  |        |
+      | to                    |        |
+      | shop                  |        |
+      | currency              |        |
+      | country               |        |
+      | group                 |        |
+      | customer              |        |
+    When I edit specific price "price1" with following details:
+      | shop | nonExistingShop |
+    Then I should get error that shop was not found
+    When I edit specific price "price1" with following details:
+      | currency | jen |
+    Then I should get error that currency was not found
+    When I edit specific price "price1" with following details:
+      | country | Simsalabim |
+    Then I should get error that country was not found
+    When I edit specific price "price1" with following details:
+      | group | pirates |
+    Then I should get error that group was not found
+    When I edit specific price "price1" with following details:
+      | customer | Rick - the pickle |
+    Then I should get error that customer was not found
+    And specific price price1 should have following details:
       | specific price detail | value  |
       | reduction type        | amount |
       | reduction value       | 12.56  |

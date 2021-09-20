@@ -23,51 +23,39 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
+namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
+use RuntimeException;
 
-/**
- * Defines Customer ID with it's constraints
- */
-class CustomerId
+class CountryFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @var int
+     * Random integer representing country id which should never exist in test database
      */
-    private $customerId;
+    public const NON_EXISTING_COUNTRY_ID = 74000211;
 
     /**
-     * @param int $customerId
+     * @Given country :reference does not exist
+     *
+     * @param string $reference
      */
-    public function __construct(int $customerId)
+    public function setNonExistingCountryReference(string $reference): void
     {
-        $this->assertIntegerIsGreaterThanZero($customerId);
-
-        $this->customerId = $customerId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->customerId;
-    }
-
-    /**
-     * @param int $customerId
-     */
-    private function assertIntegerIsGreaterThanZero(int $customerId): void
-    {
-        if (0 > $customerId) {
-            throw new CustomerConstraintException(
-                sprintf('Customer id %s is invalid.', $customerId),
-                CustomerConstraintException::INVALID_ID
-            );
+        if ($this->getSharedStorage()->exists($reference) && $this->getSharedStorage()->get($reference)) {
+            throw new RuntimeException(sprintf('Expected that country "%s" should not exist', $reference));
         }
+
+        $this->getSharedStorage()->set($reference, self::NON_EXISTING_COUNTRY_ID);
+    }
+
+    /**
+     * @Then I should get error that country was not found
+     */
+    public function assertCountryNotFound(): void
+    {
+        $this->assertLastErrorIs(CountryNotFoundException::class);
     }
 }
