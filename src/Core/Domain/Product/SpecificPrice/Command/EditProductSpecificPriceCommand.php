@@ -81,6 +81,7 @@ class EditProductSpecificPriceCommand
     private $fromQuantity;
 
     /**
+     * @todo: shop group is not handled for product specific price. Remove this field. (only shop id is handled)
      * @var ShopGroupIdInterface|null
      */
     private $shopGroupId;
