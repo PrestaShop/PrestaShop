@@ -109,7 +109,6 @@
         "prestashop/statssearch": "^2",
         "prestashop/statsstock": "^2",
         "prestashop/translationtools-bundle": "^5.0",
-        "prestashop/welcome": "^6",
         "sensio/framework-extra-bundle": "^5.1",
         "shudrum/array-finder": "^1.1.0",
         "smarty/smarty": "^3.1.39",
