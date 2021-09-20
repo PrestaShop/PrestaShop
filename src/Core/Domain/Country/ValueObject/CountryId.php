@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintExcepti
 /**
  * Provides country id value
  */
-class CountryId implements CountryIdInterface
+class CountryId
 {
     /**
      * @var int

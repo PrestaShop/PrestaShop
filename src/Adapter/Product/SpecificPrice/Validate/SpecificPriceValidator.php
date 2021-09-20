@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\NoCountryId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
@@ -227,7 +226,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         }
 
         $countryId = (int) $specificPrice->id_country;
-        if ($countryId !== NoCountryId::NO_COUNTRY_ID) {
+        if ($countryId) {
             $this->countryRepository->assertCountryExists(new CountryId($countryId));
         }
 

@@ -30,8 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryIdInterface;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\NoCountryId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
@@ -91,7 +89,7 @@ class EditProductSpecificPriceCommand
     private $currencyId;
 
     /**
-     * @var CountryIdInterface|null
+     * @var CountryId|null
      */
     private $countryId;
 
@@ -273,9 +271,9 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return CountryIdInterface|null
+     * @return CountryId|null
      */
-    public function getCountryId(): ?CountryIdInterface
+    public function getCountryId(): ?CountryId
     {
         return $this->countryId;
     }
@@ -287,7 +285,7 @@ class EditProductSpecificPriceCommand
      */
     public function setCountryId(int $countryId): EditProductSpecificPriceCommand
     {
-        $this->countryId = NoCountryId::NO_COUNTRY_ID === $countryId ? new NoCountryId() : new CountryId($countryId);
+        $this->countryId = new CountryId($countryId);
 
         return $this;
     }
