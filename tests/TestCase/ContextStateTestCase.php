@@ -24,53 +24,49 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace Tests\TestCase;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject;
+use Context;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Shop;
 
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
-
-class ShopGroupId
+abstract class ContextStateTestCase extends TestCase
 {
     /**
-     * @var int
-     */
-    private $shopGroupId;
-
-    /**
-     * @param int $shopGroupId
+     * @param array $contextFields
      *
-     * @throws ShopException
+     * @return MockObject|Context
      */
-    public function __construct(int $shopGroupId)
+    protected function createContextMock(array $contextFields): Context
     {
-        $this->assertIsGreaterThanZero($shopGroupId);
+        $contextMock = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->shopGroupId = $shopGroupId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->shopGroupId;
-    }
-
-    /**
-     * @param int $shopGroupId
-     *
-     * @throws ShopException
-     */
-    private function assertIsGreaterThanZero(int $shopGroupId): void
-    {
-        if (0 >= $shopGroupId) {
-            throw new ShopException(
-                sprintf(
-                    'Shop group id %s is invalid. Shop group id must be a number that is greater than zero.',
-                    var_export($shopGroupId, true)
-                )
-            );
+        foreach ($contextFields as $fieldName => $contextValue) {
+            $contextMock->$fieldName = $contextValue;
         }
+        LegacyContext::setInstanceForTesting($contextMock);
+
+        return $contextMock;
+    }
+
+    /**
+     * @param string $className
+     * @param int $objectId
+     *
+     * @return MockObject|Cart|Country|Currency|Customer|Language|Shop
+     */
+    protected function createContextFieldMock(string $className, int $objectId)
+    {
+        $contextField = $this->getMockBuilder($className)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $contextField->id = $objectId;
+
+        return $contextField;
     }
 }
