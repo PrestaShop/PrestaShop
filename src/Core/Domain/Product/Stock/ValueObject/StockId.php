@@ -45,9 +45,9 @@ class StockId
      *
      * @throws ProductStockConstraintException
      */
-    public function __construct($stockId)
+    public function __construct(int $stockId)
     {
-        $this->assertIntegerIsGreaterThanZero($stockId);
+        $this->assertIsGreaterThanZero($stockId);
 
         $this->stockId = $stockId;
     }
@@ -55,7 +55,7 @@ class StockId
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->stockId;
     }
@@ -63,9 +63,9 @@ class StockId
     /**
      * @param int $stockId
      */
-    private function assertIntegerIsGreaterThanZero($stockId)
+    private function assertIsGreaterThanZero(int $stockId): void
     {
-        if (!is_int($stockId) || 0 > $stockId) {
+        if (0 > $stockId) {
             throw new ProductStockConstraintException(
                 sprintf('Stock id %s is invalid. Stock id must be number that is greater than zero.', var_export($stockId, true)),
                 ProductStockConstraintException::INVALID_ID
