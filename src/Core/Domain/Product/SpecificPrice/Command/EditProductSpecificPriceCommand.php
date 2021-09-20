@@ -36,8 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerIdInterface;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\GroupIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\NoGroupId;
@@ -103,7 +101,7 @@ class EditProductSpecificPriceCommand
     private $groupId;
 
     /**
-     * @var CustomerIdInterface|null
+     * @var CustomerId|null
      */
     private $customerId;
 
@@ -315,9 +313,9 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return CustomerIdInterface|null
+     * @return CustomerId|null
      */
-    public function getCustomerId(): ?CustomerIdInterface
+    public function getCustomerId(): ?CustomerId
     {
         return $this->customerId;
     }
@@ -329,7 +327,7 @@ class EditProductSpecificPriceCommand
      */
     public function setCustomerId(int $customerId): EditProductSpecificPriceCommand
     {
-        $this->customerId = NoCustomerId::NO_CUSTOMER_ID === $customerId ? new NoCustomerId() : new CustomerId($customerId);
+        $this->customerId = new CustomerId($customerId);
 
         return $this;
     }

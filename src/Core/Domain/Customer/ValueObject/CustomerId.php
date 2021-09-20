@@ -28,12 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 
 /**
  * Defines Customer ID with it's constraints
  */
-class CustomerId implements CustomerIdInterface
+class CustomerId
 {
     /**
      * @var int
@@ -43,9 +43,9 @@ class CustomerId implements CustomerIdInterface
     /**
      * @param int $customerId
      */
-    public function __construct(int $customerId)
+    public function __construct($customerId)
     {
-        $this->assertIsGreaterThanZero($customerId);
+        $this->assertIntegerIsGreaterThanZero($customerId);
 
         $this->customerId = $customerId;
     }
@@ -53,7 +53,7 @@ class CustomerId implements CustomerIdInterface
     /**
      * @return int
      */
-    public function getValue(): int
+    public function getValue()
     {
         return $this->customerId;
     }
@@ -61,17 +61,10 @@ class CustomerId implements CustomerIdInterface
     /**
      * @param int $customerId
      */
-    private function assertIsGreaterThanZero(int $customerId): void
+    private function assertIntegerIsGreaterThanZero($customerId): void
     {
-        //@todo:
-        //  Search for usages and adjust behavior of CustomerId where customerId is allowed to be 0
-        //  Use CustomerIdInterface and CustomerId|NoCustomerId classes to indicate where 0 is allowed
-        //  and then make $customerId not valid as 0 value here
-        if (0 > $customerId) {
-            throw new CustomerConstraintException(
-                sprintf('Customer id %d is invalid.', $customerId),
-                CustomerConstraintException::INVALID_ID
-            );
+        if (!is_int($customerId) || 0 > $customerId) {
+            throw new CustomerException(sprintf('Customer id %s is invalid. Customer id must be number that is greater than zero.', var_export($customerId, true)));
         }
     }
 }

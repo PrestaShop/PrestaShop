@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\NoCountryId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\NoGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -238,7 +237,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         }
 
         $customerId = (int) $specificPrice->id_customer;
-        if ($customerId !== NoCustomerId::NO_CUSTOMER_ID) {
+        if ($customerId) {
             $this->customerRepository->assertCustomerExists(new CustomerId($customerId));
         }
     }
