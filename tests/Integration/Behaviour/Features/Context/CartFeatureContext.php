@@ -31,6 +31,7 @@ use Cart;
 use Context;
 use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
 use PHPUnit\Framework\Assert as Assert;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 
@@ -46,7 +47,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then there is no delivery options available for my cart
      */
-    public function noDeliveryOptions()
+    public function noDeliveryOptions(): void
     {
         if ($this->getCurrentCart() === null) {
             throw new \RuntimeException('No current cart, cannot check available delivery options');
@@ -64,7 +65,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @todo: improve this to assert the content of delivery options
      */
-    public function deliveryOptionsAreAvailable()
+    public function deliveryOptionsAreAvailable(): void
     {
         if ($this->getCurrentCart() === null) {
             throw new \RuntimeException('No current cart, cannot check available delivery options');
@@ -80,7 +81,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Given /^I have an empty default cart$/
      */
-    public function iHaveAnEmptyDefaultCart()
+    public function iHaveAnEmptyDefaultCart(): void
     {
         $cart = new CartOld();
         $cart->id_lang = (int) Context::getContext()->language->id;
@@ -95,7 +96,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @AfterScenario
      */
-    public function emptyCartProducts()
+    public function emptyCartProducts(): void
     {
         if ($this->getCurrentCart() !== null) {
             // remove products from cart
@@ -111,7 +112,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^I should have (\d+) different products in my cart$/
      */
-    public function productCountInMyCartShouldBe($productCount)
+    public function productCountInMyCartShouldBe($productCount): void
     {
         $currentCartProducts = $this->getCurrentCart()->getProducts(true);
         if ($productCount != count($currentCartProducts)) {
@@ -122,7 +123,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^I should have (\d+) products in my cart$/
      */
-    public function totalProductCountInMyCartShouldBe($productCount)
+    public function totalProductCountInMyCartShouldBe($productCount): void
     {
         $currentCartProducts = Cart::getNbProducts($this->getCurrentCart()->id);
         if ($productCount != $currentCartProducts) {
@@ -133,7 +134,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^my cart total should be (precisely )?(\d+\.\d+) tax included$/
      */
-    public function totalCartWithTaxShouldBe($precisely, $expectedTotal)
+    public function totalCartWithTaxShouldBe($precisely, $expectedTotal): void
     {
         $this->expectsTotal($expectedTotal, 'v2', true, !empty($precisely));
     }
@@ -141,7 +142,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^my cart total using previous calculation method should be (precisely )?(\d+\.\d+) tax included$/
      */
-    public function totalCartWithTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
+    public function totalCartWithTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal): void
     {
         $this->expectsTotal($expectedTotal, 'v1', true, !empty($precisely));
     }
@@ -149,7 +150,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^my cart total should be (precisely )?(\d+\.\d+) tax excluded$/
      */
-    public function totalCartWithoutTaxShouldBe($precisely, $expectedTotal)
+    public function totalCartWithoutTaxShouldBe($precisely, $expectedTotal): void
     {
         $this->expectsTotal($expectedTotal, 'v2', false, !empty($precisely));
     }
@@ -157,12 +158,12 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^my cart total using previous calculation method should be (precisely )?(\d+\.\d+) tax excluded$/
      */
-    public function totalCartWithoutTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
+    public function totalCartWithoutTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal): void
     {
         $this->expectsTotal($expectedTotal, 'v1', false, !empty($precisely));
     }
 
-    protected function expectsTotal($expectedTotal, $method, $withTax = true, $precisely = false)
+    protected function expectsTotal($expectedTotal, $method, $withTax = true, $precisely = false): void
     {
         $cart = $this->getCurrentCart();
         $carrierId = (int) $cart->id_carrier <= 0 ? null : $cart->id_carrier;
@@ -184,7 +185,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @When /^I select gift wrapping$/
      */
-    public function iSelectGiftWrapping()
+    public function iSelectGiftWrapping(): void
     {
         $this->getCurrentCart()->gift = true;
     }
@@ -192,7 +193,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^cart shipping fees should be (\d+\.\d+)( tax excluded| tax included)?$/
      */
-    public function calculateCartShippingFees($expectedShippingFees, $taxes = null)
+    public function calculateCartShippingFees($expectedShippingFees, $taxes = null): void
     {
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $expectedTotal = round($expectedShippingFees, 1);
@@ -205,7 +206,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^cart rule "(.+)" should be applied to my cart$/
      */
-    public function assertCartRuleIsAppliedToCart(string $cartRuleReference)
+    public function assertCartRuleIsAppliedToCart(string $cartRuleReference): void
     {
         $cartInfo = $this->getCurrentCartInfos();
         $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference);
@@ -227,7 +228,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @param TableNode $table
      */
-    public function checkCartToOrderValues(TableNode $table)
+    public function checkCartToOrderValues(TableNode $table): void
     {
         $cartInfo = $this->getCurrentCartInfos();
         $expectedInformations = $table->getRowsHash();
@@ -264,7 +265,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
         );
     }
 
-    private function getCommandBus()
+    private function getCommandBus(): CommandBusInterface
     {
         return CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
     }

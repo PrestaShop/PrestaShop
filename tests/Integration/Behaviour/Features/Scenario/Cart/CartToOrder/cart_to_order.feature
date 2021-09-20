@@ -271,13 +271,13 @@ Feature: Check cart to order data copy
 
   Scenario: Applicable cart rules with no code are automatically applied to cart for order
     Given I have an empty default cart
-    Given email sending is disabled
-    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    And I add 2 items of product "product1" in my cart
-    Given there is a cart rule named "cartrule1" that applies an amount discount of 5.0 with priority 1, quantity of 1000 and quantity per user 1000
-    Given there is a customer named "customer1" whose email is "fake@prestashop.com"
-    When I am logged in as "customer1"
-    And the current cart should have the following informations:
+    And email sending is disabled
+    And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
+    When I add 2 items of product "product1" in my cart
+    And there is a cart rule named "cartrule1" that applies an amount discount of 5.0 with priority 1, quantity of 1000 and quantity per user 1000
+    And there is a customer named "customer1" whose email is "fake@prestashop.com"
+    And I am logged in as "customer1"
+    Then the current cart should have the following informations:
       | total_discounts               | -$5.00   |
       | total_price_without_taxes     | $41.62   |
       | total_price_with_taxes        | $41.62   |
