@@ -245,4 +245,15 @@ class ArrayFinderTest extends TestCase
             (new ArrayFinder([]))->get('some.key', 'default value')
         );
     }
+
+    public function testArrayAccessNullNode(): void
+    {
+        $arrayFinder = new ArrayFinder([
+            'z' => 'x',
+            'y' => null,
+        ]);
+        $this->assertNull($arrayFinder->get('y'));
+        $this->assertNull($arrayFinder->get('y.a'));
+        $this->assertNull($arrayFinder->get('y.a.b'));
+    }
 }
