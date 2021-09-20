@@ -46,14 +46,15 @@ class Theme implements AddonInterface
      */
     public function __construct(array $attributes, $configurationCacheDirectory = null, $themesDirectory = null)
     {
-        if (null === $configurationCacheDirectory) {
-            $configurationCacheDirectory = (new Configuration())->get('_PS_CACHE_DIR_');
-        }
         if (null === $themesDirectory) {
             $themesDirectory = _PS_ALL_THEMES_DIR_;
         }
 
         if (isset($attributes['parent'])) {
+            if (null === $configurationCacheDirectory) {
+                $configurationCacheDirectory = (new Configuration())->get('_PS_CACHE_DIR_');
+            }
+
             $yamlParser = new YamlParser($configurationCacheDirectory);
             $parentAttributes = $yamlParser->parse($themesDirectory . '/' . $attributes['parent'] . '/config/theme.yml');
             $parentAttributes['preview'] = 'themes/' . $attributes['parent'] . '/preview.png';
