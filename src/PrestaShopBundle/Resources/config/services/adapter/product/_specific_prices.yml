@@ -26,7 +26,7 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand
 
-    prestashop.adapter.product.specific_price.command_handler.edit_product_specific_price:
+    prestashop.adapter.product.specific_price.command_handler.edit_product_specific_price_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler\EditProductSpecificPriceHandler
         arguments:
             - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
