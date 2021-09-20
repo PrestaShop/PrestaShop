@@ -43,7 +43,7 @@ class SearchProductFeatureContext extends AbstractProductFeatureContext
      * @param string $search
      * @param TableNode $tableNode
      */
-    public function assertRelatedProducts(string $localeReference, string $search, TableNode $tableNode)
+    public function assertSearchProducts(string $localeReference, string $search, TableNode $tableNode)
     {
         $language = $this->getSharedStorage()->get($localeReference);
         /** @var ProductForAssociation[] $foundProducts */
@@ -104,5 +104,23 @@ class SearchProductFeatureContext extends AbstractProductFeatureContext
 
             ++$index;
         }
+    }
+
+    /**
+     * @When I search for products with locale :localeReference matching :search I should get no results
+     *
+     * @param string $localeReference
+     * @param string $search
+     */
+    public function assertNoProductsFound(string $localeReference, string $search)
+    {
+        $language = $this->getSharedStorage()->get($localeReference);
+        /** @var ProductForAssociation[] $foundProducts */
+        $foundProducts = $this->getQueryBus()->handle(new SearchProductsForAssociation(
+            $search,
+            (int) $language->id,
+            (int) Configuration::get('PS_SHOP_DEFAULT')
+        ));
+        Assert::assertEmpty($foundProducts);
     }
 }
