@@ -92,7 +92,6 @@ Feature: Edit existing Specific Price from Back Office (BO).
     Then specific price price1 should have following details:
       | specific price detail | value  |
       | includes tax          | true   |
-      | price                 | 45.78  |
       | specific price detail | value  |
       | reduction type        | amount |
       | reduction value       | 12.56  |
