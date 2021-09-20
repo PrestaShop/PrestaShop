@@ -1122,20 +1122,12 @@ $product-page-padding-bottom: 80px !default;
     .related-product {
       display: flex;
       flex-direction: column;
-      width: 180px;
+      width: 100%;
+      max-width: 180px;
       margin: 0.5rem;
 
       &-image {
-        width: 100%;
-
-        img {
-          display: block;
-          width: auto;
-          max-width: 170px;
-          height: auto;
-          max-height: 170px;
-          margin: 0 auto;
-        }
+        margin-bottom: 0.5rem;
       }
     }
   }
