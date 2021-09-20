@@ -63,6 +63,10 @@ class CustomerId implements CustomerIdInterface
      */
     private function assertIsGreaterThanZero(int $customerId): void
     {
+        //@todo:
+        //  Search for usages and adjust behavior of CustomerId where customerId is allowed to be 0
+        //  Use CustomerIdInterface and CustomerId|NoCustomerId classes to indicate where 0 is allowed
+        //  and then make $customerId not valid as 0 value here
         if (0 > $customerId) {
             throw new CustomerConstraintException(
                 sprintf('Customer id %d is invalid.', $customerId),
