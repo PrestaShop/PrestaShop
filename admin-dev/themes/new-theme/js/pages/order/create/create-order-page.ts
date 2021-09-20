@@ -25,7 +25,6 @@
 
 import Router from '@components/router';
 import {EventEmitter} from '@components/event-emitter';
-// @ts-ignore-next-line
 import _ from 'lodash';
 import createOrderMap from './create-order-map';
 import CustomerManager from './customer-manager';

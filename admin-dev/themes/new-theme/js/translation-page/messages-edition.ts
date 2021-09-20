@@ -25,7 +25,7 @@
 // @ts-ignore-next-line
 import Jets from 'jets/jets';
 
-export default function (search: Jets): void {
+export default function (search: typeof Jets): void {
   $('.reset-translation-value').each((buttonIndex, button) => {
     const $editTranslationForm = $(button).parents('form');
     const defaultTranslationValue = $editTranslationForm

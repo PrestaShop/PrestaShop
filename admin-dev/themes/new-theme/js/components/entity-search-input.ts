@@ -88,7 +88,7 @@ export default class EntitySearchInput {
 
   private options!: EntitySearchInputOptions;
 
-  private entityRemoteSource: Bloodhound;
+  private entityRemoteSource?: Bloodhound<Record<string, any>>;
 
   private autoSearch!: AutoCompleteSearch;
 
@@ -152,8 +152,8 @@ export default class EntitySearchInput {
     this.options[optionName] = value;
 
     // Apply special options to components when needed
-    if (optionName === 'remoteUrl') {
-      this.entityRemoteSource.remote.url = this.options.remoteUrl;
+    if (optionName === 'remoteUrl' && this.entityRemoteSource) {
+      (<Record<string, any>> this.entityRemoteSource).remote.url = this.options.remoteUrl;
     }
   }
 
