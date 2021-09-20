@@ -42,28 +42,14 @@ class CustomerRepository extends AbstractObjectModelRepository
     /**
      * @param CustomerId $customerId
      *
-     * @throws CoreException
      * @throws CustomerNotFoundException
      */
     public function assertCustomerExists(CustomerId $customerId): void
     {
-        try {
-            if (!ObjectModel::existsInDatabase($customerId->getValue(), 'customer')) {
-                throw new CustomerNotFoundException(
-                    $customerId,
-                    sprintf('customer #%d does not exist', $customerId->getValue())
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf(
-                    'Error occurred when trying to check if customer #%d exists [%s]',
-                    $customerId->getValue(),
-                    $e->getMessage()
-                ),
-                0,
-                $e
-            );
-        }
+        $this->assertObjectModelExists(
+            $customerId->getValue(),
+            'customer',
+            CustomerNotFoundException::class
+        );
     }
 }
