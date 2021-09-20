@@ -135,10 +135,12 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
 
         if (null !== $command->getDateTimeFrom()) {
             $specificPrice->from = $command->getDateTimeFrom()->format(DateTime::DEFAULT_DATETIME_FORMAT);
+            $updatableProperties[] = 'from';
         }
 
         if (null !== $command->getDateTimeTo()) {
             $specificPrice->to = $command->getDateTimeTo()->format(DateTime::DEFAULT_DATETIME_FORMAT);
+            $updatableProperties[] = 'to';
         }
 
         return $updatableProperties;
