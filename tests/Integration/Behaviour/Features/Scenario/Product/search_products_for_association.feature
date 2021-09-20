@@ -10,6 +10,8 @@ Feature: Search products to associate them in the BO
     Given language "english" with locale "en-US" exists
     Given language "french" with locale "fr-FR" exists
     And language with iso code "en" is the default one
+
+  Scenario: I can search products by name
     When I add product "product1" with following information:
       | name[en-US] | bottle of beer     |
       | name[fr-FR] | bouteille de biere |
@@ -18,8 +20,6 @@ Feature: Search products to associate them in the BO
       | name[en-US] | bottle of cider    |
       | name[fr-FR] | bouteille de cidre |
       | type        | standard           |
-
-  Scenario: I can search products by name
     When I search for products with locale "english" matching "beer" I should get following results:
       | product  | name           | reference | image url                                             |
       | product1 | bottle of beer |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
@@ -34,3 +34,146 @@ Feature: Search products to associate them in the BO
       | product  | name               | reference | image url                                             |
       | product1 | bouteille de biere |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
       | product2 | bouteille de cidre |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "french" matching "beer" I should get no results
+    And I search for products with locale "english" matching "biere" I should get no results
+
+  Scenario: I can search products by references
+    When I add product "product3" with following information:
+      | name[en-US] | bottle of champaign    |
+      | name[fr-FR] | bouteille de champagne |
+      | type        | standard               |
+    When I search for products with locale "english" matching "978-3-16-148410-0" I should get no results
+    And I search for products with locale "english" matching "72527273070" I should get no results
+    And I search for products with locale "english" matching "978020137962" I should get no results
+    And I search for products with locale "english" matching "mpn1" I should get no results
+    And I search for products with locale "english" matching "ref1" I should get no results
+    When I update product "product3" details with following values:
+      | isbn      | 978-3-16-148410-0 |
+      | upc       | 72527273070       |
+      | ean13     | 978020137962      |
+      | mpn       | mpn1              |
+      | reference | ref1              |
+    Then product "product3" should have following details:
+      | product detail | value             |
+      | isbn           | 978-3-16-148410-0 |
+      | upc            | 72527273070       |
+      | ean13          | 978020137962      |
+      | mpn            | mpn1              |
+      | reference      | ref1              |
+    # Search by all types of references matching product3
+    When I search for products with locale "english" matching "978-3-16-148410-0" I should get following results:
+      | product  | name                | reference | image url                                             |
+      | product3 | bottle of champaign | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "english" matching "72527273070" I should get following results:
+      | product  | name                | reference | image url                                             |
+      | product3 | bottle of champaign | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "english" matching "978020137962" I should get following results:
+      | product  | name                | reference | image url                                             |
+      | product3 | bottle of champaign | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "english" matching "mpn1" I should get following results:
+      | product  | name                | reference | image url                                             |
+      | product3 | bottle of champaign | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "english" matching "ref1" I should get following results:
+      | product  | name                | reference | image url                                             |
+      | product3 | bottle of champaign | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+
+  Scenario: I can search products by combination references
+    Given I add product "product4" with following information:
+      | name[en-US] | bottle of wine   |
+      | name[fr-FR] | bouteille de vin |
+      | type        | combinations     |
+    And attribute group "Color" named "Color" in en language exists
+    And attribute "White" named "White" in en language exists
+    And attribute "Red" named "Red" in en language exists
+    And attribute "Pink" named "Pink" in en language exists
+    And I generate combinations for product product4 using following attributes:
+      | Color | [Red,White,Pink] |
+    And product "product4" should have following combinations:
+      | id reference  | combination name | reference | attributes    | impact on price | quantity | is default |
+      | product4Red   | Color - Red      |           | [Color:Red]   | 0               | 0        | true       |
+      | product4White | Color - White    |           | [Color:White] | 0               | 0        | false      |
+      | product4Pink  | Color - Pink     |           | [Color:Pink]  | 0               | 0        | false      |
+    When I search for products with locale "english" matching "154867313573" I should get no results
+    And I search for products with locale "english" matching "978-3-16-148410-3" I should get no results
+    And I search for products with locale "english" matching "mpn3red" I should get no results
+    And I search for products with locale "english" matching "ref3red" I should get no results
+    And I search for products with locale "english" matching "137684192354" I should get no results
+    And I search for products with locale "english" matching "1357321357213" I should get no results
+    And I search for products with locale "english" matching "978-3-16-148410-4" I should get no results
+    And I search for products with locale "english" matching "mpn3white" I should get no results
+    And I search for products with locale "english" matching "ref3white" I should get no results
+    And I search for products with locale "english" matching "3543213543213" I should get no results
+    When I update combination "product4Red" details with following values:
+      | ean13            | 154867313573      |
+      | isbn             | 978-3-16-148410-3 |
+      | mpn              | mpn3red           |
+      | reference        | ref3red           |
+      | upc              | 137684192354      |
+    And I update combination "product4White" details with following values:
+      | ean13            | 1357321357213     |
+      | isbn             | 978-3-16-148410-4 |
+      | mpn              | mpn3white         |
+      | reference        | ref3white         |
+      | upc              | 354321354321      |
+    Then combination "product4Red" should have following details:
+      | combination detail | value             |
+      | ean13              | 154867313573      |
+      | isbn               | 978-3-16-148410-3 |
+      | mpn                | mpn3red           |
+      | reference          | ref3red           |
+      | upc                | 137684192354      |
+    Then combination "product4White" should have following details:
+      | combination detail | value             |
+      | ean13              | 1357321357213     |
+      | isbn               | 978-3-16-148410-4 |
+      | mpn                | mpn3white         |
+      | reference          | ref3white         |
+      | upc                | 354321354321     |
+    # Search by all types of references matching product4Red combination
+    When I search for products with locale "english" matching "154867313573" I should get following results:
+      | product  | name           | reference | image url                                             |
+      | product4 | bottle of wine |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "english" matching "978-3-16-148410-3" I should get following results:
+      | product  | name           | reference | image url                                             |
+      | product4 | bottle of wine |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "english" matching "mpn3red" I should get following results:
+      | product  | name           | reference | image url                                             |
+      | product4 | bottle of wine |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "english" matching "ref3red" I should get following results:
+      | product  | name           | reference | image url                                             |
+      | product4 | bottle of wine |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "english" matching "137684192354" I should get following results:
+      | product  | name           | reference | image url                                             |
+      | product4 | bottle of wine |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    # Search by all types of references matching product4White combination
+    When I search for products with locale "english" matching "1357321357213" I should get following results:
+      | product  | name           | reference | image url                                             |
+      | product4 | bottle of wine |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "english" matching "978-3-16-148410-4" I should get following results:
+      | product  | name           | reference | image url                                             |
+      | product4 | bottle of wine |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "english" matching "mpn3white" I should get following results:
+      | product  | name           | reference | image url                                             |
+      | product4 | bottle of wine |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "english" matching "ref3white" I should get following results:
+      | product  | name           | reference | image url                                             |
+      | product4 | bottle of wine |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "english" matching "354321354321" I should get following results:
+      | product  | name           | reference | image url                                             |
+      | product4 | bottle of wine |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    # Search by types that match both combinations, only one product is returned
+    When I search for products with locale "english" matching "mpn3" I should get following results:
+      | product  | name           | reference | image url                                             |
+      | product4 | bottle of wine |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "english" matching "ref3" I should get following results:
+      | product  | name           | reference | image url                                             |
+      | product4 | bottle of wine |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    # Search by types that match two products
+    When I search for products with locale "english" matching "mpn" I should get following results:
+      | product  | name                | reference | image url                                             |
+      | product3 | bottle of champaign | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product4 | bottle of wine      |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And I search for products with locale "english" matching "ref" I should get following results:
+      | product  | name                | reference | image url                                             |
+      | product3 | bottle of champaign | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product4 | bottle of wine      |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
