@@ -1983,7 +1983,6 @@ window.priceCalculation = (function () {
         const rates = this.getRates();
         const computationMethod = taxElem.find('option:selected').attr('data-computation-method');
         priceTI = ps_round(addTaxes(priceTE, rates, computationMethod), displayPricePrecision);
-        priceTI = truncateDecimals(priceTI, displayPricePrecision);
       }
 
       return priceTI;
@@ -2001,7 +2000,6 @@ window.priceCalculation = (function () {
         const rates = this.getRates();
         const computationMethod = taxElem.find('option:selected').attr('data-computation-method');
         priceTE = ps_round(removeTaxes(priceTI, rates, computationMethod), displayPricePrecision);
-        priceTE = truncateDecimals(priceTE, displayPricePrecision);
       }
 
       return priceTE;
