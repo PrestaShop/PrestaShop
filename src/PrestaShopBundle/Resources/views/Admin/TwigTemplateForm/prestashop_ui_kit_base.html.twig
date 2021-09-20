@@ -1225,7 +1225,7 @@
 {% block image_preview_widget %}
   {# This is the hidden input #}
   {{- block('form_widget_simple') -}}
-  <img src="{{ form.vars.value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" />
+  <img src="{{ form.vars.value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" class="{{ form.vars.image_class }}" />
 {% endblock %}
 
 {% block delta_quantity_widget %}
