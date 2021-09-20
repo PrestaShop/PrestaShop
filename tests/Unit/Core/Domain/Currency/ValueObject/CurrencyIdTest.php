@@ -25,14 +25,14 @@
  */
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Domain\Group\ValueObject;
+namespace Tests\Unit\Core\Domain\Currency\ValueObject;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Group\Exception\GroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
-class GroupIdTest extends TestCase
+class CurrencyIdTest extends TestCase
 {
     /**
      * @dataProvider getValidValues
@@ -41,9 +41,9 @@ class GroupIdTest extends TestCase
      */
     public function testCreateWithPositiveValue(int $value): void
     {
-        $groupId = new GroupId($value);
+        $currencyId = new CurrencyId($value);
 
-        $this->assertEquals($value, $groupId->getValue());
+        $this->assertEquals($value, $currencyId->getValue());
     }
 
     /**
@@ -53,10 +53,10 @@ class GroupIdTest extends TestCase
      */
     public function testItThrowsExceptionWhenProvidingInvalidValue(int $value): void
     {
-        $this->expectException(GroupConstraintException::class);
-        $this->expectExceptionCode(GroupConstraintException::INVALID_ID);
+        $this->expectException(CurrencyConstraintException::class);
+        $this->expectExceptionCode(CurrencyConstraintException::INVALID_ID);
 
-        new GroupId($value);
+        new CurrencyId($value);
     }
 
     /**
@@ -65,11 +65,11 @@ class GroupIdTest extends TestCase
     public function getValidValues(): Generator
     {
         yield [
-            1,
+            10,
         ];
 
         yield [
-            150,
+            15,
         ];
     }
 
@@ -83,7 +83,7 @@ class GroupIdTest extends TestCase
         ];
 
         yield [
-            -10,
+            -1,
         ];
     }
 }

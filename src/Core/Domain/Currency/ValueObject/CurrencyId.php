@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 
 /**
@@ -48,7 +49,10 @@ class CurrencyId implements CurrencyIdInterface
     public function __construct(int $currencyId)
     {
         if ($currencyId <= 0) {
-            throw new CurrencyException(sprintf('Invalid Currency id: %s', var_export($currencyId, true)));
+            throw new CurrencyConstraintException(
+                sprintf('Invalid Currency id: %d', $currencyId),
+                CurrencyConstraintException::INVALID_ID
+            );
         }
 
         $this->currencyId = $currencyId;
