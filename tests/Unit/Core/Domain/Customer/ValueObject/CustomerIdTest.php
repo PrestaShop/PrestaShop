@@ -23,51 +23,67 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
+namespace Tests\Unit\Core\Domain\Customer\ValueObject;
 
+use Generator;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
-/**
- * Defines Customer ID with it's constraints
- */
-class CustomerId implements CustomerIdInterface
+class CustomerIdTest extends TestCase
 {
     /**
-     * @var int
+     * @dataProvider getValidValues
+     *
+     * @param int $value
      */
-    private $customerId;
-
-    /**
-     * @param int $customerId
-     */
-    public function __construct(int $customerId)
+    public function testCreateWithPositiveValue(int $value): void
     {
-        $this->assertIsGreaterThanZero($customerId);
+        $customerId = new CustomerId($value);
 
-        $this->customerId = $customerId;
+        $this->assertEquals($value, $customerId->getValue());
     }
 
     /**
-     * @return int
+     * @dataProvider getInvalidValues
+     *
+     * @param int $value
      */
-    public function getValue(): int
+    public function testItThrowsExceptionWhenProvidingInvalidValue(int $value): void
     {
-        return $this->customerId;
+        $this->expectException(CustomerConstraintException::class);
+        $this->expectExceptionCode(CustomerConstraintException::INVALID_ID);
+
+        new CustomerId($value);
     }
 
     /**
-     * @param int $customerId
+     * @return Generator
      */
-    private function assertIsGreaterThanZero(int $customerId): void
+    public function getValidValues(): Generator
     {
-        if (0 > $customerId) {
-            throw new CustomerConstraintException(
-                sprintf('Customer id %d is invalid.', $customerId),
-                CustomerConstraintException::INVALID_ID
-            );
-        }
+        yield [
+            0,
+        ];
+
+        yield [
+            1,
+        ];
+
+        yield [
+            150,
+        ];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getInvalidValues(): Generator
+    {
+        yield [
+            -10,
+        ];
     }
 }

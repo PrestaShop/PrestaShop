@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 /**
  * Defines contract for customer identification value
  *
+ * @todo: this interface is not used everywhere.
+ *      CustomerId was introduced with valid value of 0 so this interface has no advantages until its implemented everywhere
+ *
  * @see CustomerId
  * @see NoCustomerId
  */
