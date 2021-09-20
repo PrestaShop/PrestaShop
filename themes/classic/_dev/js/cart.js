@@ -194,8 +194,8 @@ $(document).ready(() => {
         let dataset;
 
         if ($target && $target.dataset) {
-          // eslint-disable-next-line
-          dataset = $target.dataset;
+        // eslint-disable-next-line
+        dataset = $target.dataset;
         } else {
           dataset = resp;
         }
@@ -258,12 +258,16 @@ $(document).ready(() => {
   $body.on('focusout keyup', productLineInCartSelector, (event) => {
     if (event.type === 'keyup') {
       if (event.keyCode === 13) {
+        isUpdateOperation = true;
         updateProductQuantityInCart(event);
       }
+
       return false;
     }
 
-    updateProductQuantityInCart(event);
+    if (!isUpdateOperation) {
+      updateProductQuantityInCart(event);
+    }
 
     return false;
   });
