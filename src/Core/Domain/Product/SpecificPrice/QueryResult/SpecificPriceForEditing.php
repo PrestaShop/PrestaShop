@@ -90,12 +90,12 @@ class SpecificPriceForEditing
     private $customerId;
 
     /**
-     * @var DateTime|null
+     * @var DateTimeInterface
      */
     private $dateTimeFrom;
 
     /**
-     * @var DateTime|null
+     * @var DateTimeInterface
      */
     private $dateTimeTo;
 
