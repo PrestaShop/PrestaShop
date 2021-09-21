@@ -1102,7 +1102,7 @@ $product-page-padding-bottom: 80px !default;
       }
 
       &.decreased_quantity {
-        background-color: #373a40;
+        background-color: $gray-dark;
       }
     }
   }
