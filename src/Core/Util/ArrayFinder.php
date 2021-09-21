@@ -208,6 +208,6 @@ class ArrayFinder implements ArrayAccess, Countable
         $expl = explode('.', $dotPath);
         $in = implode('][', $expl);
 
-        return '[' . $in . ']';
+        return str_replace('[]', '[0]', '[' . $in . ']');
     }
 }
