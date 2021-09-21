@@ -143,7 +143,7 @@ class EditProductSpecificPriceCommand
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setReduction(string $reductionType, string $reductionValue): EditProductSpecificPriceCommand
+    public function setReduction(string $reductionType, string $reductionValue): self
     {
         $this->reduction = new Reduction($reductionType, $reductionValue);
 
@@ -163,7 +163,7 @@ class EditProductSpecificPriceCommand
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setIncludesTax(bool $includesTax): EditProductSpecificPriceCommand
+    public function setIncludesTax(bool $includesTax): self
     {
         $this->includesTax = $includesTax;
 
@@ -183,7 +183,7 @@ class EditProductSpecificPriceCommand
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setPrice(string $price): EditProductSpecificPriceCommand
+    public function setPrice(string $price): self
     {
         $this->price = new DecimalNumber($price);
 
@@ -203,7 +203,7 @@ class EditProductSpecificPriceCommand
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setFromQuantity(int $fromQuantity): EditProductSpecificPriceCommand
+    public function setFromQuantity(int $fromQuantity): self
     {
         $this->fromQuantity = $fromQuantity;
 
@@ -223,7 +223,7 @@ class EditProductSpecificPriceCommand
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setShopId(int $shopId): EditProductSpecificPriceCommand
+    public function setShopId(int $shopId): self
     {
         $this->shopId = NoShopId::NO_SHOP_ID === $shopId ? new NoShopId() : new ShopId($shopId);
 
@@ -243,7 +243,7 @@ class EditProductSpecificPriceCommand
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setCombinationId(int $combinationId): EditProductSpecificPriceCommand
+    public function setCombinationId(int $combinationId): self
     {
         $this->combinationId = NoCombinationId::NO_COMBINATION_ID === $combinationId ? new NoCombinationId() : new CombinationId($combinationId);
 
@@ -263,7 +263,7 @@ class EditProductSpecificPriceCommand
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setCurrencyId(int $currencyId): EditProductSpecificPriceCommand
+    public function setCurrencyId(int $currencyId): self
     {
         $this->currencyId = NoCurrencyId::NO_CURRENCY_ID === $currencyId ? new NoCurrencyId() : new CurrencyId($currencyId);
 
@@ -283,7 +283,7 @@ class EditProductSpecificPriceCommand
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setCountryId(int $countryId): EditProductSpecificPriceCommand
+    public function setCountryId(int $countryId): self
     {
         $this->countryId = new CountryId($countryId);
 
@@ -303,7 +303,7 @@ class EditProductSpecificPriceCommand
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setGroupId(int $groupId): EditProductSpecificPriceCommand
+    public function setGroupId(int $groupId): self
     {
         $this->groupId = NoGroupId::NO_GROUP_ID === $groupId ? new NoGroupId() : new GroupId($groupId);
 
@@ -323,7 +323,7 @@ class EditProductSpecificPriceCommand
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setCustomerId(int $customerId): EditProductSpecificPriceCommand
+    public function setCustomerId(int $customerId): self
     {
         $this->customerId = new CustomerId($customerId);
 
@@ -343,7 +343,7 @@ class EditProductSpecificPriceCommand
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setDateTimeFrom(?DateTimeInterface $dateTimeFrom): EditProductSpecificPriceCommand
+    public function setDateTimeFrom(?DateTimeInterface $dateTimeFrom): self
     {
         $this->dateTimeFrom = $dateTimeFrom;
 
@@ -363,7 +363,7 @@ class EditProductSpecificPriceCommand
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setDateTimeTo(?DateTimeInterface $dateTimeTo): EditProductSpecificPriceCommand
+    public function setDateTimeTo(?DateTimeInterface $dateTimeTo): self
     {
         $this->dateTimeTo = $dateTimeTo;
 
