@@ -43,7 +43,7 @@ class SearchProductFeatureContext extends AbstractProductFeatureContext
      * @param string $search
      * @param TableNode $tableNode
      */
-    public function assertSearchProducts(string $localeReference, string $search, TableNode $tableNode)
+    public function assertSearchProducts(string $localeReference, string $search, TableNode $tableNode): void
     {
         $language = $this->getSharedStorage()->get($localeReference);
         /** @var ProductForAssociation[] $foundProducts */
@@ -112,7 +112,7 @@ class SearchProductFeatureContext extends AbstractProductFeatureContext
      * @param string $localeReference
      * @param string $search
      */
-    public function assertNoProductsFound(string $localeReference, string $search)
+    public function assertNoProductsFound(string $localeReference, string $search): void
     {
         $language = $this->getSharedStorage()->get($localeReference);
         /** @var ProductForAssociation[] $foundProducts */
