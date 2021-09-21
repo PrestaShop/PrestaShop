@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,12 +22,53 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-<div class="text-center">
-  {% if column.options.increment_position %}
-    {{ record[column.options.position_field] + 1}}
-  {% else %}
-    {{ record[column.options.position_field] }}
-  {% endif %}
-</div>
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+
+/**
+ * Updates product details
+ */
+class UpdateProductPositionCommand
+{
+    /**
+     * @var array
+     */
+    private $positions;
+
+    /**
+     * @var CategoryId
+     */
+    private $categoryId;
+    /**
+     * UpdateProductPositionCommand constructor.
+     *
+     * @param array $positions
+     * @param int $categoryId
+     */
+    public function __construct(array $positions, int $categoryId)
+    {
+        $this->categoryId = new CategoryId($categoryId);
+        $this->positions = $positions;
+    }
+
+    /**
+     * @param array $positions
+     */
+    public function getPositions(): array
+    {
+        return $this->positions;
+    }
+
+    /**
+     * @param CategoryId $categoryId
+     */
+    public function getCategoryId(): CategoryId
+    {
+        return $this->categoryId;
+    }
+}

@@ -38,11 +38,13 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
+use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -180,6 +182,20 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'primary_field' => 'id_product',
                         'route' => 'admin_products_v2_toggle_status',
                         'route_param_name' => 'productId',
+                    ])
+            )
+            ->add(
+                (new PositionColumn('position'))
+                    ->setName($this->trans('Position', [], 'Admin.Global'))
+                    ->setOptions([
+                        'increment_position' => false,
+                        'id_field' => 'id_product',
+                        'position_field' => 'position',
+                        'update_method' => 'POST',
+                        'update_route' => 'admin_products_v2_update_position',
+                        'record_route_params' => [
+                            'id_category' => 'id_category',
+                        ],
                     ])
             )
             ->add((new ActionColumn('actions'))

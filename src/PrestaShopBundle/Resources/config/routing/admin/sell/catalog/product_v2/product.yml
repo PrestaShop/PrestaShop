@@ -68,7 +68,7 @@ admin_products_v2_delete:
 
 admin_products_v2_duplicate:
     path: /{productId}/duplicate
-    methods: [POST, DELETE]
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:duplicate
         _legacy_controller: AdminProducts
@@ -81,7 +81,7 @@ admin_products_v2_duplicate:
 
 admin_products_v2_preview:
     path: /{productId}/preview
-    methods: [POST, DELETE]
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:preview
         _legacy_controller: AdminProducts
@@ -95,12 +95,25 @@ admin_products_v2_preview:
 
 admin_products_v2_toggle_status:
     path: /{productId}/toggle_status
-    methods: [POST, DELETE]
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:toggleStatus
         _legacy_controller: AdminProducts
         _legacy_link:
             - AdminProducts:statusproduct
+        _legacy_parameters:
+            id_product: productId
+    requirements:
+        productId: \d+
+
+admin_products_v2_update_position:
+    path: /update_position
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:updatePosition
+        _legacy_controller: AdminProducts
+        _legacy_link:
+            - AdminProducts:positionproduct
         _legacy_parameters:
             id_product: productId
     requirements:

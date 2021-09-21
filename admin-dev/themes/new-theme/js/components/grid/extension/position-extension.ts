@@ -145,7 +145,7 @@ export default class PositionExtension {
         const position = $positionWrapper.data('position');
         const id = `row_${rowId}_${position}`;
         $positionWrapper.closest('tr').attr('id', id);
-        $positionWrapper.closest('td').addClass(GridMap.dragHandler);
+        $positionWrapper.closest('td').addClass('js-drag-handle');
         $positionWrapper.closest('tr').data('dragAndDropOffset', counter);
 
         counter += 1;
@@ -222,15 +222,14 @@ export default class PositionExtension {
     rowsData: Array<RowDatas>,
   ): Array<DNDPositions> {
     const regex = /^row_(\d+)_(\d+)$/;
-    const mapping = Array(rowsData.length).map(Object);
+    const mapping = Array(rowsData.length).fill(undefined).map(Object);
 
     for (let i = 0; i < rowsData.length; i += 1) {
-      const regexResult = <RegExpPositions>regex.exec(rowsData[i].rowMarker);
 
-      if (regexResult?.rowId && regexResult?.oldPosition) {
-        mapping[i].rowId = regexResult.rowId;
-        mapping[i].oldPosition = parseInt(regexResult.oldPosition, 10);
-      }
+      // @ts-ignore
+      const [, rowId, oldPosition] = regex.exec(rowsData[i].rowMarker);
+      mapping[i].rowId = rowId;
+      mapping[i].oldPosition = parseInt(oldPosition, 10);
       // This row will have as a new position the old position of the current one
       mapping[rowsData[i].offset].newPosition = mapping[i].oldPosition;
     }

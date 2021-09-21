@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,12 +22,19 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-<div class="text-center">
-  {% if column.options.increment_position %}
-    {{ record[column.options.position_field] + 1}}
-  {% else %}
-    {{ record[column.options.position_field] }}
-  {% endif %}
-</div>
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPositionCommand;
+
+/**
+ * Defines contract to handle @see UpdateProductPositionCommand
+ */
+interface UpdateProductPositionHandlerInterface
+{
+    /**
+     * @param UpdateProductPositionCommand $command
+     */
+    public function handle(UpdateProductPositionCommand $command): void;
+}
