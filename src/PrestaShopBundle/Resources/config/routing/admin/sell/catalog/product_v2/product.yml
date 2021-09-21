@@ -73,4 +73,4 @@ admin_products_v2_search_associations:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::searchAssociationsAction
         _legacy_controller: AdminProducts
     requirements:
-        languageCode: ^[a-zA-Z]{2}(-[a-zA-Z]{2})?$
+        languageCode: !php/const PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF::IETF_TAG_REGEXP
