@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Description;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType;
@@ -39,23 +38,37 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 
 class DescriptionType extends TranslatorAwareType
 {
     /**
-     * @var LegacyContext
+     * @var RouterInterface
      */
-    private $context;
+    private $router;
 
+    /**
+     * @var string
+     */
+    private $employeeIsoCode;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param RouterInterface $router
+     * @param string $employeeIsoCode
+     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        LegacyContext $context
+        RouterInterface $router,
+        string $employeeIsoCode
     ) {
         parent::__construct($translator, $locales);
-        $this->context = $context;
+        $this->router = $router;
+        $this->employeeIsoCode = $employeeIsoCode;
     }
 
     /**
@@ -130,7 +143,10 @@ class DescriptionType extends TranslatorAwareType
                 'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
                 'entry_type' => RelatedProductType::class,
-                'remote_url' => $this->context->getLegacyAdminLink('AdminProducts', true, ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'disableCombination' => 1, 'exclude_packs' => 0, 'excludeVirtuals' => 0, 'limit' => 20]) . '&q=__QUERY__',
+                'remote_url' => $this->router->generate('admin_products_v2_search_associations', [
+                    'languageCode' => $this->employeeIsoCode,
+                    'query' => '__QUERY__',
+                ]),
             ])
         ;
     }
