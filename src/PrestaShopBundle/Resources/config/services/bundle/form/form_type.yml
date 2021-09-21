@@ -1290,7 +1290,8 @@ services:
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
-      - '@prestashop.adapter.legacy.context'
+      - '@router'
+      - '@=service("prestashop.adapter.legacy.context").getEmployeeLanguageIso()'
     tags:
       - { name: form.type }
 
@@ -1546,10 +1547,10 @@ services:
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
-      - '@prestashop.adapter.legacy.context'
       - '@router'
       - '@form.type.sell.product.data_transformer.redirection_target_transformer'
       - '@form.type.sell.product.event_listener.redirect_option_listener'
+      - '@=service("prestashop.adapter.legacy.context").getEmployeeLanguageIso()'
     tags:
       - { name: form.type }
 

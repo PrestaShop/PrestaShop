@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\SEO;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -43,11 +42,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class RedirectOptionType extends TranslatorAwareType
 {
-    /**
-     * @var LegacyContext
-     */
-    private $context;
-
     /**
      * @var RouterInterface
      */
@@ -64,26 +58,31 @@ class RedirectOptionType extends TranslatorAwareType
     private $eventSubscriber;
 
     /**
+     * @var string
+     */
+    private $employeeIsoCode;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param LegacyContext $context
      * @param RouterInterface $router
      * @param DataTransformerInterface $targetTransformer
      * @param EventSubscriberInterface $eventSubscriber
+     * @param string $employeeIsoCode
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        LegacyContext $context,
         RouterInterface $router,
         DataTransformerInterface $targetTransformer,
-        EventSubscriberInterface $eventSubscriber
+        EventSubscriberInterface $eventSubscriber,
+        string $employeeIsoCode
     ) {
         parent::__construct($translator, $locales);
-        $this->context = $context;
         $this->router = $router;
         $this->targetTransformer = $targetTransformer;
         $this->eventSubscriber = $eventSubscriber;
+        $this->employeeIsoCode = $employeeIsoCode;
     }
 
     /**
@@ -96,7 +95,10 @@ class RedirectOptionType extends TranslatorAwareType
                 'label' => $this->trans('Target product', 'Admin.Catalog.Feature'),
                 'placeholder' => $this->trans('To which product the page should redirect?', 'Admin.Catalog.Help'),
                 'help' => '',
-                'searchUrl' => $this->context->getLegacyAdminLink('AdminProducts', true, ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'disableCombination' => 1, 'exclude_packs' => 0, 'excludeVirtuals' => 0, 'limit' => 20]) . '&q=__QUERY__',
+                'searchUrl' => $this->router->generate('admin_products_v2_search_associations', [
+                    'languageCode' => $this->employeeIsoCode,
+                    'query' => '__QUERY__',
+                ]),
             ],
             'category' => [
                 'label' => $this->trans('Target category', 'Admin.Catalog.Feature'),
