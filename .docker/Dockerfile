@@ -3,8 +3,6 @@ FROM prestashop/prestashop-git:latest
 # To run files with the same group as your primary user
 ARG GROUP_ID
 ARG USER_ID
-RUN echo $GROUP_ID
-RUN echo $USER_ID
 
 RUN groupmod -g $GROUP_ID www-data \
   && usermod -u $USER_ID -g $GROUP_ID www-data
