@@ -53,7 +53,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     /**
      * Random integer which should never exist in test database as currency id
      */
-    public const NON_EXISTING_CURRENCY_ID = 1234567;
+    private const NON_EXISTING_CURRENCY_ID = 1234567;
 
     /**
      * @var ReferenceCurrency

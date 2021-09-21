@@ -35,7 +35,7 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
     /**
      * Random integer representing country id which should never exist in test database
      */
-    public const NON_EXISTING_COUNTRY_ID = 74000211;
+    private const NON_EXISTING_COUNTRY_ID = 74000211;
 
     /**
      * @Given country :reference does not exist

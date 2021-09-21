@@ -56,7 +56,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     /**
      * Random integer that represents shop id which should never exist in test database
      */
-    public const NON_EXISTING_SHOP_ID = 77701;
+    private const NON_EXISTING_SHOP_ID = 77701;
 
     /**
      * @When I upload :path as new Header Logo
