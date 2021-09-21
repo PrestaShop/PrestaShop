@@ -25,44 +25,13 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Group\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Group\Exception\GroupConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Holds group identification value
+ * Base exception for Group domain
  */
-class GroupId implements GroupIdInterface
+class GroupException extends DomainException
 {
-    /**
-     * @var int
-     */
-    private $value;
-
-    /**
-     * @param int $groupId
-     */
-    public function __construct(int $groupId)
-    {
-        $this->assertValueIsPositive($groupId);
-        $this->value = $groupId;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getValue(): int
-    {
-        return $this->value;
-    }
-
-    /**
-     * @param int $value
-     */
-    private function assertValueIsPositive(int $value): void
-    {
-        if (0 >= $value) {
-            throw new GroupConstraintException(sprintf('Group id must be positive integer. "%s" given', $value), GroupConstraintException::INVALID_ID);
-        }
-    }
 }
