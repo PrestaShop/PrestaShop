@@ -119,9 +119,8 @@
                     {include file='catalog/_partials/product-discounts.tpl'}
                   {/block}
 
+                  <span class="control-label">{l s='Availability' d='Shop.Theme.Catalog'}</span>
                   {block name='product_availability'}
-                    {include file="{_PS_PARENT_THEME_URI_}_partials/product-availability.tpl" type="success" label={l s="Only 10 products in stock - Delivery under 48 hours"}}
-                    {include file="{_PS_PARENT_THEME_URI_}_partials/product-availability.tpl" label={l s="Temporarily out of stock - Delivery under 72 hours"}}
                     {include file="{_PS_PARENT_THEME_URI_}_partials/product-availability.tpl" type="error" label={l s="Out of stock"} hasOptions=true}
                   {/block}
 

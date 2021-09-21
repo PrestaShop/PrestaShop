@@ -6,6 +6,11 @@ $component-name: product-availability;
   font-weight: 400;
   color: $warning;
 
+  @at-root .product-miniature & {
+    margin-bottom: 0;
+    text-align: center;
+  }
+
   i {
     margin-right: 0.25rem;
     font-size: 1.25rem;

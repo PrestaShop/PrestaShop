@@ -89,6 +89,10 @@
 
               {hook h='displayProductPriceBlock' product=$product type='weight'}
             </div>
+
+            {block name='product_availability'}
+              {include file="_partials/product-availability.tpl" type="error" label={l s="Out of stock"}}
+            {/block}
           {/if}
         {/block}
 

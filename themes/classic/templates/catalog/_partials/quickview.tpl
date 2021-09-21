@@ -59,6 +59,11 @@
                   {include file='catalog/_partials/product-variants.tpl'}
                 {/block}
 
+                <span class="control-label">{l s='Availability' d='Shop.Theme.Catalog'}</span>
+                {block name='product_availability'}
+                  {include file="_partials/product-availability.tpl" type="error" label={l s="Out of stock"}}
+                {/block}
+
                 {block name='product_add_to_cart'}
                   {include file='catalog/_partials/product-add-to-cart.tpl'}
                 {/block}

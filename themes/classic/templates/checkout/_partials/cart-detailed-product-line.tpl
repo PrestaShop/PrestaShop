@@ -73,6 +73,10 @@
       </div>
     {/foreach}
 
+    {block name='product_availability'}
+      {include file="{_PS_PARENT_THEME_URI_}_partials/product-availability.tpl" type="error" label={l s="Out of stock"}}
+    {/block}
+
     {if is_array($product.customizations) && $product.customizations|count}
       <br>
       {block name='cart_detailed_product_line_customization'}
