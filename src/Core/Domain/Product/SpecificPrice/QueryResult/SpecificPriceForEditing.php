@@ -66,11 +66,6 @@ class SpecificPriceForEditing
     /**
      * @var int|null
      */
-    private $shopGroupId;
-
-    /**
-     * @var int|null
-     */
     private $shopId;
 
     /**
@@ -110,7 +105,6 @@ class SpecificPriceForEditing
      * @param bool $includesTax
      * @param DecimalNumber $price
      * @param int $fromQuantity
-     * @param int|null $shopGroupId
      * @param int|null $shopId
      * @param int|null $currencyId
      * @param int|null $countryId
@@ -128,7 +122,6 @@ class SpecificPriceForEditing
         int $fromQuantity,
         ?DateTime $dateTimeFrom,
         ?DateTime $dateTimeTo,
-        ?int $shopGroupId,
         ?int $shopId,
         ?int $currencyId,
         ?int $countryId,
@@ -141,7 +134,6 @@ class SpecificPriceForEditing
         $this->includesTax = $includesTax;
         $this->price = $price;
         $this->fromQuantity = $fromQuantity;
-        $this->shopGroupId = $shopGroupId;
         $this->shopId = $shopId;
         $this->currencyId = $currencyId;
         $this->countryId = $countryId;
@@ -197,14 +189,6 @@ class SpecificPriceForEditing
     public function getFromQuantity(): int
     {
         return $this->fromQuantity;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getShopGroupId(): ?int
-    {
-        return $this->shopGroupId;
     }
 
     /**

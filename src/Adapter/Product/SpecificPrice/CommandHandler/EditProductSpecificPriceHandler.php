@@ -76,7 +76,7 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
         $updatableProperties = [];
         if (null !== $command->getReduction()) {
             $specificPrice->reduction_type = $command->getReduction()->getType();
-            $specificPrice->reduction = (float) (string) $command->getReduction()->getValue();
+            $specificPrice->reduction = (string) $command->getReduction()->getValue();
             $updatableProperties = [
                 'reduction_type',
                 'reduction',

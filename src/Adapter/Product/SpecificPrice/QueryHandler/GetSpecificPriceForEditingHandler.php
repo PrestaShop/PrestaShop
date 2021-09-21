@@ -74,7 +74,6 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
             (int) $specificPrice->from_quantity,
             $dateFrom,
             $dateTo,
-            (int) $specificPrice->id_shop_group ?: null,
             (int) $specificPrice->id_shop ?: null,
             (int) $specificPrice->id_currency ?: null,
             (int) $specificPrice->id_country ?: null,

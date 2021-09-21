@@ -27,7 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Group\ValueObject;
 
 /**
- * Defines contract for group identification value
+ * Defines contract for group identification value.
+ * This interface allows to explicitly define whether group relation is optional or required.
  *
  * @see GroupId
  * @see NoGroupId

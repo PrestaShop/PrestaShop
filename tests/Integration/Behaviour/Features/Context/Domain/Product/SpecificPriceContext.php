@@ -83,7 +83,6 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             (int) $dataRows['from quantity'],
             $from,
             $to,
-            $this->getStoredId($dataRows, 'shop group'),
             $this->getStoredId($dataRows, 'shop'),
             $this->getStoredId($dataRows, 'currency'),
             $this->getStoredId($dataRows, 'country'),
@@ -326,9 +325,6 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         }
         if (isset($dataRows['combination'])) {
             $editCommand->setCombinationId($this->getStoredId($dataRows, 'combination'));
-        }
-        if (isset($dataRows['shop group'])) {
-            $editCommand->setShopGroupId($this->getNullableIdForEdit($dataRows, 'shop group'));
         }
         if (isset($dataRows['shop'])) {
             $editCommand->setShopId($this->getNullableIdForEdit($dataRows, 'shop'));

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject;
 
 /**
- * ManufacturerIdInterface represents a relation with a Manufacturer.
+ * This interface allows to explicitly define whether the manufacturer relation is optional or required.
  *
  * @see ManufacturerId
  * @see NoManufacturerId
