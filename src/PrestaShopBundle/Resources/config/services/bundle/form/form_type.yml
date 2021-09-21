@@ -1426,6 +1426,7 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
+            - "@router"
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
         tags:
             - { name: form.type }
