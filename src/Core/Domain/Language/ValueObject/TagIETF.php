@@ -34,6 +34,11 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintExcep
 class TagIETF
 {
     /**
+     * Regexp to validate an IETF tag
+     */
+    const IETF_TAG_REGEXP = '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/';
+
+    /**
      * @var string
      */
     private $tagIETF;
@@ -65,7 +70,7 @@ class TagIETF
      */
     private function assertIsTagIETF($tagIETF)
     {
-        if (!is_string($tagIETF) || !preg_match('/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/', $tagIETF)) {
+        if (!is_string($tagIETF) || !preg_match(static::IETF_TAG_REGEXP, $tagIETF)) {
             throw new LanguageConstraintException(sprintf('Invalid IETF tag %s provided', var_export($tagIETF, true)), LanguageConstraintException::INVALID_IETF_TAG);
         }
     }
