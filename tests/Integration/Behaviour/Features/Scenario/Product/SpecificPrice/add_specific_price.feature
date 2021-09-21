@@ -24,18 +24,16 @@ Feature: Update product options from Back Office (BO)
       | includes tax    | true   |
       | price           | 45.78  |
       | from quantity   | 1      |
-      | from            |        |
-      | to              |        |
     Then product "product1" should have 1 specific prices
     And specific price price1 should have following details:
-      | specific price detail | value  |
-      | reduction type        | amount |
-      | reduction value       | 12.56  |
-      | includes tax          | true   |
-      | price                 | 45.78  |
-      | from quantity         | 1      |
-      | from                  |        |
-      | to                    |        |
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
 
   Scenario: I add a specific price with percent reduction to product
     Given I add product "product1" with following information:
@@ -106,8 +104,6 @@ Feature: Update product options from Back Office (BO)
       | includes tax    | true   |
       | price           | 45.78  |
       | from quantity   | 1      |
-      | from            |        |
-      | to              |        |
       | shop            |        |
       | currency        |        |
       | country         |        |
@@ -115,19 +111,19 @@ Feature: Update product options from Back Office (BO)
       | customer        |        |
     Then product "product1" should have 1 specific prices
     And specific price price1 should have following details:
-      | specific price detail | value  |
-      | reduction type        | amount |
-      | reduction value       | 12.56  |
-      | includes tax          | true   |
-      | price                 | 45.78  |
-      | from quantity         | 1      |
-      | from                  |        |
-      | to                    |        |
-      | shop                  |        |
-      | currency              |        |
-      | country               |        |
-      | group                 |        |
-      | customer              |        |
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+      | shop                  |                     |
+      | currency              |                     |
+      | country               |                     |
+      | group                 |                     |
+      | customer              |                     |
 
   Scenario: I add a specific price with relations
     Given I add product "product1" with following information:
@@ -140,8 +136,6 @@ Feature: Update product options from Back Office (BO)
       | includes tax    | true         |
       | price           | 45.78        |
       | from quantity   | 1            |
-      | from            |              |
-      | to              |              |
       | shop            | testShop     |
       | currency        | usd          |
       | country         | UnitedStates |
@@ -149,16 +143,16 @@ Feature: Update product options from Back Office (BO)
       | customer        | testCustomer |
     Then product "product1" should have 1 specific prices
     And specific price price1 should have following details:
-      | specific price detail | value        |
-      | reduction type        | amount       |
-      | reduction value       | 12.56        |
-      | includes tax          | true         |
-      | price                 | 45.78        |
-      | from quantity         | 1            |
-      | from                  |              |
-      | to                    |              |
-      | shop                  | testShop     |
-      | currency              | usd          |
-      | country               | UnitedStates |
-      | group                 | visitor      |
-      | customer              | testCustomer |
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+      | shop                  | testShop            |
+      | currency              | usd                 |
+      | country               | UnitedStates        |
+      | group                 | visitor             |
+      | customer              | testCustomer        |

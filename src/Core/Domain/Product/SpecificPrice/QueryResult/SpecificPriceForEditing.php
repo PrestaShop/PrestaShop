@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult;
 
 use DateTime;
+use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 
 class SpecificPriceForEditing
@@ -105,13 +106,13 @@ class SpecificPriceForEditing
      * @param bool $includesTax
      * @param DecimalNumber $price
      * @param int $fromQuantity
+     * @param DateTimeInterface $dateTimeFrom
+     * @param DateTimeInterface $dateTimeTo
      * @param int|null $shopId
      * @param int|null $currencyId
      * @param int|null $countryId
      * @param int|null $groupId
      * @param int|null $customerId
-     * @param DateTime|null $dateTimeFrom
-     * @param DateTime|null $dateTimeTo
      */
     public function __construct(
         int $specificPriceId,
@@ -120,8 +121,8 @@ class SpecificPriceForEditing
         bool $includesTax,
         DecimalNumber $price,
         int $fromQuantity,
-        ?DateTime $dateTimeFrom,
-        ?DateTime $dateTimeTo,
+        DateTimeInterface $dateTimeFrom,
+        DateTimeInterface $dateTimeTo,
         ?int $shopId,
         ?int $currencyId,
         ?int $countryId,
@@ -232,17 +233,17 @@ class SpecificPriceForEditing
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface
      */
-    public function getDateTimeFrom(): ?DateTime
+    public function getDateTimeFrom(): DateTimeInterface
     {
         return $this->dateTimeFrom;
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface
      */
-    public function getDateTimeTo(): ?DateTime
+    public function getDateTimeTo(): DateTimeInterface
     {
         return $this->dateTimeTo;
     }

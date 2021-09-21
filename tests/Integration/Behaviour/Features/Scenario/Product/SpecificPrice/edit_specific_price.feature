@@ -24,97 +24,95 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | includes tax    | true   |
       | price           | 45.78  |
       | from quantity   | 1      |
-      | from            |        |
-      | to              |        |
     And product "product1" should have 1 specific prices
     And specific price price1 should have following details:
-      | specific price detail | value  |
-      | reduction type        | amount |
-      | reduction value       | 12.56  |
-      | includes tax          | true   |
-      | price                 | 45.78  |
-      | from quantity         | 1      |
-      | from                  |        |
-      | to                    |        |
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
     When I edit specific price "price1" with following details:
       | reduction type  | percentage |
       | reduction value | 10         |
     Then specific price price1 should have following details:
-      | specific price detail | value      |
-      | reduction type        | percentage |
-      | reduction value       | 10         |
-      | includes tax          | true       |
-      | price                 | 45.78      |
-      | from quantity         | 1          |
-      | from                  |            |
-      | to                    |            |
+      | specific price detail | value               |
+      | reduction type        | percentage          |
+      | reduction value       | 10                  |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
     When I edit specific price "price1" with following details:
       | reduction type  | amount |
       | reduction value | 12.56  |
     Then specific price price1 should have following details:
-      | specific price detail | value  |
-      | reduction type        | amount |
-      | reduction value       | 12.56  |
-      | includes tax          | true   |
-      | price                 | 45.78  |
-      | from quantity         | 1      |
-      | from                  |        |
-      | to                    |        |
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
 
   Scenario: I edit specific price tax, price and quantity
     Given specific price price1 should have following details:
-      | specific price detail | value  |
-      | reduction type        | amount |
-      | reduction value       | 12.56  |
-      | includes tax          | true   |
-      | price                 | 45.78  |
-      | from quantity         | 1      |
-      | from                  |        |
-      | to                    |        |
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
     When I edit specific price "price1" with following details:
       | includes tax  | false |
       | price         | 50    |
       | from quantity | 3     |
     Then specific price price1 should have following details:
-      | specific price detail | value  |
-      | reduction type        | amount |
-      | reduction value       | 12.56  |
-      | includes tax          | false  |
-      | price                 | 50     |
-      | from quantity         | 3      |
-      | from                  |        |
-      | to                    |        |
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | false               |
+      | price                 | 50                  |
+      | from quantity         | 3                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
     When I edit specific price "price1" with following details:
       | price         | 45.78 |
       | includes tax  | true  |
       | from quantity | 1     |
     Then specific price price1 should have following details:
-      | specific price detail | value  |
-      | includes tax          | true   |
-      | specific price detail | value  |
-      | reduction type        | amount |
-      | reduction value       | 12.56  |
-      | includes tax          | true   |
-      | price                 | 45.78  |
-      | from quantity         | 1      |
-      | from                  |        |
-      | to                    |        |
+      | specific price detail | value               |
+      | includes tax          | true                |
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
 
   Scenario: I edit specific price relations
     Given specific price price1 should have following details:
-      | specific price detail | value  |
-      | reduction type        | amount |
-      | reduction value       | 12.56  |
-      | includes tax          | true   |
-      | price                 | 45.78  |
-      | from quantity         | 1      |
-      | from                  |        |
-      | to                    |        |
-      | shop                  |        |
-      | currency              |        |
-      | country               |        |
-      | group                 |        |
-      | customer              |        |
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+      | shop                  |                     |
+      | currency              |                     |
+      | country               |                     |
+      | group                 |                     |
+      | customer              |                     |
     When I edit specific price "price1" with following details:
       | shop     | testShop     |
       | currency | usd          |
@@ -122,19 +120,19 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | group    | visitor      |
       | customer | testCustomer |
     Then specific price price1 should have following details:
-      | specific price detail | value        |
-      | reduction type        | amount       |
-      | reduction value       | 12.56        |
-      | includes tax          | true         |
-      | price                 | 45.78        |
-      | from quantity         | 1            |
-      | from                  |              |
-      | to                    |              |
-      | shop                  | testShop     |
-      | currency              | usd          |
-      | country               | UnitedStates |
-      | group                 | visitor      |
-      | customer              | testCustomer |
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+      | shop                  | testShop            |
+      | currency              | usd                 |
+      | country               | UnitedStates        |
+      | group                 | visitor             |
+      | customer              | testCustomer        |
     When I edit specific price "price1" with following details:
       | shop     |  |
       | currency |  |
@@ -142,19 +140,19 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | group    |  |
       | customer |  |
     Then specific price price1 should have following details:
-      | specific price detail | value  |
-      | reduction type        | amount |
-      | reduction value       | 12.56  |
-      | includes tax          | true   |
-      | price                 | 45.78  |
-      | from quantity         | 1      |
-      | from                  |        |
-      | to                    |        |
-      | shop                  |        |
-      | currency              |        |
-      | country               |        |
-      | group                 |        |
-      | customer              |        |
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+      | shop                  |                     |
+      | currency              |                     |
+      | country               |                     |
+      | group                 |                     |
+      | customer              |                     |
 
   Scenario: I edit specific price with non-existing relations
     Given currency "jen" does not exist
@@ -163,19 +161,19 @@ Feature: Edit existing Specific Price from Back Office (BO).
     And group "pirates" does not exist
     And customer "Rick - the pickle" does not exist
     And specific price price1 should have following details:
-      | specific price detail | value  |
-      | reduction type        | amount |
-      | reduction value       | 12.56  |
-      | includes tax          | true   |
-      | price                 | 45.78  |
-      | from quantity         | 1      |
-      | from                  |        |
-      | to                    |        |
-      | shop                  |        |
-      | currency              |        |
-      | country               |        |
-      | group                 |        |
-      | customer              |        |
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+      | shop                  |                     |
+      | currency              |                     |
+      | country               |                     |
+      | group                 |                     |
+      | customer              |                     |
     When I edit specific price "price1" with following details:
       | shop | nonExistingShop |
     Then I should get error that shop was not found
@@ -192,30 +190,30 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | customer | Rick - the pickle |
     Then I should get error that customer was not found
     And specific price price1 should have following details:
-      | specific price detail | value  |
-      | reduction type        | amount |
-      | reduction value       | 12.56  |
-      | includes tax          | true   |
-      | price                 | 45.78  |
-      | from quantity         | 1      |
-      | from                  |        |
-      | to                    |        |
-      | shop                  |        |
-      | currency              |        |
-      | country               |        |
-      | group                 |        |
-      | customer              |        |
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+      | shop                  |                     |
+      | currency              |                     |
+      | country               |                     |
+      | group                 |                     |
+      | customer              |                     |
 
   Scenario: I edit specific price dates
     Given specific price price1 should have following details:
-      | specific price detail | value  |
-      | reduction type        | amount |
-      | reduction value       | 12.56  |
-      | includes tax          | true   |
-      | price                 | 45.78  |
-      | from quantity         | 1      |
-      | from                  |        |
-      | to                    |        |
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
     When I edit specific price "price1" with following details:
       | from | 2021-01-01 10:00:00 |
       | to   | 2021-01-01 11:00:00 |
@@ -277,9 +275,30 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 2021-01-01 10:00:00 |
+
+  Scenario: Date ranges are not reset when not provided
+    Given specific price price1 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 2021-01-01 10:00:00 |
     When I edit specific price "price1" with following details:
-      | from |  |
-      | to   |  |
+      | includes tax | false |
+    Then specific price price1 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | false               |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 2021-01-01 10:00:00 |
+    When I edit specific price "price1" with following details:
+      | includes tax | true |
     Then specific price price1 should have following details:
       | specific price detail | value               |
       | reduction type        | amount              |

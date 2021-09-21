@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use DateTime;
+use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
 /**
  * Add specific price to a Product
@@ -97,12 +99,18 @@ class AddProductSpecificPriceCommand
     private $customerId;
 
     /**
-     * @var DateTime|null
+     * @var DateTimeInterface
+     *
+     * @see DateTime
+     * @see NullDateTime
      */
     private $dateTimeFrom;
 
     /**
-     * @var DateTime|null
+     * @var DateTimeInterface
+     *
+     * @see DateTime
+     * @see NullDateTime
      */
     private $dateTimeTo;
 
@@ -130,6 +138,8 @@ class AddProductSpecificPriceCommand
         $this->includesTax = $includeTax;
         $this->price = new DecimalNumber($price);
         $this->fromQuantity = $fromQuantity;
+        $this->dateTimeFrom = new NullDateTime();
+        $this->dateTimeTo = new NullDateTime();
     }
 
     /**
@@ -173,21 +183,47 @@ class AddProductSpecificPriceCommand
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface
      */
-    public function getDateTimeFrom(): ?DateTime
+    public function getDateTimeFrom(): DateTimeInterface
     {
         return $this->dateTimeFrom;
     }
 
     /**
-     * @param DateTime|null $dateTimeFrom
+     * @param DateTimeInterface $dateTimeFrom
      *
-     * @return $this
+     * @see DateTime
+     * @see NullDateTime
+     *
+     * @return AddProductSpecificPriceCommand
      */
-    public function setDateTimeFrom(?DateTime $dateTimeFrom): self
+    public function setDateTimeFrom(DateTimeInterface $dateTimeFrom): self
     {
         $this->dateTimeFrom = $dateTimeFrom;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTimeInterface
+     */
+    public function getDateTimeTo(): ?DateTimeInterface
+    {
+        return $this->dateTimeTo;
+    }
+
+    /**
+     * @param DateTimeInterface $dateTimeTo
+     *
+     * @see DateTime
+     * @see NullDateTime
+     *
+     * @return AddProductSpecificPriceCommand
+     */
+    public function setDateTimeTo(DateTimeInterface $dateTimeTo): self
+    {
+        $this->dateTimeTo = $dateTimeTo;
 
         return $this;
     }
@@ -308,26 +344,6 @@ class AddProductSpecificPriceCommand
     public function setCustomerId(int $customerId): self
     {
         $this->customerId = $customerId;
-
-        return $this;
-    }
-
-    /**
-     * @return DateTime|null
-     */
-    public function getDateTimeTo(): ?DateTime
-    {
-        return $this->dateTimeTo;
-    }
-
-    /**
-     * @param DateTime|null $dateTimeTo
-     *
-     * @return $this
-     */
-    public function setDateTimeTo(?DateTime $dateTimeTo): self
-    {
-        $this->dateTimeTo = $dateTimeTo;
 
         return $this;
     }

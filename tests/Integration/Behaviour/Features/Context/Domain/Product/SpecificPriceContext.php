@@ -65,14 +65,6 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     public function transformSpecificPrice(TableNode $tableNode): SpecificPriceForEditing
     {
         $dataRows = $tableNode->getRowsHash();
-        $from = null;
-        if (!empty($dataRows['from'])) {
-            $from = new DateTime($dataRows['from']);
-        }
-        $to = null;
-        if (!empty($dataRows['to'])) {
-            $to = new DateTime($dataRows['to']);
-        }
 
         return new SpecificPriceForEditing(
             42, // The ID does not matter we don't check it
@@ -81,8 +73,8 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
             new DecimalNumber($dataRows['price']),
             (int) $dataRows['from quantity'],
-            $from,
-            $to,
+            DateTimeUtil::NULL_DATETIME === $dataRows['from'] ? new NullDateTime() : new DateTime($dataRows['from']),
+            DateTimeUtil::NULL_DATETIME === $dataRows['to'] ? new NullDateTime() : new DateTime($dataRows['to']),
             $this->getStoredId($dataRows, 'shop'),
             $this->getStoredId($dataRows, 'currency'),
             $this->getStoredId($dataRows, 'country'),
@@ -176,17 +168,16 @@ class SpecificPriceContext extends AbstractProductFeatureContext
 
         $specificPriceDateTimeProperties = ['dateTimeFrom', 'dateTimeTo'];
         foreach ($specificPriceDateTimeProperties as $dateTimeProperty) {
-            /** @var DateTime|null $expectedDateTime */
+            /** @var DateTimeInterface $expectedDateTime */
             $expectedDateTime = $propertyAccessor->getValue($expectedSpecificPrice, $dateTimeProperty);
-            /** @var DateTime|null $productDateTime */
+            /** @var DateTimeInterface $productDateTime */
             $productDateTime = $propertyAccessor->getValue($productSpecificPrice, $dateTimeProperty);
-            if (null === $expectedDateTime && null !== $productDateTime) {
-                throw new RuntimeException(sprintf(
-                    'Expected %s of "%s" to be null',
-                    $dateTimeProperty,
-                    $specificPriceReference
-                ));
-            }
+
+            Assert::assertSame(
+                $expectedDateTime->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                $productDateTime->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                'Unexpected specific price date time'
+            );
         }
 
         $specificPriceDecimalProperties = ['reductionAmount', 'price'];

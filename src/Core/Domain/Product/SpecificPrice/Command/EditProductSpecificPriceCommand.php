@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
+use DateTime;
 use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
@@ -45,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
 class EditProductSpecificPriceCommand
 {
@@ -105,11 +107,17 @@ class EditProductSpecificPriceCommand
 
     /**
      * @var DateTimeInterface|null
+     *
+     * @see DateTime
+     * @see NullDateTime
      */
     private $dateTimeFrom;
 
     /**
      * @var DateTimeInterface|null
+     *
+     * @see DateTime
+     * @see NullDateTime
      */
     private $dateTimeTo;
 

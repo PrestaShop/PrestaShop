@@ -43,7 +43,6 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CustomerFeatureContext extends AbstractDomainFeatureContext
 {
-
     /**
      * Random integer representing group id which should never exist in test database
      */
