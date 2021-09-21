@@ -1079,6 +1079,10 @@ $product-page-padding-bottom: 80px !default;
   #product_stock_quantities_stock_movements {
     max-width: 400px;
 
+    .table {
+      margin-bottom: 0.8rem;
+    }
+
     td {
       padding-top: 0.8rem;
       padding-bottom: 0.8rem;
