@@ -43,7 +43,7 @@ class CustomerAddressPersisterCore
 
     private function authorizeChange(Address $address, $token)
     {
-        if(!Validate::isLoadedObject($this->customer)) {
+        if (!Validate::isLoadedObject($this->customer)) {
             // No action allowed without a valid customer into the context
             return false;
         }
