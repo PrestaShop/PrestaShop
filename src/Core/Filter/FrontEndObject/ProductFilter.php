@@ -44,6 +44,7 @@ class ProductFilter extends HashMapWhitelistFilter
             'availability',
             'availability_date',
             'availability_message',
+            'availability_submessage',
             'available_later',
             'available_now',
             'canonical_url',

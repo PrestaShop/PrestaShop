@@ -888,6 +888,7 @@ class ProductLazyArray extends AbstractLazyArray
         $this->product['show_availability'] = $show_availability;
         $product['quantity_wanted'] = $this->getQuantityWanted();
 
+        // If availability date already passed, we don't want to show it
         if (isset($product['available_date'])) {
             $date = new DateTime($product['available_date']);
             if ($date < new DateTime()) {
@@ -895,68 +896,63 @@ class ProductLazyArray extends AbstractLazyArray
             }
         }
 
-        if ($show_availability) {
-            $availableQuantity = $product['quantity'] - $product['quantity_wanted'];
-            if (isset($product['stock_quantity'])) {
-                $availableQuantity = $product['stock_quantity'] - $product['quantity_wanted'];
-            }
-            if ($availableQuantity >= 0) {
-                $this->product['availability_date'] = $product['available_date'];
+        // If we don't want to show availability, we return
+        if (!$show_availability) {
+            $this->product['availability_message'] = null;
+            $this->product['availability_date'] = null;
+            $this->product['availability'] = null;
+            return;
+        }
 
-                if ($product['quantity'] < $settings->lastRemainingItems) {
-                    $this->applyLastItemsInStockDisplayRule();
-                } else {
-                    $config = $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS');
-                    $this->product['availability_message'] = $product['available_now'] ? $product['available_now']
-                        : ($config[$language->id] ?? null);
-                    $this->product['availability'] = 'available';
-                }
-            } elseif ($product['allow_oosp']) {
-                $config = $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOA');
-                $this->product['availability_message'] = $product['available_later'] ? $product['available_later']
-                    : ($config[$language->id] ?? null);
-                $this->product['availability_date'] = $product['available_date'];
-                $this->product['availability'] = 'available';
-            } elseif ($product['quantity_wanted'] > 0 && $product['quantity'] > 0) {
-                $this->product['availability_message'] = $this->translator->trans(
-                    'There are not enough products in stock',
-                    [],
-                    'Shop.Notifications.Error'
-                );
-                $this->product['availability'] = 'unavailable';
-                $this->product['availability_date'] = null;
-            } elseif (!empty($product['quantity_all_versions']) && $product['quantity_all_versions'] > 0) {
-                $this->product['availability_message'] = $this->translator->trans(
+        $availableQuantity = $product['quantity'] - $product['quantity_wanted'];
+        if (isset($product['stock_quantity'])) {
+            $availableQuantity = $product['stock_quantity'] - $product['quantity_wanted'];
+        }
+
+        // In stock situation
+        if ($availableQuantity >= 0) {
+
+            // If quantity is lower than a set value in PS settings, we can display it in a different waay
+            if ($product['quantity'] < $settings->lastRemainingItems) {
+                $this->product['availability'] = 'last_remaining_items';
+            } else {
+                $this->product['availability'] = 'instock';
+            }
+
+            $default_label = $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS');
+            $this->product['availability_message'] = $product['available_now'] ? $product['available_now']
+                : ($default_label[$language->id] ?? null);
+            
+        // Out of stock, but enabled ordering
+        } elseif ($product['allow_oosp']) {
+
+            $this->product['availability'] = 'available';
+            $this->product['availability_date'] = $product['available_date'];
+
+            $default_label = $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOA');
+            $this->product['availability_message'] = $product['available_later'] ? $product['available_later']
+                : ($default_label[$language->id] ?? null);
+
+        // Out of stock, disabled ordering
+        } else {
+
+            $this->product['availability'] = 'unavailable';
+            $this->product['availability_date'] = $product['available_date'];
+
+            $default_label = $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOD');
+            $this->product['availability_message'] = $default_label[$language->id] ?? null;
+            // TODO - add a specific field to every product
+
+            // If the product is not available, but other variants are, we show the customer a notification
+            if (!empty($product['quantity_all_versions']) && $product['quantity_all_versions'] > 0) {
+                $this->product['availability_submessage'] = $this->translator->trans(
                     'Product available with different options',
                     [],
                     'Shop.Theme.Catalog'
                 );
-                $this->product['availability_date'] = $product['available_date'];
-                $this->product['availability'] = 'unavailable';
-            } else {
-                $config = $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOD');
-                $this->product['availability_message'] = $config[$language->id] ?? null;
-                $this->product['availability_date'] = $product['available_date'];
-                $this->product['availability'] = 'unavailable';
             }
-        } else {
-            $this->product['availability_message'] = null;
-            $this->product['availability_date'] = null;
-            $this->product['availability'] = null;
         }
-    }
-
-    /**
-     * Override availability message.
-     */
-    protected function applyLastItemsInStockDisplayRule()
-    {
-        $this->product['availability_message'] = $this->translator->trans(
-            'Last items in stock',
-            [],
-            'Shop.Theme.Catalog'
-        );
-        $this->product['availability'] = 'last_remaining_items';
+        
     }
 
     /**
@@ -996,6 +992,7 @@ class ProductLazyArray extends AbstractLazyArray
             'availability',
             'availability_date',
             'availability_message',
+            'availability_submessage',
             'available_date',
             'available_for_order',
             'available_later',
