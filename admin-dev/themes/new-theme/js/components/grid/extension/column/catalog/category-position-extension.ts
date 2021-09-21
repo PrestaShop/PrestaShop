@@ -56,7 +56,7 @@ export default class CategoryPositionExtension {
       .getContainer()
       .find(GridMap.gridTable)
       .tableDnD({
-        dragHandle: 'js-drag-handle',
+        dragHandle: GridMap.dragHandler,
         onDragClass: 'dragging-row',
         onDragStart: () => {
           this.originalPositions = decodeURIComponent($.tableDnD.serialize());
