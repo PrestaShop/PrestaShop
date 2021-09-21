@@ -9,8 +9,10 @@ COPY /docker_run_git.sh /tmp/
 
 RUN mkdir -p /var/www/.npm
 RUN chown -R www-data:www-data /var/www/.npm
+RUN mkdir -p /var/www/.composer
+RUN chown -R www-data:www-data /var/www/.composer
 
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt install -y nodejs
 
 CMD ["/tmp/docker_run_git.sh"]
