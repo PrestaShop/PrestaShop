@@ -24,17 +24,39 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand;
+namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+
+use PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDuplicateProductHandlerInterface;
 
 /**
- * Defines contract to handle @see BulkToggleProductCommand
+ * Handles command which deletes addresses in bulk action
  */
-interface BulkToggleProductHandlerInterface
+final class BulkDuplicateProductHandler implements BulkDuplicateProductHandlerInterface
 {
     /**
-     * @param BulkToggleProductCommand $command
+     * @var ProductDuplicator
      */
-    public function handle(BulkToggleProductCommand $command): void;
+    private $productDuplicator;
+
+    /**
+     * @param ProductDuplicator $productRepository
+     */
+    public function __construct(ProductDuplicator $productDuplicator)
+    {
+        $this->productDuplicator = $productDuplicator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(BulkDuplicateProductCommand $command): void
+    {
+        foreach ($command->getProductIds() as $productId) {
+            $this->productDuplicator->duplicate($productId);
+        }
+    }
 }

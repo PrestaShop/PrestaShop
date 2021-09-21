@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -384,16 +385,23 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new BulkActionCollection())
             ->add(
                 (new SubmitBulkAction('enable_selection'))
-                    ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+                    ->setName($this->trans('Activate selection', [], 'Admin.Actions'))
                     ->setOptions([
                         'submit_route' => 'admin_products_v2_bulk_enable',
                     ])
             )
             ->add(
                 (new SubmitBulkAction('disable_selection'))
-                    ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+                    ->setName($this->trans('Deactivate selection', [], 'Admin.Actions'))
                     ->setOptions([
                         'submit_route' => 'admin_products_v2_bulk_disable',
+                    ])
+            )
+            ->add(
+                (new SubmitBulkAction('duplicate_selection'))
+                    ->setName($this->trans('Duplicate selection', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_products_v2_bulk_duplicate',
                     ])
             )
             ->add(

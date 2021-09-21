@@ -24,17 +24,40 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Defines contract to handle @see BulkToggleProductCommand
+ * Deletes multiple products
  */
-interface BulkToggleProductHandlerInterface
+class BulkDuplicateProductCommand
 {
     /**
-     * @param BulkToggleProductCommand $command
+     * @var ProductId[]
      */
-    public function handle(BulkToggleProductCommand $command): void;
+    private $productIds;
+
+    /**
+     * @param int[] $productIds
+     *
+     * @throws ProductConstraintException
+     */
+    public function __construct(array $productIds)
+    {
+        foreach ($productIds as $productId) {
+            $this->productIds[] = new ProductId($productId);
+        }
+    }
+
+    /**
+     * @return ProductId[]
+     */
+    public function getProductIds(): array
+    {
+        return $this->productIds;
+    }
 }

@@ -132,6 +132,19 @@ admin_products_v2_bulk_disable:
     requirements:
         productId: \d+
 
+admin_products_v2_bulk_duplicate:
+    path: /bulk-duplicate
+    methods: [POST, DELETE]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkDuplicate
+        _legacy_controller: AdminProducts
+        _legacy_link:
+            - AdminProducts:submitBulkduplicateSelectionproduct
+        _legacy_parameters:
+            id_product: productId
+    requirements:
+        productId: \d+
+
 admin_products_v2_bulk_delete:
     path: /bulk-delete
     methods: [POST, DELETE]

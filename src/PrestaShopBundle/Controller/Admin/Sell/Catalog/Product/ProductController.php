@@ -32,6 +32,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
@@ -362,11 +363,11 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * Disable customers in bulk action.
+     * Disable products in bulk action.
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_customers_index",
+     *     redirectRoute="admin_products_v2_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -394,6 +395,40 @@ class ProductController extends FrameworkBundleAdminController
 
         return $this->redirectToRoute('admin_products_v2_index');
     }
+
+    /**
+     * Duplicate products in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+
+    public function bulkDuplicateAction(Request $request): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new BulkDuplicateProductCommand(
+                    $this->getProductIdsFromRequest($request)
+                )
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('Successful duplicate.', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
 
     /**
      * @param Request $request
