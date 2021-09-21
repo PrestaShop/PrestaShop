@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Group;
-use PrestaShop\PrestaShop\Core\Domain\Group\Exception\GroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use RuntimeException;
 
 class GroupFeatureContext extends AbstractDomainFeatureContext

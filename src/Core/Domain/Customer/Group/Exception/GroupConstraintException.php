@@ -25,7 +25,7 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Group\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception;
 
 /**
  * Is thrown when Group constraints are violated

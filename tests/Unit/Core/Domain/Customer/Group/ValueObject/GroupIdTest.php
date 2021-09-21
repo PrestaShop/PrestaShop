@@ -25,12 +25,12 @@
  */
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Domain\Group\ValueObject;
+namespace Tests\Unit\Core\Domain\Customer\Group\ValueObject;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Group\Exception\GroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 
 class GroupIdTest extends TestCase
 {

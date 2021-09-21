@@ -25,23 +25,8 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Group\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception;
 
-/**
- * Indicates that no group is specified
- */
-class NoGroupId implements GroupIdInterface
+class GroupNotFoundException extends GroupException
 {
-    /**
-     * Value when no group is specified
-     */
-    public const NO_GROUP_ID = 0;
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getValue(): int
-    {
-        return self::NO_GROUP_ID;
-    }
 }

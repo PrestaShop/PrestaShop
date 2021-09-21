@@ -23,10 +23,20 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Group\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject;
 
-class GroupNotFoundException extends GroupException
+/**
+ * Defines contract for group identification value.
+ * This interface allows to explicitly define whether group relation is optional or required.
+ *
+ * @see GroupId
+ * @see NoGroupId
+ */
+interface GroupIdInterface
 {
+    /**
+     * @return int
+     */
+    public function getValue(): int;
 }

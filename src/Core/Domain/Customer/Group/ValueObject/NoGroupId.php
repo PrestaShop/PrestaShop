@@ -23,20 +23,25 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Group\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject;
 
 /**
- * Defines contract for group identification value.
- * This interface allows to explicitly define whether group relation is optional or required.
- *
- * @see GroupId
- * @see NoGroupId
+ * Indicates that no group is specified
  */
-interface GroupIdInterface
+class NoGroupId implements GroupIdInterface
 {
     /**
-     * @return int
+     * Value when no group is specified
      */
-    public function getValue(): int;
+    public const NO_GROUP_ID = 0;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getValue(): int
+    {
+        return self::NO_GROUP_ID;
+    }
 }
