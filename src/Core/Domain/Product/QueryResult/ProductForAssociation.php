@@ -24,55 +24,75 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Language\ValueObject;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-/**
- * Stores IETF tag value (e.g. en-US)
- */
-class TagIETF
+class ProductForAssociation
 {
     /**
-     * Regexp to validate an IETF tag, the bounding anchors are not present, so you can choose them and it allows
-     * this regexp to be used in routing configuration.
+     * @var int
      */
-    public const IETF_TAG_REGEXP = '^[a-zA-Z]{2}(-[a-zA-Z]{2})?$';
+    private $productId;
 
     /**
      * @var string
      */
-    private $tagIETF;
+    private $name;
 
     /**
-     * @param string $tagIETF
-     *
-     * @throws LanguageConstraintException
+     * @var string
      */
-    public function __construct($tagIETF)
-    {
-        $this->assertIsTagIETF($tagIETF);
+    private $reference;
 
-        $this->tagIETF = $tagIETF;
+    /**
+     * @var string
+     */
+    private $imageUrl;
+
+    /**
+     * @param int $productId
+     * @param string $name
+     * @param string $reference
+     * @param string $imageUrl
+     */
+    public function __construct(int $productId, string $name, string $reference, string $imageUrl)
+    {
+        $this->productId = $productId;
+        $this->name = $name;
+        $this->reference = $reference;
+        $this->imageUrl = $imageUrl;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProductId(): int
+    {
+        return $this->productId;
     }
 
     /**
      * @return string
      */
-    public function getValue()
+    public function getName(): string
     {
-        return $this->tagIETF;
+        return $this->name;
     }
 
     /**
-     * @param string $tagIETF
-     *
-     * @throws LanguageConstraintException
+     * @return string
      */
-    private function assertIsTagIETF($tagIETF)
+    public function getReference(): string
     {
-        if (!is_string($tagIETF) || !preg_match(sprintf('/%s/', static::IETF_TAG_REGEXP), $tagIETF)) {
-            throw new LanguageConstraintException(sprintf('Invalid IETF tag %s provided', var_export($tagIETF, true)), LanguageConstraintException::INVALID_IETF_TAG);
-        }
+        return $this->reference;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageUrl(): string
+    {
+        return $this->imageUrl;
     }
 }
