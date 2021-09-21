@@ -37,7 +37,7 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
     /**
      * @var array<int, string>
      */
-    protected $fields = ['enable_shop', 'maintenance_ip', 'maintenance_text'];
+    private $fields = ['enable_shop', 'maintenance_ip', 'maintenance_text'];
 
     /**
      * {@inheritdoc}
