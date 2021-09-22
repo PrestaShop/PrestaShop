@@ -6,6 +6,8 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler\GetSpecificPriceListHandler
     arguments:
       - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
+      - '@prestashop.adapter.attribute.repository.attribute_repository'
+      - '@prestashop.core.product.combination.combination_name_builder'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList

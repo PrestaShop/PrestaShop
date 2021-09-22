@@ -147,6 +147,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
         $qb = $this->getSpecificPricesQueryBuilder($productId, $langId, $filters)
             ->select('
                 sp.id_specific_price,
+                sp.id_product_attribute,
                 sp.reduction_type,
                 sp.reduction,
                 sp.reduction_tax,

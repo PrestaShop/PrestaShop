@@ -29,11 +29,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetEditableSpecificPricesListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
+use PrestaShop\PrestaShop\Core\Product\Combination\CombinationNameBuilderInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 /**
@@ -47,12 +51,28 @@ class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandle
     private $specificPriceRepository;
 
     /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    /**
+     * @var CombinationNameBuilderInterface
+     */
+    private $combinationNameBuilder;
+
+    /**
      * @param SpecificPriceRepository $specificPriceRepository
+     * @param AttributeRepository $attributeRepository
+     * @param CombinationNameBuilderInterface $combinationNameBuilder
      */
     public function __construct(
-        SpecificPriceRepository $specificPriceRepository
+        SpecificPriceRepository $specificPriceRepository,
+        AttributeRepository $attributeRepository,
+        CombinationNameBuilderInterface $combinationNameBuilder
     ) {
         $this->specificPriceRepository = $specificPriceRepository;
+        $this->attributeRepository = $attributeRepository;
+        $this->combinationNameBuilder = $combinationNameBuilder;
     }
 
     /**
@@ -69,7 +89,7 @@ class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandle
         );
 
         return new SpecificPriceListForEditing(
-            $this->formatSpecificPricesForListing($specificPriceData),
+            $this->formatSpecificPricesForListing($specificPriceData, $query->getLanguageId()),
             $this->specificPriceRepository->getProductSpecificPricesCount(
                 $query->getProductId(),
                 $query->getLanguageId(),
@@ -79,15 +99,31 @@ class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandle
     }
 
     /**
-     * @param array $specificPrices
+     * @param array<int, array<string, string|null>> $specificPrices
+     * @param LanguageId $languageId
      *
      * @return SpecificPriceForListing[]
      */
-    private function formatSpecificPricesForListing(array $specificPrices): array
+    private function formatSpecificPricesForListing(array $specificPrices, LanguageId $languageId): array
     {
-        return array_map(function (array $specificPrice): SpecificPriceForListing {
-            return new SpecificPriceForListing(
-                //@todo: missing combination
+        $attributesInfo = $this->getAttributesInfo($specificPrices, $languageId);
+
+        $specificPricesForListing = [];
+        foreach ($specificPrices as $specificPrice) {
+            $customerName = null;
+            if ((int) $specificPrice['id_customer']) {
+                $customerName = sprintf('%s %s', $specificPrice['customer_firstname'], $specificPrice['customer_lastname']);
+            }
+
+            $combinationId = (int) $specificPrice['id_product_attribute'];
+            if ($combinationId && !isset($attributesInfo[$combinationId])) {
+                throw new CombinationException(sprintf(
+                    'Attributes information was not fetched for combination "%s"',
+                    $combinationId
+                ));
+            }
+
+            $specificPricesForListing[] = new SpecificPriceForListing(
                 (int) $specificPrice['id_specific_price'],
                 $specificPrice['reduction_type'],
                 new DecimalNumber($specificPrice['reduction']),
@@ -96,15 +132,33 @@ class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandle
                 (int) $specificPrice['from_quantity'],
                 DateTimeUtil::buildNullableDateTime($specificPrice['from']),
                 DateTimeUtil::buildNullableDateTime($specificPrice['to']),
-                //@todo: not working yet. Need to adjust repository method -> join all lang tables and retrieve names instead of id
-                $specificPrice['shop_name'] ?: null,
-                $specificPrice['currency_name'] ?: null,
-                $specificPrice['country_name'] ?: null,
-                $specificPrice['group_name'] ?: null,
-                $specificPrice['id_customer'] ?
-                    sprintf('%s %s', $specificPrice['customer_firstname'], $specificPrice['customer_lastname']) :
-                    null
+                $combinationId ? $this->combinationNameBuilder->buildName($attributesInfo[$combinationId]) : null,
+                $specificPrice['shop_name'],
+                $specificPrice['currency_name'],
+                $specificPrice['country_name'],
+                $specificPrice['group_name'],
+                $customerName
             );
-        }, $specificPrices);
+        }
+
+        return $specificPricesForListing;
+    }
+
+    /**
+     * @param array<int, array<string, string|null>> $specificPrices
+     * @param LanguageId $languageId
+     *
+     * @return array
+     */
+    private function getAttributesInfo(array $specificPrices, LanguageId $languageId): array
+    {
+        $combinationIds = [];
+        foreach ($specificPrices as $specificPrice) {
+            if ($specificPrice['id_product_attribute']) {
+                $combinationIds[] = (int) $specificPrice['id_product_attribute'];
+            }
+        }
+
+        return $this->attributeRepository->getAttributesInfoByCombinationIds($combinationIds, $languageId);
     }
 }
