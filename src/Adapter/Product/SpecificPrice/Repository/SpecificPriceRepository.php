@@ -157,7 +157,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
                 sp.from,
                 sp.to,
                 shop.name as shop_name,
-                currency.name as currency_name,
+                currency_lang.name as currency_name,
                 customer.firstname as customer_firstname,
                 customer.lastname as customer_lastname,
                 country_lang.name as country_name,
@@ -200,8 +200,8 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
         $qb->from($this->dbPrefix . 'specific_price', 'sp')
             ->leftJoin(
                 'sp',
-                $this->dbPrefix . 'currency', 'currency',
-                'sp.id_currency = currency.id_currency'
+                $this->dbPrefix . 'currency_lang', 'currency_lang',
+                'sp.id_currency = currency_lang.id_currency AND currency_lang.id_lang = :langId'
             )
             ->leftJoin(
                 'sp',

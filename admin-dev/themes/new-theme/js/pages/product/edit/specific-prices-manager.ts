@@ -61,11 +61,13 @@ export default class SpecificPricesManager {
     getSpecificPrices(this.productId).then((response) => {
       const specificPrices = response.specificPrices as Array<SpecificPriceForListing>;
 
+      //@todo: selectors to map
       specificPrices.forEach((specificPrice: SpecificPriceForListing) => {
         const trClone = trTemplate.content.cloneNode(true) as HTMLElement;
         const idField = trClone.querySelector('.specific-price-id') as HTMLElement;
         const combinationField = trClone.querySelector('.combination') as HTMLElement;
         const currencyField = trClone.querySelector('.currency') as HTMLElement;
+        const countryField = trClone.querySelector('.country') as HTMLElement;
         const groupField = trClone.querySelector('.group') as HTMLElement;
         const customerField = trClone.querySelector('.customer') as HTMLElement;
         const priceField = trClone.querySelector('.price') as HTMLElement;
@@ -77,6 +79,7 @@ export default class SpecificPricesManager {
         idField.textContent = String(specificPrice.id);
         combinationField.textContent = specificPrice.combination;
         currencyField.textContent = specificPrice.currency;
+        countryField.textContent = specificPrice.country;
         groupField.textContent = specificPrice.group;
         customerField.textContent = specificPrice.customer;
         priceField.textContent = specificPrice.price;
