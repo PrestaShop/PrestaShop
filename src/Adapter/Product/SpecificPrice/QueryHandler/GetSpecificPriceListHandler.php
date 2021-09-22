@@ -62,6 +62,7 @@ class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandle
     {
         $specificPriceData = $this->specificPriceRepository->getProductSpecificPrices(
             $query->getProductId(),
+            $query->getLanguageId(),
             $query->getLimit(),
             $query->getOffset(),
             $query->getFilters()
@@ -69,7 +70,11 @@ class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandle
 
         return new SpecificPriceListForEditing(
             $this->formatSpecificPricesForListing($specificPriceData),
-            $this->specificPriceRepository->getProductSpecificPricesCount($query->getProductId(), $query->getFilters())
+            $this->specificPriceRepository->getProductSpecificPricesCount(
+                $query->getProductId(),
+                $query->getLanguageId(),
+                $query->getFilters()
+            )
         );
     }
 
@@ -91,11 +96,14 @@ class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandle
                 (int) $specificPrice['from_quantity'],
                 DateTimeUtil::buildNullableDateTime($specificPrice['from']),
                 DateTimeUtil::buildNullableDateTime($specificPrice['to']),
-                (int) $specificPrice['id_shop'] ?: null,
-                (int) $specificPrice['id_currency'] ?: null,
-                (int) $specificPrice['id_country'] ?: null,
-                (int) $specificPrice['id_group'] ?: null,
-                (int) $specificPrice['id_customer'] ?: null
+                //@todo: not working yet. Need to adjust repository method -> join all lang tables and retrieve names instead of id
+                $specificPrice['shop_name'] ?: null,
+                $specificPrice['currency_name'] ?: null,
+                $specificPrice['country_name'] ?: null,
+                $specificPrice['group_name'] ?: null,
+                $specificPrice['id_customer'] ?
+                    sprintf('%s %s', $specificPrice['customer_firstname'], $specificPrice['customer_lastname']) :
+                    null
             );
         }, $specificPrices);
     }
