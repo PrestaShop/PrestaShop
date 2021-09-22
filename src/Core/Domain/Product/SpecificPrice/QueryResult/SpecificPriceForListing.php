@@ -98,6 +98,11 @@ class SpecificPriceForListing
     private $dateTimeTo;
 
     /**
+     * @var string|null
+     */
+    private $combinationName;
+
+    /**
      * @param int $specificPriceId
      * @param string $reductionType
      * @param DecimalNumber $reductionValue
@@ -106,6 +111,7 @@ class SpecificPriceForListing
      * @param int $fromQuantity
      * @param DateTimeInterface $dateTimeFrom
      * @param DateTimeInterface $dateTimeTo
+     * @param string|null $combinationName
      * @param string|null $shop
      * @param string|null $currency
      * @param string|null $country
@@ -122,6 +128,7 @@ class SpecificPriceForListing
         //@todo: datetimeImmutable instead of interface?
         DateTimeInterface $dateTimeFrom,
         DateTimeInterface $dateTimeTo,
+        ?string $combinationName,
         ?string $shop,
         ?string $currency,
         ?string $country,
@@ -136,6 +143,7 @@ class SpecificPriceForListing
         $this->fromQuantity = $fromQuantity;
         $this->dateTimeFrom = $dateTimeFrom;
         $this->dateTimeTo = $dateTimeTo;
+        $this->combinationName = $combinationName;
         $this->shop = $shop;
         $this->currency = $currency;
         $this->country = $country;
@@ -173,6 +181,14 @@ class SpecificPriceForListing
     public function includesTax(): bool
     {
         return $this->includesTax;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCombinationName(): ?string
+    {
+        return $this->combinationName;
     }
 
     /**

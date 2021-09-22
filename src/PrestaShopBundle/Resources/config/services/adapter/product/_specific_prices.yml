@@ -2,13 +2,15 @@ services:
   _defaults:
     public: true
 
-    prestashop.adapter.product.specific_price.query_handler.get_specific_price_list_handler:
-      class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler\GetSpecificPriceListHandler
-      arguments:
-        - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
-      tags:
-        - name: tactician.handler
-          command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList
+  prestashop.adapter.product.specific_price.query_handler.get_specific_price_list_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler\GetSpecificPriceListHandler
+    arguments:
+      - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
+      - '@prestashop.adapter.attribute.repository.attribute_repository'
+      - '@prestashop.core.product.combination.combination_name_builder'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList
 
   prestashop.adapter.product.specific_price.query_handler.get_specific_price_for_editing_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler\GetSpecificPriceForEditingHandler

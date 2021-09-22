@@ -137,8 +137,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         foreach ($specificPriceListForEditing->getSpecificPrices() as $specificPrice) {
             $list[] = [
                 'id' => $specificPrice->getSpecificPriceId(),
-                //@todo: missing combination id in specificPriceForEditing
-                'combination' => $this->getUnspecifiedValueFormat(),
+                'combination' => $specificPrice->getCombinationName() ?: $this->getUnspecifiedValueFormat(),
                 'currency' => $specificPrice->getCurrency() ?? $this->trans('All currencies', 'Admin.Global'),
                 'country' => $specificPrice->getCountry() ?? $this->trans('All countries', 'Admin.Global'),
                 'group' => $specificPrice->getGroup() ?? $this->trans('All groups', 'Admin.Global'),
