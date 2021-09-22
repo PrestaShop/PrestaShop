@@ -135,7 +135,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
             $list[] = [
                 'id' => $specificPrice->getSpecificPriceId(),
                 //@todo: missing combination id in specificPriceForEditing
-                'combination' => null,
+                'combination' => $this->getUnspecifiedValueFormat(),
                 'currency' => $specificPrice->getCurrency() ?? $this->trans('All currencies', 'Admin.Global'),
                 'country' => $specificPrice->getCountry() ?? $this->trans('All countries', 'Admin.Global'),
                 'group' => $specificPrice->getGroup() ?? $this->trans('All groups', 'Admin.Global'),
@@ -153,6 +153,10 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
     private function formatImpact(string $reductionType, DecimalNumber $reductionValue): string
     {
+        if ($reductionValue->equalsZero()) {
+            return $this->getUnspecifiedValueFormat();
+        }
+
         if ($reductionType === Reduction::TYPE_AMOUNT) {
             //@todo: hardcoded $ sign. Use CLDR formatting instead
             return sprintf('-%s $', (string) $reductionValue);
@@ -184,5 +188,10 @@ class SpecificPriceController extends FrameworkBundleAdminController
         }
 
         return $this->trans('From %s to %s', 'Admin.Catalog.Feature', [$fromParam, $toParam]);
+    }
+
+    private function getUnspecifiedValueFormat(): string
+    {
+        return '--';
     }
 }
