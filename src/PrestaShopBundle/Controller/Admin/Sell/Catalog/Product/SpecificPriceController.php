@@ -142,8 +142,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 'country' => $specificPrice->getCountry() ?? $this->trans('All countries', 'Admin.Global'),
                 'group' => $specificPrice->getGroup() ?? $this->trans('All groups', 'Admin.Global'),
                 'customer' => $specificPrice->getCustomer() ?? $this->trans('All customers', 'Admin.Global'),
-                //@todo: CLDR format currency?
-                'price' => (string) $specificPrice->getPrice(),
+                'price' => $this->getContextLocale()->formatPrice((string) $specificPrice->getPrice(), $this->getContextCurrencyIso()),
                 'impact' => $this->formatImpact($specificPrice->getReductionType(), $specificPrice->getReductionValue()),
                 'period' => $this->formatPeriod($specificPrice->getDateTimeFrom(), $specificPrice->getDateTimeFrom()),
                 'fromQuantity' => $specificPrice->getFromQuantity()
@@ -159,12 +158,13 @@ class SpecificPriceController extends FrameworkBundleAdminController
             return $this->getUnspecifiedValueFormat();
         }
 
+        //@todo: locale seems to have smth like negative percentage/price specifications, but have no idea how to use it??
+        $locale = $this->getContextLocale();
         if ($reductionType === Reduction::TYPE_AMOUNT) {
-            //@todo: hardcoded $ sign. Use CLDR formatting instead
-            return sprintf('-%s $', (string) $reductionValue);
+            return sprintf('-%s', $locale->formatPrice((string) $reductionValue, $this->getContextCurrencyIso()));
         }
 
-        return sprintf('-%s %%', (string) $reductionValue);
+        return sprintf( '-%s %%', (string) $reductionValue);
     }
 
     private function formatPeriod(DateTimeInterface $from, DateTimeInterface $to): ?array
