@@ -477,6 +477,7 @@ class OrderController extends FrameworkBundleAdminController
         ]);
 
         $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        //@todo: Fix me. Should not rely on legacy object model - Currency
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         $addProductRowForm = $this->createForm(AddProductRowType::class, [], [
