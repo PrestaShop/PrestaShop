@@ -50,11 +50,11 @@ class AddProductCommand
      * @param string $productType
      */
     public function __construct(
-        array $localizedNames,
-        string $productType
+        string $productType,
+        array $localizedNames = []
     ) {
-        $this->localizedNames = $localizedNames;
         $this->productType = new ProductType($productType);
+        $this->localizedNames = $localizedNames;
     }
 
     /**
