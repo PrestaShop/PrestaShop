@@ -918,6 +918,7 @@ class ProductFormDataProviderTest extends TestCase
         return new ProductForEditing(
             static::PRODUCT_ID,
             $product['type'] ?? ProductType::TYPE_STANDARD,
+            $product['active'] ?? true,
             ProductCustomizationOptions::createNotCustomizable(),
             $this->createBasic($product),
             $this->createCategories($product),
@@ -1118,7 +1119,6 @@ class ProductFormDataProviderTest extends TestCase
     private function createOptions(array $product): ProductOptions
     {
         return new ProductOptions(
-            $product['active'] ?? true,
             $product['visibility'] ?? ProductVisibility::VISIBLE_EVERYWHERE,
             $product['available_for_order'] ?? true,
             $product['online_only'] ?? false,
