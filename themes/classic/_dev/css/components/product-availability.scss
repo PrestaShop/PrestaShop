@@ -9,6 +9,10 @@ $component-name: product-availability;
   @at-root .product-miniature & {
     margin-bottom: 0;
     text-align: center;
+
+    .#{$component-name}-options {
+      padding-left: 0;
+    }
   }
 
   i {
