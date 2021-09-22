@@ -47,8 +47,8 @@ class AddProductFeatureContext extends AbstractProductFeatureContext
 
         try {
             $productId = $this->getCommandBus()->handle(new AddProductCommand(
-                $data['name'],
-                $data['type']
+                $data['type'],
+                $data['name'] ?? []
             ));
 
             $this->getSharedStorage()->set($productReference, $productId->getValue());
