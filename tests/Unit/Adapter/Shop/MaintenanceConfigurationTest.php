@@ -93,7 +93,7 @@ class MaintenanceConfigurationTest extends AbstractConfigurationTestCase
         $this->expectException(InvalidOptionsException::class);
         $this->maintenanceConfiguration->updateConfiguration(['enable_shop' => 'wrong_type']);
         $this->expectException(InvalidOptionsException::class);
-        $this->maintenanceConfiguration->updateConfiguration(['maintenance_text' => ['wrong_type']]);
+        $this->maintenanceConfiguration->updateConfiguration(['maintenance_ip' => ['wrong_type']]);
         $this->expectException(InvalidOptionsException::class);
         $this->maintenanceConfiguration->updateConfiguration(['maintenance_text' => 'wrong_type']);
     }
