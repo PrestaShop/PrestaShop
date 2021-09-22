@@ -37,6 +37,11 @@ type SpecificPriceForListing = {
   customer: string,
   price: string,
   impact: string,
-  period: string,
+  period: Period|null,
   fromQuantity: string,
+}
+
+type Period = {
+  from: string,
+  to: string
 }

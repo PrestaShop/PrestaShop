@@ -23,20 +23,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
 <div id="specific-price-list-container">
+{#  @todo: add loader animation #}
   <table class="table seo-table">
     <thead class="thead-default">
     <tr>
-      {# @todo: trans #}
-      <th>ID</th>
-      <th>Combination</th>
-      <th>Currency</th>
-      <th>Country</th>
-      <th>Group</th>
-      <th>Customer</th>
-      <th>Fixed price</th>
-      <th>Impact</th>
-      <th>Period</th>
-      <th>From</th>
+      <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+      <th>{{ 'Combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
+      <th>{{ 'Currency'|trans({}, 'Admin.Global') }}</th>
+      <th>{{ 'Country'|trans({}, 'Admin.Global') }}</th>
+      <th>{{ 'Group'|trans({}, 'Admin.Global') }}</th>
+      <th>{{ 'Customer'|trans({}, 'Admin.Global') }}</th>
+      <th>{{ 'Fixed price'|trans({}, 'Admin.Catalog.Feature') }}</th>
+      <th>{{ 'Impact'|trans({}, 'Admin.Catalog.Feature') }}</th>
+      <th>{{ 'Period'|trans({}, 'Admin.Global') }}</th>
+      <th>{{ 'From'|trans({}, 'Admin.Catalog.Feature') }}</th>
       <th></th>
       <th></th>
     </tr>
@@ -55,13 +55,31 @@
       <td class="customer"></td>
       <td class="price"></td>
       <td class="impact"></td>
-      <td class="period"></td>
+      <td class="period" data-unlimited-text="{{ 'Unlimited'| trans({}, 'Admin.Global') }}">
+        <label>
+          {{ 'From'|trans({}, 'Admin.Global') }}
+          <span class="from"></span>
+        </label>
+        <br>
+        <label>
+          {{ 'To'|trans({}, 'Admin.Global') }}
+          <span class="to"></span>
+        </label>
+      </td>
       <td class="from-qty"></td>
       <td>
-        <button class="js-delete-specific-price-btn"><i class="material-icons">delete</i></button>
+        <button
+          type="button"
+          title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
+          class="js-delete-specific-price-btn btn tooltip-link"><i class="material-icons">delete</i>
+        </button>
       </td>
       <td>
-        <button class="js-edit-specific-price-btn"><i class="material-icons">edit</i></button>
+        <button
+          type="button"
+          title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+          class="js-edit-specific-price-btn btn tooltip-link"><i class="material-icons">edit</i>
+        </button>
       </td>
     </tr>
   </template>
