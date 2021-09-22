@@ -47,7 +47,9 @@ class SpecificPriceController extends FrameworkBundleAdminController
 {
     public function listAction(int $productId): JsonResponse
     {
-        $specificPricesList = $this->getQueryBus()->handle(new GetSpecificPriceList($productId));
+        $specificPricesList = $this->getQueryBus()->handle(
+            new GetSpecificPriceList($productId, $this->getContextLangId())
+        );
 
         return $this->json(['specificPrices' => $this->formatSpecificPricesList($specificPricesList)]);
     }
