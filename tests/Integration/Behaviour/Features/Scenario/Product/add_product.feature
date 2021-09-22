@@ -32,7 +32,6 @@ Feature: Add basic product from Back Office (BO)
     Then product "product1" should be disabled
     And product "product1" should have following options:
       | product option      | value |
-      | active              | false |
       | visibility          | both  |
       | available_for_order | true  |
       | online_only         | false |
