@@ -44,11 +44,6 @@ class UpdateProductOptionsCommand
     private $productId;
 
     /**
-     * @var bool|null
-     */
-    private $active;
-
-    /**
      * @var ProductVisibility|null
      */
     private $visibility;
@@ -97,26 +92,6 @@ class UpdateProductOptionsCommand
     public function getProductId(): ProductId
     {
         return $this->productId;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function isActive(): ?bool
-    {
-        return $this->active;
-    }
-
-    /**
-     * @param bool $active
-     *
-     * @return UpdateProductOptionsCommand
-     */
-    public function setActive(bool $active): UpdateProductOptionsCommand
-    {
-        $this->active = $active;
-
-        return $this;
     }
 
     /**
