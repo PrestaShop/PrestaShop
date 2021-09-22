@@ -168,29 +168,20 @@ class SpecificPriceController extends FrameworkBundleAdminController
         return sprintf('-%s %%', (string) $reductionValue);
     }
 
-    private function formatPeriod(DateTimeInterface $from, DateTimeInterface $to): string
+    private function formatPeriod(DateTimeInterface $from, DateTimeInterface $to): ?array
     {
         if (DateTimeUtil::isNull($from) && DateTimeUtil::isNull($to)) {
-            return $this->trans('Unlimited', 'Admin.Catalog.Features');
+            return null;
         }
 
-        $fromParam = $this->trans('Unlimited', 'Admin.Catalog.Features');
-        $toParam = $this->trans('Unlimited', 'Admin.Catalog.Features');
-
-        if (!DateTimeUtil::isNull($from) && DateTimeUtil::isNull($to)) {
-            $fromParam = $from->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
-        }
-
-        if (DateTimeUtil::isNull($to) && !DateTimeUtil::isNull($from)) {
-            $toParam = $from->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
-        }
-
-        if (!DateTimeUtil::isNull($from) && !DateTimeUtil::isNull($to)) {
-            $fromParam = $from->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
-            $toParam = $to->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
-        }
-
-        return $this->trans('From %s to %s', 'Admin.Catalog.Feature', [$fromParam, $toParam]);
+        return [
+            'from' => DateTimeUtil::isNull($from) ?
+                $this->trans('Unlimited', 'Admin.Global') :
+                $from->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+            'to' => DateTimeUtil::isNull($to) ?
+                $this->trans('Unlimited', 'Admin.Global') :
+                $to->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+        ];
     }
 
     private function getUnspecifiedValueFormat(): string

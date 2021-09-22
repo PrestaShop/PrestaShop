@@ -71,6 +71,8 @@ export default class SpecificPricesManager {
         const priceField = trClone.querySelector('.price') as HTMLElement;
         const impactField = trClone.querySelector('.impact') as HTMLElement;
         const periodField = trClone.querySelector('.period') as HTMLElement;
+        const periodFromField = periodField.querySelector('.from') as HTMLElement;
+        const periodToField = periodField.querySelector('.to') as HTMLElement;
         const fromQtyField = trClone.querySelector('.from-qty') as HTMLElement;
         idField.textContent = String(specificPrice.id);
         combinationField.textContent = specificPrice.combination;
@@ -79,8 +81,14 @@ export default class SpecificPricesManager {
         customerField.textContent = specificPrice.customer;
         priceField.textContent = specificPrice.price;
         impactField.textContent = specificPrice.impact;
-        periodField.textContent = specificPrice.period;
         fromQtyField.textContent = specificPrice.fromQuantity;
+
+        if (!specificPrice.period) {
+          periodField.textContent = String(periodField.dataset.unlimitedText);
+        } else {
+          periodFromField.textContent = specificPrice.period.from;
+          periodToField.textContent = specificPrice.period.to;
+        }
 
         tbody.append(trClone);
       });
