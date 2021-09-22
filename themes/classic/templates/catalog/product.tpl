@@ -121,7 +121,7 @@
 
                   <span class="control-label">{l s='Availability' d='Shop.Theme.Catalog'}</span>
                   {block name='product_availability'}
-                    {include file="{_PS_PARENT_THEME_URI_}_partials/product-availability.tpl" type="error" label={l s="Out of stock"} hasOptions=true}
+                    {include file="_partials/product-availability.tpl" product=$product}
                   {/block}
 
                   {block name='product_add_to_cart'}

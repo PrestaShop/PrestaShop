@@ -23,27 +23,30 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
 
-{if !isset($type)}
-  {assign var="icon" value="warning"}
-{else if $type == 'success'}
+{if $product.availability == 'available' || $product.availability == 'instock'}
   {assign var="icon" value="check_circle"}
-{else if $type == 'error'}
+  {assign var="type" value="success"}
+{else if $product.availability == 'unavailable'}
   {assign var="icon" value="error_circle"}
+  {assign var="type" value="error"}
+{else if $product.availability == 'last_remaining_items'}
+  {assign var="icon" value="warning"}
+  {assign var="type" value="warning"}
 {/if}
 
 {block name='product_availability'}
-  <div class="product-availability{if isset($type)} product-availability--{$type}{/if}">
+  <div class="product-availability product-availability--{$type}">
     <i class="material-icons">
       {$icon}
     </i>
 
     <span class="product-availability-label">
-      {$label}
+      {$product.availability_message}
     </span>
 
-    {if isset($hasOptions) && $hasOptions}
+    {if isset($product.availability_submessage)}
       <p class="product-availability-options">
-        {l s='Other options available' d='Shop.Theme.Global'}
+        {$product.availability_submessage}
       </p>
     {/if}
   </div>  
