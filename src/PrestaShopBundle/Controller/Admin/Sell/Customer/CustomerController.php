@@ -503,7 +503,7 @@ class CustomerController extends AbstractAdminController
      *
      * @param int $customerId
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
     public function toggleStatusAction($customerId)
     {
@@ -516,15 +516,18 @@ class CustomerController extends AbstractAdminController
 
             $this->getCommandBus()->handle($editCustomerCommand);
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-            );
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
         } catch (CustomerException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ];
         }
 
-        return $this->redirectToRoute('admin_customers_index');
+        return $this->json($response);
     }
 
     /**
@@ -538,7 +541,7 @@ class CustomerController extends AbstractAdminController
      *
      * @param int $customerId
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
     public function toggleNewsletterSubscriptionAction($customerId)
     {
@@ -553,15 +556,18 @@ class CustomerController extends AbstractAdminController
 
             $this->getCommandBus()->handle($editCustomerCommand);
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-            );
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
         } catch (CustomerException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ];
         }
 
-        return $this->redirectToRoute('admin_customers_index');
+        return $this->json($response);
     }
 
     /**
@@ -575,7 +581,7 @@ class CustomerController extends AbstractAdminController
      *
      * @param int $customerId
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
     public function togglePartnerOfferSubscriptionAction($customerId)
     {
@@ -588,15 +594,18 @@ class CustomerController extends AbstractAdminController
 
             $this->getCommandBus()->handle($editCustomerCommand);
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-            );
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
         } catch (CustomerException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ];
         }
 
-        return $this->redirectToRoute('admin_customers_index');
+        return $this->json($response);
     }
 
     /**
