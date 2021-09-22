@@ -1697,7 +1697,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             $adminDir,
             $themesDir,
             [
-                _PS_MODULE_DIR_ . 'welcome',
                 _PS_MODULE_DIR_ . 'cronjobs',
             ]
         );
