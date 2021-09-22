@@ -34,11 +34,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 class ProductOptions
 {
     /**
-     * @var bool
-     */
-    private $active;
-
-    /**
      * @var string
      */
     private $visibility;
@@ -74,7 +69,6 @@ class ProductOptions
     private $manufacturerId;
 
     /**
-     * @param bool $active
      * @param string $visibility
      * @param bool $availableForOrder
      * @param bool $onlineOnly
@@ -84,7 +78,6 @@ class ProductOptions
      * @param int $manufacturerId
      */
     public function __construct(
-        bool $active,
         string $visibility,
         bool $availableForOrder,
         bool $onlineOnly,
@@ -93,7 +86,6 @@ class ProductOptions
         bool $showCondition,
         int $manufacturerId
     ) {
-        $this->active = $active;
         $this->visibility = $visibility;
         $this->availableForOrder = $availableForOrder;
         $this->onlineOnly = $onlineOnly;
@@ -101,14 +93,6 @@ class ProductOptions
         $this->condition = $condition;
         $this->showCondition = $showCondition;
         $this->manufacturerId = $manufacturerId;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
     }
 
     /**
