@@ -91,7 +91,7 @@
             </div>
 
             {block name='product_availability'}
-              {include file="_partials/product-availability.tpl" type="error" label={l s="Out of stock"}}
+              {include file="_partials/product-availability.tpl" product=$product}
             {/block}
           {/if}
         {/block}
