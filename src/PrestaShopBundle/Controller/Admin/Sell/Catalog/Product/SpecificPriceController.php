@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use DateTime;
+use DateTimeInterface;
 use Exception;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
@@ -165,24 +166,24 @@ class SpecificPriceController extends FrameworkBundleAdminController
         return sprintf('-%s %%', (string) $reductionValue);
     }
 
-    private function formatPeriod(?DateTime $from, ?DateTime $to): string
+    private function formatPeriod(DateTimeInterface $from, DateTimeInterface $to): string
     {
-        if (!$from && !$to) {
+        if (DateTimeUtil::isNull($from) && DateTimeUtil::isNull($to)) {
             return $this->trans('Unlimited', 'Admin.Catalog.Features');
         }
 
         $fromParam = $this->trans('Unlimited', 'Admin.Catalog.Features');
         $toParam = $this->trans('Unlimited', 'Admin.Catalog.Features');
 
-        if ($from && !$to) {
+        if (!DateTimeUtil::isNull($from) && DateTimeUtil::isNull($to)) {
             $fromParam = $from->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
         }
 
-        if ($to && !$from) {
+        if (DateTimeUtil::isNull($to) && !DateTimeUtil::isNull($from)) {
             $toParam = $from->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
         }
 
-        if ($from && $to) {
+        if (!DateTimeUtil::isNull($from) && !DateTimeUtil::isNull($to)) {
             $fromParam = $from->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
             $toParam = $to->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
         }
