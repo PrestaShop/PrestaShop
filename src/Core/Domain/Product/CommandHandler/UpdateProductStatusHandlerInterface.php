@@ -24,34 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Product;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStatusCommandHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 
 /**
- * @internal
+ * Interface for service that set product to be enabled or disabled
  */
-class UpdateProductStatusCommandHandler implements UpdateProductStatusCommandHandlerInterface
+interface UpdateProductStatusHandlerInterface
 {
     /**
      * @param UpdateProductStatusCommand $command
      */
-    public function handle(UpdateProductStatusCommand $command)
-    {
-        $productId = $command->getProductId()->getValue();
-        $product = new Product($productId);
-
-        if ($product->id !== $productId) {
-            throw new ProductNotFoundException(sprintf('Product with id "%d" was not found', $productId));
-        }
-        if ($product->active != $command->getEnable()) {
-            if (!$product->toggleStatus()) {
-                throw new CannotUpdateProductException(sprintf('Cannot update status for product with id "%d"', $productId));
-            }
-        }
-    }
+    public function handle(UpdateProductStatusCommand $command);
 }
