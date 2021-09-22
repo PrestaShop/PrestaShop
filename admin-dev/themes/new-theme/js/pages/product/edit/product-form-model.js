@@ -27,7 +27,7 @@ import BigNumber from 'bignumber.js';
 import ObjectFormMapper from '@components/form/form-object-mapper';
 import ProductFormMapping from '@pages/product/edit/product-form-mapping';
 import ProductEventMap from '@pages/product/product-event-map';
-import {calculateTax} from '@pages/product/edit/helpers/product-form';
+import {calculateMultiplier} from '@helpers/numbers';
 
 export default class ProductFormModel {
   constructor($form, eventEmitter) {
@@ -105,7 +105,7 @@ export default class ProductFormModel {
     const $taxRulesGroupIdInput = this.mapper.getInputsFor('product.price.taxRulesGroupId');
     const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
 
-    const taxRatio = calculateTax($selectedTaxOption.data('taxRate'));
+    const taxRatio = calculateMultiplier($selectedTaxOption.data('taxRate'));
 
     switch (event.modelKey) {
       case 'product.price.priceTaxIncluded': {

@@ -19,7 +19,8 @@
       "@scss/*": ["scss/*"],
       "@node_modules/*": ["node_modules/*"],
       "@vue/*": ["js/vue/*"],
-      "@PSTypes/*": ["js/types/*"]
+      "@PSTypes/*": ["js/types/*"],
+      "@helpers/*": ["js/helpers/*"]
     },
     "typeRoots": ["js/types", "node_modules/@types"]
   },

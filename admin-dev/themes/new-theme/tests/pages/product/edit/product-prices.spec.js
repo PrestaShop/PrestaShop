@@ -23,11 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import {expect} from 'chai';
-import {calculateTax} from '@pages/product/edit/helpers/product-form';
+import {calculateMultiplier} from '@helpers/numbers';
 import BigNumber from 'bignumber.js';
 
 describe('Product Price Calculation', () => {
-  describe('calculateTax', () => {
+  describe('Calculate Tax Multiplier', () => {
     const assertions = [
       ['24.000', new BigNumber(1.24)],
       ['10.000', new BigNumber(1.1)],
@@ -38,7 +38,7 @@ describe('Product Price Calculation', () => {
 
     assertions.forEach((assertion) => {
       it(`test ${assertion[0]} should return ${assertion[1]}`, () => {
-        expect(calculateTax(assertion[0])).to.eql(assertion[1]);
+        expect(calculateMultiplier(assertion[0])).to.eql(assertion[1]);
       });
     });
   });

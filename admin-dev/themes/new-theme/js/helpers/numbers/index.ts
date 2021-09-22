@@ -25,24 +25,19 @@
 
 import BigNumber from 'bignumber.js';
 
-export const calculateTax = (taxRate: string): BigNumber => {
-  let newTaxRate;
+/**
+ * @param {percentage: number} A number percentage
+ *
+ * @returns {number} A multiplier that you can use to multiply another number
+ */
+export const calculateMultiplier = (percentage: string): BigNumber => {
+  const percentageNumber = new BigNumber(percentage);
 
-  try {
-    newTaxRate = new BigNumber(taxRate);
-  } catch (error) {
-    newTaxRate = new BigNumber(NaN);
-  }
+  const multiplier = percentageNumber.dividedBy(100).plus(1);
 
-  if (newTaxRate.isNaN()) {
-    newTaxRate = new BigNumber(0);
-  }
-
-  const taxRatio = newTaxRate.dividedBy(100).plus(1);
-
-  return taxRatio;
+  return multiplier;
 };
 
 export default {
-  calculateTax,
+  calculateMultiplier,
 };
