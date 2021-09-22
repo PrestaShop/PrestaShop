@@ -47,6 +47,11 @@ class ProductForEditing
     private $type;
 
     /**
+     * @var bool
+     */
+    private $isActive;
+
+    /**
      * @var ProductBasicInformation
      */
     private $basicInformation;
@@ -109,6 +114,7 @@ class ProductForEditing
     /**
      * @param int $productId
      * @param string $type
+     * @param bool $isActive
      * @param ProductCustomizationOptions $customizationOptions
      * @param ProductBasicInformation $basicInformation
      * @param CategoriesInformation $categoriesInformation
@@ -125,6 +131,7 @@ class ProductForEditing
     public function __construct(
         int $productId,
         string $type,
+        bool $isActive,
         ProductCustomizationOptions $customizationOptions,
         ProductBasicInformation $basicInformation,
         CategoriesInformation $categoriesInformation,
@@ -140,6 +147,7 @@ class ProductForEditing
     ) {
         $this->productId = $productId;
         $this->type = $type;
+        $this->isActive = $isActive;
         $this->customizationOptions = $customizationOptions;
         $this->basicInformation = $basicInformation;
         $this->categoriesInformation = $categoriesInformation;
@@ -168,6 +176,14 @@ class ProductForEditing
     public function getType(): string
     {
         return $this->type;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->isActive;
     }
 
     /**
