@@ -203,6 +203,16 @@ class FrameworkBundleAdminController extends AbstractController
     }
 
     /**
+     * @return string
+     *
+     * //@todo: is there a better way using currency iso_code?
+     */
+    protected function getContextCurrencyIso(): string
+    {
+        return $this->getContext()->currency->iso_code;
+    }
+
+    /**
      * Get the locale based on the context
      *
      * @return Locale
