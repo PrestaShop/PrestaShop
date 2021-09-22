@@ -185,6 +185,8 @@ class CartCore extends ObjectModel
     const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
     const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
 
+    private const DEFAULT_ATTRIBUTES_KEYS = ['attributes' => '', 'attributes_small' => ''];
+
     /**
      * CartCore constructor.
      *
@@ -979,9 +981,10 @@ class CartCore extends ObjectModel
         $row['features'] = Product::getFeaturesStatic((int) $row['id_product']);
 
         $productAttributeKey = $row['id_product_attribute'] . '-' . $this->getAssociatedLanguage()->getId();
-        if (array_key_exists($productAttributeKey, self::$_attributesLists)) {
-            $row = array_merge($row, self::$_attributesLists[$productAttributeKey]);
-        }
+        $row = array_merge(
+            $row,
+            self::$_attributesLists[$productAttributeKey] ?? self::DEFAULT_ATTRIBUTES_KEYS
+        );
 
         return Product::getTaxesInformations($row, $shopContext);
     }
@@ -1197,7 +1200,7 @@ class CartCore extends ObjectModel
         foreach ($ipa_list as $id_product_attribute) {
             if ((int) $id_product_attribute && !array_key_exists($id_product_attribute . '-' . $id_lang, self::$_attributesLists)) {
                 $pa_implode[] = (int) $id_product_attribute;
-                self::$_attributesLists[(int) $id_product_attribute . '-' . $id_lang] = ['attributes' => '', 'attributes_small' => ''];
+                self::$_attributesLists[(int) $id_product_attribute . '-' . $id_lang] = self::DEFAULT_ATTRIBUTES_KEYS;
             }
         }
 
