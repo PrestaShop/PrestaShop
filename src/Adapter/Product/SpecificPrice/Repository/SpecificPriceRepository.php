@@ -129,16 +129,39 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     * @param LanguageId $langId
      * @param int|null $limit
      * @param int|null $offset
-     * @param array|null $filters
+     * @param array<string, mixed> $filters
      *
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array<string, string|null>>
      */
-    public function getProductSpecificPrices(ProductId $productId, ?int $limit = null, ?int $offset = null, ?array $filters = []): array
+    public function getProductSpecificPrices(
+        ProductId $productId,
+        LanguageId $langId,
+        ?int $limit = null,
+        ?int $offset = null,
+        array $filters = []
+    ): array
     {
-        $qb = $this->getSpecificPricesQueryBuilder($productId, $filters)
-            ->select('sp.*')
+        $qb = $this->getSpecificPricesQueryBuilder($productId, $langId, $filters)
+            ->select('
+                sp.id_specific_price,
+                sp.reduction_type,
+                sp.reduction,
+                sp.reduction_tax,
+                sp.price,
+                sp.from_quantity,
+                sp.id_customer,
+                sp.from,
+                sp.to,
+                shop.name as shop_name,
+                currency.name as currency_name,
+                customer.firstname as customer_firstname,
+                customer.lastname as customer_lastname,
+                country_lang.name as country_name,
+                gl.name as group_name'
+            )
             ->setFirstResult($offset)
             ->setMaxResults($limit)
         ;
@@ -148,13 +171,14 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param array|null $filters
+     * @param LanguageId $langId
+     * @param array<string, mixed> $filters
      *
      * @return int
      */
-    public function getProductSpecificPricesCount(ProductId $productId, ?array $filters = []): int
+    public function getProductSpecificPricesCount(ProductId $productId, LanguageId $langId, array $filters = []): int
     {
-        $qb = $this->getSpecificPricesQueryBuilder($productId, $filters)
+        $qb = $this->getSpecificPricesQueryBuilder($productId, $langId, $filters)
             ->select('COUNT(sp.id_specific_price) AS total_specific_prices')
         ;
 
@@ -163,20 +187,50 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param array|null $filters
+     * @param LanguageId $langId
+     * @param array<string, mixed> $filters
      *
      * @return QueryBuilder
      */
-    private function getSpecificPricesQueryBuilder(ProductId $productId, ?array $filters): QueryBuilder
+    private function getSpecificPricesQueryBuilder(ProductId $productId, LanguageId $langId, array $filters): QueryBuilder
     {
         //@todo: filters are not handled.
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'specific_price', 'sp')
+            ->leftJoin(
+                'sp',
+                $this->dbPrefix . 'currency', 'currency',
+                'sp.id_currency = currency.id_currency'
+            )
+            ->leftJoin(
+                'sp',
+                $this->dbPrefix . 'customer', 'customer',
+                'sp.id_customer = customer.id_customer'
+            )
+            ->leftJoin(
+                'sp',
+                $this->dbPrefix . 'shop', 'shop',
+                'sp.id_shop = shop.id_shop'
+            )
+            ->leftJoin(
+                'sp',
+                $this->dbPrefix . 'country_lang',
+                'country_lang',
+                'sp.id_country = country_lang.id_country AND country_lang.id_lang = :langId'
+            )
+            ->leftJoin(
+                'sp',
+                $this->dbPrefix . 'group_lang',
+                'gl',
+                'sp.id_group = gl.id_group AND gl.id_lang = :langId'
+            )
             ->where('sp.id_product = :productId')
+            ->andWhere('')
             ->andWhere('sp.id_cart = 0')
             ->andWhere('sp.id_specific_price_rule = 0')
             ->orderBy('id_specific_price', 'asc')
             ->setParameter('productId', $productId->getValue())
+            ->setParameter('langId', $langId->getValue())
         ;
 
         return $qb;

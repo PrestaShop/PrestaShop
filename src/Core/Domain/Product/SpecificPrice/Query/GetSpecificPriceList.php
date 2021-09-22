@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -41,6 +42,11 @@ class GetSpecificPriceList
     private $productId;
 
     /**
+     * @var LanguageId
+     */
+    private $languageId;
+
+    /**
      * @var int|null
      */
     private $limit;
@@ -51,23 +57,26 @@ class GetSpecificPriceList
     private $offset;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $filters;
 
     /**
      * @param int $productId
+     * @param int $languageId
      * @param int|null $limit
      * @param int|null $offset
-     * @param array|null $filters
+     * @param array<string, mixed> $filters
      */
     public function __construct(
         int $productId,
+        int $languageId,
         ?int $limit = null,
         ?int $offset = null,
-        ?array $filters = null
+        array $filters = []
     ) {
         $this->productId = new ProductId($productId);
+        $this->languageId = new LanguageId($languageId);
         $this->limit = $limit;
         $this->offset = $offset;
         $this->filters = $filters;
@@ -79,6 +88,14 @@ class GetSpecificPriceList
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return LanguageId
+     */
+    public function getLanguageId(): LanguageId
+    {
+        return $this->languageId;
     }
 
     /**
@@ -98,9 +115,9 @@ class GetSpecificPriceList
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function getFilters(): ?array
+    public function getFilters(): array
     {
         return $this->filters;
     }
