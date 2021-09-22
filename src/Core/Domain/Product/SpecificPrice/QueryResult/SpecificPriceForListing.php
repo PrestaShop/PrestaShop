@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult;
 
-use DateTime;
+use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 
 class SpecificPriceForListing
@@ -65,11 +65,6 @@ class SpecificPriceForListing
     /**
      * @var string
      */
-    private $shopGroup;
-
-    /**
-     * @var string
-     */
     private $shop;
 
     /**
@@ -93,12 +88,12 @@ class SpecificPriceForListing
     private $customer;
 
     /**
-     * @var DateTime|null
+     * @var DateTimeInterface
      */
     private $dateTimeFrom;
 
     /**
-     * @var DateTime|null
+     * @var DateTimeInterface
      */
     private $dateTimeTo;
 
@@ -109,9 +104,8 @@ class SpecificPriceForListing
      * @param bool $includesTax
      * @param DecimalNumber $price
      * @param int $fromQuantity
-     * @param DateTime|null $dateTimeFrom
-     * @param DateTime|null $dateTimeTo
-     * @param string|null $shopGroup
+     * @param DateTimeInterface $dateTimeFrom
+     * @param DateTimeInterface $dateTimeTo
      * @param string|null $shop
      * @param string|null $currency
      * @param string|null $country
@@ -125,9 +119,9 @@ class SpecificPriceForListing
         bool $includesTax,
         DecimalNumber $price,
         int $fromQuantity,
-        ?DateTime $dateTimeFrom,
-        ?DateTime $dateTimeTo,
-        ?string $shopGroup,
+        //@todo: datetimeImmutable instead of interface?
+        DateTimeInterface $dateTimeFrom,
+        DateTimeInterface $dateTimeTo,
         ?string $shop,
         ?string $currency,
         ?string $country,
@@ -142,7 +136,6 @@ class SpecificPriceForListing
         $this->fromQuantity = $fromQuantity;
         $this->dateTimeFrom = $dateTimeFrom;
         $this->dateTimeTo = $dateTimeTo;
-        $this->shopGroup = $shopGroup;
         $this->shop = $shop;
         $this->currency = $currency;
         $this->country = $country;
@@ -201,14 +194,6 @@ class SpecificPriceForListing
     /**
      * @return string|null
      */
-    public function getShopGroup(): ?string
-    {
-        return $this->shopGroup;
-    }
-
-    /**
-     * @return string|null
-     */
     public function getShop(): ?string
     {
         return $this->shop;
@@ -247,17 +232,17 @@ class SpecificPriceForListing
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface
      */
-    public function getDateTimeFrom(): ?DateTime
+    public function getDateTimeFrom(): DateTimeInterface
     {
         return $this->dateTimeFrom;
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface
      */
-    public function getDateTimeTo(): ?DateTime
+    public function getDateTimeTo(): DateTimeInterface
     {
         return $this->dateTimeTo;
     }
