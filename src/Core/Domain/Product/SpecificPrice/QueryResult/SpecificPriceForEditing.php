@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult;
 
-use DateTime;
 use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 
