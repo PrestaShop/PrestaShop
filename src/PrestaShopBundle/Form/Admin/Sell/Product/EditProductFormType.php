@@ -47,7 +47,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * This is the parent product form type
  */
-class ProductFormType extends TranslatorAwareType
+class EditProductFormType extends TranslatorAwareType
 {
     /**
      * @var EventSubscriberInterface
