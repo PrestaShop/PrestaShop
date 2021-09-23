@@ -159,6 +159,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductOptionsHandler
     arguments:
       - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.update.product_indexation_updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand
