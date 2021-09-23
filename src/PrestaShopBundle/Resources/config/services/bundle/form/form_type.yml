@@ -1267,14 +1267,21 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.product_form_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductFormType'
-    parent: 'form.type.translatable.aware'
-    public: true
-    arguments:
-      - '@form.type.sell.product.event_listener.product_type_listener'
-    tags:
-      - { name: form.type }
+    form.type.sell.product.create_product_form_type:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Product\CreateProductFormType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      tags:
+        - { name: form.type }
+
+    form.type.sell.product.edit_product_form_type:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Product\EditProductFormType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      arguments:
+        - '@form.type.sell.product.event_listener.product_type_listener'
+      tags:
+        - { name: form.type }
 
   form.type.sell.product.header_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\HeaderType'
