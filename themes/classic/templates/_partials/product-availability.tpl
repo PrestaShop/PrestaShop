@@ -34,20 +34,54 @@
   {assign var="type" value="warning"}
 {/if}
 
-{block name='product_availability'}
-  <div class="product-availability product-availability--{$type}">
-    <i class="material-icons">
-      {$icon}
-    </i>
-
-    <span class="product-availability-label">
-      {$product.availability_message}
-    </span>
-
-    {if isset($product.availability_submessage)}
-      <p class="product-availability-options">
-        {$product.availability_submessage}
-      </p>
+{if $product.is_virtual	== 0 && isset($showDeliveryTime) && $showDeliveryTime}
+  {if $product.additional_delivery_times == 1}
+    {if $product.delivery_information}
+      {assign var="deliveryInformations" value=$product.delivery_information}
     {/if}
-  </div>  
+  {elseif $product.additional_delivery_times == 2}
+    {if $product.quantity > 0}
+      {assign var="deliveryInformations" value=$product.delivery_in_stock}
+    {* Out of stock message should not be displayed if customer can't order the product. *}
+    {elseif $product.quantity <= 0 && $product.add_to_cart_url}
+      {assign var="deliveryInformations" value=$product.delivery_out_stock}
+    {/if}
+  {/if}
+{/if}
+
+
+{block name='product_availability'}
+  {if $product.availability_message || isset($deliveryInformations)}
+    <div class="product-availability product-availability--{$type}">
+      <i class="material-icons">
+        {$icon}
+      </i>
+
+      <span class="product-availability-label">
+        {if 
+          isset($deliveryInformations) 
+          && $product.availability_message
+        }
+          {l
+          s='%availabilityMessage% - %deliveryInformations%'
+          d='Shop.Theme.Checkout'
+          sprintf=[
+            '%deliveryInformations%' => $deliveryInformations,
+            '%availabilityMessage%' => $product.availability_message
+            ]
+          }
+        {elseif isset($deliveryInformations)}
+          {$deliveryInformations}
+        {else}
+          {$product.availability_message}
+        {/if}
+      </span>
+
+      {if isset($product.availability_submessage)}
+        <p class="product-availability-options">
+          {$product.availability_submessage}
+        </p>
+      {/if}
+    </div>  
+  {/if}
 {/block}
