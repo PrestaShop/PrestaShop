@@ -16,7 +16,7 @@ global.BO = {
 global.INSTALL = {
   URL: process.env.URL_INSTALL || `${global.FO.URL}install-dev/`,
   LANGUAGE: process.env.INSTALL_LANGUAGE || 'en',
-  COUNTRY: process.env.INSTALL_COUNTRY || 'fr',
+  COUNTRY: process.env.INSTALL_COUNTRY || 'France',
   DB_SERVER: process.env.DB_SERVER || '127.0.0.1',
   DB_NAME: process.env.DB_NAME || 'prestashopdb',
   DB_USER: process.env.DB_USER || 'root',

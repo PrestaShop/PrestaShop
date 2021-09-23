@@ -153,7 +153,7 @@ class AddProduct extends BOBasePage {
 
     await this.setValueOnTinymceInput(page, this.productDescriptionIframe, productData.description);
     await this.setValueOnTinymceInput(page, this.productShortDescriptionIframe, productData.summary);
-    await this.selectByVisibleText(page, this.productTypeSelect, productData.type);
+    await this.selectByVisibleText(page, this.productTypeSelect, productData.type, true);
     await this.setValue(page, this.productReferenceInput, productData.reference);
     if (await this.elementVisible(page, this.productQuantityInput, 500)) {
       await this.setValue(page, this.productQuantityInput, productData.quantity);

@@ -255,7 +255,7 @@ describe('Filter, sort and pagination logs', async () => {
             testIdentifier: 'filterByEmployee',
             filterType: 'input',
             filterBy: 'employee',
-            filterValue: DefaultEmployee.firstName,
+            filterValue: DefaultEmployee.lastName,
           },
       },
       {
