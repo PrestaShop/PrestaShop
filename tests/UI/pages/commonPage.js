@@ -372,10 +372,10 @@ class CommonPage {
 
   /**
    * Sort array of strings or numbers
-   * @param arrayToSort {Array} Array to sort
+   * @param arrayToSort {Array<string|number>} Array to sort
    * @param isFloat {boolean} True if array values type are float
    * @param isDate {boolean} True if array values type are date
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string|number>>}
    */
   async sortArray(arrayToSort, isFloat = false, isDate = false) {
     if (isFloat) {
@@ -393,7 +393,7 @@ class CommonPage {
    * Drag and drop element
    * @param page {Page} Browser tab
    * @param selectorToDrag {string} String to locate the element to drag
-   * @param selectorWhereToDrop String to locate the element where to drop
+   * @param selectorWhereToDrop {string} String to locate the element where to drop
    * @return {Promise<void>}
    */
   async dragAndDrop(page, selectorToDrag, selectorWhereToDrop) {

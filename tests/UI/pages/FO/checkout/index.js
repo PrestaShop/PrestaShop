@@ -182,7 +182,7 @@ class Checkout extends FOBasePage {
   /**
    * Get all carriers prices
    * @param page {Page} Browser tab
-   * @returns {Promise<[]>}
+   * @returns {Promise<Array<string>>}
    */
   async getAllCarriersPrices(page) {
     return page.$$eval(this.deliveryOptionAllPricesSpan, all => all.map(el => el.textContent));
@@ -200,7 +200,7 @@ class Checkout extends FOBasePage {
   /**
    * Get all carriers names
    * @param page {Page} Browser tab
-   * @returns {Promise<[]>}
+   * @returns {Promise<Array<string>>}
    */
   async getAllCarriersNames(page) {
     return page.$$eval(this.deliveryOptionAllNamesSpan, all => all.map(el => el.textContent));
