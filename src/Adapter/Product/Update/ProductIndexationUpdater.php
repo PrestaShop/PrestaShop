@@ -56,6 +56,19 @@ class ProductIndexationUpdater
     /**
      * @param Product $product
      *
+     * @return bool
+     */
+    public function isVisibleOnSearch(product $product): bool
+    {
+        return in_array(
+            $product->visibility,
+            [ProductVisibility::VISIBLE_EVERYWHERE, ProductVisibility::VISIBLE_IN_SEARCH]
+        ) && $product->active;
+    }
+
+    /**
+     * @param Product $product
+     *
      * @throws CannotUpdateProductException
      * @throws CoreException
      */
@@ -65,12 +78,7 @@ class ProductIndexationUpdater
             return;
         }
 
-        $productIsVisibleInSearch = in_array(
-            $product->visibility,
-            [ProductVisibility::VISIBLE_EVERYWHERE, ProductVisibility::VISIBLE_IN_SEARCH]
-        ) && $product->active;
-
-        if ($productIsVisibleInSearch) {
+        if ($this->isVisibleOnSearch($product)) {
             $this->updateProductIndexes((int) $product->id);
         } else {
             $this->removeProductIndexes((int) $product->id);
