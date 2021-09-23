@@ -116,7 +116,7 @@ class ProductController extends FrameworkBundleAdminController
             return $this->renderDisableMultistorePage();
         }
 
-        $productForm = $this->getProductFormBuilder()->getForm();
+        $productForm = $this->getCreateProductFormBuilder()->getForm();
 
         try {
             $productForm->handleRequest($request);
@@ -132,7 +132,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->renderProductForm($productForm);
+        return $this->renderCreateProductForm($productForm);
     }
 
     /**
@@ -155,7 +155,7 @@ class ProductController extends FrameworkBundleAdminController
             return $this->renderDisableMultistorePage($productId);
         }
 
-        $productForm = $this->getProductFormBuilder()->getFormFor($productId, [], [
+        $productForm = $this->getEditProductFormBuilder()->getFormFor($productId, [], [
             'product_id' => $productId,
             // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
             // 'method' => Request::METHOD_PATCH,
@@ -187,7 +187,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->renderProductForm($productForm, $productId);
+        return $this->renderEditProductForm($productForm, $productId);
     }
 
     /**
@@ -337,7 +337,28 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    private function renderProductForm(FormInterface $productForm, ?int $productId = null): Response
+    private function renderCreateProductForm(FormInterface $productForm, ?int $productId = null): Response
+    {
+        $shopContext = $this->get('prestashop.adapter.shop.context');
+        $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/create.html.twig', [
+            'showContentHeader' => false,
+            'productForm' => $productForm->createView(),
+            'statsLink' => $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null,
+            'helpLink' => $this->generateSidebarLink('AdminProducts'),
+            'isMultiShopContext' => $isMultiShopContext,
+            'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
+        ]);
+    }
+
+    /**
+     * @param FormInterface $productForm
+     * @param int|null $productId
+     *
+     * @return Response
+     */
+    private function renderEditProductForm(FormInterface $productForm, ?int $productId = null): Response
     {
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
@@ -355,13 +376,23 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * Gets form builder.
+     * Gets creation form builder.
      *
      * @return FormBuilderInterface
      */
-    private function getProductFormBuilder(): FormBuilderInterface
+    private function getCreateProductFormBuilder(): FormBuilderInterface
     {
-        return $this->get('prestashop.core.form.identifiable_object.builder.product_form_builder');
+        return $this->get('prestashop.core.form.identifiable_object.builder.create_product_form_builder');
+    }
+
+    /**
+     * Gets edition form builder.
+     *
+     * @return FormBuilderInterface
+     */
+    private function getEditProductFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.edit_product_form_builder');
     }
 
     /**
