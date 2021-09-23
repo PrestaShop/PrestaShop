@@ -194,3 +194,61 @@ Feature: Update product options from Back Office (BO)
       | show_condition      | true         |
       | manufacturer        | studioDesign |
     And product "product1" should not be indexed
+
+  Scenario: Product indexation depends on its visibility and status
+    Given product "product1" should have following options:
+      | product option      | value        |
+      | visibility          | search       |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    And product "product1" should be disabled
+    And product "product1" should not be indexed
+    When I update product "product1" options with following values:
+      | visibility | search |
+    Then product "product1" should have following options:
+      | product option      | value        |
+      | visibility          | search       |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    And product "product1" should be disabled
+    And product "product1" should not be indexed
+    When I enable product "product1"
+    Then product "product1" should be enabled
+    And product "product1" should be indexed
+    When I update product "product1" options with following values:
+      | visibility | catalog |
+    Then product "product1" should have following options:
+      | product option      | value        |
+      | visibility          | catalog      |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    And product "product1" should be enabled
+    And product "product1" should not be indexed
+    When I update product "product1" options with following values:
+      | visibility | both |
+    Then product "product1" should have following options:
+      | product option      | value        |
+      | visibility          | both         |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    And product "product1" should be enabled
+    And product "product1" should be indexed
+    When I disable product "product1"
+    Then product "product1" should be disabled
+    And product "product1" should not be indexed

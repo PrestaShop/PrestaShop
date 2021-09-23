@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -45,12 +46,20 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
     private $productRepository;
 
     /**
+     * @var ProductIndexationUpdater
+     */
+    private $productIndexationUpdater;
+
+    /**
      * @param ProductRepository $productRepository
+     * @param ProductIndexationUpdater $productIndexationUpdater
      */
     public function __construct(
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        ProductIndexationUpdater $productIndexationUpdater
     ) {
         $this->productRepository = $productRepository;
+        $this->productIndexationUpdater = $productIndexationUpdater;
     }
 
     /**
@@ -59,9 +68,15 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
     public function handle(UpdateProductOptionsCommand $command): void
     {
         $product = $this->productRepository->get($command->getProductId());
-        $updatableProperties = $this->fillUpdatableProperties($product, $command);
+        $wasVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
 
+        $updatableProperties = $this->fillUpdatableProperties($product, $command);
         $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_OPTIONS);
+
+        $isVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
+        if ($wasVisibleOnSearch !== $isVisibleOnSearch) {
+            $this->productIndexationUpdater->updateIndexation($product);
+        }
     }
 
     /**
