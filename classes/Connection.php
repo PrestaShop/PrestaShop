@@ -154,7 +154,7 @@ class ConnectionCore extends ObjectModel
         if(self::isBot()) {
             return false;
         }
-        
+
         // A new connection is created if the guest made no actions during 30 minutes
         $sql = 'SELECT SQL_NO_CACHE `id_guest`
 				FROM `' . _DB_PREFIX_ . 'connections`
