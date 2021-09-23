@@ -121,20 +121,30 @@ SetEnv _TOKEN_ disabled
 npm run linkchecker
 ```
 
-## Upgrade test
+## Documentation
 
-This test will upgrade PrestaShop version with the Autoupgrade module
+To help contributors find more documentation about UI tests, [JS-DOC](https://jsdoc.app/) was added on these directories:
 
-### Launch script
-Before testing it, you should install Prestashop version to upgrade from.
+- `pages`
+- `campaigns/data/faker`
 
-If you want to run this test, you can use command **specific-test**
+### Before generating documentation
 
-#### With default values
+[jsdoc-to-markdown](https://github.com/jsdoc2md/jsdoc-to-markdown) is the library used, it will create `.md` files using js files from the above directories.
 
-```bash
-# You need to set PS_VERSION to check after upgrade, default to 1.7.6.0 
-PS_VERSION=1.7.6.0 TEST_PATH="upgrade/upgradeShop" npm run specific-test
+To install :
+```shell
+npm install -g jsdoc-to-markdown
+```
+
+PS: You can install it on you project only, but it will change the package.json. Be careful while committing since it's not needed for tests.
+
+#### Generate documentation
+
+By running the command below, it will generate jsdoc on `.doc` directory.
+
+```shell
+bash scripts/generate-jsdoc.sh
 ```
 
 Enjoy :wink: :v:
