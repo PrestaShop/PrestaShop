@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult;
 
-use DateTime;
+use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 
 class SpecificPriceForEditing
@@ -66,11 +66,6 @@ class SpecificPriceForEditing
     /**
      * @var int|null
      */
-    private $shopGroupId;
-
-    /**
-     * @var int|null
-     */
     private $shopId;
 
     /**
@@ -94,12 +89,12 @@ class SpecificPriceForEditing
     private $customerId;
 
     /**
-     * @var DateTime|null
+     * @var DateTimeInterface
      */
     private $dateTimeFrom;
 
     /**
-     * @var DateTime|null
+     * @var DateTimeInterface
      */
     private $dateTimeTo;
 
@@ -110,14 +105,13 @@ class SpecificPriceForEditing
      * @param bool $includesTax
      * @param DecimalNumber $price
      * @param int $fromQuantity
-     * @param int|null $shopGroupId
+     * @param DateTimeInterface $dateTimeFrom
+     * @param DateTimeInterface $dateTimeTo
      * @param int|null $shopId
      * @param int|null $currencyId
      * @param int|null $countryId
      * @param int|null $groupId
      * @param int|null $customerId
-     * @param DateTime|null $dateTimeFrom
-     * @param DateTime|null $dateTimeTo
      */
     public function __construct(
         int $specificPriceId,
@@ -126,9 +120,8 @@ class SpecificPriceForEditing
         bool $includesTax,
         DecimalNumber $price,
         int $fromQuantity,
-        ?DateTime $dateTimeFrom,
-        ?DateTime $dateTimeTo,
-        ?int $shopGroupId,
+        DateTimeInterface $dateTimeFrom,
+        DateTimeInterface $dateTimeTo,
         ?int $shopId,
         ?int $currencyId,
         ?int $countryId,
@@ -141,7 +134,6 @@ class SpecificPriceForEditing
         $this->includesTax = $includesTax;
         $this->price = $price;
         $this->fromQuantity = $fromQuantity;
-        $this->shopGroupId = $shopGroupId;
         $this->shopId = $shopId;
         $this->currencyId = $currencyId;
         $this->countryId = $countryId;
@@ -202,14 +194,6 @@ class SpecificPriceForEditing
     /**
      * @return int|null
      */
-    public function getShopGroupId(): ?int
-    {
-        return $this->shopGroupId;
-    }
-
-    /**
-     * @return int|null
-     */
     public function getShopId(): ?int
     {
         return $this->shopId;
@@ -248,17 +232,17 @@ class SpecificPriceForEditing
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface
      */
-    public function getDateTimeFrom(): ?DateTime
+    public function getDateTimeFrom(): DateTimeInterface
     {
         return $this->dateTimeFrom;
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface
      */
-    public function getDateTimeTo(): ?DateTime
+    public function getDateTimeTo(): DateTimeInterface
     {
         return $this->dateTimeTo;
     }

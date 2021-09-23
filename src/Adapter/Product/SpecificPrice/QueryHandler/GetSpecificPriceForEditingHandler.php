@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPri
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetSpecificPriceForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
 /**
  * Handles @see GetSpecificPriceForEditing using legacy object model
@@ -62,9 +63,6 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
     {
         $specificPrice = $this->specificPriceRepository->get($query->getSpecificPriceId());
 
-        $dateFrom = DateTimeUtil::NULL_DATETIME !== $specificPrice->from ? new DateTime($specificPrice->from) : null;
-        $dateTo = DateTimeUtil::NULL_DATETIME !== $specificPrice->to ? new DateTime($specificPrice->to) : null;
-
         return new SpecificPriceForEditing(
             (int) $specificPrice->id,
             $specificPrice->reduction_type,
@@ -72,9 +70,8 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
             (bool) $specificPrice->reduction_tax,
             new DecimalNumber((string) $specificPrice->price),
             (int) $specificPrice->from_quantity,
-            $dateFrom,
-            $dateTo,
-            (int) $specificPrice->id_shop_group ?: null,
+            DateTimeUtil::NULL_DATETIME === $specificPrice->from ? new NullDateTime() : new DateTime($specificPrice->from),
+            DateTimeUtil::NULL_DATETIME === $specificPrice->to ? new NullDateTime() : new DateTime($specificPrice->to),
             (int) $specificPrice->id_shop ?: null,
             (int) $specificPrice->id_currency ?: null,
             (int) $specificPrice->id_country ?: null,

@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetEdit
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
 /**
  * Handles @see GetEditableSpecificPricesList using legacy object model
@@ -82,9 +83,6 @@ class GetEditableSpecificPricesListHandler implements GetEditableSpecificPricesL
     private function formatSpecificPricesForEditing(array $specificPrices): array
     {
         return array_map(function (array $specificPrice): SpecificPriceForEditing {
-            $dateFrom = DateTimeUtil::NULL_VALUE !== $specificPrice['from'] ? new DateTime($specificPrice['from']) : null;
-            $dateTo = DateTimeUtil::NULL_VALUE !== $specificPrice['to'] ? new DateTime($specificPrice['to']) : null;
-
             return new SpecificPriceForEditing(
                 (int) $specificPrice['id_specific_price'],
                 $specificPrice['reduction_type'],
@@ -92,9 +90,8 @@ class GetEditableSpecificPricesListHandler implements GetEditableSpecificPricesL
                 (bool) $specificPrice['reduction_tax'],
                 new DecimalNumber($specificPrice['price']),
                 (int) $specificPrice['from_quantity'],
-                $dateFrom,
-                $dateTo,
-                (int) $specificPrice['id_shop_group'] ?: null,
+                DateTimeUtil::NULL_DATETIME === $specificPrice['from'] ? new NullDateTime() : new DateTime($specificPrice['from']),
+                DateTimeUtil::NULL_DATETIME === $specificPrice['to'] ? new NullDateTime() : new DateTime($specificPrice['to']),
                 (int) $specificPrice['id_shop'] ?: null,
                 (int) $specificPrice['id_currency'] ?: null,
                 (int) $specificPrice['id_country'] ?: null,
