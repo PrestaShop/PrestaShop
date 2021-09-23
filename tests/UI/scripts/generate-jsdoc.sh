@@ -34,4 +34,3 @@ generate_doc $PAGES_DIRECTORY
 
 # 2. Generate documentation for campaigns/data/faker directory
 generate_doc $FAKER_DIRECTORY
-
