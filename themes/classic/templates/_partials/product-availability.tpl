@@ -23,13 +23,13 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
 
-{if $product.availability == 'available' || $product.availability == 'instock'}
+{if $product.availability == 'last_remaining_items' || $product.availability == 'instock'}
   {assign var="icon" value="check_circle"}
   {assign var="type" value="success"}
 {else if $product.availability == 'unavailable'}
   {assign var="icon" value="error_circle"}
   {assign var="type" value="error"}
-{else if $product.availability == 'last_remaining_items'}
+{else if $product.availability == 'available'}
   {assign var="icon" value="warning"}
   {assign var="type" value="warning"}
 {/if}
