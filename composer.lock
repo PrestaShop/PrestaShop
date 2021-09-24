@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a94fdd6ca4e8130e2b10d94930618a2d",
+    "content-hash": "8102c815e2af40f4559ec5fd2412d5d1",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -10788,71 +10788,6 @@
             "time": "2020-11-13T09:40:50+00:00"
         },
         {
-            "name": "phake/phake",
-            "version": "v4.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phake/phake.git",
-                "reference": "7a4beaea32f11fdfeaf5afe9a70e23264d59a051"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phake/phake/zipball/7a4beaea32f11fdfeaf5afe9a70e23264d59a051",
-                "reference": "7a4beaea32f11fdfeaf5afe9a70e23264d59a051",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/instantiator": "^1.4",
-                "php": "^7.1|^8.0",
-                "sebastian/comparator": "^1.1|^2.0|^3.0|^4.0"
-            },
-            "require-dev": {
-                "doctrine/common": "^3.0",
-                "ext-soap": "*",
-                "hamcrest/hamcrest-php": "1.1.*",
-                "phpunit/phpunit": "^7.0|^8.0"
-            },
-            "suggest": {
-                "doctrine/common": "Allows mock annotations to use import statements for classes.",
-                "hamcrest/hamcrest-php": "Use Hamcrest matchers."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Phake\\": "src/Phake"
-                },
-                "files": [
-                    "src/Phake.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Mike Lively",
-                    "email": "m@digitalsandwich.com"
-                }
-            ],
-            "description": "The Phake mock testing library",
-            "homepage": "https://github.com/phake/phake",
-            "keywords": [
-                "mock",
-                "testing"
-            ],
-            "support": {
-                "issues": "https://github.com/phake/phake/issues",
-                "source": "https://github.com/phake/phake/tree/v4.1.0"
-            },
-            "time": "2021-04-24T00:05:13+00:00"
-        },
-        {
             "name": "phar-io/manifest",
             "version": "2.0.1",
             "source": {
@@ -12620,9 +12555,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "phake/phake": 0
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -12643,5 +12576,5 @@
     "platform-overrides": {
         "php": "7.2.5"
     },
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.0.0"
 }
