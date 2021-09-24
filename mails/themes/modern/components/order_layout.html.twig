@@ -3,11 +3,12 @@
 
 <head>
   <title> {% block title %}Title{% endblock %} </title>
-  <!--[if !mso]><!-- -->
+  <!--[if !mso]><!-->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!--<![endif]-->
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% block styles %}
   <style type="text/css">
     #outlook a {
       padding: 0;
@@ -42,12 +43,14 @@
     }
   </style>
   <!--[if mso]>
+        <noscript>
         <xml>
         <o:OfficeDocumentSettings>
           <o:AllowPNG/>
           <o:PixelsPerInch>96</o:PixelsPerInch>
         </o:OfficeDocumentSettings>
         </xml>
+        </noscript>
         <![endif]-->
   <!--[if lte mso 11]>
         <style type="text/css">
@@ -145,37 +148,18 @@
       }
     }
   </style>
-    {% block styles %}
-    {% endblock %}
+  {% endblock %}
 </head>
 
-<body style="background-color:#eeeeee;">
+<body style="word-spacing:normal;background-color:#eeeeee;">
   <div style="background-color:#eeeeee;">
-    <!--[if mso | IE]>
-    
-        <table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td height="40" style="vertical-align:top;height:40px;">
-      
-    <![endif]-->
-    <div style="height:40px;">   </div>
-    <!--[if mso | IE]>
-    
-        </td></tr></table>
-      
-    
-      <table
-         align="center" border="0" cellpadding="0" cellspacing="0" class="shadow-outlook wrapper-container-outlook" style="width:604px;" width="604"
-      >
-        <tr>
-          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
-      <![endif]-->
+    <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="shadow-outlook wrapper-container-outlook" role="presentation" style="width:604px;" width="604" bgcolor="#ffffff" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     <div class="shadow wrapper-container" style="background:#ffffff;background-color:#ffffff;margin:0px auto;border-radius:4px;max-width:604px;">
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;background-color:#ffffff;width:100%;border-radius:4px;">
         <tbody>
           <tr>
             <td style="direction:ltr;font-size:0px;padding:0 0 30px;text-align:center;">
-              <!--[if mso | IE]>
-                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                <![endif]--> 
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><![endif]--> 
                   {% block header %}
                       {% include '@MailThemes/modern/components/header.html.twig' %}
                   {% endblock %}
@@ -186,19 +170,13 @@
                   {% block footer_content %}
                   {% endblock %}
 
-              <!--[if mso | IE]>
-                  </table>
-                <![endif]-->
+              <!--[if mso | IE]></table><![endif]-->
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <!--[if mso | IE]>
-          </td>
-        </tr>
-      </table>
-      <![endif]--> 
+    <!--[if mso | IE]></td></tr></table><![endif]--> 
                   {% block footer %}
                       {% include '@MailThemes/modern/components/footer.html.twig' %}
                   {% endblock %}
