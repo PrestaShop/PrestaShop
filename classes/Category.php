@@ -277,7 +277,6 @@ class CategoryCore extends ObjectModel
         return $ret;
     }
 
-
     /**
      * Recursive scan of subcategories.
      *
