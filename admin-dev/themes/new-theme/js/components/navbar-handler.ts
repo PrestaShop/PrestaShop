@@ -39,9 +39,9 @@ export default class NavbarHandler {
 
   $navigationContainer: JQuery;
 
-  constructor($navigationContainer: JQuery, tabPrefix: string) {
+  constructor($navigationContainer: JQuery, tabPrefix: string = 'tab-') {
     // We use a tab prefix for hastag so that on reload the page doesn't auto scroll to the anchored element
-    this.tabPrefix = tabPrefix || 'tab-';
+    this.tabPrefix = tabPrefix;
     this.$navigationContainer = $navigationContainer;
 
     this.watchNavbar();
@@ -49,7 +49,7 @@ export default class NavbarHandler {
     this.switchOnPageLoad();
   }
 
-  switchToTarget(target: string): void {
+  private switchToTarget(target: string): void {
     if (!target) {
       return;
     }
@@ -64,12 +64,12 @@ export default class NavbarHandler {
     this.switchToTab(tabLink);
   }
 
-  switchToTab(tab: JQuery): void {
+  private switchToTab(tab: JQuery): void {
     tab.click();
     this.updateBrowserHash(<string>tab.attr('href'));
   }
 
-  updateBrowserHash(target: string): void {
+  private updateBrowserHash(target: string): void {
     const hashName = target.replace('#', `#${this.tabPrefix}`);
 
     if (window.history.pushState) {
@@ -79,8 +79,8 @@ export default class NavbarHandler {
     }
   }
 
-  watchNavbar(): void {
-    $(this.$navigationContainer).on(
+  private watchNavbar(): void {
+    this.$navigationContainer.on(
       'shown.bs.tab',
       (event: JQueryEventObject) => {
         // @ts-ignore-next-line
@@ -92,7 +92,7 @@ export default class NavbarHandler {
     );
   }
 
-  watchTabLinks(): void {
+  private watchTabLinks(): void {
     $('.tab-link').click((event) => {
       event.preventDefault();
       const target = $(event.target).attr('href');
@@ -105,7 +105,7 @@ export default class NavbarHandler {
     });
   }
 
-  switchOnPageLoad(): void {
+  private switchOnPageLoad(): void {
     const errorTabs = $('.has-error', this.$navigationContainer);
 
     if (errorTabs.length) {
