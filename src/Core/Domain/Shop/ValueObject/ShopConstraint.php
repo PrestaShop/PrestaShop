@@ -52,14 +52,14 @@ class ShopConstraint
     /**
      * Constraint to get configuration for a specific shop
      *
-     * @param int $shopId
+     * @param int|null $shopId
      * @param bool $isStrict
      *
      * @return static
      *
      * @throws ShopException
      */
-    public static function shop(int $shopId, bool $isStrict = false): self
+    public static function shop(?int $shopId, bool $isStrict = false): self
     {
         return new static($shopId, null, $isStrict);
     }
@@ -67,14 +67,14 @@ class ShopConstraint
     /**
      * Constraint to get configuration for a specific shop group
      *
-     * @param int $shopGroupId
+     * @param int|null $shopGroupId
      * @param bool $isStrict
      *
      * @return static
      *
      * @throws ShopException
      */
-    public static function shopGroup(int $shopGroupId, bool $isStrict = false): self
+    public static function shopGroup(?int $shopGroupId, bool $isStrict = false): self
     {
         return new static(null, $shopGroupId, $isStrict);
     }
