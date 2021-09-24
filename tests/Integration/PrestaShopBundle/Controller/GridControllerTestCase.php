@@ -28,12 +28,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller;
 
-use PrestaShop\PrestaShop\Core\Exception\TypeException;
+use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
+use Symfony\Component\Routing\RouterInterface;
 use Tests\Integration\PrestaShopBundle\Controller\FormFiller\FormFiller;
 
 abstract class GridControllerTestCase extends WebTestCase
@@ -44,47 +44,9 @@ abstract class GridControllerTestCase extends WebTestCase
     protected $client;
 
     /**
-     * Route to the grid you are testing
-     *
-     * @var string
+     * @var RouterInterface
      */
-    protected $gridRoute;
-
-    /**
-     * The id of the test entity with which filters will be tested
-     * Should be set during SetUp
-     *
-     * @var int
-     */
-    protected $testEntityId;
-
-    /**
-     * The name of entity you are testing, e.g.,address.
-     *
-     * @var string
-     */
-    protected $testEntityName;
-
-    /**
-     * The route to create entity
-     *
-     * @var string
-     */
-    protected $createEntityRoute;
-
-    /**
-     * The route to delete entity
-     *
-     * @var string
-     */
-    protected $deleteEntityRoute;
-
-    /**
-     * Amount of entities in starting list
-     *
-     * @var int
-     */
-    protected $initialEntityCount;
+    protected $router;
 
     /**
      * @var FormFiller
@@ -92,140 +54,82 @@ abstract class GridControllerTestCase extends WebTestCase
     protected $formFiller;
 
     /**
-     * Service id form form handler
-     *
-     * @var string
-     */
-    protected $formHandlerServiceId;
-
-    /**
-     * Save button id should always be the same, but can be overridden if needed
-     *
-     * @var string
-     */
-    protected $saveButtonId = 'save-button';
-
-    public function __construct($name = null, array $data = [], $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-
-        $this->formFiller = new FormFiller();
-    }
-
-    /**
      * Creates a test entity and ensures asserts that amount of entities in the list got increased by one
-     *
-     * @throws TypeException
      */
     public function setUp(): void
     {
         $this->client = static::createClient();
         $this->client->followRedirects(true);
-
-        /** Asserts that list contains as many entities as expected */
-        $crawler = $this->client->request('GET', $this->getIndexRoute($this->client->getKernel()->getContainer()->get('router')));
-        $this->assertResponseIsSuccessful();
-
-        $entities = $this->getEntityList($crawler);
-        $this->initialEntityCount = $entities->count();
-
-        $this->createTestEntity();
-
-        /** Asserts amount of entities in the list increased by one and test entity exists */
-        $crawler = $this->client->request('GET', $this->getIndexRoute($this->client->getKernel()->getContainer()->get('router')));
-        $entities = $this->getEntityList($crawler);
-        /* If this fails it means entity was not created correctly */
-        self::assertCount($this->initialEntityCount + 1, $entities);
-        $this->assertTestEntityExists($entities);
+        $this->router = $this->client->getContainer()->get('router');
+        $this->formFiller = new FormFiller();
     }
 
     /**
-     * Removes the created test entity and asserts that it was successfully removed from the list.
+     * Calls the gris page and return the parsed entities it contains, based on the parseEntityFromRow that each
+     * sub-class must implement.
      *
-     * @throws TypeException
+     * @param array $routeParams
+     *
+     * @return TestEntityDTOCollection
      */
-    public function tearDown(): void
+    protected function getEntitiesFromGrid(array $routeParams = []): TestEntityDTOCollection
     {
-        $this->client->followRedirects(true);
-        $router = $this->client->getContainer()->get('router');
-
-        /**
-         * Assumes that deletion route only requires id param and that id has format is $this->testEntityName . 'Id'
-         * If it's not the case you can always override tearDown with logic specific to grid you are testing
-         */
-        $deleteUrl = $router->generate($this->deleteEntityRoute, [$this->testEntityName . 'Id' => $this->testEntityId]);
-        $this->client->request('POST', $deleteUrl);
+        $gridUrl = $this->generateGridUrl($routeParams);
+        $crawler = $this->client->request('GET', $gridUrl);
         $this->assertResponseIsSuccessful();
 
-        $crawler = $this->client->request('GET', $this->getIndexRoute($this->client->getKernel()->getContainer()->get('router')));
-
-        $entities = $this->getEntityList($crawler);
-
-        /* If this fails it means entity deletion did not work as intended */
-        self::assertCount($this->initialEntityCount, $entities);
+        return $this->parseEntitiesFromGridTable($crawler);
     }
 
     /**
-     * @return void
+     * Parses all the entities' data from the grid table, based on the parseEntityFromRow that each sub-class must
+     * implement.
+     *
+     * @param Crawler $crawler
+     *
+     * @return TestEntityDTOCollection
      */
-    protected function createTestEntity(): void
+    protected function parseEntitiesFromGridTable(Crawler $crawler): TestEntityDTOCollection
     {
-        $router = $this->client->getContainer()->get('router');
-        $createEntityUrl = $router->generate($this->createEntityRoute);
+        $testEntityDTOCollection = new TestEntityDTOCollection();
+        $grid = $crawler->filter($this->getGridSelector());
+        if (empty($grid->count())) {
+            throw new InvalidArgumentException(sprintf(
+                'Could not find a grid matching CSS selector "%s"',
+                $this->getGridSelector()
+            ));
+        }
 
-        $crawler = $this->client->request('GET', $createEntityUrl);
-        $this->assertResponseIsSuccessful();
+        $entities = $grid->filter('tbody tr')->each(function ($tr, $i) {
+            return $this->parseEntityFromRow($tr, $i);
+        });
+        foreach ($entities as $entity) {
+            $testEntityDTOCollection->add($entity);
+        }
 
-        $submitButton = $crawler->selectButton($this->saveButtonId);
-        /** If you get "InvalidArgumentException: The current node list is empty" error here it means save button was not found */
-        $entityForm = $submitButton->form();
-
-        $entityForm = $this->formFiller->fillForm($entityForm, $this->getCreateEntityFormModifications());
-
-        /*
-         * Without changing followRedirects to false when submitting the form
-         * $dataChecker->getLastCreatedId() returns null.
-         */
-        $this->client->followRedirects(false);
-        $this->client->submit($entityForm);
-        $this->client->followRedirects(true);
-        $formHandlerChecker = $this->client->getContainer()->get($this->formHandlerServiceId);
-        $this->testEntityId = $formHandlerChecker->getLastCreatedId();
-        self::assertNotNull($this->testEntityId);
+        return $testEntityDTOCollection;
     }
 
     /**
-     * If this test fails it's likely problem with filters being incorrect or filtering not working
-     * Asserts that there is only one entity left in the list after using filters
+     * Calls the gris page with specific filters and return the parsed entities it contains, based on the
+     * parseEntityFromRow that each sub-class must implement.
      *
      * @param array $testFilters
+     * @param array $routeParams
      *
-     * @throws TypeException
+     * @return TestEntityDTOCollection
      */
-    protected function assertFiltersFindOnlyTestEntity(array $testFilters): void
+    protected function getFilteredEntitiesFromGrid(array $testFilters, array $routeParams = []): TestEntityDTOCollection
     {
-        $crawler = $this->client->request('GET', $this->getIndexRoute($this->client->getKernel()->getContainer()->get('router')));
+        $gridUrl = $this->generateGridUrl($routeParams);
+        $crawler = $this->client->request('GET', $gridUrl);
         $this->assertResponseIsSuccessful();
 
-        /** Assert that list contains all entities and thus not affected by anything */
-        $entities = $this->getEntityList($crawler);
-        self::assertCount($this->initialEntityCount + 1, $entities);
-
-        /**
-         * Submit filters
-         */
         $filterForm = $this->fillFiltersForm($crawler, $testFilters);
         $this->client->followRedirects(true);
-
         $crawler = $this->client->submit($filterForm);
 
-        /**
-         * Assert that there is only test entity left in the list after using filters
-         */
-        $entities = $this->getEntityList($crawler);
-
-        self::assertCount(1, $entities);
-        $this->assertTestEntityExists($entities);
+        return $this->parseEntitiesFromGridTable($crawler);
     }
 
     /**
@@ -236,61 +140,82 @@ abstract class GridControllerTestCase extends WebTestCase
      */
     protected function fillFiltersForm(Crawler $crawler, array $formModifications): Form
     {
-        $button = $crawler->selectButton($this->testEntityName . '[actions][search]');
-        $filtersForm = $button->form();
+        $filtersForm = $this->getFormByButton($crawler, $this->getFilterSearchButtonSelector());
         $this->formFiller->fillForm($filtersForm, $formModifications);
 
         return $filtersForm;
     }
 
     /**
-     * Asserts test entity exists with the list
+     * @param Crawler $crawler
+     * @param string $formButtonSelector
+     *
+     * @return Form
+     */
+    protected function getFormByButton(Crawler $crawler, string $formButtonSelector): Form
+    {
+        $submitButton = $crawler->selectButton($formButtonSelector);
+        try {
+            $form = $submitButton->form();
+        } catch (InvalidArgumentException $e) {
+            throw new InvalidArgumentException(sprintf(
+                'Could not find form in the page, maybe the button selector "%s" is not adapted, usually you can use the button id (without the #) or its name',
+                $formButtonSelector
+            ), $e->getCode(), $e);
+        }
+
+        return $form;
+    }
+
+    /**
+     * Asserts collection contains the entity matching the provided ID
      *
      * @param TestEntityDTOCollection $entities
+     * @param int $searchEntityId
      */
-    protected function assertTestEntityExists(TestEntityDTOCollection $entities): void
+    protected function assertCollectionContainsEntity(TestEntityDTOCollection $entities, int $searchEntityId): void
     {
         $ids = array_map(function ($entity) {
             return $entity->getId();
         }, iterator_to_array($entities));
-        self::assertContains($this->getTestEntity()->getId(), $ids);
+
+        $this->assertContains($searchEntityId, $ids);
     }
 
     /**
-     * @param Crawler $crawler
-     *
-     * @return TestEntityDTOCollection
-     *
-     * @throws TypeException
+     * These are the methods that need to be implemented by the sub-classes but since we are not sure that they will
+     * be used they are not pure abstract.
      */
-    protected function getEntityList(Crawler $crawler): TestEntityDTOCollection
-    {
-        $testEntityDTOCollection = new TestEntityDTOCollection();
-        $entities = $crawler->filter('#' . $this->testEntityName . '_grid_table')->filter('tbody tr')->each(function ($tr, $i) {
-            return $this->getEntity($tr, $i);
-        });
-        foreach ($entities as $entity) {
-            $testEntityDTOCollection->add($entity);
-        }
-
-        return $testEntityDTOCollection;
-    }
 
     /**
-     * Can be overridden if you need to manipulate route in in any way
-     *
-     * @param Router $router
+     * Returns the selector allowing to get the grid's search button.
      *
      * @return string
      */
-    protected function getIndexRoute(Router $router): string
-    {
-        return $router->generate($this->gridRoute);
-    }
+    abstract protected function getFilterSearchButtonSelector(): string;
 
-    abstract protected function getTestEntity(): TestEntityDTO;
+    /**
+     * @param array $routeParams
+     *
+     * @return string
+     */
+    abstract protected function generateGridUrl(array $routeParams = []): string;
 
-    abstract protected function getCreateEntityFormModifications(): array;
+    /**
+     * Returns the selector of the tested grid, for example: #products_grid_table
+     *
+     * @return string
+     */
+    abstract protected function getGridSelector(): string;
 
-    abstract protected function getEntity(Crawler $tr, int $i): TestEntityDTO;
+    /**
+     * This method parse a row from the grid and returns a TestEntityDTO which contains, at the minimum, the ID of the
+     * entity plus additional variables that you could wish to test.
+     *
+     * @param Crawler $tr
+     * @param int $i
+     *
+     * @return TestEntityDTO
+     */
+    abstract protected function parseEntityFromRow(Crawler $tr, int $i): TestEntityDTO;
 }
