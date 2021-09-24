@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
+use Hook;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
@@ -321,6 +322,17 @@ class ProductStockUpdater
             $stockModification->getDeltaQuantity(),
             [
                 'id_stock_mvt_reason' => $stockModification->getMovementReasonId()->getValue(),
+                'id_shop' => (int) $stockAvailable->id_shop,
+            ]
+        );
+
+        Hook::exec(
+            'actionUpdateQuantity',
+            [
+                'id_product' => $stockAvailable->id_product,
+                'id_product_attribute' => $stockAvailable->id_product_attribute,
+                'quantity' => $stockAvailable->quantity,
+                'delta_quantity' => $stockModification->getDeltaQuantity(),
                 'id_shop' => (int) $stockAvailable->id_shop,
             ]
         );

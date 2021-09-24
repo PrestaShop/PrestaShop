@@ -625,6 +625,8 @@ class StockAvailableCore extends ObjectModel
                     'id_product' => $id_product,
                     'id_product_attribute' => $id_product_attribute,
                     'quantity' => $stock_available->quantity,
+                    'delta_quantity' => $deltaQuantity ?? null,
+                    'id_shop' => $id_shop,
                 ]
             );
         }
