@@ -466,13 +466,13 @@ class ConfigurationCore extends ObjectModel
                 if (!$lang) {
                     // Update config not linked to lang
                     $result &= Db::getInstance()->update(self::$definition['table'], [
-                        'value' => pSQL($value, $html),
+                        'value' => pSQL($value, true),
                         'date_upd' => date('Y-m-d H:i:s'),
                     ], '`name` = \'' . pSQL($key) . '\'' . Configuration::sqlRestriction($idShopGroup, $idShop), 1, true);
                 } else {
                     // Update multi lang
                     $sql = 'UPDATE `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang` cl
-                            SET cl.value = \'' . pSQL($value, $html) . '\',
+                            SET cl.value = \'' . pSQL($value, true) . '\',
                                 cl.date_upd = NOW()
                             WHERE cl.id_lang = ' . (int) $lang . '
                                 AND cl.`' . bqSQL(self::$definition['primary']) . '` = (
@@ -491,7 +491,7 @@ class ConfigurationCore extends ObjectModel
                         'id_shop_group' => $idShopGroup ? (int) $idShopGroup : null,
                         'id_shop' => $idShop ? (int) $idShop : null,
                         'name' => pSQL($key),
-                        'value' => $lang ? null : pSQL($value, $html),
+                        'value' => $lang ? null : pSQL($value, true),
                         'date_add' => $now,
                         'date_upd' => $now,
                     ];
@@ -514,7 +514,7 @@ class ConfigurationCore extends ObjectModel
                     $results = Db::getInstance()->getRow($selectConfiguration);
                     $configurationExists = is_array($results) && count($results) > 0;
                     $now = date('Y-m-d H:i:s');
-                    $sanitizedValue = pSQL($value, $html);
+                    $sanitizedValue = pSQL($value, true);
 
                     if ($configurationExists) {
                         $condition = strtr(
