@@ -132,3 +132,14 @@
   border-right-style: none;
   border-left-style: solid;
 }
+
+/* Fix Product V2 category list for RTL language */
+.product-page .category-tree-overflow ul.category-tree .category-tree-inputs {
+  padding: 0 1.25rem 0 0 !important;
+}
+
+.product-page .category-tree-overflow ul.category-tree ul {
+    padding-left: 0 !important;
+    padding-right: 0.75rem;
+}
+
