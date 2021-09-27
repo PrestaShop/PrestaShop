@@ -42,6 +42,7 @@ import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
 
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
+import CreateProductModal from '@pages/product/components/create-product-modal';
 
 const {$} = window;
 
@@ -81,6 +82,7 @@ $(() => {
   new CategoriesManager(eventEmitter);
   new ProductFooterManager();
   new ProductModulesManager();
+  new CreateProductModal();
 
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(
