@@ -24,7 +24,7 @@
  *#}
 {% block product_footer %}
   <div class="product-footer justify-content-md-center">
-    <div class="col-lg-4">
+    <div class="col-lg-3">
       <a
         href="{{ path('admin_product_unit_action', {action: 'delete', id: productId}) }}"
         class="tooltip-link btn btn-lg delete"
@@ -65,7 +65,7 @@
         />
       {% endif %}
     </div>
-    <div class="col-sm-5 col-lg-7 text-right">
+    <div class="col-sm-5 col-lg-9 text-right">
       <input
         id="submit"
         type="submit"
@@ -106,9 +106,9 @@
       >
         {{ 'Add new product'|trans({}, 'Admin.Catalog.Feature')|raw }}
       </button>
-      {% if isProductPageV2Enabled == true and isCreationMode is same as(true) %}
+      {% if isProductPageV2Enabled == true %}
         <a
-          class="btn btn-outline-primary ml-3"
+          class="btn btn-outline-primary ml-3 new-product"
           href="{{ path('admin_products_v2_create') }}"
         >
           {{ 'New product on experimental page'|trans({}, 'Admin.Catalog.Feature')|raw }}
