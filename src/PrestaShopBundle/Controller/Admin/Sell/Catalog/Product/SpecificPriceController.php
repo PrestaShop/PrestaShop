@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
-use DateTime;
 use DateTimeInterface;
 use Exception;
 use PrestaShop\Decimal\DecimalNumber;
@@ -146,7 +145,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 'price' => $this->getContextLocale()->formatPrice((string) $specificPrice->getPrice(), $this->getContextCurrencyIso()),
                 'impact' => $this->formatImpact($specificPrice->getReductionType(), $specificPrice->getReductionValue()),
                 'period' => $this->formatPeriod($specificPrice->getDateTimeFrom(), $specificPrice->getDateTimeFrom()),
-                'fromQuantity' => $specificPrice->getFromQuantity()
+                'fromQuantity' => $specificPrice->getFromQuantity(),
             ];
         }
 
@@ -165,7 +164,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
             return sprintf('-%s', $locale->formatPrice((string) $reductionValue, $this->getContextCurrencyIso()));
         }
 
-        return sprintf( '-%s %%', (string) $reductionValue);
+        return sprintf('-%s %%', (string) $reductionValue);
     }
 
     private function formatPeriod(DateTimeInterface $from, DateTimeInterface $to): ?array

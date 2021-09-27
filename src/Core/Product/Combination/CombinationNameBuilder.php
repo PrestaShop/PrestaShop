@@ -34,9 +34,9 @@ class CombinationNameBuilder implements CombinationNameBuilderInterface
 {
     /**
      * {@inheritdoc}
+     *
      * @todo: could be reused in src/Adapter/Product/Combination/QueryHandler/GetCombinationForEditingHandler.php
      *   but is it really the same for SpecificPriceForListing? old page seems to only show attribute names there (not showing attribute_groups)
-
      */
     public function buildName(array $attributesInfo): string
     {
