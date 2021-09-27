@@ -85,7 +85,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $form->handleRequest($request);
 
         try {
-            $result = $this->getFormHandler()->handle($form);
+            $result = $this->getFormHandler()->handleFor($specificPriceId, $form);
 
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
