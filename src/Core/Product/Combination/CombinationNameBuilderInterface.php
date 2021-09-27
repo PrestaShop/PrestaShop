@@ -31,6 +31,7 @@ interface CombinationNameBuilderInterface
 {
     /**
      * @todo: some dto instead of array?
+     *
      * @param array<int, array<string, string>> $attributesInfo
      *
      * @return string
