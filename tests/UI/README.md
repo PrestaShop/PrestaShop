@@ -132,14 +132,13 @@ To help contributors find more documentation about UI tests, [JS-DOC](https://js
 
 [jsdoc-to-markdown](https://github.com/jsdoc2md/jsdoc-to-markdown) is the library used, it will create `.md` files using js files from the above directories.
 
-To install :
+To install `jsdoc-to-markdown` :
 ```shell
-npm install -g jsdoc-to-markdown
+cd tests/UI
+npm install
 ```
 
-PS: You can install it on you project only, but it will change the package.json. Be careful while committing since it's not needed for tests.
-
-#### Generate documentation
+### Generate documentation
 
 By running the command below, it will generate jsdoc on `.doc` directory.
 
