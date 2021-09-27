@@ -26,7 +26,7 @@
   <div id="specific-price-form-modal">
     <modal
       class="specific-price-modal"
-      v-if="openForCreate"
+      v-if="openForCreate || openForUpdate"
       @close="closeModal"
     >
       <template #body>
@@ -39,7 +39,7 @@
         <iframe
           ref="iframe"
           class="specific-price-iframe"
-          :src="createSpecificPriceUrl"
+          :src="url"
           @load="onFrameLoaded"
           vspace="0"
           hspace="0"
@@ -85,7 +85,6 @@
   import Modal from '@vue/components/Modal';
   import Router from '@components/router';
 
-  const {$} = window;
   const router = new Router();
   const SpecificPriceMap = ProductMap.specificPrice;
 
@@ -95,14 +94,9 @@
     data() {
       return {
         openForCreate: false,
+        openForUpdate: false,
         loadingForm: false,
-        createSpecificPriceUrl: router.generate(
-          'admin_products_specific_prices_create',
-          {
-            productId: this.productId,
-            liteDisplaying: 1,
-          },
-        ),
+        url: null,
         submittingForm: false,
         container: null,
       };
@@ -118,7 +112,8 @@
       },
     },
     mounted() {
-      this.container = $(SpecificPriceMap.container);
+      this.container = document.querySelector(SpecificPriceMap.container);
+      this.watchAddButton();
       this.watchEditButtons();
     },
     methods: {
@@ -130,16 +125,35 @@
         this.submittingForm = true;
         this.loadingForm = true;
       },
+      watchAddButton() {
+        const addButton = this.container.querySelector(SpecificPriceMap.addSpecificPriceBtn);
+        addButton.addEventListener('click', (e) => {
+          e.stopImmediatePropagation();
+          this.url = router.generate(
+            'admin_products_specific_prices_create',
+            {
+              productId: this.productId,
+              liteDisplaying: 1,
+            },
+          );
+          this.loadingForm = true;
+          this.openForCreate = true;
+        });
+      },
       watchEditButtons() {
-        this.container.on(
-          'click',
-          SpecificPriceMap.addSpecificPriceBtn,
-          (event) => {
-            event.stopImmediatePropagation();
-            this.loadingForm = true;
-            this.openForCreate = true;
-          },
-        );
+        // cannot listen edit buttons directly as they are rendered dynamically
+        $(SpecificPriceMap.listContainer).on('click', SpecificPriceMap.listFields.editBtn, (e) => {
+          e.stopImmediatePropagation();
+          this.url = router.generate(
+            'admin_products_specific_prices_edit',
+            {
+              specificPriceId: e.currentTarget.dataset.specificPriceId,
+              liteDisplaying: 1,
+            },
+          );
+          this.loadingForm = true;
+          this.openForUpdate = true;
+        });
       },
       onFrameLoaded() {
         this.applyIframeStyling();

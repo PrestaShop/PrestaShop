@@ -92,6 +92,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_products_specific_prices_edit', [
                     'liteDisplaying' => $request->query->has('liteDisplaying'),
+                    'specificPriceId' => $specificPriceId,
                 ]);
             }
         } catch (Exception $e) {

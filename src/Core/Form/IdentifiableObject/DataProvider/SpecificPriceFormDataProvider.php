@@ -42,7 +42,10 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
         return [
             'product_id' => $specificPrice->id_product,
             'from_quantity' => $specificPrice->from_quantity,
-            //@todo finish up
+            'reduction' => [
+                'type' => $specificPrice->reduction_type,
+                'value' => $specificPrice->reduction,
+            ],
         ];
     }
 
