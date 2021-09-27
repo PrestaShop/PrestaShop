@@ -27,7 +27,7 @@ function generate_doc() {
   # 2 Create documentation for each file
   cd $PROJECT_PATH
   for JS_FILE in "${JS_FILES[@]}"; do
-    jsdoc2md --no-gfm --files $PROJECT_PATH/$JS_FILE > $PROJECT_PATH/$DOC_DIRECTORY/$JS_FILE.md
+    ./node_modules/.bin/jsdoc2md --no-gfm --files $PROJECT_PATH/$JS_FILE > $PROJECT_PATH/$DOC_DIRECTORY/$JS_FILE.md
   done
 
   echo "File generated for '$JS_DIRECTORY', Check errors if printed"
