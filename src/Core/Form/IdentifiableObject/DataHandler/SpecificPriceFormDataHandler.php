@@ -29,7 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 //@todo: rename to ProductSpecificPriceFormDataHandler? and related services
 class SpecificPriceFormDataHandler implements FormDataHandlerInterface
@@ -75,8 +77,39 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
         return $specificPriceId->getValue();
     }
 
-    public function update($id, array $data)
+    public function update($id, array $data): void
     {
-        //@todo we don't have UpdateSpecificPrice command?
+        $command = new EditProductSpecificPriceCommand((int) $id);
+
+        if (null !== $data['currency_id']) {
+            $command->setCurrencyId((int) $data['currency_id']);
+        }
+        if (null !== $data['country_id']) {
+            $command->setCountryId((int) $data['country_id']);
+        }
+        if (null !== $data['group_id']) {
+            $command->setGroupId((int) $data['group_id']);
+        }
+        if (null !== $data['customer_id']) {
+            $command->setCustomerId((int) $data['customer_id']);
+        }
+        if (null !== $data['from_quantity']) {
+            $command->setFromQuantity((int) $data['from_quantity']);
+        }
+        if (null !== $data['price']) {
+            $command->setPrice((string) $data['price']);
+        }
+        if (isset($data['date_range']['from'])) {
+            $command->setDateTimeFrom(DateTime::getNullableDateTime($data['date_range']['from']));
+        }
+        if (isset($data['date_range']['to'])) {
+            $command->setDateTimeTo(DateTime::getNullableDateTime($data['date_range']['to']));
+        }
+        if (null !== $data['reduction']) {
+            $command->setReduction((string) $data['reduction']['type'], (string) $data['reduction']['value']);
+        }
+        if (null !== $data['include_tax']) {
+            $command->setIncludesTax((bool) $data['include_tax']);
+        }
     }
 }

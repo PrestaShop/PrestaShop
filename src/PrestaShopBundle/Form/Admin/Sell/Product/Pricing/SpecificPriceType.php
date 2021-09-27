@@ -113,7 +113,7 @@ class SpecificPriceType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            // without product id in form we cannot use FormHandler and benefit from its hooks
+            // product_id is required for create action
             ->add('product_id', HiddenType::class)
             ->add('currency_id', ChoiceType::class, [
                 'label' => $this->trans('Currency', 'Admin.Global'),

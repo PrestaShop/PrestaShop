@@ -27,8 +27,27 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
+
 class SpecificPriceFormDataProvider implements FormDataProviderInterface
 {
+    /**
+     * @var CommandBusInterface
+     */
+    private $queryBus;
+
+    /**
+     * @param CommandBusInterface $queryBus
+     */
+    public function __construct(
+        CommandBusInterface $queryBus
+    ) {
+        $this->queryBus = $queryBus;
+    }
+
     /**
      * @param int $id
      *
@@ -36,16 +55,27 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id): array
     {
-        //@todo: getSpecificPriceForEditing
-        $specificPrice = new \SpecificPrice($id);
+        /** @var SpecificPriceForEditing $specificPriceForEditing */
+        $specificPriceForEditing = $this->queryBus->handle(new GetSpecificPriceForEditing((int) $id));
+        $fixedPrice = $specificPriceForEditing->getPrice();
 
         return [
-            'product_id' => $specificPrice->id_product,
-            'from_quantity' => $specificPrice->from_quantity,
-            'reduction' => [
-                'type' => $specificPrice->reduction_type,
-                'value' => $specificPrice->reduction,
+            'currency_id' => $specificPriceForEditing->getCurrencyId(),
+            'country_id' => $specificPriceForEditing->getCountryId(),
+            'group_id' => $specificPriceForEditing->getGroupId(),
+            'customer_id' => $specificPriceForEditing->getCustomerId(),
+            'from_quantity' => $specificPriceForEditing->getFromQuantity(),
+            'price' => (string) $fixedPrice,
+            'leave_initial_price' => $fixedPrice->equalsZero(),
+            'date_range' => [
+                'from' => $specificPriceForEditing->getDateTimeFrom()->format(DateTime::DEFAULT_DATETIME_FORMAT),
+                'to' => $specificPriceForEditing->getDateTimeTo()->format(DateTime::DEFAULT_DATETIME_FORMAT),
             ],
+            'reduction' => [
+                'type' => $specificPriceForEditing->getReductionType(),
+                'value' => (string) $specificPriceForEditing->getReductionAmount(),
+            ],
+            'include_tax' => $specificPriceForEditing->includesTax(),
         ];
     }
 
@@ -57,7 +87,7 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
         return [
             'reduction' => [
                 'value' => 0,
-            ]
+            ],
         ];
     }
 }
