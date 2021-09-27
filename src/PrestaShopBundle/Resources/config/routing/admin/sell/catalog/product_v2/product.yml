@@ -43,6 +43,8 @@ admin_products_v2_edit:
       id_product: productId
   requirements:
     productId: \d+
+  options:
+    expose: true
 
 admin_products_v2_download_virtual_product_file:
   path: /virtual-product-file/{virtualProductFileId}
