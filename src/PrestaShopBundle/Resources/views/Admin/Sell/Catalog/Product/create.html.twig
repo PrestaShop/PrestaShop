@@ -32,10 +32,6 @@
 {% endblock %}
 
 {% block content %}
-  <div class="header-toolbar d-print-none">
-    {{ multistoreHeader() }}
-  </div>
-
   {{ form_start(productForm, {'attr': {'class': 'form-horizontal product-page product-page-v2 row justify-content-md-center', 'novalidate': 'novalidate'}}) }}
 
   {% block product_creation_form %}
