@@ -156,3 +156,5 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [reporting-issues]: https://devdocs.prestashop.com/1.7/contribute/contribute-reporting-issues/
 [modules-devdocs]: https://devdocs.prestashop.com/1.7/modules/
 [themes-devdocs]: https://devdocs.prestashop.com/1.7/themes/
+
+.
