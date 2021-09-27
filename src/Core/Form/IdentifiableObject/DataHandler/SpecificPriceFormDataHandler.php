@@ -53,9 +53,9 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
         $command = new AddProductSpecificPriceCommand(
             (int) $data['product_id'],
             $data['reduction']['type'],
-            (float) $data['reduction']['value'],
+            (string) $data['reduction']['value'],
             (bool) $data['include_tax'],
-            (float) $data['price'],
+            (string) $data['price'],
             (int) $data['from_quantity']
         );
 
