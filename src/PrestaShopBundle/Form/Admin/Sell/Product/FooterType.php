@@ -91,7 +91,7 @@ class FooterType extends TranslatorAwareType
                 'icon' => 'arrow_back_ios',
                 'attr' => [
                     'class' => 'btn-outline-secondary',
-                    'href' => $this->router->generate('admin_product_catalog', ['offset' => 'last', 'limit' => 'last']),
+                    'href' => $this->router->generate('admin_products_v2_index', ['offset' => 'last', 'limit' => 'last']),
                 ],
             ])
             ->add('preview', IconButtonType::class, [
