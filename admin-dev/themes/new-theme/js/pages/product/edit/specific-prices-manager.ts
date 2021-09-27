@@ -76,6 +76,8 @@ export default class SpecificPricesManager {
         const periodFromField = this.selectListField(trClone, listFields.from);
         const periodToField = this.selectListField(trClone, listFields.to);
         const fromQtyField = this.selectListField(trClone, listFields.fromQuantity);
+        const deleteBtn = this.selectListField(trClone, listFields.deleteBtn);
+        const editBtn = this.selectListField(trClone, listFields.editBtn);
         idField.textContent = String(specificPrice.id);
         combinationField.textContent = specificPrice.combination;
         currencyField.textContent = specificPrice.currency;
@@ -85,6 +87,8 @@ export default class SpecificPricesManager {
         priceField.textContent = specificPrice.price;
         impactField.textContent = specificPrice.impact;
         fromQtyField.textContent = specificPrice.fromQuantity;
+        deleteBtn.dataset.specificPriceId = String(specificPrice.id);
+        editBtn.dataset.specificPriceId = String(specificPrice.id);
 
         if (!specificPrice.period) {
           periodField.textContent = String(periodField.dataset.unlimitedText);
