@@ -94,18 +94,6 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
-  &::before {
-    position: fixed;
-    top: $size-header-height - 0.0625rem;
-    right: 0;
-    left: 0;
-    z-index: 400;
-    display: block;
-    height: 1px;
-    content: "";
-    box-shadow: $gray-dark 0 0 10px;
-  }
-
   // Resets
   ul.nostyle {
     padding: 0;
@@ -127,6 +115,18 @@ $product-page-padding-bottom: 80px !default;
     margin-top: -$grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
     background: $white;
+
+    &::before {
+      position: fixed;
+      top: $size-header-height - 0.0625rem;
+      right: 0;
+      left: 0;
+      z-index: 400;
+      display: block;
+      height: 1px;
+      content: "";
+      box-shadow: $gray-dark 0 0 10px;
+    }
 
     .edit {
       background-size: 4%;
