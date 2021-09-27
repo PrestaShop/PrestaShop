@@ -39,11 +39,14 @@ use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 class SpecificPriceType extends TranslatorAwareType
 {
@@ -73,8 +76,14 @@ class SpecificPriceType extends TranslatorAwareType
     private $taxInclusionChoiceProvider;
 
     /**
+     * @var string
+     */
+    private $defaultCurrencyIso;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
+     * @param string $defaultCurrencyIso
      * @param FormChoiceProviderInterface $currencyByIdChoiceProvider
      * @param FormChoiceProviderInterface $countryByIdChoiceProvider
      * @param FormChoiceProviderInterface $groupByIdChoiceProvider
@@ -84,6 +93,7 @@ class SpecificPriceType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
+        string $defaultCurrencyIso,
         FormChoiceProviderInterface $currencyByIdChoiceProvider,
         FormChoiceProviderInterface $countryByIdChoiceProvider,
         FormChoiceProviderInterface $groupByIdChoiceProvider,
@@ -97,6 +107,7 @@ class SpecificPriceType extends TranslatorAwareType
         $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
         $this->shopByIdChoiceProvider = $shopByIdChoiceProvider;
         $this->taxInclusionChoiceProvider = $taxInclusionChoiceProvider;
+        $this->defaultCurrencyIso = $defaultCurrencyIso;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -139,19 +150,16 @@ class SpecificPriceType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('price', NumberType::class, [
-                'label' => $this->trans('Product price (tax excl.)', 'Admin.Catalog.Feature'),
+            ->add('price', MoneyType::class, [
                 'required' => false,
-                'scale' => 6,
+                'label' => $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
+                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'currency' => $this->defaultCurrencyIso,
                 'constraints' => [
-                    new GreaterThanOrEqual([
-                        'value' => 0,
-                        'message' => $this->trans(
-                            '%s is invalid.',
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
                 ],
+                'default_empty_data' => 0.0,
             ])
             ->add('leave_initial_price', CheckboxType::class, [
                 'label' => $this->trans('Leave initial price', 'Admin.Catalog.Feature'),
