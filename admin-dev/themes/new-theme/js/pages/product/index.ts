@@ -27,6 +27,8 @@
 // But in other index.ts there is no such issue
 // const {$} = window;
 
+import CreateProductModal from '@pages/product/components/create-product-modal';
+
 $(() => {
   const grid = new window.prestashop.component.Grid('product');
 
@@ -39,4 +41,6 @@ $(() => {
   grid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+
+  new CreateProductModal();
 });
