@@ -41,8 +41,8 @@ class Theme implements AddonInterface
 
     /**
      * @param array $attributes Theme attributes
-     * @param string $configurationCacheDirectory Default _PS_CACHE_DIR_
-     * @param string $themesDirectory Default _PS_ALL_THEMES_DIR_
+     * @param string|null $configurationCacheDirectory Default _PS_CACHE_DIR_
+     * @param string|null $themesDirectory Default _PS_ALL_THEMES_DIR_
      */
     public function __construct(array $attributes, $configurationCacheDirectory = null, $themesDirectory = null)
     {

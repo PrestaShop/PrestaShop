@@ -46,7 +46,9 @@ class ThemeTest extends TestCase
                 'bar' => 'preston',
                 'directory' => 'a/',
             ],
-            '', '');
+            '',
+            ''
+        );
 
         $this->assertEquals('preston', $theme->get('bar'));
         $this->assertEquals('foo', $theme->get('name'));
@@ -83,7 +85,9 @@ class ThemeTest extends TestCase
                 'directory' => 'a/',
                 'theme_settings' => ['layouts' => 'z'],
             ],
-            '', '');
+            '',
+            ''
+        );
 
         $this->assertEquals('z', $theme->getPageLayouts());
     }
@@ -96,7 +100,9 @@ class ThemeTest extends TestCase
                 'directory' => 'a/',
                 'meta' => ['available_layouts' => 'z'],
             ],
-            '', '');
+            '',
+            ''
+        );
 
         $this->assertEquals('z', $theme->getAvailableLayouts());
     }
@@ -111,7 +117,9 @@ class ThemeTest extends TestCase
                     'default_layout' => 'm',
                     'layouts' => ['homepage' => 'o', 'checkout_page' => 'p'], ],
             ],
-            '', '');
+            '',
+            ''
+        );
 
         $this->assertEquals('o', $theme->getLayoutNameForPage('homepage'));
         $this->assertEquals('p', $theme->getLayoutNameForPage('checkout_page'));
@@ -138,7 +146,8 @@ class ThemeTest extends TestCase
                 ],
                 ],
             ],
-            '', ''
+            '',
+            ''
         );
 
         $this->assertEquals(
