@@ -152,14 +152,16 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              presets: [['env', {useBuiltIns: 'usage', modules: false}]],
-              plugins: ['transform-object-rest-spread', 'transform-runtime'],
+              presets: [['@babel/preset-env', {useBuiltIns: 'usage', modules: false, corejs: '3.18.0'}]],
+              plugins: ['@babel/plugin-transform-runtime'],
+              cacheDirectory: true,
             },
           },
         ],
       },
       {
         test: /\.ts?$/,
+        include: path.resolve(__dirname, '../js'),
         loader: 'ts-loader',
         options: {
           appendTsSuffixTo: [/\.vue$/],
@@ -306,7 +308,6 @@ module.exports = {
       {
         test: /\.scss$/,
         include: /scss/,
-        exclude: /js/,
         use: [
           MiniCssExtractPlugin.loader,
           {
