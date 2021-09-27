@@ -29,6 +29,7 @@ const attachmentsBlockId = '#product_specifications_attachments';
 export default {
   productForm: 'form[name=product]',
   productTypeSelector: '#product_header_type',
+  createProduct: 'a.new-product',
   productType: {
     STANDARD: 'standard',
     PACK: 'pack',
