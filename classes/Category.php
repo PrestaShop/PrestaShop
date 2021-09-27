@@ -278,6 +278,16 @@ class CategoryCore extends ObjectModel
     }
 
     /**
+     * Toggles the `active` flag.
+     *
+     * @return bool Indicates whether the status was successfully toggled
+     */
+    public function toggleStatus()
+    {
+        return parent::toggleStatus();
+    }
+
+    /**
      * Recursive scan of subcategories.
      *
      * @param int $maxDepth Maximum depth of the tree (i.e. 2 => 3 levels depth)
