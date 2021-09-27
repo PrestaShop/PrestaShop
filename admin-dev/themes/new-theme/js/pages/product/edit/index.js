@@ -39,10 +39,10 @@ import ProductSEOManager from '@pages/product/edit/product-seo-manager';
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
 import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
-
+import RelatedProductsManager from '@pages/product/edit/related-products-manager';
+import CreateProductModal from '@pages/product/components/create-product-modal';
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
-import RelatedProductsManager from '@pages/product/edit/related-products-manager';
 
 const {$} = window;
 
@@ -83,6 +83,7 @@ $(() => {
   new ProductFooterManager();
   new ProductModulesManager();
   new RelatedProductsManager(eventEmitter);
+  new CreateProductModal();
 
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(
