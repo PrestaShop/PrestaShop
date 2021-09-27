@@ -54,6 +54,7 @@ export default class SpecificPricesManager {
   }
 
   renderList(): void {
+    const {listFields} = SpecificPriceMap;
     const tbody = this.listContainer.querySelector(`${SpecificPriceMap.listContainer} tbody`) as HTMLElement;
     const trTemplate = this.listContainer.querySelector(SpecificPriceMap.listRowTemplate) as HTMLTemplateElement;
     tbody.innerHTML = '';
@@ -61,21 +62,20 @@ export default class SpecificPricesManager {
     getSpecificPrices(this.productId).then((response) => {
       const specificPrices = response.specificPrices as Array<SpecificPriceForListing>;
 
-      //@todo: selectors to map
       specificPrices.forEach((specificPrice: SpecificPriceForListing) => {
         const trClone = trTemplate.content.cloneNode(true) as HTMLElement;
-        const idField = trClone.querySelector('.specific-price-id') as HTMLElement;
-        const combinationField = trClone.querySelector('.combination') as HTMLElement;
-        const currencyField = trClone.querySelector('.currency') as HTMLElement;
-        const countryField = trClone.querySelector('.country') as HTMLElement;
-        const groupField = trClone.querySelector('.group') as HTMLElement;
-        const customerField = trClone.querySelector('.customer') as HTMLElement;
-        const priceField = trClone.querySelector('.price') as HTMLElement;
-        const impactField = trClone.querySelector('.impact') as HTMLElement;
-        const periodField = trClone.querySelector('.period') as HTMLElement;
-        const periodFromField = periodField.querySelector('.from') as HTMLElement;
-        const periodToField = periodField.querySelector('.to') as HTMLElement;
-        const fromQtyField = trClone.querySelector('.from-qty') as HTMLElement;
+        const idField = this.selectListField(trClone, listFields.specificPriceId);
+        const combinationField = this.selectListField(trClone, listFields.combination);
+        const currencyField = this.selectListField(trClone, listFields.currency);
+        const countryField = this.selectListField(trClone, listFields.country);
+        const groupField = this.selectListField(trClone, listFields.group);
+        const customerField = this.selectListField(trClone, listFields.customer);
+        const priceField = this.selectListField(trClone, listFields.price);
+        const impactField = this.selectListField(trClone, listFields.impact);
+        const periodField = this.selectListField(trClone, listFields.period);
+        const periodFromField = this.selectListField(trClone, listFields.from);
+        const periodToField = this.selectListField(trClone, listFields.to);
+        const fromQtyField = this.selectListField(trClone, listFields.fromQuantity);
         idField.textContent = String(specificPrice.id);
         combinationField.textContent = specificPrice.combination;
         currencyField.textContent = specificPrice.currency;
@@ -96,5 +96,9 @@ export default class SpecificPricesManager {
         tbody.append(trClone);
       });
     });
+  }
+
+  private selectListField(templateTrClone: HTMLElement, selector: string): HTMLElement {
+    return templateTrClone.querySelector(selector) as HTMLElement;
   }
 }
