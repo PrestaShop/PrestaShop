@@ -35,14 +35,12 @@ use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\ReductionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -99,8 +97,7 @@ class SpecificPriceType extends TranslatorAwareType
         FormChoiceProviderInterface $groupByIdChoiceProvider,
         FormChoiceProviderInterface $shopByIdChoiceProvider,
         FormChoiceProviderInterface $taxInclusionChoiceProvider
-    )
-    {
+    ) {
         parent::__construct($translator, $locales);
         $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
         $this->countryByIdChoiceProvider = $countryByIdChoiceProvider;

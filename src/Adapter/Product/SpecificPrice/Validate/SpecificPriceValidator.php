@@ -204,40 +204,40 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
      */
     private function assertRelatedEntitiesExist(SpecificPrice $specificPrice): void
     {
-        $productId = (int)$specificPrice->id_product;
+        $productId = (int) $specificPrice->id_product;
         $this->productRepository->assertProductExists(new ProductId($productId));
 
-        $shopGroupId = (int)$specificPrice->id_shop_group;
+        $shopGroupId = (int) $specificPrice->id_shop_group;
         if ($shopGroupId) {
             $this->shopGroupRepository->assertShopGroupExists(new ShopGroupId($shopGroupId));
         }
 
-        $shopId = (int)$specificPrice->id_shop;
+        $shopId = (int) $specificPrice->id_shop;
         if ($shopId !== NoShopId::NO_SHOP_ID) {
             $this->shopRepository->assertShopExists(new ShopId($shopId));
         }
 
-        $combinationId = (int)$specificPrice->id_product_attribute;
+        $combinationId = (int) $specificPrice->id_product_attribute;
         if ($combinationId !== NoCombinationId::NO_COMBINATION_ID) {
             $this->combinationRepository->assertCombinationExists(new CombinationId($combinationId));
         }
 
-        $currencyId = (int)$specificPrice->id_currency;
+        $currencyId = (int) $specificPrice->id_currency;
         if ($currencyId !== NoCurrencyId::NO_CURRENCY_ID) {
             $this->currencyRepository->assertCurrencyExists(new CurrencyId($currencyId));
         }
 
-        $countryId = (int)$specificPrice->id_country;
+        $countryId = (int) $specificPrice->id_country;
         if ($countryId) {
             $this->countryRepository->assertCountryExists(new CountryId($countryId));
         }
 
-        $groupId = (int)$specificPrice->id_group;
+        $groupId = (int) $specificPrice->id_group;
         if ($groupId !== NoGroupId::NO_GROUP_ID) {
             $this->groupRepository->assertGroupExists(new GroupId($groupId));
         }
 
-        $customerId = (int)$specificPrice->id_customer;
+        $customerId = (int) $specificPrice->id_customer;
         if ($customerId) {
             $this->customerRepository->assertCustomerExists(new CustomerId($customerId));
         }
