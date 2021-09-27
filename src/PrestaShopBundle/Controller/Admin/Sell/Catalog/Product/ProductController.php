@@ -219,9 +219,10 @@ class ProductController extends FrameworkBundleAdminController
         $toolbarButtons = [];
 
         $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_product_new'),
-            'desc' => $this->trans('New product', 'Admin.Actions'),
+            'href' => $this->generateUrl('admin_products_v2_create'),
+            'desc' => $this->trans('New product on experimental page', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
+            'class' => 'btn-primary new-product',
         ];
 
         $toolbarButtons['list_v1'] = [
