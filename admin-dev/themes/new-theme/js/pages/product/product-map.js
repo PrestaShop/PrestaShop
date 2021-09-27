@@ -222,8 +222,6 @@ export default {
     addSpecificPriceBtn: '.js-add-specific-price-btn',
     formModal: '#specific-price-form-modal',
     form: 'form[name="specific_price"]',
-    editBtn: '.specific-price-edit-btn',
-    deleteBtn: '.specific-price-delete-btn',
     listContainer: '#specific-price-list-container',
     listRowTemplate: '#specific-price-tr-template',
     listFields: {
