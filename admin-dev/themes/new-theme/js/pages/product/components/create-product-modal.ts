@@ -46,10 +46,13 @@ export default class CreateProductModal {
         formSelector: 'form[name="product"]',
         formUrl: linkUrl,
         closable: true,
+        // We override the body selector so that the modal keeps the size of the initial create form even after submit
+        autoSizeContainer: '.create-product-form',
         onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
           if (dataAttributes && dataAttributes.productId) {
             const editUrl = this.router.generate('admin_products_v2_edit', {productId: dataAttributes.productId});
-            iframeModal.hide();
+            // Keep showing loading until the page is refreshed
+            iframeModal.showLoading();
             window.location.href = editUrl;
           }
         },
