@@ -96,6 +96,7 @@ class ProductLazyArrayTest extends TestCase
     const PRODUCT_AVAILABLE_LATER = 'This product is available on backorder';
     const PRODUCT_NOT_AVAILABLE = 'This product is not available for order';
     const PRODUCT_ATTRIBUTE_NOT_AVAILABLE = 'Product available with different options';
+    const PRODUCT_WITH_NOT_ENOUGH_STOCK = 'There are not enough products in stock';
 
     public function setUp(): void
     {
@@ -225,6 +226,7 @@ class ProductLazyArrayTest extends TestCase
             array_merge(
                 $product,
                 [
+                    'cache_default_attribute' => 0,
                     'quantity_wanted' => 1,
                     'stock_quantity' => 1000,
                     'quantity' => 1000,
@@ -238,14 +240,34 @@ class ProductLazyArrayTest extends TestCase
             static::PRODUCT_AVAILABLE_NOW,
         ];
 
-        // out of stock, not allowed to order when out of stock
+        // not enough stock, not allowed to order when out of stock
         yield [
             array_merge(
                 $product,
                 [
+                    'cache_default_attribute' => 0,
                     'quantity_wanted' => 11,
                     'stock_quantity' => 10,
                     'quantity' => 10,
+                    'show_availability' => 1,
+                    'available_date' => false,
+                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+                ]
+            ),
+            static::PRODUCT_WITH_NOT_ENOUGH_STOCK,
+        ];
+
+        // completely out of stock, not allowed to order when out of stock
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 1,
+                    'stock_quantity' => 0,
+                    'quantity' => 0,
                     'show_availability' => 1,
                     'available_date' => false,
                     'available_now' => static::PRODUCT_AVAILABLE_NOW,
@@ -261,6 +283,7 @@ class ProductLazyArrayTest extends TestCase
             array_merge(
                 $product,
                 [
+                    'cache_default_attribute' => 0,
                     'quantity_wanted' => 11,
                     'stock_quantity' => 10,
                     'quantity' => 10,
@@ -281,6 +304,7 @@ class ProductLazyArrayTest extends TestCase
             array_merge(
                 $product,
                 [
+                    'cache_default_attribute' => 1,
                     'quantity_all_versions' => 1000,
                     'quantity_wanted' => 11,
                     'stock_quantity' => 10,
@@ -303,6 +327,7 @@ class ProductLazyArrayTest extends TestCase
             array_merge(
                 $product,
                 [
+                    'cache_default_attribute' => 1,
                     'quantity_all_versions' => 1000,
                     'quantity_wanted' => 11,
                     'stock_quantity' => 10,

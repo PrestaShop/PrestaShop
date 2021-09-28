@@ -903,6 +903,7 @@ class ProductLazyArray extends AbstractLazyArray
             if (isset($product['stock_quantity'])) {
                 $availableQuantity = $product['stock_quantity'] - $product['quantity_wanted'];
             }
+
             if ($availableQuantity >= 0) {
                 $this->product['availability_date'] = $product['available_date'];
 
@@ -920,7 +921,7 @@ class ProductLazyArray extends AbstractLazyArray
                     : ($config[$language->id] ?? null);
                 $this->product['availability_date'] = $product['available_date'];
                 $this->product['availability'] = 'available';
-            } elseif ($product['quantity_wanted'] > 0 && $availableQuantity > 0) {
+            } elseif (!$product['cache_default_attribute'] && $product['quantity_wanted'] > $availableQuantity && $product['quantity'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'There are not enough products in stock',
                     [],
@@ -928,7 +929,7 @@ class ProductLazyArray extends AbstractLazyArray
                 );
                 $this->product['availability'] = 'unavailable';
                 $this->product['availability_date'] = null;
-            } elseif (!empty($product['quantity_all_versions']) && $product['quantity_all_versions'] > 0) {
+            } elseif ($product['cache_default_attribute'] && !empty($product['quantity_all_versions']) && $product['quantity_all_versions'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'Product available with different options',
                     [],
