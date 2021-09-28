@@ -29,14 +29,36 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class CreateProductFormType extends TranslatorAwareType
 {
+    /**
+     * @var FormChoiceProviderInterface|FormChoiceAttributeProviderInterface
+     */
+    private $formChoiceProvider;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param FormChoiceProviderInterface|FormChoiceAttributeProviderInterface $formChoiceProvider
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        $formChoiceProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->formChoiceProvider = $formChoiceProvider;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -44,19 +66,17 @@ class CreateProductFormType extends TranslatorAwareType
     {
         $builder
             ->add('type', ChoiceType::class, [
-                'choices' => [
-                    $this->trans('Standard product', 'Admin.Catalog.Feature') => ProductType::TYPE_STANDARD,
-                    $this->trans('Pack of products', 'Admin.Catalog.Feature') => ProductType::TYPE_PACK,
-                    $this->trans('Virtual product', 'Admin.Catalog.Feature') => ProductType::TYPE_VIRTUAL,
-                    $this->trans('Product with combinations', 'Admin.Catalog.Feature') => ProductType::TYPE_COMBINATIONS,
-                ],
-                'choice_translation_domain' => 'Admin.Catalog.Feature',
+                'choices' => $this->formChoiceProvider->getChoices(),
+                'choice_attr' => $this->formChoiceProvider->getChoicesAttributes(),
                 'required' => true,
                 'label' => false,
                 'empty_data' => ProductType::TYPE_STANDARD,
             ])
             ->add('create', SubmitType::class, [
                 'label' => $this->trans('Add new product', 'Admin.Catalog.Help'),
+                'row_attr' => [
+                    'class' => 'text-center',
+                ],
             ])
         ;
     }
