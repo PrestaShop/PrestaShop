@@ -32,7 +32,7 @@ import ShippingRenderer from './shipping-renderer';
 import CartProvider from './cart-provider';
 import AddressesRenderer from './addresses-renderer';
 import CartRulesRenderer from './cart-rules-renderer';
-import CartEditor from './cart-editor';
+import CartEditor, {CartProduct} from './cart-editor';
 import eventMap from './event-map';
 import CartRuleManager from './cart-rule-manager';
 import ProductManager from './product-manager';
@@ -588,11 +588,11 @@ export default class CreateOrderPage {
    * @private
    */
   private initProductChangePrice(event: JQueryEventObject) {
-    const product = {
+    const product: CartProduct = {
       productId: $(event.currentTarget).data('product-id'),
       attributeId: $(event.currentTarget).data('attribute-id'),
       customizationId: $(event.currentTarget).data('customization-id'),
-      price: $(event.currentTarget).val(),
+      price: <string>$(event.currentTarget).val(),
     };
     this.productManager.changeProductPrice(
       <number> this.cartId,
@@ -609,11 +609,11 @@ export default class CreateOrderPage {
    * @private
    */
   private initProductChangeQty(event: JQueryEventObject) {
-    const product = {
+    const product: CartProduct = {
       productId: $(event.currentTarget).data('product-id'),
       attributeId: $(event.currentTarget).data('attribute-id'),
       customizationId: $(event.currentTarget).data('customization-id'),
-      newQty: $(event.currentTarget).val(),
+      newQty: <string>$(event.currentTarget).val(),
       prevQty: $(event.currentTarget).data('prev-qty'),
     };
 
@@ -644,6 +644,7 @@ export default class CreateOrderPage {
    * @private
    */
   private renderCartInfo(cartInfo: Record<string, any>): void {
+    console.log(cartInfo)
     this.addressesRenderer.render(cartInfo.addresses, cartInfo.cartId);
     this.cartRulesRenderer.renderCartRulesBlock(
       cartInfo.cartRules,
@@ -692,8 +693,8 @@ export default class CreateOrderPage {
    */
   private changeCartAddresses() {
     const addresses = {
-      deliveryAddressId: $(createOrderMap.deliveryAddressSelect).val(),
-      invoiceAddressId: $(createOrderMap.invoiceAddressSelect).val(),
+      deliveryAddressId: <string>$(createOrderMap.deliveryAddressSelect).val(),
+      invoiceAddressId: <string>$(createOrderMap.invoiceAddressSelect).val(),
     };
 
     this.cartEditor.changeCartAddresses(<number> this.cartId, addresses);
