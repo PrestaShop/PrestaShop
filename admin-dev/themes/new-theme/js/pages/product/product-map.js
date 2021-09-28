@@ -29,12 +29,22 @@ const attachmentsBlockId = '#product_specifications_attachments';
 export default {
   productForm: 'form[name=product]',
   productTypeSelector: '#product_header_type',
-  createProduct: 'a.new-product',
   productType: {
     STANDARD: 'standard',
     PACK: 'pack',
     VIRTUAL: 'virtual',
     COMBINATIONS: 'combinations',
+  },
+  create: {
+    newProductButton: 'a.new-product',
+    productTypeSelector: {
+      select: '#product_type',
+      choicesContainer: '.product-type-choices',
+      typeChoices: '.product-type-choice',
+      defaultChoiceClass: 'btn-outline-secondary',
+      selectedChoiceClass: 'btn-primary',
+      typeDescription: '.product-type-description',
+    },
   },
   invalidField: '.is-invalid',
   productFormSubmitButton: '.product-form-save-button',

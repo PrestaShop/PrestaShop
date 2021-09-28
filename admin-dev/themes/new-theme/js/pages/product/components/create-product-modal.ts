@@ -35,7 +35,7 @@ export default class CreateProductModal {
   }
 
   private init(): void {
-    $(ProductMap.createProduct).on('click', (event: JQuery.ClickEvent) => {
+    $(ProductMap.create.newProductButton).on('click', (event: JQuery.ClickEvent) => {
       event.preventDefault();
       const $link = $(event.target);
       const linkUrl = `${$link.prop('href')}&liteDisplaying=1`;
