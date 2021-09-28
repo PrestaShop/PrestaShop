@@ -16,6 +16,6 @@ jobs:
           access_token: ${{ github.token }}
 
       - name: Block Merge Commits
-        uses: z3by/block-merge-commits-action@master
+        uses: Morishiri/block-merge-commits-action@v1.0.1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
