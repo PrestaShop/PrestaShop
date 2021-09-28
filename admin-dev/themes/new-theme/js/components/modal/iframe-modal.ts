@@ -45,6 +45,7 @@ export type IframeModalParams = ModalParams & {
   onUnload?: IframeCallbackFunction,
   iframeUrl: string;
   autoSize: boolean;
+  autoSizeContainer: string;
 }
 export type InputIframeModalParams = Partial<IframeModalParams> & {
   iframeUrl: string; // iframeUrl is mandatory in input
@@ -107,6 +108,8 @@ export class IframeModal extends Modal implements IframeModalType {
 
   protected autoSize!: boolean;
 
+  protected autoSizeContainer!: string;
+
   constructor(
     inputParams: InputIframeModalParams,
   ) {
@@ -114,6 +117,7 @@ export class IframeModal extends Modal implements IframeModalType {
       id: 'iframe-modal',
       closable: false,
       autoSize: true,
+      autoSizeContainer: 'body',
       ...inputParams,
     };
     super(params);
@@ -125,6 +129,7 @@ export class IframeModal extends Modal implements IframeModalType {
     super.initContainer(params);
 
     this.autoSize = params.autoSize;
+    this.autoSizeContainer = params.autoSizeContainer;
     this.modal.iframe.addEventListener('load', (loadedEvent) => {
       this.hideLoading();
       if (params.onLoaded) {
@@ -174,15 +179,19 @@ export class IframeModal extends Modal implements IframeModalType {
   }
 
   private autoResize(): void {
-    if (this.autoSize) {
-      const iframeScrollHeight = this.modal.iframe.contentWindow ? this.modal.iframe.contentWindow.document.body.scrollHeight : 0;
-      const contentHeight = this.getOuterHeight(this.modal.header)
-        + this.getOuterHeight(this.modal.message)
-        + iframeScrollHeight;
+    if (this.autoSize && this.modal.iframe.contentWindow) {
+      const iframeContainer = this.modal.iframe.contentWindow.document.querySelector(this.autoSizeContainer);
 
-      // Avoid applying height of 0 (on first load for example)
-      if (contentHeight) {
-        this.modal.dialog.style.height = `${contentHeight}px`;
+      if (iframeContainer) {
+        const iframeScrollHeight = iframeContainer.scrollHeight;
+        const contentHeight = this.getOuterHeight(this.modal.header)
+          + this.getOuterHeight(this.modal.message)
+          + iframeScrollHeight;
+
+        // Avoid applying height of 0 (on first load for example)
+        if (contentHeight) {
+          this.modal.dialog.style.height = `${contentHeight}px`;
+        }
       }
     }
   }
