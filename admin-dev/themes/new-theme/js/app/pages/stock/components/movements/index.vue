@@ -112,12 +112,41 @@
 
   const DEFAULT_SORT = 'desc';
 
+  export interface StockMovement {
+    attribute_name: string | null;
+    combination_cover_id: number;
+    combination_id: number;
+    combination_name: string;
+    combination_thumbnail: string;
+    date_add: string;
+    employee_firstname: string;
+    employee_lastname: string;
+    id_employee: number;
+    id_order: number;
+    id_stock: number;
+    id_stock_mvt: number;
+    id_stock_mvt_reason: number;
+    movement_reason: string;
+    order_link: string;
+    physical_quantity: number;
+    product_attributes: string;
+    product_cover_id: number;
+    product_features: string;
+    product_id: number;
+    product_name: string;
+    product_reference: string;
+    product_thumbnail: string;
+    sign: number;
+    supplier_id: number;
+    supplier_name: string;
+  }
+
   export default Vue.extend({
     computed: {
       isLoading(): boolean {
         return this.$store.state.isLoading;
       },
-      movements(): Record<string, any> {
+      movements(): Array<StockMovement> {
         return this.$store.state.movements;
       },
       emptyMovements(): boolean {

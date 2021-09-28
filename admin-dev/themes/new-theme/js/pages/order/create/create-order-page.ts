@@ -43,6 +43,77 @@ import {ValidateAddresses} from './address-validator';
 
 const {$} = window;
 
+export interface CartAddress {
+  addressId: number;
+  alias: string;
+  delivery: boolean;
+  formattedAddress: string;
+}
+
+export interface CartInfo {
+  addresses: Array<CartAddress>;
+  cartId: number;
+  cartRules: any;
+  currencyId: number;
+  langId: number;
+  products: Array<CartInfoProduct>;
+  shipping: CartShipping;
+  summary: CartSummary;
+}
+
+export interface CartInfoProduct {
+  attribute: string;
+  attributeId: number;
+  availableOutOfStock: boolean;
+  availableStock: number;
+  customization: Array<CustomizationField>;
+  gift: boolean
+  imageLink: string;
+  name: string;
+  price: string;
+  productId: number;
+  quantity: number;
+  reference: string;
+  unitPrice: string;
+}
+
+export interface CartShipping {
+  deliveryOptions: Array<CartDeliveryOptions>;
+  freeShipping: boolean;
+  gift: boolean;
+  giftMessage: string;
+  recycledPackaging: boolean;
+  selectedCarrierId: number | null | string;
+}
+
+export interface CartSummary {
+  orderMessage: string;
+  processOrderLink: string;
+  totalDiscount: string;
+  totalPriceWithTaxes: string;
+  totalPriceWithoutTaxes: string;
+  totalProductsPrice: string;
+  totalShippingPrice: string;
+  totalShippingWithoutTaxes: string;
+}
+
+export interface CartDeliveryOptions {
+  carrierId: number;
+  carrierName: string;
+  carrierDelay: string;
+}
+
+export interface CartCustomization {
+  customizationId: number;
+  customizationFieldsData: Array<CustomizationField>;
+}
+
+export interface CustomizationField {
+  type: number;
+  name: string;
+  value: string;
+}
+
 /**
  * Page Object for "Create order" page
  */
@@ -412,7 +483,7 @@ export default class CreateOrderPage {
    * @private
    */
   private onCartLanguageChanged() {
-    EventEmitter.on(eventMap.cartLanguageChanged, (cartInfo) => {
+    EventEmitter.on(eventMap.cartLanguageChanged, (cartInfo: CartInfo) => {
       this.preselectCartLanguage(cartInfo.langId);
       this.renderCartInfo(cartInfo);
     });
@@ -425,7 +496,7 @@ export default class CreateOrderPage {
    */
   private onCartCurrencyChanged() {
     // on success
-    EventEmitter.on(eventMap.cartCurrencyChanged, (cartInfo) => {
+    EventEmitter.on(eventMap.cartCurrencyChanged, (cartInfo: CartInfo) => {
       this.renderCartInfo(cartInfo);
       this.productRenderer.reset();
     });
@@ -643,8 +714,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  private renderCartInfo(cartInfo: Record<string, any>): void {
-    console.log(cartInfo)
+  private renderCartInfo(cartInfo: CartInfo): void {
     this.addressesRenderer.render(cartInfo.addresses, cartInfo.cartId);
     this.cartRulesRenderer.renderCartRulesBlock(
       cartInfo.cartRules,
@@ -671,7 +741,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  private preselectCartCurrency(currencyId: string) {
+  private preselectCartCurrency(currencyId: number) {
     $(createOrderMap.cartCurrencySelect).val(currencyId);
   }
 
@@ -682,7 +752,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  private preselectCartLanguage(langId: string) {
+  private preselectCartLanguage(langId: number) {
     $(createOrderMap.cartLanguageSelect).val(langId);
   }
 
