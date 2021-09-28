@@ -1,23 +1,25 @@
 const MailDev = require('maildev');
 
+/**
+ * @module MailDevHelper
+ * @description Helper to wrap Maildev functions
+ */
 module.exports = {
 
   /**
-   * create a maildev instance (the default smtp port is 1025)
-   *
-   * @param config
-   * @returns {*}
+   * Create a Maildev server instance (the default smtp port is 1025)
+   * @param config {{smtpPort: string, smtpServer: string, silent:boolean}} Maildev config to start listening
+   * @returns {Object}
    */
   createMailListener(config = global.maildevConfig) {
     return new MailDev({
       smtp: config.smtpPort,
-      silent: true,
+      silent: config.silent,
     });
   },
   /**
-   * start the maildev listener (listen on 1025 smtp port)
-   *
-   * @param mailListener
+   * Start the maildev listener (listen on 1025 smtp port)
+   * @param mailListener {Object} Maildev server instance
    */
   startListener(mailListener) {
     mailListener.listen((err) => {
@@ -27,9 +29,8 @@ module.exports = {
     });
   },
   /**
-   * stop the maildev listener
-   *
-   * @param mailListener
+   * Stop the maildev listener
+   * @param mailListener {Object} Maildev server instance
    */
   stopListener(mailListener) {
     mailListener.close((err) => {
