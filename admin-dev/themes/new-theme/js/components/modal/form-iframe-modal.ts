@@ -24,9 +24,9 @@
  */
 
 import IframeModal, {
+  IframeModalParams,
   IframeModalType, InputIframeModalParams,
 } from '@components/modal/iframe-modal';
-import {ModalParams} from '@components/modal/modal';
 
 export type FormIframeModalType = IframeModalType
 export type FormIframeCallbackFunction = (
@@ -35,7 +35,7 @@ export type FormIframeCallbackFunction = (
   dataAttributes: DOMStringMap | null,
   event: Event
 ) => void;
-export type FormIframeModalParams = ModalParams & {
+export type FormIframeModalParams = IframeModalParams & {
   formUrl: string;
   formSelector: string;
   cancelButtonSelector: string;
