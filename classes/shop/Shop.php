@@ -1020,7 +1020,7 @@ class ShopCore extends ObjectModel
     /**
      * Get current ID of shop if context is CONTEXT_SHOP.
      *
-     * @return int
+     * @return int|null
      */
     public static function getContextShopID($null_value_without_multishop = false)
     {
@@ -1046,7 +1046,7 @@ class ShopCore extends ObjectModel
     /**
      * Get current ID of shop group if context is CONTEXT_SHOP or CONTEXT_GROUP.
      *
-     * @return int
+     * @return int|null
      */
     public static function getContextShopGroupID($null_value_without_multishop = false)
     {
