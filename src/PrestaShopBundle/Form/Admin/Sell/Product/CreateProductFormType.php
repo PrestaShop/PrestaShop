@@ -88,7 +88,11 @@ class CreateProductFormType extends TranslatorAwareType
     {
         $resolver->setDefaults([
             'required' => false,
-            'label' => false,
+            'label' => $this->trans('Add new product', 'Admin.Catalog.Help'),
+            'label_tag_name' => 'h2',
+            'label_attr' => [
+                'class' => 'text-center',
+            ],
         ]);
     }
 
