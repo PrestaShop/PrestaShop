@@ -96,7 +96,7 @@ class PhpParametersTest extends TestCase
 
         $result = $parameterReader->saveConfiguration();
 
-        $this->assertTrue(($result));
+        $this->assertTrue($result);
 
         $parametersSampleFileContentAfterSave = file_get_contents($this->parametersSampleFile);
 
@@ -113,7 +113,7 @@ class PhpParametersTest extends TestCase
 
         $result = $parameterReader->saveConfiguration();
 
-        $this->assertTrue(($result));
+        $this->assertTrue($result);
 
         $parametersSampleFileContentModified = file_get_contents(
             dirname(__DIR__, 2) . '/Resources/config/params_modified.php'
@@ -132,7 +132,7 @@ class PhpParametersTest extends TestCase
      *    'parameters' =>\n
      *        array(\n
      *            'a' => '127.0.0.1',\n
-     *           'c_d' => '1234',\n
+     *            'c_d' => '1234',\n
      *       ),\n
      *
      * @param string $fileContent1
