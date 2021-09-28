@@ -30,6 +30,20 @@ import createOrderMap from './create-order-map';
 
 const {$} = window;
 
+export interface CartAddress {
+  deliveryAddressId: string;
+  invoiceAddressId: string;
+}
+
+export interface CartProduct {
+  attributeId: number;
+  customizationId: number;
+  productId: number;
+  price?: string;
+  newQty?: string;
+  prevQty?: number;
+}
+
 /**
  * Provides ajax calls for cart editing actions
  * Each method emits an event with updated cart information after success.
@@ -47,7 +61,7 @@ export default class CartEditor {
    * @param {Number} cartId
    * @param {Object} addresses
    */
-  changeCartAddresses(cartId: number, addresses: Record<string, any>): void {
+  changeCartAddresses(cartId: number, addresses: CartAddress): void {
     $.post(
       this.router.generate('admin_carts_edit_addresses', {cartId}),
       addresses,
@@ -177,7 +191,7 @@ export default class CartEditor {
    * @param {Number} cartId
    * @param {Object} product
    */
-  removeProductFromCart(cartId: number, product: Record<string, any>): void {
+  removeProductFromCart(cartId: number, product: CartProduct): void {
     $.post(this.router.generate('admin_carts_delete_product', {cartId}), {
       productId: product.productId,
       attributeId: product.attributeId,
@@ -202,7 +216,7 @@ export default class CartEditor {
   changeProductPrice(
     cartId: number,
     customerId: number,
-    product: Record<string, any>,
+    product: CartProduct,
   ): void {
     $.post(
       this.router.generate('admin_carts_edit_product_price', {
@@ -227,7 +241,7 @@ export default class CartEditor {
    * @param cartId
    * @param product
    */
-  changeProductQty(cartId: number, product: Record<string, any>): void {
+  changeProductQty(cartId: number, product: CartProduct): void {
     $.post(
       this.router.generate('admin_carts_edit_product_quantity', {
         cartId,

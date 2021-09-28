@@ -55,14 +55,14 @@ export default class OrderProductRenderer {
   editProductFromList(
     orderDetailId: number,
     quantity: number,
-    priceTaxIncl: boolean,
-    priceTaxExcl: boolean,
+    priceTaxIncl: number,
+    priceTaxExcl: number,
     taxRate: number,
-    location: number,
+    location: string,
     availableQuantity: number,
-    availableOutOfStock: boolean,
-    orderInvoiceId: number,
-    isOrderTaxIncluded: boolean,
+    availableOutOfStock: string,
+    orderInvoiceId: string,
+    isOrderTaxIncluded: number,
   ): void {
     const $orderEdit = new OrderProductEdit(orderDetailId);
     $orderEdit.displayProduct({

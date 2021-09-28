@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import CartEditor from '@pages/order/create/cart-editor';
+import CartEditor, {CartProduct} from '@pages/order/create/cart-editor';
 import createOrderMap from '@pages/order/create/create-order-map';
 import eventMap from '@pages/order/create/event-map';
 import {EventEmitter} from '@components/event-emitter';
@@ -74,19 +74,19 @@ export default class ProductManager {
     this.cartEditor.addProduct(cartId, this.getProductData());
   }
 
-  removeProductFromCart(cartId: number, product: Record<string, any>): void {
+  removeProductFromCart(cartId: number, product: CartProduct): void {
     this.cartEditor.removeProductFromCart(cartId, product);
   }
 
   changeProductPrice(
     cartId: number,
     customerId: number,
-    updatedProduct: Record<string, any>,
+    updatedProduct: CartProduct,
   ): void {
     this.cartEditor.changeProductPrice(cartId, customerId, updatedProduct);
   }
 
-  changeProductQty(cartId: number, updatedProduct: Record<string, any>): void {
+  changeProductQty(cartId: number, updatedProduct: CartProduct): void {
     this.cartEditor.changeProductQty(cartId, updatedProduct);
   }
 
