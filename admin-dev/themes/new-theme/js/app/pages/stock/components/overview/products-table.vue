@@ -131,6 +131,34 @@
   import PSLoader from '@app/widgets/ps-loader.vue';
   import ProductLine from './product-line.vue';
 
+  export interface StockProduct {
+    active: number;
+    attribute_name: string;
+    combination_cover_id: number;
+    combination_id: number;
+    combination_name: string;
+    combination_reference: string;
+    combination_thumbnail: string;
+    combinations_product_url: string;
+    edit_url: string;
+    product_attributes: string;
+    product_available_quantity: number;
+    product_cover_id: number;
+    product_features: string;
+    product_id: number;
+    product_low_stock_alert: number;
+    product_low_stock_threshold: string;
+    product_name: string;
+    product_physical_quantity: number;
+    product_reference: string;
+    product_reserved_quantity: number;
+    product_thumbnail: string;
+    qty: number;
+    supplier_id: number;
+    supplier_name: string;
+    total_combinations: number;
+  }
+
   export default Vue.extend({
     props: {
       isLoading: {
@@ -152,7 +180,7 @@
       },
     },
     computed: {
-      products(): Record<string, any> {
+      products(): Array<StockProduct> {
         return this.$store.state.products;
       },
       emptyProducts(): boolean {

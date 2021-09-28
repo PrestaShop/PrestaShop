@@ -118,9 +118,15 @@
   import Vue from 'vue';
   import PSCheckbox from '@app/widgets/ps-checkbox.vue';
   import PSMedia from '@app/widgets/ps-media.vue';
+  import {StockProduct} from '@app/pages/stock/components/overview/products-table.vue';
   import ProductDesc from '@app/pages/stock/mixins/product-desc';
   import {EventBus} from '@app/utils/event-bus';
   import Spinner from '@app/pages/stock/components/overview/spinner.vue';
+
+  export interface StockProductToUpdate {
+    product: StockProduct;
+    delta: number;
+  }
 
   export default Vue.extend({
     props: {
@@ -178,7 +184,7 @@
           this.$store.dispatch('removeSelectedProduct', checkbox.item);
         }
       },
-      updateProductQty(productToUpdate: Record<string, any>): void {
+      updateProductQty(productToUpdate: StockProductToUpdate): void {
         const updatedProduct = {
           product_id: productToUpdate.product.product_id,
           combination_id: productToUpdate.product.combination_id,

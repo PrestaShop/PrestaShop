@@ -42,7 +42,7 @@
       ghost: {type: Boolean},
     },
     computed: {
-      classObject(): Record<string, any> {
+      classObject(): {'btn-outline-primary'?: boolean, 'btn-outline-secondary'?: boolean, 'btn-primary'?: boolean, 'btn-secondary'?: boolean}  {
         if (this.ghost) {
           return {
             'btn-outline-primary': this.primary,
