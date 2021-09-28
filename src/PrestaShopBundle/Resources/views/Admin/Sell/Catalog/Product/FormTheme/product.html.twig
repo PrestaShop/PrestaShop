@@ -51,3 +51,20 @@
     {{ form_widget(form.id) }}
   </li>
 {% endblock %}
+
+{% block _product_type_row %}
+  <div class="product-type-selector">
+    <div class="product-type-choices">
+      {% for choice in form.vars.choices %}
+        <div class="product-type-choice btn btn-outline-secondary" data-value="{{ choice.value }}" data-description="{{ choice.attr['data-description']|default(choice.label) }}">
+          <div class="product-type-choice-label">
+            {{ choice.label }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="product-type-description">
+    </div>
+    {{ form_widget(form) }}
+  </div>
+{% endblock %}
