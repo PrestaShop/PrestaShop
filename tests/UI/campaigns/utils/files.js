@@ -2,28 +2,32 @@ const fs = require('fs');
 const pdfJs = require('pdfjs-dist/es5/build/pdf.js');
 const imgGen = require('js-image-generator');
 
+/**
+ * @module FilesHelper
+ * @description Helper to wrap functions that uses fs, pdfjs and js-image-generator libraries
+ */
 module.exports = {
   /**
    * Delete File if exist
-   * @param pathToFile
+   * @param filePath {string} Filepath to delete
    * @return {Promise<void>}
    */
-  async deleteFile(pathToFile) {
-    if (fs.existsSync(pathToFile)) {
-      fs.unlinkSync(pathToFile);
+  async deleteFile(filePath) {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
     }
   },
 
   /**
    * Check if file was download in path
-   * @param filePath
-   * @param timeDelay
+   * @param filePath {string} Filepath to check
+   * @param attempt {number} Number of attempt to check for the file
    * @returns {Promise<boolean>}
    */
-  async doesFileExist(filePath, timeDelay = 5000) {
+  async doesFileExist(filePath, attempt = 5000) {
     let found = false;
 
-    for (let i = 0; i <= timeDelay && !found; i += 100) {
+    for (let i = 0; i <= attempt && !found; i += 100) {
       await (new Promise(resolve => setTimeout(resolve, 100)));
       found = await fs.existsSync(filePath);
     }
@@ -33,9 +37,9 @@ module.exports = {
 
   /**
    * Get page text from PDF
-   * @param pdf
-   * @param pageNo
-   * @return text, text in PDF file
+   * @param pdf {PDFDocumentLoadingTask} PDF loaded with pdfjs
+   * @param pageNo {number} Page number of the PDF file
+   * @return {string} Text in PDF page
    */
   async getPageTextFromPdf(pdf, pageNo) {
     const page = await pdf.getPage(pageNo);
@@ -46,9 +50,9 @@ module.exports = {
 
   /**
    * Check text in PDF
-   * @param filePath
-   * @param text
-   * @return boolean, true if text exist, false if not
+   * @param filePath {string} Path of the PDF file
+   * @param text {string} Text to check on the file
+   * @return {boolean}
    */
   async isTextInPDF(filePath, text) {
     const pdf = await pdfJs.getDocument(filePath).promise;
@@ -65,9 +69,9 @@ module.exports = {
   },
 
   /**
-   * Get image number from PDF
-   * @param filePath
-   * @return imageNumber, number of images in PDF file
+   * Get quantity of images on the PDF
+   * @param filePath {string} FilePath of the PDF file
+   * @return {number}
    */
   async getImageNumberInPDF(filePath) {
     const pdf = await pdfJs.getDocument(filePath).promise;
@@ -104,7 +108,7 @@ module.exports = {
   },
   /**
    * Create directory if not exist
-   * @param path
+   * @param path {string} Path of the directory to create
    * @return {Promise<void>}
    */
   async createDirectory(path) {
@@ -112,9 +116,9 @@ module.exports = {
   },
   /**
    * Create file with content
-   * @param path
-   * @param filename
-   * @param content
+   * @param path {string} Path of the directory where to create
+   * @param filename {string} Name of the file to create
+   * @param content {string} Content to write on the file
    * @return {Promise<void>}
    */
   async createFile(path, filename, content) {
@@ -126,10 +130,10 @@ module.exports = {
   },
   /**
    * Check text in file
-   * @param filePath
-   * @param textToCheckWith
-   * @param ignoreSpaces, true to delete all spaces before the check
-   * @param ignoreTimeZone, true to delete timezone string added to some image url
+   * @param filePath {string} Filepath to check
+   * @param textToCheckWith {string} Text to check on the file
+   * @param ignoreSpaces {boolean} True to delete all spaces before the check
+   * @param ignoreTimeZone {boolean} True to delete timezone string added to some image url
    * @return {Promise<boolean>}
    */
   async isTextInFile(filePath, textToCheckWith, ignoreSpaces = false, ignoreTimeZone = false) {
@@ -148,11 +152,11 @@ module.exports = {
   },
 
   /**
-   * Generate image
-   * @param imageName
-   * @param width
-   * @param height
-   * @param quality
+   * Generate image with js-image-generator
+   * @param imageName {string} Filename/Filepath of the image
+   * @param width {number} Width chosen for the image
+   * @param height {number} Height chosen for the image
+   * @param quality {number} Quality chosen for the image
    * @return {Promise<void>}
    */
   async generateImage(imageName, width = 200, height = 200, quality = 1) {
@@ -163,8 +167,8 @@ module.exports = {
 
   /**
    * Rename files
-   * @param oldPath
-   * @param newPath
+   * @param oldPath {string} Old path of the file
+   * @param newPath {string} New path of the file
    * @return {Promise<void>}
    */
   async renameFile(oldPath, newPath) {
