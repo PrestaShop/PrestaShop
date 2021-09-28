@@ -42,7 +42,8 @@ class Install extends CommonPage {
     // Selectors for step 4
     this.storeInformationStepPageTitle = '#infosShopBlock h2';
     this.shopNameInput = '#infosShop';
-    this.countrySelect = '#infosCountry';
+    this.countryChosenSelect = '#infosCountry_chosen';
+    this.countryChosenSearchInput = `${this.countryChosenSelect} .chosen-search input`;
     this.firstNameInput = '#infosFirstname';
     this.lastNameInput = '#infosName';
     this.emailInput = '#infosEmail';
@@ -151,7 +152,12 @@ class Install extends CommonPage {
    */
   async fillInformationForm(page) {
     await page.type(this.shopNameInput, global.INSTALL.SHOP_NAME);
-    await page.selectOption(this.countrySelect, global.INSTALL.COUNTRY);
+
+    // Choosing country
+    await page.click(this.countryChosenSelect);
+    await page.type(this.countryChosenSearchInput, global.INSTALL.COUNTRY);
+    await page.keyboard.press('Enter');
+
     await page.type(this.firstNameInput, global.BO.FIRSTNAME);
     await page.type(this.lastNameInput, global.BO.LASTNAME);
     await page.type(this.emailInput, global.BO.EMAIL);

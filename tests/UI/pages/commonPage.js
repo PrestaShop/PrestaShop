@@ -271,26 +271,11 @@ class CommonPage {
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the select
    * @param textValue {string/number} Value to select
+   * @param force {boolean} Forcing the value of the select
    * @returns {Promise<void>}
    */
-  async selectByVisibleText(page, selector, textValue) {
-    let found = false;
-    let options = await page.$$eval(
-      `${selector} option`,
-      all => all.map(
-        option => ({
-          textContent: option.textContent,
-          value: option.value,
-        })),
-    );
-
-    options = await options.filter(option => textValue === option.textContent.trim());
-    if (options.length !== 0) {
-      const elementValue = await options[0].value;
-      await page.selectOption(selector, elementValue);
-      found = true;
-    }
-    if (!found) throw new Error(`${textValue} was not found as option of select`);
+  async selectByVisibleText(page, selector, textValue, force = false) {
+    await page.selectOption(selector, {label: textValue.toString()}, {force});
   }
 
   /**
