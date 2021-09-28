@@ -32,15 +32,16 @@
 {% endblock %}
 
 {% block content %}
-  {{ form_start(productForm, {'attr': {'class': 'form-horizontal product-page product-page-v2 row justify-content-md-center', 'novalidate': 'novalidate'}}) }}
+  {{ form_start(productForm, {'attr': {'class': 'form-horizontal create-product-form product-page-v2 row justify-content-md-center', 'novalidate': 'novalidate'}}) }}
+  <div class="col col-xxl-10 col-md-12">
+    {% block product_creation_form %}
+      {{ form_row(productForm) }}
+    {% endblock %}
 
-  {% block product_creation_form %}
-    {{ form_row(productForm) }}
-  {% endblock %}
-
-  {% block product_rest %}
-    {{ form_end(productForm) }}
-  {% endblock %}
+    {% block product_rest %}
+      {{ form_end(productForm) }}
+    {% endblock %}
+  </div>
 {% endblock %}
 
 {% block javascripts %}
