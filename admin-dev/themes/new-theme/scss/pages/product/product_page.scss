@@ -1059,6 +1059,10 @@ $product-page-padding-bottom: 80px !default;
 }
 
 .product-page-v2 {
+  &.create-product-form {
+    background-color: $white;
+  }
+
   .maxLength {
     float: none;
   }
@@ -1104,6 +1108,53 @@ $product-page-padding-bottom: 80px !default;
       &.decreased_quantity {
         background-color: $gray-dark;
       }
+    }
+  }
+
+  .product-type-selector {
+    width: 100%;
+    margin-bottom: 1rem;
+
+    select {
+      display: none;
+    }
+
+    .product-type-choices {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+
+      .product-type-choice {
+        position: relative;
+        display: block;
+        width: 130px;
+        max-width: 130px;
+        padding: 0;
+        margin: 0.5rem;
+
+        // CSS trick to have responsive square
+        &::after {
+          display: block;
+          padding-bottom: 100%;
+          content: "";
+        }
+
+        &-label {
+          position: absolute;
+          top: 50%;
+          width: 100%;
+          padding: 0 0.5rem;
+          transform: translate(0%, -50%);
+        }
+      }
+    }
+
+    .product-type-description {
+      width: 100%;
+      margin: 1rem 0;
+      text-align: center;
     }
   }
 }
