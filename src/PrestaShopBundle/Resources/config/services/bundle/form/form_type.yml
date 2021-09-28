@@ -1271,6 +1271,8 @@ services:
       class: 'PrestaShopBundle\Form\Admin\Sell\Product\CreateProductFormType'
       parent: 'form.type.translatable.aware'
       public: true
+      arguments:
+        - '@prestashop.core.form.choice_provider.product_type_choice_provider'
       tags:
         - { name: form.type }
 
