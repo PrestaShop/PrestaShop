@@ -64,7 +64,6 @@ class ProductControllerTest extends FormGridControllerTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         if ($this->changedProductFeatureFlag) {
             $featureFlagModifier = $this->client->getContainer()->get('prestashop.core.feature_flags.modifier');
             $featureFlagModifier->updateConfiguration(
@@ -73,6 +72,9 @@ class ProductControllerTest extends FormGridControllerTestCase
                 ]
             );
         }
+
+        // Call parent tear down later or the kernel will be shut down
+        parent::tearDown();
     }
 
     public function testIndex(): int
