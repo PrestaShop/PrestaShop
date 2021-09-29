@@ -66,7 +66,7 @@ class ProductControllerTest extends FormGridControllerTestCase
     {
         parent::tearDown();
         if ($this->changedProductFeatureFlag) {
-            $featureFlagModifier = $this->client->getContainer()->get('prestashop.core.feature_flags.modifier');
+            $featureFlagModifier = self::$kernel->getContainer()->get('prestashop.core.feature_flags.modifier');
             $featureFlagModifier->updateConfiguration(
                 [
                     FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2 => false,
