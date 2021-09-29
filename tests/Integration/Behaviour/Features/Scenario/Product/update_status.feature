@@ -83,3 +83,12 @@ Feature: Update product status from BO (Back Office)
       | home         | Home        | true       |
     When I enable product "product4"
     Then I should get an error that product online data are invalid
+    And product "product4" should be disabled
+    When I update product "product4" basic information with following values:
+      | name[en-US] | photo of funny mug |
+    Then product "product4" localized "name" should be:
+      | locale     | value              |
+      | en-US      | photo of funny mug |
+    When I enable product "product4"
+    Then I should get no error
+    And product "product4" should be enabled
