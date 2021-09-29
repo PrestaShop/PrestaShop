@@ -1551,6 +1551,7 @@ services:
       - '@form.type.sell.product.data_transformer.redirection_target_transformer'
       - '@form.type.sell.product.event_listener.redirect_option_listener'
       - '@=service("prestashop.adapter.legacy.context").getEmployeeLanguageIso()'
+      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
     tags:
       - { name: form.type }
 
