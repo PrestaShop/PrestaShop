@@ -374,7 +374,7 @@ class ValidateCore
      */
     public static function isMessage($message)
     {
-        return !preg_match('/[<>{}]/i', $message);
+        return Tools::isCleanHtml($message, false);
     }
 
     /**
