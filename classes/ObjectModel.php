@@ -404,14 +404,26 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         foreach ($this->def['fields'] as $field => $data) {
             // Only get fields we need for the type
             // E.g. if only lang fields are filtered, ignore fields without lang => true
+
+            // For type FORMAT_LANG only multi lang fields are returned
             if (($type == self::FORMAT_LANG && empty($data['lang']))
+                // For type FORMAT_SHOP only multi shop fields are returned
                 || ($type == self::FORMAT_SHOP && empty($data['shop']))
-                || ($type == self::FORMAT_COMMON && ((!empty($data['shop']) && $data['shop'] != 'both') || !empty($data['lang'])))) {
+                // For type FORMAT_COMMON only fields that are neither multi shop nor multi lang are returned (one exception though in case
+                // shop === both, then the field is returned for both FORMAT_SHOP and FORMAT_COMMON types)
+                || ($type == self::FORMAT_COMMON && ((!empty($data['shop']) && $data['shop'] !== 'both') || !empty($data['lang'])))) {
                 continue;
             }
 
+            // This field contains a list of fields that need to be updated, and only those fields So this method must filter out the fields
+            // that do not belong in $this->update_fields Since fields have already been filtered beforehand regarding of the requested type
+            // the check here is only about checking that the data has been marked as "to be updated"
             if (is_array($this->update_fields)) {
-                if ((!empty($data['lang']) || (!empty($data['shop']) && $data['shop'] != 'both')) && (empty($this->update_fields[$field]) || ($type == self::FORMAT_LANG && empty($this->update_fields[$field][$id_lang])))) {
+                if (empty($this->update_fields[$field])) {
+                    // Regular fields updates (multi shop or not) are identified by their field name
+                    continue;
+                } elseif ($type == self::FORMAT_LANG && empty($this->update_fields[$field][$id_lang])) {
+                    // Multi lang updates are identified by associated language ID
                     continue;
                 }
             }
@@ -758,14 +770,15 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
         }
         // Database update
-        if (!$result = Db::getInstance()->update($this->def['table'], $this->getFields(), '`' . pSQL($this->def['primary']) . '` = ' . (int) $this->id, 0, $null_values)) {
+        $fieldsToUpdate = $this->getFields();
+        if (!$result = Db::getInstance()->update($this->def['table'], $fieldsToUpdate, '`' . pSQL($this->def['primary']) . '` = ' . (int) $this->id, 0, $null_values)) {
             return false;
         }
 
         // Database insertion for multishop fields related to the object
         if (Shop::isTableAssociated($this->def['table'])) {
-            $fields = $this->getFieldsShop();
-            $fields[$this->def['primary']] = (int) $this->id;
+            $multiShopFieldsToUpdate = $this->getFieldsShop();
+            $multiShopFieldsToUpdate[$this->def['primary']] = (int) $this->id;
             if (is_array($this->update_fields)) {
                 $update_fields = $this->update_fields;
                 $this->update_fields = null;
@@ -773,11 +786,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 $all_fields[$this->def['primary']] = (int) $this->id;
                 $this->update_fields = $update_fields;
             } else {
-                $all_fields = $fields;
+                $all_fields = $multiShopFieldsToUpdate;
             }
 
             foreach ($id_shop_list as $id_shop) {
-                $fields['id_shop'] = (int) $id_shop;
+                $multiShopFieldsToUpdate['id_shop'] = (int) $id_shop;
                 $all_fields['id_shop'] = (int) $id_shop;
                 $where = $this->def['primary'] . ' = ' . (int) $this->id . ' AND id_shop = ' . (int) $id_shop;
 
@@ -785,7 +798,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 // only if we are in a shop context (if we are in all context, we just want to update entries that alread exists)
                 $shop_exists = Db::getInstance()->getValue('SELECT ' . $this->def['primary'] . ' FROM ' . _DB_PREFIX_ . $this->def['table'] . '_shop WHERE ' . $where);
                 if ($shop_exists) {
-                    $result &= Db::getInstance()->update($this->def['table'] . '_shop', $fields, $where, 0, $null_values);
+                    $result &= Db::getInstance()->update($this->def['table'] . '_shop', $multiShopFieldsToUpdate, $where, 0, $null_values);
                 } elseif (Shop::getContext() == Shop::CONTEXT_SHOP) {
                     $result &= Db::getInstance()->insert($this->def['table'] . '_shop', $all_fields, $null_values);
                 }
@@ -794,9 +807,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // Database update for multilingual fields related to the object
         if (isset($this->def['multilang']) && $this->def['multilang']) {
-            $fields = $this->getFieldsLang();
-            if (is_array($fields)) {
-                foreach ($fields as $field) {
+            $multiLangFieldsToUpdate = $this->getFieldsLang();
+            if (is_array($multiLangFieldsToUpdate)) {
+                foreach ($multiLangFieldsToUpdate as $field) {
                     foreach (array_keys($field) as $key) {
                         if (!Validate::isTableOrIdentifier($key)) {
                             throw new PrestaShopException('key ' . $key . ' is not a valid table or identifier');
