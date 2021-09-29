@@ -135,7 +135,7 @@ class FooterType extends TranslatorAwareType
                 ],
             ])
             ->add('save', SubmitType::class, [
-                'label' => $this->trans('Save', 'Admin.Actions'),
+                'label' => $options['active'] ? $this->trans('Save and publish', 'Admin.Actions') : $this->trans('Save', 'Admin.Actions'),
                 'attr' => [
                     'data-toggle' => 'pstooltip',
                     'disabled' => true,
@@ -175,6 +175,7 @@ class FooterType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'product_id' => null,
+                'active' => false,
                 'required' => false,
                 'label' => false,
                 'attr' => [
@@ -182,6 +183,7 @@ class FooterType extends TranslatorAwareType
                 ],
             ])
             ->setAllowedTypes('product_id', ['null', 'int'])
+            ->setAllowedTypes('active', ['bool'])
         ;
     }
 }
