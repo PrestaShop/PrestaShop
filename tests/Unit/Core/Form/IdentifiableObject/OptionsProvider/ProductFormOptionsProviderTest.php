@@ -43,7 +43,7 @@ class ProductFormOptionsProviderTest extends TestCase
         $this->assertEquals([], $defaultOptions);
     }
 
-    public function testVirtualProductOptions(): void
+    public function testVirtualProductOption(): void
     {
         $provider = new ProductFormOptionsProvider();
         $options = $provider->getOptions(self::PRODUCT_ID, []);
@@ -59,5 +59,21 @@ class ProductFormOptionsProviderTest extends TestCase
         ]);
         $this->assertArrayHasKey('virtual_product_file_id', $options);
         $this->assertEquals(self::VIRTUAL_PRODUCT_FILE_ID, $options['virtual_product_file_id']);
+    }
+
+    public function testActiveOptions(): void
+    {
+        $provider = new ProductFormOptionsProvider();
+        $options = $provider->getOptions(self::PRODUCT_ID, []);
+        $this->assertArrayHasKey('active', $options);
+        $this->assertFalse($options['active']);
+
+        $options = $provider->getOptions(self::PRODUCT_ID, [
+            'footer' => [
+                'active' => true,
+            ],
+        ]);
+        $this->assertArrayHasKey('active', $options);
+        $this->assertTrue($options['active']);
     }
 }
