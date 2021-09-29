@@ -76,6 +76,7 @@ export default class RedirectOptionManager {
           }
           this.$redirectTargetHint.html(this.$redirectTargetInput.data('categoryHelp'));
           this.entitySearchInput.setOption('allowDelete', true);
+          this.entitySearchInput.setOption('filteredIdentities', this.$redirectTargetInput.data('categoryFiltered'));
           this.showTarget();
           break;
         case '301-product':
@@ -89,6 +90,7 @@ export default class RedirectOptionManager {
           }
           this.$redirectTargetHint.html(this.$redirectTargetInput.data('productHelp'));
           this.entitySearchInput.setOption('allowDelete', false);
+          this.entitySearchInput.setOption('filteredIdentities', this.$redirectTargetInput.data('productFiltered'));
           this.showTarget();
           break;
         case '404':

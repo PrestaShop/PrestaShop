@@ -74,6 +74,7 @@ class RedirectOptionListenerTest extends FormListenerTestCase
                 'placeholder' => SimpleTargetFormTest::CATEGORY_PLACEHOLDER,
                 'help' => SimpleTargetFormTest::CATEGORY_HELP,
                 'remote_url' => SimpleTargetFormTest::CATEGORY_SEARCH_URL,
+                'filtered_identities' => SimpleTargetFormTest::CATEGORY_FILTERED,
             ],
         ];
 
@@ -84,6 +85,7 @@ class RedirectOptionListenerTest extends FormListenerTestCase
                 'placeholder' => SimpleTargetFormTest::CATEGORY_PLACEHOLDER,
                 'help' => SimpleTargetFormTest::CATEGORY_HELP,
                 'remote_url' => SimpleTargetFormTest::CATEGORY_SEARCH_URL,
+                'filtered_identities' => SimpleTargetFormTest::CATEGORY_FILTERED,
             ],
         ];
 
@@ -94,6 +96,7 @@ class RedirectOptionListenerTest extends FormListenerTestCase
                 'placeholder' => SimpleTargetFormTest::PRODUCT_PLACEHOLDER,
                 'help' => SimpleTargetFormTest::PRODUCT_HELP,
                 'remote_url' => SimpleTargetFormTest::PRODUCT_SEARCH_URL,
+                'filtered_identities' => SimpleTargetFormTest::PRODUCT_FILTERED,
             ],
         ];
 
@@ -104,6 +107,7 @@ class RedirectOptionListenerTest extends FormListenerTestCase
                 'placeholder' => SimpleTargetFormTest::PRODUCT_PLACEHOLDER,
                 'help' => SimpleTargetFormTest::PRODUCT_HELP,
                 'remote_url' => SimpleTargetFormTest::PRODUCT_SEARCH_URL,
+                'filtered_identities' => SimpleTargetFormTest::PRODUCT_FILTERED,
             ],
         ];
 
@@ -115,6 +119,7 @@ class RedirectOptionListenerTest extends FormListenerTestCase
                 'placeholder' => SimpleTargetFormTest::PRODUCT_PLACEHOLDER,
                 'help' => SimpleTargetFormTest::PRODUCT_HELP,
                 'remote_url' => SimpleTargetFormTest::PRODUCT_SEARCH_URL,
+                'filtered_identities' => SimpleTargetFormTest::PRODUCT_FILTERED,
                 'row_attr' => [
                     'class' => 'd-none',
                 ],
@@ -141,11 +146,13 @@ class SimpleTargetFormTest extends CommonAbstractType
     public const PRODUCT_PLACEHOLDER = 'Product placeholder';
     public const PRODUCT_SEARCH_URL = 'Product search url';
     public const PRODUCT_HELP = 'Product help';
+    public const PRODUCT_FILTERED = [42];
 
     public const CATEGORY_LABEL = 'Category label';
     public const CATEGORY_PLACEHOLDER = 'Category placeholder';
     public const CATEGORY_SEARCH_URL = 'Category search url';
     public const CATEGORY_HELP = 'Category help';
+    public const CATEGORY_FILTERED = [51];
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -157,10 +164,12 @@ class SimpleTargetFormTest extends CommonAbstractType
                     'data-product-placeholder' => static::PRODUCT_PLACEHOLDER,
                     'data-product-search-url' => static::PRODUCT_SEARCH_URL,
                     'data-product-help' => static::PRODUCT_HELP,
+                    'data-product-filtered' => json_encode(static::PRODUCT_FILTERED),
                     'data-category-label' => static::CATEGORY_LABEL,
                     'data-category-placeholder' => static::CATEGORY_PLACEHOLDER,
                     'data-category-help' => static::CATEGORY_HELP,
                     'data-category-search-url' => static::CATEGORY_SEARCH_URL,
+                    'data-category-filtered' => json_encode(static::CATEGORY_FILTERED),
                 ],
             ])
         ;
