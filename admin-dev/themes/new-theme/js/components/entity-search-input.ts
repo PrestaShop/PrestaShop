@@ -41,8 +41,10 @@ export interface EntitySearchInputOptions extends OptionsObject {
 
   allowDelete: boolean,
   dataLimit: number,
+  minLength: number,
   remoteUrl: string,
   filterSelected: boolean,
+  filteredIdentities: Array<string>,
 
   removeModal: ModalOptions,
 
@@ -176,8 +178,10 @@ export default class EntitySearchInput {
 
       allowDelete: true,
       dataLimit: 0,
+      minLength: 2,
       remoteUrl: undefined,
       filterSelected: true,
+      filteredIdentities: [],
 
       removeModal: {
         id: 'modal-confirm-remove-entity',
@@ -269,7 +273,8 @@ export default class EntitySearchInput {
     const autoSearchConfig = {
       source: this.entityRemoteSource,
       dataLimit: this.options.dataLimit,
-      value: '',
+      value: this.options.identifierField,
+      minLength: this.options.minLength,
       templates: {
         suggestion: (entity: any) => {
           let entityImage = '';
@@ -291,7 +296,6 @@ export default class EntitySearchInput {
     };
 
     // Can be used to format value depending on selected item
-    autoSearchConfig.value = <string> this.options.identifierField;
     this.autoSearch = new AutoCompleteSearch(
       this.$entitySearchInput,
       autoSearchConfig,
@@ -321,27 +325,33 @@ export default class EntitySearchInput {
           }
 
           const selectedIds: any[] = this.getSelectedIds();
-          const filteredItems: any[] = [];
+          const suggestedItems: any[] = [];
           response.forEach((responseItem: any) => {
             const responseIdentifier = responseItem[this.options.identifierField];
 
             /**
-             * We need this method instead of relying on a built in Array.includes because it is based on
+             * We need custom check instead of relying on a built in Array.includes because it is based on
              * strict equality. Since we can't be sure that the API format and the input field types will
              * match we need to use loose equality here.
              */
             // eslint-disable-next-line arrow-body-style
-            const isIdContained = selectedIds.some((id: any) => {
+            const isIdContained = this.options.filterSelected && selectedIds.some((id: any) => {
               // eslint-disable-next-line eqeqeq
               return id == responseIdentifier;
             });
 
-            if (!isIdContained) {
-              filteredItems.push(responseItem);
+            // eslint-disable-next-line arrow-body-style
+            const isFiltered = this.options.filteredIdentities.length > 0 && this.options.filteredIdentities.some((id: any) => {
+              // eslint-disable-next-line eqeqeq
+              return id == responseIdentifier;
+            });
+
+            if (!isIdContained && !isFiltered) {
+              suggestedItems.push(responseItem);
             }
           });
 
-          return filteredItems;
+          return suggestedItems;
         },
       },
     });
