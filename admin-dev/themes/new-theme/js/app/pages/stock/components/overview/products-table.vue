@@ -131,6 +131,7 @@
   import PSLoader from '@app/widgets/ps-loader.vue';
   import ProductLine from './product-line.vue';
 
+  /* eslint-disable camelcase */
   export interface StockProduct {
     active: number;
     attribute_name: string;
@@ -158,6 +159,7 @@
     supplier_name: string;
     total_combinations: number;
   }
+  /* eslint-enable camelcase */
 
   export default Vue.extend({
     props: {

@@ -60,6 +60,7 @@
   import Search from './header/search.vue';
   import LowFilter from './header/filters/low-filter.vue';
 
+  /* eslint-disable camelcase */
   export interface StockFilters {
     active?: string;
     categories?: Array<number>;
@@ -72,6 +73,7 @@
     keywords?: any;
     low_stock?: number | boolean | string;
   }
+  /* eslint-enable camelcase */
 
   const FIRST_PAGE = 1;
 

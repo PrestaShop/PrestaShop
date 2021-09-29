@@ -148,6 +148,7 @@
 </template>
 
 <script lang="ts">
+  /* eslint-disable camelcase */
   import Vue from 'vue';
   import PSSelect from '@app/widgets/ps-select.vue';
   import PSDatePicker from '@app/widgets/ps-datepicker.vue';

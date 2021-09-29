@@ -69,7 +69,12 @@
       },
     },
     computed: {
-      classObject(): {'alert-info': boolean, 'alert-warning': boolean, 'alert-danger': boolean, 'alert-success': boolean} {
+      classObject(): {
+        'alert-info': boolean,
+        'alert-warning': boolean,
+        'alert-danger': boolean,
+        'alert-success': boolean
+      } {
         return {
           'alert-info': this.alertType === ALERT_TYPE_INFO,
           'alert-warning': this.alertType === ALERT_TYPE_WARNING,
