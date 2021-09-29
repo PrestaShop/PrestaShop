@@ -12,13 +12,9 @@ $header-text-color: #4e6167 !default;
   background: $white;
 
   .header-right {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     height: 100%;
-
-    @include media-breakpoint-down("md") {
-      display: inline-flex;
-      align-items: center;
-    }
   }
 
   .material-icons {
@@ -153,6 +149,12 @@ $header-text-color: #4e6167 !default;
     }
   }
 
+  #header-shop-list-container {
+    @include media-breakpoint-down("sm") {
+      margin-right: 0;
+    }
+  }
+
   #header-search-container {
     flex-grow: 1;
     padding-left: 0;
@@ -164,7 +166,7 @@ $header-text-color: #4e6167 !default;
       form {
         &.collapsed {
           width: 100%;
-          max-width: 11rem;
+          max-width: 9rem;
 
           input#bo_query {
             height: 100%;
@@ -381,6 +383,10 @@ $header-text-color: #4e6167 !default;
     }
 
     @include media-breakpoint-down("sm") {
+      &.gamification-component {
+        display: none!important;
+      }
+
       &.header-right-component,
       &#header-employee-container {
         margin: -0.6rem 0;

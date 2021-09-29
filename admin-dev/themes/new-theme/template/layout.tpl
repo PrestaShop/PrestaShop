@@ -24,8 +24,17 @@
       <div class="component" id="quick-access-container">
         {include file="components/layout/quick_access.tpl"}
       </div>
-      <div class="component" id="header-search-container">
-        {include file="components/layout/search_form.tpl"}
+      <div class="component component-search" id="header-search-container">
+        <div class="component-search-body">
+          <div class="component-search-top">
+            {include file="components/layout/search_form.tpl"}
+            <button class="component-search-cancel d-none">{l|escape s='Cancel' d='Admin.Navigation.Header'}</button>
+          </div>
+
+          {include file="components/layout/mobile_quickaccess.tpl"}
+        </div>
+
+        <div class="component-search-background d-none"></div>
       </div>
 
       {if isset($debug_mode) && $debug_mode == true}
