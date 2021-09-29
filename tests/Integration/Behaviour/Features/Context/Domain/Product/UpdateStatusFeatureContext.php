@@ -45,6 +45,7 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
      */
     public function updateStatus(bool $status, string $productReference): void
     {
+        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(new UpdateProductStatusCommand(
                 $this->getSharedStorage()->get($productReference),
