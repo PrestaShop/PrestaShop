@@ -45,6 +45,7 @@ class HeaderType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $nameConstraints = $options['active'] ? [new DefaultLanguage()] : [];
         $builder
             ->add('cover_thumbnail', ImagePreviewType::class, [
                 'label' => false,
@@ -52,9 +53,7 @@ class HeaderType extends TranslatorAwareType
             ->add('name', TranslatableType::class, [
                 'label' => false,
                 'type' => TextType::class,
-                'constraints' => [
-                    new DefaultLanguage(),
-                ],
+                'constraints' => $nameConstraints,
                 'options' => [
                     'attr' => [
                         'class' => 'serp-default-title',
@@ -97,9 +96,14 @@ class HeaderType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'required' => false,
-            'label' => false,
-        ]);
+
+        $resolver
+            ->setDefaults([
+                'active' => false,
+                'required' => false,
+                'label' => false,
+            ])
+            ->setAllowedTypes('active', ['bool'])
+        ;
     }
 }
