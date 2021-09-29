@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
 
 class UpdateStatusFeatureContext extends AbstractProductFeatureContext
@@ -44,10 +45,18 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
      */
     public function updateStatus(bool $status, string $productReference): void
     {
-        $this->getCommandBus()->handle(new UpdateProductStatusCommand(
-            $this->getSharedStorage()->get($productReference),
-            $status
-        ));
+        try {
+            $this->getCommandBus()->handle(new UpdateProductStatusCommand(
+                $this->getSharedStorage()->get($productReference),
+                $status
+            ));
+        } catch (ProductConstraintException $e) {
+            if (ProductConstraintException::INVALID_ONLINE_DATA === $e->getCode()) {
+                $this->setLastException($e);
+            } else {
+                throw $e;
+            }
+        }
     }
 
     /**
@@ -62,5 +71,13 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
     {
         $actualStatus = $this->extractValueFromProductForEditing($this->getProductForEditing($productReference), 'active');
         Assert::assertSame($expectedStatus, $actualStatus, 'Unexpected product status');
+    }
+
+    /**
+     * @Then I should get an error that product online data are invalid
+     */
+    public function assertInvalidOnlineDataException(): void
+    {
+        $this->assertLastErrorIs(ProductConstraintException::class, ProductConstraintException::INVALID_ONLINE_DATA);
     }
 }

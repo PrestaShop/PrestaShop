@@ -42,6 +42,19 @@ use Product;
 class ProductValidator extends AbstractObjectModelValidator
 {
     /**
+     * @var int
+     */
+    private $defaultLanguageId;
+
+    /**
+     * @param int $defaultLanguageId
+     */
+    public function __construct(int $defaultLanguageId)
+    {
+        $this->defaultLanguageId = $defaultLanguageId;
+    }
+
+    /**
      * This method is specific for product creation only.
      *
      * @param Product $product
@@ -81,6 +94,7 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateStock($product);
         $this->validateSeo($product);
         $this->validatePrices($product);
+        $this->validateOnlineRequirement($product);
     }
 
     /**
@@ -252,5 +266,21 @@ class ProductValidator extends AbstractObjectModelValidator
             ProductConstraintException::class,
             $errorCode
         );
+    }
+
+    /**
+     * To be online a product has some minimum data to be set
+     *
+     * @param Product $product
+     */
+    private function validateOnlineRequirement(Product $product): void
+    {
+        if (!$product->active) {
+            return;
+        }
+
+        if (empty($product->name) || empty($product->name[$this->defaultLanguageId])) {
+            throw new ProductConstraintException('Missing name to be online.', ProductConstraintException::INVALID_ONLINE_DATA);
+        }
     }
 }
