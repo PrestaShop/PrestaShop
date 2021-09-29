@@ -75,7 +75,9 @@ class EditProductFormType extends TranslatorAwareType
     {
         $productId = $options['product_id'] ?? null;
         $builder
-            ->add('header', HeaderType::class)
+            ->add('header', HeaderType::class, [
+                'active' => $options['active'],
+            ])
             ->add('description', DescriptionType::class, [
                 'product_id' => $productId,
             ])
