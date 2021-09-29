@@ -258,6 +258,8 @@ services:
 
   prestashop.adapter.product.validate.product_validator:
     class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator
+    arguments:
+      - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
 
   prestashop.adapter.product.repository.product_repository:
     class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository
