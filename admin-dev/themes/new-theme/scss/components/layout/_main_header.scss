@@ -384,7 +384,8 @@ $header-text-color: #4e6167 !default;
 
     @include media-breakpoint-down("sm") {
       &.gamification-component {
-        display: none!important;
+        // stylelint-disable-next-line
+        display: none !important;
       }
 
       &.header-right-component,
