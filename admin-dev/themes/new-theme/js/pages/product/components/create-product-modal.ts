@@ -42,7 +42,6 @@ export default class CreateProductModal {
 
       const iframeModal = new FormIframeModal({
         id: 'modal-create-product',
-        modalTitle: 'Create product',
         formSelector: 'form[name="product"]',
         formUrl: linkUrl,
         closable: true,
