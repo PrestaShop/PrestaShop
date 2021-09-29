@@ -147,6 +147,8 @@ class DescriptionType extends TranslatorAwareType
                     'languageCode' => $this->employeeIsoCode,
                     'query' => '__QUERY__',
                 ]),
+                'min_length' => 3,
+                'filtered_identities' => $productId > 0 ? [$productId] : [],
             ])
         ;
     }
