@@ -118,12 +118,14 @@
     },
     methods: {
       getItems(): Array<any> {
+        /* eslint-disable camelcase */
         const matchList: Array<{
           id: number,
           name: string,
           supplier_id: number,
           visible: boolean,
         }> = [];
+        /* eslint-enable camelcase */
         this.list.filter((data: any) => {
           const label = data[this.label].toLowerCase();
           data.visible = false;

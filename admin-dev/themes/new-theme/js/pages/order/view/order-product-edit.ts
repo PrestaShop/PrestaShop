@@ -32,9 +32,11 @@ import ConfirmModal from '@components/modal';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 
 export interface DisplayedProduct {
+  /* eslint-disable camelcase */
   price_tax_excl: number;
   price_tax_incl: number;
   tax_rate: number;
+  /* eslint-enable camelcase */
   quantity: number;
   location: string;
   availableQuantity: number;
