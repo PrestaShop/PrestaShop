@@ -450,9 +450,9 @@ export default class EntitySearchInput {
 
   private getSelectedIds(): any[] {
     const selectedIds: any[] = [];
-    const selectedChildren = this.$entitiesContainer.children();
+    const selectedChildren = $(this.options.entityItemSelector, this.$entitiesContainer);
     selectedChildren.each((index: number, selectedChild: HTMLElement) => {
-      const identifierNameRegexp: string = `\\[${index}\\].*\\[${this.options.identifierField}\\]`;
+      const identifierNameRegexp: string = `\\[${this.options.identifierField}\\]`;
       const inputs = $(selectedChild).find('input');
       inputs.each((inputIndex: number, input: HTMLInputElement): void => {
         if (input.name.match(identifierNameRegexp)) {
