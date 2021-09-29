@@ -42,6 +42,7 @@ class ProductFormOptionsProvider implements FormOptionsProviderInterface
     {
         return [
             'virtual_product_file_id' => $data['stock']['virtual_product_file']['virtual_product_file_id'] ?? null,
+            'active' => $data['footer']['active'] ?? false,
         ];
     }
 
