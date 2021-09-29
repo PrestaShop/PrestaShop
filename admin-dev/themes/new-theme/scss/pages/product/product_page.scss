@@ -1098,6 +1098,17 @@ $product-page-padding-bottom: 80px !default;
       &-image {
         margin-bottom: 0.5rem;
       }
+
+      &-legend {
+        max-width: 100%;
+
+        .text-preview {
+          display: inline-block;
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
     }
   }
 

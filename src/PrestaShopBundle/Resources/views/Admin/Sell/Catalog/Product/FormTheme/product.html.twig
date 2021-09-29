@@ -46,8 +46,7 @@
       {{ form_widget(form.image) }}
     </div>
     <div class="related-product-legend">
-      <i class="material-icons delete entity-item-delete">delete</i>
-      {{ form_widget(form.name) }}
+      {{ form_widget(form.name, {prefix: '<i class="material-icons delete entity-item-delete">delete</i>'}) }}
     </div>
     {{ form_widget(form.id) }}
   </li>
