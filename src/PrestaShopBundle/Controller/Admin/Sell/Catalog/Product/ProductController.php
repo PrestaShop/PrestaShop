@@ -433,6 +433,10 @@ class ProductController extends FrameworkBundleAdminController
                     'When redirecting towards a product you must select a target product.',
                     'Admin.Notifications.Error'
                 ),
+                ProductConstraintException::INVALID_ONLINE_DATA => $this->trans(
+                    'A product without name cannot be set online.',
+                    'Admin.Notifications.Error'
+                ),
             ],
             DuplicateFeatureValueAssociationException::class => $this->trans(
                 'You cannot associate the same feature value more than once.',
