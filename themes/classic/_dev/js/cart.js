@@ -194,8 +194,8 @@ $(document).ready(() => {
         let dataset;
 
         if ($target && $target.dataset) {
-        // eslint-disable-next-line
-        dataset = $target.dataset;
+          // eslint-disable-next-line prefer-destructuring
+          dataset = $target.dataset;
         } else {
           dataset = resp;
         }
