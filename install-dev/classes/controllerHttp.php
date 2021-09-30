@@ -119,6 +119,11 @@ class InstallControllerHttp
                 'controllerClass' => 'InstallControllerHttpConfigure',
             ],
             [
+                'name' => 'content',
+                'displayName' => $this->translator->trans('Content information', [], 'Install'),
+                'controllerClass' => 'InstallControllerHttpContent',
+            ],
+            [
                 'name' => 'database',
                 'displayName' => $this->translator->trans('System configuration', [], 'Install'),
                 'controllerClass' => 'InstallControllerHttpDatabase',
@@ -273,11 +278,39 @@ class InstallControllerHttp
         self::getSteps()->current()->getControllerInstance()->display();
     }
 
-    public function init()
+    /**
+     * Display controller view
+     */
+    public function display(): void
     {
     }
 
-    public function process()
+    /**
+     * Validate current step
+     */
+    public function validate(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Initialize
+     */
+    public function init(): void
+    {
+    }
+
+    /**
+     * Process installation
+     */
+    public function process(): void
+    {
+    }
+
+    /**
+     * Process next step
+     */
+    public function processNextStep(): void
     {
     }
 

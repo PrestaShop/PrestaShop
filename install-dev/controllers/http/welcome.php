@@ -38,19 +38,10 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
      */
     public $ps_version;
 
-    public function processNextStep()
-    {
-    }
-
-    public function validate()
-    {
-        return true;
-    }
-
     /**
-     * Change language
+     * {@inheritdoc}
      */
-    public function process()
+    public function process(): void
     {
         if (Tools::getValue('language')) {
             $this->session->lang = Tools::getValue('language');
@@ -68,9 +59,9 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
     }
 
     /**
-     * Display welcome step
+     * {@inheritdoc}
      */
-    public function display()
+    public function display(): void
     {
         $this->can_upgrade = false;
         if (file_exists(_PS_ROOT_DIR_ . '/config/settings.inc.php')) {
