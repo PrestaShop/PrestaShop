@@ -598,7 +598,7 @@ class StockAvailableCore extends ObjectModel
                     $stockManager->saveMovement($id_product, $id_product_attribute, $deltaQuantity);
                 }
             } else {
-                $deltaQuantity = (int) $quantity;
+                $deltaQuantity = null;
                 $out_of_stock = StockAvailable::outOfStock($id_product, $id_shop);
                 $stock_available = new StockAvailable();
                 $stock_available->out_of_stock = (int) $out_of_stock;
