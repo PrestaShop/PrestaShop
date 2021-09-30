@@ -2423,20 +2423,22 @@ abstract class ModuleCore implements ModuleInterface
         if (Configuration::get('PS_SSL_ENABLED')) {
             $cache_array[] = (int) Tools::usingSecureMode();
         }
-        if (Shop::isFeatureActive()) {
+        if (isset($this->context->shop) && Shop::isFeatureActive()) {
             $cache_array[] = (int) $this->context->shop->id;
         }
         if (Group::isFeatureActive() && isset($this->context->customer)) {
             $cache_array[] = (int) Group::getCurrent()->id;
             $cache_array[] = implode('_', Customer::getGroupsStatic($this->context->customer->id));
         }
-        if (Language::isMultiLanguageActivated()) {
+        if (isset($this->context->language) && Language::isMultiLanguageActivated()) {
             $cache_array[] = (int) $this->context->language->id;
         }
-        if (Currency::isMultiCurrencyActivated()) {
+        if (isset($this->context->currency) && Currency::isMultiCurrencyActivated()) {
             $cache_array[] = (int) $this->context->currency->id;
         }
-        $cache_array[] = (int) $this->context->country->id;
+        if (isset($this->context->country)) {
+            $cache_array[] = (int) $this->context->country->id;
+        }
 
         return implode('|', $cache_array);
     }
