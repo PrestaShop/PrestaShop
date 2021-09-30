@@ -208,7 +208,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                 ],
                 'separatePackages' => [
                     'allowed' => $this->isSeparatePackagesAllowed(),
-                    'isSeparatePackage' => $this->getCheckoutSession()->isSeparatePackagesAllowed()
+                    'isSeparatePackage' => $this->getCheckoutSession()->isSeparatePackagesAllowed(),
                 ],
             ]
         );
