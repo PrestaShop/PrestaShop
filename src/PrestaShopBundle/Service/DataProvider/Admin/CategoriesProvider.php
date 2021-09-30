@@ -52,6 +52,11 @@ class CategoriesProvider
     private $categories;
 
     /**
+     * @var array
+     */
+    private $categoriesMenu;
+
+    /**
      * @var object
      */
     private $categoriesFromSource;
@@ -61,6 +66,12 @@ class CategoriesProvider
         $this->modulesTheme = $modulesTheme;
         // We now avoid calling the API. This data is loaded from a local YML file
         $this->categoriesFromSource = $this->sortCategories($addonsCategories);
+        $this->categories = $this->initializeCategories($this->categoriesFromSource);
+    }
+
+    public function getCategories(): array
+    {
+        return $this->categories;
     }
 
     /**
@@ -72,24 +83,24 @@ class CategoriesProvider
      */
     public function getCategoriesMenu($modules): array
     {
-        if (null === $this->categories) {
+        if (null === $this->categoriesMenu) {
             // The Root category is "Categories"
-            $categories = $this->initializeCategories($this->categoriesFromSource);
+            // Co py the original array
+            $categories = $this->categories;
             foreach ($modules as $module) {
                 $category = $this->findModuleCategory($module, $categories);
-
                 $categories['categories']->subMenu[$category]->modules[] = $module;
             }
 
             // Clear custom categories if there is no module inside
-            if (empty($categories['categories']->subMenu[self::CATEGORY_THEME]->modules)) {
-                unset($categories['categories']->subMenu[self::CATEGORY_THEME]);
+            if (empty($categories['categories']->subMenu[self::CATEGORY_THEME_NAME]->modules)) {
+                unset($categories['categories']->subMenu[self::CATEGORY_THEME_NAME]);
             }
 
-            $this->categories = $categories;
+            $this->categoriesMenu = $categories;
         }
 
-        return $this->categories;
+        return $this->categoriesMenu;
     }
 
     /**
@@ -115,13 +126,13 @@ class CategoriesProvider
             );
         }
 
-        $categories['categories']->subMenu[self::CATEGORY_THEME] = $this->createMenuObject(
+        $categories['categories']->subMenu[self::CATEGORY_THEME_NAME] = $this->createMenuObject(
             self::CATEGORY_THEME,
             self::CATEGORY_THEME_NAME,
             [],
             self::CATEGORY_THEME
         );
-        $categories['categories']->subMenu[self::CATEGORY_OTHER] = $this->createMenuObject(
+        $categories['categories']->subMenu[self::CATEGORY_OTHER_NAME] = $this->createMenuObject(
             self::CATEGORY_OTHER,
             self::CATEGORY_OTHER_NAME,
             [],
@@ -193,7 +204,7 @@ class CategoriesProvider
             return $moduleCategoryParent;
         }
 
-        return self::CATEGORY_OTHER;
+        return self::CATEGORY_OTHER_NAME;
     }
 
     /**

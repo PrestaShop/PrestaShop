@@ -44,27 +44,18 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
     public $tests_render;
 
     /**
-     * @see HttpConfigureInterface::init()
+     * {@inheritdoc}
      */
-    public function init()
+    public function init(): void
     {
         $this->model_system = new System();
         $this->model_system->setTranslator($this->translator);
     }
 
     /**
-     * @see HttpConfigureInterface::processNextStep()
+     * {@inheritdoc}
      */
-    public function processNextStep()
-    {
-    }
-
-    /**
-     * Required tests must be passed to validate this step
-     *
-     * @see HttpConfigureInterface::validate()
-     */
-    public function validate()
+    public function validate(): bool
     {
         $this->tests['required'] = $this->model_system->checkRequiredTests();
 
@@ -72,9 +63,9 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
     }
 
     /**
-     * Display system step
+     * {@inheritdoc}
      */
-    public function display()
+    public function display(): void
     {
         if (!isset($this->tests['required'])) {
             $this->tests['required'] = $this->model_system->checkRequiredTests();

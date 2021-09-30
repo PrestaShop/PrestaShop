@@ -24,33 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-/**
- * Step 2 : display license form
- */
-class InstallControllerHttpLicense extends InstallControllerHttp implements HttpConfigureInterface
+namespace PrestaShop\PrestaShop\Core\Theme;
+
+use PrestaShop\PrestaShop\Core\Util\ArrayFinder;
+
+interface ConfigReaderInterface
 {
     /**
-     * {@inheritdoc}
+     * Read file properties
+     *
+     * @param string $name The theme name
+     *
+     * @return ArrayFinder|null
      */
-    public function processNextStep(): void
-    {
-        $this->session->licence_agrement = (bool) Tools::getValue('licence_agrement');
-        $this->session->configuration_agrement = Tools::getValue('configuration_agrement');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validate(): bool
-    {
-        return (bool) $this->session->licence_agrement;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function display(): void
-    {
-        $this->displayContent('license');
-    }
+    public function read(string $name): ?ArrayFinder;
 }

@@ -34,7 +34,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     public $process_steps = [];
     public $previous_button = false;
 
-    public function init()
+    public function init(): void
     {
         $this->model_install = new Install();
         $this->model_install->setTranslator($this->translator);
@@ -43,14 +43,14 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     /**
      * @see HttpConfigureInterface::processNextStep()
      */
-    public function processNextStep()
+    public function processNextStep(): void
     {
     }
 
     /**
      * @see HttpConfigureInterface::validate()
      */
-    public function validate()
+    public function validate(): bool
     {
         return false;
     }
@@ -73,7 +73,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         Context::getContext()->smarty = $smarty;
     }
 
-    public function process()
+    public function process(): void
     {
         /* avoid exceptions on re-installation */
         $this->clearConfigXML() && $this->clearConfigThemes();
@@ -239,10 +239,11 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         $this->initializeContext();
 
-        $result = $this->model_install->installModules();
+        $result = $this->model_install->installModules($this->session->content_modules);
         if (!$result || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
+
         $this->session->process_validated = array_merge($this->session->process_validated, ['installModules' => true]);
         $this->ajaxJsonAnswer(true);
     }
@@ -254,7 +255,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         $this->initializeContext();
 
-        $result = $this->model_install->postInstall();
+        $result = $this->model_install->postInstall($this->session->content_modules);
         if (!$result || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
@@ -289,7 +290,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         $this->initializeContext();
         Search::indexation(true);
-        $this->model_install->installTheme();
+        $this->model_install->installTheme($this->session->content_theme);
         if ($this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
@@ -300,7 +301,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     /**
      * @see HttpConfigureInterface::display()
      */
-    public function display()
+    public function display(): void
     {
         $memoryLimit = Tools::getMemoryLimit();
         // We fill the process step used for Ajax queries

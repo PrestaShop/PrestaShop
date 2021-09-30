@@ -1232,3 +1232,62 @@ ul#optional_update li.ok {
   }
 }
 /* @end */
+#sheet_content ul {
+  list-style: none;
+  margin: 0;
+}
+
+.themes-container {
+  overflow-y: auto;
+  height: 20rem;
+  border: 1px solid #cccccc;
+  padding: 1rem;
+  margin-right: 1rem;
+}
+
+.theme-card {
+  position: relative;
+  height: 12rem;
+  max-width: 24.1875rem;
+  overflow-y: hidden;
+  border-radius: 0.25rem;
+}
+
+.theme-card .image-block {
+  padding-left: 1rem;
+  max-width: 100%;
+  height: 9rem;
+  overflow: hidden;
+}
+
+.theme-card .image-block img {
+  max-width: 100%;
+  height: auto;
+}
+.theme-card .theme-version {
+  font-size: 0.7rem;
+  text-align: center;
+}
+
+#modules-container {
+  /* display: none; */
+  margin-left: 190px;
+  padding: 1rem;
+  width: 26.7rem;
+  height: 15rem;
+  overflow: auto;
+  border: 1px solid #cccccc;
+}
+#modules-container label {
+  width: 100%;
+}
+#modules-container dt {
+  padding: 0.6rem 0;
+  font-weight: bold;
+}
+
+#search-for-module {
+  margin-bottom: 1rem;
+  border: 1px solid #cccccc;
+  padding: 0.3rem;
+}

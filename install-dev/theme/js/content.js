@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,33 +23,31 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-/**
- * Step 2 : display license form
- */
-class InstallControllerHttpLicense extends InstallControllerHttp implements HttpConfigureInterface
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function processNextStep(): void
-    {
-        $this->session->licence_agrement = (bool) Tools::getValue('licence_agrement');
-        $this->session->configuration_agrement = Tools::getValue('configuration_agrement');
-    }
+$(document).ready(function() {
+  const $modulesContainer = $('#modules-container');
+  const $modulesList = $('input[name="modules[]"]');
+  const $selectAllButton = $('input[name="select-all"]');
+  const $searchInput = $('#search-for-module');
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validate(): bool
-    {
-        return (bool) $this->session->licence_agrement;
-    }
+  $('input[name="module-action"]').on('change', function() {
+    $modulesContainer.fadeToggle(parseInt($(this).val(), 10) === 1);
+  });
 
-    /**
-     * {@inheritdoc}
-     */
-    public function display(): void
-    {
-        $this->displayContent('license');
-    }
-}
+  $selectAllButton.on('change', function() {
+    $modulesList.prop('checked', $(this).prop('checked'));
+  });
+
+  $modulesList.on('click', function() {
+    $selectAllButton.prop(
+      'checked',
+      $modulesList.filter(':checked').length === $modulesList.length
+    );
+  });
+
+  $searchInput.on('keyup', function() {
+    var value = $(this).val().toLowerCase();
+    $modulesContainer.find('dd').filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});

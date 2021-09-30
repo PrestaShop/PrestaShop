@@ -43,16 +43,15 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     public $install_type;
 
     /**
-     * @see HttpConfigureInterface::processNextStep()
+     * {@inheritdoc}
      */
-    public function processNextStep()
+    public function processNextStep(): void
     {
         if (Tools::isSubmit('shop_name')) {
             // Save shop configuration
             $this->session->shop_name = trim(Tools::getValue('shop_name'));
             $this->session->shop_activity = Tools::getValue('shop_activity');
-            $this->session->install_type = Tools::getValue('db_mode');
-            $this->session->enable_ssl = Tools::getValue('enable_ssl');
+            $this->session->enable_ssl = (bool) Tools::getValue('enable_ssl');
             $this->session->shop_country = Tools::getValue('shop_country');
             $this->session->shop_timezone = Tools::getValue('shop_timezone');
 
@@ -73,9 +72,9 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     }
 
     /**
-     * @see HttpConfigureInterface::validate()
+     * {@inheritdoc}
      */
-    public function validate()
+    public function validate(): bool
     {
         // List of required fields
         $required_fields = ['shop_name', 'shop_country', 'shop_timezone', 'admin_firstname', 'admin_lastname', 'admin_email', 'admin_password'];
@@ -122,7 +121,10 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         return count($this->errors) ? false : true;
     }
 
-    public function process()
+    /**
+     * {@inheritdoc}
+     */
+    public function process(): void
     {
         if (Tools::getValue('timezoneByIso')) {
             $this->processTimezoneByIso();
@@ -132,7 +134,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     /**
      * Obtain the timezone associated to an iso
      */
-    public function processTimezoneByIso()
+    public function processTimezoneByIso(): void
     {
         $timezone = $this->getTimezoneByIso(Tools::getValue('iso'));
         $this->ajaxJsonAnswer((bool) $timezone, $timezone);
@@ -143,7 +145,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
      *
      * @return array
      */
-    public function getTimezones()
+    public function getTimezones(): array
     {
         if (!file_exists(_PS_INSTALL_DATA_PATH_ . 'xml/timezone.xml')) {
             return [];
@@ -167,7 +169,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
      *
      * @return string
      */
-    public function getTimezoneByIso($iso)
+    public function getTimezoneByIso($iso): string
     {
         if (!file_exists(_PS_INSTALL_DATA_PATH_ . 'iso_to_timezone.xml')) {
             return '';
@@ -185,9 +187,9 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     }
 
     /**
-     * @see HttpConfigureInterface::display()
+     * {@inheritdoc}
      */
-    public function display()
+    public function display(): void
     {
         // List of activities
         $list_activities = [
@@ -247,9 +249,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
             }
         }
 
-        // Install type
-        $this->install_type = ($this->session->install_type) ? $this->session->install_type : 'full';
-
         $this->displayContent('configure');
     }
 
@@ -260,10 +259,10 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
      *
      * @return string|void
      */
-    public function displayError($field)
+    public function displayError(string $field): ?string
     {
         if (!isset($this->errors[$field])) {
-            return;
+            return null;
         }
 
         return '<span class="result aligned errorTxt">' . Tools::htmlentitiesUTF8($this->errors[$field]) . '</span>';
