@@ -71,7 +71,7 @@ class UpdateProductStatusHandler implements UpdateProductStatusHandlerInterface
         $product->active = $command->getEnable();
         $this->productRepository->partialUpdate(
             $product,
-            ['active' => true],
+            ['active'],
             CannotUpdateProductException::FAILED_UPDATE_STATUS
         );
 
