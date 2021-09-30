@@ -2958,7 +2958,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @return false|null
      */
-    protected function adminDisplayInformation($msg)
+    public function adminDisplayInformation($msg)
     {
         if (!($this->context->controller instanceof AdminController)) {
             return false;
