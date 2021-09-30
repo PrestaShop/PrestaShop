@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopException;
 
 abstract class AbstractObjectModelRepository
@@ -241,6 +242,15 @@ abstract class AbstractObjectModelRepository
     }
 
     /**
+     * Expected format: $propertiesToUpdate = [
+     *     'active', // Regular field are simply listed
+     *     'price',
+     *     'name' => [ // Multilang fields must indicate which language is impacted
+     *         1,
+     *         3,
+     *     ],
+     * ];
+     *
      * @param array $propertiesToUpdate
      *
      * @return array<string, mixed>
@@ -249,12 +259,18 @@ abstract class AbstractObjectModelRepository
     {
         $formattedPropertiesToUpdate = [];
         foreach ($propertiesToUpdate as $propertyName => $property) {
+            if (!is_array($property) && !is_string($property)) {
+                throw new InvalidArgumentException('Invalid format for properties to update, expected an array indexed by string matching field name');
+            }
+
+            // For common properties the value is the field name
             if (!is_array($property)) {
                 $formattedPropertiesToUpdate[$property] = true;
 
                 continue;
             }
 
+            // For multilang values the index is actually the field name
             foreach ($property as $langId) {
                 $formattedPropertiesToUpdate[$propertyName][$langId] = true;
             }
