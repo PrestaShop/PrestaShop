@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate;
@@ -83,6 +84,9 @@ if ($lastParametersModificationTime) {
             $exportPhpConfigFile($config, $cachedParameters);
         }
     }
+
+    $dotenv = new Dotenv();
+    $dotenv->loadEnv(_PS_ROOT_DIR_.'/.env');
 
     $config = require_once _PS_CACHE_DIR_ . 'appParameters.php';
     array_walk($config['parameters'], function (&$param) {

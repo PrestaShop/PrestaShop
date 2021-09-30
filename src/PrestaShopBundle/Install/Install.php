@@ -66,6 +66,18 @@ class Install extends AbstractInstall
     public const SETTINGS_FILE = 'config/settings.inc.php';
     public const BOOTSTRAP_FILE = 'config/bootstrap.php';
 
+    private const PARAMETERS_WITH_ENV_VARS = [
+        'database_host' => 'PS_DATABASE_HOST',
+        'database_port' => 'PS_DATABASE_PORT',
+        'database_user' => 'PS_DATABASE_USER',
+        'database_password' => 'PS_DATABASE_PASSWORD',
+        'database_name' => 'PS_DATABASE_NAME',
+        'database_prefix' => 'PS_DATABASE_PREFIX',
+        'database_engine' => 'PS_DATABASE_ENGINE',
+        'cookie_key' => 'PS_COOKIE_KEY',
+        'cookie_iv' => 'PS_COOKIE_IV',
+    ];
+
     protected $logger;
 
     /**
@@ -180,6 +192,8 @@ class Install extends AbstractInstall
 
         $key = PhpEncryption::createNewRandomKey();
 
+        $useEnvValuesIfExists = true;
+
         $parameters = [
             'parameters' => [
                 'database_host' => $database_host,
@@ -216,7 +230,7 @@ class Install extends AbstractInstall
             return false;
         }
 
-        if (!$this->processParameters($parameters)) {
+        if (!$this->processParameters($parameters, $useEnvValuesIfExists)) {
             return false;
         }
 
@@ -230,10 +244,23 @@ class Install extends AbstractInstall
      *
      * @return bool|int
      */
-    public function processParameters($parameters)
+    public function processParameters(array $parameters, bool $useEnvValuesIfExists)
     {
-        $parametersContent = sprintf('<?php return %s;', var_export($parameters, true));
-        if (!file_put_contents(_PS_ROOT_DIR_ . '/app/config/parameters.php', $parametersContent)) {
+        $content = 'array(' . PHP_EOL;
+        $content .= chr(9) . "'parameters' => array(" . PHP_EOL;
+
+        foreach ($parameters['parameters'] as $parameterKey => $parameterValue) {
+            if ($useEnvValuesIfExists && isset(self::PARAMETERS_WITH_ENV_VARS[$parameterKey])) {
+                $content .= chr(9) . chr(9) . "'$parameterKey' => \$ENV['" . self::PARAMETERS_WITH_ENV_VARS[$parameterKey] . "'] ?? " . var_export($parameterValue, true) . "," . PHP_EOL;
+            } else {
+                $content .= chr(9) . chr(9) . "'$parameterKey' => " . var_export($parameterValue, true) . "," . PHP_EOL;
+            }
+        }
+
+        $content .= chr(9) . ")" . PHP_EOL;
+        $content .= ")";
+
+        if (!file_put_contents(_PS_ROOT_DIR_ . '/app/config/parameters.php', sprintf('<?php return %s;', $content))) {
             $this->setError($this->translator->trans('Cannot write app/config/parameters.php file', [], 'Install'));
 
             return false;
