@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # To print only errors
-set -x
+set +x
 
 # Get tests/UI directory path
 PROJECT_PATH=$(cd "$( dirname "$0" )/../" && pwd)
@@ -10,6 +10,7 @@ cd $PROJECT_PATH
 DOC_DIRECTORY=".doc"
 PAGES_DIRECTORY="pages"
 FAKER_DIRECTORY="campaigns/data/faker"
+UTILS_DIRECTORY="campaigns/utils"
 
 # Create .doc directory
 mkdir -p $PROJECT_PATH/$DOC_DIRECTORY
@@ -38,3 +39,6 @@ generate_doc $PAGES_DIRECTORY
 
 # 2. Generate documentation for campaigns/data/faker directory
 generate_doc $FAKER_DIRECTORY
+
+# 3. Generate documentation for campaigns/utils directory
+generate_doc $UTILS_DIRECTORY

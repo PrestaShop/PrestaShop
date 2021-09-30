@@ -127,6 +127,7 @@ To help contributors find more documentation about UI tests, [JS-DOC](https://js
 
 - `pages`
 - `campaigns/data/faker`
+- `campaigns/utils`
 
 ### Before generating documentation
 
