@@ -150,21 +150,17 @@ module.exports = {
         include: path.resolve(__dirname, '../js'),
         use: [
           {
-            loader: 'babel-loader',
-            options: {
-              presets: [['@babel/preset-env', {useBuiltIns: 'usage', modules: false, corejs: '3.18.0'}]],
-              plugins: ['@babel/plugin-transform-runtime'],
-              cacheDirectory: true,
-            },
+            loader: 'esbuild-loader',
           },
         ],
       },
       {
         test: /\.ts?$/,
         include: path.resolve(__dirname, '../js'),
-        loader: 'ts-loader',
+        loader: 'esbuild-loader',
         options: {
-          appendTsSuffixTo: [/\.vue$/],
+          loader: 'ts',
+          target: 'es2015',
         },
         exclude: /node_modules/,
       },
