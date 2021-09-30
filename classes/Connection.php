@@ -151,7 +151,7 @@ class ConnectionCore extends ObjectModel
     public static function setNewConnection($cookie)
     {
         // This is a bot : don't log connection
-        if(self::isBot()) {
+        if (static::isBot()) {
             return false;
         }
 
