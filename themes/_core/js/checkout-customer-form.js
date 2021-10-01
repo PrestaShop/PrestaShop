@@ -34,10 +34,14 @@ export default function () {
   const $checkoutCustomerForm = $(checkoutCustomerForm);
   const $checkoutCustomerFormSubmitBtn = $checkoutCustomerForm.find('[type="submit"]');
   const $checkoutFormEmailInput = $checkoutCustomerForm.find('[name="email"]');
+  const $checkoutFormPasswordInput = $checkoutCustomerForm.find('[name="password"]');
   let timeout;
 
   const handleBlockDisplay = ({customerExists}) => {
     $checkoutNewCustomerRelatedBlock.toggleClass('hidden-xs-up', customerExists);
+    if (customerExists === true) {
+      $checkoutFormPasswordInput.val('');
+    }
   };
 
   const handleAlertMessage = ({alert}) => {
