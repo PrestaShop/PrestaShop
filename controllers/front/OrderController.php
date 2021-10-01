@@ -246,8 +246,7 @@ class OrderControllerCore extends FrontController
 
         if ($this->context->cart->isAllProductsInStock() !== true ||
             $this->context->cart->checkAllProductsAreStillAvailableInThisState() !== true ||
-            $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) 
-        {
+            $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) {
             $responseData['allGood'] = false;
             $responseData['cartUrl'] = $this->context->link->getPageLink('cart', null, null, ['action' => 'show']);
         }
@@ -280,8 +279,7 @@ class OrderControllerCore extends FrontController
         // Check that products are still orderable, at any point in checkout
         if ($this->context->cart->isAllProductsInStock() !== true ||
             $this->context->cart->checkAllProductsAreStillAvailableInThisState() !== true ||
-            $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true)
-        {
+            $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) {
             $shouldRedirectToCart = true;
         }
 
