@@ -146,6 +146,19 @@ class Payment {
       return;
     }
 
+    const url = window.location.href;
+    $.post(url, {
+      ajax: 1,
+      action: 'checkProductsStillOrderable',
+    })
+      .then((resp) => {
+        console.log(resp);
+        if (resp.allGood === false && resp.cartUrl !== '') {
+          location.href = resp.cartUrl;
+          return;
+        }
+      });
+
     $(`${this.confirmationSelector} button`).addClass('disabled');
     $(`#pay-with-${option}-form form`).submit();
   }
