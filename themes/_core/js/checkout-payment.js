@@ -25,6 +25,15 @@
 import $ from 'jquery';
 import prestashop from 'prestashop';
 
+prestashop.checkout = prestashop.checkout || {};
+
+// eslint-disable-next-line no-unused-vars
+prestashop.checkout.onCheckOrderableCartError = (resp, paymentObject) => {
+  if (resp.errors === true && resp.cartUrl !== '') {
+    location.href = resp.cartUrl;
+  }
+};
+
 class Payment {
   constructor() {
     this.confirmationSelector = prestashop.selectors.checkout.confirmationSelector;
@@ -147,6 +156,14 @@ class Payment {
 
       return;
     }
+
+    $.post(window.prestashop.urls.pages.order, {
+      ajax: 1,
+      action: 'checkCartStillOrderable',
+    })
+      .then((resp) => {
+        prestashop.checkout.onCheckOrderableCartError(resp, this);
+      });
 
     $(`${this.confirmationSelector} button`).addClass('disabled');
     $(`#pay-with-${option}-form form`).submit();
