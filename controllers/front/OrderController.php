@@ -237,6 +237,25 @@ class OrderControllerCore extends FrontController
         ]));
     }
 
+    public function displayAjaxCheckProductsStillOrderable(): void
+    {
+        $responseData = [
+            'errors' => false,
+            'cartUrl' => '',
+        ];
+
+        if ($this->context->cart->isAllProductsInStock() !== true ||
+            $this->context->cart->checkAllProductsAreStillAvailableInThisState() !== true ||
+            $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) {
+            $responseData['errors'] = true;
+            $responseData['cartUrl'] = $this->context->link->getPageLink('cart', null, null, ['action' => 'show']);
+        }
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+        $this->ajaxRender(Tools::jsonEncode($responseData));
+    }
+
     public function initContent()
     {
         if (Configuration::isCatalogMode()) {
@@ -250,15 +269,23 @@ class OrderControllerCore extends FrontController
 
         $presentedCart = $this->cart_presenter->present($this->context->cart, true);
 
+        $shouldRedirectToCart = false;
+
+        // Check the customer meets minimal order amount treshold
         if (count($presentedCart['products']) <= 0 || $presentedCart['minimalPurchaseRequired']) {
-            // if there is no product in current cart, redirect to cart page
-            $cartLink = $this->context->link->getPageLink('cart');
-            Tools::redirect($cartLink);
+            $shouldRedirectToCart = true;
         }
 
-        $product = $this->context->cart->checkQuantities(true);
-        if (is_array($product)) {
-            // if there is an issue with product quantities, redirect to cart page
+        // Check that products are still orderable, at any point in checkout
+        if ($this->context->cart->isAllProductsInStock() !== true ||
+            $this->context->cart->checkAllProductsAreStillAvailableInThisState() !== true ||
+            $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) {
+            $shouldRedirectToCart = true;
+        }
+
+        // If there was a problem, we redirect the user to cart, CartController deals with the detailed errors
+        // We don't redirect in case of ajax requests, so we can get our answer
+        if ($shouldRedirectToCart === true && !$this->ajax) {
             $cartLink = $this->context->link->getPageLink('cart', null, null, ['action' => 'show']);
             Tools::redirect($cartLink);
         }
