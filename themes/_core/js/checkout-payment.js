@@ -146,8 +146,7 @@ class Payment {
       return;
     }
 
-    const url = window.location.href;
-    $.post(url, {
+    $.post(window.location.href, {
       ajax: 1,
       action: 'checkProductsStillOrderable',
     })
