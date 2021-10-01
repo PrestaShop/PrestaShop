@@ -3,10 +3,10 @@ About PrestaShop
 
 [![PHP checks and unit tests](https://github.com/PrestaShop/PrestaShop/actions/workflows/php.yml/badge.svg)](https://github.com/PrestaShop/PrestaShop/actions/workflows/php.yml)
 [![Integration tests](https://github.com/PrestaShop/PrestaShop/actions/workflows/integration.yml/badge.svg)](https://github.com/PrestaShop/PrestaShop/actions/workflows/integration.yml)
-[![UI tests - PHP 7.4](https://github.com/PrestaShop/PrestaShop/actions/workflows/sanity-74.yml/badge.svg)](https://github.com/PrestaShop/PrestaShop/actions/workflows/sanity-74.yml)
+[![UI tests](https://github.com/PrestaShop/PrestaShop/actions/workflows/sanity.yml/badge.svg)](https://github.com/PrestaShop/PrestaShop/actions/workflows/sanity.yml)
 [![Nightly Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi-nightly.prestashop.com%2Fdata%2Fbadge&label=Nightly%20Status&cacheSeconds=3600)](https://nightly.prestashop.com/)
 
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.1-8892BF.svg?style=flat-square)](https://php.net/)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.2-8892BF.svg?style=flat-square)](https://php.net/)
 [![GitHub release](https://img.shields.io/github/v/release/prestashop/prestashop)](https://github.com/PrestaShop/PrestaShop)
 [![Slack chat](https://img.shields.io/badge/Chat-on%20Slack-red)](https://github.com/PrestaShop/open-source/blob/master/slack/readme.md)
 [![GitHub forks](https://img.shields.io/github/forks/PrestaShop/PrestaShop)](https://github.com/PrestaShop/PrestaShop/network)
@@ -133,22 +133,22 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [chat]: https://www.prestashop-project.org/slack/
 [user-doc]: https://doc.prestashop.com
 [contributing-md]: CONTRIBUTING.md
-[contributing-tutorial]: https://devdocs.prestashop.com/1.7/contribute/
+[contributing-tutorial]: https://devdocs.prestashop.com/8/contribute/
 [crowdin]: https://crowdin.net/project/prestashop-official
 [getting-started]: https://doc.prestashop.com/display/PS17/Getting+Started
 [user-guide]: https://doc.prestashop.com/display/PS17/User+Guide
 [updating-guide]: https://doc.prestashop.com/display/PS16/Updating+PrestaShop
 [merchant-guide]: https://doc.prestashop.com/display/PS16/Merchant%27s+Guide
-[faq-17]: https://devdocs.prestashop.com/1.7/faq/
+[faq-17]: https://devdocs.prestashop.com/8/faq/
 [sysadmin-guide]: https://doc.prestashop.com/display/PS16/System+Administrator+Guide
 [contributors-md]: CONTRIBUTORS.md
-[example-nginx]: https://devdocs.prestashop.com/1.7/basics/installation/nginx/
+[example-nginx]: https://devdocs.prestashop.com/8/basics/installation/nginx/
 [docker-compose]: https://docs.docker.com/compose/
-[install-guide-dev]: https://devdocs.prestashop.com/1.7/basics/installation/
-[system-requirements]: https://devdocs.prestashop.com/1.7/basics/installation/system-requirements/
+[install-guide-dev]: https://devdocs.prestashop.com/8/basics/installation/
+[system-requirements]: https://devdocs.prestashop.com/8/basics/installation/system-requirements/
 [install-guide]: https://doc.prestashop.com/display/PS17/Installing+PrestaShop
 [devdocs]: https://devdocs.prestashop.com/
 [create-issue]: https://github.com/PrestaShop/PrestaShop/issues/new/choose
-[reporting-issues]: https://devdocs.prestashop.com/1.7/contribute/contribute-reporting-issues/
-[modules-devdocs]: https://devdocs.prestashop.com/1.7/modules/
-[themes-devdocs]: https://devdocs.prestashop.com/1.7/themes/
+[reporting-issues]: https://devdocs.prestashop.com/8/contribute/contribute-reporting-issues/
+[modules-devdocs]: https://devdocs.prestashop.com/8/modules/
+[themes-devdocs]: https://devdocs.prestashop.com/8/themes/
