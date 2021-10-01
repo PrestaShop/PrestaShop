@@ -858,8 +858,6 @@ class ToolsCore
     /**
      * Return price converted.
      *
-     * @deprecated since 1.7.4 use convertPriceToCurrency()
-     *
      * @param float|null $price Product price
      * @param object|array|int|string|null $currency Current currency object
      * @param bool $to_currency convert to currency or from currency to default currency
