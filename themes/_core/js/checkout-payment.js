@@ -153,7 +153,6 @@ class Payment {
       .then((resp) => {
         if (resp.allGood === false && resp.cartUrl !== '') {
           location.href = resp.cartUrl;
-          return;
         }
       });
 
