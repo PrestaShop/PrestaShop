@@ -249,7 +249,7 @@ class OrderControllerCore extends FrontController
             $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) 
         {
             $responseData['allGood'] = false;
-            $responseData['cartUrl'] = $this->context->link->getPageLink('cart', null, null, ['action' => 'show']);;
+            $responseData['cartUrl'] = $this->context->link->getPageLink('cart', null, null, ['action' => 'show']);
         }
 
         ob_end_clean();
