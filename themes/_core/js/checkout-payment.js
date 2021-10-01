@@ -152,7 +152,6 @@ class Payment {
       action: 'checkProductsStillOrderable',
     })
       .then((resp) => {
-        console.log(resp);
         if (resp.allGood === false && resp.cartUrl !== '') {
           location.href = resp.cartUrl;
           return;
