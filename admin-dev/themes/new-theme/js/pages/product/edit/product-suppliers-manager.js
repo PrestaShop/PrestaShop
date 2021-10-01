@@ -119,7 +119,12 @@ export default class ProductSuppliersManager {
     const defaultProductSupplierId = this.getDefaultProductSupplierId();
 
     if (defaultProductSupplierId) {
-      const newDefaultPrice = $(this.suppliersMap.productSupplierRow.priceInput(defaultProductSupplierId)).val();
+      const $defaultPriceInput = $(this.suppliersMap.productSupplierRow.priceInput(defaultProductSupplierId));
+
+      if (!$defaultPriceInput.length) {
+        return;
+      }
+      const newDefaultPrice = $defaultPriceInput.val();
       this.productFormModel.set('price.wholesalePrice', newDefaultPrice);
     }
   }
@@ -128,6 +133,10 @@ export default class ProductSuppliersManager {
    * @returns {null|int}
    */
   getDefaultProductSupplierId() {
+    if (this.getSelectedSuppliers().length === 0) {
+      return null;
+    }
+
     const defaultSupplier = this.$defaultSupplierGroup.find('input:checked');
 
     if (!defaultSupplier.length) {
