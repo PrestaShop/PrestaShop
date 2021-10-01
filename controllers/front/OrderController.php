@@ -237,16 +237,15 @@ class OrderControllerCore extends FrontController
         ]));
     }
 
-    public function displayAjaxcheckCustomerInformation(): void
+    public function displayAjaxCheckCustomerInformation(): void
     {
         $email = Tools::getValue('email');
-        $isEmailValid = Validate::isEmail($email);
         $isGuestAllowed = (bool) Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
         $customerExists = false;
         $responseData = [];
         $alert = [];
 
-        if ($isEmailValid) {
+        if (Validate::isEmail($email)) {
             $customerExists = Customer::customerExists($email, false, true);
         }
 
