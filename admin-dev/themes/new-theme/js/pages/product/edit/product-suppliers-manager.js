@@ -160,10 +160,13 @@ export default class ProductSuppliersManager {
    * @param {Object} supplier
    */
   addSupplier(supplier) {
+    const wholeSalePrice = this.productFormModel.getProduct().price.wholesalePrice;
+
     if (typeof this.suppliers[supplier.supplierId] === 'undefined') {
       const newSupplier = Object.create(this.defaultDataForSupplier);
       newSupplier.supplierId = supplier.supplierId;
       newSupplier.supplierName = supplier.supplierName;
+      newSupplier.price = wholeSalePrice;
 
       this.suppliers[supplier.supplierId] = newSupplier;
     } else {
