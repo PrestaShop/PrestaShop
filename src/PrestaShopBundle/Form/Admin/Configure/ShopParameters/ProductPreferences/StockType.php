@@ -53,7 +53,7 @@ class StockType extends TranslatorAwareType
                 'only_enabled_locales' => false,
                 'options' => [
                     'attr' => [
-                        'placeholder' => $this->trans('In Stock','Admin.Shopparameters.Help'),
+                        'placeholder' => $this->trans('In Stock', 'Admin.Shopparameters.Help'),
                     ],
                 ],
             ])
@@ -62,7 +62,7 @@ class StockType extends TranslatorAwareType
                 'only_enabled_locales' => false,
                 'options' => [
                     'attr' => [
-                        'placeholder' => $this->trans('On backorder','Admin.Shopparameters.Help'),
+                        'placeholder' => $this->trans('On backorder', 'Admin.Shopparameters.Help'),
                     ],
                 ],
             ])
@@ -71,7 +71,7 @@ class StockType extends TranslatorAwareType
                 'only_enabled_locales' => false,
                 'options' => [
                     'attr' => [
-                        'placeholder' => $this->trans('Out of stock','Admin.Shopparameters.Help'),
+                        'placeholder' => $this->trans('Out of stock', 'Admin.Shopparameters.Help'),
                     ],
                 ],
             ])
@@ -80,7 +80,7 @@ class StockType extends TranslatorAwareType
                 'only_enabled_locales' => false,
                 'options' => [
                     'attr' => [
-                        'placeholder' => $this->trans('Delivered within 3-4 days','Admin.Shopparameters.Help'),
+                        'placeholder' => $this->trans('Delivered within 3-4 days', 'Admin.Shopparameters.Help'),
                     ],
                 ],
             ])
@@ -89,7 +89,7 @@ class StockType extends TranslatorAwareType
                 'only_enabled_locales' => false,
                 'options' => [
                     'attr' => [
-                        'placeholder' => $this->trans('Delivered within 5-7 days','Admin.Shopparameters.Help'),
+                        'placeholder' => $this->trans('Delivered within 5-7 days', 'Admin.Shopparameters.Help'),
                     ],
                 ],
             ])
