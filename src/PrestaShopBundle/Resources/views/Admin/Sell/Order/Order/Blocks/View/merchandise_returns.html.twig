@@ -40,7 +40,7 @@
           <td>{{ return.date|date_format_full }}</td>
           <td>{{ return.type }}</td>
           <td>{{ return.stateName }}</td>
-          <td class="text-right">
+          <td>
             {% if return.trackingNumber and return.trackingUrl %}
               <a href="{{ return.trackingUrl }}">{{ return.trackingNumber }}</a>
             {% elseif return.trackingNumber %}
