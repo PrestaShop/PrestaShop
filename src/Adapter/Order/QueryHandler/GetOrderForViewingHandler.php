@@ -598,10 +598,14 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
             if (isset($orderReturn['url'], $orderReturn['tracking_number'])) {
                 $trackingUrl = $orderReturn['url'];
-                $trackingNumber = $orderReturn['tracking_number'];
-            } elseif (isset($orderReturn['tracking_number'])) {
-                $trackingNumber = $orderReturn['tracking_number'];
             }
+
+            $conf = $this->configuration->get('PS_RETURN_PREFIX');
+            $trackingNumber = sprintf(
+                '%s%06d',
+                $conf[$this->contextLanguageId] ?? '',
+                $orderReturn['id_order_return']
+            );
 
             $orderReturns[] = new OrderReturnForViewing(
                 (int) $orderReturn['id_order_return'],
