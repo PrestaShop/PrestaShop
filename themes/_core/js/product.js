@@ -133,7 +133,7 @@ function updateProduct(event, eventType, updateUrl) {
     preview = '';
   }
 
-  // Can not get product ajax url
+  // Cannot get product ajax url
   if (updateUrl === null) {
     showErrorNextToAddtoCartButton();
 
@@ -199,7 +199,7 @@ function updateProduct(event, eventType, updateUrl) {
       },
       success(data) {
         // Avoid image to blink each time we modify the product quantity
-        // Can not compare directly cause of HTML comments in data.
+        // Cannot compare directly cause of HTML comments in data.
         const $newImagesContainer = $('<div>').append(
           data.product_cover_thumbnails,
         );

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
 
 /**
- * Attachment can not be added exception
+ * Attachment cannot be added exception
  */
 class CannotAddAttachmentException extends AttachmentException
 {

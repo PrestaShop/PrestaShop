@@ -1104,7 +1104,7 @@ class WebserviceRequestCore
 
     protected function manageFilters()
     {
-        // filtered fields which can not use filters : hidden_fields
+        // filtered fields which cannot use filters : hidden_fields
         $available_filters = [];
         // filtered i18n fields which can use filters
         $i18n_available_filters = [];

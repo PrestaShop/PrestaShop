@@ -668,7 +668,7 @@ class AdminCarriersControllerCore extends AdminController
                     if (isset($position) && $carrier->updatePosition($way, $position)) {
                         echo 'ok position ' . (int) $position . ' for carrier ' . (int) $pos[1] . '\r\n';
                     } else {
-                        echo '{"hasError" : true, "errors" : "Can not update carrier ' . (int) $id_carrier . ' to position ' . (int) $position . ' "}';
+                        echo '{"hasError" : true, "errors" : "Cannot update carrier ' . (int) $id_carrier . ' to position ' . (int) $position . ' "}';
                     }
                 } else {
                     echo '{"hasError" : true, "errors" : "This carrier (' . (int) $id_carrier . ') can t be loaded"}';

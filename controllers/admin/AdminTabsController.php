@@ -371,7 +371,7 @@ class AdminTabsControllerCore extends AdminController
                     if (isset($position) && $tab->updatePosition($way, $position)) {
                         echo 'ok position ' . (int) $position . ' for tab ' . (int) $pos[1] . '\r\n';
                     } else {
-                        echo '{"hasError" : true, "errors" : "Can not update tab ' . (int) $id_tab . ' to position ' . (int) $position . ' "}';
+                        echo '{"hasError" : true, "errors" : "Cannot update tab ' . (int) $id_tab . ' to position ' . (int) $position . ' "}';
                     }
                 } else {
                     echo '{"hasError" : true, "errors" : "This tab (' . (int) $id_tab . ') can t be loaded"}';

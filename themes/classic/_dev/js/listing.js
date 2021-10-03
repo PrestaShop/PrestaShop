@@ -166,7 +166,7 @@ $(document).ready(() => {
     }
 
     if ($(event.target).parent()[0].dataset.searchUrl === undefined) {
-      throw new Error('Can not parse search URL');
+      throw new Error('Cannot parse search URL');
     }
 
     return $(event.target).parent()[0].dataset.searchUrl;

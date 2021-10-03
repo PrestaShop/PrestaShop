@@ -88,7 +88,7 @@ final class MailThemeConfiguration implements DataConfigurationInterface
     public function validateConfiguration(array $configuration)
     {
         if (empty($configuration['defaultTheme'])) {
-            throw new InvalidArgumentException('Default theme can not be empty');
+            throw new InvalidArgumentException('Default theme cannot be empty');
         }
 
         return null !== $this->themeCatalog->getByName($configuration['defaultTheme']);

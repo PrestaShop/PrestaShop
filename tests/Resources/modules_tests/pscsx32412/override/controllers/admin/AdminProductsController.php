@@ -4749,7 +4749,7 @@ class AdminProductsController extends AdminProductsControllerCore
                                 }
                                 echo 'ok position ' . (int) $position . ' for product ' . (int) $pos[2] . "\r\n";
                             } else {
-                                echo '{"hasError" : true, "errors" : "Can not update product ' . (int) $id_product . ' to position ' . (int) $position . ' "}';
+                                echo '{"hasError" : true, "errors" : "Cannot update product ' . (int) $id_product . ' to position ' . (int) $position . ' "}';
                             }
                         } else {
                             echo '{"hasError" : true, "errors" : "This product (' . (int) $id_product . ') can t be loaded"}';

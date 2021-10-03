@@ -111,7 +111,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         if (!$order->hasBeenPaid() && !$order->hasPayments()) {
             throw new InvalidOrderStateException(
                 InvalidOrderStateException::NOT_PAID,
-                'Can not perform partial refund on an order which is not paid'
+                'Cannot perform partial refund on an order which is not paid'
             );
         }
 

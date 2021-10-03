@@ -186,7 +186,7 @@ class AttachmentCore extends ObjectModel
     public function deleteAttachments(bool $updateAttachmentCache = true): bool
     {
         if (0 >= (int) $this->id) {
-            // Can not delete attachement without id
+            // Cannot delete attachement without id
             return false;
         }
 

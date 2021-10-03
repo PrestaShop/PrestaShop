@@ -30,5 +30,5 @@
 class BuildException extends Exception
 {
     /** @var string */
-    protected $message = 'Can not build the release';
+    protected $message = 'Cannot build the release';
 }

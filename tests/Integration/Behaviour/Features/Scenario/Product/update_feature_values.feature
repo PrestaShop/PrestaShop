@@ -135,7 +135,7 @@ Feature: Update product details from Back Office (BO)
     Then product "lightMagicBook" should have no feature values
     And feature value "light" should not exist
 
-  Scenario: I can not set the same feature twice
+  Scenario: I cannot set the same feature twice
     Given I add product "lightMagicBook" with following information:
       | name[en-US] | Light Magic Book |
       | type        | standard         |
@@ -147,7 +147,7 @@ Feature: Update product details from Back Office (BO)
     Then I should get an error that a feature can only be associated once
     And product "lightMagicBook" should have no feature values
 
-  Scenario: I can not set a value to another feature
+  Scenario: I cannot set a value to another feature
     Given I add product "lightMagicBook" with following information:
       | name[en-US] | Light Magic Book |
       | type        | standard         |

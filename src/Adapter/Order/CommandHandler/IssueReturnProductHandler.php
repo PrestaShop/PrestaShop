@@ -117,7 +117,7 @@ class IssueReturnProductHandler extends AbstractOrderCommandHandler implements I
         if (!$order->hasBeenDelivered()) {
             throw new InvalidOrderStateException(
                 InvalidOrderStateException::DELIVERY_NOT_FOUND,
-                'Can not perform return product on order with not delivered yet'
+                'Cannot perform return product on order with not delivered yet'
             );
         }
         $this->setOrderContext($this->contextStateManager, $order);

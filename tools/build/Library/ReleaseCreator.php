@@ -268,7 +268,7 @@ class ReleaseCreator
     public function createRelease()
     {
         if (!file_exists($this->destinationDir) && !mkdir($this->destinationDir, 0777, true)) {
-            throw new BuildException("ERROR: can not create directory '{$this->destinationDir}'");
+            throw new BuildException("ERROR: cannot create directory '{$this->destinationDir}'");
         }
         $startTime = date('H:i:s');
         $this->consoleWriter->displayText(

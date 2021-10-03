@@ -1453,7 +1453,7 @@ class AdminModulesControllerCore extends AdminController
         }
 
         // Since 1.7, legacy modules page does not have to be show
-        // Redirect to the new page, can not do this into __construct because
+        // Redirect to the new page, cannot do this into __construct because
         // some install module, configuration are done with this controller...
         Tools::redirectAdmin($this->getAdminModulesUrl());
     }

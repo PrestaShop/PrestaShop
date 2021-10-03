@@ -932,7 +932,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                     if (isset($position) && $group_attribute->updatePosition($way, $position)) {
                         echo 'ok position ' . (int) $position . ' for attribute group ' . (int) $pos[2] . '\r\n';
                     } else {
-                        echo '{"hasError" : true, "errors" : "Can not update the ' . (int) $id_attribute_group . ' attribute group to position ' . (int) $position . ' "}';
+                        echo '{"hasError" : true, "errors" : "Cannot update the ' . (int) $id_attribute_group . ' attribute group to position ' . (int) $position . ' "}';
                     }
                 } else {
                     echo '{"hasError" : true, "errors" : "The (' . (int) $id_attribute_group . ') attribute group cannot be loaded."}';
@@ -960,7 +960,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                         if (isset($position) && $attribute->updatePosition($way, $position)) {
                             echo 'ok position ' . (int) $position . ' for attribute ' . (int) $pos[2] . '\r\n';
                         } else {
-                            echo '{"hasError" : true, "errors" : "Can not update the ' . (int) $id_attribute . ' attribute to position ' . (int) $position . ' "}';
+                            echo '{"hasError" : true, "errors" : "Cannot update the ' . (int) $id_attribute . ' attribute to position ' . (int) $position . ' "}';
                         }
                     } else {
                         echo '{"hasError" : true, "errors" : "The (' . (int) $id_attribute . ') attribute cannot be loaded"}';

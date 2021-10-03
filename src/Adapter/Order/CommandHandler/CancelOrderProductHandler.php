@@ -146,7 +146,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
         if ($order->hasBeenPaid() || $order->hasPayments()) {
             throw new InvalidOrderStateException(
                 InvalidOrderStateException::ALREADY_PAID,
-                'Can not cancel product on an order which is already paid'
+                'Cannot cancel product on an order which is already paid'
             );
         }
     }

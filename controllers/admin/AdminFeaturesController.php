@@ -642,7 +642,7 @@ class AdminFeaturesControllerCore extends AdminController
                         if (isset($position) && $feature->updatePosition($way, $position, $id_feature)) {
                             echo 'ok position ' . (int) $position . ' for feature ' . (int) $pos[1] . '\r\n';
                         } else {
-                            echo '{"hasError" : true, "errors" : "Can not update feature ' . (int) $id_feature . ' to position ' . (int) $position . ' "}';
+                            echo '{"hasError" : true, "errors" : "Cannot update feature ' . (int) $id_feature . ' to position ' . (int) $position . ' "}';
                         }
                     } else {
                         echo '{"hasError" : true, "errors" : "This feature (' . (int) $id_feature . ') can t be loaded"}';

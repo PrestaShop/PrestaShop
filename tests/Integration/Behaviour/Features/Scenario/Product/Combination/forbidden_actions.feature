@@ -5,7 +5,7 @@
 @forbidden-combination-actions
 Feature: Combination actions are forbidden on product which do not have combinations type (BO)
   As an employee
-  I can not perform combination actions on standard, pack or virtual products
+  I cannot perform combination actions on standard, pack or virtual products
 
   Background:
     Given language with iso code "en" is the default one

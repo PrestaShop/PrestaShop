@@ -117,13 +117,13 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
         if (!$order->hasBeenPaid() && !$order->hasPayments()) {
             throw new InvalidOrderStateException(
                 InvalidOrderStateException::NOT_PAID,
-                'Can not perform standard refund on an order which is not paid'
+                'Cannot perform standard refund on an order which is not paid'
             );
         }
         if ($order->hasBeenDelivered()) {
             throw new InvalidOrderStateException(
                 InvalidOrderStateException::UNEXPECTED_DELIVERY,
-                'Can not perform standard refund on order already delivered'
+                'Cannot perform standard refund on order already delivered'
             );
         }
 

@@ -266,7 +266,7 @@ export default class CurrencyForm {
           } else {
             showGrowl(
               'error',
-              `Can not find CLDR data for currency ${currencyIsoCode}`,
+              `Cannot find CLDR data for currency ${currencyIsoCode}`,
               3000,
             );
           }

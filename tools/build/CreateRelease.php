@@ -114,7 +114,7 @@ try {
     $releaseCreator->createRelease();
 } catch (Exception $e) {
     $consoleWrite->displayText(
-        "ERROR:{$lineSeparator}Can not create the release.{$lineSeparator}Message: '{$e->getMessage()}'{$lineSeparator}",
+        "ERROR:{$lineSeparator}Cannot create the release.{$lineSeparator}Message: '{$e->getMessage()}'{$lineSeparator}",
         ConsoleWriter::COLOR_RED
     );
 

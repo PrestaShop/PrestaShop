@@ -61,6 +61,6 @@ class EntityLinkBuilderFactory
             }
         }
 
-        throw new BuilderNotFoundException(sprintf('Can not find a builder for entity %s', $entity));
+        throw new BuilderNotFoundException(sprintf('Cannot find a builder for entity %s', $entity));
     }
 }
