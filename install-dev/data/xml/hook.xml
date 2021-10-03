@@ -3510,5 +3510,10 @@
       <title>After customer logout</title>
       <description>This hook allows you to execute code after customer logout</description>
     </hook>
+    <hook id="displayCheckoutSummaryTop">
+      <name>displayCheckoutSummaryTop</name>
+      <title>Cart summary top</title>
+      <description>This hook allows you to display new elements in top of cart summary</description>
+    </hook>
   </entities>
 </entity_hook>
