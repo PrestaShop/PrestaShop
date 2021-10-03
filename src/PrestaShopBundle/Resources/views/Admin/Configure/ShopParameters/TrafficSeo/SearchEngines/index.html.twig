@@ -34,11 +34,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': searchEnginesGrid} %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': searchEnginesGrid} %}
 {% endblock %}
 
 {% block javascripts %}

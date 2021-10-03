@@ -27,10 +27,5 @@
 
 {% block content %}
   {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/SearchEngines/Blocks/form.html.twig' with {'searchEngineForm': searchEngineForm} %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/SearchEngines/Blocks/form.html.twig' with {'searchEngineForm': searchEngineForm} %}
 {% endblock %}
-
