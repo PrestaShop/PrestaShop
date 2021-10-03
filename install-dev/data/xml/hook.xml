@@ -3500,5 +3500,15 @@
       <title>After setting the tracking number for the order</title>
       <description>This hook allows you to execute code after the unique tracking number for the order was added</description>
     </hook>
+    <hook id="actionAdminOrdersTrackingNumberUpdate">
+      <name>actionCustomerLogoutBefore</name>
+      <title>Before customer logout</title>
+      <description>This hook allows you to execute code before customer logout</description>
+    </hook>
+    <hook id="actionAdminOrdersTrackingNumberUpdate">
+      <name>actionCustomerLogoutAfter</name>
+      <title>After customer logout</title>
+      <description>This hook allows you to execute code after customer logout</description>
+    </hook>
   </entities>
 </entity_hook>
