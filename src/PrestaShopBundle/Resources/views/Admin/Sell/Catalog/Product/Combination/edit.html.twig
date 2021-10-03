@@ -32,23 +32,20 @@
 {% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-sm-12">
-    {{ form_start(combinationForm, {'attr': {'class': 'form-horizontal combination-page', 'novalidate': 'novalidate'}}) }}
-    <div class="card">
-      <div class="card-header">
-        {{ 'Combination details'|trans({}, 'Admin.Catalog.Feature') }} -
-        <span>{{ combinationForm.vars.value.name }}</span>
-      </div>
-      <div class="card-block row">
-        <div id="{{ combinationForm.vars.id }}">
-          {{ form_row(combinationForm) }}
-        </div>
+  {{ form_start(combinationForm, {'attr': {'class': 'form-horizontal combination-page', 'novalidate': 'novalidate'}}) }}
+  <div class="card">
+    <div class="card-header">
+      {{ 'Combination details'|trans({}, 'Admin.Catalog.Feature') }}
+      -
+      <span>{{ combinationForm.vars.value.name }}</span>
+    </div>
+    <div class="card-block row">
+      <div id="{{ combinationForm.vars.id }}">
+        {{ form_row(combinationForm) }}
       </div>
     </div>
-    {{ form_end(combinationForm) }}
   </div>
-</div>
+  {{ form_end(combinationForm) }}
 {% endblock %}
 
 {% block javascripts %}
