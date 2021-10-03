@@ -44,7 +44,9 @@
             {% if return.trackingNumber and return.trackingUrl %}
               <a href="{{ return.trackingUrl }}">{{ return.trackingNumber }}</a>
             {% elseif return.trackingNumber %}
-              {{ return.trackingNumber }}
+              <a class="d-print-none" href="{{ getAdminLink('AdminReturn', true, {'id_order_return': return.idOrderReturn, updateorder_return : '', 'back': app.request.uri}) }}">
+                  {{ return.trackingNumber }}
+              </a>
             {% endif %}
           </td>
         </tr>
