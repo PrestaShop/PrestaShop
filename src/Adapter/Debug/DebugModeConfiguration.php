@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Debug;
 
-use PrestaShopAutoload:
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShopAutoload;
 
 /**
  * This class manages Debug mode configuration for a Shop.
