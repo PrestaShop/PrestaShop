@@ -26,11 +26,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col-lg-12">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': taxRulesGroupGrid} %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': taxRulesGroupGrid} %}
 {% endblock %}
 
 {% block javascripts %}
