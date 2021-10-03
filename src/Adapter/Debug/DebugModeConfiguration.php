@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Debug;
 
+use PrestaShopAutoload:
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
@@ -85,6 +86,8 @@ class DebugModeConfiguration implements DataConfigurationInterface
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_DISABLE_NON_NATIVE_MODULE', $configuration['disable_non_native_modules']);
             $this->configuration->set('PS_DISABLE_OVERRIDES', $configuration['disable_overrides']);
+
+            PrestaShopAutoload::getInstance()->generateIndex();
 
             $status = $this->updateDebugMode((bool) $configuration['debug_mode']);
 
