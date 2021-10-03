@@ -27,31 +27,19 @@
 {% trans_default_domain 'Admin.International.Feature' %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col-xl-12">
-      {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/import_localization_pack_block.html.twig' %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/import_localization_pack_block.html.twig' %}
 
-  <div class="row justify-content-center">
-    <div class="col-xl-12">
-      {{ form_start(configurationForm, {'action': path('admin_localization_configuration_save')}) }}
-        {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/configuration.html.twig' %}
-      {{ form_end(configurationForm) }}
-    </div>
+  {{ form_start(configurationForm, {'action': path('admin_localization_configuration_save')}) }}
+  {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/configuration.html.twig' %}
+  {{ form_end(configurationForm) }}
 
-    <div class="col-xl-12">
-      {{ form_start(localUnitsForm, {'action': path('admin_localization_local_units_save')}) }}
-        {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/local_units.html.twig' %}
-      {{ form_end(localUnitsForm) }}
-    </div>
+  {{ form_start(localUnitsForm, {'action': path('admin_localization_local_units_save')}) }}
+  {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/local_units.html.twig' %}
+  {{ form_end(localUnitsForm) }}
 
-    <div class="col-xl-12">
-      {{ form_start(advancedForm, {'action': path('admin_localization_advanced_save')}) }}
-        {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/advanced_configuration.html.twig' %}
-      {{ form_end(advancedForm) }}
-    </div>
-  </div>
+  {{ form_start(advancedForm, {'action': path('admin_localization_advanced_save')}) }}
+  {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/advanced_configuration.html.twig' %}
+  {{ form_end(advancedForm) }}
 
 {% endblock %}
 

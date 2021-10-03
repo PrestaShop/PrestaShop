@@ -24,47 +24,45 @@
  *#}
 {% set modulesListShouldBeDisplayed = (modulesList is defined and modulesList is not empty) %}
 {% if modulesListShouldBeDisplayed == true %}
-  <div class="row row-margin-bottom">
-  <div class="col-lg-12">
+  <div class="row-margin-bottom">
     <ul class="nav nav-pills">
       {% if modulesList.notInstalled|length > 0 %}
-      <li class="active">
-        <a href="#tab_modules_list_not_installed" data-toggle="tab">
-          {{ 'Not Installed'|trans({}) }}
-        </a>
-      </li>
+        <li class="active">
+          <a href="#tab_modules_list_not_installed" data-toggle="tab">
+            {{ 'Not Installed'|trans({}) }}
+          </a>
+        </li>
       {% endif %}
 
       {% if modulesList.installed|length > 0 %}
-        <li {% if modulesList.notInstalled|length == 0 %}class="active"{% endif %}>
-        <a href="#tab_modules_list_installed" data-toggle="tab">
-          {{ 'Installed'|trans({}) }}
-        </a>
+        <li {% if modulesList.notInstalled|length == 0 %} class="active" {% endif %}>
+          <a href="#tab_modules_list_installed" data-toggle="tab">
+            {{ 'Installed'|trans({}) }}
+          </a>
         </li>
       {% endif %}
     </ul>
   </div>
-</div>
-<div id="modules_list_container_content" class="tab-content modal-content-overflow">
-  {% if modulesList.notInstalled is defined and modulesList.notInstalled is not empty %}
-  <div class="tab-pane active" id="tab_modules_list_not_installed">
-    <table id="tab_modules_list_not_installed" class="table">
-      {% for module in modulesList.notInstalled %}
-        {{ include('@PrestaShop/Admin/Module/Includes/tab-module-line.html.twig',{'module': module}) }}
-      {% endfor %}
-    </table>
+  <div id="modules_list_container_content" class="tab-content modal-content-overflow">
+    {% if modulesList.notInstalled is defined and modulesList.notInstalled is not empty %}
+      <div class="tab-pane active" id="tab_modules_list_not_installed">
+        <table id="tab_modules_list_not_installed" class="table">
+          {% for module in modulesList.notInstalled %}
+            {{ include('@PrestaShop/Admin/Module/Includes/tab-module-line.html.twig',{'module': module}) }}
+          {% endfor %}
+        </table>
+      </div>
+    {% endif %}
+    {% if modulesList.installed|length > 0 %}
+      <div class="tab-pane {% if modulesList.notInstalled|length == 0 %}active{% endif %}" id="tab_modules_list_installed">
+        <table id="tab_modules_list_installed" class="table">
+          {% for module in modulesList.installed %}
+            {{ include('@PrestaShop/Admin/Module/Includes/tab-module-line.html.twig',{'module': module}) }}
+          {% endfor %}
+        </table>
+      </div>
+    {% endif %}
   </div>
-  {% endif %}
-  {% if modulesList.installed|length > 0 %}
-  <div class="tab-pane {% if modulesList.notInstalled|length == 0 %}active{% endif %}" id="tab_modules_list_installed">
-    <table id="tab_modules_list_installed" class="table">
-      {% for module in modulesList.installed %}
-        {{ include('@PrestaShop/Admin/Module/Includes/tab-module-line.html.twig',{'module': module}) }}
-      {% endfor %}
-    </table>
-  </div>
-  {% endif %}
-</div>
 {% endif %}
 <div class="alert alert-addons row-margin-top" role="alert">
   <p class="alert-text">
