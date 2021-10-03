@@ -48,9 +48,7 @@
     </div>
   </div>
 
-  <div class="row">
-    {{ renderhook('displayAdminCustomers', {'id_customer': customerInformation.customerId.value}) }}
-  </div>
+  {{ renderhook('displayAdminCustomers', {'id_customer': customerInformation.customerId.value}) }}
 {% endblock %}
 
 {% block javascripts %}

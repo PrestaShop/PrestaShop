@@ -29,24 +29,15 @@
     {{ 'Addresses'|trans({}, 'Admin.Global') }}
     <span class="badge badge-primary rounded">{{ customerInformation.addressesInformation|length }}</span>
 
-    <a href="{{ getAdminLink('AdminAddresses', true, {'id_customer': customerInformation.customerId.value, 'addaddress': 1, 'back': app.request.uri}) }}"
-       class="tooltip-link float-right"
-       data-toggle="pstooltip"
-       title=""
-       data-placement="top"
-       data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}"
-    >
+    <a href="{{ getAdminLink('AdminAddresses', true, {'id_customer': customerInformation.customerId.value, 'addaddress': 1, 'back': app.request.uri}) }}" class="tooltip-link float-right" 
+    data-toggle="pstooltip" title="" data-placement="top" data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}">
       <i class="material-icons">add_circle</i>
     </a>
   </h3>
 
   <div class="card-body">
     {% if customerAddressGrid.data.records_total > 0 %}
-      <div class="row">
-        <div class="col">
-          {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerAddressGrid} %}
-        </div>
-      </div>
+      {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerAddressGrid} %}
     {% else %}
       <p class="text-muted text-center mb-0">
         {{ '%firstname% %lastname% has not registered any addresses yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
