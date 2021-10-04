@@ -39,6 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use Product;
 
+/**
+ * Class ProductShopUpdater
+ */
 class ProductShopUpdater
 {
     /**

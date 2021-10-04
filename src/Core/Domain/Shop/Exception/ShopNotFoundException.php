@@ -27,6 +27,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\Exception;
 
+/**
+ * Thrown when a shop is nonexistent.
+ */
 class ShopNotFoundException extends ShopException
 {
 }
