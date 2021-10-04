@@ -1,18 +1,16 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
-const common = require('./common.js');
 const {VueLoaderPlugin} = require('vue-loader');
-const { HotAcceptPlugin } = require('hot-accept-webpack-plugin');
-const keepLicense = require('uglify-save-license');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const {HotAcceptPlugin} = require('hot-accept-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const common = require('./common.js');
 
 /**
  * Returns the development webpack config,
  * by merging development specific configuration with the common one.
  */
-function devConfig(test) {
-  console.log();
+function devConfig() {
   const dev = Object.assign(
     common,
     {
@@ -29,7 +27,7 @@ function devConfig(test) {
         hot: true,
         static: {
           directory: path.join(__dirname, '/../public'),
-          watch: false
+          watch: false,
         },
         port: 3000,
         watchFiles: [
@@ -43,21 +41,19 @@ function devConfig(test) {
             target: process.env.PS_URL,
             secure: false,
             changeOrigin: true,
-          }
+          },
         },
         devMiddleware: {
           publicPath: path.join(__dirname, '/../public'),
-          writeToDisk: (filePath) => {
-            return !(/hot-update/.test(filePath));
-          },
-        }
+          writeToDisk: (filePath) => !(/hot-update/.test(filePath)),
+        },
       },
       plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new HotAcceptPlugin({
           test: [
-            ...Object.keys(common.entry).map(el => `${common.entry[el]}.js`),
-          ]
+            ...Object.keys(common.entry).map((el) => `${common.entry[el]}.js`),
+          ],
         }),
         new MiniCssExtractPlugin({filename: '[name].css'}),
         new webpack.ProvidePlugin({
@@ -66,6 +62,21 @@ function devConfig(test) {
           jQuery: 'jquery',
         }),
         new VueLoaderPlugin(),
+        new ForkTsCheckerWebpackPlugin({
+          typescript: {
+            extensions: {
+              vue: true,
+            },
+            diagnosticOptions: {
+              semantic: true,
+              syntactic: true,
+            },
+          },
+          eslint: {
+            enabled: true,
+            files: path.resolve(__dirname, '../js/**/*.{ts,js,vue}'),
+          },
+        }),
       ],
     },
   );

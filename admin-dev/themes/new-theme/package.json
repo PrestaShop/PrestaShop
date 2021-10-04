@@ -53,6 +53,7 @@
     "vuex": "^2.5.0"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.15.7",
     "@types/bootstrap": "^4.0.0",
     "@types/jquery": "^3.5.5",
     "@types/jquery.growl": "^1.3.4",
@@ -79,6 +80,7 @@
     "exports-loader": "^0.7.0",
     "expose-loader": "^2.0.0",
     "file-loader": "^5.0",
+    "fork-ts-checker-webpack-plugin": "^6.3.3",
     "hot-accept-webpack-plugin": "^2.0.0-beta.7",
     "imports-loader": "^3.0.0",
     "loader-utils": "^1.2.3",

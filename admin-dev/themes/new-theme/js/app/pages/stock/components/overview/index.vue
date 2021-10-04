@@ -34,8 +34,8 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import ProductsActions from './products-actions';
-  import ProductsTable from './products-table';
+  import ProductsActions from './products-actions.vue';
+  import ProductsTable from './products-table.vue';
 
   const DEFAULT_SORT = 'asc';
 

@@ -73,7 +73,7 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import PSMedia from '@app/widgets/ps-media';
+  import PSMedia from '@app/widgets/ps-media.vue';
   import productDesc from '@app/pages/stock/mixins/product-desc';
 
   export default Vue.extend({
