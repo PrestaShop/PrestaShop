@@ -158,6 +158,8 @@ class CommandAccessor
                 return (bool) $value;
             case CommandField::TYPE_INT:
                 return (int) $value;
+            case CommandField::TYPE_ARRAY:
+                return (array) $value;
             default:
                 return $value;
         }
