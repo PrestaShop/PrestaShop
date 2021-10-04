@@ -41,14 +41,16 @@ class CommandFieldTest extends TestCase
      * @param string $dataPath
      * @param string $commandSetter
      * @param string $type
+     * @param bool $isMultistoreField
      */
-    public function testValidConstructors(string $dataPath, string $commandSetter, string $type): void
+    public function testValidConstructors(string $dataPath, string $commandSetter, string $type, bool $isMultistoreField): void
     {
-        $field = new CommandField($dataPath, $commandSetter, $type);
+        $field = new CommandField($dataPath, $commandSetter, $type, $isMultistoreField);
         $this->assertNotNull($field);
         $this->assertEquals($dataPath, $field->getDataPath());
         $this->assertEquals($commandSetter, $field->getCommandSetter());
         $this->assertEquals($type, $field->getType());
+        $this->assertEquals($isMultistoreField, $field->isMultistoreField());
     }
 
     public function getValidParameters(): iterable
@@ -57,18 +59,21 @@ class CommandFieldTest extends TestCase
             '[form_data][my_field]',
             'setMyField',
             CommandField::TYPE_STRING,
+            true,
         ];
 
         yield [
             'form_data.my_field',
             'setMyField',
             CommandField::TYPE_BOOL,
+            false,
         ];
 
         yield [
             'my_field',
             'setMyField',
             CommandField::TYPE_INT,
+            true,
         ];
     }
 
@@ -78,12 +83,13 @@ class CommandFieldTest extends TestCase
      * @param string $dataPath
      * @param string $commandSetter
      * @param string $type
+     * @param bool $isMultistoreField
      * @param string $expectedException
      */
-    public function testInvalidConstructors(string $dataPath, string $commandSetter, string $type, string $expectedException): void
+    public function testInvalidConstructors(string $dataPath, string $commandSetter, string $type, bool $isMultistoreField, string $expectedException): void
     {
         $this->expectException($expectedException);
-        new CommandField($dataPath, $commandSetter, $type);
+        new CommandField($dataPath, $commandSetter, $type, $isMultistoreField);
     }
 
     public function getInvalidParameters(): iterable
@@ -92,6 +98,7 @@ class CommandFieldTest extends TestCase
             '[form_data][my_field]',
             'setMyField',
             'invalid',
+            true,
             InvalidCommandFieldTypeException::class,
         ];
 
@@ -99,6 +106,7 @@ class CommandFieldTest extends TestCase
             '',
             'setMyField',
             CommandField::TYPE_INT,
+            false,
             InvalidPropertyPathException::class,
         ];
 
@@ -106,6 +114,7 @@ class CommandFieldTest extends TestCase
             '[form_data.objectField',
             'setMyField',
             CommandField::TYPE_INT,
+            true,
             InvalidPropertyPathException::class,
         ];
     }
