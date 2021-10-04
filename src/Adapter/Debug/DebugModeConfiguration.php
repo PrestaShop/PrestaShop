@@ -61,7 +61,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
      * @param Configuration $configuration
      * @param string $configDefinesPath
      */
-    public function __construct(DebugMode $debugMode, Configuration $configuration, $configDefinesPath, ClassIndexCacheClearer $classIndexCacheClearer )
+    public function __construct(DebugMode $debugMode, Configuration $configuration, $configDefinesPath, ClassIndexCacheClearer $classIndexCacheClearer)
     {
         $this->debugMode = $debugMode;
         $this->configuration = $configuration;
