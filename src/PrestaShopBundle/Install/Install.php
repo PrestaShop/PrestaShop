@@ -250,14 +250,14 @@ class Install extends AbstractInstall
 
         foreach ($parameters['parameters'] as $parameterKey => $parameterValue) {
             if ($useEnvValuesIfExists && isset(self::PARAMETERS_WITH_ENV_VARS[$parameterKey])) {
-                $content .= chr(9) . chr(9) . "'$parameterKey' => \$ENV['" . self::PARAMETERS_WITH_ENV_VARS[$parameterKey] . "'] ?? " . var_export($parameterValue, true) . "," . PHP_EOL;
+                $content .= chr(9) . chr(9) . "'$parameterKey' => \$ENV['" . self::PARAMETERS_WITH_ENV_VARS[$parameterKey] . "'] ?? " . var_export($parameterValue, true) . ',' . PHP_EOL;
             } else {
-                $content .= chr(9) . chr(9) . "'$parameterKey' => " . var_export($parameterValue, true) . "," . PHP_EOL;
+                $content .= chr(9) . chr(9) . "'$parameterKey' => " . var_export($parameterValue, true) . ',' . PHP_EOL;
             }
         }
 
-        $content .= chr(9) . ")" . PHP_EOL;
-        $content .= ")";
+        $content .= chr(9) . ')' . PHP_EOL;
+        $content .= ')';
 
         if (!file_put_contents(_PS_ROOT_DIR_ . '/app/config/parameters.php', sprintf('<?php return %s;', $content))) {
             $this->setError($this->translator->trans('Cannot write app/config/parameters.php file', [], 'Install'));
