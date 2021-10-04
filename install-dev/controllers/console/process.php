@@ -196,7 +196,8 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             $this->datas->database_password,
             $this->datas->database_name,
             $this->datas->database_prefix,
-            $this->datas->database_engine
+            $this->datas->database_engine,
+            $this->datas->use_env_variables
         );
     }
 
