@@ -6,12 +6,15 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
+// BO
 const dashboardPage = require('@pages/BO/dashboard');
 const searchPage = require('@pages/BO/shopParameters/search');
+
+// FO
 const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
 
-// Import products demo data
+// Import data
 const {Products} = require('@data/demo/products');
 
 // Import test context
@@ -35,7 +38,7 @@ Search Product and check result
 Check the products number
  */
 
-describe('Search product and consult autocomplete list', async () => {
+describe('FO - Search Page : Search product and consult autocomplete list', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

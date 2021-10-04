@@ -50,7 +50,7 @@ Click to send
 Go to BO, Customers service, customers service, the message is displayed
  */
 
-describe('Send a message with an ordered product', async () => {
+describe('FO - Account : Send a message with an ordered product', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -46,7 +46,7 @@ Log in with default customer
 Send a message on contact page
 Verify message on customer service page
  */
-describe('Send message from contact us page with customer logged in', async () => {
+describe('FO - Contact us : Send message from contact us page with customer logged in', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

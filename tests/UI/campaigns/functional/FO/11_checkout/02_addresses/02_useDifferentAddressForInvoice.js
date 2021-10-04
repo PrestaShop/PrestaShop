@@ -57,7 +57,7 @@ Go to order view page
 Check that the 2 addresses are different
 */
 
-describe('Guest checkout: Use different invoice address', async () => {
+describe('FO - Guest checkout: Use different invoice address', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
