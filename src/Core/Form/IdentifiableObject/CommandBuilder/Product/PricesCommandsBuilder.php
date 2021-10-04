@@ -41,14 +41,17 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\C
  */
 class PricesCommandsBuilder implements MultistoreProductCommandsBuilderInterface
 {
-    private $multiShopPrefix;
+    /**
+     * @var string
+     */
+    private $modifyAllNamePrefix;
 
     /**
-     * @param string $multiShopPrefix
+     * @param string $modifyAllNamePrefix
      */
-    public function __construct(string $multiShopPrefix)
+    public function __construct(string $modifyAllNamePrefix)
     {
-        $this->multiShopPrefix = $multiShopPrefix;
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
     }
 
     /**
@@ -61,7 +64,7 @@ class PricesCommandsBuilder implements MultistoreProductCommandsBuilderInterface
         }
 
         $priceData = $formData['pricing'];
-        $config = new CommandAccessorConfig($this->multiShopPrefix);
+        $config = new CommandAccessorConfig($this->modifyAllNamePrefix);
         $config
             ->addField('[retail_price][price_tax_excluded]', 'setPrice', CommandField::TYPE_STRING)
             ->addField('[retail_price][ecotax]', 'setEcotax', CommandField::TYPE_STRING)

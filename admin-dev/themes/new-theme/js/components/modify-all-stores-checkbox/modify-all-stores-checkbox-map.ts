@@ -27,7 +27,7 @@
  * Encapsulates selectors for multi store modify all component
  */
 export default {
-  modifyAllWidgets: '.modify-all-shops',
+  modifyAllWidgets: '.modify-all-stores',
   widgetCheckbox: '[type=checkbox]',
   fieldFocusedClass: 'multi-store-field-focused',
   focusedClass: 'multi-store-focused',
