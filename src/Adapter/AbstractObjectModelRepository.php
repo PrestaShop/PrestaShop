@@ -121,9 +121,9 @@ abstract class AbstractObjectModelRepository
 
         $query = new DbQuery();
         $query
-            ->select('e.`' . $primaryColumn . '` as id')
-            ->from($objectTable . '_shop', 'e')
-            ->where('e.`' . $primaryColumn . '` = ' . $id)
+            ->select('e.`' . bqSQL($primaryColumn) . '` as id')
+            ->from(bqSQL($objectTable) . '_shop', 'e')
+            ->where('e.`' . bqSQL($primaryColumn) . '` = ' . $id)
             ->where('e.`id_shop` = ' . $shopId->getValue())
         ;
 
@@ -133,7 +133,7 @@ abstract class AbstractObjectModelRepository
             $row = false;
         }
 
-        if (!isset($row['id'])) {
+        if (empty($row['id'])) {
             throw new ShopAssociationNotFound(sprintf(
                 'Could not find association between %s %d and Shop %d',
                 $objectModelClassName,
