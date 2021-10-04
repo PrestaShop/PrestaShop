@@ -501,7 +501,7 @@ class ProductRepository extends AbstractObjectModelRepository
     /**
      * This override was needed because of the extra parameter in product constructor
      *
-     * @inerhitDoc
+     * {@inheritDoc}
      */
     protected function constructObjectModel(int $id, string $objectModelClass, ?int $shopId): ObjectModel
     {

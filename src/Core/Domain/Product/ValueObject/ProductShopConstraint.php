@@ -31,6 +31,10 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
+/**
+ * Extended shop constraint, it prevents using group ID and it also handles an additional constraint
+ * to use product default shop (which is dynamic and potentially different from one product to another)
+ */
 class ProductShopConstraint extends ShopConstraint
 {
     /**
@@ -61,9 +65,10 @@ class ProductShopConstraint extends ShopConstraint
         if (null !== $shopGroupId) {
             throw new InvalidShopConstraintException(sprintf(
                 '%s cannot be created for shop group because it is not handled by product',
-                static::class,
+                static::class
             ));
         }
+
         parent::__construct($shopId, $shopGroupId, $strict);
         $this->defaultProductShop = $defaultProductShop;
     }

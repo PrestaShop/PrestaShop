@@ -73,13 +73,12 @@ abstract class AbstractObjectModelRepository
      * @param int $id
      * @param string $objectModelClass
      * @param string $exceptionClass
-     * @param ShopId|null $shopId
      *
      * @return ObjectModel
      *
      * @throws CoreException
      */
-    protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass, ?ShopId $shopId = null): ObjectModel
+    protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass): ObjectModel
     {
         return $this->fetchObjectModel($id, $objectModelClass, $exceptionClass, null);
     }
@@ -201,7 +200,14 @@ abstract class AbstractObjectModelRepository
         $savedShopIds = $objectModel->id_shop_list;
         $objectModel->id_shop_list = [$shopId];
 
-        $object = $this->addObjectModel($objectModel, $exceptionClass, $errorCode);
+        try {
+            $object = $this->addObjectModel($objectModel, $exceptionClass, $errorCode);
+        } catch (Exception $e) {
+            // Even if an error occurs we reset the initial object's inner data, but without blocking the exception
+            $objectModel->id_shop_list = $savedShopIds;
+            throw $e;
+        }
+
         $objectModel->id_shop_list = $savedShopIds;
 
         return $object;

@@ -69,7 +69,7 @@ class PricesCommandsBuilder implements MultistoreProductCommandsBuilderInterface
             ->addMultiStoreField('[retail_price][price_tax_excluded]', 'setPrice', CommandField::TYPE_STRING)
             ->addMultiStoreField('[retail_price][ecotax]', 'setEcotax', CommandField::TYPE_STRING)
             ->addMultiStoreField('[tax_rules_group_id]', 'setTaxRulesGroupId', CommandField::TYPE_STRING)
-            ->addMultiStoreField('[on_sale]', 'setOnSale', CommandField::TYPE_STRING)
+            ->addMultiStoreField('[on_sale]', 'setOnSale', CommandField::TYPE_BOOL)
             ->addMultiStoreField('[wholesale_price]', 'setWholesalePrice', CommandField::TYPE_STRING)
             ->addMultiStoreField('[unit_price][price]', 'setUnitPrice', CommandField::TYPE_STRING)
             ->addMultiStoreField('[unit_price][unity]', 'setUnity', CommandField::TYPE_STRING)

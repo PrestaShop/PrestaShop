@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\Exception;
 
+/**
+ * Thrown when a shop association is checked but is nonexistent.
+ */
 class ShopAssociationNotFound extends ShopException
 {
 }
