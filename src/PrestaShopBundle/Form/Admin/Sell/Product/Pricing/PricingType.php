@@ -114,6 +114,7 @@ class PricingType extends TranslatorAwareType
                     'href' => $this->router->generate('admin_taxes_index'),
                     'align' => 'right',
                 ],
+                'modify_all_stores' => true,
             ])
             ->add('unit_price', UnitPriceType::class)
             ->add('on_sale', CheckboxType::class, [
@@ -122,6 +123,7 @@ class PricingType extends TranslatorAwareType
                     'Display the "On sale!" flag on the product page, and on product listings.',
                     'Admin.Catalog.Feature'
                 ),
+                'modify_all_stores' => true,
             ])
             ->add('wholesale_price', MoneyType::class, [
                 'required' => false,
@@ -130,6 +132,7 @@ class PricingType extends TranslatorAwareType
                 'label_help_box' => $this->trans('The cost price is the price you paid for the product. Do not include the tax. It should be lower than the retail price: the difference between the two will be your margin.', 'Admin.Catalog.Help'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
+                'modify_all_stores' => true,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
