@@ -153,8 +153,9 @@ class Install extends AbstractInstall
         $database_name,
         $database_prefix,
         $database_engine,
-        $useEnvValuesIfExists
-    ) {
+        bool $useEnvValuesIfExists = false
+    ): bool
+    {
         // Check permissions for settings file
         if (
             file_exists(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $this->settingsFile)
@@ -240,10 +241,10 @@ class Install extends AbstractInstall
      * Replace "parameters.yml" with "parameters.php" in "app/config".
      *
      * @param array $parameters
-     *
-     * @return bool|int
+     * @param bool $useEnvValuesIfExists
+     * @return bool
      */
-    public function processParameters(array $parameters, bool $useEnvValuesIfExists)
+    public function processParameters(array $parameters, bool $useEnvValuesIfExists = false): bool
     {
         $content = 'array(' . PHP_EOL;
         $content .= chr(9) . "'parameters' => array(" . PHP_EOL;
