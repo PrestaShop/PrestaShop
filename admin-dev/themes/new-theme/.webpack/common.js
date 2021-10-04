@@ -30,12 +30,9 @@ const {VueLoaderPlugin} = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const bourbon = require('bourbon');
+const { HotAcceptPlugin } = require('hot-accept-webpack-plugin');
 
-module.exports = {
-  externals: {
-    jquery: 'jQuery',
-  },
-  entry: {
+const entries = {
     address: './js/pages/address',
     attachment: './js/pages/attachment',
     attribute: './js/pages/attribute',
@@ -119,7 +116,13 @@ module.exports = {
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
     zone: './js/pages/zone',
+}
+
+module.exports = {
+  externals: {
+    jquery: 'jQuery',
   },
+  entry: entries,
   output: {
     path: path.resolve(__dirname, '../public'),
     filename: '[name].bundle.js',

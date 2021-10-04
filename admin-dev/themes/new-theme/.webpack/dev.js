@@ -1,20 +1,72 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const webpack = require('webpack');
 const common = require('./common.js');
+const {VueLoaderPlugin} = require('vue-loader');
+const { HotAcceptPlugin } = require('hot-accept-webpack-plugin');
+const keepLicense = require('uglify-save-license');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 /**
  * Returns the development webpack config,
  * by merging development specific configuration with the common one.
  */
-function devConfig() {
+function devConfig(test) {
+  console.log();
   const dev = Object.assign(
     common,
     {
       devtool: 'inline-source-map',
       devServer: {
+        client: {
+          logging: 'error',
+          progress: false,
+          overlay: {
+            errors: true,
+            warnings: false,
+          },
+        },
         hot: true,
-        contentBase: path.resolve(__dirname, '/../public'),
-        publicPath: '/',
+        static: {
+          directory: path.join(__dirname, '/../public'),
+          watch: false
+        },
+        port: 3000,
+        watchFiles: [
+          path.join(__dirname, '/../**/*.tpl'),
+          path.join(__dirname, '../js/**/*.js'),
+          path.join(__dirname, '../scss/**/*.scss'),
+        ],
+        open: true,
+        proxy: {
+          '**': {
+            target: process.env.PS_URL,
+            secure: false,
+            changeOrigin: true,
+          }
+        },
+        devMiddleware: {
+          publicPath: path.join(__dirname, '/../public'),
+          writeToDisk: (filePath) => {
+            return !(/hot-update/.test(filePath));
+          },
+        }
       },
+      plugins: [
+        new webpack.HotModuleReplacementPlugin(),
+        new HotAcceptPlugin({
+          test: [
+            ...Object.keys(common.entry).map(el => `${common.entry[el]}.js`),
+          ]
+        }),
+        new MiniCssExtractPlugin({filename: '[name].css'}),
+        new webpack.ProvidePlugin({
+          moment: 'moment', // needed for bootstrap datetime picker
+          $: 'jquery', // needed for jquery-ui
+          jQuery: 'jquery',
+        }),
+        new VueLoaderPlugin(),
+      ],
     },
   );
 
