@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Debug;
 
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\ClassIndexCacheClearer;
-use PrestaShop\PrestaShop\Adapter\Debug\DebugMode;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
