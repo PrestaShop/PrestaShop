@@ -7,6 +7,7 @@
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --require ts-node/register --require tsconfig-paths/register --reporter spec \"tests/**/*.spec.js\"",
     "build": "webpack --progress --stats-error-details",
     "dev": "webpack --progress --watch --mode=development",
+    "serve": "webpack serve --mode=development",
     "watch": "npm run dev",
     "lint": "eslint -c .eslintrc.js --ext .js,.vue,.ts .",
     "lint-fix": "eslint -c .eslintrc.js --ext .js,.vue,.ts . --fix",
@@ -78,6 +79,7 @@
     "exports-loader": "^0.7.0",
     "expose-loader": "^2.0.0",
     "file-loader": "^5.0",
+    "hot-accept-webpack-plugin": "^2.0.0-beta.7",
     "imports-loader": "^3.0.0",
     "loader-utils": "^1.2.3",
     "mini-css-extract-plugin": "^1.6.0",
@@ -102,6 +104,7 @@
     "vue-template-compiler": "^2.6.14",
     "webpack": "^5.53.0",
     "webpack-cli": "^4.7.0",
+    "webpack-dev-server": "^4.3.0",
     "webpack-remove-empty-scripts": "^0.7.1"
   }
 }
