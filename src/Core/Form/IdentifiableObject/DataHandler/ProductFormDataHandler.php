@@ -68,7 +68,7 @@ class ProductFormDataHandler implements FormDataHandlerInterface
     ) {
         $this->bus = $bus;
         $this->commandsBuilder = $commandsBuilder;
-        $this->shopId = null !== $contextShopId ? new ShopId($contextShopId) : new ShopId($defaultShopId);
+        $this->shopId = new ShopId($contextShopId ?: $defaultShopId);
     }
 
     /**
