@@ -35,7 +35,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyAccess\PropertyPath;
 
 /**
- * This class is inspired from the PropertyAccessor component from Symfony but it's centered around
+ * This class is inspired from the PropertyAccessor component from Symfony, but it's centered around
  * prefilling command objects based on a config and the data available in the flattened form data array.
  */
 class CommandAccessor
@@ -62,23 +62,27 @@ class CommandAccessor
     }
 
     /**
-     * @param array $data
-     * @param mixed $shopCommand
-     * @param mixed|null $allShopsCommand
+     * If only single store command is provided then only this one will be prefilled, however if a command for all
+     * stores is also provided then this component will check in the data (for each field) if the modification targets
+     * all the stores, or not, and prefill the appropriate command accordingly.
      *
-     * @return array
+     * @param array $data
+     * @param mixed $singleStoreCommand
+     * @param mixed|null $allStoresCommand
+     *
+     * @return array Returns modified commands (if no field was detected an empty array is returned)
      */
     public function buildCommands(
         array $data,
-        $shopCommand,
-        $allShopsCommand = null
+        $singleStoreCommand,
+        $allStoresCommand = null
     ): array {
         $modifiedCommands = [];
         foreach ($this->config->getFields() as $commandField) {
             try {
                 $value = $this->propertyAccessor->getValue($data, $commandField->getDataPath());
                 $castedValue = $this->castValue($value, $commandField->getType());
-                $command = $this->getAppropriateCommand($data, $commandField->getDataPath(), $shopCommand, $allShopsCommand);
+                $command = $this->getAppropriateCommand($data, $commandField->getDataPath(), $singleStoreCommand, $allStoresCommand);
                 $this->propertyAccessor->setValue($command, $commandField->getCommandSetter(), $castedValue);
                 if (!in_array($command, $modifiedCommands)) {
                     $modifiedCommands[] = $command;
@@ -88,53 +92,53 @@ class CommandAccessor
             }
         }
 
-        // Make sure the order of returned commands is always consistent (single shop comes first)
+        // Make sure the order of returned commands is always consistent (single store comes first)
         $commands = [];
-        if (in_array($shopCommand, $modifiedCommands)) {
-            $commands[] = $shopCommand;
+        if (in_array($singleStoreCommand, $modifiedCommands)) {
+            $commands[] = $singleStoreCommand;
         }
-        if (in_array($allShopsCommand, $modifiedCommands)) {
-            $commands[] = $allShopsCommand;
+        if (in_array($allStoresCommand, $modifiedCommands)) {
+            $commands[] = $allStoresCommand;
         }
 
         return $commands;
     }
 
     /**
-     * Check if the data has a mapping checkbox to modify all shops for the tested field, if so use the allShopsCommand
+     * Check if the data has a mapping checkbox to modify all stores for the tested field, if so use the allStoresCommand
      *
      * @param array $data
      * @param PropertyPath $dataPath
-     * @param mixed $shopCommand
-     * @param mixed|null $allShopsCommand
+     * @param mixed $singleStoreCommand
+     * @param mixed|null $allStoresCommand
      *
      * @return mixed
      */
     private function getAppropriateCommand(
         array $data,
         PropertyPath $dataPath,
-        $shopCommand,
-        $allShopsCommand
+        $singleStoreCommand,
+        $allStoresCommand
     ) {
-        if (null === $allShopsCommand) {
-            return $shopCommand;
+        if (null === $allStoresCommand) {
+            return $singleStoreCommand;
         }
 
         $lastElement = $dataPath->getElement($dataPath->getLength() - 1);
-        $multiShopName = $this->config->getMultiShopPrefix() . $lastElement;
+        $modifyAllNamePrefix = $this->config->getModifyAllNamePrefix() . $lastElement;
 
         // Replace last element
         $stringPath = (string) $dataPath;
         if (($pos = strrpos($stringPath, $lastElement)) !== false) {
-            $stringPath = substr_replace($stringPath, $multiShopName, $pos, strlen($lastElement));
+            $stringPath = substr_replace($stringPath, $modifyAllNamePrefix, $pos, strlen($lastElement));
         }
 
         try {
             $modifyAll = $this->propertyAccessor->getValue($data, $stringPath);
 
-            return $modifyAll ? $allShopsCommand : $shopCommand;
+            return $modifyAll ? $allStoresCommand : $singleStoreCommand;
         } catch (NoSuchIndexException | NoSuchPropertyException $e) {
-            return $shopCommand;
+            return $singleStoreCommand;
         }
     }
 
@@ -142,7 +146,7 @@ class CommandAccessor
      * @param mixed $value
      * @param string $type
      *
-     * @return bool|int|mixed|string
+     * @return bool|int|mixed|string|array
      */
     private function castValue($value, string $type)
     {
