@@ -26,9 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Debug;
 
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\ClassIndexCacheClearer;
+use PrestaShop\PrestaShop\Adapter\Debug\DebugMode;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShopAutoload;
 
 /**
  * This class manages Debug mode configuration for a Shop.
@@ -51,15 +52,21 @@ class DebugModeConfiguration implements DataConfigurationInterface
     private $configDefinesPath;
 
     /**
+     * @var ClassIndexCacheClearer
+     */
+    private $classIndexCacheClearer;
+
+    /**
      * @param DebugMode $debugMode
      * @param Configuration $configuration
      * @param string $configDefinesPath
      */
-    public function __construct(DebugMode $debugMode, Configuration $configuration, $configDefinesPath)
+    public function __construct(DebugMode $debugMode, Configuration $configuration, $configDefinesPath, ClassIndexCacheClearer $classIndexCacheClearer )
     {
         $this->debugMode = $debugMode;
         $this->configuration = $configuration;
         $this->configDefinesPath = $configDefinesPath;
+        $this->classIndexCacheClearer = $classIndexCacheClearer;
     }
 
     /**
@@ -87,7 +94,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_DISABLE_NON_NATIVE_MODULE', $configuration['disable_non_native_modules']);
             $this->configuration->set('PS_DISABLE_OVERRIDES', $configuration['disable_overrides']);
 
-            PrestaShopAutoload::getInstance()->generateIndex();
+            $this->classIndexCacheClearer->clear();
 
             $status = $this->updateDebugMode((bool) $configuration['debug_mode']);
 
