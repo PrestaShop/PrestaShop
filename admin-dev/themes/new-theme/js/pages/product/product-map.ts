@@ -179,10 +179,14 @@ export default {
     treeCheckboxInput: '.tree-checkbox-input',
     checkboxInput: '[type=checkbox]',
     checkedCheckboxInputs: '[type=checkbox]:checked',
+    // eslint-disable-next-line
+    checkboxName: (categoryId: string): string => `product[description][categories][product_categories][${categoryId}][is_associated]`,
     inputByValue: (value: string): string => `input[value="${value}"]`,
     defaultCategorySelectInput: '#product_description_categories_default_category_id',
     materialCheckbox: '.md-checkbox',
+    radioInput: '[type=radio]',
     defaultRadioInput: '[type=radio]:checked',
+    radioName: (categoryId: string): string => `product[description][categories][product_categories][${categoryId}][is_default]`,
     tagsContainer: '.pstaggerTagsWrapper',
     tagRemoveBtn: '.pstaggerClosingCross',
     tagCategoryIdInput: '.category-id-input',
@@ -195,6 +199,8 @@ export default {
     childrenList: '.children-list',
     everyItems: '.less, .more',
     addCategoriesBtn: '.add-categories-btn',
+    expandAllButton: '#categories-tree-expand',
+    reduceAllButton: '#categories-tree-reduce',
   },
   modules: {
     previewContainer: '.module-render-container.all-modules',
