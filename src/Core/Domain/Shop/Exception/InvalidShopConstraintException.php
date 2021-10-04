@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\Exception;
 
+/**
+ * Exception thrown when a shop constraint is built or used with in valid values.
+ */
 class InvalidShopConstraintException extends ShopException
 {
 }
