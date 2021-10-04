@@ -110,6 +110,7 @@ class RetailPriceType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                     new PositiveOrZero(),
                 ],
+                'modify_all_stores' => true,
             ]);
         }
     }
