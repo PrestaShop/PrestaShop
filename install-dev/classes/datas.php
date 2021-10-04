@@ -89,6 +89,12 @@ class Datas
             'validate' => 'isGenericName',
             'default' => 'localhost',
         ],
+        'use_env_variables' => [
+            'name' => 'use_env_variables',
+            'default' => '1',
+            'validate' => 'isInt',
+            'help' => 'Use environment variables if set',
+        ],
         'database_server' => [
             'name' => 'db_server',
             'default' => 'localhost',
