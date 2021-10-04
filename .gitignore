@@ -365,3 +365,6 @@ tools/build/releases/*
 
 ## Docker configuration
 install.lock
+
+# Env variables file
+.env
