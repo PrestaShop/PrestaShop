@@ -102,6 +102,7 @@ class RetailPriceType extends TranslatorAwareType
         if ($this->isEcotaxEnabled) {
             $builder->add('ecotax', UnavailableType::class, [
                 'label' => $this->trans('Ecotax (tax incl.)', 'Admin.Catalog.Feature'),
+                'modify_all_stores' => true,
             ]);
         }
     }
