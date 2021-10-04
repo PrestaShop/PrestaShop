@@ -116,6 +116,7 @@ class AdminModuleController {
     this.statusResetBtnSelector = '.module-status-reset';
 
     // Selectors for Module Import
+    this.importModalBtnSelector = '#page-header-desc-configuration-add_module';
     this.dropZoneModalSelector = '#module-modal-import';
     this.dropZoneModalFooterSelector = '#module-modal-import .modal-footer';
     this.dropZoneImportZoneSelector = '#importDropzone';
@@ -140,6 +141,7 @@ class AdminModuleController {
     this.initCategorySelect();
     this.initCategoriesGrid();
     this.initActionButtons();
+    this.initAddModuleAction();
     this.initDropzone();
     this.initPageChangeProtection();
     this.initPlaceholderMechanism();
@@ -558,6 +560,12 @@ class AdminModuleController {
     return htmlGenerated;
   }
 
+  initAddModuleAction() {
+    const self = this;
+    const addModuleButton = $(self.importModalBtnSelector);
+    addModuleButton.attr('data-toggle', 'modal');
+    addModuleButton.attr('data-target', self.dropZoneModalSelector);
+  }
 
   initDropzone() {
     const self = this;

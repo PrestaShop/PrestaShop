@@ -65,6 +65,7 @@ const AdminModuleController = function () {
   this.statusResetBtnSelector = '.module-status-reset';
 
   // Selectors for Module Import
+  this.importModalBtnSelector = '#page-header-desc-configuration-add_module';
   this.dropZoneModalSelector = '#module-modal-import';
   this.dropZoneModalFooterSelector = '#module-modal-import .modal-footer';
   this.dropZoneImportZoneSelector = '#importDropzone';
@@ -94,6 +95,7 @@ const AdminModuleController = function () {
     this.initCategorySelect();
     this.initCategoriesGrid();
     this.initActionButtons();
+    this.initAddModuleAction();
     this.initDropzone();
     this.initPageChangeProtection();
     this.initBulkActions();
@@ -311,6 +313,12 @@ const AdminModuleController = function () {
     });
 
     return htmlGenerated;
+  };
+
+  this.initAddModuleAction = function () {
+    const addModuleButton = $(this.importModalBtnSelector);
+    addModuleButton.attr('data-toggle', 'modal');
+    addModuleButton.attr('data-target', this.dropZoneModalSelector);
   };
 
   this.initDropzone = function () {
