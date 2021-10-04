@@ -105,6 +105,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
         $this->session->database_password = trim(Tools::getValue('dbPassword'));
         $this->session->database_prefix = trim(Tools::getValue('db_prefix'));
         $this->session->database_clear = Tools::getValue('database_clear');
+        $this->session->use_env_variables = Tools::getValue('use_env_variables');
         $this->session->rewrite_engine = Tools::getValue('rewrite_engine');
     }
 
@@ -205,6 +206,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
             $this->database_prefix = $parameters['parameters']['database_prefix'];
 
             $this->database_clear = true;
+            $this->use_env_variables = true;
             $this->use_smtp = false;
             $this->smtp_encryption = 'off';
             $this->smtp_port = 25;
@@ -216,6 +218,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
             $this->database_engine = $this->session->database_engine;
             $this->database_prefix = $this->session->database_prefix;
             $this->database_clear = $this->session->database_clear;
+            $this->use_env_variables = $this->session->use_env_variables;
 
             $this->use_smtp = $this->session->use_smtp;
             $this->smtp_encryption = $this->session->smtp_encryption;

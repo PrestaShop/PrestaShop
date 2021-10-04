@@ -152,7 +152,8 @@ class Install extends AbstractInstall
         $database_password,
         $database_name,
         $database_prefix,
-        $database_engine
+        $database_engine,
+        $useEnvValuesIfExists
     ) {
         // Check permissions for settings file
         if (
@@ -191,8 +192,6 @@ class Install extends AbstractInstall
         }
 
         $key = PhpEncryption::createNewRandomKey();
-
-        $useEnvValuesIfExists = true;
 
         $parameters = [
             'parameters' => [
