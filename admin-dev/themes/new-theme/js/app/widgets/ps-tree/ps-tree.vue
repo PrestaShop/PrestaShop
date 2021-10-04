@@ -66,7 +66,7 @@
 <script lang="ts">
   import Vue from 'vue';
   import {EventBus} from '@app/utils/event-bus';
-  import PSTreeItem from './ps-tree-item';
+  import PSTreeItem from './ps-tree-item.vue';
 
   export default Vue.extend({
     name: 'PSTree',

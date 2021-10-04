@@ -76,9 +76,9 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import PSTags from '@app/widgets/ps-tags';
-  import PSTreeItem from '@app/widgets/ps-tree/ps-tree-item';
-  import PSTree from '@app/widgets/ps-tree/ps-tree';
+  import PSTags from '@app/widgets/ps-tags.vue';
+  import PSTreeItem from '@app/widgets/ps-tree/ps-tree-item.vue';
+  import PSTree from '@app/widgets/ps-tree/ps-tree.vue';
   import {EventBus} from '@app/utils/event-bus';
 
   export default Vue.extend({

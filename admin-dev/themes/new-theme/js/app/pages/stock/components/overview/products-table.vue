@@ -125,11 +125,11 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import PSAlert from '@app/widgets/ps-alert';
-  import PSTable from '@app/widgets/ps-table/ps-table';
-  import PSSort from '@app/widgets/ps-table/ps-sort';
-  import PSLoader from '@app/widgets/ps-loader';
-  import ProductLine from './product-line';
+  import PSAlert from '@app/widgets/ps-alert.vue';
+  import PSTable from '@app/widgets/ps-table/ps-table.vue';
+  import PSSort from '@app/widgets/ps-table/ps-sort.vue';
+  import PSLoader from '@app/widgets/ps-loader.vue';
+  import ProductLine from './product-line.vue';
 
   export default Vue.extend({
     props: {
