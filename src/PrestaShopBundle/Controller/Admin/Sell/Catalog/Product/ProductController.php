@@ -452,7 +452,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig', [
             'errorMessage' => $this->trans(
-                'This page is only compatible with the single shop context. To access the page, please select a shop or [1]disable the multistore feature[/1].',
+                'This page is only compatible with the single store context. To access the page, please select a store or [1]disable the multistore feature[/1].',
                 'Admin.Notifications.Info',
                 [
                     '[1]' => sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences')),
