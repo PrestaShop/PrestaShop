@@ -84,11 +84,6 @@ class PerformanceController extends FrameworkBundleAdminController
             'cachingForm' => $cachingForm->createView(),
             'memcacheForm' => $memcacheForm->createView(),
             'servers' => $this->get('prestashop.adapter.memcache_server.manager')->getServers(),
-            'multistoreInfoTip' => $this->trans(
-                'Note that this page is available in all shops context only, this is why your context has just switched.',
-                'Admin.Notifications.Info'
-            ),
-            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
         ]);
     }
 
