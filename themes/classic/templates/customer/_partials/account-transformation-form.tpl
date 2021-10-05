@@ -22,23 +22,23 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
-{extends file='customer/order-detail.tpl'}
-
-{block name='page_title'}
-  {l s='Guest Tracking' d='Shop.Theme.Customeraccount'}
+{block name='account_transformation_form'}
+  <h4>{l s='Save time on your next order, sign up now' d='Shop.Theme.Checkout'}</h4>
+  <ul>
+    <li> - {l s='Personalized and secure access' d='Shop.Theme.Customeraccount'}</li>
+    <li> - {l s='Fast and easy checkout' d='Shop.Theme.Customeraccount'}</li>
+    <li> - {l s='Easier merchandise return' d='Shop.Theme.Customeraccount'}</li>
+  </ul>
+  <form method="post">
+    <div class="form-group">
+      <label class="form-control-label required" for="field-email">
+        {l s='Set your password:' d='Shop.Forms.Labels'}
+      </label>
+      <input type="password" class="form-control" data-validate="isPasswd" required name="password" value="">
+    </div>
+    <footer class="form-footer">
+      <input type="hidden" name="submitTransformGuestToCustomer" value="1">
+      <button class="btn btn-primary" type="submit">{l s='Create account' d='Shop.Theme.Actions'}</button>
+    </footer>
+  </form>
 {/block}
-
-{block name='order_detail'}
-  {include file='customer/_partials/order-detail-no-return.tpl'}
-{/block}
-
-{block name='order_messages'}
-{/block}
-
-{if !$registered_customer_exists}
-  {block name='page_content' append}
-    {block name='account_transformation_form'}
-      {include file='customer/_partials/account-transformation-form.tpl'}
-    {/block}
-  {/block}
-{/if}
