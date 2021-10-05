@@ -1167,7 +1167,7 @@ abstract class ModuleCore implements ModuleInterface
     {
         if (!Validate::isModuleName($module_name)) {
             if (_PS_MODE_DEV_) {
-                die(Tools::displayError(Context::getContext()->getTranslator()->trans('%1$s is not a valid module name.', [Tools::safeOutput($module_name)], 'Admin.Modules.Notification')));
+                throw new \Exception(Context::getContext()->getTranslator()->trans('%1$s is not a valid module name.', array(Tools::safeOutput($module_name)), 'Admin.Modules.Notification'));
             }
 
             return false;
