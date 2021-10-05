@@ -56,8 +56,17 @@ class DeltaQuantityInput {
       const $deltaInput: JQuery = $(event.target);
       const $container: JQuery = $deltaInput.closest(this.config.containerSelector);
 
-      const delta: number = parseInt(<string> $deltaInput.val(), 10);
-      const updatedQuantity: number = parseInt(<string> $container.data('initialQuantity'), 10) + delta;
+      let delta: number = parseInt(<string> $deltaInput.val(), 10);
+
+      if (Number.isNaN(delta)) {
+        delta = 0;
+      }
+      let initialQuantity = parseInt(<string> $container.data('initialQuantity'), 10);
+
+      if (Number.isNaN(initialQuantity)) {
+        initialQuantity = 0;
+      }
+      const updatedQuantity: number = initialQuantity + delta;
 
       const $newQuantity: JQuery = $container.find(this.config.newQuantitySelector);
       $newQuantity.text(updatedQuantity);
