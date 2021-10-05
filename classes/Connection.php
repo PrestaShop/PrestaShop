@@ -132,7 +132,7 @@ class ConnectionCore extends ObjectModel
 
     /**
      * Check if the current visitor is a bot
-     * 
+     *
      * @return bool
      */
     public static function isBot()
