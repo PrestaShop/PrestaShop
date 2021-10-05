@@ -78,7 +78,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
     await expect(numberOfOrderReturnStatuses).to.be.above(0);
   });
 
-// 1 - Filter order return statuses
+  // 1 - Filter order return statuses
   describe('Filter order return statuses table', async () => {
     const tests = [
       {
@@ -138,7 +138,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
     });
   });
 
-// 2 - Sort order return statuses table
+  // 2 - Sort order return statuses table
   describe('Sort order return statuses table', async () => {
     const sortTests = [
       {
@@ -207,7 +207,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
     });
   });
 
-// 3 - Create 16 order return statuses
+  // 3 - Create 16 order return statuses
   const creationTests = new Array(16).fill(0, 0, 16);
 
   creationTests.forEach((test, index) => {
@@ -237,7 +237,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
     });
   });
 
-// 4 - Pagination
+  // 4 - Pagination
   describe('Pagination next and previous', async () => {
     it('should change the item number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
@@ -268,7 +268,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
     });
   });
 
-// 5 : Delete order retuen statuses created with bulk actions
+  // 5 : Delete order retuen statuses created with bulk actions
   describe('Delete order return statuses with Bulk Actions', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
@@ -295,5 +295,4 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
       await expect(numberOfLinesAfterReset).to.be.equal(numberOfOrderReturnStatuses);
     });
   });
-})
-;
+});

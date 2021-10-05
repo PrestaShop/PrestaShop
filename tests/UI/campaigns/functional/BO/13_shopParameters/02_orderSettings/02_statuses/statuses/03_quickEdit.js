@@ -4,9 +4,9 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext')
+const testContext = require('@utils/testContext');
 
-// Common tests login BO
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
