@@ -31,13 +31,9 @@ namespace Tests\Integration\PrestaShopBundle\Form\EventListener;
 use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener;
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Symfony\Component\Form\Exception\OutOfBoundsException;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
+use Tests\Integration\PrestaShopBundle\Form\TestProductFormType;
 
 class ProductTypeListenerTest extends FormListenerTestCase
 {
@@ -61,7 +57,7 @@ class ProductTypeListenerTest extends FormListenerTestCase
      */
     public function testFormTypeExistsInFormDependingOnProductType(string $productType, string $formTypeName, bool $shouldExist): void
     {
-        $form = $this->createForm(SimpleProductFormTest::class);
+        $form = $this->createForm(TestProductFormType::class);
         $this->assertFormTypeExistsInForm($form, $formTypeName, true);
         $this->adaptProductFormBasedOnProductType($form, $productType);
         $this->assertFormTypeExistsInForm($form, $formTypeName, $shouldExist);
@@ -112,7 +108,7 @@ class ProductTypeListenerTest extends FormListenerTestCase
      */
     public function testFormTypeSwitching(string $initialProductType, string $newProductType): void
     {
-        $form = $this->createForm(SimpleProductFormTest::class);
+        $form = $this->createForm(TestProductFormType::class);
         $this->adaptProductFormBasedOnProductType($form, $initialProductType);
         $this->adaptProductFormBasedOnProductType($form, $newProductType);
     }
@@ -149,7 +145,7 @@ class ProductTypeListenerTest extends FormListenerTestCase
                 ],
             ],
         ];
-        $form = $this->createForm(SimpleProductFormTest::class, [], $formData);
+        $form = $this->createForm(TestProductFormType::class, [], $formData);
 
         $this->assertFormTypeExistsInForm($form, 'stock.quantities.stock_movements', true);
         $this->adaptProductFormBasedOnProductType($form, $productType, $formData);
@@ -194,60 +190,5 @@ class ProductTypeListenerTest extends FormListenerTestCase
 
         $eventMock = $this->createEventMock($formData, $form);
         $listener->adaptProductForm($eventMock);
-    }
-
-    /**
-     * @param FormInterface $form
-     * @param string $typeName
-     * @param bool $shouldExist
-     */
-    private function assertFormTypeExistsInForm(FormInterface $form, string $typeName, bool $shouldExist): void
-    {
-        if ($shouldExist) {
-            $this->assertNotNull($this->getFormChild($form, $typeName));
-        } else {
-            $this->expectException(OutOfBoundsException::class);
-            $this->getFormChild($form, $typeName);
-        }
-    }
-
-    /**
-     * @param FormInterface $form
-     * @param string $typeName
-     *
-     * @return FormInterface
-     */
-    private function getFormChild(FormInterface $form, string $typeName): FormInterface
-    {
-        $typeNames = explode('.', $typeName);
-        $child = $form;
-        foreach ($typeNames as $typeName) {
-            $child = $child->get($typeName);
-        }
-
-        return $child;
-    }
-}
-
-class SimpleProductFormTest extends CommonAbstractType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('shortcuts', FormType::class)
-            ->add('stock', FormType::class)
-            ->add('shipping', FormType::class)
-            ->add('options', FormType::class)
-        ;
-        $builder->get('shortcuts')->add('stock', FormType::class);
-
-        $stock = $builder->get('stock');
-        $stock->add('pack_stock_type', ChoiceType::class);
-        $stock->add('virtual_product_file', FormType::class);
-        $stock->add('quantities', FormType::class);
-        $quantities = $stock->get('quantities');
-        $quantities->add('stock_movements', FormType::class);
-
-        $builder->get('options')->add('suppliers', ChoiceType::class);
     }
 }
