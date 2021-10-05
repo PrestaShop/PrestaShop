@@ -117,6 +117,16 @@ class GeneralType extends TranslatorAwareType
                     'Display or not the partner offers tick box, to receive offers from the store\'s partners.',
                     'Admin.Shopparameters.Help'
                 ),
+            ])
+            ->add('customer_search_full', SwitchType::class, [
+                'label' => $this->trans(
+                    'Disable OR in customer search',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'If you enable this option the clients will be found on the full name. "John Do" and not "John" + "Do".',
+                    'Admin.Shopparameters.Help'
+                ),
             ]);
     }
 

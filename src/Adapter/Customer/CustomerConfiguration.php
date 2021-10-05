@@ -56,6 +56,7 @@ class CustomerConfiguration implements DataConfigurationInterface
             'enable_b2b_mode' => $this->configuration->getBoolean('PS_B2B_ENABLE'),
             'ask_for_birthday' => $this->configuration->getBoolean('PS_CUSTOMER_BIRTHDATE'),
             'enable_offers' => $this->configuration->getBoolean('PS_CUSTOMER_OPTIN'),
+            'customer_search_full' => $this->configuration->getBoolean('PS_CUSTOMER_SEARCH_FULL'),
         ];
     }
 
@@ -71,6 +72,7 @@ class CustomerConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_B2B_ENABLE', (int) $config['enable_b2b_mode']);
             $this->configuration->set('PS_CUSTOMER_BIRTHDATE', (int) $config['ask_for_birthday']);
             $this->configuration->set('PS_CUSTOMER_OPTIN', (int) $config['enable_offers']);
+            $this->configuration->set('PS_CUSTOMER_SEARCH_FULL', (int) $config['customer_search_full']);
         }
 
         return [];
@@ -87,7 +89,8 @@ class CustomerConfiguration implements DataConfigurationInterface
             $config['password_reset_delay'],
             $config['enable_b2b_mode'],
             $config['ask_for_birthday'],
-            $config['enable_offers']
+            $config['enable_offers'],
+            $config['customer_search_full']
         );
     }
 }
