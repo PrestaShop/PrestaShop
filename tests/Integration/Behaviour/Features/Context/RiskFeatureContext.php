@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,24 +22,39 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% set enableSidebar = true %}
-{% set fullName = '%s. %s'|format(customerInformation.firstName.getValue[:1], customerInformation.lastName.getValue) %}
-{% set layoutTitle = 'Editing customer %name%'|trans({'%name%': fullName}, 'Admin.Orderscustomers.Feature') %}
+declare(strict_types=1);
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace Tests\Integration\Behaviour\Features\Context;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/form.html.twig' with {'isGuest': customerInformation.isGuest} %}
-    </div>
-  </div>
-{% endblock %}
+use Configuration;
+use Risk;
+use RuntimeException;
 
-{% block javascripts %}
-  {{ parent() }}
+class RiskFeatureContext extends AbstractPrestaShopFeatureContext
+{
+    /**
+     * @Given risk :reference in default language named :name exists
+     */
+    public function checkRiskWithNameExists($reference, $name)
+    {
+        $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
+        $risks = Risk::getRisks($defaultLanguageId);
 
-  {% include '@PrestaShop/Admin/Sell/Customer/Blocks/javascript.html.twig' %}
-{% endblock %}
+        $searchedRisk = null;
+        /** @var Risk $risk */
+        foreach ($risks as $risk) {
+            if ($risk->name === $name) {
+                $searchedRisk = $risk;
+                break;
+            }
+        }
+
+        if (!$searchedRisk) {
+            throw new RuntimeException(sprintf('Cannot find risk with name %s', $name));
+        }
+
+        SharedStorage::getStorage()->set($reference, $searchedRisk->id);
+    }
+}

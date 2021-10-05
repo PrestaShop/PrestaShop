@@ -615,6 +615,13 @@ class CustomerCore extends ObjectModel
         return self::$_customerHasAddress[$key];
     }
 
+    public static function resetStaticCache()
+    {
+        self::$_customerHasAddress = [];
+        self::$_customer_groups = [];
+        self::$_defaultGroupId = [];
+    }
+
     /**
      * Reset Address cache.
      *
