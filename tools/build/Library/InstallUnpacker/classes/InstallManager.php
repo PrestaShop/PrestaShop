@@ -125,12 +125,10 @@ class InstallManager
         $this->unzip->unzipArchive($destinationPath, $this->extractDirectoryPath);
 
         // test 3 extracted files are OK
-        $this->verifyUnzipFile('Install_PrestaShop.html');
         $this->verifyUnzipFile('prestashop.zip');
         $this->verifyUnzipFile('index.php');
 
         // replace files
-        $this->replaceInstallFile('Install_PrestaShop.html');
         $this->replaceInstallFile('prestashop.zip');
         $this->replaceInstallFile('index.php');
 
