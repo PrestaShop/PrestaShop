@@ -134,6 +134,7 @@ Release Notes for PrestaShop 1.7
     - #24729: Update linklist to v4 (by @atomiix)
     - #24717: Update native modules (by @atomiix)
   - Bug fix:
+    - #25982: Fix CLI install (by @atomiix)
     - #25784: Use null coalescing operator to fix notice (by @kpodemski)
     - #25613: Fix missing hook behavior when we want an array return (by @kpodemski)
     - #25413: Fix performance issue on Smarty template caching (by @lukaslau)
