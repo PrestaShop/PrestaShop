@@ -29,7 +29,7 @@ Go to orders history page
 Check that number of orders is above 5 (default orders)
  */
 
-describe('Check number of orders in order history page', async () => {
+describe('FO - Account : Check number of orders in order history page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -61,7 +61,6 @@ module.exports = {
    * @return {Promise<Page>}
    */
   async newTab(context) {
-    console.log(typeof context);
     const page = await context.newPage();
 
     if (global.BROWSER.interceptErrors) {
