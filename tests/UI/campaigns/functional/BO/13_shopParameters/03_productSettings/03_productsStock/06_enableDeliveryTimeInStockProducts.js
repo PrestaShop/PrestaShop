@@ -1,25 +1,28 @@
 require('module-alias/register');
 
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
+
+// Import FO pages
 const foProductPage = require('@pages/FO/product');
 const foHomePage = require('@pages/FO/home');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_enableDeliveryTimeInStockProducts';
-
 
 let browserContext;
 let page;
 
-describe('Enable delivery time in stocks products', async () => {
+describe('BO - Shop Parameters - Product Settings : Enable delivery time in stocks products', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
