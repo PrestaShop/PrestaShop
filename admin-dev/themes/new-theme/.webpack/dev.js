@@ -61,10 +61,6 @@ function devConfig() {
               syntactic: true,
             },
           },
-          eslint: {
-            enabled: true,
-            files: path.resolve(__dirname, '../js/**/*.{ts,js,vue}'),
-          },
         }),
       ],
     },
