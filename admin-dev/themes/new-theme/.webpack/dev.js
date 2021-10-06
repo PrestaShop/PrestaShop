@@ -1,8 +1,4 @@
 const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const webpack = require('webpack');
-const {VueLoaderPlugin} = require('vue-loader');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const common = require('./common.js');
 
 /**
@@ -43,26 +39,6 @@ function devConfig() {
           writeToDisk: (filePath) => !(/hot-update/.test(filePath)),
         },
       },
-      plugins: [
-        new MiniCssExtractPlugin({filename: '[name].css'}),
-        new webpack.ProvidePlugin({
-          moment: 'moment', // needed for bootstrap datetime picker
-          $: 'jquery', // needed for jquery-ui
-          jQuery: 'jquery',
-        }),
-        new VueLoaderPlugin(),
-        new ForkTsCheckerWebpackPlugin({
-          typescript: {
-            extensions: {
-              vue: true,
-            },
-            diagnosticOptions: {
-              semantic: true,
-              syntactic: true,
-            },
-          },
-        }),
-      ],
     },
   );
 
