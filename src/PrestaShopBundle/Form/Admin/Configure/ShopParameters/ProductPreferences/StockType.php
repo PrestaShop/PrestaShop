@@ -53,7 +53,7 @@ class StockType extends TranslatorAwareType
                 'only_enabled_locales' => false,
                 'options' => [
                     'attr' => [
-                        'placeholder' => $this->trans('In Stock', 'Admin.Shopparameters.Help'),
+                        'placeholder' => $this->trans('In stock', 'Admin.Shopparameters.Help'),
                     ],
                 ],
             ])
