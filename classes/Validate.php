@@ -374,7 +374,7 @@ class ValidateCore
      */
     public static function isMessage($message)
     {
-        return Validate::isCleanHtml($message, false);
+        return static::isCleanHtml($message, false);
     }
 
     /**
