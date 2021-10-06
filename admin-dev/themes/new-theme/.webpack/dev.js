@@ -2,7 +2,6 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 const {VueLoaderPlugin} = require('vue-loader');
-const {HotAcceptPlugin} = require('hot-accept-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const common = require('./common.js');
 
