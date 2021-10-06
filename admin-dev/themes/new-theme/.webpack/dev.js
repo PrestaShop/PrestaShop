@@ -29,6 +29,12 @@ function devConfig() {
           watch: false,
         },
         port: 3000,
+        watchFiles: [
+          path.join(__dirname, '/../**/*.tpl'),
+          path.join(__dirname, '../js/**/*.js'),
+          path.join(__dirname, '../js/**/*.ts'),
+          path.join(__dirname, '../scss/**/*.scss'),
+        ],
         open: true,
         proxy: {
           '**': {
