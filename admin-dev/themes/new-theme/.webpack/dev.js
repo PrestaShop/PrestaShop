@@ -49,12 +49,6 @@ function devConfig() {
         },
       },
       plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new HotAcceptPlugin({
-          test: [
-            ...Object.keys(common.entry).map((el) => `${common.entry[el]}.js`),
-          ],
-        }),
         new MiniCssExtractPlugin({filename: '[name].css'}),
         new webpack.ProvidePlugin({
           moment: 'moment', // needed for bootstrap datetime picker
