@@ -10,7 +10,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: '10.x'
+          node-version: '14.x'
 
       - name: BackOffice Theme `new-theme`
         run: cd ./admin-dev/themes/new-theme && npm install && npm run scss-lint
@@ -29,7 +29,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-            node-version: '10.x'
+            node-version: '14.x'
 
       -   name: Validate npm config
           run: >-
