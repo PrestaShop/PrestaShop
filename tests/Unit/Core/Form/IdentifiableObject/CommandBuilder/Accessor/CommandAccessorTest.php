@@ -53,7 +53,7 @@ class CommandAccessorTest extends TestCase
     ): void {
         $accessor = new CommandAccessor($config);
         $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
-        $commands = $accessor->buildCommands($data, $command);
+        $commands = $accessor->prepareCommands($data, $command);
         $this->assertEquals($expectedCommands, $commands);
     }
 
@@ -97,6 +97,32 @@ class CommandAccessorTest extends TestCase
             [$command],
         ];
 
+        // prefix is not mandatory especially when dealing with single store command
+        $config = new CommandAccessorConfig();
+        $config
+            ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
+            ->addField('[name]', 'setName', CommandField::TYPE_STRING)
+            ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
+            ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
+            ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+        ;
+
+        yield [
+            $config,
+            [
+                'url' => 'http://localhost',
+                'name' => 'toto',
+                'command' => [
+                    'isValid' => true,
+                ],
+                '_number' => 42,
+                'parent' => [
+                    'children' => $children,
+                ],
+            ],
+            [$command],
+        ];
+
         $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
             ->setName('toto')
@@ -110,6 +136,38 @@ class CommandAccessorTest extends TestCase
                 'command' => [
                     'isValid' => false,
                 ],
+                'unknown' => 45,
+            ],
+            [$command],
+        ];
+
+        $config = new CommandAccessorConfig(self::MULTI_STORE_PREFIX);
+        $config
+            ->addMultiStoreField('[url]', 'setUrl', CommandField::TYPE_STRING)
+            ->addField('[name]', 'setName', CommandField::TYPE_STRING)
+            ->addMultiStoreField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
+            ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
+            ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+        ;
+
+        $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
+        $command
+            ->setUrl('http://localhost')
+            ->setName('toto')
+            ->setIsValid(true)
+            ->setCount(42)
+        ;
+
+        // Same test but now some fields are multistore, since no multistore command is provided it shouldn't change the final result
+        yield [
+            $config,
+            [
+                'url' => 'http://localhost',
+                'name' => 'toto',
+                'command' => [
+                    'isValid' => true,
+                ],
+                '_number' => 42,
                 'unknown' => 45,
             ],
             [$command],
@@ -131,7 +189,7 @@ class CommandAccessorTest extends TestCase
         $accessor = new CommandAccessor($config);
         $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $allShopsCommand = new CommandAccessorTestCommand(ShopConstraint::allShops());
-        $commands = $accessor->buildCommands($data, $command, $allShopsCommand);
+        $commands = $accessor->prepareCommands($data, $command, $allShopsCommand);
         $this->assertEquals($expectedCommands, $commands);
     }
 

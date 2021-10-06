@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Acce
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
- * Thorwn when trying to create a CommandField with invalid type.
+ * Thrown when trying to create a CommandField with invalid type.
  */
 class InvalidCommandFieldTypeException extends CoreException
 {
