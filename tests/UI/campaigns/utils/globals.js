@@ -47,6 +47,6 @@ global.TAKE_SCREENSHOT_AFTER_FAIL = process.env.TAKE_SCREENSHOT_AFTER_FAIL || fa
 
 global.maildevConfig = {
   smtpPort: process.env.SMTP_PORT || '1025',
-  smtpServer: process.env.SMTP_SERVER || 'localhost',
+  smtpServer: process.env.SMTP_SERVER || '172.20.0.4',
   silent: true,
 };
