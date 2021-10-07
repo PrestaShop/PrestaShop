@@ -2906,7 +2906,7 @@ FileETag none
                     if (count($languagesIsoIds) > 1) {
                         fwrite($write_fd, 'Disallow: /*' . $iso_code . '/' . $file . PHP_EOL);
                     } else {
-                        fwrite($write_fd, 'Disallow: /' . $file . PHP_EOL);
+                        fwrite($write_fd, 'Disallow: ' . $uri['physical'] . $file . PHP_EOL);
                     }
                 }
             }
