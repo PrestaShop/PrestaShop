@@ -3505,5 +3505,20 @@
       <title>Administration Employee menu</title>
       <description>This hook is displayed in the employee menu</description>
     </hook>
+    <hook id="actionCustomerLogoutBefore">
+      <name>actionCustomerLogoutBefore</name>
+      <title>Before customer logout</title>
+      <description>This hook allows you to execute code before customer logout</description>
+    </hook>
+    <hook id="actionCustomerLogoutAfter">
+      <name>actionCustomerLogoutAfter</name>
+      <title>After customer logout</title>
+      <description>This hook allows you to execute code after customer logout</description>
+    </hook>
+    <hook id="displayCheckoutSummaryTop">
+      <name>displayCheckoutSummaryTop</name>
+      <title>Cart summary top</title>
+      <description>This hook allows you to display new elements in top of cart summary</description>
+    </hook>
   </entities>
 </entity_hook>
