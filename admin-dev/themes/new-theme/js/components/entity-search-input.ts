@@ -403,7 +403,8 @@ export default class EntitySearchInput {
    * @param {Object} selectedItem
    */
   private addSelectedContentToContainer(selectedItem: any): void {
-    const newIndex = this.$entitiesContainer.children().length;
+    const $entityItems = $(this.options.entityItemSelector, this.$entitiesContainer);
+    const newIndex = $entityItems.length ? this.getIndexFromItem($entityItems.last()) + 1 : 0;
     const selectedHtml = this.renderSelected(selectedItem, newIndex);
 
     const $selectedNode = $(selectedHtml);
@@ -416,6 +417,45 @@ export default class EntitySearchInput {
       this.options.onSelectedContent($selectedNode, selectedItem);
     }
     this.updateEmptyState();
+  }
+
+  /**
+   * Try and find the index of an element in the collection by parsing its inputs names which should look like:
+   *
+   * form[collection][0][name], form[collection][1][id] => we aim to extract the 1
+   *
+   * We search for the name matching the configured identifier, and extract its index. This is important because
+   * when you edit a collection, you can add then remove then add an element again, the indexes are not gonna follow
+   * so you cannot rely on just the index from element order. Which is why it is more accurate to parse the index that
+   * was used when the element has been rendered for the first time.
+   *
+   * If we can't find anything we use the order index as fallback though.
+   *
+   * @param {JQuery} $item
+   *
+   * @return number
+   */
+  private getIndexFromItem($item: JQuery): number {
+    // By default use the position index
+    let index = $item.index();
+
+    // Try to find an input which names contains [1][id] (where 1 is the index, and id the identifier)
+    const identifierNameRegexp: string = `\\[(\\d+)\\]\\[${this.options.identifierField}\\]`;
+    const inputs = $item.find('input');
+    inputs.each((inputIndex: number, input: HTMLInputElement): void => {
+      const matches = input.name.match(identifierNameRegexp);
+
+      // Extract the index from the input name, if it is found and is a number use it as the index
+      if (matches && matches.length > 0) {
+        const foundIndex = parseInt(matches[1], 10);
+
+        if (!Number.isNaN(foundIndex)) {
+          index = foundIndex;
+        }
+      }
+    });
+
+    return index;
   }
 
   /**
