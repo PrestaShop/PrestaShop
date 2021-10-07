@@ -556,7 +556,6 @@ class EmployeeController extends FrameworkBundleAdminController
 
         return [
             'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
-            'requireAddonsSearch' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'superAdminProfileId' => $configuration->get('_PS_ADMIN_PROFILE_'),
             'getTabsUrl' => $this->generateUrl('admin_employees_get_tabs'),
