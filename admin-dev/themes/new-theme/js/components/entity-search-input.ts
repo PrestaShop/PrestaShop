@@ -211,6 +211,9 @@ export default class EntitySearchInput {
       // This gets the proper value for each option, respecting the priority: input > data-attribute > default
       this.initOption(optionName, inputOptions, defaultOptions[optionName]);
     });
+
+    // Cast all IDs into string to avoid not matching because of different types
+    this.options.filteredIdentities = this.options.filteredIdentities.map(String);
   }
 
   /**
@@ -326,27 +329,13 @@ export default class EntitySearchInput {
             return [];
           }
 
-          const selectedIds: any[] = this.getSelectedIds();
+          const selectedIds: string[] = this.getSelectedIds();
           const suggestedItems: any[] = [];
           response.forEach((responseItem: any) => {
-            const responseIdentifier = responseItem[this.options.identifierField];
-
-            /**
-             * We need custom check instead of relying on a built in Array.includes because it is based on
-             * strict equality. Since we can't be sure that the API format and the input field types will
-             * match we need to use loose equality here.
-             */
-            // eslint-disable-next-line arrow-body-style
-            const isIdContained = this.options.filterSelected && selectedIds.some((id: any) => {
-              // eslint-disable-next-line eqeqeq
-              return id == responseIdentifier;
-            });
-
-            // eslint-disable-next-line arrow-body-style
-            const isFiltered = this.options.filteredIdentities.length > 0 && this.options.filteredIdentities.some((id: any) => {
-              // eslint-disable-next-line eqeqeq
-              return id == responseIdentifier;
-            });
+            // Force casting to string to avoid inequality with number IDs because of type
+            const responseIdentifier: string = String(responseItem[this.options.identifierField]);
+            const isIdContained = this.options.filterSelected && selectedIds.includes(responseIdentifier);
+            const isFiltered = this.options.filteredIdentities.includes(responseIdentifier);
 
             if (!isIdContained && !isFiltered) {
               suggestedItems.push(responseItem);
@@ -450,8 +439,8 @@ export default class EntitySearchInput {
     return template;
   }
 
-  private getSelectedIds(): any[] {
-    const selectedIds: any[] = [];
+  private getSelectedIds(): string[] {
+    const selectedIds: string[] = [];
     const selectedChildren = $(this.options.entityItemSelector, this.$entitiesContainer);
     selectedChildren.each((index: number, selectedChild: HTMLElement) => {
       const identifierNameRegexp: string = `\\[${this.options.identifierField}\\]`;
