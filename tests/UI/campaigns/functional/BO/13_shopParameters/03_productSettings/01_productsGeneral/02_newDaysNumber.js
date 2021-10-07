@@ -78,8 +78,15 @@ describe('BO - Shop Parameters - Product Settings : Update Number of days for wh
 
       const isNewFlagVisible = await homePage.isNewFlagVisible(page, 1);
       await expect(isNewFlagVisible).to.be.equal(test.args.exist);
+    });
+
+    it('should close the page and go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'closePageAndBackToBO', baseContext);
 
       page = await homePage.closePage(browserContext, page, 0);
+
+      const pageTitle = await productSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
   });
 });

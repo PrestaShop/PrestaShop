@@ -172,8 +172,15 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
     await foProductPage.goToCartPage(page);
     const priceATI = await cartPage.getATIPrice(page);
     await expect(priceATI).to.equal(secondCartTotalATI);
+  });
+
+  it('should close the page and go back to BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'closePageAndBackToBO', baseContext);
 
     page = await cartPage.closePage(browserContext, page, 0);
+
+    const pageTitle = await productSettingsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
   });
 
   it('should go to \'Catalog > Products\' page', async function () {

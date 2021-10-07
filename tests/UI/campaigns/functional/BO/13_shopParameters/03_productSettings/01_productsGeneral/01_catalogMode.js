@@ -135,8 +135,15 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
 
           isVisible = await productPage.isAddToCartButtonDisplayed(page);
           await expect(isVisible).to.equal(showPrices.args.isAddToCartExist);
+        });
+
+        it('should close the page and go back to BO', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
           page = await productPage.closePage(browserContext, page, 0);
+
+          const pageTitle = await productSettingsPage.getPageTitle(page);
+          await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
         });
       });
     } else {
@@ -177,8 +184,15 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
 
         isVisible = await productPage.isAddToCartButtonDisplayed(page);
         await expect(isVisible).to.be.true;
+      });
+
+      it('should close the page and go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
         page = await productPage.closePage(browserContext, page, 0);
+
+        const pageTitle = await productSettingsPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
       });
     }
   });

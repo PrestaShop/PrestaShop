@@ -137,8 +137,15 @@ describe('BO - Shop Parameters - Product Settings :  Display unavailable product
       );
 
       await expect(colorIsVisible).to.be.equal(test.args.enable);
+    });
+
+    it('should close the page and go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
       page = await productPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await productSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
   });
 

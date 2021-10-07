@@ -92,8 +92,15 @@ describe('BO - Shop Parameters - Product Settings : Display available quantities
 
       const quantityIsVisible = await productPage.isQuantityDisplayed(page);
       await expect(quantityIsVisible).to.be.equal(test.args.enable);
+    });
 
-      page = await homePage.closePage(browserContext, page, 0);
+    it('should close the page and go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'closePageAndBackToBO', baseContext);
+
+      page = await productPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await productSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
   });
 });

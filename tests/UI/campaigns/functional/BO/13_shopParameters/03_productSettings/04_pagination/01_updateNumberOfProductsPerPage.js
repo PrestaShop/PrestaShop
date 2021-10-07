@@ -109,8 +109,15 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
           numberOfProducts,
           'Number of product displayed is incorrect',
         ).to.equal(test.args.numberOfProductsPerPage);
+      });
+
+      it('should close the page and go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index + 1}`, baseContext);
 
         page = await homePageFO.closePage(browserContext, page, 0);
+
+        const pageTitle = await productSettingsPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
       });
     });
   });

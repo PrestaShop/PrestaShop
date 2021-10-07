@@ -133,8 +133,15 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
 
       const lastQuantityIsVisible = await productPage.isAvailabilityQuantityDisplayed(page);
       await expect(lastQuantityIsVisible).to.be.equal(test.args.exist);
+    });
+
+    it('should close the page and go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${test.args.state}`, baseContext);
 
       page = await productPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await productSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
   });
 });

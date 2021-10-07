@@ -241,7 +241,7 @@ describe('Filter, sort and pagination order return status', async () => {
 
   // 4 - Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 20 per page', async function () {
+    it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, '20');
@@ -262,7 +262,7 @@ describe('Filter, sort and pagination order return status', async () => {
       expect(paginationNumber).to.equal('1');
     });
 
-    it('should change the item number to 50 per page', async function () {
+    it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, '50');
@@ -270,7 +270,7 @@ describe('Filter, sort and pagination order return status', async () => {
     });
   });
 
-  // 5 : Delete order retuen statuses created with bulk actions
+  // 5 : Delete order return statuses created with bulk actions
   describe('Delete order return statuses with Bulk Actions', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);

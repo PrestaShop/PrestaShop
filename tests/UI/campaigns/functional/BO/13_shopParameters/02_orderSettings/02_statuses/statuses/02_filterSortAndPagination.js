@@ -291,7 +291,7 @@ describe('Filter, sort and pagination order status', async () => {
 
   // 4 - Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 20 per page', async function () {
+    it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, '20');
@@ -312,7 +312,7 @@ describe('Filter, sort and pagination order status', async () => {
       expect(paginationNumber).to.equal('1');
     });
 
-    it('should change the item number to 50 per page', async function () {
+    it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, '50');
