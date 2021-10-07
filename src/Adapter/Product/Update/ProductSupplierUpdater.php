@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\DefaultProductSupplierNotAssociatedException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
@@ -213,7 +213,7 @@ class ProductSupplierUpdater
 
         $productSuppliers = $this->productSupplierRepository->getAssociatedProductSuppliers($productId, $supplierId);
         if (empty($productSuppliers)) {
-            throw new DefaultProductSupplierNotAssociatedException(sprintf(
+            throw new ProductSupplierNotAssociatedException(sprintf(
                 'Supplier #%d is not associated with product #%d', $supplierIdValue, $productIdValue
             ));
         }
@@ -250,7 +250,7 @@ class ProductSupplierUpdater
         }
 
         // Check if product has a default supplier if not use the first one
-        $defaultSupplierId = $this->productSupplierRepository->getProductDefaultSupplierId($productId);
+        $defaultSupplierId = $this->productSupplierRepository->getDefaultSupplierId($productId);
         if (null === $defaultSupplierId) {
             /** @var ProductSupplier $defaultSupplier */
             $defaultSupplier = reset($productSuppliers);

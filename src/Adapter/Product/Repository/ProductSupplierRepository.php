@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotAddProduc
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotBulkDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\DefaultProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -98,11 +97,13 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Returns the ID of the Supplier set as default for this product.
+     *
      * @param ProductId $productId
      *
      * @return SupplierId|null
      */
-    public function getProductDefaultSupplierId(ProductId $productId): ?SupplierId
+    public function getDefaultSupplierId(ProductId $productId): ?SupplierId
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('p.id_supplier AS default_supplier_id')
@@ -127,13 +128,13 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Returns the ProductSupplier associated to a product as its default one.
+     *
      * @param ProductId $productId
      *
-     * @return ProductSupplier
-     *
-     * @throws ProductSupplierNotFoundException
+     * @return ProductSupplierId|null
      */
-    public function getDefaultProductSupplier(ProductId $productId): ProductSupplier
+    public function getDefaultProductSupplierId(ProductId $productId): ?ProductSupplierId
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('ps.id_product_supplier AS default_supplier_id')
@@ -152,13 +153,10 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
         $result = $qb->execute()->fetch();
 
         if (empty($result['default_supplier_id'])) {
-            throw new DefaultProductSupplierNotAssociatedException(sprintf(
-                'Cannot find default ProductSupplier for product %d',
-                $productId->getValue()
-            ));
+            return null;
         }
 
-        return $this->get(new ProductSupplierId((int) $result['default_supplier_id']));
+        return new ProductSupplierId((int) $result['default_supplier_id']);
     }
 
     /**
