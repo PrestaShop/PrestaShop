@@ -309,7 +309,7 @@ function setPreviousYear() {
 
 $(document).ready(() => {
   // Instanciate datepickers
-  const datepickerStart = $('.datepicker1').daterangepicker({
+  datepickerStart = $('.datepicker1').daterangepicker({
     dates: window.translated_dates,
     weekStart: 1,
     start: $('#date-start').val(),
@@ -320,7 +320,7 @@ $(document).ready(() => {
     }
   }).data('daterangepicker');
 
-  const datepickerEnd = $('.datepicker2').daterangepicker({
+  datepickerEnd = $('.datepicker2').daterangepicker({
     dates: window.translated_dates,
     weekStart: 1,
     start: $('#date-start').val(),
