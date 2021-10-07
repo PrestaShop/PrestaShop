@@ -50,7 +50,7 @@ jobs:
               && cd -
 
       -   name: Upload to Google Cloud Storage (GCS)
-          run: gsutil cp -r "/tmp/ps-release" gs://prestashop-core-nightly
+          run: gsutil cp -r "/tmp/ps-release/**" gs://prestashop-core-nightly
 
       -   name: Stop the instance if started
           run: gcloud compute instances stop --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}"
