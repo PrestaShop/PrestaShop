@@ -2879,13 +2879,14 @@ FileETag none
                 }
 
                 // Disallow multilang directories
-                if (!empty($languagesIsoIds)) {
+                if (!empty($languagesIsoIds) && count($languagesIsoIds) > 1) {
                     foreach ($languagesIsoIds as $language) {
                         foreach ($robots_content['Directories'] as $dir) {
                             fwrite(
                                 $write_fd,
                                 sprintf(
-                                    'Disallow: /%s/%s%s',
+                                    'Disallow: %s%s/%s%s',
+                                    $uri['physical'],
                                     $language['iso_code'],
                                     $dir,
                                     PHP_EOL
@@ -2902,7 +2903,7 @@ FileETag none
             fwrite($write_fd, "# Files\n");
             foreach ($robots_content['Files'] as $iso_code => $files) {
                 foreach ($files as $file) {
-                    if (!empty($languagesIsoIds)) {
+                    if (count($languagesIsoIds) > 1) {
                         fwrite($write_fd, 'Disallow: /*' . $iso_code . '/' . $file . PHP_EOL);
                     } else {
                         fwrite($write_fd, 'Disallow: /' . $file . PHP_EOL);
@@ -2950,6 +2951,8 @@ FileETag none
             '*/modules/*.js',
             '*/modules/*.png',
             '*/modules/*.jpg',
+            '*/modules/*.gif',
+            '*/modules/*.svg',
             '/js/jquery/*',
         ];
 
