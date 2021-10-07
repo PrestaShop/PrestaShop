@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\RelatedProductsCommandsBuilder;
 
@@ -68,7 +69,7 @@ class RelatedProductsCommandsBuilderTest extends AbstractProductCommandBuilderTe
                     'related_products' => [],
                 ],
             ],
-            [],
+            [new RemoveAllRelatedProductsCommand($this->getProductId()->getValue())],
         ];
 
         $command = new SetRelatedProductsCommand($this->getProductId()->getValue(), [23]);

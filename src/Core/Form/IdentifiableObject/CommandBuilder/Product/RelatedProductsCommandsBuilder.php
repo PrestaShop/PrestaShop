@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -38,12 +39,17 @@ class RelatedProductsCommandsBuilder implements ProductCommandsBuilderInterface
      */
     public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (empty($formData['description']['related_products'])) {
+        if (!isset($formData['description']['related_products'])) {
             return [];
         }
 
+        $relatedProducts = $formData['description']['related_products'];
+        if (empty($relatedProducts)) {
+            return [new RemoveAllRelatedProductsCommand($productId->getValue())];
+        }
+
         $relatedProductIds = [];
-        foreach ($formData['description']['related_products'] as $relatedProduct) {
+        foreach ($relatedProducts as $relatedProduct) {
             $relatedProductId = (int) $relatedProduct['id'];
             if (!in_array($relatedProductId, $relatedProductIds)) {
                 $relatedProductIds[] = $relatedProductId;
