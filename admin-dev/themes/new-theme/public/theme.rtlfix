@@ -1,3 +1,80 @@
+/*
+ * Vazir is a Persian/Arabic font
+ * https://github.com/rastikerdar/vazir-font
+ */
+@font-face {
+    font-family: Vazir;
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.eot');
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.eot?#iefix') format('embedded-opentype'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.woff') format('woff'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: Vazir;
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.eot');
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.eot?#iefix') format('embedded-opentype'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.woff') format('woff'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: Vazir;
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.eot');
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.eot?#iefix') format('embedded-opentype'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.woff') format('woff'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+body.lang-fa, .lang-fa h1, .lang-fa h2, .lang-fa .modal-title, .lang-fa h3, .lang-fa h4, .lang-fa h5, .lang-fa h6, .lang-fa .h1, .lang-fa .h2, .lang-fa .h3, .lang-fa .h4, .lang-fa .h5, .lang-fa .h6, .lang-fa .tooltip, .lang-fa .popover, .lang-fa .module-search-result-title {
+  font-family: Vazir,Tahoma,Helvetica,Arial,sans-serif !important;
+}
+body.lang-rtl .float-right {
+    float: left !important;
+}
+body.lang-rtl .float-left {
+    float: right !important;
+}
+/* Fix arrow direction in categories list */
+ul.category-tree .more > .checkbox:before, ul.category-tree .more > .radio:before, .material-choice-tree-container ul.choice-tree .collapsed > .checkbox:before, .material-choice-tree-container ul.choice-tree .collapsed > .radio:before {
+  content: "\E5CB";
+}
+/* Fix arrow direction for tooltip */
+.popover .arrow {
+  transform: scaleX(1) !important;
+}
+/* Fix menu placement for TinyMCE */
+.mce-window, .mce-menu {
+  right: auto !important;
+  left: 0;
+}
+/* Fix page navigation arrows */
+.page-item.previous.next .page-link:after, .page-item.next.next .page-link:after {
+  content: "\E314";
+}
+.page-item.previous.previous .page-link:after, .page-item.next.previous .page-link:after {
+  content: "\E315";
+}
+/* Fix attributes list in product page */
+#attributes-list .attribute-group .attributes .attribute .js-attribute-checkbox + .attribute-label .pretty-checkbox {
+  float: right !important;
+  margin-left: 0.4375rem;
+  margin-right: 0 !important;
+}
+/* Fix categories list in product page */
+.product-page .category-tree-overflow ul.category-tree .category-tree-inputs {
+  padding: 0 1.25rem 0 0 !important;
+}
+.product-page .category-tree-overflow ul.category-tree ul {
+  padding-left: 0 !important;
+  padding-right: 0.75rem;
+}
 @keyframes showcase-img-appearance-rtl {
   from {
     -webkit-transform: translate(-20px) translateX(-1);
