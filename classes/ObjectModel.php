@@ -576,6 +576,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $this->date_upd = date('Y-m-d H:i:s');
         }
 
+        $id_shop_list = [];
         if (Shop::isTableAssociated($this->def['table'])) {
             $id_shop_list = Shop::getContextListShopID();
             if (count($this->id_shop_list)) {
@@ -1462,6 +1463,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 $sql_join = $multi_shop_join . ' ' . $sql_join;
             } else {
                 $vars = get_class_vars($class_name);
+                $or = [];
                 foreach ($vars['shopIDs'] as $id_shop) {
                     $or[] = '(main.id_shop = ' . (int) $id_shop . (isset($this->def['fields']['id_shop_group']) ? ' OR (id_shop = 0 AND id_shop_group=' . (int) Shop::getGroupFromShop((int) $id_shop) . ')' : '') . ')';
                 }
@@ -2091,7 +2093,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 return isset($definition['fields'][$field]) ? $definition['fields'][$field] : null;
             }
 
-            Cache::store($cache_id, $definition);
+            if (isset($cache_id)) {
+                Cache::store($cache_id, $definition);
+            }
 
             return $definition;
         }

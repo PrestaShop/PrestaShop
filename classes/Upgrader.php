@@ -50,6 +50,7 @@ class UpgraderCore
     public $autoupgrade_module;
     public $autoupgrade_last_version;
     public $autoupgrade_module_link;
+    public $desc;
     public $changelog;
     public $md5;
 

@@ -48,8 +48,8 @@ class DbMySQLiCore extends Db
      */
     public function connect()
     {
-        $socket = false;
-        $port = false;
+        $socket = $port = false;
+        $server = '';
         if (Tools::strpos($this->server, ':') !== false) {
             list($server, $port) = explode(':', $this->server);
             if (is_numeric($port) === false) {

@@ -294,41 +294,19 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 break;
             // normal images management : like the most entity images (categories, manufacturers..)...
             case 'categories':
+                return $this->manageDeclinatedImages(_PS_CAT_IMG_DIR_);
             case 'manufacturers':
+                return $this->manageDeclinatedImages(_PS_MANU_IMG_DIR_);
             case 'suppliers':
+                return $this->manageDeclinatedImages(_PS_SUPP_IMG_DIR_);
             case 'stores':
-                switch ($this->wsObject->urlSegment[1]) {
-                    case 'categories':
-                        $directory = _PS_CAT_IMG_DIR_;
-
-                        break;
-                    case 'manufacturers':
-                        $directory = _PS_MANU_IMG_DIR_;
-
-                        break;
-                    case 'suppliers':
-                        $directory = _PS_SUPP_IMG_DIR_;
-
-                        break;
-                    case 'stores':
-                        $directory = _PS_STORE_IMG_DIR_;
-
-                        break;
-                }
-
-                return $this->manageDeclinatedImages($directory);
-
-                break;
+                return $this->manageDeclinatedImages(_PS_STORE_IMG_DIR_);
 
             // product image management : many image for one entity (product)
             case 'products':
                 return $this->manageProductImages();
-
-                break;
             case 'customizations':
                 return $this->manageCustomizationImages();
-
-                break;
             // images root node management : many image for one entity (product)
             case '':
                 $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image_types', []);
@@ -621,7 +599,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         // in case of declinated images list of a product is get
         if ($this->output != '') {
             return true;
-        } elseif (isset($image_size) && $image_size != '') {
+        } elseif (isset($image_size) && $image_size != '' && isset($image_id)) {
             // If a size was given try to display it
 
             // Check the given size
@@ -632,7 +610,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
                 throw $exception->setDidYouMean($image_size, $normal_image_size_names);
             }
-            if (!file_exists($filename)) {
+            if (!isset($filename) || !file_exists($filename)) {
                 throw new WebserviceException('This image does not exist on disk', [59, 500]);
             }
 
@@ -1154,7 +1132,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         throw new WebserviceException('Bad image : ' . $error, [76, 400]);
                     }
 
-                    if ($this->imageType == 'products') {
+                    if ($this->imageType == 'products' && isset($image, $product)) {
                         $image = new Image($image->id);
                         if (!(Configuration::get('PS_OLD_FILESYSTEM') && file_exists(_PS_PROD_IMG_DIR_ . $product->id . '-' . $image->id . '.jpg'))) {
                             $image->createImgFolder();

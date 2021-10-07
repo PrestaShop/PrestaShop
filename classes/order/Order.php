@@ -1957,7 +1957,7 @@ class OrderCore extends ObjectModel
         foreach ($delivery_slips as $key => $delivery) {
             $delivery->is_delivery = true;
             $delivery->date_add = $delivery->delivery_date;
-            if (!$invoice->delivery_number) {
+            if (isset($invoice) && !$invoice->delivery_number) {
                 unset($delivery_slips[$key]);
             }
         }
@@ -2580,7 +2580,7 @@ class OrderCore extends ObjectModel
             }
 
             foreach ($tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $unit_amount) {
-                $total_tax_base = 0;
+                $total_tax_base = $total_amount = 0;
                 switch ($round_type) {
                     case Order::ROUND_ITEM:
                         $total_tax_base = $quantity * Tools::ps_round($discounted_price_tax_excl, Context::getContext()->getComputingPrecision(), $this->round_mode);
