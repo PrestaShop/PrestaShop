@@ -342,6 +342,29 @@ class ProductLazyArrayTest extends TestCase
             ),
             static::PRODUCT_AVAILABLE_LATER,
         ];
+
+        // product with combinations
+        // the one we want is out of stock, other combinations too
+        // not allowed to order when out of stock
+        // it should show the availability message for the "out of stock" status
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 1,
+                    'quantity_wanted' => 5,
+                    'stock_quantity' => 4,
+                    'quantity' => 4,
+                    'quantity_all_versions' => 4,
+                    'show_availability' => 1,
+                    'available_date' => false,
+                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+                ]
+            ),
+            static::PRODUCT_WITH_NOT_ENOUGH_STOCK,
+        ];
     }
 
     /**
