@@ -387,7 +387,7 @@ abstract class PaymentModuleCore extends Module
             // Make sure CartRule caches are empty
             CartRule::cleanCache();
             foreach ($order_detail_list as $key => $order_detail) {
-                /** @var OrderDetail $order_detail */
+                /** @var Order $order */
                 $order = $order_list[$key];
                 if (isset($order->id)) {
                     if (!$secure_key) {
@@ -395,15 +395,15 @@ abstract class PaymentModuleCore extends Module
                     }
                     // Optional message to attach to this order
                     if (!empty($message)) {
-                        $msg = new Message();
                         $message = strip_tags($message, '<br>');
                         if (Validate::isCleanHtml($message)) {
                             if (self::DEBUG_MODE) {
                                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Message is about to be added', 1, null, 'Cart', (int) $id_cart, true);
                             }
+                            $msg = new Message();
                             $msg->message = $message;
                             $msg->id_cart = (int) $id_cart;
-                            $msg->id_customer = (int) ($order->id_customer);
+                            $msg->id_customer = (int) $order->id_customer;
                             $msg->id_order = (int) $order->id;
                             $msg->private = 1;
                             $msg->add();
@@ -772,7 +772,7 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * @param Address Address $the_address that needs to be txt formatted
+     * @param Address $the_address that needs to be txt formatted
      * @param string $line_sep
      * @param array $fields_style
      *

@@ -526,7 +526,7 @@ class EmployeeCore extends ObjectModel
     /**
      * Check if the employee is associated to a specific shop group.
      *
-     * @param int $id_shop_group ShopGroup ID
+     * @param int $idShopGroup ShopGroup ID
      *
      * @return bool
      *
@@ -539,7 +539,9 @@ class EmployeeCore extends ObjectModel
         }
 
         foreach ($this->associated_shops as $idShop) {
-            if ($idShopGroup == Shop::getGroupFromShop($idShop, true)) {
+            /** @var int $groupFromShop */
+            $groupFromShop = Shop::getGroupFromShop($idShop, true);
+            if ($idShopGroup == $groupFromShop) {
                 return true;
             }
         }
@@ -638,7 +640,7 @@ class EmployeeCore extends ObjectModel
     /**
      * Get last elements for notify.
      *
-     * @param $element
+     * @param string $element
      *
      * @return int
      */
@@ -731,8 +733,8 @@ class EmployeeCore extends ObjectModel
     /**
      * Is the Employee allowed to do the given action.
      *
-     * @param $action
-     * @param $tab
+     * @param string $action
+     * @param string $tab
      *
      * @return bool
      */

@@ -332,7 +332,7 @@ class OrderCore extends ObjectModel
     /**
      * Does NOT delete a product but "cancel" it (which means return/refund/delete it depending of the case).
      *
-     * @param $order
+     * @param Order $order
      * @param OrderDetail $order_detail
      * @param int $quantity
      *
@@ -714,7 +714,7 @@ class OrderCore extends ObjectModel
      * If advanced stock management is active, get physical stock of this product in the warehouse associated to the ptoduct for the current order
      * Else get the available quantity of the product in fucntion of the shop associated to the order
      *
-     * @param array &$product
+     * @param array $product
      */
     protected function setProductCurrentStock(&$product)
     {
@@ -732,7 +732,7 @@ class OrderCore extends ObjectModel
     /**
      * This method allow to add image information on a product detail.
      *
-     * @param array &$product
+     * @param array $product
      */
     protected function setProductImageInformations(&$product)
     {
@@ -1027,10 +1027,10 @@ class OrderCore extends ObjectModel
     /**
      * @deprecated since 1.5.0.2
      *
-     * @param $date_from
-     * @param $date_to
-     * @param $id_customer
-     * @param $type
+     * @param string $date_from
+     * @param string $date_to
+     * @param int|null $id_customer
+     * @param string|null $type
      *
      * @return array
      */
@@ -1057,7 +1057,7 @@ class OrderCore extends ObjectModel
     /**
      * @deprecated 1.5.0.3
      *
-     * @param $id_order_state
+     * @param int $id_order_state
      *
      * @return array
      */
@@ -1226,6 +1226,7 @@ class OrderCore extends ObjectModel
      * @param string $name
      * @param array $values
      * @param int $id_order_invoice
+     * @param bool|null $free_shipping
      *
      * @return bool
      */
@@ -1242,8 +1243,9 @@ class OrderCore extends ObjectModel
             $cart_rule = new CartRule($id_cart_rule);
             $free_shipping = $cart_rule->free_shipping;
         }
-        $order_cart_rule->free_shipping = (int) $free_shipping;
-        $order_cart_rule->add();
+        $order_cart_rule->free_shipping = (bool) $free_shipping;
+
+        return $order_cart_rule->add();
     }
 
     public function getNumberOfDays()
@@ -1589,8 +1591,8 @@ class OrderCore extends ObjectModel
     /**
      * The combination (reference, email) should be unique, of multiple entries are found, then we take the first one.
      *
-     * @param $reference Order reference
-     * @param $email customer email address
+     * @param string $reference Order reference
+     * @param string $email customer email address
      *
      * @return Order The first order found
      */
@@ -2490,7 +2492,7 @@ class OrderCore extends ObjectModel
      * If you provide $limitToOrderDetails, only these item will be taken into account. This option is useful for order slip for example,
      * where only sublist of the order is refunded.
      *
-     * @param $limitToOrderDetails Optional array of OrderDetails to take into account. False by default to take all OrderDetails from the current Order.
+     * @param bool|array $limitToOrderDetails Optional array of OrderDetails to take into account. False by default to take all OrderDetails from the current Order.
      *
      * @return array a list of tax rows applied to the given OrderDetails (or all OrderDetails linked to the current Order)
      */

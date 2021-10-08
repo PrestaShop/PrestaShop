@@ -128,7 +128,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     /**
      * Renders an array of facets.
      *
-     * @param array $facets
+     * @param ProductSearchResult $result
      *
      * @return string the HTML of the facets
      */
@@ -166,7 +166,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     /**
      * Renders an array of active filters.
      *
-     * @param array $facets
+     * @param ProductSearchResult $result
      *
      * @return string the HTML of the facets
      */
@@ -240,6 +240,8 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                 return $provider;
             }
         }
+
+        return null;
     }
 
     /**
