@@ -116,11 +116,11 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import PSCheckbox from '@app/widgets/ps-checkbox';
-  import PSMedia from '@app/widgets/ps-media';
+  import PSCheckbox from '@app/widgets/ps-checkbox.vue';
+  import PSMedia from '@app/widgets/ps-media.vue';
   import ProductDesc from '@app/pages/stock/mixins/product-desc';
   import {EventBus} from '@app/utils/event-bus';
-  import Spinner from '@app/pages/stock/components/overview/spinner';
+  import Spinner from '@app/pages/stock/components/overview/spinner.vue';
 
   export default Vue.extend({
     props: {

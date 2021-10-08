@@ -37,7 +37,7 @@ class SmartyDevTemplateCore extends Smarty_Internal_Template
         }
 
         return "\n<!-- begin $tpl -->\n"
-            . parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter)
+            . parent::fetch($template, $cache_id, $compile_id, $parent)
             . "\n<!-- end $tpl -->\n";
     }
 }

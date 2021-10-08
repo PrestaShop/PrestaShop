@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import Vue from 'vue';
-import app from './components/app';
+import app from './components/app.vue';
 import store from './store';
 import router from './router';
 import Translation from './mixins/translate';

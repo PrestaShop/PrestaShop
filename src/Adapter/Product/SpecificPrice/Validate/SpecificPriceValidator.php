@@ -186,7 +186,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
             return;
         }
 
-        if (DateTimeUtil::NULL_DATETIME === $specificPrice->from || DateTimeUtil::NULL_DATETIME === $specificPrice->to) {
+        if (DateTimeUtil::isNull($specificPrice->from) || DateTimeUtil::isNull($specificPrice->to)) {
             return;
         }
 

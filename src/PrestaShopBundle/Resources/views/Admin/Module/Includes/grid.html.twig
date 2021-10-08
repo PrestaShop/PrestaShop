@@ -28,11 +28,4 @@
       {% include '@PrestaShop/Admin/Module/Includes/card_list.html.twig' with { 'index': index, 'module': module, 'origin': origin|default('none'), 'category': id } %}
     {% endblock %}
   {% endfor %}
-
-  {% block addon_search_card %}
-    {% if requireAddonsSearch is defined and requireAddonsSearch == true %}
-      {% include '@PrestaShop/Admin/Module/Includes/card_grid_addons.html.twig'%}
-      {% include '@PrestaShop/Admin/Module/Includes/card_list_addons.html.twig'%}
-    {% endif %}
-  {% endblock %}
 </div>

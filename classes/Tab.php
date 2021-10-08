@@ -584,7 +584,7 @@ class TabCore extends ObjectModel
             }
         }
 
-        if (!isset($movedTab) || !isset($position)) {
+        if (!isset($movedTab)) {
             return false;
         }
         // < and > statements rather than BETWEEN operator

@@ -671,6 +671,7 @@ class WebserviceRequestCore
     protected function getClosest($input, $words)
     {
         $shortest = -1;
+        $closest = '';
         foreach ($words as $word) {
             $lev = levenshtein($input, $word);
             if ($lev == 0) {
@@ -860,7 +861,7 @@ class WebserviceRequestCore
         $sql = 'SELECT 1
 				FROM ' . _DB_PREFIX_ . 'webservice_account wsa LEFT JOIN ' . _DB_PREFIX_ . 'webservice_account_shop wsas ON (wsa.id_webservice_account = wsas.id_webservice_account)
 				WHERE wsa.key = \'' . pSQL($key) . '\'';
-
+        $OR = [];
         foreach (self::$shopIDs as $id_shop) {
             $OR[] = ' wsas.id_shop = ' . (int) $id_shop . ' ';
         }
@@ -1246,6 +1247,7 @@ class WebserviceRequestCore
 
             foreach ($sorts as $sort) {
                 $delimiterPosition = strrpos($sort, '_');
+                $fieldName = $direction = '';
                 if ($delimiterPosition !== false) {
                     $fieldName = substr($sort, 0, $delimiterPosition);
                     $direction = strtoupper(substr($sort, $delimiterPosition + 1));
@@ -1364,6 +1366,7 @@ class WebserviceRequestCore
                 }
                 $sql .= '`';
 
+                $OR = [];
                 foreach (self::$shopIDs as $id_shop) {
                     $OR[] = ' (id_shop = ' . (int) $id_shop . ($check_shop_group ? ' OR (id_shop = 0 AND id_shop_group=' . (int) Shop::getGroupFromShop((int) $id_shop) . ')' : '') . ') ';
                 }

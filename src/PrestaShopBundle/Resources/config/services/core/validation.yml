@@ -1,8 +1,8 @@
 services:
-    _defaults:
-        public: true
+  _defaults:
+    public: true
 
-    prestashop.core.validation.validator:
-        class: 'PrestaShop\PrestaShop\Core\Validation\Validator'
-        arguments:
-            - '@prestashop.adapter.validate'
+  prestashop.core.validation.validator:
+    class: 'PrestaShop\PrestaShop\Core\Validation\Validator'
+    arguments:
+      - '@prestashop.adapter.validate'

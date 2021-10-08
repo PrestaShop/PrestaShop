@@ -588,6 +588,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
             $definition = $this->definition;
             $split = explode('.', $association);
             $is_lang = false;
+            $asso = '';
             for ($i = 0, $total_association = count($split); $i < $total_association; ++$i) {
                 $asso = $split[$i];
 

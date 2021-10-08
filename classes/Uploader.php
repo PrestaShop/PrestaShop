@@ -259,8 +259,8 @@ class UploaderCore
     }
 
     /**
-     * @param $file
-     * @param null $dest
+     * @param string $file
+     * @param string|null $dest
      *
      * @return mixed
      */

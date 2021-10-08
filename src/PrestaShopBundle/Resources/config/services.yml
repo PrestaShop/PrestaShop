@@ -1,9 +1,9 @@
 parameters:
-    multishop.settings.share_orders: !php/const Shop::SHARE_ORDER
+  multishop.settings.share_orders: !php/const Shop::SHARE_ORDER
 
 imports:
-    - { resource: services/bundle/*.yml }
-    - { resource: services/core/*.yml }
-    - { resource: services/adapter/*.yml }
-    - { resource: services/legacy.yml }
-    - { resource: services/alias.yml }
+  - { resource: services/bundle/*.yml }
+  - { resource: services/core/*.yml }
+  - { resource: services/adapter/*.yml }
+  - { resource: services/legacy.yml }
+  - { resource: services/alias.yml }

@@ -262,8 +262,6 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
             'admin_system_information' => ['Information', 'admin_system_information'],
             // @todo: something is missing for Vuejs application in translations page.
             //'admin_international_translation_overview' => ['Translations', 'admin_international_translation_overview'],
-            'admin_theme_catalog' => ['Themes Catalog', 'admin_theme_catalog'],
-            'admin_module_catalog' => ['Module selection', 'admin_module_catalog'],
             'admin_module_manage' => ['Module Manager', 'admin_module_manage'],
             'admin_shipping_preferences' => ['Shipping Preferences', 'admin_shipping_preferences'],
             'admin_payment_methods' => ['Payment Methods', 'admin_payment_methods'],

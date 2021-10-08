@@ -30,7 +30,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use DateTime;
-use DateTimeImmutable;
 use DateTimeInterface;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
@@ -48,7 +47,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\Specific
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
-use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -73,8 +71,8 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
             new DecimalNumber($dataRows['price']),
             (int) $dataRows['from quantity'],
-            DateTimeUtil::NULL_DATETIME === $dataRows['from'] ? new NullDateTime() : new DateTime($dataRows['from']),
-            DateTimeUtil::NULL_DATETIME === $dataRows['to'] ? new NullDateTime() : new DateTime($dataRows['to']),
+            DateTimeUtil::buildNullableDateTime($dataRows['from']),
+            DateTimeUtil::buildNullableDateTime($dataRows['to']),
             $this->getStoredId($dataRows, 'shop'),
             $this->getStoredId($dataRows, 'currency'),
             $this->getStoredId($dataRows, 'country'),
@@ -349,11 +347,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
      */
     private function getDateTime(string $input): DateTimeInterface
     {
-        if ($input === DateTimeUtil::NULL_DATETIME) {
-            return new NullDateTime();
-        }
-
-        return new DateTimeImmutable($input);
+        return DateTimeUtil::buildNullableDateTime($input);
     }
 
     /**

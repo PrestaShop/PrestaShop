@@ -13,7 +13,7 @@
             {/block}
 
             <p>
-              {l s='An email has been sent to your mail address %email%.' d='Shop.Theme.Checkout' sprintf=['%email%' => $customer.email]}
+              {l s='An email has been sent to your mail address %email%.' d='Shop.Theme.Checkout' sprintf=['%email%' => $order_customer.email]}
               {if $order.details.invoice_url}
                 {* [1][/1] is for a HTML tag. *}
                 {l
@@ -92,16 +92,15 @@
     {/if}
   {/block}
 
-  {block name='customer_registration_form'}
-    {if $customer.is_guest}
-      <div id="registration-form" class="card">
+  {if !$registered_customer_exists}
+    {block name='account_transformation_form'}
+      <div class="card">
         <div class="card-block">
-          <h4 class="h4">{l s='Save time on your next order, sign up now' d='Shop.Theme.Checkout'}</h4>
-          {render file='customer/_partials/customer-form.tpl' ui=$register_form}
+          {include file='customer/_partials/account-transformation-form.tpl'}
         </div>
       </div>
-    {/if}
-  {/block}
+    {/block}
+  {/if}
 
   {block name='hook_order_confirmation_1'}
     {hook h='displayOrderConfirmation1'}

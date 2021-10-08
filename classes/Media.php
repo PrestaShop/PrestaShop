@@ -687,6 +687,7 @@ class MediaCore
         }
 
         // rebuild the original js_files array
+        $url = '';
         if (strpos($compressedJsPath, _PS_ROOT_DIR_) !== false) {
             $url = str_replace(_PS_ROOT_DIR_ . '/', __PS_BASE_URI__, $compressedJsPath);
         }
@@ -850,15 +851,9 @@ class MediaCore
         if (!is_array($matches)) {
             return false;
         }
-        $inline = '';
 
-        if (isset($matches[0])) {
-            $original = trim($matches[0]);
-        }
-
-        if (isset($matches[2])) {
-            $inline = trim($matches[2]);
-        }
+        $original = isset($matches[0]) ? trim($matches[0]) : '';
+        $inline = isset($matches[2]) ? trim($matches[2]) : '';
 
         /* This is an inline script, add its content to inline scripts stack then remove it from content */
         if (!empty($inline) && preg_match(Media::$pattern_js, $original) !== false && !preg_match('/' . Media::$pattern_keepinline . '/', $original) && Media::$inline_script[] = $inline) {

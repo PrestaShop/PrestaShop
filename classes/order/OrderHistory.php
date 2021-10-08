@@ -347,7 +347,7 @@ class OrderHistoryCore extends ObjectModel
                             ]
                         );
                         //back to current shop context
-                        if ($current_shop_context_type !== Shop::CONTEXT_SHOP) {
+                        if ($current_shop_context_type !== Shop::CONTEXT_SHOP && isset($current_shop_group_id)) {
                             Context::getContext()->shop->setContext($current_shop_context_type, $current_shop_group_id);
                         }
                     }
@@ -389,7 +389,7 @@ class OrderHistoryCore extends ObjectModel
                     $payment->id_currency = $order->id_currency;
                     $payment->amount = $rest_paid;
 
-                    if ($order->total_paid != 0) {
+                    if ($order->total_paid != 0 && isset($payment_method) && $payment_method instanceof Module) {
                         $payment->payment_method = $payment_method->displayName;
                     } else {
                         $payment->payment_method = null;

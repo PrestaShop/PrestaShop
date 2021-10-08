@@ -858,8 +858,6 @@ class ToolsCore
     /**
      * Return price converted.
      *
-     * @deprecated since 1.7.4 use convertPriceToCurrency()
-     *
      * @param float|null $price Product price
      * @param object|array|int|string|null $currency Current currency object
      * @param bool $to_currency convert to currency or from currency to default currency
@@ -1090,7 +1088,7 @@ class ToolsCore
             E_USER_DEPRECATED
         );
 
-        if (!isset($_POST) || !is_array($_POST)) {
+        if (!is_array($_POST)) {
             $_POST = [];
         } else {
             $_POST = array_map(['Tools', 'htmlentitiesUTF8'], $_POST);
@@ -1140,7 +1138,7 @@ class ToolsCore
      */
     public static function deleteFile($file, $exclude_files = [])
     {
-        if (isset($exclude_files) && !is_array($exclude_files)) {
+        if (!is_array($exclude_files)) {
             $exclude_files = [$exclude_files];
         }
 
@@ -1642,12 +1640,12 @@ class ToolsCore
          * @var bool $exact
          * @var bool $html
          */
-        if ($html) {
+        if (isset($html)) {
             if (Tools::strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
                 return $text;
             }
 
-            $total_length = Tools::strlen(strip_tags($ellipsis));
+            $total_length = Tools::strlen(strip_tags($ellipsis ?? ''));
             $open_tags = [];
             $truncate = '';
             preg_match_all('/(<\/?([\w+]+)[^>]*>)?([^<>]*)/', $text, $tags, PREG_SET_ORDER);
@@ -1698,23 +1696,23 @@ class ToolsCore
                 return $text;
             }
 
-            $truncate = Tools::substr($text, 0, $length - Tools::strlen($ellipsis));
+            $truncate = Tools::substr($text, 0, $length - Tools::strlen($ellipsis ?? ''));
         }
 
-        if (!$exact) {
-            $spacepos = Tools::strrpos($truncate, ' ');
-            if ($html) {
-                $truncate_check = Tools::substr($truncate, 0, $spacepos);
+        if (!isset($exact) || !$exact) {
+            $spacepos = Tools::strrpos($truncate ?? '', ' ');
+            if (isset($html)) {
+                $truncate_check = Tools::substr($truncate ?? '', 0, $spacepos);
                 $last_open_tag = Tools::strrpos($truncate_check, '<');
                 $last_close_tag = Tools::strrpos($truncate_check, '>');
 
                 if ($last_open_tag > $last_close_tag) {
-                    preg_match_all('/<[\w]+[^>]*>/s', $truncate, $last_tag_matches);
+                    preg_match_all('/<[\w]+[^>]*>/s', $truncate ?? '', $last_tag_matches);
                     $last_tag = array_pop($last_tag_matches[0]);
                     $spacepos = Tools::strrpos($truncate, $last_tag) + Tools::strlen($last_tag);
                 }
 
-                $bits = Tools::substr($truncate, $spacepos);
+                $bits = Tools::substr($truncate ?? '', $spacepos);
                 preg_match_all('/<\/([a-z]+)>/', $bits, $dropped_tags, PREG_SET_ORDER);
 
                 if (!empty($dropped_tags)) {
@@ -1735,9 +1733,10 @@ class ToolsCore
             $truncate = Tools::substr($truncate, 0, $spacepos);
         }
 
-        $truncate .= $ellipsis;
+        $truncate .= ($ellipsis ?? '');
 
-        if ($html) {
+        if (isset($html)) {
+            $open_tags = $open_tags ?? [];
             foreach ($open_tags as $tag) {
                 $truncate .= '</' . $tag . '>';
             }
@@ -2637,6 +2636,7 @@ class ToolsCore
             // As we use regex in the htaccess, ipv6 surrounded by brackets must be escaped
             $domain = str_replace(['[', ']'], ['\[', '\]'], $domain);
 
+            $domain_rewrite_cond = '';
             foreach ($list_uri as $uri) {
                 fwrite($write_fd, PHP_EOL . PHP_EOL . '#Domain: ' . $domain . PHP_EOL);
                 if (Shop::isFeatureActive()) {
@@ -4332,7 +4332,7 @@ exit;
                 $head = array_pop($head_stack);
                 unset($bref_stack[key($bref_stack)]);
                 foreach (array_keys($head) as $key) {
-                    if (isset($key, $bref) && is_array($bref[$key]) && is_array($head[$key])) {
+                    if (is_array($bref[$key]) && is_array($head[$key])) {
                         $bref_stack[] = &$bref[$key];
                         $head_stack[] = $head[$key];
                     } else {

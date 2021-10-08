@@ -422,7 +422,7 @@ class Product extends FOBasePage {
    * @returns {Promise<number>}
    */
   getNumberOfComments(page) {
-    return this.getNumberFromText(page, this.commentCount);
+    return page.$$eval(this.productReviewRows, rows => rows.length);
   }
 
   /**

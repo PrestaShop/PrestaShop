@@ -21,6 +21,7 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerManagerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\RiskFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext

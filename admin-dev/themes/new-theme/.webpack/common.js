@@ -30,6 +30,7 @@ const {VueLoaderPlugin} = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const bourbon = require('bourbon');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {
   externals: {
@@ -146,25 +147,25 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+      },
+      {
         test: /\.js$/,
         include: path.resolve(__dirname, '../js'),
         use: [
           {
-            loader: 'babel-loader',
-            options: {
-              presets: [['@babel/preset-env', {useBuiltIns: 'usage', modules: false, corejs: '3.18.0'}]],
-              plugins: ['@babel/plugin-transform-runtime'],
-              cacheDirectory: true,
-            },
+            loader: 'esbuild-loader',
           },
         ],
       },
       {
         test: /\.ts?$/,
         include: path.resolve(__dirname, '../js'),
-        loader: 'ts-loader',
+        loader: 'esbuild-loader',
         options: {
-          appendTsSuffixTo: [/\.vue$/],
+          loader: 'ts',
+          target: 'es2015',
         },
         exclude: /node_modules/,
       },
@@ -293,10 +294,6 @@ module.exports = {
         },
       },
       {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-      },
-      {
         test: /\.css$/,
         use: [
           {
@@ -363,5 +360,16 @@ module.exports = {
       patterns: [{from: 'static'}],
     }),
     new VueLoaderPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        extensions: {
+          vue: true,
+        },
+        diagnosticOptions: {
+          semantic: true,
+          syntactic: true,
+        },
+      },
+    }),
   ],
 };

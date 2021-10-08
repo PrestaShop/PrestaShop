@@ -81,12 +81,28 @@ class GuestTrackingControllerCore extends FrontController
             $customer = new Customer((int) $this->order->id_customer);
             $password = Tools::getValue('password');
 
-            if (strlen($password) < Validate::PASSWORD_LENGTH) {
+            if (empty($password)) {
+                $this->errors[] = $this->trans(
+                    'Enter a password to transform your guest account into a customer account.',
+                    [],
+                    'Shop.Forms.Help'
+                );
+            } elseif (strlen($password) < Validate::PASSWORD_LENGTH) {
                 $this->errors[] = $this->trans(
                     'Your password must be at least %min% characters long.',
                     ['%min%' => Validate::PASSWORD_LENGTH],
                     'Shop.Forms.Help'
                 );
+            // Prevent error
+            // A) either on page refresh
+            // B) if we already transformed him in other window or through backoffice
+            } elseif ($customer->is_guest == 0) {
+                $this->errors[] = $this->trans(
+                    'A customer account has already been created from this guest account. Please sign in.',
+                    [],
+                    'Shop.Notifications.Error'
+                );
+            // Attempt to convert the customer
             } elseif ($customer->transformToCustomer($this->context->language->id, $password)) {
                 $this->success[] = $this->trans(
                     'Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.',
@@ -94,7 +110,7 @@ class GuestTrackingControllerCore extends FrontController
                     'Shop.Notifications.Success'
                 );
             } else {
-                $this->success[] = $this->trans(
+                $this->errors[] = $this->trans(
                     'An unexpected error occurred while creating your account.',
                     [],
                     'Shop.Notifications.Error'
@@ -124,12 +140,14 @@ class GuestTrackingControllerCore extends FrontController
             );
         }
 
-        $presented_order = (new OrderPresenter())->present($this->order);
+        // Kept for backwards compatibility (is_customer), inline it in later versions
+        $registered_customer_exists = Customer::customerExists(Tools::getValue('email'), false, true);
 
         $this->context->smarty->assign([
-            'order' => $presented_order,
+            'order' => (new OrderPresenter())->present($this->order),
             'guest_email' => Tools::getValue('email'),
-            'is_customer' => Customer::customerExists(Tools::getValue('email'), false, true),
+            'registered_customer_exists' => $registered_customer_exists,
+            'is_customer' => $registered_customer_exists, // Kept for backwards compatibility
             'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $this->order]),
         ]);
 

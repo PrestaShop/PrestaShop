@@ -85,6 +85,7 @@ use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
+use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\InvalidModuleException;

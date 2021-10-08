@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
+use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 
 class AdminControllerCore extends Controller
 {
@@ -1009,7 +1010,7 @@ class AdminControllerCore extends Controller
                     $this->processFilter();
                 }
 
-                if (isset($_POST) && count($_POST) && (int) Tools::getValue('submitFilter' . $this->list_id) || Tools::isSubmit('submitReset' . $this->list_id)) {
+                if (!empty($_POST) && is_array($_POST) && (int) Tools::getValue('submitFilter' . $this->list_id) || Tools::isSubmit('submitReset' . $this->list_id)) {
                     $this->setRedirectAfter(self::$currentIndex . '&token=' . $this->token . (Tools::isSubmit('submitFilter' . $this->list_id) ? '&submitFilter' . $this->list_id . '=' . (int) Tools::getValue('submitFilter' . $this->list_id) : ''));
                 }
 
@@ -1271,10 +1272,11 @@ class AdminControllerCore extends Controller
             $id = (int) Tools::getValue($this->identifier);
 
             /* Object update */
-            if (isset($id) && !empty($id)) {
+            if (!empty($id)) {
                 /** @var ObjectModel $object */
                 $object = new $this->className($id);
                 if (Validate::isLoadedObject($object)) {
+                    $result = false;
                     /* Specific to objects which must not be deleted */
                     if ($this->deleted && $this->beforeDelete($object)) {
                         // Create new one with old objet values
@@ -1994,8 +1996,20 @@ class AdminControllerCore extends Controller
             );
         }
 
+        // Fetch Employee Menu
+        $menuLinksCollections = new ActionsBarButtonsCollection();
+        Hook::exec(
+            'displayBackOfficeEmployeeMenu',
+            [
+                'links' => $menuLinksCollections,
+            ],
+            null,
+            true
+        );
+
         $this->context->smarty->assign([
             'displayBackOfficeTop' => Hook::exec('displayBackOfficeTop'),
+            'displayBackOfficeEmployeeMenu' => $menuLinksCollections,
             'submit_form_ajax' => (int) Tools::getValue('submitFormAjax'),
         ]);
 
@@ -2073,7 +2087,6 @@ class AdminControllerCore extends Controller
             'currentIndex' => self::$currentIndex,
             'bootstrap' => $this->bootstrap,
             'default_language' => (int) Configuration::get('PS_LANG_DEFAULT'),
-            'display_addons_connection' => Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController')),
         ]);
     }
 
@@ -2111,7 +2124,7 @@ class AdminControllerCore extends Controller
     private function getTabs($parentId = 0, $level = 0)
     {
         $tabs = Tab::getTabs($this->context->language->id, $parentId);
-        $current_id = Tab::getCurrentParentId($this->controller_name ? $this->controller_name : '');
+        $current_id = Tab::getCurrentParentId();
 
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
@@ -2339,26 +2352,7 @@ class AdminControllerCore extends Controller
             'check_url_fopen' => (ini_get('allow_url_fopen') ? 'ok' : 'ko'),
             'check_openssl' => (extension_loaded('openssl') ? 'ok' : 'ko'),
             'add_permission' => 1,
-            'addons_register_link' => 'https://addons.prestashop.com/' . $this->context->language->iso_code . '/login?'
-                . 'email=' . urlencode($this->context->employee->email)
-                . '&firstname=' . urlencode($this->context->employee->firstname)
-                . '&lastname=' . urlencode($this->context->employee->lastname)
-                . '&website=' . urlencode($this->context->shop->getBaseURL())
-                . '&utm_source=back-office&utm_medium=connect-to-addons'
-                . '&utm_campaign=back-office-' . Tools::strtoupper($this->context->language->iso_code)
-                . '&utm_content=' . (defined('_PS_HOST_MODE_') ? 'cloud' : 'download') . '#createnow',
-            'addons_forgot_password_link' => '//addons.prestashop.com/' . $this->context->language->iso_code . '/forgot-your-password',
         ]);
-
-        $this->modals[] = [
-            'modal_id' => 'modal_addons_connect',
-            'modal_class' => 'modal-md',
-            'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="https://addons.prestashop.com/'
-            . '?utm_source=back-office&utm_medium=modules'
-            . '&utm_campaign=back-office-' . Tools::strtoupper($this->context->language->iso_code)
-            . '&utm_content=' . (defined('_PS_HOST_MODE_') ? 'cloud' : 'download') . '">PrestaShop Addons</a>',
-            'modal_content' => $this->context->smarty->fetch('controllers/modules/login_addons.tpl'),
-        ];
     }
 
     /**
@@ -2471,7 +2465,7 @@ class AdminControllerCore extends Controller
      */
     public function renderView()
     {
-        $helper = new HelperView($this);
+        $helper = new HelperView();
         $this->setHelperDisplay($helper);
         $helper->tpl_vars = $this->getTemplateViewVars();
         if (null !== $this->base_tpl_view) {
@@ -2534,7 +2528,7 @@ class AdminControllerCore extends Controller
                 'form_vars' => &$this->tpl_form_vars,
             ]);
 
-            $helper = new HelperForm($this);
+            $helper = new HelperForm();
             $this->setHelperDisplay($helper);
             $helper->fields_value = $fields_value;
             $helper->submit_action = $this->submit_action;
@@ -2594,7 +2588,7 @@ class AdminControllerCore extends Controller
 
             unset($this->toolbar_btn);
             $this->initToolbar();
-            $helper = new HelperOptions($this);
+            $helper = new HelperOptions();
             $this->setHelperDisplay($helper);
             $helper->id = $this->id;
             $helper->tpl_vars = $this->tpl_option_vars;
@@ -3366,7 +3360,7 @@ class AdminControllerCore extends Controller
     {
         $whereShop = '';
         if ($this->shopLinkType) {
-            $whereShop = Shop::addSqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
+            $whereShop = Shop::addSqlRestriction($this->shopShareDatas, 'a');
         }
         $whereClause = ' WHERE 1 ' . (isset($this->_where) ? $this->_where . ' ' : '') .
             ($this->deleted ? 'AND a.`deleted` = 0 ' : '') .
@@ -4649,26 +4643,27 @@ class AdminControllerCore extends Controller
                 break;
             }
         }
+        if (isset($module) && $module instanceof Module) {
+            $url = $module->url;
 
-        $url = $module->url;
+            if (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')) {
+                $url = $this->context->link->getAdminLink('AdminModules') . '&install=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name);
+            }
 
-        if (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')) {
-            $url = $this->context->link->getAdminLink('AdminModules') . '&install=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name);
+            $this->context->smarty->assign([
+                'displayName' => $module->displayName,
+                'image' => $module->image,
+                'nb_rates' => (int) $module->nb_rates[0],
+                'avg_rate' => (int) $module->avg_rate[0],
+                'badges' => $module->badges,
+                'compatibility' => $module->compatibility,
+                'description_full' => $module->description_full,
+                'additional_description' => $module->additional_description,
+                'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
+                'url' => $url,
+                'price' => $module->price,
+            ]);
         }
-
-        $this->context->smarty->assign([
-            'displayName' => $module->displayName,
-            'image' => $module->image,
-            'nb_rates' => (int) $module->nb_rates[0],
-            'avg_rate' => (int) $module->avg_rate[0],
-            'badges' => $module->badges,
-            'compatibility' => $module->compatibility,
-            'description_full' => $module->description_full,
-            'additional_description' => $module->additional_description,
-            'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
-            'url' => $url,
-            'price' => $module->price,
-        ]);
         // Fetch the translations in the right place - they are not defined by our current controller!
         Context::getContext()->override_controller_name_for_translations = 'AdminModules';
         $this->smartyOutputContent('controllers/modules/quickview.tpl');

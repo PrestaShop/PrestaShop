@@ -753,7 +753,7 @@ class CarrierCore extends ObjectModel
                     }
 
                     if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE
-                        && (!Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency))) {
+                        && (!Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency ?? null))) {
                         $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
                         unset($result[$k]);
 
@@ -1381,7 +1381,7 @@ class CarrierCore extends ObjectModel
      * @since 1.5.0
      *
      * @param bool $way Up (1) or Down (0)
-     * @param int $position Current position of the Carrier
+     * @param int|null $position Current position of the Carrier
      *
      * @return bool Whether the update was successful
      */

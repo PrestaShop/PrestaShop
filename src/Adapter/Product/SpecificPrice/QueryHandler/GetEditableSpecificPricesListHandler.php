@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler;
 
-use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetEditableSpecificPricesList;
@@ -36,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetEdit
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
-use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
 /**
  * Handles @see GetEditableSpecificPricesList using legacy object model
@@ -90,8 +88,8 @@ class GetEditableSpecificPricesListHandler implements GetEditableSpecificPricesL
                 (bool) $specificPrice['reduction_tax'],
                 new DecimalNumber($specificPrice['price']),
                 (int) $specificPrice['from_quantity'],
-                DateTimeUtil::NULL_DATETIME === $specificPrice['from'] ? new NullDateTime() : new DateTime($specificPrice['from']),
-                DateTimeUtil::NULL_DATETIME === $specificPrice['to'] ? new NullDateTime() : new DateTime($specificPrice['to']),
+                DateTimeUtil::buildNullableDateTime($specificPrice['from']),
+                DateTimeUtil::buildNullableDateTime($specificPrice['to']),
                 (int) $specificPrice['id_shop'] ?: null,
                 (int) $specificPrice['id_currency'] ?: null,
                 (int) $specificPrice['id_country'] ?: null,

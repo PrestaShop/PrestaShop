@@ -24,58 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Controller\Admin\Sell\Order;
+declare(strict_types=1);
 
-class ActionsBarButton implements ActionsBarButtonInterface
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor;
+
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+
+/**
+ * Thrown when trying to create a CommandField with invalid type.
+ */
+class InvalidCommandFieldTypeException extends CoreException
 {
-    /**
-     * @var string
-     */
-    protected $class;
-
-    /**
-     * @var string[]
-     */
-    protected $properties;
-
-    /**
-     * @var string
-     */
-    protected $content;
-
-    /**
-     * @param string $class
-     * @param string[] $properties
-     * @param string $content
-     */
-    public function __construct(string $class = '', array $properties = [], string $content = '')
-    {
-        $this->class = $class;
-        $this->properties = $properties;
-        $this->content = $content;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClass(): string
-    {
-        return $this->class;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getProperties(): array
-    {
-        return $this->properties;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContent(): string
-    {
-        return $this->content;
-    }
 }
