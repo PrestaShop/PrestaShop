@@ -49,7 +49,7 @@ describe('Regression : Access to Module catalog is denied with neither left menu
     await expect(isMenuTabVisible, 'The Menu tab is still visible').to.be.false;
   });
 
-  it('should page be not found when accessing by legacy url', async function () {
+  it('should trigger a not found alert when accessing by legacy url', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkUrlAccessibility', baseContext);
 
     await dashboardPage.navigateToPageWithInvalidToken(page, pageLegacyUrl);
