@@ -81,7 +81,7 @@ describe('BO - Shop Parameters - Product Settings : Update Number of days for wh
     });
 
     it('should close the page and go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closePageAndBackToBO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${test.args.state}`, baseContext);
 
       page = await homePage.closePage(browserContext, page, 0);
 

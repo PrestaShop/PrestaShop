@@ -95,7 +95,7 @@ describe('BO - Shop Parameters - Product Settings : Display available quantities
     });
 
     it('should close the page and go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closePageAndBackToBO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
       page = await productPage.closePage(browserContext, page, 0);
 
