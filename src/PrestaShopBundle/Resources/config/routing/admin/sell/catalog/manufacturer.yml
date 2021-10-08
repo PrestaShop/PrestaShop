@@ -19,7 +19,7 @@ admin_manufacturers_search:
 
 admin_manufacturers_create:
   path: /new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::createAction'
     _legacy_controller: AdminManufacturers
@@ -39,7 +39,7 @@ admin_manufacturers_view:
 
 admin_manufacturers_edit:
   path: /{manufacturerId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::editAction'
     _legacy_controller: AdminManufacturers
@@ -51,7 +51,7 @@ admin_manufacturers_edit:
 
 admin_manufacturers_delete:
   path: /{manufacturerId}/delete
-  methods: [POST, DELETE]
+  methods: [ POST, DELETE ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::deleteAction'
     _legacy_controller: AdminManufacturers
@@ -110,7 +110,7 @@ admin_manufacturers_export:
 #
 admin_manufacturer_addresses_create:
   path: addresses/new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::createAddressAction'
     _legacy_controller: AdminManufacturers
@@ -118,7 +118,7 @@ admin_manufacturer_addresses_create:
 
 admin_manufacturer_addresses_edit:
   path: addresses/{addressId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::editAddressAction'
     _legacy_controller: AdminManufacturers
@@ -130,7 +130,7 @@ admin_manufacturer_addresses_edit:
 
 admin_manufacturer_addresses_delete:
   path: addresses/{addressId}/delete
-  methods: [POST, DELETE]
+  methods: [ POST, DELETE ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::deleteAddressAction'
     _legacy_controller: AdminManufacturers

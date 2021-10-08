@@ -1,12 +1,12 @@
 name: Js
-on: [push, pull_request]
+on: [ push, pull_request ]
 jobs:
   js-unit-tests:
     runs-on: ubuntu-latest
     name: Run unit tests
     strategy:
       matrix:
-        js: ['12', '13', '14', '15']
+        js: [ '12', '13', '14', '15' ]
     steps:
       - name: Setup Node
         uses: actions/setup-node@v2

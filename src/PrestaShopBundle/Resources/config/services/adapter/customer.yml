@@ -115,4 +115,4 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerDataSource'
 
   prestashop.adapter.customer.repository.customer_repository:
-      class: 'PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository'
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository'
