@@ -73,7 +73,7 @@ class FrameworkBundleAdminController extends AbstractController
      *
      * @deprecated Since 8.0, to be removed in the next major version
      *
-     * @return array Template vars
+     * @return array|Response Template vars if the action uses template annotation, or a Response object
      */
     public function overviewAction()
     {
