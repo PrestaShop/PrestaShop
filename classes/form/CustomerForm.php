@@ -33,6 +33,11 @@ class CustomerFormCore extends AbstractForm
 {
     protected $template = 'customer/_partials/customer-form.tpl';
 
+    /**
+     * @var CustomerFormatter
+     */
+    protected $formatter;
+
     private $context;
     private $urls;
 
@@ -165,9 +170,9 @@ class CustomerFormCore extends AbstractForm
     }
 
     /**
-     * @param $fieldName
-     * @param $maximumLength
-     * @param $violationMessage
+     * @param string $fieldName
+     * @param int $maximumLength
+     * @param string $violationMessage
      */
     protected function validateFieldLength($fieldName, $maximumLength, $violationMessage)
     {

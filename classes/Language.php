@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Adapter\EntityTranslation\EntityTranslatorFactory;
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\Exception\DataLangClassNameNotFoundException;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageImageManager;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
@@ -523,9 +524,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * duplicate translated rows from xxx_lang tables
      * from the shop default language.
      *
-     * @param $tableName
-     * @param $shopDefaultLangId
-     * @param $shopId
+     * @param string $tableName
+     * @param int $shopDefaultLangId
+     * @param int $shopId
      *
      * @return bool
      *

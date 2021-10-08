@@ -781,7 +781,7 @@ class MediaCore
     }
 
     /**
-     * @param $output
+     * @param string $output
      *
      * @return string|string[]|null
      */
@@ -790,7 +790,7 @@ class MediaCore
         /* Try to enqueue in js_files inline scripts with src but without conditionnal comments */
         $dom = new DOMDocument();
         libxml_use_internal_errors(true);
-        @$dom->loadHTML(($output));
+        @$dom->loadHTML($output);
         libxml_use_internal_errors(false);
         $scripts = $dom->getElementsByTagName('script');
         if (is_object($scripts) && $scripts->length) {

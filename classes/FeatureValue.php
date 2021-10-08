@@ -132,6 +132,8 @@ class FeatureValueCore extends ObjectModel
                 return $tab['value'];
             }
         }
+
+        return '';
     }
 
     /**

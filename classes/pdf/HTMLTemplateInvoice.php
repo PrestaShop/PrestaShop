@@ -238,7 +238,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             unset($order_detail); // don't overwrite the last order_detail later
         }
 
-        $cart_rules = $this->order->getCartRules($this->order_invoice->id);
+        $cart_rules = $this->order->getCartRules();
         $free_shipping = false;
         foreach ($cart_rules as $key => $cart_rule) {
             if ($cart_rule['free_shipping']) {

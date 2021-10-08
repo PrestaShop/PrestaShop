@@ -556,7 +556,7 @@ class SearchCore
     }
 
     /**
-     * @param $weight_array
+     * @param array $weight_array
      *
      * @return string
      */
@@ -708,12 +708,12 @@ class SearchCore
     }
 
     /**
-     * @param $product_array
-     * @param $weight_array
-     * @param $key
-     * @param $value
-     * @param $id_lang
-     * @param $iso_code
+     * @param array $product_array
+     * @param array $weight_array
+     * @param string $key
+     * @param string $value
+     * @param int $id_lang
+     * @param string|bool $iso_code
      */
     protected static function fillProductArray(&$product_array, $weight_array, $key, $value, $id_lang, $iso_code)
     {
@@ -1057,7 +1057,8 @@ class SearchCore
     }
 
     /**
-     * @param $context , $queryString
+     * @param Context $context
+     * @param string $queryString
      *
      * @return string
      *

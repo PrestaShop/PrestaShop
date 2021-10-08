@@ -82,7 +82,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
      */
     public function getContent()
     {
-        $supply_order_details = $this->supply_order->getEntriesCollection((int) $this->supply_order->id_lang);
+        $supply_order_details = $this->supply_order->getEntriesCollection();
         $this->roundSupplyOrderDetails($supply_order_details);
 
         $this->roundSupplyOrder($this->supply_order);

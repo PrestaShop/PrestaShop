@@ -231,7 +231,7 @@ class OrderReturnCore extends ObjectModel
     /**
      * Get return details for one product line.
      *
-     * @param $id_order_detail
+     * @param int $id_order_detail
      */
     public static function getProductReturnDetail($id_order_detail)
     {

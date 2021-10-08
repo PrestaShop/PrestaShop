@@ -859,9 +859,9 @@ class ToolsCore
      * Return price converted.
      *
      * @param float|null $price Product price
-     * @param object|array|int|string|null $currency Current currency object
+     * @param array|Currency|int|null $currency Current currency object
      * @param bool $to_currency convert to currency or from currency to default currency
-     * @param Context $context
+     * @param Context|null $context
      *
      * @return float|null Price
      */
@@ -1045,7 +1045,7 @@ class ToolsCore
      * Sanitize a string.
      *
      * @param string $string String to sanitize
-     * @param bool $full String contains HTML or not (optional)
+     * @param bool $html String contains HTML or not (optional)
      *
      * @return string Sanitized string
      */
@@ -1202,7 +1202,7 @@ class ToolsCore
      * @param mixed $object
      * @param bool $kill
      *
-     * @return $object if $kill = false;
+     * @return mixed
      */
     public static function dieObject($object, $kill = true)
     {
@@ -1331,7 +1331,8 @@ class ToolsCore
     /**
      * Get token to prevent CSRF.
      *
-     * @param string $token token to encrypt
+     * @param bool $page
+     * @param Context|null $context
      *
      * @return string
      */
@@ -1376,7 +1377,7 @@ class ToolsCore
 
     /**
      * @param array $params
-     * @param $smarty unused parameter, please ignore (@todo: remove in next major)
+     * @param Smarty|null $smarty unused parameter, please ignore (@todo: remove in next major)
      *
      * @return bool|string
      */
@@ -1635,12 +1636,9 @@ class ToolsCore
 
         $options = array_merge($default, $options);
         extract($options);
-        /**
-         * @var string
-         * @var bool $exact
-         * @var bool $html
-         */
         if (isset($html)) {
+            /* @var bool $exact */
+            /* @var bool $html */
             if (Tools::strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
                 return $text;
             }
@@ -1752,10 +1750,6 @@ class ToolsCore
 
     /**
      * Generate date form.
-     *
-     * @param int $year Year to select
-     * @param int $month Month to select
-     * @param int $day Day to select
      *
      * @return array $tab html data with 3 cells :['days'], ['months'], ['years']
      */
@@ -1967,8 +1961,8 @@ class ToolsCore
     }
 
     /**
-     * @param $value
-     * @param $places
+     * @param int|float $value
+     * @param int|float $places
      * @param int $mode
      *
      * @return false|float
@@ -2032,8 +2026,8 @@ class ToolsCore
     }
 
     /**
-     * @param $value
-     * @param $mode
+     * @param float $value
+     * @param int $mode
      *
      * @return float
      */
@@ -3359,8 +3353,8 @@ exit;
      * Get products order field name for queries.
      *
      * @param string $type by|way
-     * @param string $value If no index given, use default order from admin -> pref -> products
-     * @param bool|\bool(false)|string $prefix
+     * @param string|null $value If no index given, use default order from admin -> pref -> products
+     * @param bool|string $prefix
      *
      * @return string Order by sql clause
      */
@@ -3397,6 +3391,8 @@ exit;
 
             break;
         }
+
+        return '';
     }
 
     /**
@@ -3724,8 +3720,8 @@ exit;
     /**
      * Fix native uasort see: http://php.net/manual/en/function.uasort.php#114535.
      *
-     * @param $array
-     * @param $cmp_function
+     * @param array $array
+     * @param callable $cmp_function
      */
     public static function uasort(&$array, $cmp_function)
     {
@@ -3768,8 +3764,8 @@ exit;
     /**
      * Copy the folder $src into $dst, $dst is created if it do not exist.
      *
-     * @param $src
-     * @param $dst
+     * @param string $src
+     * @param string $dst
      * @param bool $del if true, delete the file after copy
      */
     public static function recurseCopy($src, $dst, $del = false)
@@ -3845,8 +3841,8 @@ exit;
     /**
      * Align version sent and use internal function.
      *
-     * @param $v1
-     * @param $v2
+     * @param string $v1
+     * @param string $v2
      * @param string $operator
      *
      * @return mixed
@@ -3863,8 +3859,8 @@ exit;
      * version_compare will work better for its comparison :)
      * (Means: '1.8' to '1.9.3' will change '1.8' to '1.8.0').
      *
-     * @param $v1
-     * @param $v2
+     * @param string $v1
+     * @param string $v2
      */
     public static function alignVersionNumber(&$v1, &$v2)
     {
@@ -4099,7 +4095,7 @@ exit;
      * Format a number into a human readable format
      * e.g. 24962496 => 23.81M.
      *
-     * @param $size
+     * @param float $size
      * @param int $precision
      *
      * @return string
@@ -4212,9 +4208,9 @@ exit;
                     $config->set('URI.SafeIframeRegexp', '/.*/');
                 }
 
-                /** @var HTMLPurifier_HTMLDefinition|HTMLPurifier_HTMLModule $def */
                 // http://developers.whatwg.org/the-video-element.html#the-video-element
                 if ($def = $config->getHTMLDefinition(true)) {
+                    /* @var HTMLPurifier_HTMLDefinition|HTMLPurifier_HTMLModule $def */
                     $def->addElement('video', 'Block', 'Optional: (source, Flow) | (Flow, source) | Flow', 'Common', [
                         'src' => 'URI',
                         'type' => 'Text',
@@ -4268,13 +4264,13 @@ exit;
      *
      * => $rows is [['a' => 8.4], ['a' => 5.2]]
      *
-     * @param $amount float  The amount to spread across the rows
-     * @param $precision int Rounding precision
+     * @param float $amount The amount to spread across the rows
+     * @param int $precision Rounding precision
      *                       e.g. if $amount is 1, $precision is 0 and $rows = [['a' => 2], ['a' => 1]]
      *                       then the resulting $rows will be [['a' => 3], ['a' => 1]]
      *                       But if $precision were 1, then the resulting $rows would be [['a' => 2.5], ['a' => 1.5]]
-     * @param &$rows array   An array, associative or not, containing arrays that have at least $column and $sort_column fields
-     * @param $column string The column on which to perform adjustments
+     * @param array $rows An array, associative or not, containing arrays that have at least $column and $sort_column fields
+     * @param string $column The column on which to perform adjustments
      */
     public static function spreadAmount($amount, $precision, &$rows, $column)
     {
@@ -4352,7 +4348,8 @@ exit;
      * @param int $id_category Start category
      * @param string $path Current path
      * @param string $highlight String to highlight (in XHTML/CSS)
-     * @param string $type Category type (products/cms)
+     * @param string $category_type Category type (products/cms)
+     * @param bool $home
      */
     public static function getPath($url_base, $id_category, $path = '', $highlight = '', $category_type = 'catalog', $home = false)
     {
