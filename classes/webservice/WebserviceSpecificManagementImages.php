@@ -27,6 +27,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 {
     /** @var WebserviceOutputBuilder */
     protected $objOutput;
+    /** @var string */
     protected $output;
 
     /** @var WebserviceRequest */
@@ -119,9 +120,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         return $this->wsObject;
     }
 
-    /*
-    * This method need $this->imgToDisplay to be set if output don't needs to be XML
-    */
+    /**
+     * This method need $this->imgToDisplay to be set if output don't needs to be XML
+     *
+     * @return string
+     */
     public function getContent()
     {
         if ($this->output != '') {
@@ -164,6 +167,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 return file_get_contents($this->imgToDisplay);
             }
         }
+
+        return '';
     }
 
     public function manage()
@@ -333,7 +338,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     /**
      * Management of general images.
      *
-     * @return bool
+     * @return bool|void
      *
      * @throws WebserviceException
      */
@@ -788,7 +793,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      * @param array $image_sizes The
      * @param string $directory
      *
-     * @return bool
+     * @return bool|void
      *
      * @throws WebserviceException
      */
@@ -1042,7 +1047,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      * @param array $image_types
      * @param string $parent_path
      *
-     * @return bool
+     * @return bool|void
      *
      * @throws WebserviceException
      */

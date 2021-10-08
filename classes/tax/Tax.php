@@ -143,7 +143,7 @@ class TaxCore extends ObjectModel
     /**
      * Get all available taxes.
      *
-     * @param int $id_lang
+     * @param int|bool $id_lang
      * @param bool $active_only (true by default)
      *
      * @return array Taxes
@@ -177,7 +177,7 @@ class TaxCore extends ObjectModel
      * Return the tax id associated to the specified name.
      *
      * @param string $tax_name
-     * @param bool $active (true by default)
+     * @param bool|int $active (true by default)
      */
     public static function getTaxIdByName($tax_name, $active = 1)
     {

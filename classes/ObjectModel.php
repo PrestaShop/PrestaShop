@@ -220,7 +220,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param int|null $id if specified, loads and existing object from DB (optional)
      * @param int|null $id_lang required if object is multilingual (optional)
      * @param int|null $id_shop ID shop for objects with multishop tables
-     * @param PrestaShopBundle\Translation\Translator
+     * @param PrestaShopBundle\Translation\Translator|null $translator
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -1750,7 +1750,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
-     * @param $id
+     * @param int $id
      *
      * @return bool|void
      *

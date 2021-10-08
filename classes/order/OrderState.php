@@ -114,7 +114,7 @@ class OrderStateCore extends ObjectModel
      * Get all available order statuses.
      *
      * @param int $id_lang Language id for status name
-     * @param bool $getDeletedStates
+     * @param bool $filterDeleted
      *
      * @return array Order statuses
      */

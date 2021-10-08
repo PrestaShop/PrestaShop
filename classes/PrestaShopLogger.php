@@ -103,7 +103,6 @@ class PrestaShopLoggerCore extends ObjectModel
     /**
      * Send e-mail to the shop owner only if the minimal severity level has been reached.
      *
-     * @param Logger
      * @param PrestaShopLogger $log
      */
     public static function sendByMail($log)

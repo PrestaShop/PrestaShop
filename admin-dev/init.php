@@ -112,7 +112,7 @@ try {
             $split = explode('-', $context->cookie->shopContext);
             if (count($split) == 2) {
                 if ($split[0] == 'g') {
-                    if ($context->employee->hasAuthOnShopGroup($split[1])) {
+                    if ($context->employee->hasAuthOnShopGroup((int) $split[1])) {
                         Shop::setContext(Shop::CONTEXT_GROUP, (int) $split[1]);
                     } else {
                         $shop_id = $context->employee->getDefaultShopID();

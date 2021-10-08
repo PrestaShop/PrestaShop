@@ -95,7 +95,9 @@ class TaxManagerFactoryCore
     /**
      * Create a unique identifier for the address.
      *
-     * @param Address
+     * @param Address$address
+     *
+     * @return string
      */
     protected static function getCacheKey(Address $address)
     {

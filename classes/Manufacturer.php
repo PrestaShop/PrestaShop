@@ -136,6 +136,8 @@ class ManufacturerCore extends ObjectModel
 
             return $this->deleteImage();
         }
+
+        return false;
     }
 
     /**

@@ -140,7 +140,7 @@ class TaxRuleCore extends ObjectModel
     }
 
     /**
-     * @param string $zipcode a range of zipcode (eg: 75000 / 75000-75015)
+     * @param string $zip_codes a range of zipcode (eg: 75000 / 75000-75015)
      *
      * @return array an array containing two zipcode ordered by zipcode
      */
