@@ -78,7 +78,7 @@ services:
 
   prestashop.core.form.command_builder.product.related_products_commands_builder:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\RelatedProductsCommandsBuilder
-    tags: ['core.product_command_builder']
+    tags: [ 'core.product_command_builder' ]
 
   # Combination builders
   prestashop.core.form.command_builder.combination.combination_commands_builder:
