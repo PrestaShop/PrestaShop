@@ -49,10 +49,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'image_type';
-
     use DeleteActionTrait;
     use BulkDeleteActionTrait;
+
+    const GRID_ID = 'image_type';
 
     /**
      * {@inheritdoc}
