@@ -1,60 +1,60 @@
 services:
-    _defaults:
-        public: true
+  _defaults:
+    public: true
 
-    prestashop.adapter.image_type.query_handler.get_image_type_for_editing_handler:
-        class: 'PrestaShop\PrestaShop\Adapter\ImageType\QueryHandler\GetImageTypeForEditingHandler'
-        tags:
-            - name: tactician.handler
-              command: 'PrestaShop\PrestaShop\Core\Domain\ImageType\Query\GetImageTypeForEditing'
+  prestashop.adapter.image_type.query_handler.get_image_type_for_editing_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\ImageType\QueryHandler\GetImageTypeForEditingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\ImageType\Query\GetImageTypeForEditing'
 
-    prestashop.adapter.image_type.command_handler.edit_image_type_handler:
-        class: 'PrestaShop\PrestaShop\Adapter\ImageType\CommandHandler\EditImageTypeHandler'
-        tags:
-            - name: tactician.handler
-              command: 'PrestaShop\PrestaShop\Core\Domain\ImageType\Command\EditImageTypeCommand'
+  prestashop.adapter.image_type.command_handler.edit_image_type_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\ImageType\CommandHandler\EditImageTypeHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\ImageType\Command\EditImageTypeCommand'
 
-    prestashop.adapter.image_type.command_handler.add_image_type_handler:
-        class: 'PrestaShop\PrestaShop\Adapter\ImageType\CommandHandler\AddImageTypeHandler'
-        tags:
-            - name: tactician.handler
-              command: 'PrestaShop\PrestaShop\Core\Domain\ImageType\Command\AddImageTypeCommand'
+  prestashop.adapter.image_type.command_handler.add_image_type_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\ImageType\CommandHandler\AddImageTypeHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\ImageType\Command\AddImageTypeCommand'
 
-    prestashop.adapter.image_type.command_handler.delete_image_type_handler:
-        class: 'PrestaShop\PrestaShop\Adapter\ImageType\CommandHandler\DeleteImageTypeHandler'
-        tags:
-            - name: tactician.handler
-              command: 'PrestaShop\PrestaShop\Core\Domain\ImageType\Command\DeleteImageTypeCommand'
+  prestashop.adapter.image_type.command_handler.delete_image_type_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\ImageType\CommandHandler\DeleteImageTypeHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\ImageType\Command\DeleteImageTypeCommand'
 
-    prestashop.adapter.image_type.command_handler.bulk_delete_image_type_handler:
-        class: 'PrestaShop\PrestaShop\Adapter\ImageType\CommandHandler\BulkDeleteImageTypeHandler'
-        tags:
-            - name: tactician.handler
-              command: 'PrestaShop\PrestaShop\Core\Domain\ImageType\Command\BulkDeleteImageTypeCommand'
+  prestashop.adapter.image_type.command_handler.bulk_delete_image_type_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\ImageType\CommandHandler\BulkDeleteImageTypeHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\ImageType\Command\BulkDeleteImageTypeCommand'
 
-    prestashop.adapter.image_type.data_provider:
-        class: 'PrestaShop\PrestaShop\Adapter\ImageType\ImageTypeDataProvider'
-        arguments:
-            - '@translator'
+  prestashop.adapter.image_type.data_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\ImageType\ImageTypeDataProvider'
+    arguments:
+      - '@translator'
 
-    prestashop.adapter.image_type.data_provider.formats:
-        class: 'PrestaShop\PrestaShop\Adapter\ImageType\ImageTypeFormatsDataProvider'
-        arguments:
-            - '@prestashop.adapter.image_type.data_provider'
+  prestashop.adapter.image_type.data_provider.formats:
+    class: 'PrestaShop\PrestaShop\Adapter\ImageType\ImageTypeFormatsDataProvider'
+    arguments:
+      - '@prestashop.adapter.image_type.data_provider'
 
-    prestashop.adapter.image_type.thumbnail_regenerator:
-        class: 'PrestaShop\PrestaShop\Adapter\ImageType\ImageGenerator'
-        arguments:
-            - '@translator'
-            - '@prestashop.adapter.legacy.configuration'
-            - !php/const _PS_CAT_IMG_DIR_
-            - !php/const _PS_MANU_IMG_DIR_
-            - !php/const _PS_SUPP_IMG_DIR_
-            - !php/const _PS_PROD_IMG_DIR_
-            - !php/const _PS_STORE_IMG_DIR_
+  prestashop.adapter.image_type.thumbnail_regenerator:
+    class: 'PrestaShop\PrestaShop\Adapter\ImageType\ImageGenerator'
+    arguments:
+      - '@translator'
+      - '@prestashop.adapter.legacy.configuration'
+      - !php/const _PS_CAT_IMG_DIR_
+      - !php/const _PS_MANU_IMG_DIR_
+      - !php/const _PS_SUPP_IMG_DIR_
+      - !php/const _PS_PROD_IMG_DIR_
+      - !php/const _PS_STORE_IMG_DIR_
 
-    prestashop.adapter.image_settings.helper:
-        class: 'PrestaShop\PrestaShop\Adapter\ImageType\ImageSettingsHelper'
-        arguments:
-            - '@translator'
-            - !php/const _PS_PROD_IMG_DIR_
+  prestashop.adapter.image_settings.helper:
+    class: 'PrestaShop\PrestaShop\Adapter\ImageType\ImageSettingsHelper'
+    arguments:
+      - '@translator'
+      - !php/const _PS_PROD_IMG_DIR_
