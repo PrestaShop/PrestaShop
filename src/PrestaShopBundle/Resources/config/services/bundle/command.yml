@@ -53,3 +53,12 @@ services:
       - '@prestashop.adapter.legacy_context_loader'
     tags:
       - 'console.command'
+
+  PrestaShopBundle\Command\ConfigCommand:
+    arguments:
+      - '@translator'
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.data_provider.language'
+    tags:
+      - 'console.command'
