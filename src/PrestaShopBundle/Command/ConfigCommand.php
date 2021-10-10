@@ -26,20 +26,17 @@
 
 namespace PrestaShopBundle\Command;
 
+use Employee;
+use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
-
-use Employee;
-
 
 class ConfigCommand extends Command
 {
@@ -101,7 +98,6 @@ class ConfigCommand extends Command
 
     private $action;
     private $idLang;
-
 
     public function __construct(
         TranslatorInterface $translator,
@@ -167,14 +163,14 @@ class ConfigCommand extends Command
 
         // if language is provided check that it is valid
         $this->initLanguage();
-
     }
 
     /**
      * init possible shopconstraints
      */
-    private function initShopConstraint() {
-        if($this->input->getOption('shopId') && $this->input->getOption('shopGroupId')) {
+    private function initShopConstraint()
+    {
+        if ($this->input->getOption('shopId') && $this->input->getOption('shopGroupId')) {
             $this->displayMessage(
                 $this->translator->trans(
                     'Both shopId and shopGroupId cannot be defined',
@@ -188,7 +184,7 @@ class ConfigCommand extends Command
         // init shopConstraint
         // TODO: this should check that shopId and shopGroupId are valid
         try {
-            if($this->input->getOption('shopGroupId')) {
+            if ($this->input->getOption('shopGroupId')) {
                 $this->shopConstraint = ShopConstraint::shopGroup($this->input->getOption('shopGroupId'));
             } elseif ($this->input->getOption('shopId')) {
                 $this->shopConstraint = ShopConstraint::shop($this->input->getOption('shopId'));
@@ -212,9 +208,10 @@ class ConfigCommand extends Command
     /**
      * initialize language if the option was given
      */
-    private function initLanguage() {
+    private function initLanguage()
+    {
         $inputlang = $this->input->getOption('lang');
-        if(!$inputlang) {
+        if (!$inputlang) {
             return;
         }
 
@@ -224,18 +221,18 @@ class ConfigCommand extends Command
         $languages = $this->languageDataProvider->getLanguages($onlyActive, $onlyShopId);
 
         $found = null;
-        if(is_numeric($inputlang)) {
+        if (is_numeric($inputlang)) {
             // check that input language is valid
-            $found = current(array_filter($languages, function($item) use($inputlang) {
+            $found = current(array_filter($languages, function ($item) use ($inputlang) {
                 return isset($item['id_lang']) && $inputlang == $item['id_lang'];
             }));
         } else {
-            $found = current(array_filter($languages, function($item) use($inputlang) {
+            $found = current(array_filter($languages, function ($item) use ($inputlang) {
                 return isset($item['iso_code']) && $inputlang == $item['iso_code'];
             }));
         }
 
-        if(!$found) {
+        if (!$found) {
             $this->displayMessage(
                 $this->translator->trans(
                     'Invalid language',
@@ -248,20 +245,22 @@ class ConfigCommand extends Command
         }
 
         $this->idLang = (int) $found['id_lang'];
+
         return;
     }
 
     /**
      * Get and print out one configuration value
      */
-    private function get() {
+    private function get()
+    {
         $key = $this->input->getArgument('key');
         $value = $this->configuration->get($key, null, $this->shopConstraint);
 
         // non language values will be just strings
         // but for language dependant values the response is an array
-        if(is_array($value)) {
-            if(!$this->idLang) {
+        if (is_array($value)) {
+            if (!$this->idLang) {
                 $this->displayMessage(
                     $this->translator->trans(
                         '%key% is language dependant, language required',
@@ -287,12 +286,13 @@ class ConfigCommand extends Command
     /**
      * Set and print out one configuration value
      */
-    private function set() {
+    private function set()
+    {
         $key = $this->input->getArgument('key');
         $newvalue = $this->input->getOption('value');
 
         // new value is required for set
-        if(is_null($newvalue)) {
+        if (is_null($newvalue)) {
             $this->displayMessage(
                 $this->translator->trans(
                     'Value required for action "set"',
@@ -305,7 +305,7 @@ class ConfigCommand extends Command
         }
 
         // make the value language array if lang is set
-        if(!is_null($this->idLang)) {
+        if (!is_null($this->idLang)) {
             $newvalue = [
                 $this->idLang => $newvalue,
             ];
@@ -334,7 +334,8 @@ class ConfigCommand extends Command
     /**
      * Delete one configuration value
      */
-    private function delete() {
+    private function delete()
+    {
         $key = $this->input->getArgument('key');
         // this will give the user at least some backup
         $oldvalue = $this->configuration->get($key, null, $this->shopConstraint);
