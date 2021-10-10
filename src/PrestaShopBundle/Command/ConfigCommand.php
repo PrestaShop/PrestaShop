@@ -279,7 +279,7 @@ class ConfigCommand extends Command
                 '%key%="%value%"',
                 ['%key%' => $key, '%value%' => $value],
                 'Admin.Command.Notification'
-            ),
+            )
         );
     }
 
