@@ -360,7 +360,7 @@ class ConfigCommand extends Command
                 '%key% removed (value was "%oldvalue%")',
                 ['%key%' => $key, '%oldvalue%' => $oldvalue],
                 'Admin.Command.Notification'
-            ),
+            )
         );
     }
 
