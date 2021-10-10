@@ -263,7 +263,7 @@ class ConfigCommand extends Command
             if (!$this->idLang) {
                 $this->displayMessage(
                     $this->translator->trans(
-                        '%key% is language dependant, language required',
+                        '%key% is language dependant, --lang option is required',
                         ['%key%' => $key],
                         'Admin.Command.Notification'
                     ),
