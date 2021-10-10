@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputArgument;
@@ -82,7 +83,7 @@ class ConfigCommand extends Command
     private $context;
 
     /**
-     * @var Configuration
+     * @var ShopConfigurationInterface
      */
     private $configuration;
 
@@ -102,7 +103,7 @@ class ConfigCommand extends Command
     public function __construct(
         TranslatorInterface $translator,
         LegacyContext $context,
-        ConfigurationInterface $configuration,
+        ShopConfigurationInterface $configuration,
         LanguageDataProvider $languageDataProvider
     ) {
         parent::__construct();
@@ -217,7 +218,7 @@ class ConfigCommand extends Command
 
         // all languages
         $onlyActive = true;
-        $onlyShopId = $this->shopConstraint->getShopId();
+        $onlyShopId = is_null($this->shopConstraint->getShopId()) ? $this->shopConstraint->getShopId() : $this->shopConstraint->getShopId()->getValue();
         $languages = $this->languageDataProvider->getLanguages($onlyActive, $onlyShopId);
 
         $found = null;
