@@ -44,20 +44,6 @@
           </div>
         </div>
         <div class="form-group row">
-          {{ ps.label_with_help(('Display remaining quantities when the quantity is lower than'|trans), ('Set to "0" to disable this feature.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-          <div class="col-sm">
-            {{ form_errors(pageForm.display_last_quantities) }}
-            {{ form_widget(pageForm.display_last_quantities) }}
-          </div>
-        </div>
-        <div class="form-group row">
-          {{ ps.label_with_help(('Display unavailable attributes on the product page'|trans), ('If an attribute is not available in every product combination, it will not be displayed.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-          <div class="col-sm">
-            {{ form_errors(pageForm.display_unavailable_attributes) }}
-            {{ form_widget(pageForm.display_unavailable_attributes) }}
-          </div>
-        </div>
-        <div class="form-group row">
           {{ ps.label_with_help(('Display the "%add_to_cart_label%" button when a product has attributes'|trans({'%add_to_cart_label%': 'Add to cart'|trans({}, 'Shop.Theme.Actions')}, 'Admin.Shopparameters.Help')), ('Display or hide the "%add_to_cart_label%" button on category pages for products that have attributes forcing customers to see product details.'|trans({'%add_to_cart_label%': 'Add to cart'|trans({}, 'Shop.Theme.Actions')}, 'Admin.Shopparameters.Help'))) }}
           <div class="col-sm">
             {{ form_errors(pageForm.allow_add_variant_to_cart_from_listing) }}
