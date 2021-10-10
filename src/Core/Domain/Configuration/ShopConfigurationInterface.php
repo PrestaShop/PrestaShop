@@ -58,4 +58,12 @@ interface ShopConfigurationInterface extends ConfigurationInterface
      * @return bool
      */
     public function has($key, ShopConstraint $shopConstraint = null);
+
+    /**
+     * @param string $key
+     *
+     * @return ShopConfigurationInterface
+     */
+    public function remove($key);
+
 }
