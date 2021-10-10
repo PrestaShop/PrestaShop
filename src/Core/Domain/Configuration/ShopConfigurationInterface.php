@@ -65,5 +65,4 @@ interface ShopConfigurationInterface extends ConfigurationInterface
      * @return ShopConfigurationInterface
      */
     public function remove($key);
-
 }
