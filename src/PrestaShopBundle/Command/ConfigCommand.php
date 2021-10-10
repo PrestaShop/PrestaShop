@@ -92,7 +92,7 @@ class ConfigCommand extends Command
     private $shopConstraint;
 
     /**
-     * @var LanguageDataProvidcr
+     * @var LanguageDataProvider
      */
     private $languageDataProvider;
 
