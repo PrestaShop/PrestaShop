@@ -30,8 +30,6 @@ class ProductSettings extends BOBasePage {
 
     // Product page form
     this.displayAvailableQuantitiesToggleInput = toggle => `#page_display_quantities_${toggle}`;
-    this.remainingQuantityInput = '#page_display_last_quantities';
-    this.displayUnavailableAttributesToggleInput = toggle => `#page_display_unavailable_attributes_${toggle}`;
     this.separatorAttributeOnProductPageSelect = '#page_attribute_anchor_separator';
     this.displayDiscountedPriceToggleInput = toggle => `#page_display_discount_price_${toggle}`;
     this.saveProductPageFormButton = '#form-page-save-button';
@@ -48,6 +46,8 @@ class ProductSettings extends BOBasePage {
     this.deliveryTimeOutOfStockInput = '#stock_oos_delivery_time_1';
     this.oosAllowedBackordersLabel = idLang => `#stock_oos_allowed_backorders_${idLang}`;
     this.oosDeniedBackordersLabel = idLang => `#stock_oos_denied_backorders_${idLang}`;
+    this.remainingQuantityInput = '#page_display_last_quantities';
+    this.displayUnavailableAttributesToggleInput = toggle => `#page_display_unavailable_attributes_${toggle}`;
     this.defaultPackStockManagementSelect = '#stock_pack_stock_management';
     this.saveProductsStockForm = '#form-stock-save-button';
     this.saveProductsStockForm = `${this.productsStockForm} .card-footer button`;

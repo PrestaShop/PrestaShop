@@ -46,8 +46,6 @@ class PageType extends AbstractType
     {
         $builder
             ->add('display_quantities', SwitchType::class)
-            ->add('display_last_quantities', IntegerType::class)
-            ->add('display_unavailable_attributes', SwitchType::class)
             ->add('allow_add_variant_to_cart_from_listing', SwitchType::class)
             ->add('attribute_anchor_separator', ChoiceType::class, [
                 'choices' => [

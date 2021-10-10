@@ -52,8 +52,6 @@ class PageConfiguration implements DataConfigurationInterface
     {
         return [
             'display_quantities' => $this->configuration->getBoolean('PS_DISPLAY_QTIES'),
-            'display_last_quantities' => $this->configuration->get('PS_LAST_QTIES'),
-            'display_unavailable_attributes' => $this->configuration->getBoolean('PS_DISP_UNAVAILABLE_ATTR'),
             'allow_add_variant_to_cart_from_listing' => $this->configuration->getBoolean('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
             'attribute_anchor_separator' => $this->configuration->get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'),
             'display_discount_price' => $this->configuration->getBoolean('PS_DISPLAY_DISCOUNT_PRICE'),
@@ -69,8 +67,6 @@ class PageConfiguration implements DataConfigurationInterface
 
         if ($this->validateConfiguration($config)) {
             $this->configuration->set('PS_DISPLAY_QTIES', (int) $config['display_quantities']);
-            $this->configuration->set('PS_LAST_QTIES', (int) $config['display_last_quantities']);
-            $this->configuration->set('PS_DISP_UNAVAILABLE_ATTR', (int) $config['display_unavailable_attributes']);
             $this->configuration->set('PS_ATTRIBUTE_CATEGORY_DISPLAY', (int) $config['allow_add_variant_to_cart_from_listing']);
             $this->configuration->set('PS_ATTRIBUTE_ANCHOR_SEPARATOR', $config['attribute_anchor_separator']);
             $this->configuration->set('PS_DISPLAY_DISCOUNT_PRICE', (int) $config['display_discount_price']);
@@ -87,8 +83,6 @@ class PageConfiguration implements DataConfigurationInterface
         $resolver = new OptionsResolver();
         $resolver->setRequired([
             'display_quantities',
-            'display_last_quantities',
-            'display_unavailable_attributes',
             'allow_add_variant_to_cart_from_listing',
             'attribute_anchor_separator',
             'display_discount_price',

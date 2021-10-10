@@ -30,6 +30,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -109,7 +110,9 @@ class StockType extends TranslatorAwareType
                     'Note that the label will be displayed only if backorders are denied.',
                     'Admin.Shopparameters.Help'
                 ),
-            ]);
+            ])
+            ->add('display_last_quantities', IntegerType::class)
+            ->add('display_unavailable_attributes', SwitchType::class);
     }
 
     /**
