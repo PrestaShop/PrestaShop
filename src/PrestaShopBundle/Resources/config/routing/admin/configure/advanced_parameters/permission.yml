@@ -1,6 +1,6 @@
 admin_permissions_index:
   path: /
-  methods: [GET]
+  methods: GET
   defaults:
     _controller: PrestaShopBundle:Admin\Configure\AdvancedParameters\Permission:index
     _legacy_controller: AdminAccess
@@ -8,7 +8,7 @@ admin_permissions_index:
 
 admin_permissions_update_tab_permissions:
   path: /update/permissions/tab
-  methods: [POST]
+  methods: POST
   defaults:
     _controller: PrestaShopBundle:Admin\Configure\AdvancedParameters\Permission:updateTabPermissions
     _legacy_controller: AdminAccess
@@ -16,7 +16,7 @@ admin_permissions_update_tab_permissions:
 
 admin_permissions_update_module_permissions:
   path: /update/permissions/module
-  methods: [POST]
+  methods: POST
   defaults:
     _controller: PrestaShopBundle:Admin\Configure\AdvancedParameters\Permission:updateModulePermissions
     _legacy_controller: AdminAccess
