@@ -363,7 +363,7 @@ class ValidateCore
      * product name has max length 128 in db
      * category name has max length 128 in db
      *
-     * @deprecated 1.7.8 this should really be handled in the DAL layer and it should throw an error which can then be used elsewhere
+     * this should really be handled in the DAL layer for each object and it should throw an error which can then be used elsewhere
      *
      * @return bool Validity is ok or not
      */
@@ -511,7 +511,7 @@ class ValidateCore
      *
      * product reference and manufacturer reference are max 64 characters in db
      *
-     * @deprecated 1.7.8 this should really be handled in the DAL layer and it should throw an error which can then be used elsewhere
+     * This should really be handled in the DAL layer and it should throw an error which can then be used elsewhere
      *
      * @return bool Validity is ok or not
      */
