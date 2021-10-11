@@ -216,7 +216,6 @@ class ConfigCommand extends Command
         $onlyShopId = is_null($this->shopConstraint->getShopId()) ? $this->shopConstraint->getShopId() : $this->shopConstraint->getShopId()->getValue();
         $languages = $this->languageDataProvider->getLanguages($onlyActive, $onlyShopId);
 
-        $found = null;
         if (is_numeric($inputlang)) {
             // check that input language is valid
             $found = current(array_filter($languages, function ($item) use ($inputlang) {
