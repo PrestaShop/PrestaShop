@@ -66,6 +66,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         // Clean all cache values
         Cache::clean('*');
 
+        Configuration::set('PS_SHOP_DEFAULT', 1);
         Shop::initialize();
         Context::getContext()->shop = new Shop(1);
         Shop::setContext(Shop::CONTEXT_SHOP, 1);

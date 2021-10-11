@@ -28,10 +28,12 @@
     "@type": "Organization",
     "name" : "{$shop.name}",
     "url" : "{$urls.pages.index}",
-    "logo": {
-      "@type": "ImageObject",
-      "url":"{$shop.logo}"
-    }
+    {if $shop.logo}
+      "logo": {
+        "@type": "ImageObject",
+        "url":"{$shop.logo.src}"
+      }
+    {/if}
   }
 </script>
 
@@ -55,10 +57,12 @@
       "@context": "https://schema.org",
       "@type": "WebSite",
       "url" : "{$urls.pages.index}",
-      "image": {
-        "@type": "ImageObject",
-        "url":"{$shop.logo}"
-      },
+      {if $shop.logo}
+        "image": {
+          "@type": "ImageObject",
+          "url":"{$shop.logo.src}"
+        },
+      {/if}
       "potentialAction": {
         "@type": "SearchAction",
         "target": "{'--search_term_string--'|str_replace:'{search_term_string}':$link->getPageLink('search',true,null,['search_query'=>'--search_term_string--'])}",
