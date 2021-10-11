@@ -256,6 +256,7 @@ $(document).ready(() => {
   }
 
   $body.on('focusout keyup', productLineInCartSelector, (event) => {
+    isUpdateOperation = false;
     if (event.type === 'keyup') {
       if (event.keyCode === 13) {
         isUpdateOperation = true;
