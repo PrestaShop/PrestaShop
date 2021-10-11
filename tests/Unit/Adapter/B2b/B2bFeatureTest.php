@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Adapter\B2b;
 
 use PHPUnit\Framework\TestCase;
@@ -32,7 +34,7 @@ use PrestaShop\PrestaShop\Core\B2b\B2bFeature;
 
 class B2bFeatureTest extends TestCase
 {
-    const CONFIGURATION_FEATURE = 'PS_B2B_ENABLE';
+    private const CONFIGURATION_FEATURE = 'PS_B2B_ENABLE';
 
     public function testIsUsedOrIsActiveWhenConfigurationIsFalse(): void
     {
