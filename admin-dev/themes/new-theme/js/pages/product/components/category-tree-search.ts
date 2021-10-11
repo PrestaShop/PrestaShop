@@ -25,11 +25,11 @@
 
 const {$} = window;
 
-export default function categoryTree(categoryTreeSelector: string, settings: string | null = null) {
+export default function categoryTree(categoryTreeSelector: string, settings: string | null = null): JQuery {
   const $categoryTree = $(categoryTreeSelector);
-  const isMethodCall = (typeof settings === 'string'); // is this a method call like $().categorytree("unselect")
+  const isMethodCall = (typeof settings === 'string');
   const returnValue = $categoryTree;
-  document.getElementsByClassName("topnav");
+  document.getElementsByClassName('topnav');
   // if a method call execute the method on all selected instances
   if (isMethodCall) {
     switch (settings) {
@@ -46,11 +46,8 @@ export default function categoryTree(categoryTreeSelector: string, settings: str
         $categoryTree.find('li').has('ul').removeClass('less').addClass('more');
         break;
       default:
-        // eslint-disable-next-line
         throw 'Unknown method';
     }
-
-    // eslint-disable-next-line
   }
 
   // initialize tree
@@ -92,4 +89,3 @@ export default function categoryTree(categoryTreeSelector: string, settings: str
   // return the jquery selection (or if it was a method call that returned a value - the returned value)
   return returnValue;
 };
-

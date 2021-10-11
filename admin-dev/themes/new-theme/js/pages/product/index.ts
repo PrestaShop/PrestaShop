@@ -51,27 +51,26 @@ $(() => {
    */
   categoryTree('div#product_catalog_category_tree_filter');
 
-  $('#product_catalog_category_tree_filter_reset').on('click', function () {
+  $('#product_catalog_category_tree_filter_reset').on('click', () => {
     categoryTree('#product_categories', 'unselect');
     $('form#product_filter_form input[name="product[id_category]"]').val('');
     $('form#product_filter_form').submit();
-  })
+  });
 
-  $('#product_catalog_category_tree_filter_expand').on('click', function () {
-    categoryTree('#product_categories', 'unfold')
-  })
+  $('#product_catalog_category_tree_filter_expand').on('click', () => {
+    categoryTree('#product_categories', 'unfold');
+  });
 
-  $('#product_catalog_category_tree_filter_collapse').on('click', function () {
+  $('#product_catalog_category_tree_filter_collapse').on('click', () => {
     categoryTree('#product_categories', 'fold');
-  })
+  });
 
-  $('div#product_catalog_category_tree_filter div.radio > label > input:radio').on('change',function () {
+  $('div#product_catalog_category_tree_filter div.radio > label > input:radio').on('change', function () {
     if ($(this).is(':checked')) {
       // @ts-ignore
-      let categoryId = $(this).val().toString();
+      const categoryId = $(this).val().toString();
       $('form#product_filter_form input[name="product[id_category]"]').val(categoryId);
       $('form#product_filter_form').submit();
     }
   });
-
 });
