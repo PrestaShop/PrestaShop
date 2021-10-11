@@ -4483,6 +4483,7 @@ $baseline = [
     'PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface::get',
     'PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface::set',
     'PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface::has',
+    'PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface::remove',
     'PrestaShop\PrestaShop\Core\Domain\ValueObject\Email::__construct',
     'PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException::__construct',
     'PrestaShop\PrestaShop\Core\Domain\Order\Payment\ValueObject\OrderPaymentId::__construct',
