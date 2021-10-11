@@ -1,10 +1,11 @@
+---
 name: Nightly
 
 on:
   schedule:
     - cron: '0 1 * * *'
-  # Allows maintainers to trigger nightly manually
-  # workflow_dispatch:
+    # Allows maintainers to trigger nightly manually
+    # workflow_dispatch:
 
 jobs:
   nightly:
