@@ -43,14 +43,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ConfigCommand extends Command
 {
     // return values
-    const RET_OK = 0;
-    const RET_INVALID_ACTION = 1;
-    const RET_VALUE_REQUIRED = 2;
-    const RET_FAILED_SET = 3;
-    const RET_FAILED_REMOVE = 4;
-    const RET_INVALID_OPTIONS = 5;
-    const RET_FAILED_SHOPCONSTRAINT = 6;
-    const RET_LANG_REQUIRED = 7;
+    private const RET_OK = 0;
+    private const RET_INVALID_ACTION = 1;
+    private const RET_VALUE_REQUIRED = 2;
+    private const RET_FAILED_SET = 3;
+    private const RET_FAILED_REMOVE = 4;
+    private const RET_INVALID_OPTIONS = 5;
+    private const RET_FAILED_SHOPCONSTRAINT = 6;
+    private const RET_LANG_REQUIRED = 7;
 
     private $allowedActions = [
         'get',
