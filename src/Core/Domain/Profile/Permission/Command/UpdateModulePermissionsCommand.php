@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\Permission;
 use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
+use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleId;
 
 /**
  * Updates module permissions for employee's profile
@@ -42,7 +43,7 @@ class UpdateModulePermissionsCommand
     private $profileId;
 
     /**
-     * @var int
+     * @var ModuleId
      */
     private $moduleId;
 
@@ -65,7 +66,7 @@ class UpdateModulePermissionsCommand
     public function __construct(int $profileId, int $moduleId, string $permission, bool $expectedStatus)
     {
         $this->profileId = new ProfileId($profileId);
-        $this->moduleId = $moduleId;
+        $this->moduleId = new ModuleId($moduleId);
         $this->permission = new Permission($permission);
         $this->expectedStatus = $expectedStatus;
     }
@@ -79,9 +80,9 @@ class UpdateModulePermissionsCommand
     }
 
     /**
-     * @return int
+     * @return ModuleId
      */
-    public function getModuleId(): int
+    public function getModuleId(): ModuleId
     {
         return $this->moduleId;
     }
