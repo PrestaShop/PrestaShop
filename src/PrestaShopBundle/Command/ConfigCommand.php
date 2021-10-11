@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Command;
 
 use Employee;
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
@@ -152,22 +153,18 @@ class ConfigCommand extends Command
         // check our action
         $action = $input->getArgument('action');
         if (!in_array($action, $this->allowedActions)) {
-            $this->displayMessage(
-                $this->translator->trans(
-                    'Unknown configuration action. It must be one of these values: %actions%',
-                    ['%actions%' => implode(' / ', $this->allowedActions)],
-                    'Admin.Command.Notification'
-                ),
-                'error'
+            $msg = $this->translator->trans(
+                'Unknown configuration action. It must be one of these values: %actions%',
+                ['%actions%' => implode(' / ', $this->allowedActions)],
+                'Admin.Command.Notification'
             );
-            exit(self::RET_INVALID_ACTION);
+            throw new Exception($msg, self::RET_INVALID_ACTION);
         }
+
         $this->action = $action;
 
-        // check ShopConstraint
         $this->initShopConstraint();
 
-        // if language is provided check that it is valid
         $this->initLanguage();
     }
 
@@ -177,15 +174,12 @@ class ConfigCommand extends Command
     private function initShopConstraint()
     {
         if ($this->input->getOption('shopId') && $this->input->getOption('shopGroupId')) {
-            $this->displayMessage(
-                $this->translator->trans(
-                    'Both shopId and shopGroupId cannot be defined',
-                    [],
-                    'Admin.Command.Notification'
-                ),
-                'error'
+            $msg = $this->translator->trans(
+                'Both shopId and shopGroupId cannot be defined',
+                [],
+                'Admin.Command.Notification'
             );
-            exit(self::RET_INVALID_OPTIONS);
+            throw new Exception($msg, self::RET_INVALID_OPTIONS);
         }
         // init shopConstraint
         // TODO: this should check that shopId and shopGroupId are valid
@@ -199,15 +193,12 @@ class ConfigCommand extends Command
             }
         } catch (\Exception $e) {
             $msg = $e->getMessage();
-            $this->displayMessage(
-                $this->translator->trans(
-                    'Failed initializing ShopConstraint: %msg%',
-                    ['%msg%' => $msg],
-                    'Admin.Command.Notification'
-                ),
-                'error'
+            $msg = $this->translator->trans(
+                'Failed initializing ShopConstraint: %msg%',
+                ['%msg%' => $msg],
+                'Admin.Command.Notification'
             );
-            exit(self::RET_FAILED_SHOPCONSTRAINT);
+            throw new Exception($msg, self::RET_INVALID_OPTIONS);
         }
     }
 
@@ -239,15 +230,12 @@ class ConfigCommand extends Command
         }
 
         if (!$found) {
-            $this->displayMessage(
-                $this->translator->trans(
-                    'Invalid language',
-                    [],
-                    'Admin.Command.Notification'
-                ),
-                'error'
+            $msg = $this->translator->trans(
+                'Invalid language',
+                [],
+                'Admin.Command.Notification'
             );
-            exit(self::RET_INVALID_OPTIONS);
+            throw new Exception($msg, self::RET_INVALID_OPTIONS);
         }
 
         $this->idLang = (int) $found['id_lang'];
@@ -265,15 +253,12 @@ class ConfigCommand extends Command
         // but for language dependant values the response is an array
         if (is_array($value)) {
             if (!$this->idLang) {
-                $this->displayMessage(
-                    $this->translator->trans(
-                        '%key% is language dependant, --lang option is required',
-                        ['%key%' => $key],
-                        'Admin.Command.Notification'
-                    ),
-                    'error'
+                $msg = $this->translator->trans(
+                    '%key% is language dependant, --lang option is required',
+                    ['%key%' => $key],
+                    'Admin.Command.Notification'
                 );
-                exit(self::RET_LANG_REQUIRED);
+                throw new Exception($msg, self::RET_LANG_REQUIRED);
             }
             $value = $value[$this->idLang];
         }
@@ -297,15 +282,12 @@ class ConfigCommand extends Command
 
         // new value is required for set
         if (is_null($newvalue)) {
-            $this->displayMessage(
-                $this->translator->trans(
-                    'Value required for action "set"',
-                    [],
-                    'Admin.Command.Notification'
-                ),
-                'error'
+            $msg = $this->translator->trans(
+                'Value required for action "set"',
+                [],
+                'Admin.Command.Notification'
             );
-            exit(self::RET_VALUE_REQUIRED);
+            throw new Exception($msg, self::RET_VALUE_REQUIRED);
         }
 
         // make the value language array if lang is set
@@ -320,18 +302,14 @@ class ConfigCommand extends Command
             $this->configuration->set($key, $newvalue, $this->shopConstraint);
         } catch (\Exception $e) {
             $msg = $e->getMessage();
-            $this->displayMessage(
-                $this->translator->trans(
-                    'Failed setting value: %msg%',
-                    ['%msg%' => $msg],
-                    'Admin.Command.Notification'
-                ),
-                'error'
+            $msg = $this->translator->trans(
+                'Failed setting value: %msg%',
+                ['%msg%' => $msg],
+                'Admin.Command.Notification'
             );
-            exit(self::RET_FAILED_SET);
+            throw new Exception($msg, self::RET_FAILED_SET);
         }
 
-        // and call get to print the value out
         $this->get();
     }
 
@@ -341,28 +319,28 @@ class ConfigCommand extends Command
     private function remove()
     {
         $key = $this->input->getArgument('key');
-        // this will give the user at least some backup
-        $oldvalue = $this->configuration->get($key, null, $this->shopConstraint);
 
         try {
+            // remove does not support removing only one language, use default
+            // lang if not defined
+            $this->idLang = $this->configuration->get('PS_LANG_DEFAULT');
+            // this will give the user at least some backup
+            $this->get();
             $this->configuration->remove($key);
         } catch (\Exception $e) {
             $msg = $e->getMessage();
-            $this->displayMessage(
-                $this->translator->trans(
-                    'Failed removing: %msg%',
-                    ['%msg%' => $msg],
-                    'Admin.Command.Notification'
-                ),
-                'error'
+            $msg = $this->translator->trans(
+                'Failed removing: %msg%. Original message: %msg%',
+                ['%msg%' => $msg],
+                'Admin.Command.Notification'
             );
-            exit(self::RET_FAILED_REMOVE);
+            throw new Exception($msg, self::RET_FAILED_REMOVE);
         }
 
         $this->output->writeln(
             $this->translator->trans(
-                '%key% removed (value was "%oldvalue%")',
-                ['%key%' => $key, '%oldvalue%' => $oldvalue],
+                '%key% removed',
+                ['%key%' => $key],
                 'Admin.Command.Notification'
             )
         );
@@ -373,10 +351,17 @@ class ConfigCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->init($input, $output);
+        try {
+            $this->init($input, $output);
+            $action = $this->action;
+            $this->$action();
+        } catch (\Exception $e) {
+            $msg = $e->getMessage();
+            $code = $e->getCode();
+            $this->displayMessage($msg, 'error');
 
-        $action = $this->action;
-        $this->$action();
+            return $code;
+        }
 
         return self::RET_OK;
     }
