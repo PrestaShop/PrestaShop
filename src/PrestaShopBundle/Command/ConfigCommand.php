@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Command;
 
 use Employee;
@@ -245,8 +247,6 @@ class ConfigCommand extends Command
         }
 
         $this->idLang = (int) $found['id_lang'];
-
-        return;
     }
 
     /**
@@ -367,7 +367,7 @@ class ConfigCommand extends Command
     /**
      * Main execute. Calls the method defined by action
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->init($input, $output);
 
@@ -380,7 +380,7 @@ class ConfigCommand extends Command
     /**
      * Helper for showing a nice error message
      */
-    protected function displayMessage($message, $type = 'info')
+    protected function displayMessage(string $message, string $type = 'info')
     {
         $this->output->writeln(
             $this->formatter->formatBlock($message, $type, true)
