@@ -171,7 +171,7 @@ class ConfigCommand extends Command
     /**
      * init possible shopconstraints
      */
-    private function initShopConstraint()
+    private function initShopConstraint(): void
     {
         if ($this->input->getOption('shopId') && $this->input->getOption('shopGroupId')) {
             $msg = $this->translator->trans(
@@ -192,10 +192,9 @@ class ConfigCommand extends Command
                 $this->shopConstraint = ShopConstraint::allShops();
             }
         } catch (\Exception $e) {
-            $msg = $e->getMessage();
             $msg = $this->translator->trans(
                 'Failed initializing ShopConstraint: %msg%',
-                ['%msg%' => $msg],
+                ['%msg%' => $e->getMessage()],
                 'Admin.Command.Notification'
             );
             throw new Exception($msg, self::RET_INVALID_OPTIONS);
@@ -205,7 +204,7 @@ class ConfigCommand extends Command
     /**
      * initialize language if the option was given
      */
-    private function initLanguage()
+    private function initLanguage(): void
     {
         $inputlang = $this->input->getOption('lang');
         if (!$inputlang) {
@@ -275,7 +274,7 @@ class ConfigCommand extends Command
     /**
      * Set and print out one configuration value
      */
-    private function set()
+    private function set(): void
     {
         $key = $this->input->getArgument('key');
         $newvalue = $this->input->getOption('value');
@@ -301,10 +300,9 @@ class ConfigCommand extends Command
         try {
             $this->configuration->set($key, $newvalue, $this->shopConstraint);
         } catch (\Exception $e) {
-            $msg = $e->getMessage();
             $msg = $this->translator->trans(
                 'Failed setting value: %msg%',
-                ['%msg%' => $msg],
+                ['%msg%' => $e->getMessage()],
                 'Admin.Command.Notification'
             );
             throw new Exception($msg, self::RET_FAILED_SET);
@@ -353,14 +351,11 @@ class ConfigCommand extends Command
     {
         try {
             $this->init($input, $output);
-            $action = $this->action;
-            $this->$action();
+            $this->{$this->action}();
         } catch (\Exception $e) {
-            $msg = $e->getMessage();
-            $code = $e->getCode();
-            $this->displayMessage($msg, 'error');
+            $this->displayMessage($e->getMessage(), 'error');
 
-            return $code;
+            return $e->getCode();
         }
 
         return self::RET_OK;
@@ -369,7 +364,7 @@ class ConfigCommand extends Command
     /**
      * Helper for showing a nice error message
      */
-    protected function displayMessage(string $message, string $type = 'info')
+    protected function displayMessage(string $message, string $type = 'info'): void
     {
         $this->output->writeln(
             $this->formatter->formatBlock($message, $type, true)

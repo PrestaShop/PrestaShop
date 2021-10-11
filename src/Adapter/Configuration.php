@@ -257,7 +257,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @return self
      */
-    public function remove($key): ShopConfigurationInterface
+    public function remove($key)
     {
         $success = \Configuration::deleteByName(
             $key
