@@ -333,7 +333,7 @@ class ProductController extends FrameworkBundleAdminController
 
             return $this->redirectToRoute('admin_products_v2_index');
         }
-        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_products_v2_index');
     }
@@ -359,7 +359,7 @@ class ProductController extends FrameworkBundleAdminController
             );
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
