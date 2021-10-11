@@ -35,11 +35,7 @@
   </p>
 
   <div id="formCheckSQL">
-      <p class="first" style="margin-top: 15px;">
-          <label for="use_env_variables"><?php echo $this->translator->trans('Use environment variables if set', [], 'Install'); ?> </label>
-          <input type="checkbox" name="use_env_variables" id="use_env_variables" value="1" <?php if ($this->use_env_variables) { ?>checked="checked"<?php } ?> />
-      </p>
-    <p>
+    <p class="first" style="margin-top: 15px;">
       <label for="dbServer"><?php echo $this->translator->trans('Database server address', [], 'Install'); ?> </label>
       <input size="25" class="text" type="text" id="dbServer" name="dbServer" value="<?php echo htmlspecialchars($this->database_server); ?>" />
       <span class="userInfos aligned"><?php echo $this->translator->trans('The default port is 3306. To use a different port, add the port number at the end of your server\'s address i.e ":4242".', [], 'Install'); ?></span>
