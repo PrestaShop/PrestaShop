@@ -72,109 +72,109 @@ admin_products_v2_delete:
     productId: \d+
 
 admin_products_v2_duplicate:
-    path: /{productId}/duplicate
-    methods: [POST]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:duplicate
-        _legacy_controller: AdminProducts
-        _legacy_link:
-            - AdminProducts:duplicate
-        _legacy_parameters:
-            id_product: productId
-    requirements:
-        productId: \d+
+  path: /{productId}/duplicate
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:duplicate
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:duplicate
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+      productId: \d+
 
 admin_products_v2_preview:
-    path: /{productId}/preview
-    methods: [POST]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:preview
-        _legacy_controller: AdminProducts
-        _legacy_link:
-            - AdminProducts:preview
-        _legacy_parameters:
-            id_product: productId
-    requirements:
-        productId: \d+
+  path: /{productId}/preview
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:preview
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:preview
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+      productId: \d+
 
 
 admin_products_v2_toggle_status:
-    path: /{productId}/toggle_status
-    methods: [POST]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:toggleStatus
-        _legacy_controller: AdminProducts
-        _legacy_link:
-            - AdminProducts:statusproduct
-        _legacy_parameters:
-            id_product: productId
-    requirements:
-        productId: \d+
+  path: /{productId}/toggle_status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:toggleStatus
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:statusproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+      productId: \d+
 
 admin_products_v2_update_position:
-    path: /update_position
-    methods: [POST]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:updatePosition
-        _legacy_controller: AdminProducts
-        _legacy_link:
-            - AdminProducts:positionproduct
-        _legacy_parameters:
-            id_product: productId
-    requirements:
-        productId: \d+
+  path: /update_position
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:updatePosition
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:positionproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
 
 admin_products_v2_bulk_enable:
-    path: /bulk-enable
-    methods: [POST, DELETE]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkEnable
-        _legacy_controller: AdminProducts
-        _legacy_link:
-            - AdminProducts:submitBulkdisableSelectionproduct
-        _legacy_parameters:
-            id_product: productId
-    requirements:
-        productId: \d+
+  path: /bulk-enable
+  methods: [POST, DELETE]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkEnable
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdisableSelectionproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
 
 admin_products_v2_bulk_disable:
-    path: /bulk-disable
-    methods: [POST, DELETE]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkDisable
-        _legacy_controller: AdminProducts
-        _legacy_link:
-            - AdminProducts:submitBulkenableSelectionproduct
-        _legacy_parameters:
-            id_product: productId
-    requirements:
-        productId: \d+
+  path: /bulk-disable
+  methods: [POST, DELETE]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkDisable
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkenableSelectionproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
 
 admin_products_v2_bulk_duplicate:
-    path: /bulk-duplicate
-    methods: [POST, DELETE]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkDuplicate
-        _legacy_controller: AdminProducts
-        _legacy_link:
-            - AdminProducts:submitBulkduplicateSelectionproduct
-        _legacy_parameters:
-            id_product: productId
-    requirements:
-        productId: \d+
+  path: /bulk-duplicate
+  methods: [POST, DELETE]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkDuplicate
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkduplicateSelectionproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
 
 admin_products_v2_bulk_delete:
-    path: /bulk-delete
-    methods: [POST, DELETE]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkDelete
-        _legacy_controller: AdminProducts
-        _legacy_link:
-            - AdminProducts:submitBulkdeleteproduct
-        _legacy_parameters:
-            id_product: productId
-    requirements:
-        productId: \d+
+  path: /bulk-delete
+  methods: [POST, DELETE]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkDelete
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdeleteproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
 
 admin_products_v2_search_associations:
   path: /search/{languageCode}
