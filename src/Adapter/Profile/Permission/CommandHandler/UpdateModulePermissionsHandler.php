@@ -49,7 +49,7 @@ final class UpdateModulePermissionsHandler implements UpdateModulePermissionsHan
     {
         $result = (new Access())->updateLgcModuleAccess(
             $command->getProfileId()->getValue(),
-            $command->getModuleId(),
+            $command->getModuleId()->getValue(),
             $command->getPermission()->getValue(),
             $command->getExpectedStatus()
         );
