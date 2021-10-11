@@ -223,7 +223,7 @@ class ConfigCommand extends Command
                 return isset($item['id_lang']) && $inputlang == $item['id_lang'];
             }));
         } else {
-            $found = current(array_filter($languages, function ($item) use ($inputlang) {
+            $found = current(array_filter($languages, function (array $item) use ($inputlang) {
                 return isset($item['iso_code']) && $inputlang == $item['iso_code'];
             }));
         }
