@@ -131,8 +131,8 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         $productId = (int) $this->getSharedStorage()->get($productReference);
         /** @var SpecificPriceListForEditing $productSpecificPrices */
         $productSpecificPrices = $this->getQueryBus()->handle(new GetSpecificPriceList(
-            $this->getDefaultLangId(),
-            $productId
+            $productId,
+            $this->getDefaultLangId()
         ));
 
         Assert::assertEquals($expectedCount, $productSpecificPrices->getTotalSpecificPricesCount());
