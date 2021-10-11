@@ -53,6 +53,10 @@ services:
     arguments:
       - '@security.authorization_checker'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      -
+        - 'AdminLogin'
+        - 'AdminQuickAccesses'
+        - 'AdminTabs'
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration'

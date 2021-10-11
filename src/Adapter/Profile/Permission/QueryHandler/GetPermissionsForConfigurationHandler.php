@@ -67,14 +67,21 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     private $languageId;
 
     /**
+     * @var array
+     */
+    protected $nonConfigurableTabs;
+
+    /**
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
-        int $languageId
+        int $languageId,
+        array $nonConfigurableTabs
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->languageId = $languageId;
+        $this->nonConfigurableTabs = $nonConfigurableTabs;
     }
 
     /**
@@ -125,11 +132,12 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
      */
     private function getNonConfigurableTabs(): array
     {
-        return [
-            Tab::getIdFromClassName('AdminLogin'),
-            Tab::getIdFromClassName('AdminQuickAccesses'),
-            Tab::getIdFromClassName('AdminTabs'),
-        ];
+        $result = [];
+        foreach ($this->nonConfigurableTabs as $tabName) {
+            $result[] = Tab::getIdFromClassName($tabName);
+        }
+
+        return $result;
     }
 
     /**
