@@ -55,20 +55,20 @@ class UpdateModulePermissionsCommand
     /**
      * @var bool
      */
-    private $expectedStatus;
+    private $hasPermission;
 
     /**
      * @param int $profileId
      * @param int $moduleId
      * @param string $permission
-     * @param bool $expectedStatus
+     * @param bool $hasPermission
      */
-    public function __construct(int $profileId, int $moduleId, string $permission, bool $expectedStatus)
+    public function __construct(int $profileId, int $moduleId, string $permission, bool $hasPermission)
     {
         $this->profileId = new ProfileId($profileId);
         $this->moduleId = new ModuleId($moduleId);
         $this->permission = new Permission($permission);
-        $this->expectedStatus = $expectedStatus;
+        $this->hasPermission = $hasPermission;
     }
 
     /**
@@ -98,8 +98,8 @@ class UpdateModulePermissionsCommand
     /**
      * @return bool
      */
-    public function getExpectedStatus(): bool
+    public function hasPermission(): bool
     {
-        return $this->expectedStatus;
+        return $this->hasPermission;
     }
 }
