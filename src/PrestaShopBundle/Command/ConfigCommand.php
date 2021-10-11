@@ -221,7 +221,7 @@ class ConfigCommand extends Command
 
         if (is_numeric($inputlang)) {
             // check that input language is valid
-            $found = current(array_filter($languages, function ($item) use ($inputlang) {
+            $found = current(array_filter($languages, function (array $item) use ($inputlang) {
                 return isset($item['id_lang']) && $inputlang == $item['id_lang'];
             }));
         } else {
@@ -259,7 +259,7 @@ class ConfigCommand extends Command
                 throw new Exception($msg, self::STATUS_LANG_REQUIRED);
             }
             try {
-                $keys = array_filter($this->configuration->keys(), function ($v) use ($key) {
+                $keys = array_filter($this->configuration->keys(), function (string $v) use ($key) {
                     return fnmatch($key, $v);
                 });
             } catch (NotImplementedException $e) {
