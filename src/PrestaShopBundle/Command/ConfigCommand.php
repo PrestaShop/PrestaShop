@@ -191,7 +191,7 @@ class ConfigCommand extends Command
             } else {
                 $this->shopConstraint = ShopConstraint::allShops();
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $msg = $this->translator->trans(
                 'Failed initializing ShopConstraint: %msg%',
                 ['%msg%' => $e->getMessage()],
@@ -324,7 +324,7 @@ class ConfigCommand extends Command
             // this will give the user at least some backup
             $this->get();
             $this->configuration->remove($key);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $msg = $e->getMessage();
             $msg = $this->translator->trans(
                 'Failed removing: %msg%. Original message: %msg%',
@@ -351,7 +351,7 @@ class ConfigCommand extends Command
         try {
             $this->init($input, $output);
             $this->{$this->action}();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->displayMessage($e->getMessage(), 'error');
 
             return $e->getCode();
