@@ -225,7 +225,6 @@ export default class PositionExtension {
     const mapping = Array(rowsData.length).fill(undefined).map(Object);
 
     for (let i = 0; i < rowsData.length; i += 1) {
-
       // @ts-ignore
       const [, rowId, oldPosition] = regex.exec(rowsData[i].rowMarker);
       mapping[i].rowId = rowId;
