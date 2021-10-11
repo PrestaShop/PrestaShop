@@ -26,27 +26,25 @@
 
 declare(strict_types = 1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Tab\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Tab\Exception\InvalidTabValueIdException;
 
-class ProfileId
+class TabId
 {
     /**
      * @var int
      */
-    private $profileId;
+    private $tabId;
 
     /**
-     * @param int $profileId
-     *
-     * @throws ProfileConstraintException
+     * @param int $tabId
      */
-    public function __construct($profileId)
+    public function __construct(int $tabId)
     {
-        $this->assertProfileIdIsGreaterThanZero($profileId);
+        $this->assertTabIdIsGreaterThanZero($tabId);
 
-        $this->profileId = (int) $profileId;
+        $this->tabId = $tabId;
     }
 
     /**
@@ -54,19 +52,19 @@ class ProfileId
      */
     public function getValue()
     {
-        return $this->profileId;
+        return $this->tabId;
     }
 
     /**
-     * @param mixed $profileId
+     * @param int $tabId
      *
-     * @throws ProfileConstraintException
+     * @throws InvalidTabValueIdException
      */
-    private function assertProfileIdIsGreaterThanZero($profileId)
+    private function assertTabIdIsGreaterThanZero(int $tabId)
     {
-        if ((!is_int($profileId) && !ctype_digit($profileId)) || 0 > $profileId) {
-            throw new ProfileConstraintException(
-                sprintf('Invalid profile id %s provided', var_export($profileId, true))
+        if (0 > $tabId) {
+            throw new InvalidTabValueIdException(
+                sprintf('Invalid tab id "%d" provided', $tabId)
             );
         }
     }
