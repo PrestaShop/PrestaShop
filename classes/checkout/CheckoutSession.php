@@ -199,7 +199,7 @@ class CheckoutSessionCore
 
     public function setSeparatePackagesAllowed(bool $separatePackagesAllowed): bool
     {
-        $this->context->cart->allow_separated_package = $separatePackagesAllowed;
+        $this->context->cart->allow_seperated_package = $separatePackagesAllowed;
 
         return $this->context->cart->update();
     }
