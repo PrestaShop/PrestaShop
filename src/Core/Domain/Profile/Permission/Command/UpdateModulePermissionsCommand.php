@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleId;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\Permission;
 use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
-use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleId;
 
 /**
  * Updates module permissions for employee's profile
