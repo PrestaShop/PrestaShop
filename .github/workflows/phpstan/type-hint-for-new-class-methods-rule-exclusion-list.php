@@ -1455,6 +1455,7 @@ $baseline = [
 'PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface::get',
 'PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface::set',
 'PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface::has',
+'PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface::remove',
 'PrestaShop\PrestaShop\Core\Domain\Order\Invoice\ValueObject\OrderInvoiceId::__construct',
 'PrestaShop\PrestaShop\Core\Domain\ValueObject\Email::__construct',
 'PrestaShop\PrestaShop\Core\Domain\ValueObject\Email::assertEmailIsNotEmpty',
