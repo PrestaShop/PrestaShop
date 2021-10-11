@@ -150,9 +150,9 @@ class PDFCore
             $this->pdf_renderer->createPagination($template->getPagination());
             $this->pdf_renderer->createContent($template->getContent());
             $this->pdf_renderer->writePage();
-	    // The footer must be added after adding the page, or TCPDF will
-	    // add the footer for the next page from on the last page of this
-	    // page group, which could mean the wrong store info is rendered.
+            // The footer must be added after adding the page, or TCPDF will
+            // add the footer for the next page from on the last page of this
+            // page group, which could mean the wrong store info is rendered.
             $this->pdf_renderer->createFooter($template->getFooter());
             $render = true;
 
