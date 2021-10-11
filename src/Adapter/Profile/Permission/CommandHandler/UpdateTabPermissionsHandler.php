@@ -53,8 +53,8 @@ final class UpdateTabPermissionsHandler implements UpdateTabPermissionsHandlerIn
                 $command->getProfileId()->getValue(),
                 $command->getTabId(),
                 $command->getPermission()->getValue(),
-                $command->getExpectedStatus(),
-                $command->isAddedFromParent()
+                $command->hasPermission(),
+                false // Do not apply to all children
             );
         } catch (Exception $e) {
             // If role slug is not found it raises an exception

@@ -54,27 +54,20 @@ class UpdateTabPermissionsCommand
     /**
      * @var bool
      */
-    private $expectedStatus;
-
-    /**
-     * @var bool
-     */
-    private $isAddedFromParent;
+    private $hasPermission;
 
     /**
      * @param int $profileId
      * @param int $tabId
      * @param string $permission
-     * @param bool $expectedStatus
-     * @param bool $isAddedFromParent
+     * @param bool $hasPermission
      */
-    public function __construct(int $profileId, int $tabId, string $permission, bool $expectedStatus, bool $isAddedFromParent)
+    public function __construct(int $profileId, int $tabId, string $permission, bool $hasPermission)
     {
         $this->profileId = new ProfileId($profileId);
         $this->tabId = $tabId;
         $this->permission = new Permission($permission);
-        $this->expectedStatus = $expectedStatus;
-        $this->isAddedFromParent = $isAddedFromParent;
+        $this->hasPermission = $hasPermission;
     }
 
     /**
@@ -104,16 +97,8 @@ class UpdateTabPermissionsCommand
     /**
      * @return bool
      */
-    public function getExpectedStatus(): bool
+    public function hasPermission(): bool
     {
-        return $this->expectedStatus;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAddedFromParent(): bool
-    {
-        return $this->isAddedFromParent;
+        return $this->hasPermission;
     }
 }

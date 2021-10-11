@@ -51,7 +51,7 @@ final class UpdateModulePermissionsHandler implements UpdateModulePermissionsHan
             $command->getProfileId()->getValue(),
             $command->getModuleId()->getValue(),
             $command->getPermission()->getValue(),
-            $command->getExpectedStatus()
+            $command->hasPermission()
         );
 
         if ('error' === $result) {
