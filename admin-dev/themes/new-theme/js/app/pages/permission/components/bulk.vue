@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div class="row bulk-row">
+  <div class="d-flex flex-wrap bulk-row">
     <div class="col-4" />
 
-    <div class="col-8 row">
+    <div class="col-8 d-flex flex-wrap">
       <div
         class="text-center"
         :class="getClasses(types, bulkType === 'view')"
@@ -50,6 +50,8 @@
   import PsCheckbox from '@app/components/checkbox.vue';
   import ColSize from '@app/mixins/col-size.vue';
 
+  const TYPE_ALL: string = 'all';
+
   export default Vue.extend({
     mixins: [
       ColSize,
@@ -67,10 +69,9 @@
         required: true,
       },
     },
-    data(): {status: Array<string>, TYPE_ALL: string} {
+    data(): {status: Array<string>} {
       return {
         status: [],
-        TYPE_ALL: 'all',
       };
     },
     watch: {
@@ -90,7 +91,7 @@
        */
       refreshPermissionsCheckboxes(permissions: Record<string, any>): void {
         Object.keys(this.types).forEach((t: string) => {
-          if (t === this.TYPE_ALL) {
+          if (t === TYPE_ALL) {
             return;
           }
 
@@ -116,11 +117,11 @@
        */
       checkForTypeAllCheckbox(bulkType?: string): void {
         // no need to check there is no type all
-        if (!(this.TYPE_ALL in this.types)) {
+        if (!(TYPE_ALL in this.types)) {
           return;
         }
 
-        if (bulkType === this.TYPE_ALL) {
+        if (bulkType === TYPE_ALL) {
           this.status = this.status.includes(bulkType)
             ? Object.keys(this.types)
             : [];
@@ -133,10 +134,10 @@
         }
 
         // We can add the TYPE_ALL because we check all checkboxes
-        if (this.status.includes(this.TYPE_ALL)) {
-          this.status.splice(this.status.indexOf(this.TYPE_ALL), 1);
+        if (this.status.includes(TYPE_ALL)) {
+          this.status.splice(this.status.indexOf(TYPE_ALL), 1);
         } else {
-          this.status.push(this.TYPE_ALL);
+          this.status.push(TYPE_ALL);
         }
       },
       /**
@@ -149,7 +150,7 @@
           {
             updateType: bulkType,
             status: this.status.includes(bulkType),
-            types: bulkType !== this.TYPE_ALL ? [bulkType] : Object.keys(this.types),
+            types: bulkType !== TYPE_ALL ? [bulkType] : Object.keys(this.types),
           },
         );
       },
