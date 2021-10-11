@@ -35,6 +35,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -329,7 +330,7 @@ class ConfigurationMock extends Configuration
         return isset($this->configurationData[$key]) ? $this->configurationData[$key] : $default;
     }
 
-    public function remove($key)
+    public function remove($key): ShopConfigurationInterface
     {
         unset($this->configurationData[$key]);
 
