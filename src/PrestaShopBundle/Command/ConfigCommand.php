@@ -99,6 +99,10 @@ class ConfigCommand extends Command
     private $languageDataProvider;
 
     private $action;
+
+    /**
+     * @var int|null
+     */
     private $idLang;
 
     public function __construct(
