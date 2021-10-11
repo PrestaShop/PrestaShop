@@ -157,3 +157,35 @@ Feature: Update product options from Back Office (BO)
       | country               | UnitedStates        |
       | group                 | visitor             |
       | customer              | testCustomer        |
+
+  Scenario: I cannot add specific price if identical one already exists for product
+    Given I add product "product2" with following information:
+      | name[en-US] | Presta camera2 |
+      | type        | standard       |
+    And product "product2" should have 0 specific prices
+    And specific price price1 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+      | shop                  | testShop            |
+      | currency              | usd                 |
+      | country               | UnitedStates        |
+      | group                 | visitor             |
+      | customer              | testCustomer        |
+    When I add a specific price price2 to product product1 with following details:
+      | reduction type  | amount       |
+      | reduction value | 12.56        |
+      | includes tax    | true         |
+      | price           | 45.78        |
+      | from quantity   | 1            |
+      | shop            | testShop     |
+      | currency        | usd          |
+      | country         | UnitedStates |
+      | group           | visitor      |
+      | customer        | testCustomer |
+    Then I should get error that identical specific price already exists for product

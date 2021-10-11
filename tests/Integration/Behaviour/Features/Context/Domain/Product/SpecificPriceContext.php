@@ -218,6 +218,17 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then I should get error that identical specific price already exists for product
+     */
+    public function assertLastErrorIsSpecificPriceNotUnique(): void
+    {
+        $this->assertLastErrorIs(
+            SpecificPriceConstraintException::class,
+            SpecificPriceConstraintException::NOT_UNIQUE_PER_PRODUCT
+        );
+    }
+
+    /**
      * @param string $fieldName
      *
      * @return int
