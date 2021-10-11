@@ -89,8 +89,7 @@ class PermissionController extends FrameworkBundleAdminController
                     $request->request->getInt('profile_id'),
                     $request->request->getInt('tab_id'),
                     $request->request->get('permission'),
-                    $request->request->getBoolean('expected_status'),
-                    $request->request->getBoolean('from_parent')
+                    $request->request->getBoolean('is_active')
                 )
             );
 
@@ -125,7 +124,7 @@ class PermissionController extends FrameworkBundleAdminController
                     $request->request->getInt('profile_id'),
                     $request->request->getInt('id_module'),
                     $request->request->get('permission'),
-                    $request->request->getBoolean('expected_status')
+                    $request->request->getBoolean('is_active')
                 )
             );
 

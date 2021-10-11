@@ -270,7 +270,7 @@
         if (sendRequest === true) {
           const params: Record<string, any> = {
             permission: type,
-            expected_status: this.permissionValues.includes(type),
+            is_active: this.permissionValues.includes(type),
           };
 
           params[this.permissionKey] = this.permission[this.permissionKey] !== undefined
