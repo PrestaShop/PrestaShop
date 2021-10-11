@@ -307,8 +307,8 @@ function setPreviousYear() {
   $('#date-end-compare').val(endDate.format($('#date-start').data('date-format')));
 }
 
-var datepickerStart;
-var datepickerEnd;
+let datepickerStart;
+let datepickerEnd;
 
 $(document).ready(() => {
   // Instanciate datepickers
