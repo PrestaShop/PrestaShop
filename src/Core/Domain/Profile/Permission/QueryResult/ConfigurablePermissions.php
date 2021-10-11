@@ -63,11 +63,6 @@ class ConfigurablePermissions
     private $permissions;
 
     /**
-     * @var array
-     */
-    private $permissionIds;
-
-    /**
      * @var int
      */
     private $employeeProfileId;
@@ -84,7 +79,6 @@ class ConfigurablePermissions
      * @param array $tabs
      * @param array $bulkConfiguration
      * @param string[] $permissions
-     * @param int[] $permissionIds
      * @param int $employeeProfileId
      * @param bool $hasEmployeeEditPermission
      */
@@ -95,7 +89,6 @@ class ConfigurablePermissions
         array $tabs,
         array $bulkConfiguration,
         array $permissions,
-        array $permissionIds,
         int $employeeProfileId,
         bool $hasEmployeeEditPermission
     ) {
@@ -105,7 +98,6 @@ class ConfigurablePermissions
         $this->bulkConfiguration = $bulkConfiguration;
         $this->profilePermissionsForModules = $profilePermissionsForModules;
         $this->permissions = $permissions;
-        $this->permissionIds = $permissionIds;
         $this->employeeProfileId = $employeeProfileId;
         $this->hasEmployeeEditPermission = $hasEmployeeEditPermission;
     }
@@ -198,14 +190,6 @@ class ConfigurablePermissions
     public function getPermissions(): array
     {
         return $this->permissions;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPermissionIds(): array
-    {
-        return $this->permissionIds;
     }
 
     /**

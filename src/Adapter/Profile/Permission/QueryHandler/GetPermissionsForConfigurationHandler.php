@@ -101,7 +101,6 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
         $tabPermissionsForProfiles = $this->getTabPermissionsForProfiles($profiles);
         $modulePermissionsForProfiles = $this->getModulePermissionsForProfiles($profiles);
 
-        $permissionIds = array_flip(Permission::SUPPORTED_PERMISSIONS);
         $employeeProfileId = $query->getEmployeeProfileId()->getValue();
         $canEmployeeEditPermissions = $this->authorizationChecker->isGranted(PageVoter::UPDATE, 'AdminAccess');
 
@@ -121,7 +120,6 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
             $tabs,
             $bulkConfigurationPermissions,
             $permissions,
-            $permissionIds,
             $employeeProfileId,
             $canEmployeeEditPermissions
         );
