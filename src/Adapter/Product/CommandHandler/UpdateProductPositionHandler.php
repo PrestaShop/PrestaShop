@@ -44,7 +44,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 final class UpdateProductPositionHandler implements UpdateProductPositionHandlerInterface
 {
     /**
-     * @var PositionDefinitionInterface
+     * @var PositionDefinition
      */
     private $positionDefinition;
 
