@@ -46,12 +46,9 @@ export default function categoryTree(categoryTreeSelector: string, settings: str
         $categoryTree.find('li').has('ul').removeClass('less').addClass('more');
         break;
       default:
-        throw 'Unknown method';
+        throw new Error('Unknown method');
     }
-  }
-
-  // initialize tree
-  else {
+  } else {
     const clickHandler = function (event: any) {
       let $ui = $(event.target);
 
