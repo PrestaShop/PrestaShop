@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Exception\InvalidPermissionValueException;
+
 class Permission
 {
     const VIEW = 'view';
@@ -54,6 +56,8 @@ class Permission
      */
     public function __construct(string $permission)
     {
+        $this->assertPermissionIsSupported($permission);
+
         $this->permission = $permission;
     }
 
@@ -63,5 +67,14 @@ class Permission
     public function getValue(): string
     {
         return $this->permission;
+    }
+
+    protected function assertPermissionIsSupported(string $permission): void
+    {
+        if (!in_array($permission, static::SUPPORTED_PERMISSIONS)) {
+            throw new InvalidPermissionValueException(
+                sprintf('Invalid permission "%s" provided', $permission)
+            );
+        }
     }
 }
