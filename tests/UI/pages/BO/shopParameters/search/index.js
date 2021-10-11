@@ -17,7 +17,7 @@ class Search extends BOBasePage {
     this.pageTitle = 'Search •';
     this.successfulCreationMessage = 'Successful creation';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
-    this.successfulUpdateMessage = 'The settings have been successfully updated.';
+    this.successfulUpdateMessage = 'Update successful';
 
     // Selectors
     // Header links
