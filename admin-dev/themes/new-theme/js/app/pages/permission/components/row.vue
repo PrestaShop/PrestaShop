@@ -26,7 +26,7 @@
   <div>
     <div
       :class="{parent, 'bg-light': parent}"
-      class="row permission-row"
+      class="d-flex flex-wrap permission-row"
     >
       <div class="col-4">
         <span v-html="displayLevelDepth" />
@@ -38,7 +38,7 @@
         </template>
       </div>
 
-      <div class="col-8 row">
+      <div class="col-8 d-flex flex-wrap">
         <div
           class="text-center"
           :class="getClasses(types, index === 0)"
