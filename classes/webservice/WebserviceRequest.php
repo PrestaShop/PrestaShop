@@ -1220,7 +1220,11 @@ class WebserviceRequestCore
                                     if (isset($this->resourceConfiguration['retrieveData']['tableAlias'])) {
                                         $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param, $this->resourceConfiguration['retrieveData']['tableAlias'] . '.');
                                     } else {
-                                        $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param);
+                                        if ($field != 'ean13' && isset($this->resourceConfiguration['retrieveData']['table']) && $this->resourceConfiguration['retrieveData']['table']=='product' && Shop::isFeatureActive() && (isset($this->urlFragments['id_shop']) && !is_null($this->urlFragments['id_shop']))) {
+                                            $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param,'multi_shop_product');
+                                        }else{
+                                            $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param);
+                                        }
                                     }
                                 }
                             }
