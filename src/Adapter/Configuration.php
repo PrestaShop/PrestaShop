@@ -255,7 +255,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @param string $key
      *
-     * @return $this
+     * @return self
      */
     public function remove($key): ShopConfigurationInterface
     {
