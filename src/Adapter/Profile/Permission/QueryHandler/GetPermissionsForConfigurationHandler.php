@@ -175,18 +175,18 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
             }
 
             // Don't allow permissions for undefined parents
-            if ($tab['id_parent'] === '-1') {
+            if ((int) $tab['id_parent'] === -1) {
                 continue;
             }
 
-            if (in_array($tab['id_tab'], $nonConfigurableTabs)) {
+            if (in_array((int) $tab['id_tab'], $nonConfigurableTabs)) {
                 continue;
             }
 
             $this->whitelist[] = $tab['id_tab'];
             $tabs[] = [
-                'id' => $tab['id_tab'],
-                'id_parent' => $tab['id_parent'],
+                'id' => (int) $tab['id_tab'],
+                'id_parent' => (int) $tab['id_parent'],
                 'name' => $tab['name'],
             ];
         }
