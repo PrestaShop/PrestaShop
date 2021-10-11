@@ -45,7 +45,7 @@ class ConfigCommand extends Command
     const RET_INVALID_ACTION = 1;
     const RET_VALUE_REQUIRED = 2;
     const RET_FAILED_SET = 3;
-    const RET_FAILED_DEL = 4;
+    const RET_FAILED_REMOVE = 4;
     const RET_INVALID_OPTIONS = 5;
     const RET_FAILED_SHOPCONSTRAINT = 6;
     const RET_LANG_REQUIRED = 7;
@@ -53,7 +53,7 @@ class ConfigCommand extends Command
     private $allowedActions = [
         'get',
         'set',
-        'delete',
+        'remove',
     ];
 
     /**
@@ -332,9 +332,9 @@ class ConfigCommand extends Command
     }
 
     /**
-     * Delete one configuration value
+     * Remove one configuration value
      */
-    private function delete()
+    private function remove()
     {
         $key = $this->input->getArgument('key');
         // this will give the user at least some backup
@@ -346,13 +346,13 @@ class ConfigCommand extends Command
             $msg = $e->getMessage();
             $this->displayMessage(
                 $this->translator->trans(
-                    'Failed deleting: %msg%',
+                    'Failed removing: %msg%',
                     ['%msg%' => $msg],
                     'Admin.Command.Notification'
                 ),
                 'error'
             );
-            exit(self::RET_FAILED_DEL);
+            exit(self::RET_FAILED_REMOVE);
         }
 
         $this->output->writeln(
