@@ -4,11 +4,16 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 const productPage = require('@pages/FO/product');
 
@@ -16,11 +21,7 @@ const productPage = require('@pages/FO/product');
 const {Products} = require('@data/demo/products');
 const {Attributes} = require('@data/demo/attributes');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_seoAndUrls_displayAttributesInProductMetaTitle';
-
 
 let browserContext;
 let page;
@@ -40,7 +41,7 @@ describe('Enable/Disable display attributes in product meta title', async () => 
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop parameters > SEO and Urls\' page', async function () {
+  it('should go to \'Shop Parameters > Traffic & SEO\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSeoAndUrlsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
