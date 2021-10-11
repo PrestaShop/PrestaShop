@@ -53,7 +53,7 @@ final class UpdateTabPermissionsHandler implements UpdateTabPermissionsHandlerIn
                 $command->getProfileId()->getValue(),
                 $command->getTabId()->getValue(),
                 $command->getPermission()->getValue(),
-                $command->hasPermission(),
+                $command->isActive(),
                 false // Do not apply to all children
             );
         } catch (Exception $e) {

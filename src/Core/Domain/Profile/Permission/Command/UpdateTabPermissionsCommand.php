@@ -55,20 +55,20 @@ class UpdateTabPermissionsCommand
     /**
      * @var bool
      */
-    private $hasPermission;
+    private $isActive;
 
     /**
      * @param int $profileId
      * @param int $tabId
      * @param string $permission
-     * @param bool $hasPermission
+     * @param bool $isActive
      */
-    public function __construct(int $profileId, int $tabId, string $permission, bool $hasPermission)
+    public function __construct(int $profileId, int $tabId, string $permission, bool $isActive)
     {
         $this->profileId = new ProfileId($profileId);
         $this->tabId = new TabId($tabId);
         $this->permission = new Permission($permission);
-        $this->hasPermission = $hasPermission;
+        $this->isActive = $isActive;
     }
 
     /**
@@ -98,8 +98,8 @@ class UpdateTabPermissionsCommand
     /**
      * @return bool
      */
-    public function hasPermission(): bool
+    public function isActive(): bool
     {
-        return $this->hasPermission;
+        return $this->isActive;
     }
 }
