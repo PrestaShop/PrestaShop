@@ -249,7 +249,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         $combinationId = (int) $specificPrice->id_product_attribute;
 
         try {
-            $alreadyExists = SpecificPrice::exists(
+            $alreadyExistingId = (int) SpecificPrice::exists(
                 $productId,
                 $combinationId,
                 $specificPrice->id_shop,
@@ -263,13 +263,14 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
             );
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                'Something went wrong when checking specific price uniqueness',
+                'Something went wrong when checking if specific price is unique',
                 0,
                 $e->getPrevious()
             );
         }
 
-        if ($alreadyExists) {
+        // It is valid if its the same specific price that we are updating
+        if ($alreadyExistingId && $alreadyExistingId !== (int) $specificPrice->id) {
             throw new SpecificPriceConstraintException(
                 sprintf(
                     'Identical specific price already exists for product "%d" and combination "%d',

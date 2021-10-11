@@ -347,11 +347,11 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @param DateTimeInterface|null $dateTimeFrom
+     * @param DateTimeInterface $dateTimeFrom
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setDateTimeFrom(?DateTimeInterface $dateTimeFrom): self
+    public function setDateTimeFrom(DateTimeInterface $dateTimeFrom): self
     {
         $this->dateTimeFrom = $dateTimeFrom;
 
@@ -367,11 +367,11 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @param DateTimeInterface|null $dateTimeTo
+     * @param DateTimeInterface $dateTimeTo
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setDateTimeTo(?DateTimeInterface $dateTimeTo): self
+    public function setDateTimeTo(DateTimeInterface $dateTimeTo): self
     {
         $this->dateTimeTo = $dateTimeTo;
 
