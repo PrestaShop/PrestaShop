@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShopBundle\Exception\NotImplementedException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputArgument;
@@ -44,14 +45,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ConfigCommand extends Command
 {
     // return values
-    private const RET_OK = 0;
-    private const RET_INVALID_ACTION = 1;
-    private const RET_VALUE_REQUIRED = 2;
-    private const RET_FAILED_SET = 3;
-    private const RET_FAILED_REMOVE = 4;
-    private const RET_INVALID_OPTIONS = 5;
-    private const RET_FAILED_SHOPCONSTRAINT = 6;
-    private const RET_LANG_REQUIRED = 7;
+    private const STATUS_OK = 0;
+    private const STATUS_INVALID_ACTION = 1;
+    private const STATUS_VALUE_REQUIRED = 2;
+    private const STATUS_FAILED_SET = 3;
+    private const STATUS_FAILED_REMOVE = 4;
+    private const STATUS_INVALID_OPTIONS = 5;
+    private const STATUS_FAILED_SHOPCONSTRAINT = 6;
+    private const STATUS_LANG_REQUIRED = 7;
+    private const STATUS_NOT_IMPLEMENTED = 8;
+    private const STATUS_ERROR = 9;
 
     private $allowedActions = [
         'get',
@@ -122,13 +125,13 @@ class ConfigCommand extends Command
         $this->idLang = null;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('prestashop:config')
             ->setDescription('Manage your configuration via command line')
             ->addArgument('action', InputArgument::REQUIRED, sprintf('Action to execute (Allowed actions: %s).', implode(' / ', $this->allowedActions)))
-            ->addArgument('key', InputArgument::REQUIRED, 'Configuration key')
+            ->addArgument('key', InputArgument::REQUIRED, 'Configuration key. Key can also use wildcards. To get all Prestashop configuration keys and values use `PS_*`')
 
             ->addOption('value', 'val', InputArgument::OPTIONAL, 'value to set', null)
 
@@ -138,7 +141,7 @@ class ConfigCommand extends Command
             ;
     }
 
-    protected function init(InputInterface $input, OutputInterface $output)
+    protected function init(InputInterface $input, OutputInterface $output): void
     {
         $this->formatter = $this->getHelper('formatter');
         $this->input = $input;
@@ -158,7 +161,7 @@ class ConfigCommand extends Command
                 ['%actions%' => implode(' / ', $this->allowedActions)],
                 'Admin.Command.Notification'
             );
-            throw new Exception($msg, self::RET_INVALID_ACTION);
+            throw new Exception($msg, self::STATUS_INVALID_ACTION);
         }
 
         $this->action = $action;
@@ -179,15 +182,15 @@ class ConfigCommand extends Command
                 [],
                 'Admin.Command.Notification'
             );
-            throw new Exception($msg, self::RET_INVALID_OPTIONS);
+            throw new Exception($msg, self::STATUS_INVALID_OPTIONS);
         }
         // init shopConstraint
         // TODO: this should check that shopId and shopGroupId are valid
         try {
             if ($this->input->getOption('shopGroupId')) {
-                $this->shopConstraint = ShopConstraint::shopGroup($this->input->getOption('shopGroupId'));
+                $this->shopConstraint = ShopConstraint::shopGroup((int) $this->input->getOption('shopGroupId'));
             } elseif ($this->input->getOption('shopId')) {
-                $this->shopConstraint = ShopConstraint::shop($this->input->getOption('shopId'));
+                $this->shopConstraint = ShopConstraint::shop((int) $this->input->getOption('shopId'));
             } else {
                 $this->shopConstraint = ShopConstraint::allShops();
             }
@@ -197,7 +200,7 @@ class ConfigCommand extends Command
                 ['%msg%' => $e->getMessage()],
                 'Admin.Command.Notification'
             );
-            throw new Exception($msg, self::RET_INVALID_OPTIONS);
+            throw new Exception($msg, self::STATUS_FAILED_SHOPCONSTRAINT);
         }
     }
 
@@ -233,7 +236,7 @@ class ConfigCommand extends Command
                 [],
                 'Admin.Command.Notification'
             );
-            throw new Exception($msg, self::RET_INVALID_OPTIONS);
+            throw new Exception($msg, self::STATUS_INVALID_OPTIONS);
         }
 
         $this->idLang = (int) $found['id_lang'];
@@ -242,32 +245,67 @@ class ConfigCommand extends Command
     /**
      * Get and print out one configuration value
      */
-    private function get()
+    private function get(): void
     {
         $key = $this->input->getArgument('key');
-        $value = $this->configuration->get($key, null, $this->shopConstraint);
 
-        // non language values will be just strings
-        // but for language dependant values the response is an array
-        if (is_array($value)) {
+        if (strpos($key, '*') !== false) {
             if (!$this->idLang) {
                 $msg = $this->translator->trans(
-                    '%key% is language dependant, --lang option is required',
-                    ['%key%' => $key],
+                    'Using wildcards is language dependant, --lang option is required',
+                    [],
                     'Admin.Command.Notification'
                 );
-                throw new Exception($msg, self::RET_LANG_REQUIRED);
+                throw new Exception($msg, self::STATUS_LANG_REQUIRED);
             }
-            $value = $value[$this->idLang];
+            try {
+                $keys = array_filter($this->configuration->keys(), function ($v) use ($key) {
+                    return fnmatch($key, $v);
+                });
+            } catch (NotImplementedException $e) {
+                $msg = $this->translator->trans(
+                    'Not implemented yet',
+                    [],
+                    'Admin.Command.Notification'
+                );
+                throw new Exception($msg, self::STATUS_NOT_IMPLEMENTED);
+            } catch (Exception $e) {
+                $msg = $this->translator->trans(
+                    'Could not load all configuration keys: %msg%',
+                    ['%msg%' => $e->getMessage()],
+                    'Admin.Command.Notification'
+                );
+                throw new Exception($msg, self::STATUS_ERROR);
+            }
+        } else {
+            $keys[] = $key;
         }
 
-        $this->output->writeln(
-            $this->translator->trans(
-                '%key%="%value%"',
-                ['%key%' => $key, '%value%' => $value],
-                'Admin.Command.Notification'
-            )
-        );
+        foreach ($keys as $key) {
+            $value = $this->configuration->get($key, null, $this->shopConstraint);
+
+            // non language values will be just strings
+            // but for language dependant values the response is an array
+            if (is_array($value)) {
+                if (!$this->idLang) {
+                    $msg = $this->translator->trans(
+                        '%key% is language dependant, --lang option is required',
+                        ['%key%' => $key],
+                        'Admin.Command.Notification'
+                    );
+                    throw new Exception($msg, self::STATUS_LANG_REQUIRED);
+                }
+                $value = $value[$this->idLang];
+            }
+
+            $this->output->writeln(
+                $this->translator->trans(
+                    '%key%="%value%"',
+                    ['%key%' => $key, '%value%' => $value],
+                    'Admin.Command.Notification'
+                )
+            );
+        }
     }
 
     /**
@@ -285,7 +323,7 @@ class ConfigCommand extends Command
                 [],
                 'Admin.Command.Notification'
             );
-            throw new Exception($msg, self::RET_VALUE_REQUIRED);
+            throw new Exception($msg, self::STATUS_VALUE_REQUIRED);
         }
 
         // make the value language array if lang is set
@@ -304,7 +342,7 @@ class ConfigCommand extends Command
                 ['%msg%' => $e->getMessage()],
                 'Admin.Command.Notification'
             );
-            throw new Exception($msg, self::RET_FAILED_SET);
+            throw new Exception($msg, self::STATUS_FAILED_SET);
         }
 
         $this->get();
@@ -313,7 +351,7 @@ class ConfigCommand extends Command
     /**
      * Remove one configuration value
      */
-    private function remove()
+    private function remove(): void
     {
         $key = $this->input->getArgument('key');
 
@@ -331,7 +369,7 @@ class ConfigCommand extends Command
                 ['%msg%' => $msg],
                 'Admin.Command.Notification'
             );
-            throw new Exception($msg, self::RET_FAILED_REMOVE);
+            throw new Exception($msg, self::STATUS_FAILED_REMOVE);
         }
 
         $this->output->writeln(
@@ -357,7 +395,7 @@ class ConfigCommand extends Command
             return $e->getCode();
         }
 
-        return self::RET_OK;
+        return self::STATUS_OK;
     }
 
     /**

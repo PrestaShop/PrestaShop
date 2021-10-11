@@ -65,4 +65,11 @@ interface ShopConfigurationInterface extends ConfigurationInterface
      * @return ShopConfigurationInterface
      */
     public function remove($key);
+
+    /**
+     * Get all configuration keys
+     *
+     * @return array
+     */
+    public function keys();
 }
