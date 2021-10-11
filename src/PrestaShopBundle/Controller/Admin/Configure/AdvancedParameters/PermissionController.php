@@ -95,11 +95,13 @@ class PermissionController extends FrameworkBundleAdminController
             );
 
             $response['success'] = true;
+            $responseCode = Response::HTTP_OK;
         } catch (ProfileException $e) {
             $response['success'] = false;
+            $responseCode = Response::HTTP_BAD_REQUEST;
         }
 
-        return $this->json($response);
+        return $this->json($response, $responseCode);
     }
 
     /**
@@ -128,10 +130,12 @@ class PermissionController extends FrameworkBundleAdminController
             );
 
             $response['success'] = true;
+            $responseCode = Response::HTTP_OK;
         } catch (ProfileException $e) {
             $response['success'] = false;
+            $responseCode = Response::HTTP_BAD_REQUEST;
         }
 
-        return $this->json($response);
+        return $this->json($response, $responseCode);
     }
 }
