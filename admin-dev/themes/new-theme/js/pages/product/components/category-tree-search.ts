@@ -26,70 +26,70 @@
 const {$} = window;
 
 export default function categoryTree(categoryTreeSelector: string, settings: string | null = null) {
-    const $categoryTree = $(categoryTreeSelector);
-    const isMethodCall = (typeof settings === 'string'); // is this a method call like $().categorytree("unselect")
-    const returnValue = $categoryTree;
-    document.getElementsByClassName("topnav");
-    // if a method call execute the method on all selected instances
-    if (isMethodCall) {
-      switch (settings) {
-        case 'unselect':
-          $categoryTree.find('.radio > label > input:radio').prop('checked', false);
-          // TODO: add a callback method feature?
-          break;
-        case 'unfold':
-          $categoryTree.find('ul').show();
-          $categoryTree.find('li').has('ul').removeClass('more').addClass('less');
-          break;
-        case 'fold':
-          $categoryTree.find('ul ul').hide();
-          $categoryTree.find('li').has('ul').removeClass('less').addClass('more');
-          break;
-        default:
-          // eslint-disable-next-line
-          throw 'Unknown method';
+  const $categoryTree = $(categoryTreeSelector);
+  const isMethodCall = (typeof settings === 'string'); // is this a method call like $().categorytree("unselect")
+  const returnValue = $categoryTree;
+  document.getElementsByClassName("topnav");
+  // if a method call execute the method on all selected instances
+  if (isMethodCall) {
+    switch (settings) {
+      case 'unselect':
+        $categoryTree.find('.radio > label > input:radio').prop('checked', false);
+        // TODO: add a callback method feature?
+        break;
+      case 'unfold':
+        $categoryTree.find('ul').show();
+        $categoryTree.find('li').has('ul').removeClass('more').addClass('less');
+        break;
+      case 'fold':
+        $categoryTree.find('ul ul').hide();
+        $categoryTree.find('li').has('ul').removeClass('less').addClass('more');
+        break;
+      default:
+        // eslint-disable-next-line
+        throw 'Unknown method';
+    }
+
+    // eslint-disable-next-line
+  }
+
+  // initialize tree
+  else {
+    const clickHandler = function (event: any) {
+      let $ui = $(event.target);
+
+      if ($ui.attr('type') === 'radio' || $ui.attr('type') === 'checkbox') {
+        return;
+      }
+      event.stopPropagation();
+
+      if ($ui.next('ul').length === 0) {
+        $ui = $ui.parent();
+      }
+
+      $ui.next('ul').toggle();
+      if ($ui.next('ul').is(':visible')) {
+        $ui.parent('li').removeClass('more').addClass('less');
+      } else {
+        $ui.parent('li').removeClass('less').addClass('more');
       }
 
       // eslint-disable-next-line
-    }
+      return false;
+    };
+    $categoryTree.find('li > ul').each((i:any, item:any) => {
+      const $inputWrapper = $(item).prev('div');
+      $inputWrapper.on('click', clickHandler);
+      $inputWrapper.find('label').on('click', clickHandler);
 
-    // initialize tree
-    else {
-      const clickHandler = function (event: any) {
-        let $ui = $(event.target);
-
-        if ($ui.attr('type') === 'radio' || $ui.attr('type') === 'checkbox') {
-          return;
-        }
-        event.stopPropagation();
-
-        if ($ui.next('ul').length === 0) {
-          $ui = $ui.parent();
-        }
-
-        $ui.next('ul').toggle();
-        if ($ui.next('ul').is(':visible')) {
-          $ui.parent('li').removeClass('more').addClass('less');
-        } else {
-          $ui.parent('li').removeClass('less').addClass('more');
-        }
-
-        // eslint-disable-next-line
-        return false;
-      };
-      $categoryTree.find('li > ul').each((i:any, item:any) => {
-        const $inputWrapper = $(item).prev('div');
-        $inputWrapper.on('click', clickHandler);
-        $inputWrapper.find('label').on('click', clickHandler);
-
-        if ($(item).is(':visible')) {
-          $(item).parent('li').removeClass('more').addClass('less');
-        } else {
-          $(item).parent('li').removeClass('less').addClass('more');
-        }
-      });
-    }
-    // return the jquery selection (or if it was a method call that returned a value - the returned value)
-    return returnValue;
+      if ($(item).is(':visible')) {
+        $(item).parent('li').removeClass('more').addClass('less');
+      } else {
+        $(item).parent('li').removeClass('less').addClass('more');
+      }
+    });
+  }
+  // return the jquery selection (or if it was a method call that returned a value - the returned value)
+  return returnValue;
 };
 
