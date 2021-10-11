@@ -51,7 +51,7 @@ final class UpdateTabPermissionsHandler implements UpdateTabPermissionsHandlerIn
         try {
             $result = $access->updateLgcAccess(
                 $command->getProfileId()->getValue(),
-                $command->getTabId(),
+                $command->getTabId()->getValue(),
                 $command->getPermission()->getValue(),
                 $command->hasPermission(),
                 false // Do not apply to all children
