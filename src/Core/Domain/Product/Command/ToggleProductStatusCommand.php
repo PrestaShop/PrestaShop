@@ -63,7 +63,7 @@ class ToggleProductStatusCommand
     }
 
     /**
-     * @param bool $expectedStatus
+     * @return bool
      */
     public function getExpectedStatus(): bool
     {

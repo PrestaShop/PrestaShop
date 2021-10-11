@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPosit
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 
@@ -58,7 +59,7 @@ final class UpdateProductPositionHandler implements UpdateProductPositionHandler
     private $positionUpdater;
 
     public function __construct(
-        PositionDefinitionInterface $positionDefinition,
+        PositionDefinition $positionDefinition,
         PositionUpdateFactoryInterface $positionUpdateFactory,
         GridPositionUpdaterInterface $positionUpdater
     ) {

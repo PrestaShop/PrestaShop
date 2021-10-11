@@ -43,7 +43,7 @@ final class BulkDuplicateProductHandler implements BulkDuplicateProductHandlerIn
     private $productDuplicator;
 
     /**
-     * @param ProductDuplicator $productRepository
+     * @param ProductDuplicator $productDuplicator
      */
     public function __construct(ProductDuplicator $productDuplicator)
     {

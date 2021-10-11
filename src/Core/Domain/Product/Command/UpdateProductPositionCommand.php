@@ -58,7 +58,7 @@ class UpdateProductPositionCommand
     }
 
     /**
-     * @param array $positions
+     * @return array
      */
     public function getPositions(): array
     {
@@ -66,7 +66,7 @@ class UpdateProductPositionCommand
     }
 
     /**
-     * @param CategoryId $categoryId
+     * @return CategoryId
      */
     public function getCategoryId(): CategoryId
     {

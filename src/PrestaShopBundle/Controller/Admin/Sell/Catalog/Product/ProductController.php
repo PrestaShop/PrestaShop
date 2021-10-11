@@ -243,6 +243,7 @@ class ProductController extends FrameworkBundleAdminController
             $url = $productUrlProvider->getUrl($productId, '{friendly-url}');
         } catch (ProductException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            return $this->redirectToRoute('admin_products_v2_index');
         }
 
         return $this->redirect($url);

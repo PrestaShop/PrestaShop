@@ -67,7 +67,7 @@ class BulkToggleProductCommand
     }
 
     /**
-     * @param bool $newStatus
+     * @return bool
      */
     public function getNewStatus(): bool
     {
