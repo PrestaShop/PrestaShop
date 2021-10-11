@@ -171,7 +171,7 @@
         });
 
         const params: Record<string, any> = {
-          expected_status: data.status,
+          is_active: data.status,
           permission: data.updateType,
         };
 

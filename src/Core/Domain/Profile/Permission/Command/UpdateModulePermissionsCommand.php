@@ -55,20 +55,20 @@ class UpdateModulePermissionsCommand
     /**
      * @var bool
      */
-    private $hasPermission;
+    private $isActive;
 
     /**
      * @param int $profileId
      * @param int $moduleId
      * @param string $permission
-     * @param bool $hasPermission
+     * @param bool $isActive
      */
-    public function __construct(int $profileId, int $moduleId, string $permission, bool $hasPermission)
+    public function __construct(int $profileId, int $moduleId, string $permission, bool $isActive)
     {
         $this->profileId = new ProfileId($profileId);
         $this->moduleId = new ModuleId($moduleId);
         $this->permission = new Permission($permission);
-        $this->hasPermission = $hasPermission;
+        $this->isActive = $isActive;
     }
 
     /**
@@ -98,8 +98,8 @@ class UpdateModulePermissionsCommand
     /**
      * @return bool
      */
-    public function hasPermission(): bool
+    public function isActive(): bool
     {
-        return $this->hasPermission;
+        return $this->isActive;
     }
 }
