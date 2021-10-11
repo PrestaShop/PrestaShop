@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Util\ConfigurationVariablesLoader;
 use PrestaShopBundle\Install\Upgrade;
 
 $parametersFilepath = __DIR__  . '/parameters.php';
@@ -43,6 +44,9 @@ if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
 }
 
 if (isset($container) && $container instanceof \Symfony\Component\DependencyInjection\Container) {
+    $configurationVariablesLoader = new ConfigurationVariablesLoader();
+    $parameters = $configurationVariablesLoader->loadEnvVariables($parameters);
+
     foreach ($parameters['parameters'] as $key => $value) {
         $container->setParameter($key, $value);
     }

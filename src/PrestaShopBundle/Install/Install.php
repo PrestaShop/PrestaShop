@@ -60,7 +60,6 @@ use PrestaShop\PrestaShop\Core\Module\ConfigReader as ModuleConfigReader;
 use PrestaShop\PrestaShop\Core\Theme\ConfigReader as ThemeConfigReader;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
-use PrestaShopException;
 use PrestashopInstallerException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
@@ -70,18 +69,6 @@ class Install extends AbstractInstall
     public const SETTINGS_FILE = 'config/settings.inc.php';
     public const BOOTSTRAP_FILE = 'config/bootstrap.php';
     public const DEFAULT_THEME = 'classic';
-
-    private const PARAMETERS_WITH_ENV_VARS = [
-        'database_host' => 'PS_DATABASE_HOST',
-        'database_port' => 'PS_DATABASE_PORT',
-        'database_user' => 'PS_DATABASE_USER',
-        'database_password' => 'PS_DATABASE_PASSWORD',
-        'database_name' => 'PS_DATABASE_NAME',
-        'database_prefix' => 'PS_DATABASE_PREFIX',
-        'database_engine' => 'PS_DATABASE_ENGINE',
-        'cookie_key' => 'PS_COOKIE_KEY',
-        'cookie_iv' => 'PS_COOKIE_IV',
-    ];
 
     protected $logger;
 
@@ -157,10 +144,8 @@ class Install extends AbstractInstall
         $database_password,
         $database_name,
         $database_prefix,
-        $database_engine,
-        bool $useEnvValuesIfExists = false
-    ): bool
-    {
+        $database_engine
+    ) {
         // Check permissions for settings file
         if (
             file_exists(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $this->settingsFile)
@@ -235,7 +220,7 @@ class Install extends AbstractInstall
             return false;
         }
 
-        if (!$this->processParameters($parameters, $useEnvValuesIfExists)) {
+        if (!$this->processParameters($parameters)) {
             return false;
         }
 
@@ -246,26 +231,13 @@ class Install extends AbstractInstall
      * Replace "parameters.yml" with "parameters.php" in "app/config".
      *
      * @param array $parameters
-     * @param bool $useEnvValuesIfExists
-     * @return bool
+     *
+     * @return bool|int
      */
-    public function processParameters(array $parameters, bool $useEnvValuesIfExists = false): bool
+    public function processParameters($parameters)
     {
-        $content = 'array(' . PHP_EOL;
-        $content .= chr(9) . "'parameters' => array(" . PHP_EOL;
-
-        foreach ($parameters['parameters'] as $parameterKey => $parameterValue) {
-            if ($useEnvValuesIfExists && isset(self::PARAMETERS_WITH_ENV_VARS[$parameterKey])) {
-                $content .= chr(9) . chr(9) . "'$parameterKey' => \$ENV['" . self::PARAMETERS_WITH_ENV_VARS[$parameterKey] . "'] ?? " . var_export($parameterValue, true) . ',' . PHP_EOL;
-            } else {
-                $content .= chr(9) . chr(9) . "'$parameterKey' => " . var_export($parameterValue, true) . ',' . PHP_EOL;
-            }
-        }
-
-        $content .= chr(9) . ')' . PHP_EOL;
-        $content .= ')';
-
-        if (!file_put_contents(_PS_ROOT_DIR_ . '/app/config/parameters.php', sprintf('<?php return %s;', $content))) {
+        $parametersContent = sprintf('<?php return %s;', var_export($parameters, true));
+        if (!file_put_contents(_PS_ROOT_DIR_ . '/app/config/parameters.php', $parametersContent)) {
             $this->setError($this->translator->trans('Cannot write app/config/parameters.php file', [], 'Install'));
 
             return false;
