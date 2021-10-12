@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+
 /**
  * Class CategoryCore.
  */
@@ -214,7 +216,7 @@ class CategoryCore extends ObjectModel
         if (!$this->doNotRegenerateNTree) {
             Category::regenerateEntireNtree();
         }
-        // if access group is not set, initialize it with 3 default groups
+        // if access group is not set, initialize it with all groups
         $this->updateGroup(($this->groupBox !== null) ? $this->groupBox : []);
         Hook::exec('actionCategoryAdd', ['category' => $this]);
 
@@ -1732,7 +1734,9 @@ class CategoryCore extends ObjectModel
         }
         $this->cleanGroups();
         if (empty($list)) {
-            $list = [Configuration::get('PS_UNIDENTIFIED_GROUP'), Configuration::get('PS_GUEST_GROUP'), Configuration::get('PS_CUSTOMER_GROUP')];
+            $sfContainer = SymfonyContainer::getInstance();
+            $groupDataProvider = $sfContainer->get('prestashop.adapter.group.group_data_provider');
+            $list = $groupDataProvider->getAllGroupIds();
         }
         $this->addGroups($list);
 
