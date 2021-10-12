@@ -30,8 +30,17 @@ namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Exception\InvalidPermissionValueException;
 
-class Permission implements PermissionInterface
+class ModulePermission implements PermissionInterface
 {
+    const CONFIGURE = 'configure';
+    const UNINSTALL = 'uninstall';
+
+    const SUPPORTED_MODULE_PERMISSIONS = [
+        PermissionInterface::VIEW,
+        self::CONFIGURE,
+        self::UNINSTALL,
+    ];
+
     /**
      * @var string
      */
@@ -57,7 +66,7 @@ class Permission implements PermissionInterface
 
     protected function assertPermissionIsSupported(string $permission): void
     {
-        if (!in_array($permission, PermissionInterface::SUPPORTED_PERMISSIONS)) {
+        if (!in_array($permission, static::SUPPORTED_MODULE_PERMISSIONS)) {
             throw new InvalidPermissionValueException(
                 sprintf('Invalid permission "%s" provided', $permission)
             );

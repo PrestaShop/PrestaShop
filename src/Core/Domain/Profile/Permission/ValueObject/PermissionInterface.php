@@ -28,39 +28,20 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Exception\InvalidPermissionValueException;
-
-class Permission implements PermissionInterface
+interface PermissionInterface
 {
-    /**
-     * @var string
-     */
-    private $permission;
+    const VIEW = 'view';
+    const ADD = 'add';
+    const EDIT = 'edit';
+    const DELETE = 'delete';
+    const ALL = 'all';
 
-    /**
-     * @param string $permission
-     */
-    public function __construct(string $permission)
-    {
-        $this->assertPermissionIsSupported($permission);
+    const SUPPORTED_PERMISSIONS = [
+        self::VIEW,
+        self::ADD,
+        self::EDIT,
+        self::DELETE,
+    ];
 
-        $this->permission = $permission;
-    }
-
-    /**
-     * @return string
-     */
-    public function getValue(): string
-    {
-        return $this->permission;
-    }
-
-    protected function assertPermissionIsSupported(string $permission): void
-    {
-        if (!in_array($permission, PermissionInterface::SUPPORTED_PERMISSIONS)) {
-            throw new InvalidPermissionValueException(
-                sprintf('Invalid permission "%s" provided', $permission)
-            );
-        }
-    }
+    public function getValue(): string;
 }
