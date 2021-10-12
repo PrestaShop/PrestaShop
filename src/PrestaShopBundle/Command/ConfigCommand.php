@@ -216,7 +216,10 @@ class ConfigCommand extends Command
 
         // all languages
         $onlyActive = true;
-        $onlyShopId = is_null($this->shopConstraint->getShopId()) ? $this->shopConstraint->getShopId() : $this->shopConstraint->getShopId()->getValue();
+        $onlyShopId = null;
+        if (!is_null($this->shopConstraint->getShopId())) {
+            $onlyShopId = $this->shopConstraint->getShopId()->getValue();
+        }
         $languages = $this->languageDataProvider->getLanguages($onlyActive, $onlyShopId);
 
         if (is_numeric($inputlang)) {
@@ -358,7 +361,9 @@ class ConfigCommand extends Command
         try {
             // remove does not support removing only one language, use default
             // lang if not defined
-            $this->idLang = $this->configuration->get('PS_LANG_DEFAULT');
+            if (!$this->idLang) {
+                $this->idLang = $this->configuration->get('PS_LANG_DEFAULT');
+            }
             // this will give the user at least some backup
             $this->get();
             $this->configuration->remove($key);
