@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPri
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetEditableSpecificPricesListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
+use PrestaShop\PrestaShop\Core\Product\Combination\CombinationNameInfo;
 use PrestaShop\PrestaShop\Core\Product\Combination\CombinationNameBuilderInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
@@ -110,17 +111,9 @@ class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandle
 
         $specificPricesForListing = [];
         foreach ($specificPrices as $specificPrice) {
-            $customerName = null;
-            if ((int) $specificPrice['id_customer']) {
-                $customerName = sprintf('%s %s', $specificPrice['customer_firstname'], $specificPrice['customer_lastname']);
-            }
-
             $combinationId = (int) $specificPrice['id_product_attribute'];
             if ($combinationId && !isset($attributesInfo[$combinationId])) {
-                throw new CombinationException(sprintf(
-                    'Attributes information was not fetched for combination "%s"',
-                    $combinationId
-                ));
+                throw new CombinationException(sprintf('Failed to fetch combination "%d" info.', $combinationId));
             }
 
             $specificPricesForListing[] = new SpecificPriceForListing(
@@ -132,16 +125,49 @@ class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandle
                 (int) $specificPrice['from_quantity'],
                 DateTimeUtil::buildNullableDateTime($specificPrice['from']),
                 DateTimeUtil::buildNullableDateTime($specificPrice['to']),
-                $combinationId ? $this->combinationNameBuilder->buildName($attributesInfo[$combinationId]) : null,
+                $combinationId ? $this->buildCombinationName($attributesInfo[$combinationId]) : null,
                 $specificPrice['shop_name'],
                 $specificPrice['currency_name'],
                 $specificPrice['country_name'],
                 $specificPrice['group_name'],
-                $customerName
+                $this->buildCustomerFullName($specificPrice)
             );
         }
 
         return $specificPricesForListing;
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $combinationAttributesInfo
+     *
+     * @return string
+     */
+    private function buildCombinationName(array $combinationAttributesInfo): string
+    {
+        $combinationsInfo = [];
+        foreach ($combinationAttributesInfo as $attributeInfo) {
+            $combinationsInfo[] = new CombinationNameInfo(
+                $attributeInfo['attribute_name'],
+                $attributeInfo['attribute_group_name']
+            );
+        }
+
+        return $this->combinationNameBuilder->buildName($combinationsInfo);
+    }
+
+    /**
+     * @param array<string, string|null> $specificPrice
+     *
+     * @return string|null
+     */
+    private function buildCustomerFullName(array $specificPrice): ?string
+    {
+        $customerName = null;
+        if ((int) $specificPrice['id_customer']) {
+            $customerName = sprintf('%s %s', $specificPrice['customer_firstname'], $specificPrice['customer_lastname']);
+        }
+
+        return $customerName;
     }
 
     /**
