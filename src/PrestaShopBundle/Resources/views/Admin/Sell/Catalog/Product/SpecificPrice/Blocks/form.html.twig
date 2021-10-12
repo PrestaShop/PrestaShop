@@ -30,7 +30,9 @@
 {% endblock %}
 
 {% block specific_price_form %}
-  {{ form_start(specificPriceForm, {'attr': {'data-specific-price-id': specificPriceId|default('')}}) }}
+  {{ form_start(specificPriceForm, {'attr': {
+    'data-after-submit': afterSubmit|default(false)
+  }}) }}
   <div class="card">
     <h3 class="card-header">
       <i class="material-icons">attach_money</i>
