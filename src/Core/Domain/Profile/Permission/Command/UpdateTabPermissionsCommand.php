@@ -30,7 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\Permission;
 use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
+use PrestaShop\PrestaShop\Core\Domain\Tab\ValueObject\AllTab;
 use PrestaShop\PrestaShop\Core\Domain\Tab\ValueObject\TabId;
+use PrestaShop\PrestaShop\Core\Domain\Tab\ValueObject\TabIdInterface;
 
 /**
  * Updates tab permissions for employee's profile
@@ -66,7 +68,7 @@ class UpdateTabPermissionsCommand
     public function __construct(int $profileId, int $tabId, string $permission, bool $isActive)
     {
         $this->profileId = new ProfileId($profileId);
-        $this->tabId = new TabId($tabId);
+        $this->tabId = $tabId === AllTab::ALL_TAB_ID ? new AllTab() : new TabId($tabId);
         $this->permission = new Permission($permission);
         $this->isActive = $isActive;
     }
@@ -82,7 +84,7 @@ class UpdateTabPermissionsCommand
     /**
      * @return TabId
      */
-    public function getTabId(): TabId
+    public function getTabId(): TabIdInterface
     {
         return $this->tabId;
     }
