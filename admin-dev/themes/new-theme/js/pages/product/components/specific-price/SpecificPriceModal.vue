@@ -157,6 +157,7 @@
       onFrameLoaded() {
         this.applyIframeStyling();
         this.closeAfterSubmit();
+        this.submittingForm = false;
         this.loadingForm = false;
       },
       applyIframeStyling() {
