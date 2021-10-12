@@ -44,7 +44,6 @@ class CombinationNameInfo
      */
     private $attributeGroupName;
 
-
     /**
      * @param string $attributeName
      * @param string $attributeGroupName

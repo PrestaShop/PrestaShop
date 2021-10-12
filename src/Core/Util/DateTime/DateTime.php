@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Util\DateTime;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 use RuntimeException;
 
 /**
@@ -73,6 +74,8 @@ final class DateTime
     }
 
     /**
+     * @param DateTimeInterface|string|null $value
+     *
      * @return bool
      */
     public static function isNull($value): bool
