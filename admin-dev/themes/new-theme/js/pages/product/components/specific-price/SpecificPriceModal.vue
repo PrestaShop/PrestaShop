@@ -34,7 +34,7 @@
           class="specific-price-loading"
           v-if="loadingForm"
         >
-          <div class="spinner" />
+        <div class="spinner" />
         </div>
         <iframe
           ref="iframe"
@@ -122,8 +122,7 @@
         const iframeBody = this.$refs.iframe.contentDocument.body;
         const form = iframeBody.querySelector(SpecificPriceMap.form);
         form.submit();
-        this.submittingForm = true;
-        this.loadingForm = true;
+        this.submittedForm = true;
       },
       watchAddButton() {
         const addButton = this.container.querySelector(SpecificPriceMap.addSpecificPriceBtn);
@@ -157,24 +156,29 @@
       },
       onFrameLoaded() {
         this.applyIframeStyling();
-        const form = this.$refs.iframe.contentDocument.querySelector(SpecificPriceMap.form);
-
-        if (this.openForCreate && form.dataset.specificPriceId) {
-          this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceCreated);
-          this.closeModal();
-        }
-        // if (this.openForUpdate && form.dataset.specificPriceId) {
-        //   this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceUpdated);
-        //   this.closeModal();
-        // }
+        this.closeAfterSubmit();
         this.loadingForm = false;
       },
       applyIframeStyling() {
         this.$refs.iframe.contentDocument.body.style.overflowX = 'hidden';
       },
+      closeAfterSubmit() {
+        const form = this.$refs.iframe.contentDocument.querySelector(SpecificPriceMap.form);
+
+        if (form.dataset.afterSubmit) {
+          if (this.openForCreate) {
+            this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceCreated);
+          }
+          if (this.openForUpdate) {
+            this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceUpdated);
+          }
+          this.closeModal();
+        }
+      },
       closeModal() {
         this.openForCreate = false;
         this.openForUpdate = false;
+        this.submittingForm = false;
       },
     },
   };
