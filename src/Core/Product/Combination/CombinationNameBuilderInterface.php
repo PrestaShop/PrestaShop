@@ -30,11 +30,11 @@ namespace PrestaShop\PrestaShop\Core\Product\Combination;
 interface CombinationNameBuilderInterface
 {
     /**
-     * @todo: some dto instead of array?
+     * Build combination name from related attributes and attribute group names
      *
-     * @param array<int, array<string, string>> $attributesInfo
+     * @param CombinationNameInfo[]
      *
      * @return string
      */
-    public function buildName(array $attributesInfo): string;
+    public function buildName(array $combinationsNameInfo): string;
 }
