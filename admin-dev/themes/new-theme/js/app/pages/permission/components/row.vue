@@ -28,8 +28,10 @@
       :class="{parent, 'bg-light': parent}"
       class="d-flex flex-wrap permission-row"
     >
-      <div class="col-4">
-        <span v-html="displayLevelDepth" />
+      <div
+        class="col-4"
+        :class="`depth-level-${levelDepth}`"
+      >
         &raquo;
 
         <strong v-if="parent">{{ permission.name }}</strong>
@@ -327,3 +329,11 @@
     },
   });
 </script>
+
+<style lang="scss">
+  @for $i from 2 through 5 {
+    .depth-level-#{$i} {
+      padding-left: #{$i}rem;
+    }
+  }
+</style>
