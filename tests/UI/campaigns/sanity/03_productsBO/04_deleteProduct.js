@@ -39,6 +39,7 @@ describe('BO - Catalog - Products : Create Standard product in BO and Delete it 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
+
   // Steps
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);
