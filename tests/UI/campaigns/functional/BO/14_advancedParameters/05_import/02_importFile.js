@@ -5,6 +5,9 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -14,9 +17,6 @@ const attributesPage = require('@pages/BO/catalog/attributes');
 
 // Import Data
 const {SampleFiles} = require('@data/demo/sampleFiles');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_import_importFile';
 
@@ -39,7 +39,7 @@ Import the combinations sample file
 Go to attributes and features page
 Check import success
  */
-describe('Import combinations', async () => {
+describe('BO - Advanced Parameters - Import : Import combinations', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -55,7 +55,7 @@ describe('Import combinations', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to import page', async function () {
+  it('should go to \'Advanced Parameters > Import\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToImportPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -117,7 +117,7 @@ describe('Import combinations', async () => {
   });
 
   describe('Check import success', async () => {
-    it('should go to attributes and features page', async function () {
+    it('should go to \'Catalog > Attributes & Features\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCombinationsPage', baseContext);
 
       await importPage.goToSubMenu(
