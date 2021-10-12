@@ -1757,8 +1757,8 @@ class CategoryCore extends ObjectModel
         $this->cleanGroups();
         if (empty($list)) {
             $sfContainer = SymfonyContainer::getInstance();
-            $goupDataPRovider = $sfContainer->get('prestashop.adapter.group.group_data_provider');
-            $list = $goupDataPRovider->getAllGroupIds();
+            $groupDataProvider = $sfContainer->get('prestashop.adapter.group.group_data_provider');
+            $list = $groupDataProvider->getAllGroupIds();
         }
         $this->addGroups($list);
 
