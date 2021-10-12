@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleId;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\Permission;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ModulePermission;
 use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
 
 /**
@@ -48,7 +48,7 @@ class UpdateModulePermissionsCommand
     private $moduleId;
 
     /**
-     * @var Permission
+     * @var ModulePermission
      */
     private $permission;
 
@@ -67,7 +67,7 @@ class UpdateModulePermissionsCommand
     {
         $this->profileId = new ProfileId($profileId);
         $this->moduleId = new ModuleId($moduleId);
-        $this->permission = new Permission($permission);
+        $this->permission = new ModulePermission($permission);
         $this->isActive = $isActive;
     }
 
@@ -88,9 +88,9 @@ class UpdateModulePermissionsCommand
     }
 
     /**
-     * @return Permission
+     * @return ModulePermission
      */
-    public function getPermission(): Permission
+    public function getPermission(): ModulePermission
     {
         return $this->permission;
     }

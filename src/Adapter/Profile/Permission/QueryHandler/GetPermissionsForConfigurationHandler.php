@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsFor
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\Permission;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\PermissionInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Profile;
 use RuntimeException;
@@ -91,12 +92,6 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     {
         $profiles = $this->getProfilesForPermissionsConfiguration();
         $tabs = $this->getTabsForPermissionsConfiguration();
-        $permissionsToDisplay = [
-            Permission::VIEW,
-            Permission::ADD,
-            Permission::EDIT,
-            Permission::DELETE,
-        ];
 
         $tabPermissionsForProfiles = $this->getTabPermissionsForProfiles($profiles);
         $modulePermissionsForProfiles = $this->getModulePermissionsForProfiles($profiles);
@@ -110,7 +105,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
             $tabPermissionsForProfiles,
             $profiles,
             $tabs,
-            $permissionsToDisplay
+            PermissionInterface::SUPPORTED_PERMISSIONS
         );
 
         return new ConfigurablePermissions(
@@ -119,7 +114,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
             $profiles,
             $tabs,
             $bulkConfigurationPermissions,
-            $permissionsToDisplay,
+            PermissionInterface::SUPPORTED_PERMISSIONS,
             $employeeProfileId,
             $canEmployeeEditPermissions
         );
@@ -267,22 +262,22 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
 
         foreach ($profiles as $profile) {
             $bulkConfiguration[$profile['id']] = [
-                Permission::VIEW => true,
-                Permission::ADD => true,
-                Permission::EDIT => true,
-                Permission::DELETE => true,
-                Permission::ALL => true,
+                PermissionInterface::VIEW => true,
+                PermissionInterface::ADD => true,
+                PermissionInterface::EDIT => true,
+                PermissionInterface::DELETE => true,
+                PermissionInterface::ALL => true,
             ];
 
             // if employee does not have "edit" permission
             // then configuration is disabled
             if (!$hasEmployeeEditPermission) {
                 $bulkConfiguration[$profile['id']] = [
-                    Permission::VIEW => false,
-                    Permission::ADD => false,
-                    Permission::EDIT => false,
-                    Permission::DELETE => false,
-                    Permission::ALL => false,
+                    PermissionInterface::VIEW => false,
+                    PermissionInterface::ADD => false,
+                    PermissionInterface::EDIT => false,
+                    PermissionInterface::DELETE => false,
+                    PermissionInterface::ALL => false,
                 ];
 
                 continue;
@@ -291,8 +286,8 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
             foreach ($tabs as $tab) {
                 foreach ($permissions as $permission) {
                     if (!$profileTabPermissions[$employeeProfileId][$tab['id']][$permission]) {
-                        $bulkConfiguration[$profile['id']][Permission::VIEW] = false;
-                        $bulkConfiguration[$profile['id']][Permission::ALL] = false;
+                        $bulkConfiguration[$profile['id']][PermissionInterface::VIEW] = false;
+                        $bulkConfiguration[$profile['id']][PermissionInterface::ALL] = false;
 
                         break;
                     }
@@ -301,8 +296,8 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
                 foreach ($tab['children'] as $childTab) {
                     foreach ($permissions as $permission) {
                         if (!$profileTabPermissions[$employeeProfileId][$childTab['id']][$permission]) {
-                            $bulkConfiguration[$profile['id']][Permission::ADD] = false;
-                            $bulkConfiguration[$profile['id']][Permission::ALL] = false;
+                            $bulkConfiguration[$profile['id']][PermissionInterface::ADD] = false;
+                            $bulkConfiguration[$profile['id']][PermissionInterface::ALL] = false;
 
                             break;
                         }
@@ -311,8 +306,8 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
                     foreach ($childTab['children'] as $subChild) {
                         foreach ($permissions as $permission) {
                             if (!$profileTabPermissions[$employeeProfileId][$subChild['id']][$permission]) {
-                                $bulkConfiguration[$profile['id']][Permission::EDIT] = false;
-                                $bulkConfiguration[$profile['id']][Permission::ALL] = false;
+                                $bulkConfiguration[$profile['id']][PermissionInterface::EDIT] = false;
+                                $bulkConfiguration[$profile['id']][PermissionInterface::ALL] = false;
 
                                 break;
                             }
@@ -321,8 +316,8 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
                         foreach ($subChild['children'] as $subSubChild) {
                             foreach ($permissions as $permission) {
                                 if (!$profileTabPermissions[$employeeProfileId][$subSubChild['id']][$permission]) {
-                                    $bulkConfiguration[$profile['id']][Permission::DELETE] = false;
-                                    $bulkConfiguration[$profile['id']][Permission::ALL] = false;
+                                    $bulkConfiguration[$profile['id']][PermissionInterface::DELETE] = false;
+                                    $bulkConfiguration[$profile['id']][PermissionInterface::ALL] = false;
 
                                     break;
                                 }
