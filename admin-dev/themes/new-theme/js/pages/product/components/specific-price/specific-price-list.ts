@@ -17,7 +17,6 @@ export default class SpecificPriceList {
     this.productId = productId;
     this.listContainer = document.querySelector(SpecificPriceMap.listContainer) as HTMLElement;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
-    this.renderList();
   }
 
   public renderList(): void {
