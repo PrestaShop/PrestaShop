@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\Permission;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\PermissionInterface;
 
 class ConfigurablePermissions
 {
@@ -133,7 +133,7 @@ class ConfigurablePermissions
      */
     public function isBulkViewConfigurationEnabled(int $profileId): bool
     {
-        return $this->bulkConfiguration[$profileId][Permission::VIEW];
+        return $this->bulkConfiguration[$profileId][PermissionInterface::VIEW];
     }
 
     /**
@@ -143,7 +143,7 @@ class ConfigurablePermissions
      */
     public function isBulkAddConfigurationEnabled(int $profileId): bool
     {
-        return $this->bulkConfiguration[$profileId][Permission::ADD];
+        return $this->bulkConfiguration[$profileId][PermissionInterface::ADD];
     }
 
     /**
@@ -153,7 +153,7 @@ class ConfigurablePermissions
      */
     public function isBulkEditConfigurationEnabled(int $profileId): bool
     {
-        return $this->bulkConfiguration[$profileId][Permission::EDIT];
+        return $this->bulkConfiguration[$profileId][PermissionInterface::EDIT];
     }
 
     /**
@@ -163,7 +163,7 @@ class ConfigurablePermissions
      */
     public function isBulkDeleteConfigurationEnabled(int $profileId): bool
     {
-        return $this->bulkConfiguration[$profileId][Permission::DELETE];
+        return $this->bulkConfiguration[$profileId][PermissionInterface::DELETE];
     }
 
     /**
@@ -173,7 +173,7 @@ class ConfigurablePermissions
      */
     public function isBulkAllConfigurationEnabled(int $profileId): bool
     {
-        return $this->bulkConfiguration[$profileId][Permission::ALL];
+        return $this->bulkConfiguration[$profileId][PermissionInterface::ALL];
     }
 
     /**
