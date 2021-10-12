@@ -44,7 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPr
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
@@ -129,7 +129,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     public function countProductSpecificPrices(string $productReference, int $expectedCount): void
     {
         $productId = (int) $this->getSharedStorage()->get($productReference);
-        /** @var SpecificPriceListForEditing $productSpecificPrices */
+        /** @var SpecificPriceList $productSpecificPrices */
         $productSpecificPrices = $this->getQueryBus()->handle(new GetSpecificPriceList(
             $productId,
             $this->getDefaultLangId()
