@@ -26,17 +26,48 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
-
-interface GetEditableSpecificPricesListHandlerInterface
+/**
+ * Transfer SpecificPrice list data
+ */
+class SpecificPriceList
 {
     /**
-     * @param GetSpecificPriceList $query
-     *
-     * @return SpecificPriceListForEditing
+     * @var SpecificPriceForListing[]
      */
-    public function handle(GetSpecificPriceList $query): SpecificPriceListForEditing;
+    private $specificPrices;
+
+    /**
+     * @var int
+     */
+    private $totalSpecificPricesCount;
+
+    /**
+     * @param SpecificPriceForListing[] $specificPrices
+     * @param int $totalSpecificPricesCount
+     */
+    public function __construct(
+        array $specificPrices,
+        int $totalSpecificPricesCount
+    ) {
+        $this->specificPrices = $specificPrices;
+        $this->totalSpecificPricesCount = $totalSpecificPricesCount;
+    }
+
+    /**
+     * @return SpecificPriceForListing[]
+     */
+    public function getSpecificPrices(): array
+    {
+        return $this->specificPrices;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalSpecificPricesCount(): int
+    {
+        return $this->totalSpecificPricesCount;
+    }
 }
