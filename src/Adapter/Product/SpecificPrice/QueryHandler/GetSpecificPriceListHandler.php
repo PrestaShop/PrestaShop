@@ -34,9 +34,9 @@ use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPrice
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetEditableSpecificPricesListHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetSpecificPriceListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForListing;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameInfo;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
@@ -44,7 +44,7 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 /**
  * Handles @see GetSpecificPriceList using legacy object model
  */
-class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandlerInterface
+class GetSpecificPriceListHandler implements GetSpecificPriceListHandlerInterface
 {
     /**
      * @var SpecificPriceRepository
@@ -79,7 +79,7 @@ class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandle
     /**
      * {@inheritdoc}
      */
-    public function handle(GetSpecificPriceList $query): SpecificPriceListForEditing
+    public function handle(GetSpecificPriceList $query): SpecificPriceList
     {
         $specificPriceData = $this->specificPriceRepository->getProductSpecificPrices(
             $query->getProductId(),
@@ -89,9 +89,9 @@ class GetSpecificPriceListHandler implements GetEditableSpecificPricesListHandle
             $query->getFilters()
         );
 
-        return new SpecificPriceListForEditing(
+        return new SpecificPriceList(
             $this->formatSpecificPricesForListing($specificPriceData, $query->getLanguageId()),
-            $this->specificPriceRepository->getProductSpecificPricesCount(
+            $this->specificPriceRepository->countProductSpecificPrices(
                 $query->getProductId(),
                 $query->getLanguageId(),
                 $query->getFilters()

@@ -32,7 +32,7 @@ use Exception;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -134,7 +134,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         return $this->get('prestashop.core.form.identifiable_object.handler.specific_price_form_handler');
     }
 
-    private function formatSpecificPricesList(SpecificPriceListForEditing $specificPriceListForEditing): array
+    private function formatSpecificPricesList(SpecificPriceList $specificPriceListForEditing): array
     {
         $list = [];
         foreach ($specificPriceListForEditing->getSpecificPrices() as $specificPrice) {
