@@ -32,7 +32,7 @@
       <div class="col">
         <div class="card">
           <div class="card-header">
-            <h3>
+            <h3 id="card-title">
               <i class="material-icons">list</i>
               {{ 'SQL query result'|trans }} ({{ sqlRequestResult.rows|length }})
             </h3>
@@ -40,11 +40,11 @@
             <div class="card-block">
               {% if sqlRequestResult.rows is not empty %}
               <div class="table-responsive">
-                <table class="table">
+                <table id="grid-table" class="table">
                   <thead>
                     <tr>
                       {% for column in sqlRequestResult.columns %}
-                        <th>{{ column }}</th>
+                        <th class="column-{{ column }}-head">{{ column }}</th>
                       {% endfor %}
                     </tr>
                   </thead>
@@ -53,9 +53,9 @@
                     <tr>
                       {% for column in sqlRequestResult.columns %}
                         {% if requestSqlView.attributes[column] is defined %}
-                          <td>{{ requestSqlView.attributes[column] }}</td>
+                          <td class="grid-{{ column }}-value">{{ requestSqlView.attributes[column] }}</td>
                         {% else %}
-                          <td>{{ row[column] }}</td>
+                          <td class="grid-{{ column }}-value">{{ row[column] }}</td>
                         {% endif %}
                       {% endfor %}
                     </tr>

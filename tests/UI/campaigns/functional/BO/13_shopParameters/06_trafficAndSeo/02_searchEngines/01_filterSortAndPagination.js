@@ -4,6 +4,9 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -13,9 +16,6 @@ const searchEnginesPage = require('@pages/BO/shopParameters/trafficAndSeo/search
 
 // Import data
 const {searchEngines} = require('@data/demo/searchEngines');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_trafficAndSeo_searchEngines_filterSortAndPagination';
 
@@ -28,7 +28,7 @@ Filter search engines by id, server and get variable and reset after
 Sort search engines
 Check pagination limit 10 and next/previous links
  */
-describe('Filter, sort and pagination search engines', async () => {
+describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination search engines', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -43,7 +43,7 @@ describe('Filter, sort and pagination search engines', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Seo and Urls\' page', async function () {
+  it('should go to \'Shop Parameters > Traffic & SEO\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSeoAndUrlsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -173,7 +173,7 @@ describe('Filter, sort and pagination search engines', async () => {
   });
 
   describe('Pagination next and previous', async () => {
-    it('should select 20 item by page and check result', async function () {
+    it('should select 20 items by page and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await searchEnginesPage.selectPaginationLimit(page, '20');
@@ -194,7 +194,7 @@ describe('Filter, sort and pagination search engines', async () => {
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
-    it('should change the item number to 50 per page', async function () {
+    it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await searchEnginesPage.selectPaginationLimit(page, '50');

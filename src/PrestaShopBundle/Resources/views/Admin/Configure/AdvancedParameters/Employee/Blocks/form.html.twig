@@ -26,10 +26,6 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
-{% block employee_addons_connect %}
-  {% include '@PrestaShop/Admin/Module/Includes/modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
-{% endblock %}
-
 {% block employee_form %}
   {{ form_start(employeeForm) }}
   <div class="card">

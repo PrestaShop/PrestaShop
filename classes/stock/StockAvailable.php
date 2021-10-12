@@ -174,8 +174,8 @@ class StockAvailableCore extends ObjectModel
 
         // gets warehouse ids grouped by shops
         $ids_warehouse = Warehouse::getWarehousesGroupedByShops();
+        $order_warehouses = [];
         if ($order_id_shop !== null) {
-            $order_warehouses = [];
             $wh = Warehouse::getWarehouses(false, (int) $order_id_shop);
             foreach ($wh as $warehouse) {
                 $order_warehouses[] = $warehouse['id_warehouse'];
@@ -706,17 +706,15 @@ class StockAvailableCore extends ObjectModel
      */
     public static function resetProductFromStockAvailableByShopGroup(ShopGroup $shop_group)
     {
-        if ($shop_group->share_stock) {
-            $shop_list = Shop::getShops(false, $shop_group->id, true);
-        }
+        $shop_list = $shop_group->share_stock ? Shop::getShops(false, $shop_group->id, true) : [];
 
         if (count($shop_list) > 0) {
             $id_shops_list = implode(', ', $shop_list);
 
             return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop IN (' . $id_shops_list . ')');
-        } else {
-            return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop_group = ' . $shop_group->id);
         }
+
+        return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop_group = ' . $shop_group->id);
     }
 
     /**

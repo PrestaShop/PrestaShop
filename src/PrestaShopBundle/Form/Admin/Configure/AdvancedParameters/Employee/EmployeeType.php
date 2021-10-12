@@ -204,7 +204,6 @@ final class EmployeeType extends AbstractType
                 // - "Change password" field (with regeneration option) shown instead of single password input,
                 // - Status switch not shown,
                 // - Profile selection not shown,
-                // - Addons connect field is shown,
                 // - Shop association field is not shown.
                 'is_restricted_access' => false,
 

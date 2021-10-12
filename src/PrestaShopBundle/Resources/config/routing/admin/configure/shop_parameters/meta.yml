@@ -18,7 +18,7 @@ admin_metas_search:
 
 admin_metas_create:
   path: /new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::createAction'
     _legacy_controller: AdminMeta
@@ -26,7 +26,7 @@ admin_metas_create:
 
 admin_metas_edit:
   path: /{metaId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::editAction'
     _legacy_controller: AdminMeta
@@ -54,7 +54,7 @@ admin_metas_delete_bulk:
 
 admin_metas_set_up_urls_save:
   path: /set-up-urls
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::processSetUpUrlsFormAction'
     _legacy_controller: AdminMeta
@@ -62,21 +62,21 @@ admin_metas_set_up_urls_save:
 
 admin_metas_shop_urls_save:
   path: /shop-urls
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::processShopUrlsFormAction'
     _legacy_controller: AdminMeta
 
 admin_metas_url_schema_save:
   path: /url-schema
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::processUrlSchemaFormAction'
     _legacy_controller: AdminMeta
 
 admin_metas_seo_options_save:
   path: /seo-options
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::processSeoOptionsFormAction'
     _legacy_controller: AdminMeta

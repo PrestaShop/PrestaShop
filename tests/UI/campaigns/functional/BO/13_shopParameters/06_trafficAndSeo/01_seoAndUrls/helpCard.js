@@ -4,22 +4,21 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
 
-
-// Import test context
-const testContext = require('@utils/testContext');
-
-const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_helperCard';
+const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_helpCard';
 
 let browserContext;
 let page;
 
-describe('Helper card', async () => {
+describe('BO - Shop Parameters - Traffic & SEO : Help card', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

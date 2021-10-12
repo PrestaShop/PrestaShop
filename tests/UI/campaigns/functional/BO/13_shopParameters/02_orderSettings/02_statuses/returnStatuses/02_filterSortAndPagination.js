@@ -1,9 +1,12 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+const {expect} = require('chai');
 
-// Common tests login BO
+// Import utils
+const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -16,13 +19,7 @@ const addOrderReturnStatusPage = require('@pages/BO/shopParameters/orderSettings
 const {ReturnStatuses} = require('@data/demo/orderReturnStatuses');
 const OrderReturnStatusFaker = require('@data/faker/orderReturnStatus');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_returnStatuses_filterSortAndPagination';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 let browserContext;
 let page;
@@ -36,7 +33,8 @@ Create 16 order return statuses
 Pagination next and previous
 Delete by bulk actions
  */
-describe('Filter, sort and pagination order return status', async () => {
+describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
+  + 'pagination order return status', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

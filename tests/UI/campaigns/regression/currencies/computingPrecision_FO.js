@@ -412,7 +412,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         await testContext.addContextItem(this, 'testIdentifier', 'checkLastOrderDiscountInDatabase', baseContext);
 
         // Get total discount from first column of the first row
-        const discountInDatabase = await viewSqlQueryPage.getTextColumn(page, 1, 1);
+        const discountInDatabase = await viewSqlQueryPage.getTextColumn(page, 1, 'total_discounts');
         await expect(parseFloat(discountInDatabase), 'Discount price is incorrect in database')
           .to.equal(orderToMake.percentDiscountValue + orderToMake.giftDiscountValue);
       });
@@ -420,7 +420,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInDatabase', baseContext);
 
         // Get total discount from second column of the first row
-        const totalPriceInDatabase = await viewSqlQueryPage.getTextColumn(page, 1, 2);
+        const totalPriceInDatabase = await viewSqlQueryPage.getTextColumn(page, 1, 'total_paid_tax_incl');
         await expect(parseFloat(totalPriceInDatabase), 'Total price is incorrect in database')
           .to.equal(orderToMake.atiPrice);
       });

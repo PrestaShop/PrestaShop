@@ -1,5 +1,5 @@
 name: PHP
-on: [push, pull_request]
+on: [ push, pull_request ]
 jobs:
   php-cs-fixer:
     name: PHP CS Fixer
@@ -75,14 +75,14 @@ jobs:
         run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist
 
       - name: Run phpstan on classes directory
-        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist -l 0 classes/
+        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist -l 1 classes/
 
   phpunit:
     name: PHPUnit
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: ['7.2', '7.3', '7.4', '8.0']
+        php: [ '7.2', '7.3', '7.4', '8.0' ]
       fail-fast: false
     steps:
       - name: Cancel Previous Runs

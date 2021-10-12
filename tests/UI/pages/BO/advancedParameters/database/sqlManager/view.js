@@ -17,13 +17,13 @@ class ViewSQLQuery extends BOBasePage {
     this.pageTitle = 'SQL Manager';
 
     // Selectors
-    this.sqlQueryResultTitle = '#main-div  div.card-header h3';
-    this.resultsTable = '#main-div .table';
+    this.sqlQueryResultTitle = '#card-title';
+    this.resultsTable = '#grid-table';
     this.tableColumnName = column => `${this.resultsTable} th:nth-child(${column})`;
     this.tableBody = `${this.resultsTable} tbody`;
     this.tableRows = `${this.tableBody} tr`;
     this.tableRow = row => `${this.tableRows}:nth-child(${row})`;
-    this.tableColumn = (row, column) => `${this.tableRow(row)} td:nth-child(${column})`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td.grid-${column}-value`;
   }
 
   /*
@@ -52,7 +52,7 @@ class ViewSQLQuery extends BOBasePage {
    * Get text from column in results table
    * @param page {Page} Browser tab
    * @param row {number} Row on table
-   * @param column {number} Id of column to get text column
+   * @param column {string} Name of the column
    * @return {Promise<string>}
    */
   getTextColumn(page, row, column) {

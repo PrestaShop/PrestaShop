@@ -16,7 +16,7 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 const orderDetailsPage = require('@pages/FO/myAccount/orderDetails');
 
-// Import datas
+// Import data
 const {DefaultCustomer} = require('@data/demo/customer');
 const CartData = require('@data/FO/cart');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
@@ -25,7 +25,7 @@ const {PaymentMethods} = require('@data/demo/paymentMethods');
 const testContext = require('@utils/testContext');
 
 // context
-const baseContext = 'functional_FO_userAccount_orderHistory_reorderFromOrderList';
+const baseContext = 'functional_FO_userAccount_orderHistory_orderDetails_reorderFromOrderDetail';
 
 let browserContext;
 let page;
@@ -36,13 +36,15 @@ Login to customer account
 Make an order
 Go to userAccount page
 Go to order history and details
-On the last order of the list => click on reorder
+Go to the order detail
+Click on the reorder link
+Proceed checkout
 Go back to the order list
 Check if the reorder is displayed
 Go to the order detail
 Check if the reorder contain the same product than the "original" order
  */
-describe('FO reorder from order list', async () => {
+describe('FO - Account : Reorder from order detail', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -147,7 +149,7 @@ describe('FO reorder from order list', async () => {
     });
   });
 
-  describe('Go to order list and proceed reorder', async () => {
+  describe('Go to order detail and proceed reorder', async () => {
     it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
@@ -164,11 +166,19 @@ describe('FO reorder from order list', async () => {
       await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
     });
 
-    it('should reorder the last order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'reorderLastOrder', baseContext);
+    it('should go to order details page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
 
-      const lastOrderRowNumber = await foOrderHistoryPage.getNumberOfOrders(page);
-      await foOrderHistoryPage.clickOnReorderLink(page, lastOrderRowNumber);
+      await foOrderHistoryPage.goToDetailsPage(page);
+
+      const pageTitle = await orderDetailsPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
+    });
+
+    it('should click on reorder link', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnReorderLink', baseContext);
+
+      await orderDetailsPage.clickOnReorderLink(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       await expect(isCheckoutPage, 'Browser is not in checkout Page').to.be.true;
@@ -218,7 +228,7 @@ describe('FO reorder from order list', async () => {
     });
 
     it('should go to order details page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToFoToOrderDetails', baseContext);
 
       await foOrderHistoryPage.goToDetailsPage(page);
 

@@ -209,7 +209,7 @@ class GroupCore extends ObjectModel
             Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', 1);
         }
 
-        return parent::update($autodate, $null_values);
+        return parent::update($null_values);
     }
 
     public function delete()

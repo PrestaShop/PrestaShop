@@ -54,22 +54,32 @@
   </nav>
 {/block}
 
+{function renderLogo}
+  <a href="{$urls.pages.index}">
+    <img
+      class="logo img-fluid"
+      src="{$shop.logo.src}"
+      alt="{$shop.name}"
+      loading="lazy"
+      width="{$shop.logo.width}"
+      height="{$shop.logo.height}">
+  </a>
+{/function}
+
 {block name='header_top'}
   <div class="header-top">
     <div class="container">
        <div class="row">
         <div class="col-md-2 hidden-sm-down" id="_desktop_logo">
+          {if $shop.logo}
             {if $page.page_name == 'index'}
               <h1>
-                <a href="{$urls.pages.index}">
-                  <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}" loading="lazy" width="100" height="28">
-                </a>
+                {renderLogo}
               </h1>
             {else}
-                <a href="{$urls.pages.index}">
-                  <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}" loading="lazy" width="100" height="28">
-                </a>
+              {renderLogo}
             {/if}
+          {/if}
         </div>
         <div class="header-top-right col-md-10 col-sm-12 position-static">
           {hook h='displayTop'}

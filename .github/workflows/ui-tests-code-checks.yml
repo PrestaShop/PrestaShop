@@ -2,11 +2,11 @@ name: UI tests code checks
 
 on:
   pull_request:
-      types: [opened,edited,reopened,synchronize,labeled]
+    types: [ opened, edited, reopened, synchronize, labeled ]
 
 defaults:
   run:
-      working-directory: ./tests/UI/
+    working-directory: ./tests/UI/
 
 jobs:
 

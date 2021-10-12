@@ -159,7 +159,6 @@ class PreferencesController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Improve/Shipping/Preferences/preferences.html.twig', [
             'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'handlingForm' => $handlingForm->createView(),

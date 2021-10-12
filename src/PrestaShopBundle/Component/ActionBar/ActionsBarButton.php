@@ -24,54 +24,58 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Type;
+namespace PrestaShopBundle\Component\ActionBar;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
-
-/**
- * Class AddonsConnectType defines addons connection form type.
- * When not connected to addons, it shows a button to sign in.
- * When connected to addons it shows the connected email and sign out button.
- */
-class AddonsConnectType extends AbstractType
+class ActionsBarButton implements ActionsBarButtonInterface
 {
     /**
-     * @var bool
+     * @var string
      */
-    private $isAddonsConnected;
+    protected $class;
+
+    /**
+     * @var string[]
+     */
+    protected $properties;
 
     /**
      * @var string
      */
-    private $addonsUsername;
+    protected $content;
 
     /**
-     * @param bool $isAddonsConnected
-     * @param string $addonsUsername
+     * @param string $class
+     * @param string[] $properties
+     * @param string $content
      */
-    public function __construct($isAddonsConnected, $addonsUsername)
+    public function __construct(string $class = '', array $properties = [], string $content = '')
     {
-        $this->isAddonsConnected = $isAddonsConnected;
-        $this->addonsUsername = $addonsUsername;
+        $this->class = $class;
+        $this->properties = $properties;
+        $this->content = $content;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function getClass(): string
     {
-        $view->vars['is_addons_connected'] = $this->isAddonsConnected;
-        $view->vars['addons_username'] = $this->addonsUsername;
+        return $this->class;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string[]
      */
-    public function getParent()
+    public function getProperties(): array
     {
-        return ButtonType::class;
+        return $this->properties;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent(): string
+    {
+        return $this->content;
     }
 }
