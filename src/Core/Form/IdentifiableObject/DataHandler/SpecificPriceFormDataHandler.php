@@ -100,10 +100,10 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
             $command->setPrice((string) $data['price']);
         }
         if (isset($data['date_range']['from'])) {
-            $command->setDateTimeFrom(DateTime::getNullableDateTime($data['date_range']['from']));
+            $command->setDateTimeFrom(DateTime::buildNullableDateTime($data['date_range']['from']));
         }
         if (isset($data['date_range']['to'])) {
-            $command->setDateTimeTo(DateTime::getNullableDateTime($data['date_range']['to']));
+            $command->setDateTimeTo(DateTime::buildNullableDateTime($data['date_range']['to']));
         }
         if (null !== $data['reduction']) {
             $command->setReduction((string) $data['reduction']['type'], (string) $data['reduction']['value']);
