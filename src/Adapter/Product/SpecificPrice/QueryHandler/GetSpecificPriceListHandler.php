@@ -37,8 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPri
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetEditableSpecificPricesListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
-use PrestaShop\PrestaShop\Core\Product\Combination\CombinationNameInfo;
-use PrestaShop\PrestaShop\Core\Product\Combination\CombinationNameBuilderInterface;
+use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameInfo;
+use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 /**

@@ -25,8 +25,13 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Product\Combination;
+namespace PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder;
 
+/**
+ * Data transfer object dedicated for combination name building
+ *
+ * @see CombinationNameBuilderInterface
+ */
 class CombinationNameInfo
 {
     /**
