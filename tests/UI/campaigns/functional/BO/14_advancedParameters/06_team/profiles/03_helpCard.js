@@ -35,7 +35,7 @@ describe('BO - Advanced Parameters - Team : Help card in Profiles page', async (
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to employees page', async function () {
+  it('should go to \'Advanced Parameters > Team\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -50,7 +50,7 @@ describe('BO - Advanced Parameters - Team : Help card in Profiles page', async (
     await expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
-  it('should go to "Profiles" page', async function () {
+  it('should go to \'Profiles\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProfilesPage', baseContext);
 
     await employeesPage.goToProfilesPage(page);
