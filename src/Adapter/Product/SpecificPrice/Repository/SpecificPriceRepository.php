@@ -176,7 +176,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
      *
      * @return int
      */
-    public function getProductSpecificPricesCount(ProductId $productId, LanguageId $langId, array $filters = []): int
+    public function countProductSpecificPrices(ProductId $productId, LanguageId $langId, array $filters = []): int
     {
         $qb = $this->getSpecificPricesQueryBuilder($productId, $langId, $filters)
             ->select('COUNT(sp.id_specific_price) AS total_specific_prices')
