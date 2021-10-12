@@ -70,6 +70,7 @@ $(() => {
 
   const customerAddressesGrid = new Grid('customer_address');
   customerAddressesGrid.addExtension(new SubmitRowActionExtension());
+  customerAddressesGrid.addExtension(new SortingExtension());
   customerAddressesGrid.addExtension(new LinkRowActionExtension());
 
   const showcaseCard = new ShowcaseCard('customersShowcaseCard');
