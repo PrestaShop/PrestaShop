@@ -91,7 +91,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     {
         $profiles = $this->getProfilesForPermissionsConfiguration();
         $tabs = $this->getTabsForPermissionsConfiguration();
-        $permissions = [
+        $permissionsToDisplay = [
             Permission::VIEW,
             Permission::ADD,
             Permission::EDIT,
@@ -110,7 +110,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
             $tabPermissionsForProfiles,
             $profiles,
             $tabs,
-            $permissions
+            $permissionsToDisplay
         );
 
         return new ConfigurablePermissions(
@@ -119,7 +119,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
             $profiles,
             $tabs,
             $bulkConfigurationPermissions,
-            $permissions,
+            $permissionsToDisplay,
             $employeeProfileId,
             $canEmployeeEditPermissions
         );
