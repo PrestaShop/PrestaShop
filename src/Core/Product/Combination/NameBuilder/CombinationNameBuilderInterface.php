@@ -25,24 +25,16 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Product\Combination;
+namespace PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder;
 
-/**
- * Builds combination name by attributes information
- */
-class CombinationNameBuilder implements CombinationNameBuilderInterface
+interface CombinationNameBuilderInterface
 {
     /**
-     * {@inheritdoc}
+     * Build combination name from related attributes and attribute group names
+     *
+     * @param CombinationNameInfo[]
+     *
+     * @return string
      */
-    public function buildName(array $combinationsNameInfo): string
-    {
-        return implode(', ', array_map(function (CombinationNameInfo $combinationNameInfo) {
-            return sprintf(
-                '%s - %s',
-                $combinationNameInfo->getAttributeGroupName(),
-                $combinationNameInfo->getAttributeName()
-            );
-        }, $combinationsNameInfo));
-    }
+    public function buildName(array $combinationsNameInfo): string;
 }
