@@ -163,6 +163,10 @@
           this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceCreated);
           this.closeModal();
         }
+        // if (this.openForUpdate && form.dataset.specificPriceId) {
+        //   this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceUpdated);
+        //   this.closeModal();
+        // }
         this.loadingForm = false;
       },
       applyIframeStyling() {
@@ -170,6 +174,7 @@
       },
       closeModal() {
         this.openForCreate = false;
+        this.openForUpdate = false;
       },
     },
   };
