@@ -4,15 +4,15 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const profilesPage = require('@pages/BO/advancedParameters/team/profiles/index');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_team_profiles_sortProfiles';
 
@@ -22,7 +22,7 @@ let page;
 let numberOfProfiles = 0;
 
 // Sort profiles by id, name
-describe('Sort Profiles', async () => {
+describe('BO - Advanced Parameters - Team : Sort Profiles table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -37,7 +37,7 @@ describe('Sort Profiles', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Advanced parameters > Team\' page', async function () {
+  it('should go to \'Advanced Parameters > Team\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -75,7 +75,7 @@ describe('Sort Profiles', async () => {
   ];
 
   tests.forEach((test) => {
-    it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+    it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
       let nonSortedTable = await profilesPage.getAllRowsColumnContent(page, test.args.sortBy);

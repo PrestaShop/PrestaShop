@@ -4,6 +4,9 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -11,16 +14,13 @@ const dashboardPage = require('@pages/BO/dashboard');
 const employeesPage = require('@pages/BO/advancedParameters/team');
 const profilesPage = require('@pages/BO/advancedParameters/team/profiles');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_advancedParameters_team_profiles_helpCard';
 
 let browserContext;
 let page;
 
 // Check that help card is in english in profiles page
-describe('Profiles help card', async () => {
+describe('BO - Advanced Parameters - Team : Help card in Profiles page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
