@@ -32,7 +32,7 @@ interface CombinationNameBuilderInterface
     /**
      * Build combination name from related attributes and attribute group names
      *
-     * @param CombinationNameInfo[]
+     * @param CombinationNameInfo[] $combinationsNameInfo
      *
      * @return string
      */
