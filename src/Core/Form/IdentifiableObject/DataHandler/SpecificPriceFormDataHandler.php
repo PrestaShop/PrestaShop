@@ -111,5 +111,7 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
         if (null !== $data['include_tax']) {
             $command->setIncludesTax((bool) $data['include_tax']);
         }
+
+        $this->commandBus->handle($command);
     }
 }
