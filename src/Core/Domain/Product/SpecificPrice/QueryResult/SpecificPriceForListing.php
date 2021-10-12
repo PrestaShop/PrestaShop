@@ -125,7 +125,6 @@ class SpecificPriceForListing
         bool $includesTax,
         DecimalNumber $price,
         int $fromQuantity,
-        //@todo: datetimeImmutable instead of interface?
         DateTimeInterface $dateTimeFrom,
         DateTimeInterface $dateTimeTo,
         ?string $combinationName,
