@@ -27,22 +27,44 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Product\Combination;
 
-/**
- * Builds combination name by attributes information
- */
-class CombinationNameBuilder implements CombinationNameBuilderInterface
+class CombinationNameInfo
 {
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    public function buildName(array $combinationsNameInfo): string
+    private $attributeName;
+
+    /**
+     * @var string
+     */
+    private $attributeGroupName;
+
+
+    /**
+     * @param string $attributeName
+     * @param string $attributeGroupName
+     */
+    public function __construct(
+        string $attributeName,
+        string $attributeGroupName
+    ) {
+        $this->attributeName = $attributeName;
+        $this->attributeGroupName = $attributeGroupName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAttributeName(): string
     {
-        return implode(', ', array_map(function (CombinationNameInfo $combinationNameInfo) {
-            return sprintf(
-                '%s - %s',
-                $combinationNameInfo->getAttributeGroupName(),
-                $combinationNameInfo->getAttributeName()
-            );
-        }, $combinationsNameInfo));
+        return $this->attributeName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAttributeGroupName(): string
+    {
+        return $this->attributeGroupName;
     }
 }
