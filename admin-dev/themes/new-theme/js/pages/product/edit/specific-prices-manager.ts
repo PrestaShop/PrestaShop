@@ -24,6 +24,7 @@
  */
 
 import ProductMap from '@pages/product/product-map';
+import ProductEventMap from '@pages/product/product-event-map';
 import initSpecificPriceModal from '@pages/product/components/specific-price';
 import {EventEmitter} from 'events';
 import SpecificPriceList from '@pages/product/components/specific-price/specific-price-list';
@@ -51,5 +52,11 @@ export default class SpecificPricesManager {
       this.eventEmitter,
     );
     this.specificPriceList.renderList();
+    this.initListeners();
+  }
+
+  public initListeners(): void {
+    this.eventEmitter.on(ProductEventMap.specificPrice.specificPriceCreated, () => this.specificPriceList.renderList());
+    this.eventEmitter.on(ProductEventMap.specificPrice.specificPriceUpdated, () => this.specificPriceList.renderList());
   }
 }
