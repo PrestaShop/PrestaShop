@@ -322,4 +322,10 @@ input[type="tel"] {
     padding: 14px 0;
     margin: auto;
   }
+
+  .form-group {
+    .btn {
+      white-space: nowrap;
+    }
+  }
 }
