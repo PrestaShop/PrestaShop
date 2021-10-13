@@ -324,7 +324,7 @@ input[type="tel"] {
   }
 
   .form-group {
-    .btn {
+    .btn[id^="add_condition_"] {
       white-space: nowrap;
     }
   }
