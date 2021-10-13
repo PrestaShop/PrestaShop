@@ -27,24 +27,50 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CombinationIdChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
+    /**
+     * @var CombinationRepository
+     */
     private $combinationRepository;
 
+    /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    /**
+     * @var LanguageId
+     */
+    private $languageId;
+
+    /**
+     * @param CombinationRepository $combinationRepository
+     * @param AttributeRepository $attributeRepository
+     * @param LanguageId $languageId
+     */
     public function __construct(
-        CombinationRepository $combinationRepository
+        CombinationRepository $combinationRepository,
+        AttributeRepository $attributeRepository,
+        int $languageId
     ) {
         $this->combinationRepository = $combinationRepository;
+        $this->attributeRepository = $attributeRepository;
+        $this->languageId = new LanguageId($languageId);
     }
 
     public function getChoices(array $options): array
     {
         $options = $this->resolveOptions($options);
-
+        $combinationIds = $this->combinationRepository->getCombinationIdsByProductId(new ProductId($options['product_id']));
+        $attributesInfo = $this->attributeRepository->getAttributesInfoByCombinationIds($combinationIds, $this->languageId);
     }
 
     private function resolveOptions(array $options): array
