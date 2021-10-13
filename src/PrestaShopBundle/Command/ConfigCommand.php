@@ -317,6 +317,16 @@ class ConfigCommand extends Command
     private function set(): void
     {
         $key = $this->input->getArgument('key');
+
+        if (strpos($key, '*') !== true) {
+            $msg = $this->translator->trans(
+                'Set action does not support wildcards',
+                [],
+                'Admin.Command.Notification'
+            );
+            throw new Exception($msg, self::STATUS_INVALID_OPTIONS);
+        }
+
         $newvalue = $this->input->getOption('value');
 
         // new value is required for set
@@ -357,6 +367,15 @@ class ConfigCommand extends Command
     private function remove(): void
     {
         $key = $this->input->getArgument('key');
+
+        if (strpos($key, '*') !== true) {
+            $msg = $this->translator->trans(
+                'Remove action does not support wildcards',
+                [],
+                'Admin.Command.Notification'
+            );
+            throw new Exception($msg, self::STATUS_INVALID_OPTIONS);
+        }
 
         try {
             // remove does not support removing only one language, use default
