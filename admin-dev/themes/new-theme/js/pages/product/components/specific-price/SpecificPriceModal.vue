@@ -34,7 +34,7 @@
           class="specific-price-loading"
           v-if="loadingForm"
         >
-        <div class="spinner" />
+          <div class="spinner" />
         </div>
         <iframe
           ref="iframe"
