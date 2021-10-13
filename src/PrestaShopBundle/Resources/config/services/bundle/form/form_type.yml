@@ -1535,12 +1535,13 @@ services:
     parent: 'form.type.translatable.aware'
     arguments:
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().iso_code'
-      - '@=service("prestashop.core.form.choice_provider.currency_by_id")'
-      - '@=service("prestashop.core.form.choice_provider.country_by_id")'
-      - '@=service("prestashop.core.form.choice_provider.group_by_id")'
-      - '@=service("prestashop.adapter.form.choice_provider.shop_name_by_id")'
-      - '@=service("prestashop.core.form.choice_provider.tax_inclusion")'
-      - '@=service("prestashop.adapter.form.choice_provider.combination_id_choice_provider")'
+      - '@prestashop.core.form.choice_provider.currency_by_id'
+      - '@prestashop.core.form.choice_provider.country_by_id'
+      - '@prestashop.core.form.choice_provider.group_by_id'
+      - '@prestashop.adapter.form.choice_provider.shop_name_by_id'
+      - '@prestashop.core.form.choice_provider.tax_inclusion'
+      - '@prestashop.adapter.form.choice_provider.combination_id_choice_provider'
+      - '@prestashop.core.admin.url_generator'
     public: true
     tags:
       - { name: form.type }
