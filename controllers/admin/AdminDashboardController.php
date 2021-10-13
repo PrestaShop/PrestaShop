@@ -299,6 +299,7 @@ class AdminDashboardControllerCore extends AdminController
             'date_to' => $this->context->employee->stats_date_to,
             'hookDashboardZoneOne' => Hook::exec('dashboardZoneOne', $params),
             'hookDashboardZoneTwo' => Hook::exec('dashboardZoneTwo', $params),
+            'hookDashboardZoneThree' => Hook::exec('dashboardZoneThree', $params),
             'action' => '#',
             'warning' => $this->getWarningDomainName(),
             'dashboard_use_push' => Configuration::get('PS_DASHBOARD_USE_PUSH'),

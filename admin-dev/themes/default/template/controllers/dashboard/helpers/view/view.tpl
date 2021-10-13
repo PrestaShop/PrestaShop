@@ -87,8 +87,13 @@
 		<div class="col-md-4 col-lg-3" id="hookDashboardZoneOne">
 			{$hookDashboardZoneOne}
 		</div>
-		<div class="col-md-8 col-lg-9" id="hookDashboardZoneTwo">
+		<div class="col-md-8 col-lg-{if $hookDashboardZoneThree}7{else}9{/if}" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
 		</div>
+    {if $hookDashboardZoneThree}
+      <div class="col-md-12 col-lg-2" id="hookDashboardZoneThree">
+          {$hookDashboardZoneThree}
+      </div>
+    {/if}
 	</div>
 </div>

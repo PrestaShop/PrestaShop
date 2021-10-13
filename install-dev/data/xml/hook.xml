@@ -3525,5 +3525,10 @@
       <title>Payment options Presenter</title>
       <description>This hook is called before payment options are presented</description>
     </hook>
+    <hook id="dashboardZoneThree">
+      <name>dashboardZoneThree</name>
+      <title>Dashboard column three</title>
+      <description>This hook is displayed in the third column of the dashboard</description>
+    </hook>
   </entities>
 </entity_hook>
