@@ -60,6 +60,8 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
         $fixedPrice = $specificPriceForEditing->getPrice();
 
         return [
+            'product_id' => $specificPriceForEditing->getProductId(),
+            'combination_id' => $specificPriceForEditing->getCombinationId(),
             'currency_id' => $specificPriceForEditing->getCurrencyId(),
             'country_id' => $specificPriceForEditing->getCountryId(),
             'group_id' => $specificPriceForEditing->getGroupId(),
