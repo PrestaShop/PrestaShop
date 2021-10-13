@@ -33,6 +33,7 @@ use Doctrine\DBAL\FetchMode;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use RuntimeException;
@@ -108,7 +109,7 @@ class AttributeRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param int[] $combinationIds
+     * @param CombinationId[] $combinationIds
      * @param LanguageId $langId
      *
      * @return array<int, CombinationAttributeInformation[]>
@@ -139,12 +140,20 @@ class AttributeRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param int[] $combinationIds
+     * @param CombinationId[] $combinationIds
      *
      * @return array<int, array<string, mixed>>
      */
     private function getAttributeCombinationAssociations(array $combinationIds): array
     {
+        if (empty($combinationIds)) {
+            return [];
+        }
+
+        $combinationIds = array_map(function (CombinationId $id): int {
+            return $id->getValue();
+        }, $combinationIds);
+
         $qb = $this->connection->createQueryBuilder();
         $qb->select('pac.id_attribute')
             ->addSelect('pac.id_product_attribute')
