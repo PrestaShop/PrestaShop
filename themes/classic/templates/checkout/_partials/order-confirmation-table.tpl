@@ -124,7 +124,7 @@
           </tr>
         {else}
           <tr class="total-value font-weight-bold">
-            <td><span class="text-uppercase">{$totals.total.label}&nbsp;{if $configuration.taxes_enabled}{$labels.tax_short}{/if}</span></td>
+            <td><span class="text-uppercase">{$totals.total.label}&nbsp;{if $configuration.taxes_enabled && $configuration.display_taxes_label}{$labels.tax_short}{/if}</span></td>
             <td>{$totals.total.value}</td>
           </tr>
         {/if}
