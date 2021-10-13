@@ -4,25 +4,26 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
+
+// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
-const baseContext = 'functional_BO_shopParameters_productSettings_displayUnavailableProductAttributes';
-
 // Import data
 const ProductFaker = require('@data/faker/product');
 
+const baseContext = 'functional_BO_shopParameters_productSettings_displayUnavailableProductAttributes';
 
 let browserContext;
 let page;
@@ -38,7 +39,8 @@ const productData = new ProductFaker(
   },
 );
 
-describe('Display unavailable product attributes on the product page', async () => {
+describe('BO - Shop Parameters - Product Settings :  Display unavailable product attributes  '
+  + 'on the product page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -135,8 +137,15 @@ describe('Display unavailable product attributes on the product page', async () 
       );
 
       await expect(colorIsVisible).to.be.equal(test.args.enable);
+    });
+
+    it('should close the page and go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
       page = await productPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await productSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
   });
 

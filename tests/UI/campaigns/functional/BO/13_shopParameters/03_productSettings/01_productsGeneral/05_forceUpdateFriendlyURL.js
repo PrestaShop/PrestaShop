@@ -2,8 +2,11 @@ require('module-alias/register');
 
 const {expect} = require('chai');
 
-// Import test context
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -14,9 +17,6 @@ const addProductPage = require('@pages/BO/catalog/products/add');
 
 // Import data
 const ProductFaker = require('@data/faker/product');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_productSettings_productsGeneral_forceUpdateFriendlyURL';
 
@@ -32,7 +32,7 @@ Create then edit product
 Check that the friendly URL is updated successfully
 Disable force update friendly URL
  */
-describe('Enable/Disable force update friendly URL', async () => {
+describe('BO - Shop Parameters - Product Settings : Enable/Disable force update friendly URL', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
