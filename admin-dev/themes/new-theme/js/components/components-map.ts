@@ -29,10 +29,12 @@ export default {
     scrollbar: '.js-multistore-scrollbar',
   },
   multistoreHeader: {
+    header: '.header-multishop',
     modal: '.js-multishop-modal',
     headerButton: '.js-header-multishop-open-modal',
     searchInput: '.js-multishop-modal-search',
     jsScrollbar: '.js-multishop-scrollbar',
+    item: '.multishop-modal-item',
     setContextUrl: (
       location: string,
       urlLetter: string,
