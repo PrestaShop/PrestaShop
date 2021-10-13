@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AbstractMultistoreConfigurationTest extends TestCase
 {
@@ -138,6 +139,11 @@ class AbstractMultistoreConfigurationTest extends TestCase
             public function updateConfiguration(array $configuration)
             {
                 return [];
+            }
+
+            public function buildResolver(): OptionsResolver
+            {
+                return new OptionsResolver();
             }
         };
     }
