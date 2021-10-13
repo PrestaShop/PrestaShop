@@ -593,6 +593,7 @@ abstract class PaymentModuleCore extends Module
                             $order_invoice_list = $order->getInvoicesCollection();
                             Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
                             $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty, 'P', $orderLanguage);
+                            $file_attachment = [];
                             $file_attachment['content'] = $pdf->render(false);
                             $file_attachment['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
                             $file_attachment['mime'] = 'application/pdf';
