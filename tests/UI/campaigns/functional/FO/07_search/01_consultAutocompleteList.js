@@ -66,7 +66,7 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
     await testContext.addContextItem(this, 'testIdentifier', 'DisableFuzzySearch', baseContext);
 
     const result = await searchPage.setFuzzySearch(page, false);
-    await expect(result).to.contains(searchPage.successfulUpdateMessage);
+    await expect(result).to.contains(searchPage.settingsUpdateMessage);
   });
 
   it('should go to FO and search product to check the autocomplete list', async function () {
@@ -106,6 +106,6 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
     await testContext.addContextItem(this, 'testIdentifier', 'EnableFuzzySearch', baseContext);
 
     const result = await searchPage.setFuzzySearch(page, true);
-    await expect(result).to.contains(searchPage.successfulUpdateMessage);
+    await expect(result).to.contains(searchPage.settingsUpdateMessage);
   });
 });
