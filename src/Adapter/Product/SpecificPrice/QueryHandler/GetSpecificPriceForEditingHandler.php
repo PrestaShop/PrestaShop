@@ -70,6 +70,8 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
             (int) $specificPrice->from_quantity,
             DateTimeUtil::buildNullableDateTime($specificPrice->from),
             DateTimeUtil::buildNullableDateTime($specificPrice->to),
+            (int) $specificPrice->id_product,
+            (int) $specificPrice->id_product_attribute ?: null,
             (int) $specificPrice->id_shop ?: null,
             (int) $specificPrice->id_currency ?: null,
             (int) $specificPrice->id_country ?: null,
