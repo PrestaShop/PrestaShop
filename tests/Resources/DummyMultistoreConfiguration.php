@@ -33,7 +33,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DummyMultistoreConfiguration extends AbstractMultistoreConfiguration
 {
-    public function getConfiguration()
+    /**
+     * @return array
+     */
+    public function getConfiguration(): array
     {
         $shopConstraint = $this->getShopConstraint();
 
@@ -43,7 +46,12 @@ class DummyMultistoreConfiguration extends AbstractMultistoreConfiguration
         ];
     }
 
-    public function updateConfiguration(array $configurationInputValues)
+    /**
+     * @param array $configurationInputValues
+     *
+     * @return array
+     */
+    public function updateConfiguration(array $configurationInputValues): array
     {
         if ($this->validateConfiguration($configurationInputValues)) {
             $shopConstraint = $this->getShopConstraint();
@@ -55,6 +63,9 @@ class DummyMultistoreConfiguration extends AbstractMultistoreConfiguration
         return [];
     }
 
+    /**
+     * @return OptionsResolver
+     */
     public function buildResolver(): OptionsResolver
     {
         $resolver = new OptionsResolver();
