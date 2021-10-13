@@ -157,9 +157,9 @@ class SpecificPriceType extends TranslatorAwareType
                 'placeholder' => false,
                 'choices' => $this->getModifiedGroupChoices(),
             ])
+            //@todo: I dont understand how to show searched entities in a dropdown. (its shows undefined. I don't see any mapping for entity fields with the search dropdown)
             ->add('customer_id', EntitySearchInputType::class, [
                 'label' => $this->trans('Customer', 'Admin.Global'),
-                'entity_type' => 'customer',
                 'layout' => EntitySearchInputType::LIST_LAYOUT,
                 'required' => false,
                 'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
