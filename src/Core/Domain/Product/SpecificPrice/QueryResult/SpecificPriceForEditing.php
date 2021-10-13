@@ -64,6 +64,26 @@ class SpecificPriceForEditing
     private $fromQuantity;
 
     /**
+     * @var DateTimeInterface
+     */
+    private $dateTimeFrom;
+
+    /**
+     * @var DateTimeInterface
+     */
+    private $dateTimeTo;
+
+    /**
+     * @var int
+     */
+    private $productId;
+
+    /**
+     * @var int|null
+     */
+    private $combinationId;
+
+    /**
      * @var int|null
      */
     private $shopId;
@@ -89,16 +109,6 @@ class SpecificPriceForEditing
     private $customerId;
 
     /**
-     * @var DateTimeInterface
-     */
-    private $dateTimeFrom;
-
-    /**
-     * @var DateTimeInterface
-     */
-    private $dateTimeTo;
-
-    /**
      * @param int $specificPriceId
      * @param string $reductionType
      * @param DecimalNumber $reductionAmount
@@ -107,6 +117,8 @@ class SpecificPriceForEditing
      * @param int $fromQuantity
      * @param DateTimeInterface $dateTimeFrom
      * @param DateTimeInterface $dateTimeTo
+     * @param int $productId
+     * @param int|null $combinationId
      * @param int|null $shopId
      * @param int|null $currencyId
      * @param int|null $countryId
@@ -122,6 +134,8 @@ class SpecificPriceForEditing
         int $fromQuantity,
         DateTimeInterface $dateTimeFrom,
         DateTimeInterface $dateTimeTo,
+        int $productId,
+        ?int $combinationId,
         ?int $shopId,
         ?int $currencyId,
         ?int $countryId,
@@ -134,13 +148,15 @@ class SpecificPriceForEditing
         $this->includesTax = $includesTax;
         $this->price = $price;
         $this->fromQuantity = $fromQuantity;
+        $this->dateTimeFrom = $dateTimeFrom;
+        $this->dateTimeTo = $dateTimeTo;
+        $this->productId = $productId;
+        $this->combinationId = $combinationId;
         $this->shopId = $shopId;
         $this->currencyId = $currencyId;
         $this->countryId = $countryId;
         $this->groupId = $groupId;
         $this->customerId = $customerId;
-        $this->dateTimeFrom = $dateTimeFrom;
-        $this->dateTimeTo = $dateTimeTo;
     }
 
     /**
@@ -245,5 +261,21 @@ class SpecificPriceForEditing
     public function getDateTimeTo(): DateTimeInterface
     {
         return $this->dateTimeTo;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProductId(): int
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCombinationId(): ?int
+    {
+        return $this->combinationId;
     }
 }
