@@ -25,50 +25,34 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder;
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
-/**
- * Data transfer object dedicated for combination name building
- *
- * @see CombinationNameBuilderInterface
- */
-class CombinationNameInfo
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class CombinationIdChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
-    /**
-     * @var string
-     */
-    private $attributeName;
+    private $combinationRepository;
 
-    /**
-     * @var string
-     */
-    private $attributeGroupName;
-
-    /**
-     * @param string $attributeName
-     * @param string $attributeGroupName
-     */
     public function __construct(
-        string $attributeName,
-        string $attributeGroupName
+        CombinationRepository $combinationRepository
     ) {
-        $this->attributeName = $attributeName;
-        $this->attributeGroupName = $attributeGroupName;
+        $this->combinationRepository = $combinationRepository;
     }
 
-    /**
-     * @return string
-     */
-    public function getAttributeName(): string
+    public function getChoices(array $options): array
     {
-        return $this->attributeName;
+        $options = $this->resolveOptions($options);
+
     }
 
-    /**
-     * @return string
-     */
-    public function getAttributeGroupName(): string
+    private function resolveOptions(array $options): array
     {
-        return $this->attributeGroupName;
+        $resolver = new OptionsResolver();
+        $resolver->setDefined(['product_id']);
+        $resolver->setAllowedTypes('product_id', 'int');
+
+        return $resolver->resolve($options);
     }
 }

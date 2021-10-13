@@ -32,13 +32,13 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetSpecificPriceListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
-use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameInfo;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 /**
@@ -125,7 +125,7 @@ class GetSpecificPriceListHandler implements GetSpecificPriceListHandlerInterfac
                 (int) $specificPrice['from_quantity'],
                 DateTimeUtil::buildNullableDateTime($specificPrice['from']),
                 DateTimeUtil::buildNullableDateTime($specificPrice['to']),
-                $combinationId ? $this->buildCombinationName($attributesInfo[$combinationId]) : null,
+                $combinationId ? $this->combinationNameBuilder->buildName($attributesInfo[$combinationId]) : null,
                 $specificPrice['shop_name'],
                 $specificPrice['currency_name'],
                 $specificPrice['country_name'],
@@ -135,24 +135,6 @@ class GetSpecificPriceListHandler implements GetSpecificPriceListHandlerInterfac
         }
 
         return $specificPricesForListing;
-    }
-
-    /**
-     * @param array<int, array<string, mixed>> $combinationAttributesInfo
-     *
-     * @return string
-     */
-    private function buildCombinationName(array $combinationAttributesInfo): string
-    {
-        $combinationsInfo = [];
-        foreach ($combinationAttributesInfo as $attributeInfo) {
-            $combinationsInfo[] = new CombinationNameInfo(
-                $attributeInfo['attribute_name'],
-                $attributeInfo['attribute_group_name']
-            );
-        }
-
-        return $this->combinationNameBuilder->buildName($combinationsInfo);
     }
 
     /**
@@ -174,7 +156,7 @@ class GetSpecificPriceListHandler implements GetSpecificPriceListHandlerInterfac
      * @param array<int, array<string, string|null>> $specificPrices
      * @param LanguageId $languageId
      *
-     * @return array
+     * @return array<int, CombinationAttributeInformation[]>
      */
     private function getAttributesInfo(array $specificPrices, LanguageId $languageId): array
     {

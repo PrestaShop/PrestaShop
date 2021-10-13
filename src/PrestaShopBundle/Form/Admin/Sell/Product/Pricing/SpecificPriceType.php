@@ -134,6 +134,12 @@ class SpecificPriceType extends TranslatorAwareType
                 'label' => $this->trans('Customer', 'Admin.Global'),
                 //@todo: provide options to search customer and add js side if needed
             ])
+            ->add('combinationId', ChoiceType::class, [
+                'label' => $this->trans('Combination', 'Admin.Global'),
+                'required' => false,
+                'placeholder' => false,
+                'choices' => [],
+            ])
             ->add('from_quantity', NumberType::class, [
                 'label' => $this->trans('From quantity', 'Admin.Catalog.Feature'),
                 'scale' => 0,

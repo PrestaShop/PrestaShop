@@ -59,6 +59,7 @@ services:
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.image.repository.product_image_repository'
       - '@prestashop.adapter.product.image.product_image_url_factory'
+      - '@prestashop.core.product.combination.name_builder.combination_name_builder'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList

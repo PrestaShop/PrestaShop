@@ -27,14 +27,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
+
 interface CombinationNameBuilderInterface
 {
     /**
      * Build combination name from related attributes and attribute group names
      *
-     * @param CombinationNameInfo[] $combinationsNameInfo
+     * @param CombinationAttributeInformation[] $attributesInfo
      *
      * @return string
      */
-    public function buildName(array $combinationsNameInfo): string;
+    public function buildName(array $attributesInfo): string;
 }
