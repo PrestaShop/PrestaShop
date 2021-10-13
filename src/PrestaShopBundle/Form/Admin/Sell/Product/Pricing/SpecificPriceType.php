@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
@@ -79,6 +80,11 @@ class SpecificPriceType extends TranslatorAwareType
     private $defaultCurrencyIso;
 
     /**
+     * @var ConfigurableFormChoiceProviderInterface
+     */
+    private $configurableFormChoiceProvider;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param string $defaultCurrencyIso
@@ -87,6 +93,7 @@ class SpecificPriceType extends TranslatorAwareType
      * @param FormChoiceProviderInterface $groupByIdChoiceProvider
      * @param FormChoiceProviderInterface $shopByIdChoiceProvider
      * @param FormChoiceProviderInterface $taxInclusionChoiceProvider
+     * @param ConfigurableFormChoiceProviderInterface $configurableFormChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -96,7 +103,8 @@ class SpecificPriceType extends TranslatorAwareType
         FormChoiceProviderInterface $countryByIdChoiceProvider,
         FormChoiceProviderInterface $groupByIdChoiceProvider,
         FormChoiceProviderInterface $shopByIdChoiceProvider,
-        FormChoiceProviderInterface $taxInclusionChoiceProvider
+        FormChoiceProviderInterface $taxInclusionChoiceProvider,
+        ConfigurableFormChoiceProviderInterface $configurableFormChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
@@ -105,6 +113,7 @@ class SpecificPriceType extends TranslatorAwareType
         $this->shopByIdChoiceProvider = $shopByIdChoiceProvider;
         $this->taxInclusionChoiceProvider = $taxInclusionChoiceProvider;
         $this->defaultCurrencyIso = $defaultCurrencyIso;
+        $this->configurableFormChoiceProvider = $configurableFormChoiceProvider;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -138,7 +147,9 @@ class SpecificPriceType extends TranslatorAwareType
                 'label' => $this->trans('Combination', 'Admin.Global'),
                 'required' => false,
                 'placeholder' => false,
-                'choices' => [],
+                'choices' => $this->configurableFormChoiceProvider->getChoices(
+                    ['product_id' => $builder->getData()['product_id']]
+                ),
             ])
             ->add('from_quantity', NumberType::class, [
                 'label' => $this->trans('From quantity', 'Admin.Catalog.Feature'),

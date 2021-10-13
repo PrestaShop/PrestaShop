@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPrice
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetSpecificPriceListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForListing;
@@ -163,7 +164,7 @@ class GetSpecificPriceListHandler implements GetSpecificPriceListHandlerInterfac
         $combinationIds = [];
         foreach ($specificPrices as $specificPrice) {
             if ($specificPrice['id_product_attribute']) {
-                $combinationIds[] = (int) $specificPrice['id_product_attribute'];
+                $combinationIds[] = new CombinationId((int) $specificPrice['id_product_attribute']);
             }
         }
 

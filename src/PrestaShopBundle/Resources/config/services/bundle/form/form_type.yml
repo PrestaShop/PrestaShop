@@ -1540,6 +1540,7 @@ services:
       - '@=service("prestashop.core.form.choice_provider.group_by_id")'
       - '@=service("prestashop.adapter.form.choice_provider.shop_name_by_id")'
       - '@=service("prestashop.core.form.choice_provider.tax_inclusion")'
+      - '@=service("prestashop.adapter.form.choice_provider.combination_id_choice_provider")'
     public: true
     tags:
       - { name: form.type }
