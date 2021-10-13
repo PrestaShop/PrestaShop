@@ -113,6 +113,18 @@ class ConfigurationCore extends ObjectModel
             $idShopGroup = Shop::getContextShopGroupID(true);
         }
 
+        return self::getIdByNameFromGivenContext($key, $idShopGroup, $idShop);
+    }
+
+    /**
+     * @param $key
+     * @param null $idShopGroup
+     * @param null $idShop
+     *
+     * @return int Configuration key ID
+     */
+    public static function getIdByNameFromGivenContext($key, $idShopGroup = null, $idShop = null)
+    {
         $sql = 'SELECT `' . bqSQL(self::$definition['primary']) . '`
                 FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
                 WHERE name = \'' . pSQL($key) . '\'
@@ -593,13 +605,26 @@ class ConfigurationCore extends ObjectModel
             $idShop = Shop::getContextShopID(true);
         }
 
-        $id = Configuration::getIdByName($key, $idShopGroup, $idShop);
+        $configurationId = Configuration::getIdByName($key, $idShopGroup, $idShop);
+
+        self::deleteFromGivenContext($key, $configurationId, $idShopGroup, $idShop);
+    }
+
+    /**
+     * @param mixed $key
+     * @param int|null $configurationId
+     * @param int|null $idShopGroup
+     * @param int|null $idShop
+     */
+    public static function deleteFromGivenContext($key, int $configurationId = null, int $idShopGroup = null, int $idShop = null)
+    {
+        $configurationId = $configurationId ?: Configuration::getIdByNameFromGivenContext($key, $idShopGroup, $idShop);
         Db::getInstance()->execute('
         DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
-        WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . (int) $id);
+        WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . (int) $configurationId);
         Db::getInstance()->execute('
         DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang`
-        WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . (int) $id);
+        WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . (int) $configurationId);
 
         self::$_cache = null;
         self::$_new_cache_shop = null;
