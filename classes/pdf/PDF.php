@@ -71,9 +71,9 @@ class PDFCore
      * @param Smarty $smarty
      * @param string $orientation
      */
-    public function __construct($objects, $template, $smarty, $orientation = 'P')
+    public function __construct($objects, $template, $smarty, $orientation = 'P', $language = null)
     {
-        $this->pdf_renderer = new PDFGenerator((bool) Configuration::get('PS_PDF_USE_CACHE'), $orientation);
+        $this->pdf_renderer = new PDFGenerator((bool) Configuration::get('PS_PDF_USE_CACHE'), $orientation, $language);
         $this->template = $template;
 
         /*
@@ -129,7 +129,6 @@ class PDFCore
     public function render($display = true)
     {
         $render = false;
-        $this->pdf_renderer->setFontForLang(Context::getContext()->language->iso_code);
         foreach ($this->objects as $object) {
             $this->pdf_renderer->startPageGroup();
             $template = $this->getTemplateObject($object);
