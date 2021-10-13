@@ -173,7 +173,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private function getCombinationName(CombinationId $combinationId): string
     {
         $attributesInformation = $this->attributeRepository->getAttributesInfoByCombinationIds(
-            [$combinationId->getValue()],
+            [$combinationId],
             new LanguageId($this->contextLanguageId)
         );
 
