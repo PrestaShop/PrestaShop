@@ -24,14 +24,46 @@
  */
 
 import ComponentsMap from '@components/components-map';
+import {ConfirmModal} from "@components/modal/confirm-modal";
 
 const {$} = window;
 
 const initMultistoreForm = () => {
   const MultistoreFormMap = ComponentsMap.multistoreForm;
+  const MultistoreHeaderMap = ComponentsMap.multistoreHeader;
   const multistoreForm = $(MultistoreFormMap.formRow).closest('form');
+  const $modalItem = $(MultistoreHeaderMap.modal);
+  const translations = $(MultistoreHeaderMap.header).data('translations');
 
   let formChangedAndNotSaved = false;
+
+  /**
+   * @param {string} path
+   */
+  const showConfirmModal = (
+    path: string,
+  ) => {
+    const confirmTitle = translations['modal.confirm_leave.title'];
+    const confirmMessage = translations['modal.confirm_leave.body'];
+    const confirmButtonLabel = translations['modal.confirm_leave.confirm'];
+    const closeButtonLabel = translations['modal.confirm_leave.cancel'];
+    const confirmButtonClass = 'btn-primary';
+
+    const modal = new ConfirmModal(
+        {
+          confirmTitle,
+          confirmMessage,
+          confirmButtonLabel,
+          closeButtonLabel,
+          confirmButtonClass,
+        },
+        () => {
+          window.location.href = path;
+        },
+    );
+
+    modal.show();
+  }
 
   if (multistoreForm) {
     multistoreForm.on('change', () => {
@@ -43,14 +75,17 @@ const initMultistoreForm = () => {
       formChangedAndNotSaved = false;
     });
 
-    window.onbeforeunload = () => {
-      if (formChangedAndNotSaved) {
-        // The message is not important as most of browsers display their own standard message
-        return 'You are about to leave the page without saving the form. Do you confirm ?';
-      }
+    // Bind click on header's links
+    $modalItem.find('a').each((index, itemLink) => {
+      $(itemLink).on('click', (event) => {
+        if (formChangedAndNotSaved) {
+          const targetUrl = $(itemLink).attr('href');
+          showConfirmModal(`${targetUrl}`);
 
-      return null;
-    };
+          return false;
+        }
+      });
+    });
   }
 };
 
