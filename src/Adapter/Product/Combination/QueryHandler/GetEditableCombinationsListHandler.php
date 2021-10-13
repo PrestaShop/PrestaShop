@@ -121,8 +121,8 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
         $combinations = $this->combinationQueryBuilder->getSearchQueryBuilder($searchCriteria)->execute()->fetchAll();
         $total = (int) $this->combinationQueryBuilder->getCountQueryBuilder($searchCriteria)->execute()->fetch(PDO::FETCH_COLUMN);
 
-        $combinationIds = array_map(function ($combination): int {
-            return (int) $combination['id_product_attribute'];
+        $combinationIds = array_map(function (array $combination): CombinationId {
+            return new CombinationId((int) $combination['id_product_attribute']);
         }, $combinations);
 
         $attributesInformation = $this->attributeRepository->getAttributesInfoByCombinationIds(

@@ -33,6 +33,7 @@ use Image;
 use ImageType;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
@@ -287,12 +288,20 @@ class ProductImageRepository extends AbstractObjectModelRepository
     /**
      * Retrieves a list of image ids ordered by position for each provided combination id
      *
-     * @param int[] $combinationIds
+     * @param CombinationId[] $combinationIds
      *
      * @return array<int, ImageId[]> [(int) id_combination => [ImageId]]
      */
     public function getImagesIdsForCombinations(array $combinationIds): array
     {
+        if (empty($combinationIds)) {
+            return [];
+        }
+
+        $combinationIds = array_map(function (CombinationId $id): int {
+            return $id->getValue();
+        }, $combinationIds);
+
         //@todo: multishop not handled
         $qb = $this->connection->createQueryBuilder();
         $qb->select('pai.id_product_attribute, pai.id_image')
