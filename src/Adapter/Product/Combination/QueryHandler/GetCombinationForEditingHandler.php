@@ -49,7 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
-use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameInfo;
+use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\AttributeNameInfo;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use Product;
@@ -176,17 +176,8 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             [$combinationId->getValue()],
             new LanguageId($this->contextLanguageId)
         );
-        $attributes = $attributesInformation[$combinationId->getValue()];
-        $combinationsInfo = [];
 
-        foreach ($attributes as $attributeInfo) {
-            $combinationsInfo[] = new CombinationNameInfo(
-                $attributeInfo['attribute_name'],
-                $attributeInfo['attribute_group_name']
-            );
-        }
-
-        return $this->combinationNameBuilder->buildName($combinationsInfo);
+        return $this->combinationNameBuilder->buildName($attributesInformation[$combinationId->getValue()]);
     }
 
     /**

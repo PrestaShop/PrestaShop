@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination;
 
 /**
  * Transfers data of single combination attributes
