@@ -318,7 +318,7 @@ class ConfigCommand extends Command
     {
         $key = $this->input->getArgument('key');
 
-        if (strpos($key, '*') !== true) {
+        if (strpos($key, '*') !== false) {
             $msg = $this->translator->trans(
                 'Set action does not support wildcards',
                 [],
@@ -368,7 +368,7 @@ class ConfigCommand extends Command
     {
         $key = $this->input->getArgument('key');
 
-        if (strpos($key, '*') !== true) {
+        if (strpos($key, '*') !== false) {
             $msg = $this->translator->trans(
                 'Remove action does not support wildcards',
                 [],
