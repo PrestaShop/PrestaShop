@@ -130,7 +130,7 @@ class AbstractMultistoreConfigurationTest extends TestCase
                 return [];
             }
 
-            public function validateConfiguration(array $configuration)
+            public function validateConfiguration(array $configuration): bool
             {
                 return true;
             }
