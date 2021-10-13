@@ -3505,5 +3505,10 @@
       <title>Administration Employee menu</title>
       <description>This hook is displayed in the employee menu</description>
     </hook>
+    <hook id="dashboardZoneThree">
+      <name>dashboardZoneThree</name>
+      <title>Dashboard column three</title>
+      <description>This hook is displayed in the third column of the dashboard</description>
+    </hook>
   </entities>
 </entity_hook>
