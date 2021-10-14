@@ -178,7 +178,6 @@ class LanguageController extends FrameworkBundleAdminController
             $result = $languageFormHandler->handleFor((int) $languageId, $languageForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                
                 $this->generateRobotsTxt();
 
                 $this->addFlash(
