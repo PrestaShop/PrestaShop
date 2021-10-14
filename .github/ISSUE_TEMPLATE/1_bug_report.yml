@@ -70,4 +70,4 @@ body:
       label: If your bug is related to a module, specify its version
       placeholder: "e.g., 3.7.1"
     validations:
-      required: false      
+      required: false
