@@ -2953,6 +2953,7 @@ FileETag none
             '*/modules/*.jpg',
             '*/modules/*.gif',
             '*/modules/*.svg',
+            '*/modules/*.webp',
             '/js/jquery/*',
         ];
 
