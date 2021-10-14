@@ -130,8 +130,6 @@ class LanguageController extends FrameworkBundleAdminController
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                $this->generateRobotsTxt();
-
                 return $this->redirectToRoute('admin_languages_index');
             }
         } catch (Exception $e) {
@@ -178,8 +176,6 @@ class LanguageController extends FrameworkBundleAdminController
             $result = $languageFormHandler->handleFor((int) $languageId, $languageForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->generateRobotsTxt();
-
                 $this->addFlash(
                     'success',
                     $this->trans('Successful update.', 'Admin.Notifications.Success')
@@ -221,8 +217,6 @@ class LanguageController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(new DeleteLanguageCommand((int) $languageId));
 
-            $this->generateRobotsTxt();
-
             $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
         } catch (LanguageException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -247,8 +241,6 @@ class LanguageController extends FrameworkBundleAdminController
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteLanguagesCommand($languageIds));
-
-            $this->generateRobotsTxt();
 
             $this->addFlash(
                 'success',
@@ -282,8 +274,6 @@ class LanguageController extends FrameworkBundleAdminController
                 !$editableLanguage->isActive()
             ));
 
-            $this->generateRobotsTxt();
-
             $this->addFlash(
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
@@ -316,8 +306,6 @@ class LanguageController extends FrameworkBundleAdminController
                 $languageIds,
                 $expectedStatus
             ));
-
-            $this->generateRobotsTxt();
 
             $this->addFlash(
                 'success',
@@ -443,17 +431,5 @@ class LanguageController extends FrameworkBundleAdminController
         }
 
         return $languageIds;
-    }
-
-    /**
-     * Generates the robots.txt file.
-     *
-     * @return bool
-     */
-    private function generateRobotsTxt()
-    {
-        $robotsTextFileGenerator = $this->get('prestashop.adapter.file.robots_text_file_generator');
-
-        return $robotsTextFileGenerator->generateFile();
     }
 }

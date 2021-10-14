@@ -2884,37 +2884,35 @@ FileETag none
                     foreach ($robots_content['Directories'] as $dir) {
                         fwrite($write_fd, 'Disallow: ' . $uri['physical'] . $dir . PHP_EOL);
                     }
-                }
-
-                // Disallow multilang directories
-                if (!empty($languagesIsoIds) && count($languagesIsoIds) > 1) {
-                    foreach ($languagesIsoIds as $language) {
-                        foreach ($robots_content['Directories'] as $dir) {
-                            fwrite(
-                                $write_fd,
-                                sprintf(
-                                    'Disallow: %s%s/%s%s',
-                                    $uri['physical'],
-                                    $language['iso_code'],
-                                    $dir,
-                                    PHP_EOL
-                                )
-                            );
+                    // Disallow multilang directories
+                    if (is_array($languagesIsoIds) && count($languagesIsoIds) > 1) {
+                        foreach ($languagesIsoIds as $language) {
+                            foreach ($robots_content['Directories'] as $dir) {
+                                fwrite(
+                                    $write_fd,
+                                    sprintf(
+                                        'Disallow: %s%s/%s%s',
+                                        $uri['physical'],
+                                        $language['iso_code'],
+                                        $dir,
+                                        PHP_EOL
+                                    )
+                                );
+                            }
                         }
                     }
-                }
-            }
-        }
-
-        // Files
-        if (count($robots_content['Files'])) {
-            fwrite($write_fd, "# Files\n");
-            foreach ($robots_content['Files'] as $iso_code => $files) {
-                foreach ($files as $file) {
-                    if (count($languagesIsoIds) > 1) {
-                        fwrite($write_fd, 'Disallow: /*' . $iso_code . '/' . $file . PHP_EOL);
-                    } else {
-                        fwrite($write_fd, 'Disallow: ' . $uri['physical'] . $file . PHP_EOL);
+                    // Files
+                    if (count($robots_content['Files'])) {
+                        fwrite($write_fd, "# Files\n");
+                        foreach ($robots_content['Files'] as $iso_code => $files) {
+                            foreach ($files as $file) {
+                                if (count($languagesIsoIds) > 1) {
+                                    fwrite($write_fd, 'Disallow: /*' . $iso_code . '/' . $file . PHP_EOL);
+                                } else {
+                                    fwrite($write_fd, 'Disallow: ' . $uri['physical'] . $file . PHP_EOL);
+                                }
+                            }
+                        }
                     }
                 }
             }
