@@ -92,11 +92,11 @@ class ProductLazyArrayTest extends TestCase
         'out_of_stock' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
     ];
 
-    const PRODUCT_AVAILABLE_NOW = 'This product is available now';
-    const PRODUCT_AVAILABLE_LATER = 'This product is available on backorder';
-    const PRODUCT_NOT_AVAILABLE = 'This product is not available for order';
-    const PRODUCT_ATTRIBUTE_NOT_AVAILABLE = 'Product available with different options';
-    const PRODUCT_WITH_NOT_ENOUGH_STOCK = 'There are not enough products in stock';
+    private const PRODUCT_AVAILABLE_NOW = 'This product is available now';
+    private const PRODUCT_AVAILABLE_LATER = 'This product is available on backorder';
+    private const PRODUCT_NOT_AVAILABLE = 'This product is not available for order';
+    private const PRODUCT_ATTRIBUTE_NOT_AVAILABLE = 'Product available with different options';
+    private const PRODUCT_WITH_NOT_ENOUGH_STOCK = 'There are not enough products in stock';
 
     public function setUp(): void
     {
