@@ -130,8 +130,7 @@ class LanguageController extends FrameworkBundleAdminController
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                $robotsTextFileGenerator = $this->get('prestashop.adapter.file.robots_text_file_generator');
-                $robotsTextFileGenerator->generateFile();
+                $this->generateRobotsTxt();
 
                 return $this->redirectToRoute('admin_languages_index');
             }
@@ -179,8 +178,8 @@ class LanguageController extends FrameworkBundleAdminController
             $result = $languageFormHandler->handleFor((int) $languageId, $languageForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $robotsTextFileGenerator = $this->get('prestashop.adapter.file.robots_text_file_generator');
-                $robotsTextFileGenerator->generateFile();
+                
+                $this->generateRobotsTxt();
 
                 $this->addFlash(
                     'success',
@@ -223,8 +222,7 @@ class LanguageController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(new DeleteLanguageCommand((int) $languageId));
 
-            $robotsTextFileGenerator = $this->get('prestashop.adapter.file.robots_text_file_generator');
-            $robotsTextFileGenerator->generateFile();
+            $this->generateRobotsTxt();
 
             $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
         } catch (LanguageException $e) {
@@ -251,8 +249,7 @@ class LanguageController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(new BulkDeleteLanguagesCommand($languageIds));
 
-            $robotsTextFileGenerator = $this->get('prestashop.adapter.file.robots_text_file_generator');
-            $robotsTextFileGenerator->generateFile();
+            $this->generateRobotsTxt();
 
             $this->addFlash(
                 'success',
@@ -286,8 +283,7 @@ class LanguageController extends FrameworkBundleAdminController
                 !$editableLanguage->isActive()
             ));
 
-            $robotsTextFileGenerator = $this->get('prestashop.adapter.file.robots_text_file_generator');
-            $robotsTextFileGenerator->generateFile();
+            $this->generateRobotsTxt();
 
             $this->addFlash(
                 'success',
@@ -322,8 +318,7 @@ class LanguageController extends FrameworkBundleAdminController
                 $expectedStatus
             ));
 
-            $robotsTextFileGenerator = $this->get('prestashop.adapter.file.robots_text_file_generator');
-            $robotsTextFileGenerator->generateFile();
+            $this->generateRobotsTxt();
 
             $this->addFlash(
                 'success',
@@ -449,5 +444,17 @@ class LanguageController extends FrameworkBundleAdminController
         }
 
         return $languageIds;
+    }
+
+    /**
+     * Generates the robots.txt file.
+     *
+     * @return bool
+     */
+    private function generateRobotsTxt()
+    {
+        $robotsTextFileGenerator = $this->get('prestashop.adapter.file.robots_text_file_generator');
+
+        return $robotsTextFileGenerator->generateFile();
     }
 }
