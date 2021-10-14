@@ -779,11 +779,13 @@ class OrderDetailCore extends ObjectModel
     /**
      * Create a list of order detail for a specified id_order using cart.
      *
-     * @param object $order
-     * @param object $cart
-     * @param int $id_order_status
+     * @param Order $order
+     * @param Cart $cart
+     * @param int $id_order_state
+     * @param array $product_list
      * @param int $id_order_invoice
      * @param bool $use_taxes set to false if you don't want to use taxes
+     * @param int $id_warehouse
      */
     public function createList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true, $id_warehouse = 0)
     {
