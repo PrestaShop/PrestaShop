@@ -23,32 +23,42 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
+namespace Tests\Integration\PrestaShopBundle\Form;
 
-use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class AttachedFileType extends TranslatorAwareType
+/**
+ * This form type is not used in the project but in the tests, it allows to build a simple
+ * form type for product listener and use it in test.
+ *
+ * @see ProductTypeListener
+ * @see ProductTypeListenerTest
+ */
+class TestProductFormType extends CommonAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('attachment_id', HiddenType::class, [
-                'label' => false,
-            ])
-            ->add('name', TextPreviewType::class, [
-                'label' => $this->trans('Title', 'Admin.Global'),
-            ])
-            ->add('file_name', TextPreviewType::class, [
-                'label' => $this->trans('File name', 'Admin.Global'),
-            ])
-            ->add('mime_type', TextPreviewType::class, [
-                'label' => $this->trans('Type', 'Admin.Global'),
-            ])
+            ->add('shortcuts', FormType::class)
+            ->add('stock', FormType::class)
+            ->add('shipping', FormType::class)
+            ->add('options', FormType::class)
         ;
+        $builder->get('shortcuts')->add('stock', FormType::class);
+
+        $stock = $builder->get('stock');
+        $stock->add('pack_stock_type', ChoiceType::class);
+        $stock->add('virtual_product_file', FormType::class);
+        $stock->add('quantities', FormType::class);
+        $quantities = $stock->get('quantities');
+        $quantities->add('stock_movements', FormType::class);
+
+        $builder->get('options')->add('suppliers', ChoiceType::class);
     }
 }

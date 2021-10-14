@@ -52,4 +52,9 @@ class ProductStockConstraintException extends ProductStockException
      * When out_of_stock is invalid
      */
     public const INVALID_OUT_OF_STOCK = 40;
+
+    /**
+     * When id is invalid
+     */
+    public const INVALID_ID = 50;
 }

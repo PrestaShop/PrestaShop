@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotAddStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
@@ -89,12 +90,11 @@ class StockAvailableRepository extends AbstractObjectModelRepository
     /**
      * @param ProductId $productId
      *
-     * @return StockAvailable
+     * @return StockId
      *
-     * @throws CoreException
      * @throws StockAvailableNotFoundException
      */
-    public function getForProduct(ProductId $productId): StockAvailable
+    public function getStockIdByProduct(ProductId $productId): StockId
     {
         $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue());
         if ($stockAvailableId <= 0) {
@@ -105,7 +105,22 @@ class StockAvailableRepository extends AbstractObjectModelRepository
             );
         }
 
-        return $this->getStockAvailable($stockAvailableId);
+        return new StockId($stockAvailableId);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return StockAvailable
+     *
+     * @throws CoreException
+     * @throws StockAvailableNotFoundException
+     */
+    public function getForProduct(ProductId $productId): StockAvailable
+    {
+        $stockId = $this->getStockIdByProduct($productId);
+
+        return $this->getStockAvailable($stockId);
     }
 
     /**
@@ -136,7 +151,7 @@ class StockAvailableRepository extends AbstractObjectModelRepository
             );
         }
 
-        return $this->getStockAvailable((int) $result['id_stock_available']);
+        return $this->getStockAvailable(new StockId((int) $result['id_stock_available']));
     }
 
     /**
@@ -170,18 +185,18 @@ class StockAvailableRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param int $stockAvailableId
+     * @param StockId $stockId
      *
      * @return StockAvailable
      *
      * @throws CoreException
      * @throws StockAvailableNotFoundException
      */
-    private function getStockAvailable(int $stockAvailableId): StockAvailable
+    private function getStockAvailable(StockId $stockId): StockAvailable
     {
         /** @var StockAvailable $stockAvailable */
         $stockAvailable = $this->getObjectModel(
-            $stockAvailableId,
+            $stockId->getValue(),
             StockAvailable::class,
             StockAvailableNotFoundException::class
         );

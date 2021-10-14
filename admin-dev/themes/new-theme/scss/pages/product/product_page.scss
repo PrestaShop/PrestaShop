@@ -1075,6 +1075,37 @@ $product-page-padding-bottom: 80px !default;
       max-width: 415px;
     }
   }
+
+  #product_stock_quantities_stock_movements {
+    max-width: 400px;
+
+    .table {
+      margin-bottom: 0.8rem;
+    }
+
+    td {
+      padding-top: 0.8rem;
+      padding-bottom: 0.8rem;
+    }
+
+    .stock_movement_quantity {
+      @include border-radius(5px);
+      display: inline-block;
+      min-width: 55px;
+      padding: 2px;
+      font-size: 0.7rem;
+      color: #fff;
+      text-align: center;
+
+      &.increased_quantity {
+        background-color: $brand-primary;
+      }
+
+      &.decreased_quantity {
+        background-color: $gray-dark;
+      }
+    }
+  }
 }
 
 #modal-create-product-attachment {

@@ -23,32 +23,21 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryHandler;
 
-use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
 
-class AttachedFileType extends TranslatorAwareType
+/**
+ * Defines contract for GetProductStockMovementsHandler
+ */
+interface GetEmployeesStockMovementsHandlerInterface
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('attachment_id', HiddenType::class, [
-                'label' => false,
-            ])
-            ->add('name', TextPreviewType::class, [
-                'label' => $this->trans('Title', 'Admin.Global'),
-            ])
-            ->add('file_name', TextPreviewType::class, [
-                'label' => $this->trans('File name', 'Admin.Global'),
-            ])
-            ->add('mime_type', TextPreviewType::class, [
-                'label' => $this->trans('Type', 'Admin.Global'),
-            ])
-        ;
-    }
+    /**
+     * @param GetEmployeesStockMovements $query
+     *
+     * @return EmployeeStockMovement[]
+     */
+    public function handle(GetEmployeesStockMovements $query): array;
 }

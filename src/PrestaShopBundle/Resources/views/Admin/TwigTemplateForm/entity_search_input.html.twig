@@ -38,17 +38,21 @@
 
   {# We use widget_container_attributes in this widget because we do not want the name property #}
   <div {{ block('widget_container_attributes') }}>
-    <div class="search search-with-icon">
-      {%- set attr = search_attr|merge({
-        'class': (search_attr.class|default('') ~ ' entity-search-input form-control')|trim,
-        'autocomplete': 'off',
-        'placeholder': placeholder,
-        'type': 'text'
-      }) -%}
-      {%- set id = form.vars.id ~ '_search_input' -%}
-      <input {{ block('widget_container_attributes') }} />
-    </div>
+    {# If dynamic addition is disabled we don't display the search input field #}
+    {% if form.vars.allow_search %}
+      <div class="search search-with-icon">
+        {%- set attr = search_attr|merge({
+          'class': (search_attr.class|default('') ~ ' entity-search-input form-control')|trim,
+          'autocomplete': 'off',
+          'placeholder': placeholder,
+          'type': 'text'
+        }) -%}
+        {%- set id = form.vars.id ~ '_search_input' -%}
+        <input {{ block('widget_container_attributes') }} />
+      </div>
+    {% endif %}
     {{- block('form_help') -}}
+
     {%- set id = form.vars.id ~ '_list' -%}
     {% if list_layout == 'table' %}
       {{- block('entity_search_table_layout') -}}
@@ -79,15 +83,19 @@
       <div class="col-sm">
         <table class="table">
           <thead class="thead-default">
-          <tr>
-          {% for child in prototype.children %}
-            {% set childType = child.vars.block_prefixes.1 %}
-            {% if childType != 'hidden' %}
-              <th>{{ child.vars.label }}</th>
+            <tr>
+            {% for child in prototype.children %}
+              {% set childType = child.vars.block_prefixes.1 %}
+              {% if childType != 'hidden' %}
+                <th>{{ child.vars.label }}</th>
+              {% endif %}
+            {% endfor %}
+
+            {# If item deletion is disabled we don't display the extra column for actions #}
+            {% if form.vars.allow_delete %}
+              <th></th>
             {% endif %}
-          {% endfor %}
-            <th></th>
-          </tr>
+            </tr>
           </thead>
           <tbody class="entities-list">
           {{- block('form_rows') -}}
@@ -131,8 +139,12 @@
     </td>
     {% endif %}
   {% endfor %}
+
+  {# If item deletion is disabled we don't display the extra column for actions #}
+  {% if form.parent.vars.allow_delete %}
     <td>
       <i class="material-icons delete entity-item-delete">clear</i>
     </td>
+  {% endif %}
   </tr>
 {%- endblock -%}

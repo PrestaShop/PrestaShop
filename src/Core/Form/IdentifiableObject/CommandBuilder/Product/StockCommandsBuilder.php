@@ -48,8 +48,11 @@ final class StockCommandsBuilder implements ProductCommandsBuilderInterface
         $quantityData = $formData['stock'];
         $command = new UpdateProductStockInformationCommand($productId->getValue());
 
+        /*
+         * Quantity field is a @see DeltaQuantityType type so on submits it contains the delta quantity
+         */
         if (isset($quantityData['quantities']['quantity'])) {
-            $command->setQuantity((int) $quantityData['quantities']['quantity']);
+            $command->setDeltaQuantity((int) $quantityData['quantities']['quantity']);
         }
         if (isset($quantityData['quantities']['minimal_quantity'])) {
             $command->setMinimalQuantity((int) $quantityData['quantities']['minimal_quantity']);

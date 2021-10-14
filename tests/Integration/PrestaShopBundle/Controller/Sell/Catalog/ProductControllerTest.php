@@ -174,7 +174,7 @@ class ProductControllerTest extends GridControllerTestCase
         return [
             'product[header][name][1]' => $testEntity->name,
             // 'product[shortcuts][stock][quantity]' => $testEntity->quantity,
-            'product[stock][quantities][quantity]' => $testEntity->quantity,
+            'product[stock][quantities][quantity][delta]' => $testEntity->quantity,
             'product[shipping][additional_shipping_cost]' => 0,
             'product[pricing][retail_price][price_tax_excluded]' => $testEntity->price,
             // 'product[shortcuts][retail_price][price_tax_excluded]' => $testEntity->price,

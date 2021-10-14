@@ -23,32 +23,44 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\EventListener;
 
-use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
-class AttachedFileType extends TranslatorAwareType
+class CombinationListener implements EventSubscriberInterface
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * {@inheritDoc}
+     */
+    public static function getSubscribedEvents(): array
     {
-        $builder
-            ->add('attachment_id', HiddenType::class, [
-                'label' => false,
-            ])
-            ->add('name', TextPreviewType::class, [
-                'label' => $this->trans('Title', 'Admin.Global'),
-            ])
-            ->add('file_name', TextPreviewType::class, [
-                'label' => $this->trans('File name', 'Admin.Global'),
-            ])
-            ->add('mime_type', TextPreviewType::class, [
-                'label' => $this->trans('Type', 'Admin.Global'),
-            ])
-        ;
+        return [
+            FormEvents::PRE_SET_DATA => 'adaptCombinationForm',
+            FormEvents::PRE_SUBMIT => 'adaptCombinationForm',
+        ];
+    }
+
+    /**
+     * @param FormEvent $event
+     */
+    public function adaptCombinationForm(FormEvent $event): void
+    {
+        $form = $event->getForm();
+        $data = $event->getData();
+
+        if ($form->has('stock')) {
+            $stock = $form->get('stock');
+            if ($stock->has('quantities')) {
+                $quantities = $stock->get('quantities');
+                if ($quantities->has('stock_movements') && empty($data['stock']['quantities']['stock_movements'])) {
+                    $quantities->remove('stock_movements');
+                }
+            }
+        }
     }
 }

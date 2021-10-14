@@ -23,32 +23,68 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query;
 
-use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-class AttachedFileType extends TranslatorAwareType
+class GetEmployeesStockMovements
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public const DEFAULT_LIMIT = 5;
+
+    /**
+     * @var ProductId
+     */
+    private $productId;
+
+    /**
+     * @var int
+     */
+    private $offset;
+
+    /**
+     * @var int
+     */
+    private $limit;
+
+    /**
+     * @param int $productId
+     * @param int $offset
+     * @param int $limit
+     */
+    public function __construct(
+        int $productId,
+        int $offset = 0,
+        int $limit = self::DEFAULT_LIMIT
+    ) {
+        $this->productId = new ProductId($productId);
+        $this->offset = $offset;
+        $this->limit = $limit;
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
     {
-        $builder
-            ->add('attachment_id', HiddenType::class, [
-                'label' => false,
-            ])
-            ->add('name', TextPreviewType::class, [
-                'label' => $this->trans('Title', 'Admin.Global'),
-            ])
-            ->add('file_name', TextPreviewType::class, [
-                'label' => $this->trans('File name', 'Admin.Global'),
-            ])
-            ->add('mime_type', TextPreviewType::class, [
-                'label' => $this->trans('Type', 'Admin.Global'),
-            ])
-        ;
+        return $this->productId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOffset(): int
+    {
+        return $this->offset;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLimit(): int
+    {
+        return $this->limit;
     }
 }

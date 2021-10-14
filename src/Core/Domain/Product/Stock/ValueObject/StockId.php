@@ -23,32 +23,53 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject;
 
-use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 
-class AttachedFileType extends TranslatorAwareType
+/**
+ * Stock identifier.
+ */
+class StockId
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @var int
+     */
+    private $stockId;
+
+    /**
+     * @param int $stockId
+     *
+     * @throws ProductStockConstraintException
+     */
+    public function __construct(int $stockId)
     {
-        $builder
-            ->add('attachment_id', HiddenType::class, [
-                'label' => false,
-            ])
-            ->add('name', TextPreviewType::class, [
-                'label' => $this->trans('Title', 'Admin.Global'),
-            ])
-            ->add('file_name', TextPreviewType::class, [
-                'label' => $this->trans('File name', 'Admin.Global'),
-            ])
-            ->add('mime_type', TextPreviewType::class, [
-                'label' => $this->trans('Type', 'Admin.Global'),
-            ])
-        ;
+        $this->assertIsGreaterThanZero($stockId);
+
+        $this->stockId = $stockId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->stockId;
+    }
+
+    /**
+     * @param int $stockId
+     */
+    private function assertIsGreaterThanZero(int $stockId): void
+    {
+        if (0 > $stockId) {
+            throw new ProductStockConstraintException(
+                sprintf('Stock id %s is invalid. Stock id must be number that is greater than zero.', var_export($stockId, true)),
+                ProductStockConstraintException::INVALID_ID
+            );
+        }
     }
 }

@@ -684,6 +684,13 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.delta_quantity_type:
+    class: 'PrestaShopBundle\Form\Admin\Type\DeltaQuantityType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
   form.type.team.employee.employee_options:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsType'
     parent: 'form.type.translatable.aware'
@@ -1411,7 +1418,17 @@ services:
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
+      - "@router"
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.stock.stock_movement:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockMovementType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@form.form_cloner'
     tags:
       - { name: form.type }
 
@@ -1642,6 +1659,7 @@ services:
     public: true
     arguments:
       - '@prestashop.core.form.choice_provider.product_images_choice_provider'
+      - '@form.type.sell.product.event_listener.combination_listener'
     tags:
       - { name: form.type }
 
@@ -1664,6 +1682,10 @@ services:
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
     tags:
       - { name: form.type }
+
+  form.type.sell.product.event_listener.combination_listener:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener'
+    public: true
 
   prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
     class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
