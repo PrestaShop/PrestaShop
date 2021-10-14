@@ -402,9 +402,9 @@ $(document).ready(() => {
   });
 
   $('#compare-options').change(function () {
-    if (this.value === 1) setPreviousPeriod();
+    if (this.value == 1) setPreviousPeriod();
 
-    if (this.value === 2) setPreviousYear();
+    if (this.value == 2) setPreviousYear();
 
     datepickerStart.setStartCompare($('#date-start-compare').val());
     datepickerStart.setEndCompare($('#date-end-compare').val());
@@ -413,7 +413,7 @@ $(document).ready(() => {
     datepickerStart.setCompare(true);
     datepickerEnd.setCompare(true);
 
-    if (this.value === 3) $('#date-start-compare').focus();
+    if (this.value == 3) $('#date-start-compare').focus();
   });
 
   if ($('#datepicker-compare').attr('checked')) {
