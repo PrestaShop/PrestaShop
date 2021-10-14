@@ -54,24 +54,12 @@
   </nav>
 {/block}
 
-{function renderLogo}
-  <a href="{$urls.pages.index}">
-    <img
-      class="logo img-fluid"
-      src="{$shop.logo.src}"
-      alt="{$shop.name}"
-      loading="lazy"
-      width="{$shop.logo.width}"
-      height="{$shop.logo.height}">
-  </a>
-{/function}
-
 {block name='header_top'}
   <div class="header-top">
     <div class="container">
        <div class="row">
         <div class="col-md-2 hidden-sm-down" id="_desktop_logo">
-          {if $shop.logo}
+          {if $shop.logo_details}
             {if $page.page_name == 'index'}
               <h1>
                 {renderLogo}
