@@ -105,8 +105,7 @@ class DebugCommand extends Command
         // no new value, just print out the current setting value
         $inval = $input->getArgument('value');
         if (is_null($inval)) {
-            $curvalue = $this->debugConfiguration->isDebugModeEnabled();
-            $output->writeln(sprintf('Debug mode is %s', $curvalue ? 'on' : 'off'));
+            $output->writeln(sprintf('Debug mode is %s', $this->debugConfiguration->isDebugModeEnabled() ? 'on' : 'off'));
 
             return self::STATUS_OK;
         }
