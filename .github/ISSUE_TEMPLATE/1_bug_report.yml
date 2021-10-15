@@ -8,7 +8,6 @@ body:
   - type: checkboxes
     attributes:
       label: Prerequisites
-      description: Take a couple of minutes to help our maintainers work faster.
       options:
         - label: I have read the [code of conduct](https://github.com/PrestaShop/PrestaShop/blob/develop/CODE_OF_CONDUCT.md)
           required: true
