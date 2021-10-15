@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Core\Configuration;
 
+use Configuration as LegacyConfiguration;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -148,6 +149,20 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
         $newShop->deleted = false;
         $newShop->add();
         $this->newShop = $newShop;
+        Shop::resetContext();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        // remove previously created shop
+        $newShopId = Shop::getIdByName('test_shop_2');
+        $newShop = new Shop($newShopId);
+        $newShop->delete();
+
+        // disable multistore
+        LegacyConfiguration::set('PS_MULTISHOP_FEATURE_ACTIVE', 0);
+
+        // reset shop context
         Shop::resetContext();
     }
 }
