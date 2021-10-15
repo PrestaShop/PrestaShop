@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Gender;
@@ -91,7 +93,7 @@ final class TitleGridDataFactory implements GridDataFactoryInterface
      *
      * @return array
      */
-    private function applyModification(array $titles)
+    private function applyModification(array $titles): array
     {
         foreach ($titles as $i => $title) {
             switch ($title['type']) {

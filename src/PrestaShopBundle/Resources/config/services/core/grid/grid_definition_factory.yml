@@ -310,4 +310,6 @@ services:
   prestashop.core.grid.definition.factory.title:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TitleGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    arguments:
+      - '@prestashop.core.form.choice_provider.gender_choice_provider'
     public: true
