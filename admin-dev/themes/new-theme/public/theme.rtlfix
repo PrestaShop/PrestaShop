@@ -41,6 +41,11 @@ body.lang-rtl .float-right {
 body.lang-rtl .float-left {
     float: right !important;
 }
+/* Fix dropdown menu text overflow */
+.dropdown-menu.show {
+  right: 0px;
+  left: auto !important;
+}
 /* Fix arrow direction in categories list */
 ul.category-tree .more > .checkbox:before, ul.category-tree .more > .radio:before, .material-choice-tree-container ul.choice-tree .collapsed > .checkbox:before, .material-choice-tree-container ul.choice-tree .collapsed > .radio:before {
   content: "\E5CB";
