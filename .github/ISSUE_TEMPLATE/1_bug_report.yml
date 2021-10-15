@@ -53,14 +53,14 @@ body:
     id: prestashop-version
     attributes:
       label: PrestaShop version(s) where the bug happened
-      placeholder: "e.g., v1.7.5.2 or v1.7.8.0"
+      placeholder: "e.g., 1.7.5.2 or 1.7.8.0"
     validations:
       required: true
   - type: input
     id: php-version
     attributes:
       label: What version of PHP are you using?
-      placeholder: "e.g., v7.0 or v7.1"
+      placeholder: "e.g., 7.0 or 7.1"
     validations:
       required: false
   - type: input
