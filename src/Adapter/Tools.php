@@ -108,7 +108,7 @@ class Tools
     }
 
     /**
-     * @see LegacyTools::generateRobotsFile()
+     * @see LegacyTools::generateHtaccess()
      *
      * @return bool
      */
