@@ -54,7 +54,7 @@
 				</span>
 			</div>
 			<p class="help-block">
-					{l s='Format:' d='Admin.Shipping.Help'} JPG, GIF, PNG. {l s='Filesize:' d='Admin.Shipping.Help'} {$max_image_size|string_format:"%.2f"} {l s='MB max.' d='Admin.Shipping.Help'}
+					{l s='Format:' d='Admin.Shipping.Help'} JPG, GIF, PNG, WEBP. {l s='Filesize:' d='Admin.Shipping.Help'} {$max_image_size|string_format:"%.2f"} {l s='MB max.' d='Admin.Shipping.Help'}
 					{l s='Current size:' d='Admin.Shipping.Help'} <span id="carrier_logo_size">{l s='undefined' d='Admin.Shipping.Help'}</span>.
 			</p>
 		</div>

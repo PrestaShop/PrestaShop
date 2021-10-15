@@ -53,7 +53,8 @@
                     <input class="file-input js-file-input" {if $field.required} required {/if} type="file" name="{$field.input_name}" id="field-{$field.input_name}">
                     <button class="btn btn-primary">{l s='Choose file' d='Shop.Theme.Actions'}</button>
                   </span>
-                  <small class="float-xs-right">{l s='.png .jpg .gif' d='Shop.Forms.Help'}</small>
+                  {assign var=authExtensions value=' .'|implode:constant('ImageManager::EXTENSIONS_SUPPORTED')}
+                  <small class="float-xs-right">.{$authExtensions}</small>
                 {/if}
               </li>
             {/foreach}
