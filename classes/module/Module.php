@@ -2436,9 +2436,7 @@ abstract class ModuleCore implements ModuleInterface
             return Hook::isDisplayHookName($hook_name);
         }
 
-        $retro_hook_name = Hook::getRetroHookName($hook_name);
-
-        return is_callable([$this, 'hook' . ucfirst($hook_name)]) || is_callable([$this, 'hook' . ucfirst($retro_hook_name)]);
+        return is_callable([$this, 'hook' . ucfirst($hook_name)]);
     }
 
     /**
