@@ -26,44 +26,36 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Title;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use HelperList;
-use ImageManager;
-use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
-use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
+use PrestaShop\PrestaShop\Adapter\Entity\Gender;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class TitleImageThumbnailProvider provides path to title's image thumbnail.
+ * Class GenderProvider provides genders choices.
  */
-class TitleImageThumbnailProvider implements ImageProviderInterface
+final class GenderChoiceProvider implements FormChoiceProviderInterface
 {
-    /**
-     * @var ImageTagSourceParserInterface
-     */
-    private $imageTagSourceParser;
+    private TranslatorInterface $translator;
 
-    /**
-     * @param ImageTagSourceParserInterface $imageTagSourceParser
-     */
-    public function __construct(ImageTagSourceParserInterface $imageTagSourceParser)
+    public function __construct(TranslatorInterface $translator)
     {
-        $this->imageTagSourceParser = $imageTagSourceParser;
+        $this->translator = $translator;
     }
 
     /**
-     * {@inheritdoc}
+     * Get currency choices.
+     *
+     * @return array
      */
-    public function getPath($titleId): string
+    public function getChoices(): array
     {
-        $pathToImage = _PS_IMG_DIR_ . 'genders' . DIRECTORY_SEPARATOR . $titleId . '.jpg';
-
-        $imageTag = ImageManager::thumbnail(
-            $pathToImage,
-            'title_mini_' . $titleId . '.jpg',
-            HelperList::LIST_THUMBNAIL_SIZE,
-        );
-
-        return $this->imageTagSourceParser->parse($imageTag);
+        return [
+            '--' => '',
+            $this->translator->trans('Male', [], 'Admin.Shopparameters.Feature') => Gender::GENDER_MALE,
+            $this->translator->trans('Female', [], 'Admin.Shopparameters.Feature') => Gender::GENDER_FEMALE,
+            $this->translator->trans('Neutral', [], 'Admin.Shopparameters.Feature') => Gender::GENDER_NEUTRAL,
+        ];
     }
 }

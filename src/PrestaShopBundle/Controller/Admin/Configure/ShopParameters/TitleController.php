@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\TitleFilters;
@@ -71,7 +73,7 @@ class TitleController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function createAction()
+    public function createAction(): Response
     {
         return new Response();
     }
@@ -87,7 +89,7 @@ class TitleController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function editAction()
+    public function editAction(): Response
     {
         return new Response();
     }
@@ -104,7 +106,7 @@ class TitleController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function deleteAction()
+    public function deleteAction(): RedirectResponse
     {
         return $this->redirectToRoute('admin_title_index');
     }
@@ -115,11 +117,9 @@ class TitleController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_title_index")
      * @DemoRestricted(redirectRoute="admin_title_index")
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
-    public function bulkDeleteAction(Request $request)
+    public function bulkDeleteAction(): RedirectResponse
     {
         return $this->redirectToRoute('admin_title_index');
     }

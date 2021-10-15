@@ -24,9 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Gender;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GenderChoiceProvider;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -39,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -54,6 +57,14 @@ final class TitleGridDefinitionFactory extends AbstractGridDefinitionFactory
     use DeleteActionTrait;
 
     public const GRID_ID = 'title';
+
+    private $genderChoiceProvider;
+
+    public function __construct(HookDispatcherInterface $hookDispatcher = null, GenderChoiceProvider $genderChoiceProvider)
+    {
+        parent::__construct($hookDispatcher);
+        $this->genderChoiceProvider = $genderChoiceProvider;
+    }
 
     /**
      * {@inheritdoc}
@@ -169,12 +180,7 @@ final class TitleGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                  (new Filter('type', ChoiceType::class))
                      ->setTypeOptions([
-                         'choices' => [
-                             '--' => '',
-                             $this->trans('Male', [], 'Admin.Shopparameters.Feature') => Gender::GENDER_MALE,
-                             $this->trans('Female', [], 'Admin.Shopparameters.Feature') => Gender::GENDER_FEMALE,
-                             $this->trans('Neutral', [], 'Admin.Shopparameters.Feature') => Gender::GENDER_NEUTRAL,
-                         ],
+                         'choices' => $this->genderChoiceProvider->getChoices(),
                      ])
                      ->setAssociatedColumn('type')
              )

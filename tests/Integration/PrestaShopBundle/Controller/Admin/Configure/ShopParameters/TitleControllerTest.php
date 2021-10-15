@@ -53,6 +53,7 @@ class TitleControllerTest extends WebTestCase
         $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');
     }
+
     public function testIndexAction(): void
     {
         $this->client->request('GET', $this->router->generate('admin_title_index'));

@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
@@ -55,7 +57,7 @@ final class TitleQueryBuilder extends AbstractDoctrineQueryBuilder
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        $languageId
+        int $languageId
     ) {
         parent::__construct($connection, $dbPrefix);
 
@@ -91,7 +93,7 @@ final class TitleQueryBuilder extends AbstractDoctrineQueryBuilder
      *
      * @return QueryBuilder
      */
-    private function getTitleQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    private function getTitleQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $builder = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'gender', 't')
@@ -109,7 +111,7 @@ final class TitleQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param QueryBuilder $builder
      * @param SearchCriteriaInterface $searchCriteria
      */
-    private function applyFilters(QueryBuilder $builder, SearchCriteriaInterface $searchCriteria)
+    private function applyFilters(QueryBuilder $builder, SearchCriteriaInterface $searchCriteria): void
     {
         $allowedFilters = [
             'id_gender',
