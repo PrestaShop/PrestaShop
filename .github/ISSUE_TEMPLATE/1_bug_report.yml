@@ -12,7 +12,7 @@ body:
       options:
         - label: I have read the [code of conduct](https://github.com/PrestaShop/PrestaShop/blob/develop/CODE_OF_CONDUCT.md)
           required: true
-        - label: I have [searched](https://github.com/PrestaShop/PrestaShop/issues?q=is%3Aissue) for duplicate or closed issues
+        - label: I have already [searched in existing issues](https://github.com/PrestaShop/PrestaShop/issues?q=is%3Aissue) and found no previous report of this bug.
           required: true
   - type: textarea
     id: what-happened
