@@ -53,7 +53,7 @@ body:
   - type: input
     id: prestashop-version
     attributes:
-      label: What version of PrestaShop are you using?
+      label: PrestaShop version(s) where the bug happened
       placeholder: "e.g., v1.7.5.2 or v1.7.8.0"
     validations:
       required: true
