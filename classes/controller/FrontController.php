@@ -28,7 +28,6 @@ use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
-use Symfony\Component\Debug\Debug;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\IpUtils;
 
@@ -301,9 +300,6 @@ class FrontControllerCore extends Controller
         self::$initialized = true;
 
         parent::init();
-
-        // enable Symfony error handler if debug mode enabled
-        $this->initDebugguer();
 
         // If current URL use SSL, set it true (used a lot for module redirect)
         if (Tools::usingSecureMode()) {
@@ -2004,13 +2000,6 @@ class FrontControllerCore extends Controller
         $form->setAction($this->getCurrentURL());
 
         return $form;
-    }
-
-    private function initDebugguer()
-    {
-        if (true === _PS_MODE_DEV_) {
-            Debug::enable();
-        }
     }
 
     /**
