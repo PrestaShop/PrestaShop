@@ -37,3 +37,7 @@ _order_return_states:
 _search_engines:
   resource: "search_engines.yml"
   prefix: /search-engines/
+
+_title:
+  resource: "title.yml"
+  prefix: /title/
