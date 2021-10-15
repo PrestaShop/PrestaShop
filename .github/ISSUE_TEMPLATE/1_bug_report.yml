@@ -18,7 +18,7 @@ body:
     id: what-happened
     attributes:
       label: Describe the bug
-      description: A clear and concise description of what went wrong.
+      description: What went wrong?
     validations:
       required: true
   - type: textarea
