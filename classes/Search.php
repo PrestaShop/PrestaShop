@@ -94,6 +94,7 @@ define(
  * Contains kana and BMP ideographs.
  */
 define('PREG_CLASS_CJK', '\x{3041}-\x{30ff}\x{31f0}-\x{31ff}\x{3400}-\x{4db5}\x{4e00}-\x{9fbb}\x{f900}-\x{fad9}');
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class SearchCore
 {
@@ -133,7 +134,7 @@ class SearchCore
     public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
     {
 /*         start improvement
-         it allowss the '&' to be indexed for product names like J&B*/
+         it allows the '&' to be indexed for product names like J&B*/
         if (!stripos($string, '&')) {
             $sanitizedString = Search::sanitize($string, $id_lang, false, Context::getContext()->language->iso_code);
         } else {
