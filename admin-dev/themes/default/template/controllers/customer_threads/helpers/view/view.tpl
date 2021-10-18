@@ -164,10 +164,11 @@
 	{
 		$.ajax({
 			type: 'POST',
-			url: 'ajax-tab.php',
+			url: 'index.php',
 			async: true,
 			dataType: 'json',
 			data: {
+        ajax: 1,
 				controller: 'AdminCustomerThreads',
 				action: 'markAsRead',
 				token : '{$token|escape:'html':'UTF-8'}',

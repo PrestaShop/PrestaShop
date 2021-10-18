@@ -29,9 +29,13 @@ function addProductRuleGroup() {
   product_rule_counters[product_rule_groups_counter] = 0;
 
   $.get(
-    'ajax-tab.php',
+    'index.php',
     {
-      controller: 'AdminCartRules', token: currentToken, newProductRuleGroup: 1, product_rule_group_id: product_rule_groups_counter,
+      ajax: 1,
+      controller: 'AdminCartRules',
+      token: currentToken,
+      newProductRuleGroup: 1,
+      product_rule_group_id: product_rule_groups_counter,
     },
     (content) => {
       if (content != '') $('#product_rule_group_table').append(content);
@@ -47,9 +51,15 @@ function addProductRule(product_rule_group_id) {
   product_rule_counters[product_rule_group_id] += 1;
   if ($(`#product_rule_type_${product_rule_group_id}`).val() != 0) {
     $.get(
-      'ajax-tab.php',
+      'index.php',
       {
-        controller: 'AdminCartRules', token: currentToken, newProductRule: 1, product_rule_type: $(`#product_rule_type_${product_rule_group_id}`).val(), product_rule_group_id, product_rule_id: product_rule_counters[product_rule_group_id],
+        ajax: 1,
+        controller: 'AdminCartRules',
+        token: currentToken,
+        newProductRule: 1,
+        product_rule_type: $(`#product_rule_type_${product_rule_group_id}`).val(),
+        product_rule_group_id,
+        product_rule_id: product_rule_counters[product_rule_group_id],
       },
       (content) => {
         if (content != '') $(`#product_rule_table_${product_rule_group_id}`).append(content);
@@ -260,7 +270,7 @@ $('#cart_rule_form').submit(() => {
 
 $('#reductionProductFilter')
   .autocomplete(
-    'ajax-tab.php', {
+    'index.php', {
       minChars: 2,
       max: 50,
       width: 500,
@@ -278,6 +288,7 @@ $('#reductionProductFilter')
         return mytab;
       },
       extraParams: {
+        ajax: 1,
         controller: 'AdminCartRules',
         token: currentToken,
         reductionProductFilter: 1,
@@ -291,7 +302,7 @@ $('#reductionProductFilter')
 
 $('#customerFilter')
   .autocomplete(
-    'ajax-tab.php', {
+    'index.php', {
       minChars: 2,
       max: 50,
       width: 500,
@@ -309,6 +320,7 @@ $('#customerFilter')
         return mytab;
       },
       extraParams: {
+        ajax: 1,
         controller: 'AdminCartRules',
         token: currentToken,
         customerFilter: 1,
@@ -384,10 +396,11 @@ function searchProducts() {
   $.ajax({
     type: 'POST',
     headers: {'cache-control': 'no-cache'},
-    url: `${'ajax-tab.php' + '?rand='}${new Date().getTime()}`,
+    url: `${'index.php' + '?rand='}${new Date().getTime()}`,
     async: true,
     dataType: 'json',
     data: {
+      ajax: 1,
       controller: 'AdminCartRules',
       token: currentToken,
       action: 'searchProducts',

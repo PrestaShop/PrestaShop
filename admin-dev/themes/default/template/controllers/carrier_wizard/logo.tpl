@@ -50,7 +50,7 @@
 
 	function uploadCarrierLogo() {
 		$.ajaxFileUpload({
-			url: 'ajax-tab.php?tab=AdminCarrierWizard&token={$token|addslashes}&action=uploadLogo',
+			url: 'index.php?ajax=1&controller=AdminCarrierWizard&token={$token|addslashes}&action=uploadLogo',
 			secureuri: false,
 			fileElementId: 'carrier_logo_input',
 			dataType: 'xml',
