@@ -65,7 +65,7 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
             ->setCurrencyId((int) $data['currency_id'])
             ->setCountryId((int) $data['country_id'])
             ->setGroupId((int) $data['group_id'])
-            ->setCustomerId((int) $data['customer_id'])
+            ->setCustomerId($this->getCustomerId($data))
         ;
         if (isset($data['shop_id'])) {
             $command->setShopId((int) $data['shop_id']);
@@ -80,6 +80,7 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
     public function update($id, array $data): void
     {
         $command = new EditProductSpecificPriceCommand((int) $id);
+        $command->setCustomerId($this->getCustomerId($data));
 
         if (null !== $data['currency_id']) {
             $command->setCurrencyId((int) $data['currency_id']);
@@ -89,9 +90,6 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
         }
         if (null !== $data['group_id']) {
             $command->setGroupId((int) $data['group_id']);
-        }
-        if (null !== $data['customer_id']) {
-            $command->setCustomerId((int) $data['customer_id']);
         }
         if (null !== $data['from_quantity']) {
             $command->setFromQuantity((int) $data['from_quantity']);
@@ -113,5 +111,18 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
         }
 
         $this->commandBus->handle($command);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     *
+     * @return int
+     */
+    private function getCustomerId(array $data): int
+    {
+        $customerInput = $data['customer_id'];
+        $firstItem = reset($customerInput);
+
+        return (int) $firstItem['id_customer'] ?? 0;
     }
 }
