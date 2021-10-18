@@ -3422,16 +3422,6 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @deprecated 1.5.0, use Cart->getPackageShippingCost()
-     */
-    public function getOrderShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
-    {
-        Tools::displayAsDeprecated('Use Cart->getPackageShippingCost()');
-
-        return $this->getPackageShippingCost((int) $id_carrier, $use_tax, $default_country, $product_list);
-    }
-
-    /**
      * Return package shipping cost.
      *
      * @param int $id_carrier Carrier ID (default : current carrier)
