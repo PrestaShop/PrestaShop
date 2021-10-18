@@ -515,9 +515,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         if (!$order->isVirtual()) {
             foreach ($shipping as $item) {
                 if ($taxCalculationMethod == PS_TAX_INC) {
-                    $price = $this->context->getCurrentLocale()->formatPrice($item['shipping_cost_tax_incl'], $currency);
+                    $price = $this->context->getCurrentLocale()->formatPrice($item['shipping_cost_tax_incl'], $currency->iso_code);
                 } else {
-                    $price = $this->context->getCurrentLocale()->formatPrice($item['shipping_cost_tax_excl'], $currency);
+                    $price = $this->context->getCurrentLocale()->formatPrice($item['shipping_cost_tax_excl'], $currency->iso_code);
                 }
 
                 $trackingUrl = null;
@@ -743,13 +743,13 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             new DecimalNumber((string) $shippingRefundable),
             new DecimalNumber((string) $taxesAmount),
             new DecimalNumber((string) $totalAmount),
-            $this->context->getCurrentLocale()->formatPrice($productsPrice, $currency),
-            $this->context->getCurrentLocale()->formatPrice($discountsAmount, $currency),
-            $this->context->getCurrentLocale()->formatPrice($wrappingPrice, $currency),
-            $this->context->getCurrentLocale()->formatPrice($shippingPrice, $currency),
-            $this->context->getCurrentLocale()->formatPrice($shippingRefundable, $currency),
-            $this->context->getCurrentLocale()->formatPrice($taxesAmount, $currency),
-            $this->context->getCurrentLocale()->formatPrice($totalAmount, $currency)
+            $this->context->getCurrentLocale()->formatPrice($productsPrice, $currency->iso_code),
+            $this->context->getCurrentLocale()->formatPrice($discountsAmount, $currency->iso_code),
+            $this->context->getCurrentLocale()->formatPrice($wrappingPrice, $currency->iso_code),
+            $this->context->getCurrentLocale()->formatPrice($shippingPrice, $currency->iso_code),
+            $this->context->getCurrentLocale()->formatPrice($shippingRefundable, $currency->iso_code),
+            $this->context->getCurrentLocale()->formatPrice($taxesAmount, $currency->iso_code),
+            $this->context->getCurrentLocale()->formatPrice($totalAmount, $currency->iso_code)
         );
     }
 
@@ -773,7 +773,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 (int) $discount['id_order_cart_rule'],
                 $discount['name'],
                 new DecimalNumber((string) $discountAmount),
-                $this->context->getCurrentLocale()->formatPrice($discountAmount, $currency)
+                $this->context->getCurrentLocale()->formatPrice($discountAmount, $currency->iso_code)
             );
         }
 
