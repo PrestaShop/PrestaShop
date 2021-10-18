@@ -21,6 +21,13 @@ body:
     validations:
       required: true
   - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: Explain what you expected to happen instead.
+    validations:
+      required: false      
+  - type: textarea
     id: steps-reproduce
     attributes:
       label: Steps to reproduce
@@ -35,13 +42,6 @@ body:
         4. See error
     validations:
       required: true
-  - type: textarea
-    id: expected-behavior
-    attributes:
-      label: Expected behavior
-      description: Explain what you expected to happen instead.
-    validations:
-      required: false
   - type: textarea
     id: screenshots
     attributes:
