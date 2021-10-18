@@ -51,7 +51,6 @@ class CartOld extends Cart
      *                  - Cart::BOTH_WITHOUT_SHIPPING
      *                  - Cart::ONLY_SHIPPING
      *                  - Cart::ONLY_WRAPPING
-     *                  - Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING
      *                  - Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING
      * @param array $products
      * @param int $id_carrier
@@ -87,7 +86,6 @@ class CartOld extends Cart
             Cart::BOTH_WITHOUT_SHIPPING,
             Cart::ONLY_SHIPPING,
             Cart::ONLY_WRAPPING,
-            Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING,
             Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING,
         ];
 
@@ -128,10 +126,6 @@ class CartOld extends Cart
 
         if ($type == Cart::ONLY_SHIPPING) {
             return $shipping_fees;
-        }
-
-        if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
-            $type = Cart::ONLY_PRODUCTS;
         }
 
         $param_product = true;
