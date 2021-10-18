@@ -111,7 +111,7 @@ class Payment {
     } else {
       this.showConfirmation();
       $(`${this.confirmationSelector} button`).toggleClass('disabled', !show);
-      // We keep in order to be retro compatible with older themes
+      // Next line provides backward compatibility for Classic Theme < 1.7.8
       $(`${this.confirmationSelector} button`).attr('disabled', !show);
 
       if (show) {
