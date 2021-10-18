@@ -55,7 +55,7 @@ final class TitleQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function __construct(
         Connection $connection,
-        $dbPrefix,
+        string $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         int $languageId
     ) {

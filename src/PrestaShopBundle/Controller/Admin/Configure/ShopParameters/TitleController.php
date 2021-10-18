@@ -37,12 +37,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Controller responsible of "Configure > Shop Parameters > Customer Settings" page.
+ * Controller responsible of "Configure > Shop Parameters > Customer Settings > Titles" page.
  */
 class TitleController extends FrameworkBundleAdminController
 {
     /**
-     * Show customer preferences page.
+     * Show customer titles page.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
