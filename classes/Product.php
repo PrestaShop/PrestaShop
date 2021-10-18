@@ -2231,7 +2231,6 @@ class ProductCore extends ObjectModel
         $combination->weight = (float) $weight;
         $combination->unit_price_impact = (float) $unit;
         $combination->reference = pSQL($reference);
-        $combination->location = pSQL($location);
         $combination->ean13 = pSQL($ean13);
         $combination->isbn = pSQL($isbn);
         $combination->upc = pSQL($upc);
@@ -2331,11 +2330,9 @@ class ProductCore extends ObjectModel
         $combination->id_product = (int) $this->id;
         $combination->price = (float) $price;
         $combination->ecotax = (float) $ecotax;
-        $combination->quantity = (int) $quantity;
         $combination->weight = (float) $weight;
         $combination->unit_price_impact = (float) $unit_impact;
         $combination->reference = pSQL($reference);
-        $combination->location = pSQL($location);
         $combination->ean13 = pSQL($ean13);
         $combination->isbn = pSQL($isbn);
         $combination->upc = pSQL($upc);

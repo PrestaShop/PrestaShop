@@ -56,7 +56,6 @@ class ProductCombinationFactory
             $combination = new Combination();
             $combination->reference = $combinationName;
             $combination->id_product = $productId;
-            $combination->quantity = $combinationDetails->getQuantity();
             if ($combinationDetails->getPrice()) {
                 $combination->price = $combinationDetails->getPrice();
             }

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Context;
 use Currency;
 use Tools;
 
@@ -53,7 +54,16 @@ class PriceFormatter
      */
     public function format($price, $currency = null)
     {
-        return Context::getContext()->getCurrentLocale()->formatPrice($price, $currency);
+        $context = Context::getContext();
+        if ($currency === null) {
+            $currency = $context->currency;
+        } elseif (is_int($currency)) {
+            $currency = Currency::getCurrencyInstance($currency);
+        }
+
+        $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
+
+        return Context::getContext()->getCurrentLocale()->formatPrice($price, $currencyCode);
     }
 
     /**
