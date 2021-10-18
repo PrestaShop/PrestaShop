@@ -255,14 +255,6 @@ class ConfigurationCore extends ObjectModel
     }
 
     /**
-     * @deprecated use Configuration::getConfigInMultipleLangs() instead
-     */
-    public static function getInt($key, $idShopGroup = null, $idShop = null)
-    {
-        return self::getConfigInMultipleLangs($key, $idShopGroup, $idShop);
-    }
-
-    /**
      * Get a single configuration value (in multiple languages).
      *
      * @param string $key Configuration Key
