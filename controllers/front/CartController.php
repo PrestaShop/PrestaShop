@@ -143,7 +143,7 @@ class CartControllerCore extends FrontController
             $presentedCart['products'] = $this->get('prestashop.core.filter.front_end_object.product_collection')
                 ->filter($presentedCart['products']);
 
-            $this->ajaxRender(Tools::jsonEncode([
+            $this->ajaxRender(json_encode([
                 'success' => true,
                 'id_product' => $this->id_product,
                 'id_product_attribute' => $this->id_product_attribute,
@@ -155,7 +155,7 @@ class CartControllerCore extends FrontController
 
             return;
         } else {
-            $this->ajaxRender(Tools::jsonEncode([
+            $this->ajaxRender(json_encode([
                 'hasError' => true,
                 'errors' => $this->errors,
                 'quantity' => $productQuantity,
@@ -173,7 +173,7 @@ class CartControllerCore extends FrontController
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'cart_detailed' => $this->render('checkout/_partials/cart-detailed'),
             'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals'),
             'cart_summary_items_subtotal' => $this->render('checkout/_partials/cart-summary-items-subtotal'),
@@ -224,7 +224,7 @@ class CartControllerCore extends FrontController
         }
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'success' => true,
             'productUrl' => $url,
         ]));

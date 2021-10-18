@@ -177,7 +177,7 @@ class AddressControllerCore extends FrontController
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'address_form' => $this->render(
                 'customer/_partials/address-form',
                 $addressForm->getTemplateVariables()

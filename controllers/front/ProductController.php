@@ -428,7 +428,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $this->setQuickViewMode();
 
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'quickview_html' => $this->render(
                 'catalog/_partials/quickview',
                 $productForTemplate instanceof AbstractLazyArray ?
@@ -452,7 +452,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'product_prices' => $this->render('catalog/_partials/product-prices'),
             'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails'),
             'product_customization' => $this->render(
