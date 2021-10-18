@@ -4192,21 +4192,6 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @deprecated 1.5.5.0
-     *
-     * @param int $id_product Product ID
-     * @param int $index Customization field identifier as id_customization_field in table customization_field
-     *
-     * @return bool
-     */
-    public function deletePictureToProduct($id_product, $index)
-    {
-        Tools::displayAsDeprecated('Use deleteCustomizationToProduct() instead');
-
-        return $this->deleteCustomizationToProduct($id_product, (int) $index);
-    }
-
-    /**
      * Remove a customer's customization.
      *
      * @param int $id_product Product ID
