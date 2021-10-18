@@ -160,7 +160,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
         $newShop->delete();
 
         // disable multistore
-        LegacyConfiguration::set('PS_MULTISHOP_FEATURE_ACTIVE', 0);
+        LegacyConfiguration::deleteByName('PS_MULTISHOP_FEATURE_ACTIVE');
 
         // reset shop context
         Shop::resetContext();
