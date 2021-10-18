@@ -111,6 +111,7 @@ class Payment {
     } else {
       this.showConfirmation();
       $(`${this.confirmationSelector} button`).toggleClass('disabled', !show);
+      $(`${this.confirmationSelector} button`).attr('disabled', !show);
 
       if (show) {
         $(this.conditionAlertSelector).hide();
