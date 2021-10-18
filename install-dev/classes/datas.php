@@ -132,7 +132,7 @@ class Datas
         ],
         'admin_password' => [
             'name' => 'password',
-            'validate' => 'isPasswd',
+            'validate' => 'isPlaintextPassword',
             'default' => '0123456789',
         ],
         'admin_email' => [
