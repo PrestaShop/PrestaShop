@@ -495,18 +495,6 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * @param $categories
-     * @param $idCategory
-     * @param $n
-     *
-     * @deprecated 1.7.0
-     */
-    protected static function _subTree(&$categories, $idCategory, &$n)
-    {
-        self::subTree($categories, $idCategory, $n);
-    }
-
-    /**
      * @param array $categories
      * @param int $idCategory
      * @param int $n
@@ -872,18 +860,6 @@ class CategoryCore extends ObjectModel
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-    }
-
-    /**
-     * Get Shop ID.
-     *
-     * @return int
-     *
-     * @deprecated 1.7.0
-     */
-    public function getShopID()
-    {
-        return $this->id_shop;
     }
 
     /**
@@ -1904,15 +1880,6 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * @see self::getUrlRewriteInformation()
-     * @deprecated 1.7.0
-     */
-    public static function getUrlRewriteInformations($idCategory)
-    {
-        return self::getUrlRewriteInformation($idCategory);
-    }
-
-    /**
      * Get URL Rewrite information.
      *
      * @param $idCategory
@@ -2097,15 +2064,6 @@ class CategoryCore extends ObjectModel
         }
 
         return $nbProductRecursive;
-    }
-
-    /**
-     * @see self::getCategoryInformation()
-     * @deprecated 1.7.0
-     */
-    public static function getCategoryInformations($idsCategory, $idLang = null)
-    {
-        return self::getCategoryInformation($idsCategory, $idLang);
     }
 
     /**
