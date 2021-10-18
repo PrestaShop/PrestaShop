@@ -171,6 +171,7 @@ class SpecificPriceType extends TranslatorAwareType
                 'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
                 'placeholder' => $this->trans('All Customers', 'Admin.Global'),
                 'suggestion_field' => 'fullname_and_email',
+                'empty_data' => null,
             ])
             ->add('combinationId', ChoiceType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),
