@@ -629,9 +629,8 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $combination = new Combination();
         $combination->reference = $combinationName;
         $combination->id_product = $this->getProductWithName($productName)->id;
-        $combination->quantity = $combinationQuantity;
         $combination->add();
-        StockAvailable::setQuantity((int) $this->getProductWithName($productName)->id, $combination->id, $combination->quantity);
+        StockAvailable::setQuantity((int) $this->getProductWithName($productName)->id, $combination->id, $combinationQuantity);
         $this->combinations[$productName][$combinationName] = $combination;
     }
 
