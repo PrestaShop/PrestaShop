@@ -4015,6 +4015,7 @@ class CartCore extends ObjectModel
          * First add all applicable cartRules before calculating the totals and the discounts
          */
         if (CartRule::isFeatureActive() && $this->id) {
+            $context = Context::getContext()->cloneContext();
             $context->cart = $this;
             CartRule::autoAddToCart($context);
         }

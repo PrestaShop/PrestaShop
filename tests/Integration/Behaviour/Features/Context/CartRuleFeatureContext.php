@@ -87,11 +87,13 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
-        $this->countryFeatureContext = $scope->getEnvironment()->getContext(CountryFeatureContext::class);
-        $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
-        $this->carrierFeatureContext = $scope->getEnvironment()->getContext(CarrierFeatureContext::class);
-        $this->customerFeatureContext = $scope->getEnvironment()->getContext(CustomerFeatureContext::class);
-        $this->categoryFeatureContext = $scope->getEnvironment()->getContext(CategoryFeatureContext::class);
+        $environment = $scope->getEnvironment();
+
+        $this->countryFeatureContext = $environment->getContext(CountryFeatureContext::class);
+        $this->productFeatureContext = $environment->getContext(ProductFeatureContext::class);
+        $this->carrierFeatureContext = $environment->getContext(CarrierFeatureContext::class);
+        $this->customerFeatureContext = $environment->getContext(CustomerFeatureContext::class);
+        $this->categoryFeatureContext = $environment->getContext(CategoryFeatureContext::class);
     }
 
     /**
@@ -118,13 +120,22 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->createCartRule($cartRuleName, 0, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser);
     }
 
+    /**
+     * @Given /^there is a cart rule named "(.+)" with empty code that applies an amount discount of (\d+\.\d+) with priority (\d+), quantity of (\d+) and quantity per user (\d+)$/
+     */
+    public function thereIsACartRuleWithEmptyCodeAndNameAndAmountDiscountOfAndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
+    {
+        $this->createCartRule($cartRuleName, 0, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser, '');
+    }
+
     protected function createCartRule(
         $cartRuleName,
         $percent,
         $amount,
         $priority,
         $cartRuleQuantity,
-        $cartRuleQuantityPerUser
+        $cartRuleQuantityPerUser,
+        $code = null
     ) {
         $cartRule = new CartRule();
         $cartRule->reduction_percent = $percent;
@@ -140,7 +151,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $now->add(new DateInterval('P1Y'));
         $cartRule->date_to = $now->format('Y-m-d H:i:s');
         $cartRule->active = 1;
-        $cartRule->code = '';
+        if (!is_null($code)) {
+            $cartRule->code = $code;
+        }
         $cartRule->add();
         $this->cartRules[$cartRuleName] = $cartRule;
         SharedStorage::getStorage()->set($cartRuleName, $cartRule->id);

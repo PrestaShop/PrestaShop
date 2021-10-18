@@ -274,7 +274,7 @@ Feature: Check cart to order data copy
     And email sending is disabled
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 2 items of product "product1" in my cart
-    And there is a cart rule named "cartrule1" that applies an amount discount of 5.0 with priority 1, quantity of 1000 and quantity per user 1000
+    And there is a cart rule named "cartrule1" with empty code that applies an amount discount of 5.0 with priority 1, quantity of 1000 and quantity per user 1000
     And there is a customer named "customer1" whose email is "fake@prestashop.com"
     And I am logged in as "customer1"
     Then the current cart should have the following informations:
