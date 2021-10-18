@@ -3832,22 +3832,6 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @deprecated 1.5.0
-     *
-     * @param CartRule $obj
-     *
-     * @return bool|string
-     */
-    public function checkDiscountValidity($obj, $discounts, $order_total, $products, $check_cart_discount = false)
-    {
-        Tools::displayAsDeprecated();
-        $context = Context::getContext()->cloneContext();
-        $context->cart = $this;
-
-        return $obj->checkValidity($context);
-    }
-
-    /**
      * Return useful information about the cart for display purpose.
      * Products are splitted between paid ones and gift
      * Gift price and shipping (if shipping is free) are removed from Discounts
