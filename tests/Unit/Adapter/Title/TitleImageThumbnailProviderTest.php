@@ -26,36 +26,19 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+namespace Tests\Unit\Adapter\Title;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Gender;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Title\TitleImageThumbnailProvider;
+use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParser;
 
-/**
- * Class GenderProvider provides genders choices.
- */
-final class GenderChoiceProvider implements FormChoiceProviderInterface
+class TitleImageThumbnailProviderTest extends TestCase
 {
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function testGetPath(): void
     {
-        $this->translator = $translator;
-    }
+        $imageTagSourceParser = new ImageTagSourceParser('/prestashop/');
+        $titleImageThumbnailProvider = new TitleImageThumbnailProvider($imageTagSourceParser);
 
-    /**
-     * Get currency choices.
-     *
-     * @return array
-     */
-    public function getChoices(): array
-    {
-        return [
-            '--' => '',
-            $this->translator->trans('Male', [], 'Admin.Shopparameters.Feature') => Gender::GENDER_MALE,
-            $this->translator->trans('Female', [], 'Admin.Shopparameters.Feature') => Gender::GENDER_FEMALE,
-            $this->translator->trans('Neutral', [], 'Admin.Shopparameters.Feature') => Gender::GENDER_NEUTRAL,
-        ];
+        $this->assertRegexp('#/img/tmp/title_mini_1.jpg#', $titleImageThumbnailProvider->getPath(1));
     }
 }
