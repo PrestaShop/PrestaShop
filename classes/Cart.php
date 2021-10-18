@@ -1399,36 +1399,6 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Check if the Cart contains the given Product (Attribute).
-     *
-     * @deprecated 1.7.3.1
-     * @see Cart::getProductQuantity()
-     *
-     * @param int $id_product Product ID
-     * @param int $id_product_attribute ProductAttribute ID
-     * @param int $id_customization Customization ID
-     * @param int $id_address_delivery Delivery Address ID
-     *
-     * @return array|bool Whether the Cart contains the Product
-     *                    Result comes directly from the database
-     */
-    public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
-    {
-        $result = $this->getProductQuantity(
-            $id_product,
-            $id_product_attribute,
-            $id_customization,
-            $id_address_delivery
-        );
-
-        if (empty($result['quantity'])) {
-            return false;
-        }
-
-        return ['quantity' => $result['quantity']];
-    }
-
-    /**
      * Update Product quantity.
      *
      * @param int $quantity Quantity to add (or substract)
