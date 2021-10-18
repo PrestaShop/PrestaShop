@@ -53,7 +53,7 @@ class PriceFormatter
      */
     public function format($price, $currency = null)
     {
-        return Tools::displayPrice($price, $currency);
+        return Context::getContext()->getCurrentLocale()->formatPrice($price, $currency);
     }
 
     /**

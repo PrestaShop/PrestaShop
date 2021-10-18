@@ -742,47 +742,6 @@ class ToolsCore
     }
 
     /**
-     * Return price with currency sign for a given product.
-     *
-     * @deprecated Since 1.7.6.0. Please use Locale::formatPrice() instead
-     * @see PrestaShop\PrestaShop\Core\Localization\Locale
-     *
-     * @param float $price Product price
-     * @param int|Currency|array|null $currency Current currency (object, id_currency, NULL => context currency)
-     * @param bool $no_utf8 Not used anymore
-     * @param Context|null $context
-     *
-     * @return string Price correctly formatted (sign, decimal separator...)
-     *                if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
-     *
-     * @throws LocalizationException
-     */
-    public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
-    {
-        @trigger_error(
-            'Tools::displayPrice() is deprecated since version 1.7.6.0. '
-            . 'Use ' . Locale::class . '::formatPrice() instead.',
-            E_USER_DEPRECATED
-        );
-
-        if (!is_numeric($price)) {
-            return $price;
-        }
-
-        $context = $context ?: Context::getContext();
-        $currency = $currency ?: $context->currency;
-
-        if (is_int($currency)) {
-            $currency = Currency::getCurrencyInstance($currency);
-        }
-
-        $locale = static::getContextLocale($context);
-        $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
-
-        return $locale->formatPrice($price, $currencyCode);
-    }
-
-    /**
      * Return current locale
      *
      * @param Context $context
