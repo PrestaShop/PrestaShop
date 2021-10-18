@@ -226,7 +226,7 @@ function doAjaxForgot() {
 		$.ajax({
 			type: 'POST',
 			headers: {'cache-control': 'no-cache'},
-			url: 'index.php' + '?rand=' + new Date().getTime(),
+			url: 'index.php?rand=' + new Date().getTime(),
 			async: true,
 			dataType: 'json',
 			data: {
@@ -257,7 +257,7 @@ function doAjaxReset() {
 		$.ajax({
 			type: 'POST',
 			headers: {'cache-control': 'no-cache'},
-			url: 'index.php' + '?rand=' + new Date().getTime(),
+			url: 'index.php?rand=' + new Date().getTime(),
 			async: true,
 			dataType: 'json',
 			data: {
