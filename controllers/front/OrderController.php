@@ -229,7 +229,7 @@ class OrderControllerCore extends FrontController
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'preview' => $this->render('checkout/_partials/cart-summary', [
                 'cart' => $cart,
                 'static_token' => Tools::getToken(false),
@@ -320,7 +320,7 @@ class OrderControllerCore extends FrontController
         ob_end_clean();
         header('Content-Type: application/json');
 
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'address_form' => $this->render(
                 'checkout/_partials/address-form',
                 $templateParams
