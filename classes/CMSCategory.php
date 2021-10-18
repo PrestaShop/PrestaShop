@@ -583,30 +583,6 @@ class CMSCategoryCore extends ObjectModel
     }
 
     /**
-     * Retrieve CMSCategory by name and parent CMSCategory id.
-     *
-     * @param int $id_lang Language ID
-     * @param string $CMSCategory_name Searched CMSCategory name
-     * @param int $id_parent_CMSCategory parent CMSCategory ID
-     *
-     * @return array Corresponding CMSCategory
-     *
-     * @deprecated 1.5.3.0
-     */
-    public static function searchByNameAndParentCMSCategoryId($id_lang, $CMSCategory_name, $id_parent_CMSCategory)
-    {
-        Tools::displayAsDeprecated();
-
-        return Db::getInstance()->getRow('
-		SELECT c.*, cl.*
-	    FROM `' . _DB_PREFIX_ . 'cms_category` c
-	    LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = ' . (int) $id_lang . ')
-	    WHERE `name` = \'' . pSQL($CMSCategory_name) . '\'
-		AND c.`id_cms_category` != 1
-		AND c.`id_parent` = ' . (int) $id_parent_CMSCategory);
-    }
-
-    /**
      * Get Each parent CMSCategory of this CMSCategory until the root CMSCategory.
      *
      * @param int $id_lang Language ID
