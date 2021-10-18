@@ -167,6 +167,7 @@ export default class EntitySearchInput {
   private buildOptions(options: OptionsObject): void {
     const inputOptions = options || {};
     const defaultOptions: OptionsObject = {
+      suggestionField: 'name',
       prototypeTemplate: undefined,
       prototypeIndex: '__index__',
       prototypeMapping: {
@@ -175,7 +176,6 @@ export default class EntitySearchInput {
         image: '__image__',
       },
       identifierField: 'id',
-      responseTransformer: (response: any) => response || [],
       allowDelete: true,
       dataLimit: 0,
       minLength: 2,
@@ -205,6 +205,7 @@ export default class EntitySearchInput {
       // These are configurable callbacks
       onRemovedContent: undefined,
       onSelectedContent: undefined,
+      responseTransformer: (response: any) => response || [],
     };
 
     Object.keys(defaultOptions).forEach((optionName) => {
@@ -286,7 +287,7 @@ export default class EntitySearchInput {
             entityImage = `<img src="${entity.image}" /> `;
           }
 
-          return `<div class="search-suggestion">${entityImage}${entity.name}</div>`;
+          return `<div class="search-suggestion">${entityImage}${entity[this.options.suggestionField]}</div>`;
         },
       },
       onSelect: (selectedItem: any) => {
