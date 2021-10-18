@@ -27,10 +27,10 @@
     <div
             class="header-multishop{% if isAllShopContext %} header-multishop-allshops{% elseif currentContext.color is empty %} header-multishop-default{% endif %}{% if isTitleDark is same as (true) %} header-multishop-dark{% else %} header-multishop-bright{% endif %}"
             data-translations="{{ {
-                'modal.confirm_leave.title': 'You have unsaved changes'|trans({}, 'Admin.Actions'),
-                'modal.confirm_leave.body': 'Changing context without saving your modifications will make you loose them. Do you want to quit ?'|trans({}, 'Admin.Actions'),
-                'modal.confirm_leave.cancel': 'No, stay'|trans({}, 'Admin.Actions'),
-                'modal.confirm_leave.confirm': 'Yes, quit'|trans({}, 'Admin.Actions')
+                'modal.confirm_leave.title': 'Switch context?'|trans({}, 'Admin.Actions'),
+                'modal.confirm_leave.body': 'Switching context now will discard all unsaved changes.'|trans({}, 'Admin.Actions'),
+                'modal.confirm_leave.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+                'modal.confirm_leave.confirm': 'Switch context without saving'|trans({}, 'Admin.Actions')
             }|json_encode }}"
     >
       <div class="header-multishop-top-bar"{% if currentContext.color is not empty %} style="background-color: {{currentContext.color}};"{% endif %}>

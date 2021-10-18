@@ -24,7 +24,7 @@
  */
 
 import ComponentsMap from '@components/components-map';
-import {ConfirmModal} from "@components/modal/confirm-modal";
+import {ConfirmModal} from '@components/modal/confirm-modal';
 
 const {$} = window;
 
@@ -35,7 +35,9 @@ const initMultistoreForm = () => {
   const $modalItem = $(MultistoreHeaderMap.modal);
   const translations = $(MultistoreHeaderMap.header).data('translations');
 
-  let formChangedAndNotSaved = false;
+  const generateFormValuesHash = () => multistoreForm.serialize();
+
+  const originalFormValuesHash = generateFormValuesHash();
 
   /**
    * @param {string} path
@@ -50,39 +52,38 @@ const initMultistoreForm = () => {
     const confirmButtonClass = 'btn-primary';
 
     const modal = new ConfirmModal(
-        {
-          confirmTitle,
-          confirmMessage,
-          confirmButtonLabel,
-          closeButtonLabel,
-          confirmButtonClass,
-        },
-        () => {
+      {
+        confirmTitle,
+        confirmMessage,
+        confirmButtonLabel,
+        closeButtonLabel,
+        confirmButtonClass,
+      },
+      () => {
+        $.post({
+          url: <string>multistoreForm.attr('action'),
+          data: multistoreForm.serialize(),
+        }).then(() => {
           window.location.href = path;
-        },
+        });
+      }, () => {
+        window.location.href = path;
+      },
     );
 
     modal.show();
-  }
+  };
 
   if (multistoreForm) {
-    multistoreForm.on('change', () => {
-      formChangedAndNotSaved = true;
-    });
-
-    multistoreForm.on('submit', () => {
-      multistoreForm.off('change');
-      formChangedAndNotSaved = false;
-    });
-
     // Bind click on header's links
     $modalItem.find('a').each((index, itemLink) => {
       $(itemLink).on('click', (event) => {
-        if (formChangedAndNotSaved) {
+        if (originalFormValuesHash !== generateFormValuesHash()) {
           const targetUrl = $(itemLink).attr('href');
           showConfirmModal(`${targetUrl}`);
 
-          return false;
+          event.stopPropagation();
+          event.preventDefault();
         }
       });
     });
