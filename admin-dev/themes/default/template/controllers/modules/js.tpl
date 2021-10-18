@@ -42,7 +42,6 @@
 
 	{literal}
 
-	function getPrestaStore(){if(getE("prestastore").style.display!='block')return;$.post(dirNameCurrentIndex+"/ajax.php",{page:"prestastore"},function(a){getE("prestastore-content").innerHTML=a;})}
 	function truncate_author(author){return ((author.length > 20) ? author.substring(0, 20)+"..." : author);}
 	function modules_management(action)
 	{
