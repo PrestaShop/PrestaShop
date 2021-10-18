@@ -3100,39 +3100,6 @@ exit;
     }
 
     /**
-     * @deprecated Deprecated since 1.7.0
-     * Use json_decode instead
-     * jsonDecode convert json string to php array / object
-     *
-     * @param string $data
-     * @param bool $assoc (since 1.4.2.4) if true, convert to associative array
-     * @param int $depth
-     * @param int $options
-     *
-     * @return array
-     */
-    public static function jsonDecode($data, $assoc = false, $depth = 512, $options = 0)
-    {
-        return json_decode($data, $assoc, $depth, $options);
-    }
-
-    /**
-     * @deprecated Deprecated since 1.7.0
-     * Use json_encode instead
-     * Convert an array to json string
-     *
-     * @param mixed $data
-     * @param int $depth
-     * @param int $options
-     *
-     * @return string json
-     */
-    public static function jsonEncode($data, $options = 0, $depth = 512)
-    {
-        return json_encode($data, $options, $depth);
-    }
-
-    /**
      * Display a warning message indicating that the method is deprecated.
      *
      * @param string $message
@@ -3286,16 +3253,6 @@ exit;
     }
 
     /**
-     * @deprecated Deprecated since 1.7.0
-     *
-     * @return bool
-     */
-    public static function getSafeModeStatus()
-    {
-        return false;
-    }
-
-    /**
      * Extract a zip file to the given directory
      *
      * @param string $from_file
@@ -3427,17 +3384,6 @@ exit;
 
             return $qty;
         }
-    }
-
-    /**
-     * @deprecated as of 1.5 use Controller::getController('PageNotFoundController')->run();
-     */
-    public static function display404Error()
-    {
-        header('HTTP/1.1 404 Not Found');
-        header('Status: 404 Not Found');
-        include __DIR__ . '/../404.php';
-        die;
     }
 
     /**
