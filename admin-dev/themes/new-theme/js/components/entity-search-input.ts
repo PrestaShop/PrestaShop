@@ -175,7 +175,7 @@ export default class EntitySearchInput {
         image: '__image__',
       },
       identifierField: 'id',
-
+      responseTransformer: (response: any) => response || [],
       allowDelete: true,
       dataLimit: 0,
       minLength: 2,
@@ -328,10 +328,10 @@ export default class EntitySearchInput {
           if (!response) {
             return [];
           }
-
+          const transformedResponse = this.options.responseTransformer(response);
           const selectedIds: string[] = this.getSelectedIds();
           const suggestedItems: any[] = [];
-          response.forEach((responseItem: any) => {
+          transformedResponse.forEach((responseItem: any) => {
             // Force casting to string to avoid inequality with number IDs because of type
             const responseIdentifier: string = String(responseItem[this.options.identifierField]);
             const isIdContained = this.options.filterSelected && selectedIds.includes(responseIdentifier);
