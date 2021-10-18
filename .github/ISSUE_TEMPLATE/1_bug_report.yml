@@ -16,8 +16,8 @@ body:
   - type: textarea
     id: what-happened
     attributes:
-      label: Describe the bug
-      description: What went wrong?
+      label: Describe the bug and add screenshots
+      description: What went wrong? If applicable, add screenshots or screen recordings to help explain your problem.
     validations:
       required: true
   - type: textarea
@@ -42,13 +42,6 @@ body:
         4. See error
     validations:
       required: true
-  - type: textarea
-    id: screenshots
-    attributes:
-      label: Screenshots
-      description: If applicable, add screenshots or screen recordings to help explain your problem.
-    validations:
-      required: false
   - type: input
     id: prestashop-version
     attributes:
