@@ -190,7 +190,7 @@ class HelperUploaderCore extends Uploader
             $this->_template_directory = self::DEFAULT_TEMPLATE_DIRECTORY;
         }
 
-        return $this->_normalizeDirectory($this->_template_directory);
+        return $this->normalizeDirectory($this->_template_directory);
     }
 
     public function getTemplateFile($template)
@@ -200,22 +200,22 @@ class HelperUploaderCore extends Uploader
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController
-            && file_exists($this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()) . $this->getTemplateDirectory() . $template)
+            && file_exists($this->normalizeDirectory($this->getContext()->controller->getTemplatePath()) . $this->getTemplateDirectory() . $template)
         ) {
-            return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
+            return $this->normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
-            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
+            && file_exists($this->normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
                 . DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
-            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
+            return $this->normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
                 . DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
-        } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
+        } elseif (file_exists($this->normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
                 . $this->getTemplateDirectory() . $template)) {
-            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
+            return $this->normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
                     . $this->getTemplateDirectory() . $template;
-        } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
+        } elseif (file_exists($this->normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
                 . $this->getTemplateDirectory() . $template)) {
-            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
+            return $this->normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
                 . $this->getTemplateDirectory() . $template;
         } else {
             return $this->getTemplateDirectory() . $template;

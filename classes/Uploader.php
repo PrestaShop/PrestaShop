@@ -208,7 +208,7 @@ class UploaderCore
             $this->setSavePath(_PS_UPLOAD_DIR_);
         }
 
-        return $this->_normalizeDirectory($this->_save_path);
+        return $this->normalizeDirectory($this->_save_path);
     }
 
     /**
@@ -385,19 +385,6 @@ class UploaderCore
      *
      * @return int
      *
-     * @deprecated 1.7.0
-     */
-    protected function _getFileSize($filePath, $clearStatCache = false)
-    {
-        return $this->getFileSize($filePath, $clearStatCache);
-    }
-
-    /**
-     * @param string $filePath
-     * @param bool $clearStatCache
-     *
-     * @return int
-     *
      * @since 1.7.0
      */
     protected function getFileSize($filePath, $clearStatCache = false)
@@ -414,35 +401,11 @@ class UploaderCore
      *
      * @return string
      *
-     * @deprecated 1.7.0
-     */
-    protected function _getServerVars($var)
-    {
-        return $this->getServerVars($var);
-    }
-
-    /**
-     * @param $var
-     *
-     * @return string
-     *
      * @since 1.7.0
      */
     protected function getServerVars($var)
     {
         return isset($_SERVER[$var]) ? $_SERVER[$var] : '';
-    }
-
-    /**
-     * @param $directory
-     *
-     * @return string
-     *
-     * @deprecated 1.7.0
-     */
-    protected function _normalizeDirectory($directory)
-    {
-        return $this->normalizeDirectory($directory);
     }
 
     /**
