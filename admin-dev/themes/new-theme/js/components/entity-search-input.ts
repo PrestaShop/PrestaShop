@@ -170,6 +170,7 @@ export default class EntitySearchInput {
         name: '__name__',
         image: '__image__',
       },
+      responseTransformer: (response: any) => response || [],
 
       allowDelete: true,
       dataLimit: 0,
@@ -318,12 +319,7 @@ export default class EntitySearchInput {
         url: sourceConfig.remoteUrl,
         cache: false,
         wildcard: this.options.queryWildcard,
-        transform(response: any) {
-          if (!response) {
-            return [];
-          }
-          return response;
-        },
+        transform: (response: any) => this.options.responseTransformer(response),
       },
     });
   }
