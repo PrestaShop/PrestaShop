@@ -496,18 +496,6 @@ class ShopCore extends ObjectModel
     }
 
     /**
-     * Get theme directory name.
-     *
-     * @return string $this->theme->theme_name
-     */
-    public function getTheme()
-    {
-        Tools::displayAsDeprecated('Please use $this->theme->getDirectory() instead');
-
-        return $this->theme->getDirectory();
-    }
-
-    /**
      * Get shop URI.
      *
      * @return string
