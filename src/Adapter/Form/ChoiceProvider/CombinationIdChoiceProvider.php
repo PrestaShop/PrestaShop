@@ -100,7 +100,7 @@ class CombinationIdChoiceProvider implements ConfigurableFormChoiceProviderInter
     private function resolveOptions(array $options): array
     {
         $resolver = new OptionsResolver();
-        $resolver->setDefined(['product_id']);
+        $resolver->setRequired(['product_id']);
         $resolver->setAllowedTypes('product_id', 'int');
 
         return $resolver->resolve($options);
