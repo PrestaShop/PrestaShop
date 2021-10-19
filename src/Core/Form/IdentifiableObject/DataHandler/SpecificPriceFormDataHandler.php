@@ -120,7 +120,7 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
      */
     private function getCustomerId(array $data): int
     {
-        $customerInput = $data['customer_id'];
+        $customerInput = $data['customer'];
         $firstItem = reset($customerInput);
 
         return (int) $firstItem['id_customer'] ?? 0;

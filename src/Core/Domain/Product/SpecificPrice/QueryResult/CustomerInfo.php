@@ -25,48 +25,77 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Customer\Repository;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult;
 
-use Customer;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-
-/**
- * Provides methods to access Customer data storage
- */
-class CustomerRepository extends AbstractObjectModelRepository
+class CustomerInfo
 {
     /**
-     * @param CustomerId $customerId
-     *
-     * @return Customer
-     *
-     * @throws CustomerNotFoundException
+     * @var int
      */
-    public function get(CustomerId $customerId): Customer
-    {
-        /** @var Customer $customer */
-        $customer = $this->getObjectModel(
-            $customerId->getValue(),
-            Customer::class,
-            CustomerNotFoundException::class
-        );
+    private $id;
 
-        return $customer;
+    /**
+     * @var string
+     */
+    private $firstname;
+
+    /**
+     * @var string
+     */
+    private $lastname;
+
+    /**
+     * @var string
+     */
+    private $email;
+
+    /**
+     * @param int $id
+     * @param string $firstname
+     * @param string $lastname
+     * @param string $email
+     */
+    public function __construct(
+        int $id,
+        string $firstname,
+        string $lastname,
+        string $email
+    ) {
+        $this->id = $id;
+        $this->firstname = $firstname;
+        $this->lastname = $lastname;
+        $this->email = $email;
     }
 
     /**
-     * @param CustomerId $customerId
-     *
-     * @throws CustomerNotFoundException
+     * @return int
      */
-    public function assertCustomerExists(CustomerId $customerId): void
+    public function getId(): int
     {
-        $this->assertObjectModelExists(
-            $customerId->getValue(),
-            'customer',
-            CustomerNotFoundException::class
-        );
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstname(): string
+    {
+        return $this->firstname;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastname(): string
+    {
+        return $this->lastname;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 }

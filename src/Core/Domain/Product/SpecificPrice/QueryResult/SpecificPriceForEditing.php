@@ -79,6 +79,11 @@ class SpecificPriceForEditing
     private $productId;
 
     /**
+     * @var CustomerInfo|null
+     */
+    private $customerInfo;
+
+    /**
      * @var int|null
      */
     private $combinationId;
@@ -104,11 +109,6 @@ class SpecificPriceForEditing
     private $groupId;
 
     /**
-     * @var int|null
-     */
-    private $customerId;
-
-    /**
      * @param int $specificPriceId
      * @param string $reductionType
      * @param DecimalNumber $reductionAmount
@@ -118,12 +118,12 @@ class SpecificPriceForEditing
      * @param DateTimeInterface $dateTimeFrom
      * @param DateTimeInterface $dateTimeTo
      * @param int $productId
+     * @param CustomerInfo|null $customerInfo
      * @param int|null $combinationId
      * @param int|null $shopId
      * @param int|null $currencyId
      * @param int|null $countryId
      * @param int|null $groupId
-     * @param int|null $customerId
      */
     public function __construct(
         int $specificPriceId,
@@ -135,12 +135,12 @@ class SpecificPriceForEditing
         DateTimeInterface $dateTimeFrom,
         DateTimeInterface $dateTimeTo,
         int $productId,
+        ?CustomerInfo $customerInfo,
         ?int $combinationId,
         ?int $shopId,
         ?int $currencyId,
         ?int $countryId,
-        ?int $groupId,
-        ?int $customerId
+        ?int $groupId
     ) {
         $this->specificPriceId = $specificPriceId;
         $this->reductionType = $reductionType;
@@ -151,12 +151,12 @@ class SpecificPriceForEditing
         $this->dateTimeFrom = $dateTimeFrom;
         $this->dateTimeTo = $dateTimeTo;
         $this->productId = $productId;
+        $this->customerInfo = $customerInfo;
         $this->combinationId = $combinationId;
         $this->shopId = $shopId;
         $this->currencyId = $currencyId;
         $this->countryId = $countryId;
         $this->groupId = $groupId;
-        $this->customerId = $customerId;
     }
 
     /**
@@ -240,11 +240,11 @@ class SpecificPriceForEditing
     }
 
     /**
-     * @return int|null
+     * @return CustomerInfo|null
      */
-    public function getCustomerId(): ?int
+    public function getCustomerInfo(): ?CustomerInfo
     {
-        return $this->customerId;
+        return $this->customerInfo;
     }
 
     /**
