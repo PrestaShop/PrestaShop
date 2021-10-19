@@ -225,7 +225,6 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
                 'sp.id_group = gl.id_group AND gl.id_lang = :langId'
             )
             ->where('sp.id_product = :productId')
-            ->andWhere('')
             ->andWhere('sp.id_cart = 0')
             ->andWhere('sp.id_specific_price_rule = 0')
             ->orderBy('id_specific_price', 'asc')
