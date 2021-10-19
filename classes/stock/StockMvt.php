@@ -122,20 +122,6 @@ class StockMvtCore extends ObjectModel
     public $referer;
 
     /**
-     * @deprecated since 1.5.0
-     * @deprecated stock movement will not be updated anymore
-     */
-    public $date_upd;
-
-    /**
-     * @deprecated since 1.5.0
-     * @see physical_quantity
-     *
-     * @var int
-     */
-    public $quantity;
-
-    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
