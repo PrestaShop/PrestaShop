@@ -25,10 +25,14 @@
 
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
-import initSpecificPriceModal from '@pages/product/components/specific-price';
 import {EventEmitter} from 'events';
 import SpecificPriceList from '@pages/product/components/specific-price/specific-price-list';
+import Vue from 'vue';
+import VueI18n from 'vue-i18n';
+import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import SpecificPriceModal from '@pages/product/components/specific-price/SpecificPriceModal.vue';
 
+Vue.use(VueI18n);
 const SpecificPriceMap = ProductMap.specificPrice;
 
 export default class SpecificPricesManager {
@@ -46,7 +50,7 @@ export default class SpecificPricesManager {
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.specificPriceList = new SpecificPriceList(productId);
-    this.specificPriceModalApp = initSpecificPriceModal(
+    this.initSpecificPriceModal(
       productId,
       SpecificPriceMap.formModal,
       this.eventEmitter,
@@ -58,5 +62,38 @@ export default class SpecificPricesManager {
   private initListeners(): void {
     this.eventEmitter.on(ProductEventMap.specificPrice.specificPriceCreated, () => this.specificPriceList.renderList());
     this.eventEmitter.on(ProductEventMap.specificPrice.specificPriceUpdated, () => this.specificPriceList.renderList());
+  }
+
+  private initSpecificPriceModal(
+    productId: number,
+    specificPriceModalSelector: string,
+    eventEmitter: EventEmitter,
+  ): Vue|null {
+    const container = document.querySelector(specificPriceModalSelector);
+
+    if (!(container instanceof HTMLElement)) {
+      console.error('Invalid container provided for specificPrice modal');
+
+      return null;
+    }
+
+    const translations = JSON.parse(<string>container.dataset.translations);
+    const i18n = new VueI18n({
+      locale: 'en',
+      formatter: new ReplaceFormatter(),
+      messages: {en: translations},
+    });
+
+    return new Vue({
+      el: specificPriceModalSelector,
+      template:
+        '<specific-price-modal :productId=productId :eventEmitter=eventEmitter />',
+      components: {SpecificPriceModal},
+      i18n,
+      data: {
+        eventEmitter,
+        productId,
+      },
+    });
   }
 }
