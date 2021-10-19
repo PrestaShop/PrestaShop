@@ -22,19 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import EntitySearchInput from '@components/entity-search-input';
-import SpecificPriceMap from '../specific-price-map';
 
-const {$} = window;
-
-$(() => {
-  new EntitySearchInput($(SpecificPriceMap.customerSearchContainer), {
-    responseTransformer: (response: any) => {
-      if (!response) {
-        return [];
-      }
-
-      return response.customers;
-    },
-  });
-});
+export default {
+  customerSearchContainer: '#specific_price_customer_id',
+};
