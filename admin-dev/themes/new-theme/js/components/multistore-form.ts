@@ -60,15 +60,8 @@ const initMultistoreForm = () => {
         confirmButtonClass,
       },
       () => {
-        $.post({
-          url: <string>multistoreForm.attr('action'),
-          data: multistoreForm.serialize(),
-        }).then(() => {
-          window.location.href = path;
-        });
-      }, () => {
         window.location.href = path;
-      },
+      }
     );
 
     modal.show();
@@ -82,9 +75,10 @@ const initMultistoreForm = () => {
           const targetUrl = $(itemLink).attr('href');
           showConfirmModal(`${targetUrl}`);
 
-          event.stopPropagation();
-          event.preventDefault();
+          return false;
         }
+
+        return true;
       });
     });
   }
