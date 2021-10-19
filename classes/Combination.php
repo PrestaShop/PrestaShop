@@ -111,18 +111,6 @@ class CombinationCore extends ObjectModel
     ];
 
     /**
-     * @param int|null $id
-     * @param int|null $id_lang
-     * @param int|null $id_shop
-     * @param Translator|null $translator
-     */
-    public function __construct(?int $id = null, ?int $id_lang = null, ?int $id_shop = null, ?Translator $translator = null)
-    {
-        parent::__construct($id, $id_lang, $id_shop, $translator);
-        $this->loadStockData();
-    }
-
-    /**
      * Deletes current Combination from the database.
      *
      * @return bool True if delete was successful
