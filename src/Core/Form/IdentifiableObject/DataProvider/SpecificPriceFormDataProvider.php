@@ -65,7 +65,13 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
             'currency_id' => $specificPriceForEditing->getCurrencyId(),
             'country_id' => $specificPriceForEditing->getCountryId(),
             'group_id' => $specificPriceForEditing->getGroupId(),
-            'customer_id' => $specificPriceForEditing->getCustomerId(),
+            'customer_id' => [
+                [
+                    'id_customer' => $specificPriceForEditing->getCustomerId(),
+                    //@todo: this part smells. Its a side effect from entity search input.
+                    'fullname_and_email' => 'todo'
+                ]
+            ],
             'from_quantity' => $specificPriceForEditing->getFromQuantity(),
             'price' => (string) $fixedPrice,
             'leave_initial_price' => $fixedPrice->equalsZero(),
