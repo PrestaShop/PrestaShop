@@ -257,7 +257,7 @@ export default class EntitySearchInput {
 
     // For now adapt the display based on the allowDelete option
     const $entityDelete = $(this.options.entityDeleteSelector, this.$entitiesContainer);
-    $entityDelete.toggle(!!this.options.allowDelete);
+    $entityDelete.toggle(this.options.allowDelete);
   }
 
   /**
@@ -385,7 +385,7 @@ export default class EntitySearchInput {
 
     const $selectedNode = $(selectedHtml);
     const $entityDelete = $(this.options.entityDeleteSelector, $selectedNode);
-    $entityDelete.toggle(!!this.options.allowDelete);
+    $entityDelete.toggle(this.options.allowDelete);
 
     this.$entitiesContainer.append($selectedNode);
 
