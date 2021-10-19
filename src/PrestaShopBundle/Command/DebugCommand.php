@@ -27,15 +27,16 @@
 namespace PrestaShopBundle\Command;
 
 use Employee;
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Debug\DebugMode;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * CLI command for getting and setting debug mode setting
@@ -43,7 +44,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class DebugCommand extends Command
 {
     private const STATUS_OK = 0;
-    private const STATUS_ERR = 1;
+    private const STATUS_ERROR = 1;
 
     /**
      * @var InputInterface
@@ -56,9 +57,9 @@ class DebugCommand extends Command
     protected $output;
 
     /**
-     * @var FormatterHelper
+     * @var SymfonyStyle
      */
-    protected $formatter;
+    protected $io;
 
     /**
      * @var CommandBusInterface
@@ -96,51 +97,51 @@ class DebugCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void|null
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->init($input, $output);
-
         // no new value, just print out the current setting value
-        $inval = $input->getArgument('value');
-        if (is_null($inval)) {
-            $output->writeln(sprintf('Debug mode is %s', $this->debugConfiguration->isDebugModeEnabled() ? 'on' : 'off'));
+        $inputValue = $this->input->getArgument('value');
+        if (is_null($inputValue)) {
+            $this->io->success(sprintf('Debug mode is: %s', $this->debugConfiguration->isDebugModeEnabled() ? 'ON' : 'OFF'));
 
             return self::STATUS_OK;
         }
 
         // parse incoming to truthy
-        $newval = filter_var($inval, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-        if (is_null($newval)) {
-            $this->displayMessage('Value is not a valid truthy value', 'error');
+        $newValue = filter_var($inputValue, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        if (is_null($newValue)) {
+            $this->io->error(
+                [
+                    'Input cannot be determined as neither "true" or "false" by php "filter_var"',
+                    'please check for valid values from: https://www.php.net/manual/en/filter.filters.validate.php section FILTER_VALIDATE_BOOLEAN',
+                ]
+            );
 
-            return self::STATUS_ERR;
+            return self::STATUS_ERROR;
         }
 
-        $this->commandBus->handle(new SwitchDebugModeCommand($newval));
-        $output->writeln(sprintf('Debug mode is now %s', $this->debugConfiguration->isDebugModeEnabled() ? 'on' : 'off'));
+        try {
+            $this->commandBus->handle(new SwitchDebugModeCommand($newValue));
+        } catch (Exception $e) {
+            $this->io->success($e->getMessage());
+        }
+        $this->io->success(sprintf('Debug mode is now: %s', $this->debugConfiguration->isDebugModeEnabled() ? 'ON' : 'OFF'));
 
         return self::STATUS_OK;
     }
 
-    protected function init(InputInterface $input, OutputInterface $output): void
+    protected function initialize(InputInterface $input, OutputInterface $output): void
     {
-        $this->formatter = $this->getHelper('formatter');
         $this->input = $input;
         $this->output = $output;
+        $this->io = new SymfonyStyle($this->input, $this->output);
         //We need to have an employee or the module hooks don't work
         //see LegacyHookSubscriber
         if (!$this->legacyContext->getContext()->employee) {
             //Even a non existing employee is fine
             $this->legacyContext->getContext()->employee = new Employee(42);
         }
-    }
-
-    protected function displayMessage(string $message, string $type = 'info'): void
-    {
-        $this->output->writeln(
-            $this->formatter->formatBlock($message, $type, true)
-        );
     }
 }
