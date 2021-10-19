@@ -24,5 +24,5 @@
  */
 
 export default {
-  customerSearchContainer: '#specific_price_customer_id',
+  customerSearchContainer: '#specific_price_customer',
 };

@@ -59,19 +59,12 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
         $specificPriceForEditing = $this->queryBus->handle(new GetSpecificPriceForEditing((int) $id));
         $fixedPrice = $specificPriceForEditing->getPrice();
 
-        return [
+        $data = [
             'product_id' => $specificPriceForEditing->getProductId(),
             'combination_id' => $specificPriceForEditing->getCombinationId(),
             'currency_id' => $specificPriceForEditing->getCurrencyId(),
             'country_id' => $specificPriceForEditing->getCountryId(),
             'group_id' => $specificPriceForEditing->getGroupId(),
-            'customer_id' => [
-                [
-                    'id_customer' => $specificPriceForEditing->getCustomerId(),
-                    //@todo: this part smells. Its a side effect from entity search input.
-                    'fullname_and_email' => 'todo'
-                ]
-            ],
             'from_quantity' => $specificPriceForEditing->getFromQuantity(),
             'price' => (string) $fixedPrice,
             'leave_initial_price' => $fixedPrice->equalsZero(),
@@ -85,6 +78,22 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
             ],
             'include_tax' => $specificPriceForEditing->includesTax(),
         ];
+
+        if ($customerInfo = $specificPriceForEditing->getCustomerInfo()) {
+            $data['customer'] = [
+                [
+                    'id_customer' => $customerInfo->getId(),
+                    'fullname_and_email' => sprintf(
+                        '%s %s - %s',
+                        $customerInfo->getFirstname(),
+                        $customerInfo->getLastname(),
+                        $customerInfo->getEmail()
+                    ),
+                ],
+            ];
+        }
+
+        return $data;
     }
 
     /**

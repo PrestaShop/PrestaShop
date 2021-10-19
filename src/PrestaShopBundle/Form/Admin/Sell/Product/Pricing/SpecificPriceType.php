@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Customer\SearchedCustomerType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Options\AttachedFileType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\ReductionType;
@@ -158,20 +157,19 @@ class SpecificPriceType extends TranslatorAwareType
                 'placeholder' => false,
                 'choices' => $this->getModifiedGroupChoices(),
             ])
-            ->add('customer_id', EntitySearchInputType::class, [
+            ->add('customer', EntitySearchInputType::class, [
                 'label' => $this->trans('Customer', 'Admin.Global'),
                 'layout' => EntitySearchInputType::LIST_LAYOUT,
                 'entry_type' => SearchedCustomerType::class,
                 'prototype_mapping' => [
                     'id_customer' => '__ID__',
-                    'fullname_and_email' => '__NAME__'
+                    'fullname_and_email' => '__NAME__',
                 ],
                 'limit' => 1,
                 'required' => false,
                 'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
                 'placeholder' => $this->trans('All Customers', 'Admin.Global'),
                 'suggestion_field' => 'fullname_and_email',
-                'empty_data' => null,
             ])
             ->add('combinationId', ChoiceType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),

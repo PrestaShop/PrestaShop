@@ -29,11 +29,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetSpecificPriceForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\CustomerInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use SpecificPrice;
 
 /**
  * Handles @see GetSpecificPriceForEditing using legacy object model
@@ -46,12 +50,20 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
     private $specificPriceRepository;
 
     /**
+     * @var CustomerRepository
+     */
+    private $customerRepository;
+
+    /**
      * @param SpecificPriceRepository $specificPriceRepository
+     * @param CustomerRepository $customerRepository
      */
     public function __construct(
-        SpecificPriceRepository $specificPriceRepository
+        SpecificPriceRepository $specificPriceRepository,
+        CustomerRepository $customerRepository
     ) {
         $this->specificPriceRepository = $specificPriceRepository;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -71,12 +83,35 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
             DateTimeUtil::buildNullableDateTime($specificPrice->from),
             DateTimeUtil::buildNullableDateTime($specificPrice->to),
             (int) $specificPrice->id_product,
-            (int) $specificPrice->id_product_attribute ?: null,
+            $this->getCustomerInfo($specificPrice),
             (int) $specificPrice->id_shop ?: null,
             (int) $specificPrice->id_currency ?: null,
             (int) $specificPrice->id_country ?: null,
             (int) $specificPrice->id_group ?: null,
             (int) $specificPrice->id_customer ?: null
+        );
+    }
+
+    /**
+     * @param SpecificPrice $specificPrice
+     *
+     * @return CustomerInfo|null
+     */
+    private function getCustomerInfo(SpecificPrice $specificPrice): ?CustomerInfo
+    {
+        $customerIdValue = (int) $specificPrice->id_customer;
+
+        if (!$customerIdValue) {
+            return null;
+        }
+
+        $customer = $this->customerRepository->get(new CustomerId($customerIdValue));
+
+        return new CustomerInfo(
+            $customerIdValue,
+            $customer->firstname,
+            $customer->lastname,
+            $customer->email
         );
     }
 }
