@@ -212,7 +212,6 @@ class OrderCore extends ObjectModel
             'total_wrapping_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
             'round_mode' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'round_type' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
-            'shipping_number' => ['type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'],
             'conversion_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
             'invoice_number' => ['type' => self::TYPE_INT],
             'delivery_number' => ['type' => self::TYPE_INT],
@@ -2290,33 +2289,32 @@ class OrderCore extends ObjectModel
         return ($a->date_add < $b->date_add) ? -1 : 1;
     }
 
-    public function getWsShippingNumber()
+    public function getShippingNumber(): ?string
     {
-        $id_order_carrier = Db::getInstance()->getValue('
-            SELECT `id_order_carrier`
-            FROM `' . _DB_PREFIX_ . 'order_carrier`
-            WHERE `id_order` = ' . (int) $this->id);
-        if ($id_order_carrier) {
-            $order_carrier = new OrderCarrier($id_order_carrier);
+        $idOrderCarrier = $this->getIdOrderCarrier();
 
-            return $order_carrier->tracking_number;
+        if ($idOrderCarrier) {
+            $orderCarrier = new OrderCarrier($idOrderCarrier);
+
+            return $orderCarrier->tracking_number;
         }
 
-        return $this->shipping_number;
+        return null;
+    }
+
+    public function getWsShippingNumber()
+    {
+        return $this->getShippingNumber();
     }
 
     public function setWsShippingNumber($shipping_number)
     {
-        $id_order_carrier = Db::getInstance()->getValue('
-            SELECT `id_order_carrier`
-            FROM `' . _DB_PREFIX_ . 'order_carrier`
-            WHERE `id_order` = ' . (int) $this->id);
-        if ($id_order_carrier) {
-            $order_carrier = new OrderCarrier($id_order_carrier);
-            $order_carrier->tracking_number = $shipping_number;
-            $order_carrier->update();
-        } else {
-            $this->shipping_number = $shipping_number;
+        $idOrderCarrier = $this->getIdOrderCarrier();
+
+        if ($idOrderCarrier) {
+            $orderCarrier = new OrderCarrier($idOrderCarrier);
+            $orderCarrier->tracking_number = $shipping_number;
+            $orderCarrier->update();
         }
 
         return true;

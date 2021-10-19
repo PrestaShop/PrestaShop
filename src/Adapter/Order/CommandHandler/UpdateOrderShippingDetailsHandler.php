@@ -66,7 +66,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
 
         $trackingNumber = $command->getShippingTrackingNumber();
         $carrierId = $command->getNewCarrierId();
-        $oldTrackingNumber = $order->shipping_number;
+        $oldTrackingNumber = $order->getShippingNumber();
 
         $orderCarrier = new OrderCarrier($command->getCurrentOrderCarrierId());
         if (!Validate::isLoadedObject($orderCarrier)) {
@@ -90,16 +90,12 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
             $orderCarrier->update();
 
             $order->id_carrier = $carrierId;
+            $order->update();
             $this->orderAmountUpdater->update($order, $cart);
         }
 
         //load fresh order carrier because updated just before
         $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
-
-        // update shipping number
-        // Keep these two following lines for backward compatibility, remove on 1.6 version
-        $order->shipping_number = $trackingNumber;
-        $order->update();
 
         // Update order_carrier
         $orderCarrier->tracking_number = pSQL($trackingNumber);

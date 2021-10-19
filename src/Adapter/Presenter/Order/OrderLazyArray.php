@@ -402,8 +402,8 @@ class OrderLazyArray extends AbstractLazyArray
         $order = $this->order;
 
         $carrier = $this->getCarrier();
-        if (!empty($carrier['url']) && !empty($order->shipping_number)) {
-            return str_replace('@', $order->shipping_number, $carrier['url']);
+        if (!empty($carrier['url']) && $order->getShippingNumber() !== null) {
+            return str_replace('@', $order->getShippingNumber(), $carrier['url']);
         }
 
         return '';
