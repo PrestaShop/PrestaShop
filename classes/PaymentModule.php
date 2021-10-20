@@ -753,20 +753,6 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * @deprecated 1.6.0.7
-     *
-     * @param mixed $content
-     *
-     * @return mixed
-     */
-    public function formatProductAndVoucherForEmail($content)
-    {
-        Tools::displayAsDeprecated('Use $content instead');
-
-        return $content;
-    }
-
-    /**
      * @param Address $the_address that needs to be txt formatted
      *
      * @return string the txt formatted address block
