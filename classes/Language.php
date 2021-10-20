@@ -584,16 +584,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * @deprecated 1.6.1.1 Use Tools::deleteDirectory($dir) instead
-     *
-     * @param string $dir is the path of the directory to delete
-     */
-    public static function recurseDeleteDir($dir)
-    {
-        return Tools::deleteDirectory($dir);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function delete()
@@ -1148,19 +1138,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return true;
     }
 
-    /**
-     * @deprecated Since 1.7.7, use LanguageImageManager
-     */
-    protected static function _copyNoneFlag($id)
-    {
-        @trigger_error(
-            __FUNCTION__ . 'is deprecated since version 1.7.7. Use ' . LanguageImageManager::class . ' instead.',
-            E_USER_DEPRECATED
-        );
-
-        return true;
-    }
-
     public static function isInstalled($iso_code)
     {
         if (static::$_cache_language_installation === null) {
@@ -1346,22 +1323,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
 
         return true;
-    }
-
-    /**
-     * @param array $lang_pack
-     * @param array $errors
-     *
-     * @deprecated This method is deprecated since 1.7.6.0 use GenerateThemeMailsCommand instead
-     */
-    public static function installEmailsLanguagePack($lang_pack, &$errors = [])
-    {
-        @trigger_error(
-            'Language::installEmailsLanguagePack() is deprecated since version 1.7.6.0 Use GenerateThemeMailsCommand instead.',
-            E_USER_DEPRECATED
-        );
-
-        static::generateEmailsLanguagePack($lang_pack, $errors, true);
     }
 
     /**
