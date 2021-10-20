@@ -94,7 +94,7 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
         if (null !== $data['from_quantity']) {
             $command->setFromQuantity((int) $data['from_quantity']);
         }
-        if (null !== $data['price']) {
+        if (true !== $data['leave_initial_price'] && null !== $data['price']) {
             $command->setPrice((string) $data['price']);
         }
         if (isset($data['date_range']['from'])) {
