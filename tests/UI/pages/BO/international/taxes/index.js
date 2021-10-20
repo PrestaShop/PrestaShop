@@ -320,8 +320,8 @@ class Taxes extends BOBasePage {
 
   /**
    * Enable/Disable eco tax
-   * @param page
-   * @param enableEcoTax
+   * @param page {Page} Browser tab
+   * @param enableEcoTax {boolean} True if we need to enable ecoTax
    * @returns {Promise<string>}
    */
   async enableEcoTax(page, enableEcoTax = true) {

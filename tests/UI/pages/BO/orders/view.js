@@ -600,7 +600,7 @@ class Order extends BOBasePage {
 
   /**
    * Is add product table row visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   isAddProductTableRowVisible(page) {
