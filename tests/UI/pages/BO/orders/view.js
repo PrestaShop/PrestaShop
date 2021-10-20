@@ -26,6 +26,7 @@ class Order extends BOBasePage {
     this.noAvailableDocumentsMessage = 'There is no available document';
     this.updateSuccessfullMessage = 'Update successful';
     this.validationSendMessage = 'The message was successfully sent to the customer.';
+    this.errorAssignSameStatus = 'The order has already been assigned this status.';
 
     // Customer card
     this.customerInfoBlock = '#customerInfo';
@@ -224,6 +225,17 @@ class Order extends BOBasePage {
     await this.dialogListener(page);
     await this.waitForSelectorAndClick(page, this.deleteProductButton(row));
     return this.getGrowlMessageContent(page);
+  }
+
+  /**
+   * Click on update status
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async clickOnUpdateStatus(page) {
+    await this.clickAndWaitForNavigation(page, '#historyTabContent .card-details-form button');
+
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   /**
