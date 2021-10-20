@@ -23,11 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import EntitySearchInput from '@components/entity-search-input';
-import SpecificPriceMap from '../specific-price-map';
+import PriceInputToggler from '@pages/specific-price/form/price-input-toggler';
+import SpecificPriceMap from '@pages/specific-price/specific-price-map';
 
 const {$} = window;
 
 $(() => {
+  new PriceInputToggler();
   new EntitySearchInput($(SpecificPriceMap.customerSearchContainer), {
     responseTransformer: (response: any) => {
       if (!response) {
