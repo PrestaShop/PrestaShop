@@ -378,6 +378,13 @@ describe('BO - Orders - view and edit order : Check order status block', async (
 
       await expect(newMail.subject).to.contains('[PrestaShop] Awaiting bank wire payment');
     });
+
+    it('should click on update status and check the error message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnUpdateStatusAndSeeTheErrorMessage', baseContext);
+
+      const textResult = await viewOrderPage.clickOnUpdateStatus(page);
+      await expect(textResult).to.contains(viewOrderPage.errorAssignSameStatus);
+    });
   });
 
   // Post-condition - Delete employee
