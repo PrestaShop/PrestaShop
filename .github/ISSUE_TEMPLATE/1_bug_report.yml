@@ -56,7 +56,7 @@ body:
       placeholder: "e.g., 7.1 or 8.0"
     validations:
       required: false
-  - type: textarea
+  - type: input
     id: module
     attributes:
       label: If your bug is related to a module, specify its name and its version
