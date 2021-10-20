@@ -31,7 +31,7 @@
     'data-prototype-mapping': prototype_mapping|json_encode,
     'data-identifier-field': identifier_field,
     'data-filtered-identities': filtered_identities|json_encode,
-    'data-remove-modal': remove_modal|json_encode,
+    'data-remove-modal': remove_modal ? remove_modal|json_encode : null,
     'data-remote-url': remote_url,
     'data-data-limit': limit,
     'data-min-length': min_length,

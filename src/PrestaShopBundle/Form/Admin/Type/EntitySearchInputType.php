@@ -115,7 +115,7 @@ class EntitySearchInputType extends CollectionType
             'layout' => static::LIST_LAYOUT,
 
             // Remove modal wording
-            'remove_modal' => null,
+            'remove_modal' => $this->getDefaultRemoveModalOptions(),
 
             // Empty state wording
             'empty_state' => null,
@@ -140,9 +140,7 @@ class EntitySearchInputType extends CollectionType
 
         $resolver->setAllowedTypes('remove_modal', ['array', 'null']);
         $resolver->setNormalizer('remove_modal', function (Options $options, $value) {
-            $resolver = $this->getRemoveModalResolver();
-
-            return $resolver->resolve($value ?? []);
+            return null !== $value ? $this->getRemoveModalResolver()->resolve($value) : null;
         });
 
         $resolver->setAllowedTypes('layout', ['string']);
@@ -175,8 +173,10 @@ class EntitySearchInputType extends CollectionType
 
         // Reformat parameter name for javascript (PHP and JS don't have same naming conventions)
         $removeModal = $options['remove_modal'];
-        $removeModal['buttonClass'] = $removeModal['button_class'];
-        unset($removeModal['button_class']);
+        if ($removeModal !== null) {
+            $removeModal['buttonClass'] = $removeModal['button_class'];
+            unset($removeModal['button_class']);
+        }
 
         $view->vars = array_replace($view->vars, [
             'allow_search' => $options['allow_search'],
@@ -243,5 +243,20 @@ class EntitySearchInputType extends CollectionType
         ;
 
         return $externalLinkResolver;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function getDefaultRemoveModalOptions(): array
+    {
+        return [
+            'id' => 'modal-confirm-remove-entity',
+            'title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
+            'message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
+            'apply' => $this->trans('Delete', 'Admin.Actions'),
+            'cancel' => $this->trans('Cancel', 'Admin.Actions'),
+            'button_class' => 'btn-danger',
+        ];
     }
 }
