@@ -65,7 +65,7 @@ Check customer block content
 Check that private note is closed by default
 Check that the other customer doesn't have the private note
 */
-describe('BO - Orders - view and edit order : Check and edit customer block', async () => {
+describe('BO - Orders - View and edit order : Check and edit customer block', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

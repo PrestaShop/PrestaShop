@@ -173,7 +173,7 @@ Check product block content:
   - Pagination next and previous
   - Delete product
 */
-describe('BO - Orders - view and edit order : Check product block in view order page', async () => {
+describe('BO - Orders - View and edit order : Check product block in view order page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
