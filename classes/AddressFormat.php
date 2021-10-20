@@ -640,18 +640,6 @@ class AddressFormatCore extends ObjectModel
     }
 
     /**
-     * @param int $idCountry
-     *
-     * @return false|string|null
-     *
-     * @deprecated 1.7.0
-     */
-    protected function _getFormatDB($idCountry)
-    {
-        return self::getFormatDB($idCountry);
-    }
-
-    /**
      * Get Address format from DB.
      *
      * @param int $idCountry Country ID
