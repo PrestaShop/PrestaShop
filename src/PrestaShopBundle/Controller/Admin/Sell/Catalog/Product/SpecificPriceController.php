@@ -33,6 +33,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Price;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -145,7 +146,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 'country' => $specificPrice->getCountry() ?? $this->trans('All countries', 'Admin.Global'),
                 'group' => $specificPrice->getGroup() ?? $this->trans('All groups', 'Admin.Global'),
                 'customer' => $specificPrice->getCustomer() ?? $this->trans('All customers', 'Admin.Global'),
-                'price' => $this->getContextLocale()->formatPrice((string) $specificPrice->getPrice(), $this->getContextCurrencyIso()),
+                'price' => $this->formatPrice($specificPrice->getPrice()),
                 'impact' => $this->formatImpact($specificPrice->getReductionType(), $specificPrice->getReductionValue()),
                 'period' => $this->formatPeriod($specificPrice->getDateTimeFrom(), $specificPrice->getDateTimeFrom()),
                 'fromQuantity' => $specificPrice->getFromQuantity(),
@@ -153,6 +154,15 @@ class SpecificPriceController extends FrameworkBundleAdminController
         }
 
         return $list;
+    }
+
+    private function formatPrice(Price $price): string
+    {
+        if ($price->isInitialPrice()) {
+            return $this->getUnspecifiedValueFormat();
+        }
+
+        return $this->getContextLocale()->formatPrice((string) $price, $this->getContextCurrencyIso());
     }
 
     private function formatImpact(string $reductionType, DecimalNumber $reductionValue): string

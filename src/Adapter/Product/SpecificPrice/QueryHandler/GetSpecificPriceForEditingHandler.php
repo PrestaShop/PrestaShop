@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPri
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetSpecificPriceForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\CustomerInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Price;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use SpecificPrice;
 
@@ -78,7 +79,7 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
             $specificPrice->reduction_type,
             new DecimalNumber((string) $specificPrice->reduction),
             (bool) $specificPrice->reduction_tax,
-            new DecimalNumber((string) $specificPrice->price),
+            new Price((string) $specificPrice->price),
             (int) $specificPrice->from_quantity,
             DateTimeUtil::buildNullableDateTime($specificPrice->from),
             DateTimeUtil::buildNullableDateTime($specificPrice->to),

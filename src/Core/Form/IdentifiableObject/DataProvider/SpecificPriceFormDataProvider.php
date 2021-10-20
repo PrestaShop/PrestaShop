@@ -67,7 +67,7 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
             'group_id' => $specificPriceForEditing->getGroupId(),
             'from_quantity' => $specificPriceForEditing->getFromQuantity(),
             'price' => (string) $fixedPrice,
-            'leave_initial_price' => $fixedPrice->equalsZero(),
+            'leave_initial_price' => $fixedPrice->isInitialPrice(),
             'date_range' => [
                 'from' => $specificPriceForEditing->getDateTimeFrom()->format(DateTime::DEFAULT_DATETIME_FORMAT),
                 'to' => $specificPriceForEditing->getDateTimeTo()->format(DateTime::DEFAULT_DATETIME_FORMAT),

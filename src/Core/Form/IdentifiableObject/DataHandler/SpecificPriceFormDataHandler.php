@@ -95,10 +95,11 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
             $command->setFromQuantity((int) $data['from_quantity']);
         }
 
-        if (true === $data['leave_initial_price']) {
-            //@todo: probably should move this part in to command/handler as its pretty important domain logic
-            $command->setPrice('-1');
-        } elseif (null !== $data['price']) {
+        if (null !== $data['leave_initial_price']) {
+            $command->setLeaveInitialPrice((bool) $data['leave_initial_price']);
+        }
+
+        if (null !== $data['price']) {
             $command->setPrice((string) $data['price']);
         }
 

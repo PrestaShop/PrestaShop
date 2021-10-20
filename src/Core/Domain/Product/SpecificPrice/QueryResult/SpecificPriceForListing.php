@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult;
 
 use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Price;
 
 class SpecificPriceForListing
 {
@@ -53,7 +54,7 @@ class SpecificPriceForListing
     private $includesTax;
 
     /**
-     * @var DecimalNumber
+     * @var Price
      */
     private $price;
 
@@ -191,9 +192,9 @@ class SpecificPriceForListing
     }
 
     /**
-     * @return DecimalNumber
+     * @return Price
      */
-    public function getPrice(): DecimalNumber
+    public function getPrice(): Price
     {
         return $this->price;
     }
