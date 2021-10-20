@@ -29,7 +29,7 @@
     'data-prototype-template': form_row(prototype),
     'data-prototype-index': prototype.vars.name|e('html_attr'),
     'data-prototype-mapping': prototype_mapping|json_encode,
-    'data-remove-modal': remove_modal|json_encode,
+    'data-remove-modal': remove_modal ? remove_modal|json_encode : null,
     'data-remote-url': remote_url,
     'data-data-limit': limit,
     'data-allow-delete': form.vars.allow_delete ? 1 : 0,
