@@ -9,7 +9,7 @@ const testContext = require('@utils/testContext');
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// import pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 

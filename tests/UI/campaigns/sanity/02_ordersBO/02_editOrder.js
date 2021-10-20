@@ -2,7 +2,7 @@ require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
 
-// import utils
+// Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 

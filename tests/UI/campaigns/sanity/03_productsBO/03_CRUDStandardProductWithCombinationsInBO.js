@@ -9,7 +9,7 @@ const testContext = require('@utils/testContext');
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// import BO pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
