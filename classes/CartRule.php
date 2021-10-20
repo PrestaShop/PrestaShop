@@ -928,26 +928,6 @@ class CartRuleCore extends ObjectModel
     /**
      * Checks if the products chosen by the customer are usable with the cart rule.
      *
-     * @deprecated since 1.7.4.0
-     * @see self::checkProductRestrictionsFromCart
-     *
-     * @param \Context $context
-     * @param bool $returnProducts
-     * @param bool $displayError
-     * @param bool $alreadyInCart
-     *
-     * @return array|bool|string
-     *
-     * @throws PrestaShopDatabaseException
-     */
-    public function checkProductRestrictions(Context $context, $returnProducts = false, $displayError = true, $alreadyInCart = false)
-    {
-        return $this->checkProductRestrictionsFromCart($context->cart, $returnProducts, $displayError, $alreadyInCart);
-    }
-
-    /**
-     * Checks if the products chosen by the customer are usable with the cart rule.
-     *
      * @param \Cart $cart
      * @param bool $returnProducts [default=false]
      *                             If true, this method will return an array of eligible products.
