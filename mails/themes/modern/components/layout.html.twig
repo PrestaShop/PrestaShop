@@ -54,8 +54,7 @@
           .mj-outlook-group-fix { width:100% !important; }
         </style>
         <![endif]-->
-  <style type="text/css">
-  {% if languageIsRTL|default(false) %}
+  {% if languageIsRTL|default(false) %}<style type="text/css">
     div {
       direction: rtl !important;
       text-align: right !important;
@@ -72,8 +71,7 @@
     .footer div {
       text-align: center !important;
     }
-  {% endif %}
-  </style>
+  </style>{% endif %}
   <style type="text/css">
     .shadow {
       box-shadow: 0 20px 30px 0 rgba(0, 0, 0, 0.1);
