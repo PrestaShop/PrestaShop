@@ -228,7 +228,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
     }
 
     /**
-     * return the subquery defining if a customer is new or not
+     * Returns the subquery defining if a customer is new or not
      */
     private function getNewCustomerSubSelect(): string
     {
@@ -246,7 +246,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
     /**
      * @param QueryBuilder $qb
      */
-    private function addNewCustomerField(QueryBuilder $qb)
+    private function addNewCustomerField(QueryBuilder $qb): void
     {
         $qb->addSelect('(' . $this->getNewCustomerSubSelect() . ') AS new');
     }
