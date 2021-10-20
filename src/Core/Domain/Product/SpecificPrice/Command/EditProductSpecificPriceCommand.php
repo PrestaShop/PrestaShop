@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use DateTime;
 use DateTimeInterface;
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIdInterface;
@@ -41,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Price;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -66,7 +66,7 @@ class EditProductSpecificPriceCommand
     private $includesTax;
 
     /**
-     * @var DecimalNumber|null
+     * @var Price|null
      */
     private $price;
 
@@ -120,6 +120,11 @@ class EditProductSpecificPriceCommand
      * @see NullDateTime
      */
     private $dateTimeTo;
+
+    /**
+     * @var bool|null
+     */
+    private $leaveInitialPrice;
 
     /**
      * @param int $specificPriceId
@@ -179,9 +184,9 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return DecimalNumber|null
+     * @return Price|null
      */
-    public function getPrice(): ?DecimalNumber
+    public function getPrice(): ?Price
     {
         return $this->price;
     }
@@ -193,7 +198,7 @@ class EditProductSpecificPriceCommand
      */
     public function setPrice(string $price): self
     {
-        $this->price = new DecimalNumber($price);
+        $this->price = new Price($price);
 
         return $this;
     }
@@ -374,6 +379,26 @@ class EditProductSpecificPriceCommand
     public function setDateTimeTo(DateTimeInterface $dateTimeTo): self
     {
         $this->dateTimeTo = $dateTimeTo;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function leaveInitialPrice(): ?bool
+    {
+        return $this->leaveInitialPrice;
+    }
+
+    /**
+     * @param bool $leaveInitialPrice
+     *
+     * @return EditProductSpecificPriceCommand
+     */
+    public function setLeaveInitialPrice(bool $leaveInitialPrice): self
+    {
+        $this->leaveInitialPrice = $leaveInitialPrice;
 
         return $this;
     }

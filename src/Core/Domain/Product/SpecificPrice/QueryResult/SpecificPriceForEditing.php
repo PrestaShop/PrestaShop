@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult;
 
 use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Price;
 
 class SpecificPriceForEditing
 {
@@ -113,7 +114,7 @@ class SpecificPriceForEditing
      * @param string $reductionType
      * @param DecimalNumber $reductionAmount
      * @param bool $includesTax
-     * @param DecimalNumber $price
+     * @param Price $price
      * @param int $fromQuantity
      * @param DateTimeInterface $dateTimeFrom
      * @param DateTimeInterface $dateTimeTo
@@ -130,7 +131,7 @@ class SpecificPriceForEditing
         string $reductionType,
         DecimalNumber $reductionAmount,
         bool $includesTax,
-        DecimalNumber $price,
+        Price $price,
         int $fromQuantity,
         DateTimeInterface $dateTimeFrom,
         DateTimeInterface $dateTimeTo,
@@ -192,9 +193,9 @@ class SpecificPriceForEditing
     }
 
     /**
-     * @return DecimalNumber
+     * @return Price
      */
-    public function getPrice(): DecimalNumber
+    public function getPrice(): Price
     {
         return $this->price;
     }
