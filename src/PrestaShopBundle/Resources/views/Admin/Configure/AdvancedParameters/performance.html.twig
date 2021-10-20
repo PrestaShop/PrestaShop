@@ -32,7 +32,6 @@
 {% form_theme cachingForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block content %}
-  {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
   {{ form_start(smartyForm, {attr : {class: 'form'}, action: path('admin_performance_smarty_save') }) }}
     <div class="row justify-content-center">
       {% block perfs_form_smarty_cache %}

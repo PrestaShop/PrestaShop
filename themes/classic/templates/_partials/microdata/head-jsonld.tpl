@@ -28,10 +28,10 @@
     "@type": "Organization",
     "name" : "{$shop.name}",
     "url" : "{$urls.pages.index}",
-    {if $shop.logo}
+    {if $shop.logo_details}
       "logo": {
         "@type": "ImageObject",
-        "url":"{$shop.logo.src}"
+        "url":"{$shop.logo_details.src}"
       }
     {/if}
   }
@@ -57,10 +57,10 @@
       "@context": "https://schema.org",
       "@type": "WebSite",
       "url" : "{$urls.pages.index}",
-      {if $shop.logo}
+      {if $shop.logo_details}
         "image": {
           "@type": "ImageObject",
-          "url":"{$shop.logo.src}"
+          "url":"{$shop.logo_details.src}"
         },
       {/if}
       "potentialAction": {
