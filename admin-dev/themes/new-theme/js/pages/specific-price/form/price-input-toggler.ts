@@ -22,9 +22,27 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import specificPriceMap from '../specific-price-map';
 
-export default {
-  customerSearchContainer: '#specific_price_customer',
-  priceInput: '#specific_price_price',
-  leaveInitialPriceCheckbox: '#specific_price_leave_initial_price',
-};
+/**
+ * Disables price input once "leave initial price" is checked
+ */
+export default class PriceInputToggler {
+  public constructor() {
+    this.init();
+  }
+
+  private init(): void {
+    const initialPriceCheckbox = document.querySelector(specificPriceMap.leaveInitialPriceCheckbox) as HTMLInputElement;
+    this.toggle(initialPriceCheckbox.checked);
+
+    initialPriceCheckbox.addEventListener('change', (event: Event) => {
+      this.toggle(initialPriceCheckbox.checked);
+    });
+  }
+
+  private toggle(disable: boolean): void {
+    const priceInput = document.querySelector(specificPriceMap.priceInput) as HTMLInputElement;
+    priceInput.classList.toggle('disabled', disable);
+  }
+}
