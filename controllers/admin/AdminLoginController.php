@@ -224,7 +224,7 @@ class AdminLoginControllerCore extends AdminController
 
         if (empty($passwd)) {
             $this->errors[] = $this->trans('The password field is blank.', [], 'Admin.Notifications.Error');
-        } elseif (!Validate::isPasswd($passwd)) {
+        } elseif (!Validate::isPlaintextPassword($passwd)) {
             $this->errors[] = $this->trans('Invalid password.', [], 'Admin.Notifications.Error');
         }
 
@@ -401,7 +401,7 @@ class AdminLoginControllerCore extends AdminController
         } elseif (!$reset_password) {
             // password (twice)
             $this->errors[] = $this->trans('The password is missing: please enter your new password.', [], 'Admin.Login.Notification');
-        } elseif (!Validate::isPasswd($reset_password)) {
+        } elseif (!Validate::isPlaintextPassword($reset_password)) {
             $this->errors[] = $this->trans('The password is not in a valid format.', [], 'Admin.Login.Notification');
         } elseif (!$reset_confirm) {
             $this->errors[] = $this->trans('The confirmation is empty: please fill in the password confirmation as well.', [], 'Admin.Login.Notification');
