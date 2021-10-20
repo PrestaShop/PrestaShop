@@ -212,7 +212,7 @@ class HelperOptionsCore extends Helper
                                 }
                             }
                         </script>';
-                    $field['link_remove_ip'] = '<button type="button" class="btn btn-default" onclick="addRemoteAddr();"><i class="icon-plus"></i> ' . Context::getContext()->getTranslator()->trans('Add my IP', [], 'Admin.Global') . '</button>';
+                    $field['link_remove_ip'] = '<button type="button" class="btn btn-default" onclick="addRemoteAddr();"><i class="icon-plus"></i> ' . Context::getContext()->getTranslator()->trans('Add my IP', [], 'Admin.Actions') . '</button>';
                 }
 
                 // Multishop default value
