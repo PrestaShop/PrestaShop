@@ -25,6 +25,7 @@ class Order extends BOBasePage {
     this.errorAddSameProduct = 'This product is already in your order, please edit the quantity instead.';
     this.noAvailableDocumentsMessage = 'There is no available document';
     this.updateSuccessfullMessage = 'Update successful';
+    this.validationSendMessage = 'The message was successfully sent to the customer.';
 
     // Customer card
     this.customerInfoBlock = '#customerInfo';
@@ -92,6 +93,7 @@ class Order extends BOBasePage {
     this.paginationPreviousLink = '#orderProductsTablePaginationPrev';
 
     // Status card
+    this.historyTab = '#historyTabContent';
     this.orderStatusesSelect = '#update_order_status_action_input';
     this.updateStatusButton = '#update_order_status_action_btn';
 
@@ -1028,6 +1030,35 @@ class Order extends BOBasePage {
    */
   getCurrencySelectOptions(page) {
     return this.getTextContent(page, this.paymentCurrencySelect);
+  }
+
+  /**
+   * Get status number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getStatusNumber(page) {
+    return this.getNumberFromText(page, '#historyTab');
+  }
+
+  /**
+   * Is order note opened
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isOrderNoteOpened(page) {
+    return this.elementVisible(page, '#historyTabContent a.js-order-notes-toggle-btn.is-opened)');
+  }
+
+  /**
+   * Resend email to customer
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async resendEmail(page) {
+    await this.waitForSelectorAndClick(page, '#historyTabContent form[action*=\'resend-email\'] button');
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 
