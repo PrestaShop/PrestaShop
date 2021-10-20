@@ -52,21 +52,14 @@ body:
   - type: input
     id: php-version
     attributes:
-      label: What version of PHP are you using?
-      placeholder: "e.g., 7.0 or 7.1"
+      label: PHP version(s) where the bug happened
+      placeholder: "e.g., 7.1 or 8.0"
     validations:
       required: false
-  - type: input
-    id: module-name
+  - type: textarea
+    id: module
     attributes:
-      label: If your bug is related to a module, specify its name
-      placeholder: "e.g., ps_facetedsearch"
-    validations:
-      required: false
-  - type: input
-    id: module-version
-    attributes:
-      label: If your bug is related to a module, specify its version
-      placeholder: "e.g., 3.7.1"
+      label: If your bug is related to a module, specify its name and its version
+      placeholder: "e.g., ps_facetedsearch v7.0"
     validations:
       required: false
