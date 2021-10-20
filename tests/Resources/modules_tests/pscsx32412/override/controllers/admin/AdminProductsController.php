@@ -2834,10 +2834,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $root = Category::getRootCategory();
         $default_category = $this->context->cookie->id_category_products_filter ? $this->context->cookie->id_category_products_filter : Context::getContext()->shop->id_category;
         if (!$product->id || !$product->isAssociatedToShop()) {
-            $selected_cat = Category::getCategoryInformations(Tools::getValue('categoryBox', [$default_category]), $this->default_form_language);
+            $selected_cat = Category::getCategoryInformation(Tools::getValue('categoryBox', [$default_category]), $this->default_form_language);
         } else {
             if (Tools::isSubmit('categoryBox')) {
-                $selected_cat = Category::getCategoryInformations(Tools::getValue('categoryBox', [$default_category]), $this->default_form_language);
+                $selected_cat = Category::getCategoryInformation(Tools::getValue('categoryBox', [$default_category]), $this->default_form_language);
             } else {
                 $selected_cat = Product::getProductCategoriesFull($product->id, $this->default_form_language);
             }
