@@ -207,16 +207,6 @@ class PrestaShopExceptionCore extends Exception
     }
 
     /**
-     * @deprecated 1.5.5
-     */
-    protected function getExentedMessage($html = true)
-    {
-        Tools::displayAsDeprecated('Use getExtendedMessage instead');
-
-        return $this->getExtendedMessage($html);
-    }
-
-    /**
      * Return the content of the Exception.
      *
      * @return string content of the exception
