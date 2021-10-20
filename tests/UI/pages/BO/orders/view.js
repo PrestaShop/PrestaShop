@@ -24,6 +24,7 @@ class Order extends BOBasePage {
     this.errorMinimumQuantityMessage = 'Minimum quantity of "3" must be added';
     this.errorAddSameProduct = 'This product is already in your order, please edit the quantity instead.';
     this.validationSendMessage = 'The message was successfully sent to the customer.';
+    this.errorAssignSameStatus = 'The order has already been assigned this status.';
 
     // Customer card
     this.customerInfoBlock = '#customerInfo';
@@ -196,6 +197,17 @@ class Order extends BOBasePage {
     await this.dialogListener(page);
     await this.waitForSelectorAndClick(page, this.deleteProductButton(row));
     return this.getGrowlMessageContent(page);
+  }
+
+  /**
+   * Click on update status
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async clickOnUpdateStatus(page) {
+    await this.clickAndWaitForNavigation(page, '#historyTabContent .card-details-form button');
+
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   /**
