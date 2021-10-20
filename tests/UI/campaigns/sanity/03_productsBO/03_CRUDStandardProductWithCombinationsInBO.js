@@ -100,7 +100,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
   });
 
   it('should go back to BO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'previewProduct1', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
     page = await foProductPage.closePage(browserContext, page, 0);
 
@@ -142,7 +142,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
   });
 
   it('should go back to BO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
     page = await foProductPage.closePage(browserContext, page, 0);
 

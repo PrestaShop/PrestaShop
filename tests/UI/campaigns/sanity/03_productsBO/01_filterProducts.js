@@ -68,7 +68,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
   });
 
   it('should check that prices have correct tax values', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkTaxRules', baseContext);
 
     // Check that prices have correct tax values
     for (let i = 1; i <= numberOfProducts && i <= numberOfProductsOnPage; i++) {

@@ -181,7 +181,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
   });
 
   it('should go to edit product page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkProductsPrices', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToEditProductPage', baseContext);
 
     await productsPage.goToEditProductPage(page, 1);
 
