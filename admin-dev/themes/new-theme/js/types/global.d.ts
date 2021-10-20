@@ -23,6 +23,7 @@ interface Window {
   Dropzone: any;
   data: any;
   pstooltip: any;
+  tinyMCE: any;
 }
 
 /* eslint-disable */

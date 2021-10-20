@@ -35,7 +35,11 @@ const initMultistoreForm = () => {
   const $modalItem = $(MultistoreHeaderMap.modal);
   const translations = $(MultistoreHeaderMap.header).data('translations');
 
-  const generateFormValuesHash = () => multistoreForm.serialize();
+  const generateFormValuesHash = () => {
+    window.tinyMCE.triggerSave(true);
+
+    return multistoreForm.serialize();
+  };
 
   const originalFormValuesHash = generateFormValuesHash();
 
@@ -61,7 +65,7 @@ const initMultistoreForm = () => {
       },
       () => {
         window.location.href = path;
-      }
+      },
     );
 
     modal.show();
@@ -70,7 +74,7 @@ const initMultistoreForm = () => {
   if (multistoreForm) {
     // Bind click on header's links
     $modalItem.find('a').each((index, itemLink) => {
-      $(itemLink).on('click', (event) => {
+      $(itemLink).on('click', () => {
         if (originalFormValuesHash !== generateFormValuesHash()) {
           const targetUrl = $(itemLink).attr('href');
           showConfirmModal(`${targetUrl}`);
@@ -85,5 +89,7 @@ const initMultistoreForm = () => {
 };
 
 $(() => {
-  initMultistoreForm();
+  window.prestashop.component.EventEmitter.on('tinymceInitialized', () => {
+    initMultistoreForm();
+  });
 });

@@ -134,6 +134,8 @@ class TinyMCEEditor {
 
     window.tinyMCE.init(cfg);
     this.watchTabChanges(cfg);
+
+    window.prestashop.component.EventEmitter.emit('tinymceInitialized', {});
   }
 
   /**
