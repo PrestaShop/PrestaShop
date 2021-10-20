@@ -86,6 +86,10 @@ class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
     {
         parent::configureOptions($resolver);
 
+        if (!$this->multistoreCheckboxEnabler->shouldAddMultistoreElements()) {
+            return;
+        }
+
         $resolver->setNormalizer('attr', function (Options $options, $value) {
             $classes = 'js-multishop-form-row';
             if (!empty($value['class'])) {
