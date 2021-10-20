@@ -101,33 +101,43 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
-        /** @var OrderPaymentForViewing $orderPaymentForViewing */
-        $orderPaymentForViewing = $this->getFirstPaymentForViewing($orderId, $orderForViewing);
+        $orderPaymentForViewing = $this->getPaymentForViewing($orderId, $orderForViewing, 'first');
         $invoiceNumber = $orderPaymentForViewing->getInvoiceNumber();
         Assert::assertNotNull($invoiceNumber);
     }
 
     /**
-     * @Then order :orderReference payments should have the following details:
+     * @Then order :orderReference payment in :position position should have the following details:
      *
      * @param string $orderReference
      * @param TableNode $table
      */
-    public function queryOrderPaymentsToGetTheFollowingProperties(string $orderReference, TableNode $table)
+    public function checkOrderPayment(string $orderReference, string $position, TableNode $table): void
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        /** @var OrderPaymentForViewing $orderPaymentForViewing */
-        $orderPaymentForViewing = $this->getFirstPaymentForViewing($orderId, $orderForViewing);
+
+        $orderPaymentForViewing = $this->getPaymentForViewing($orderId, $orderForViewing, $position);
 
         $dataArray = $table->getRowsHash();
-        $expectedOrderPaymentForViewing = $this->mapToOrderPaymentForViewing(
-            $orderPaymentForViewing->getPaymentId(), $dataArray
-        );
 
-        Assert::assertEquals($expectedOrderPaymentForViewing, $orderPaymentForViewing);
+        if (isset($dataArray['date'])) {
+            Assert::assertEquals(
+                $dataArray['date'],
+                $orderPaymentForViewing->getDate()->format('Y-m-d H:i:s')
+            );
+
+            unset($dataArray['date']);
+        }
+
+        foreach ($dataArray as $key => $value) {
+            Assert::assertEquals(
+                $value,
+                $orderPaymentForViewing->{'get' . ucfirst($key)}()
+            );
+        }
     }
 
     /**
@@ -217,12 +227,13 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param int $orderId
      * @param OrderForViewing $orderForViewing
+     * @param string $position
      *
      * @return OrderPaymentForViewing
      *
      * @throws RuntimeException
      */
-    private function getFirstPaymentForViewing(int $orderId, OrderForViewing $orderForViewing): OrderPaymentForViewing
+    private function getPaymentForViewing(int $orderId, OrderForViewing $orderForViewing, string $position): OrderPaymentForViewing
     {
         /** @var OrderPaymentsForViewing $orderPaymentsForViewing */
         $orderPaymentsForViewing = $orderForViewing->getPayments();
@@ -231,9 +242,15 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
         if (count($orderPaymentForViewingArray) == 0) {
             throw new RuntimeException('Order [' . $orderId . '] has no payments for viewing');
         }
-        /** @var OrderPaymentForViewing $orderPaymentForViewing */
-        $orderPaymentForViewing = $orderPaymentForViewingArray[0];
 
-        return $orderPaymentForViewing;
+        $indexes = [
+            'first' => 0,
+            'second' => 1,
+            'third' => 2,
+            'fourth' => 3,
+            'last' => count($orderPaymentForViewingArray) - 1,
+        ];
+
+        return $orderPaymentForViewingArray[$indexes[$position] ?? $position];
     }
 }
