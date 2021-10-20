@@ -46,7 +46,7 @@ export interface EntitySearchInputOptions extends OptionsObject {
   filterSelected: boolean,
   filteredIdentities: Array<string>,
 
-  removeModal: ModalOptions,
+  removeModal: ModalOptions | null,
 
   searchInputSelector: string,
   entitiesContainerSelector: string,
@@ -244,6 +244,12 @@ export default class EntitySearchInput {
 
       const $entity = $(event.target).closest(this.options.entityItemSelector);
 
+      if (!this.options.removeModal) {
+        $entity.remove();
+
+        return;
+      }
+
       const modal = new (ConfirmModal as any)(
         {
           id: this.options.removeModal.id,
@@ -267,6 +273,7 @@ export default class EntitySearchInput {
 
     // For now adapt the display based on the allowDelete option
     const $entityDelete = $(this.options.entityDeleteSelector, this.$entitiesContainer);
+    //'!!' converts option to bool (because if its 1 or 0, jquery toggle works differently than with true/false)
     $entityDelete.toggle(!!this.options.allowDelete);
   }
 
