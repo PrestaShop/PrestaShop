@@ -42,7 +42,7 @@ body.lang-rtl .float-left {
     float: right !important;
 }
 /* Fix dropdown menu text overflow */
-.dropdown-menu.show {
+.dropdown-menu[x-placement="bottom-start"].show {
   right: 0px;
   left: auto !important;
 }
