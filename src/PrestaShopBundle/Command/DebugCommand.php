@@ -26,10 +26,8 @@
 
 namespace PrestaShopBundle\Command;
 
-use Employee;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Debug\DebugMode;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\LegacyContextLoader;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
