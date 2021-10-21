@@ -538,6 +538,67 @@ describe('BO - Orders - view and edit order : Check order status block', async (
       const isOpened = await viewOrderPage.isOrderNoteOpened(page);
       await expect(isOpened).to.be.false;
     });
+
+    it('should open the order note textarea', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'openOrderNote', baseContext);
+
+      const isOpened = await viewOrderPage.openOrderNoteTextarea(page);
+      await expect(isOpened).to.be.true;
+    });
+
+    it('should go to \'Orders > Orders\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.ordersParentLink,
+        dashboardPage.ordersLink,
+      );
+
+      await ordersPage.closeSfToolBar(page);
+
+      const pageTitle = await ordersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
+
+      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfOrders).to.be.above(0);
+    });
+
+    it(`should filter the Orders table by 'Customer: ${DefaultCustomer.lastName}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
+
+      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
+
+      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+      await expect(textColumn).to.contains(DefaultCustomer.lastName);
+    });
+
+    it('should view the order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage', baseContext);
+
+      await ordersPage.goToOrder(page, 1);
+
+      const pageTitle = await viewOrderPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+    });
+
+    it('should check that the status number is equal to 1', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber3', baseContext);
+
+      const statusNumber = await viewOrderPage.getStatusNumber(page);
+      await expect(statusNumber).to.be.equal(1);
+    });
+
+    it('should set an order note', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'setOrderNote', baseContext);
+
+      const textResult = await viewOrderPage.setOrderNote(page, 'Test order note');
+      await expect(textResult).to.equal(viewOrderPage.updateSuccessfullMessage);
+    });
   });
 
   // Post-condition - Delete employee

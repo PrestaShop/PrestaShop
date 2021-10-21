@@ -27,6 +27,7 @@ class Order extends BOBasePage {
     this.updateSuccessfullMessage = 'Update successful';
     this.validationSendMessage = 'The message was successfully sent to the customer.';
     this.errorAssignSameStatus = 'The order has already been assigned this status.';
+    this.updateSuccessfullMessage = 'Update successful';
 
     // Customer card
     this.customerInfoBlock = '#customerInfo';
@@ -922,7 +923,32 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async isOrderNoteOpened(page) {
-    return this.elementVisible(page, '#historyTabContent a.js-order-notes-toggle-btn.is-opened)');
+    return this.elementVisible(page, '#historyTabContent a.js-order-notes-toggle-btn.is-opened', 100);
+  }
+
+  /**
+   * Open order note textarea
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async openOrderNoteTextarea(page) {
+    await this.waitForSelectorAndClick(page, '#historyTabContent a.js-order-notes-toggle-btn');
+
+    return this.isOrderNoteOpened(page);
+  }
+
+  /**
+   * Set order note
+   * @param page {Page} Browser tab
+   * @param orderNote {String} Value of order note to set on textarea
+   * @returns {Promise<string>}
+   */
+  async setOrderNote(page, orderNote) {
+    await this.openOrderNoteTextarea(page);
+    await this.setValue(page, '#internal_note_note', orderNote);
+    await this.waitForSelectorAndClick(page, 'button.js-order-notes-btn');
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
