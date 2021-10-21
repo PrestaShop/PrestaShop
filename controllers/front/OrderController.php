@@ -273,7 +273,7 @@ class OrderControllerCore extends FrontController
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode($responseData));
+        $this->ajaxRender(json_encode($responseData));
     }
 
     public function initContent()
