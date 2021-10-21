@@ -29,6 +29,10 @@ class Order extends BOBasePage {
     this.errorAssignSameStatus = 'The order has already been assigned this status.';
     this.updateSuccessfullMessage = 'Update successful';
 
+    // Order actions selectors
+    this.updateStatusButton = '#update_order_status_action_btn';
+    this.orderStatusesSelect = '#update_order_status_action_input';
+
     // Customer card
     this.customerInfoBlock = '#customerInfo';
     this.ViewAllDetailsLink = '#viewFullDetails a';
@@ -91,14 +95,19 @@ class Order extends BOBasePage {
     this.paginationNextLink = '#orderProductsTablePaginationNext';
     this.paginationPreviousLink = '#orderProductsTablePaginationPrev';
 
-    // Status card
-    this.historyTab = '#historyTabContent';
-    this.orderStatusesSelect = '#update_order_status_action_input';
-    this.updateStatusButton = '#update_order_status_action_btn';
+    // Status tab
+    this.historyTabContent = '#historyTabContent';
+    this.secondOrderStatusesSelect = '#update_order_status_new_order_status_id';
+    this.secondUpdateStatusButton = `${this.historyTabContent} .card-details-form button.btn-primary`;
     this.gridTable = '#history_grid_table';
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td#${column}`;
+    this.resendEmailButton = row => `${this.tableRow(row)} td.form[action*='resend-email'] button`;
+    this.orderNoteCloseButtun = '#historyTabContent a.js-order-notes-toggle-btn.is-opened';
+    this.orderNoteOpenButtun = '#historyTabContent a.js-order-notes-toggle-btn';
+    this.orderNoteTextarea = '#internal_note_note';
+    this.orderNoteSaveButton = 'button.js-order-notes-btn';
 
     // Documents tab
     this.documentTab = 'a#orderDocumentsTab';
@@ -143,6 +152,52 @@ class Order extends BOBasePage {
   /*
   Methods
    */
+
+  /**
+   * Get order status
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getOrderStatus(page) {
+    return this.getTextContent(page, `${this.orderStatusesSelect} option[selected='selected']`, false);
+  }
+
+  /**
+   * Modify the order status from the page header
+   * @param page {Page} Browser tab
+   * @param status {string} Status to edit
+   * @returns {Promise<string>}
+   */
+  async modifyOrderStatus(page, status) {
+    const actualStatus = await this.getOrderStatus(page);
+
+    if (status !== actualStatus) {
+      await this.selectByVisibleText(page, this.orderStatusesSelect, status);
+      await this.clickAndWaitForNavigation(page, this.updateStatusButton);
+      return this.getOrderStatus(page);
+    }
+    return actualStatus;
+  }
+
+  /**
+   * Does status exist
+   * @param page {Page} Browser tab
+   * @param statusName {string} Status to check
+   * @returns {Promise<boolean>}
+   */
+  async doesStatusExist(page, statusName) {
+    let options = await page.$$eval(
+      `${this.orderStatusesSelect} option`,
+      all => all.map(
+        option => ({
+          textContent: option.textContent,
+          value: option.value,
+        })),
+    );
+
+    options = options.filter(option => statusName === option.textContent);
+    return options.length !== 0;
+  }
 
   /**
    * Get shipping address from customer card
@@ -230,87 +285,6 @@ class Order extends BOBasePage {
     await this.dialogListener(page);
     await this.waitForSelectorAndClick(page, this.deleteProductButton(row));
     return this.getGrowlMessageContent(page);
-  }
-
-  /**
-   * Click on update status without select new status and get error message
-   * @param page {Page} Browser tab
-   * @returns {Promise<string>}
-   */
-  async clickOnUpdateStatus(page) {
-    await this.clickAndWaitForNavigation(page, '#historyTabContent .card-details-form button');
-
-    return this.getAlertDangerBlockParagraphContent(page);
-  }
-
-  /**
-   * Modify the order status from status tab
-   * @param page {Page} Browser tab
-   * @param status {string} Status to edit
-   * @returns {Promise<string>}
-   */
-  async updateOrderStatus(page, status) {
-    await this.selectByVisibleText(page, '#update_order_status_new_order_status_id', status);
-    await this.clickAndWaitForNavigation(page, '#historyTabContent .card-details-form button');
-
-    return this.getAlertSuccessBlockParagraphContent(page);
-  }
-
-  /**
-   * Modify the order status from the page header
-   * @param page {Page} Browser tab
-   * @param status {string} Status to edit
-   * @returns {Promise<string>}
-   */
-  async modifyOrderStatus(page, status) {
-    const actualStatus = await this.getOrderStatus(page);
-
-    if (status !== actualStatus) {
-      await this.selectByVisibleText(page, this.orderStatusesSelect, status);
-      await this.clickAndWaitForNavigation(page, this.updateStatusButton);
-      return this.getOrderStatus(page);
-    }
-    return actualStatus;
-  }
-
-  /**
-   * Get text from Column
-   * @param page {Page} Browser tab
-   * @param columnName {string} Column name on table
-   * @param row {number} Order row in table
-   * @returns {Promise<string>}
-   */
-  async getTextColumnFromHistoryTable(page, columnName, row) {
-    return this.getTextContent(page, this.tableColumn(row, columnName));
-  }
-
-  /**
-   * Get order status
-   * @param page {Page} Browser tab
-   * @returns {Promise<string>}
-   */
-  async getOrderStatus(page) {
-    return this.getTextContent(page, `${this.orderStatusesSelect} option[selected='selected']`, false);
-  }
-
-  /**
-   * Does status exist
-   * @param page {Page} Browser tab
-   * @param statusName {string} Status to check
-   * @returns {Promise<boolean>}
-   */
-  async doesStatusExist(page, statusName) {
-    let options = await page.$$eval(
-      `${this.orderStatusesSelect} option`,
-      all => all.map(
-        option => ({
-          textContent: option.textContent,
-          value: option.value,
-        })),
-    );
-
-    options = options.filter(option => statusName === option.textContent);
-    return options.length !== 0;
   }
 
   /**
@@ -908,13 +882,50 @@ class Order extends BOBasePage {
     return this.elementVisible(page, this.paginationNextLink, 1000);
   }
 
+  // Methods for status tab
+
+  /**
+   * Click on update status without select new status and get error message
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async clickOnUpdateStatus(page) {
+    await this.clickAndWaitForNavigation(page, this.secondUpdateStatusButton);
+
+    return this.getAlertDangerBlockParagraphContent(page);
+  }
+
+  /**
+   * Modify the order status from status tab
+   * @param page {Page} Browser tab
+   * @param status {string} Status to edit
+   * @returns {Promise<string>}
+   */
+  async updateOrderStatus(page, status) {
+    await this.selectByVisibleText(page, this.secondOrderStatusesSelect, status);
+    await this.clickAndWaitForNavigation(page, this.secondUpdateStatusButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
   /**
    * Get status number
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getStatusNumber(page) {
-    return this.getNumberFromText(page, '#historyTab');
+    return this.getNumberFromText(page, this.historyTabContent);
+  }
+
+  /**
+   * Get text from Column on history table
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name on table
+   * @param row {number} status row in table
+   * @returns {Promise<string>}
+   */
+  async getTextColumnFromHistoryTable(page, columnName, row) {
+    return this.getTextContent(page, this.tableColumn(row, columnName));
   }
 
   /**
@@ -923,7 +934,7 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async isOrderNoteOpened(page) {
-    return this.elementVisible(page, '#historyTabContent a.js-order-notes-toggle-btn.is-opened', 100);
+    return this.elementVisible(page, this.orderNoteCloseButtun, 100);
   }
 
   /**
@@ -932,7 +943,7 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async openOrderNoteTextarea(page) {
-    await this.waitForSelectorAndClick(page, '#historyTabContent a.js-order-notes-toggle-btn');
+    await this.waitForSelectorAndClick(page, this.orderNoteOpenButtun);
 
     return this.isOrderNoteOpened(page);
   }
@@ -947,8 +958,8 @@ class Order extends BOBasePage {
     if (!(await this.isOrderNoteOpened(page))) {
       await this.openOrderNoteTextarea(page);
     }
-    await this.setValue(page, '#internal_note_note', orderNote);
-    await this.waitForSelectorAndClick(page, 'button.js-order-notes-btn');
+    await this.setValue(page, this.orderNoteTextarea, orderNote);
+    await this.waitForSelectorAndClick(page, this.orderNoteSaveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -959,16 +970,17 @@ class Order extends BOBasePage {
    * @returns {Promise<string>}
    */
   async getOrderNoteContent(page) {
-    return this.getTextContent(page, '#internal_note_note');
+    return this.getTextContent(page, this.orderNoteTextarea);
   }
 
   /**
    * Resend email to customer
-   * @param page
+   * @param page {Page} Browser tab
+   * @param row {number} Value of row number of resend button
    * @returns {Promise<string>}
    */
-  async resendEmail(page) {
-    await this.waitForSelectorAndClick(page, '#historyTabContent form[action*=\'resend-email\'] button');
+  async resendEmail(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.resendEmailButton(row));
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
