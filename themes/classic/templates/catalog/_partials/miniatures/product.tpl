@@ -46,6 +46,7 @@
                 loading="lazy"
                 width="{$urls.no_picture_image.bySize.home_default.width}"
                 height="{$urls.no_picture_image.bySize.home_default.height}"
+                alt="{l s='No product image' d='Shop.Theme.Global'}"
               />
             </a>
           {/if}
