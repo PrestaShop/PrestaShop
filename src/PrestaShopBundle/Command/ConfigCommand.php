@@ -40,7 +40,6 @@ use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConfigCommand extends Command
 {
@@ -66,11 +65,6 @@ class ConfigCommand extends Command
      * @var FormatterHelper
      */
     protected $formatter;
-
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
 
     /**
      * @var InputInterface
@@ -113,13 +107,11 @@ class ConfigCommand extends Command
     private $idLang;
 
     public function __construct(
-        TranslatorInterface $translator,
         LegacyContext $context,
         ShopConfigurationInterface $configuration,
         LanguageDataProvider $languageDataProvider
     ) {
         parent::__construct();
-        $this->translator = $translator;
         $this->context = $context;
         $this->configuration = $configuration;
         $this->languageDataProvider = $languageDataProvider;
@@ -159,11 +151,7 @@ class ConfigCommand extends Command
         // check our action
         $action = $input->getArgument('action');
         if (!in_array($action, $this->allowedActions)) {
-            $msg = $this->translator->trans(
-                'Unknown configuration action. It must be one of these values: %actions%',
-                ['%actions%' => implode(' / ', $this->allowedActions)],
-                'Admin.Command.Notification'
-            );
+            $msg = sprintf('Unknown configuration action. It must be one of these values: %s', implode(' / ', $this->allowedActions));
             throw new Exception($msg, self::STATUS_INVALID_ACTION);
         }
 
@@ -180,12 +168,7 @@ class ConfigCommand extends Command
     private function initShopConstraint(): void
     {
         if ($this->input->getOption('shopId') && $this->input->getOption('shopGroupId')) {
-            $msg = $this->translator->trans(
-                'Both shopId and shopGroupId cannot be defined',
-                [],
-                'Admin.Command.Notification'
-            );
-            throw new Exception($msg, self::STATUS_INVALID_OPTIONS);
+            throw new Exception('Both shopId and shopGroupId cannot be defined', self::STATUS_INVALID_OPTIONS);
         }
         // init shopConstraint
         // TODO: this should check that shopId and shopGroupId are valid
@@ -198,11 +181,7 @@ class ConfigCommand extends Command
                 $this->shopConstraint = ShopConstraint::allShops();
             }
         } catch (Exception $e) {
-            $msg = $this->translator->trans(
-                'Failed initializing ShopConstraint: %msg%',
-                ['%msg%' => $e->getMessage()],
-                'Admin.Command.Notification'
-            );
+            $msg = sprintf('Failed initializing ShopConstraint: %s', $e->getMessage());
             throw new Exception($msg, self::STATUS_FAILED_SHOPCONSTRAINT);
         }
     }
@@ -237,12 +216,7 @@ class ConfigCommand extends Command
         }
 
         if (!$found) {
-            $msg = $this->translator->trans(
-                'Invalid language',
-                [],
-                'Admin.Command.Notification'
-            );
-            throw new Exception($msg, self::STATUS_INVALID_OPTIONS);
+            throw new Exception('Invalid language', self::STATUS_INVALID_OPTIONS);
         }
 
         $this->idLang = (int) $found['id_lang'];
@@ -257,30 +231,16 @@ class ConfigCommand extends Command
 
         if (strpos($key, '*') !== false) {
             if (!$this->idLang) {
-                $msg = $this->translator->trans(
-                    'Using wildcards is language dependant, --lang option is required',
-                    [],
-                    'Admin.Command.Notification'
-                );
-                throw new Exception($msg, self::STATUS_LANG_REQUIRED);
+                throw new Exception('Using wildcards requires --lang option', self::STATUS_LANG_REQUIRED);
             }
             try {
                 $keys = array_filter($this->configuration->keys(), function (string $v) use ($key) {
                     return fnmatch($key, $v);
                 });
             } catch (NotImplementedException $e) {
-                $msg = $this->translator->trans(
-                    'Not implemented yet',
-                    [],
-                    'Admin.Command.Notification'
-                );
-                throw new Exception($msg, self::STATUS_NOT_IMPLEMENTED);
+                throw new Exception('Not implemented yet', self::STATUS_NOT_IMPLEMENTED);
             } catch (Exception $e) {
-                $msg = $this->translator->trans(
-                    'Could not load all configuration keys: %msg%',
-                    ['%msg%' => $e->getMessage()],
-                    'Admin.Command.Notification'
-                );
+                $msg = sprintf('Could not load all configuration keys: %s', $e->getMessage());
                 throw new Exception($msg, self::STATUS_ERROR);
             }
         } else {
@@ -294,23 +254,13 @@ class ConfigCommand extends Command
             // but for language dependant values the response is an array
             if (is_array($value)) {
                 if (!$this->idLang) {
-                    $msg = $this->translator->trans(
-                        '%key% is language dependant, --lang option is required',
-                        ['%key%' => $key],
-                        'Admin.Command.Notification'
-                    );
+                    $msg = sprintf('%s is language dependant, --lang option is required', $key);
                     throw new Exception($msg, self::STATUS_LANG_REQUIRED);
                 }
                 $value = $value[$this->idLang];
             }
 
-            $this->output->writeln(
-                $this->translator->trans(
-                    '%key%="%value%"',
-                    ['%key%' => $key, '%value%' => $value],
-                    'Admin.Command.Notification'
-                )
-            );
+            $this->output->writeln(sprintf('%s=%s', $key, $value));
         }
     }
 
@@ -322,24 +272,14 @@ class ConfigCommand extends Command
         $key = $this->input->getArgument('key');
 
         if (strpos($key, '*') !== false) {
-            $msg = $this->translator->trans(
-                'Set action does not support wildcards',
-                [],
-                'Admin.Command.Notification'
-            );
-            throw new Exception($msg, self::STATUS_INVALID_OPTIONS);
+            throw new Exception('Set action does not support wildcards', self::STATUS_INVALID_OPTIONS);
         }
 
         $newvalue = $this->input->getOption('value');
 
         // new value is required for set
         if (is_null($newvalue)) {
-            $msg = $this->translator->trans(
-                'Value required for action "set"',
-                [],
-                'Admin.Command.Notification'
-            );
-            throw new Exception($msg, self::STATUS_VALUE_REQUIRED);
+            throw new Exception('Value required for action "set"', self::STATUS_VALUE_REQUIRED);
         }
 
         // make the value language array if lang is set
@@ -353,11 +293,7 @@ class ConfigCommand extends Command
         try {
             $this->configuration->set($key, $newvalue, $this->shopConstraint);
         } catch (\Exception $e) {
-            $msg = $this->translator->trans(
-                'Failed setting value: %msg%',
-                ['%msg%' => $e->getMessage()],
-                'Admin.Command.Notification'
-            );
+            $msg = sprintf('Failed setting value: %s', $e->getMessage());
             throw new Exception($msg, self::STATUS_FAILED_SET);
         }
 
@@ -372,12 +308,7 @@ class ConfigCommand extends Command
         $key = $this->input->getArgument('key');
 
         if (strpos($key, '*') !== false) {
-            $msg = $this->translator->trans(
-                'Remove action does not support wildcards',
-                [],
-                'Admin.Command.Notification'
-            );
-            throw new Exception($msg, self::STATUS_INVALID_OPTIONS);
+            throw new Exception('Remove action does not support wildcards', self::STATUS_INVALID_OPTIONS);
         }
 
         try {
@@ -391,21 +322,11 @@ class ConfigCommand extends Command
             $this->configuration->remove($key);
         } catch (Exception $e) {
             $msg = $e->getMessage();
-            $msg = $this->translator->trans(
-                'Failed removing: %msg%. Original message: %msg%',
-                ['%msg%' => $msg],
-                'Admin.Command.Notification'
-            );
+            $msg = sprintf('Failed removing: %s. Original message: %s', $key, $msg);
             throw new Exception($msg, self::STATUS_FAILED_REMOVE);
         }
 
-        $this->output->writeln(
-            $this->translator->trans(
-                '%key% removed',
-                ['%key%' => $key],
-                'Admin.Command.Notification'
-            )
-        );
+        $this->output->writeln(sprintf('%s removed', $key));
     }
 
     /**
