@@ -102,6 +102,9 @@ class ConfigCommand extends Command
      */
     private $languageDataProvider;
 
+    /**
+     * @var string|null
+     */
     private $action;
 
     /**
