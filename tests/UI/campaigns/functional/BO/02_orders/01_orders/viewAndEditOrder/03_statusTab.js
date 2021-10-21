@@ -60,7 +60,7 @@ const resetPasswordMailSubject = 'Your new password';
 
 // new employee data
 const createEmployeeData = new EmployeeFaker({
-  defaultPage: 'Products',
+  defaultPage: 'Dashboard',
   language: 'English (English)',
   permissionProfile: 'SuperAdmin',
 });
@@ -427,6 +427,116 @@ describe('BO - Orders - view and edit order : Check order status block', async (
 
       const date = await viewOrderPage.getTextColumnFromHistoryTable(page, 'date', 1);
       await expect(date).to.contain(todayDate);
+    });
+
+    it('should logout from BO', async function () {
+      await loginCommon.logoutBO(this, page);
+    });
+
+    it('should login with new employee account', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginWithNewEmployee', baseContext);
+
+      await loginPage.goTo(page, global.BO.URL);
+      await loginPage.login(page, createEmployeeData.email, createEmployeeData.password);
+
+      const pageTitle = await dashboardPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    });
+
+    it('should go to \'Orders > Orders\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.ordersParentLink,
+        dashboardPage.ordersLink,
+      );
+
+      await ordersPage.closeSfToolBar(page);
+
+      const pageTitle = await ordersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
+
+      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfOrders).to.be.above(0);
+    });
+
+    it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
+
+      await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
+
+      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+      await expect(textColumn).to.contains(customerData.lastName);
+    });
+
+    it('should view the order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage', baseContext);
+
+      await ordersPage.goToOrder(page, 1);
+
+      const pageTitle = await viewOrderPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+    });
+
+    it(`should change the order status to '${Statuses.paymentAccepted.status}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
+
+      const textResult = await viewOrderPage.updateOrderStatus(page, Statuses.paymentAccepted.status);
+      await expect(textResult).to.equal(viewOrderPage.successfulUpdateMessage);
+    });
+
+    it('should check that the status number is equal to 3', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber3', baseContext);
+
+      const statusNumber = await viewOrderPage.getStatusNumber(page);
+      await expect(statusNumber).to.be.equal(3);
+    });
+
+    it('should check the status name from the table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkStatusName', baseContext);
+
+      const statusName = await viewOrderPage.getTextColumnFromHistoryTable(page, 'status', 1);
+      await expect(statusName).to.be.equal(Statuses.paymentAccepted.status);
+    });
+
+    it('should check the employee name from the table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEmployeeName', baseContext);
+
+      const employeeName = await viewOrderPage.getTextColumnFromHistoryTable(page, 'employee', 1);
+      await expect(employeeName).to.be.equal(`${createEmployeeData.firstName} ${createEmployeeData.lastName}`);
+    });
+
+    it('should check the date from the table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDate', baseContext);
+
+      const date = await viewOrderPage.getTextColumnFromHistoryTable(page, 'date', 1);
+      await expect(date).to.contain(todayDate);
+    });
+
+    it(`should change the order status to '${Statuses.shipped.status}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
+
+      const textResult = await viewOrderPage.updateOrderStatus(page, Statuses.shipped.status);
+      await expect(textResult).to.equal(viewOrderPage.successfulUpdateMessage);
+    });
+
+    it('should check that the status number is equal to 4', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber3', baseContext);
+
+      const statusNumber = await viewOrderPage.getStatusNumber(page);
+      await expect(statusNumber).to.be.equal(4);
+    });
+
+    it('should check that the order note still closed', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNote', baseContext);
+
+      const isOpened = await viewOrderPage.isOrderNoteOpened(page);
+      await expect(isOpened).to.be.false;
     });
   });
 
