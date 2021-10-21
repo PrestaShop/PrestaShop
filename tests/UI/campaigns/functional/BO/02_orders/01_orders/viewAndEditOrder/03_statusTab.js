@@ -30,6 +30,7 @@ const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
+const {Statuses} = require('@data/demo/orderStatuses');
 
 // Import faker data
 const EmployeeFaker = require('@data/faker/employee');
@@ -38,12 +39,19 @@ const CustomerFaker = require('@data/faker/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
+const {DefaultEmployee} = require("../../../../../data/demo/employees");
 
 const baseContext = 'functional_BO_login_passwordReminder';
 
 let browserContext;
 let page;
 let numberOfEmployees = 0;
+// Get today date format 'mm/dd/yyyy'
+const today = new Date();
+const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
+const dd = (`0${today.getDate()}`).slice(-2); // Current day
+const yyyy = today.getFullYear(); // Current year
+const todayDate = `${mm}/${dd}/${yyyy}`;
 
 // maildev config and vars
 let newMail;
@@ -352,7 +360,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
 
   // 2 - Check status tab
   describe('Check status tab', async () => {
-    it('should check the status number', async function () {
+    it('should check that the status number is equal to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber', baseContext);
 
       const statusNumber = await viewOrderPage.getStatusNumber(page);
@@ -384,6 +392,41 @@ describe('BO - Orders - view and edit order : Check order status block', async (
 
       const textResult = await viewOrderPage.clickOnUpdateStatus(page);
       await expect(textResult).to.contains(viewOrderPage.errorAssignSameStatus);
+    });
+
+    it(`should change the order status to '${Statuses.canceled.status}' and check it`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
+
+      const textResult = await viewOrderPage.updateOrderStatus(page, Statuses.canceled.status);
+      await expect(textResult).to.equal(viewOrderPage.successfulUpdateMessage);
+    });
+
+    it('should check that the status number is equal to 2', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber2', baseContext);
+
+      const statusNumber = await viewOrderPage.getStatusNumber(page);
+      await expect(statusNumber).to.be.equal(2);
+    });
+
+    it('should check the status name from the table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkStatusName', baseContext);
+
+      const statusName = await viewOrderPage.getTextColumnFromHistoryTable(page, 'status', 1);
+      await expect(statusName).to.be.equal(Statuses.canceled.status);
+    });
+
+    it('should check the employee name from the table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEmployeeName', baseContext);
+
+      const employeeName = await viewOrderPage.getTextColumnFromHistoryTable(page, 'employee', 1);
+      await expect(employeeName).to.be.equal(`${DefaultEmployee.firstName} ${DefaultEmployee.lastName}`);
+    });
+
+    it('should check the date from the table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDate', baseContext);
+
+      const date = await viewOrderPage.getTextColumnFromHistoryTable(page, 'date', 1);
+      await expect(date).to.contain(todayDate);
     });
   });
 
