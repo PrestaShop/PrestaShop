@@ -46,6 +46,8 @@ const baseContext = 'functional_BO_login_passwordReminder';
 let browserContext;
 let page;
 let numberOfEmployees = 0;
+const orderNote = 'Test order note';
+
 // Get today date format 'mm/dd/yyyy'
 const today = new Date();
 const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
@@ -53,9 +55,8 @@ const dd = (`0${today.getDate()}`).slice(-2); // Current day
 const yyyy = today.getFullYear(); // Current year
 const todayDate = `${mm}/${dd}/${yyyy}`;
 
-// maildev config and vars
-let newMail;
-const {smtpServer, smtpPort} = global.maildevConfig;
+const addressData = new AddressFaker({country: 'France'});
+const customerData = new CustomerFaker({password: ''});
 
 // new employee data
 const createEmployeeData = new EmployeeFaker({
@@ -64,13 +65,37 @@ const createEmployeeData = new EmployeeFaker({
   permissionProfile: 'SuperAdmin',
 });
 
-const addressData = new AddressFaker({country: 'France'});
-const customerData = new CustomerFaker({password: ''});
+// maildev config
+let newMail;
+const {smtpServer, smtpPort} = global.maildevConfig;
 
 // mailListener
 let mailListener;
 
-describe('BO - Orders - view and edit order : Check order status block', async () => {
+/*
+Pre-condition :
+- Setup smtp parameters
+- Create new employee
+- Create order by guest
+- Create order by default customer
+Scenario :
+- Login by default account and go to view order page by guest customer
+- Check status number, order note, resend email
+- Change order status and check status number, status name, employee name and date
+- Login by new employee account and go to view order page by by guest customer
+- Change order status and check status number, status name, employee name and date
+- Go to view order page by default customer
+- Check status number, order note
+- Add order note and check that doesn't exist on other order
+- Login by default account and go to view order page by default customer
+- Check order note then delete it
+Post-condition :
+- Delete employee
+- Delete guest account
+- Reset default email parameters
+ */
+
+describe('BO - Orders - View and edit order : Check order status block', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -79,6 +104,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     // Start listening to maildev server
     mailListener = mailHelper.createMailListener();
     mailHelper.startListener(mailListener);
+
     // Handle every new email
     mailListener.on('new', (email) => {
       newMail = email;
@@ -152,7 +178,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should reset all filters and get number of employees', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterEmployeeTable', baseContext);
 
       numberOfEmployees = await employeesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfEmployees).to.be.above(0);
@@ -310,14 +336,14 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
   });
 
-  // 1 - View order page
+  // 1 - Go to view order page
   describe('Go to view order page', async () => {
-    it('should login in BO', async function () {
+    it('should login in BO by default employee', async function () {
       await loginCommon.loginBO(this, page);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -332,14 +358,14 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters1', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfOrders).to.be.above(0);
     });
 
     it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
 
       await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
 
@@ -348,7 +374,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage1', baseContext);
 
       await ordersPage.goToOrder(page, 1);
 
@@ -357,20 +383,13 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
   });
 
-  // 2 - Check status tab
-  describe('Check status tab', async () => {
+  // 2 - Check history table and order note after some edit by default employee
+  describe('Check history table after some edits by default employee', async () => {
     it('should check that the status number is equal to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber', baseContext);
 
       const statusNumber = await viewOrderPage.getStatusNumber(page);
       await expect(statusNumber).to.be.equal(1);
-    });
-
-    it('should check that the order note is closed', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNote', baseContext);
-
-      const isOpened = await viewOrderPage.isOrderNoteOpened(page);
-      await expect(isOpened).to.be.false;
     });
 
     it('should click on \'Resend email\'', async function () {
@@ -428,11 +447,22 @@ describe('BO - Orders - view and edit order : Check order status block', async (
       await expect(date).to.contain(todayDate);
     });
 
+    it('should check that the order note is closed', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNoteClosed1', baseContext);
+
+      const isOpened = await viewOrderPage.isOrderNoteOpened(page);
+      await expect(isOpened).to.be.false;
+    });
+
     it('should logout from BO', async function () {
       await loginCommon.logoutBO(this, page);
     });
+  });
 
-    it('should login with new employee account', async function () {
+  // 3 - Check history table and order note after some edit by new employee
+  describe('Check history table and order note after some edit by new employee', async () => {
+
+    it('should login by new employee account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginWithNewEmployee', baseContext);
 
       await loginPage.goTo(page, global.BO.URL);
@@ -443,7 +473,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -458,14 +488,14 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters2', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfOrders).to.be.above(0);
     });
 
     it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer2', baseContext);
 
       await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
 
@@ -474,7 +504,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage2', baseContext);
 
       await ordersPage.goToOrder(page, 1);
 
@@ -532,7 +562,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should check that the order note still closed', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNote', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNoteClosed2', baseContext);
 
       const isOpened = await viewOrderPage.isOrderNoteOpened(page);
       await expect(isOpened).to.be.false;
@@ -546,7 +576,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage3', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -561,14 +591,14 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters3', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfOrders).to.be.above(0);
     });
 
     it(`should filter the Orders table by 'Customer: ${DefaultCustomer.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer3', baseContext);
 
       await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
 
@@ -577,7 +607,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage3', baseContext);
 
       await ordersPage.goToOrder(page, 1);
 
@@ -595,12 +625,12 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     it('should set an order note', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setOrderNote', baseContext);
 
-      const textResult = await viewOrderPage.setOrderNote(page, 'Test order note');
+      const textResult = await viewOrderPage.setOrderNote(page, orderNote);
       await expect(textResult).to.equal(viewOrderPage.updateSuccessfullMessage);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage4', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -615,14 +645,14 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters4', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfOrders).to.be.above(0);
     });
 
     it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer4', baseContext);
 
       await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
 
@@ -631,7 +661,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage4', baseContext);
 
       await ordersPage.goToOrder(page, 1);
 
@@ -640,7 +670,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should check that the order note is closed', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNote', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNoteClosed3', baseContext);
 
       const isOpened = await viewOrderPage.isOrderNoteOpened(page);
       await expect(isOpened).to.be.false;
@@ -649,13 +679,15 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     it('should logout from BO', async function () {
       await loginCommon.logoutBO(this, page);
     });
+  });
 
+  describe('Delete order note by default employee', async () => {
     it('should login with default account', async function () {
       await loginCommon.loginBO(this, page);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage5', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -670,7 +702,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters5', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfOrders).to.be.above(0);
@@ -695,10 +727,10 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should check that the order note is not empty', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNote', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNoteEmpty', baseContext);
 
       const orderNote = await viewOrderPage.getOrderNoteContent(page);
-      await expect(orderNote).to.be.equal('Test order note');
+      await expect(orderNote).to.be.equal(orderNote);
     });
 
     it('should delete the order note', async function () {
@@ -746,7 +778,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should reset filter and check the number of employees', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteEmployee', baseContext);
 
       const numberOfEmployeesAfterDelete = await employeesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
@@ -783,7 +815,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteCustomer', baseContext);
 
       const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCustomersAfterReset).to.be.above(0);
@@ -812,10 +844,6 @@ describe('BO - Orders - view and edit order : Check order status block', async (
 
       const successParametersReset = await emailPage.resetDefaultParameters(page);
       await expect(successParametersReset).to.contains(emailPage.successfulUpdateMessage);
-    });
-
-    it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
     });
   });
 });
