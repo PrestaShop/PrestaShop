@@ -56,7 +56,6 @@ services:
 
   PrestaShopBundle\Command\ConfigCommand:
     arguments:
-      - '@translator'
       - '@prestashop.adapter.legacy.context'
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.data_provider.language'
