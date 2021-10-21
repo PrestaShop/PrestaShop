@@ -67,8 +67,10 @@ class OrderReturnCore extends ObjectModel
         /* Classic product return */
         if ($order_detail_list) {
             foreach ($order_detail_list as $key => $order_detail) {
+                $orderdetail = new OrderDetail($order_detail);
+                $id_customization = $orderdetail->id_customization;
                 if ($qty = (int) $product_qty_list[$key]) {
-                    Db::getInstance()->insert('order_return_detail', ['id_order_return' => (int) $this->id, 'id_order_detail' => (int) $order_detail, 'product_quantity' => $qty, 'id_customization' => 0]);
+                    Db::getInstance()->insert('order_return_detail', ['id_order_return' => (int) $this->id, 'id_order_detail' => (int) $order_detail, 'product_quantity' => $qty, 'id_customization' => (int) $id_customization]);
                 }
             }
         }
