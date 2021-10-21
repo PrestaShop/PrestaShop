@@ -150,9 +150,10 @@ const newPrice = 25;
 let productNumber = 0;
 
 /*
-Create order by guest in FO
-Enable eco tax
-Create 9 products in BO:
+Pre-condition:
+- Create order by guest in FO
+- Enable eco tax
+- Create 9 products in BO:
   - Out of stock allowed
   - Out of stock not allowed
   - Simple
@@ -162,7 +163,8 @@ Create 9 products in BO:
   - With specific price
   - With ecoTax
   - With cart rule
-Create cart rule for the product with cart rule
+- Create cart rule for the product with cart rule
+Scenario:
 Check product block content:
   - Check number of products
   - Update the price of an ordered
@@ -172,6 +174,11 @@ Check product block content:
   - Add all types of products
   - Pagination next and previous
   - Delete product
+Post-condition:
+- Delete guest customer
+- Disable ecoTax
+- Delete created products
+- Delete cart rule
 */
 describe('BO - Orders - View and edit order : Check product block in view order page', async () => {
   // before and after functions
@@ -246,7 +253,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     });
   });
 
-  // Pre-condition - Create 9 products
+  // Pre-condition - Create 9 products, Enable ecoTax, Create cart rule
   describe('Create 9 products in BO', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
@@ -363,7 +370,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     });
   });
 
-  // 3 - Go to view order page
+  // 1 - Go to view order page
   describe('Go to view order page', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
@@ -406,7 +413,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     });
   });
 
-  // 4 - Check product block
+  // 2 - Check product block
   describe('Check product block', async () => {
     it('should delete the ordered product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);

@@ -62,11 +62,10 @@ class ProductData {
     /** @type {string} Tac rule to apply the product */
     this.taxRule = productToCreate.taxRule || 'FR Taux standard (20%)';
 
-    /** @type {string} EcoTax tax included of the product */
-    this.ecoTax = productToCreate.ecoTax === undefined ? faker.random.number({
-      min: 10,
-      max: 20,
-    }) : productToCreate.ecoTax;
+    /** @type {number} EcoTax tax included of the product */
+    this.ecoTax = productToCreate.ecoTax === undefined
+      ? faker.random.number({min: 10, max: 20})
+      : productToCreate.ecoTax;
 
     /** @type {Object|{combinations: ?string, discount: ?number, startingAt: ?number}} Specific price of the product */
     this.specificPrice = productToCreate.specificPrice || {
@@ -83,7 +82,7 @@ class ProductData {
     /** @type {string} Stock location of the product */
     this.stockLocation = productToCreate.stockLocation || 'stock 1';
 
-    /** @type {string} Low stock level of the product */
+    /** @type {number} Low stock level of the product */
     this.lowStockLevel = productToCreate.lowStockLevel === undefined
       ? faker.random.number({min: 1, max: 9})
       : productToCreate.lowStockLevel;

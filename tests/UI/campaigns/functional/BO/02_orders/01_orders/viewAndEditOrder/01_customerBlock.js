@@ -54,16 +54,21 @@ let customerID = 0;
 let addressID = 0;
 
 /*
-Pre-Conditions (Create customer, create 2 addresses for the customer in FO)
-Create order by new customer in FO
-Go to orders page BO and view the created order page
-Check customer block content
-- Customer’s title, name, last name, customer reference
-- Email and validated orders number
-- Shipping and invoice address
-- Private note
-Check that private note is closed by default
-Check that the other customer doesn't have the private note
+Pre-Conditions:
+- Create customer
+- Create 2 addresses for the customer in FO
+- Create order by new customer in FO
+Scenario:
+- Go to orders page BO and view the created order page
+- Check customer block content
+  - Customer’s title, name, last name, customer reference
+  - Email and validated orders number
+  - Shipping and invoice address
+  - Private note
+  - Check that private note is closed by default
+  - Check that the other customer doesn't have the private note
+Post-condition
+- Delete the created customer
 */
 describe('BO - Orders - View and edit order : Check and edit customer block', async () => {
   // before and after functions
@@ -615,7 +620,7 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     });
   });
 
-  // 3 - Delete the created customer
+  // Post-condition - Delete the created customer
   describe(`Delete the created customer '${customerData.firstName} ${customerData.lastName}'`, async () => {
     it('should go \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);

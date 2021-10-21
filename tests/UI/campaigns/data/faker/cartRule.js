@@ -103,10 +103,8 @@ class CartRuleData {
     /** @type {string} Object to apply discount on it */
     this.applyDiscountTo = cartRuleToCreate.applyDiscountTo || 'None';
 
-    /** @type {string} Name of the product to apply cart rule */
+    /** @type {string|undefined} Name of the product to apply cart rule */
     this.product = undefined;
-
-    /** @type {string} Apply discount to which object */
     if (this.applyDiscountTo === 'Specific product') {
       this.product = cartRuleToCreate.product || faker.random.arrayElement(ProductsNames);
     }
