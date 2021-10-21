@@ -50,6 +50,6 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.debug_mode'
-      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.adapter.legacy_context_loader'
     tags:
       - 'console.command'

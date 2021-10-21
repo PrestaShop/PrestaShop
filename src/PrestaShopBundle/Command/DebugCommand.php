@@ -30,6 +30,7 @@ use Employee;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Debug\DebugMode;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\LegacyContextLoader;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
 use Symfony\Component\Console\Command\Command;
@@ -71,17 +72,12 @@ class DebugCommand extends Command
      */
     private $debugConfiguration;
 
-    /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
-    public function __construct(CommandBusInterface $commandBus, DebugMode $debugConfiguration, LegacyContext $legacyContext)
+    public function __construct(CommandBusInterface $commandBus, DebugMode $debugConfiguration, LegacyContextLoader $legacyContextLoader)
     {
         parent::__construct();
         $this->commandBus = $commandBus;
         $this->debugConfiguration = $debugConfiguration;
-        $this->legacyContext = $legacyContext;
+        $legacyContextLoader->loadGenericContext();
     }
 
     protected function configure()
@@ -137,11 +133,5 @@ class DebugCommand extends Command
         $this->input = $input;
         $this->output = $output;
         $this->io = new SymfonyStyle($this->input, $this->output);
-        //We need to have an employee or the module hooks don't work
-        //see LegacyHookSubscriber
-        if (!$this->legacyContext->getContext()->employee) {
-            //Even a non existing employee is fine
-            $this->legacyContext->getContext()->employee = new Employee(42);
-        }
     }
 }
