@@ -143,6 +143,9 @@ class DescriptionType extends TranslatorAwareType
                 'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
                 'entry_type' => RelatedProductType::class,
+                'entry_options' => [
+                    'block_prefix' => 'related_product',
+                ],
                 'remote_url' => $this->router->generate('admin_products_v2_search_associations', [
                     'languageCode' => $this->employeeIsoCode,
                     'query' => '__QUERY__',
