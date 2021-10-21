@@ -97,6 +97,10 @@ class Order extends BOBasePage {
     this.historyTab = '#historyTabContent';
     this.orderStatusesSelect = '#update_order_status_action_input';
     this.updateStatusButton = '#update_order_status_action_btn';
+    this.gridTable = '#history_grid_table';
+    this.tableBody = `${this.gridTable} tbody`;
+    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td#${column}`;
 
     // Documents tab
     this.documentTab = 'a#orderDocumentsTab';
@@ -255,7 +259,7 @@ class Order extends BOBasePage {
   }
 
   /**
-   * Click on update status
+   * Click on update status without select new status and get error message
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
@@ -266,7 +270,20 @@ class Order extends BOBasePage {
   }
 
   /**
-   * Modify the order status
+   * Modify the order status from status tab
+   * @param page {Page} Browser tab
+   * @param status {string} Status to edit
+   * @returns {Promise<string>}
+   */
+  async updateOrderStatus(page, status) {
+    await this.selectByVisibleText(page, '#update_order_status_new_order_status_id', status);
+    await this.clickAndWaitForNavigation(page, '#historyTabContent .card-details-form button');
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Modify the order status from the page header
    * @param page {Page} Browser tab
    * @param status {string} Status to edit
    * @returns {Promise<string>}
@@ -280,6 +297,17 @@ class Order extends BOBasePage {
       return this.getOrderStatus(page);
     }
     return actualStatus;
+  }
+
+  /**
+   * Get text from Column
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name on table
+   * @param row {number} Order row in table
+   * @returns {Promise<string>}
+   */
+  async getTextColumnFromHistoryTable(page, columnName, row) {
+    return this.getTextContent(page, this.tableColumn(row, columnName));
   }
 
   /**
