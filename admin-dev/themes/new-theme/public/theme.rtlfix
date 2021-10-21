@@ -41,6 +41,23 @@ body.lang-rtl .float-right {
 body.lang-rtl .float-left {
     float: right !important;
 }
+/* Fix Material Icons mirroring for RTL language */
+.next .material-icons,
+.prev .material-icons,
+.btn-back .material-icons,
+.order-navigation-right .material-icons,
+.order-navigation-left .material-icons,
+.order-preview-content .btn .material-icons,
+.configure-link .material-icons,
+.menu-collapse .material-icons {
+  transform: scaleX(-1);
+}
+/* Fix flexible space for navigation buttons */
+.product-page .combination-form .next,
+.order-navigation {
+  margin-right: auto;
+  margin-left: 0 !important;
+}
 /* Fix dropdown menu text overflow */
 .dropdown-menu[x-placement="bottom-start"].show {
   right: 0px;
