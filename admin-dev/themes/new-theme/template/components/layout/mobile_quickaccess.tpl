@@ -1,5 +1,5 @@
 <div class="component-search-quickaccess d-none">
-  <p class="component-search-title">{l s='Quick access' d='Admin.Navigation.Header'}</p>
+  <p class="component-search-title">{l s='Quick Access' d='Admin.Navigation.Header'}</p>
   {foreach $quick_access as $quick}
     <a class="dropdown-item quick-row-link{if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access} active{/if}"
        href="{$quick.link|escape:'html':'UTF-8'}"
