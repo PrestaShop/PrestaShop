@@ -28,6 +28,7 @@ const foCheckoutPage = require('@pages/FO/checkout');
 const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import demo data
+const {DefaultEmployee} = require('@data/demo//employees');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Statuses} = require('@data/demo/orderStatuses');
@@ -39,7 +40,6 @@ const CustomerFaker = require('@data/faker/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
-const {DefaultEmployee} = require("../../../../../data/demo/employees");
 
 const baseContext = 'functional_BO_login_passwordReminder';
 
@@ -56,7 +56,6 @@ const todayDate = `${mm}/${dd}/${yyyy}`;
 // maildev config and vars
 let newMail;
 const {smtpServer, smtpPort} = global.maildevConfig;
-const resetPasswordMailSubject = 'Your new password';
 
 // new employee data
 const createEmployeeData = new EmployeeFaker({
@@ -94,7 +93,7 @@ describe('BO - Orders - view and edit order : Check order status block', async (
   });
 
   // Pre-condition - Setup smtp parameters
-  describe('Go to BO to setup the smtp parameters', async () => {
+  describe('Setup the smtp parameters', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -599,119 +598,224 @@ describe('BO - Orders - view and edit order : Check order status block', async (
       const textResult = await viewOrderPage.setOrderNote(page, 'Test order note');
       await expect(textResult).to.equal(viewOrderPage.updateSuccessfullMessage);
     });
+
+    it('should go to \'Orders > Orders\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.ordersParentLink,
+        dashboardPage.ordersLink,
+      );
+
+      await ordersPage.closeSfToolBar(page);
+
+      const pageTitle = await ordersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
+
+      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfOrders).to.be.above(0);
+    });
+
+    it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
+
+      await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
+
+      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+      await expect(textColumn).to.contains(customerData.lastName);
+    });
+
+    it('should view the order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage', baseContext);
+
+      await ordersPage.goToOrder(page, 1);
+
+      const pageTitle = await viewOrderPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+    });
+
+    it('should check that the order note is closed', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNote', baseContext);
+
+      const isOpened = await viewOrderPage.isOrderNoteOpened(page);
+      await expect(isOpened).to.be.false;
+    });
+
+    it('should logout from BO', async function () {
+      await loginCommon.logoutBO(this, page);
+    });
+
+    it('should login with default account', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go to \'Orders > Orders\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.ordersParentLink,
+        dashboardPage.ordersLink,
+      );
+
+      await ordersPage.closeSfToolBar(page);
+
+      const pageTitle = await ordersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
+
+      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfOrders).to.be.above(0);
+    });
+
+    it(`should filter the Orders table by 'Customer: ${DefaultCustomer.lastName}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
+
+      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
+
+      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+      await expect(textColumn).to.contains(DefaultCustomer.lastName);
+    });
+
+    it('should view the order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage', baseContext);
+
+      await ordersPage.goToOrder(page, 1);
+
+      const pageTitle = await viewOrderPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+    });
+
+    it('should check that the order note is not empty', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNote', baseContext);
+
+      const orderNote = await viewOrderPage.getOrderNoteContent(page);
+      await expect(orderNote).to.be.equal('Test order note');
+    });
+
+    it('should delete the order note', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderNote', baseContext);
+
+      const textResult = await viewOrderPage.setOrderNote(page, '');
+      await expect(textResult).to.equal(viewOrderPage.updateSuccessfullMessage);
+    });
   });
 
   // Post-condition - Delete employee
-  /* describe('Delete created employee', async () => {
-     it('should login in BO', async function () {
-       await loginCommon.loginBO(this, page);
-     });
+  describe('Delete created employee account', async () => {
+    it('should go to \'Advanced Parameters > Team\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPageToDelete', baseContext);
 
-     it('should go to \'Advanced Parameters > Team\' page', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPageToDelete', baseContext);
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.teamLink,
+      );
 
-       await dashboardPage.goToSubMenu(
-         page,
-         dashboardPage.advancedParametersLink,
-         dashboardPage.teamLink,
-       );
+      const pageTitle = await employeesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(employeesPage.pageTitle);
+    });
 
-       const pageTitle = await employeesPage.getPageTitle(page);
-       await expect(pageTitle).to.contains(employeesPage.pageTitle);
-     });
+    it('should filter list of employees by email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterEmployeesToDelete', baseContext);
 
-     it('should filter list of employees by email', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'filterEmployeesToDelete', baseContext);
+      await employeesPage.filterEmployees(
+        page,
+        'input',
+        'email',
+        createEmployeeData.email,
+      );
 
-       await employeesPage.filterEmployees(
-         page,
-         'input',
-         'email',
-         createEmployeeData.email,
-       );
+      const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
+      await expect(textEmail).to.contains(createEmployeeData.email);
+    });
 
-       const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
-       await expect(textEmail).to.contains(createEmployeeData.email);
-     });
+    it('should delete employee', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteEmployee', baseContext);
 
-     it('should delete employee', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'deleteEmployee', baseContext);
+      const textResult = await employeesPage.deleteEmployee(page, 1);
+      await expect(textResult).to.equal(employeesPage.successfulDeleteMessage);
+    });
 
-       const textResult = await employeesPage.deleteEmployee(page, 1);
-       await expect(textResult).to.equal(employeesPage.successfulDeleteMessage);
-     });
+    it('should reset filter and check the number of employees', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-     it('should reset filter and check the number of employees', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+      const numberOfEmployeesAfterDelete = await employeesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
+    });
+  });
 
-       const numberOfEmployeesAfterDelete = await employeesPage.resetAndGetNumberOfLines(page);
-       await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
-     });
-   });
+  // Post-condition - Delete guest account
+  describe('Delete the created guest account', async () => {
+    it('should go \'Customers >  Customers\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-   // Post-condition - Delete guest account
-   describe('Delete the created guest account', async () => {
-     it('should go \'Customers >  Customers\' page', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
+      await dashboardPage.goToSubMenu(page, dashboardPage.customersParentLink, dashboardPage.customersLink);
 
-       await dashboardPage.goToSubMenu(page, dashboardPage.customersParentLink, dashboardPage.customersLink);
+      await customersPage.closeSfToolBar(page);
 
-       await customersPage.closeSfToolBar(page);
+      const pageTitle = await customersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customersPage.pageTitle);
+    });
 
-       const pageTitle = await customersPage.getPageTitle(page);
-       await expect(pageTitle).to.contains(customersPage.pageTitle);
-     });
+    it('should filter list by customer email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-     it('should filter list by customer email', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
+      await customersPage.filterCustomers(page, 'input', 'email', customerData.email);
 
-       await customersPage.filterCustomers(page, 'input', 'email', customerData.email);
+      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
+      await expect(textResult).to.contains(customerData.email);
+    });
 
-       const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-       await expect(textResult).to.contains(customerData.email);
-     });
+    it('should delete customer and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomer', baseContext);
 
-     it('should delete customer and check result', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomer', baseContext);
+      const deleteTextResult = await customersPage.deleteCustomer(page, 1);
+      await expect(deleteTextResult).to.be.equal(customersPage.successfulDeleteMessage);
+    });
 
-       const deleteTextResult = await customersPage.deleteCustomer(page, 1);
-       await expect(deleteTextResult).to.be.equal(customersPage.successfulDeleteMessage);
-     });
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-     it('should reset all filters', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCustomersAfterReset).to.be.above(0);
+    });
+  });
 
-       const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-       await expect(numberOfCustomersAfterReset).to.be.above(0);
-     });
-   });
+  // Post-condition - Reset default email parameters
+  describe('Go to BO and reset to default mail parameters', async () => {
+    it('should go to \'Advanced Parameters > E-mail\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPageForResetSmtpParams', baseContext);
 
-   // Post-condition - Reset default email parameters
-   describe('Go to BO and reset to default mail parameters', async () => {
-     it('should go to \'Advanced Parameters > E-mail\' page', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPageForResetSmtpParams', baseContext);
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.emailLink,
+      );
 
-       await dashboardPage.goToSubMenu(
-         page,
-         dashboardPage.advancedParametersLink,
-         dashboardPage.emailLink,
-       );
+      await emailPage.closeSfToolBar(page);
 
-       await emailPage.closeSfToolBar(page);
+      const pageTitle = await emailPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(emailPage.pageTitle);
+    });
 
-       const pageTitle = await emailPage.getPageTitle(page);
-       await expect(pageTitle).to.contains(emailPage.pageTitle);
-     });
+    it('should reset parameters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetMailParameters', baseContext);
 
-     it('should reset parameters', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'resetMailParameters', baseContext);
+      const successParametersReset = await emailPage.resetDefaultParameters(page);
+      await expect(successParametersReset).to.contains(emailPage.successfulUpdateMessage);
+    });
 
-       const successParametersReset = await emailPage.resetDefaultParameters(page);
-       await expect(successParametersReset).to.contains(emailPage.successfulUpdateMessage);
-     });
-
-     it('should logout from BO', async function () {
-       await loginCommon.logoutBO(this, page);
-     });
-   });*/
+    it('should logout from BO', async function () {
+      await loginCommon.logoutBO(this, page);
+    });
+  });
 });

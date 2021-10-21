@@ -944,11 +944,22 @@ class Order extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setOrderNote(page, orderNote) {
-    await this.openOrderNoteTextarea(page);
+    if (!(await this.isOrderNoteOpened(page))) {
+      await this.openOrderNoteTextarea(page);
+    }
     await this.setValue(page, '#internal_note_note', orderNote);
     await this.waitForSelectorAndClick(page, 'button.js-order-notes-btn');
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Get order note content
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getOrderNoteContent(page) {
+    return this.getTextContent(page, '#internal_note_note');
   }
 
   /**
