@@ -35,6 +35,10 @@
 body.lang-fa, .lang-fa #content.bootstrap .panel .panel-heading a.btn, .lang-fa #content.bootstrap #dash_version .panel-heading a.btn, .lang-fa #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading a.btn, .lang-fa #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading a.btn, .lang-fa #notification .dropdown-menu .notifications .nav-tabs .nav-item .nav-link, .lang-fa .bootstrap .tooltip, .lang-fa .bootstrap .btn-group-action .btn, .lang-fa .bootstrap .page-head h2.page-title, .lang-fa .bootstrap .page-head h4.page-subtitle, .lang-fa .bootstrap #dashboard #dashproducts nav, .lang-fa .bootstrap #dashboard #dashtrends dt, .lang-fa .bootstrap #dashboard section > section header .small, .bootstrap h1, .lang-fa .bootstrap h2, .lang-fa .bootstrap h3, .lang-fa .bootstrap h4, .lang-fa .bootstrap h5, .lang-fa .bootstrap h6, .lang-fa .bootstrap .h1, .lang-fa .bootstrap .h2, .lang-fa .bootstrap .h3, .lang-fa .bootstrap .h4, .lang-fa .bootstrap .h5, .lang-fa .bootstrap .h6, .lang-fa #content.bootstrap .panel .panel-heading, .lang-fa #content.bootstrap #dash_version .panel-heading, .lang-fa #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading, .lang-fa #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading, .lang-fa .bootstrap #dashboard .tooltip-panel-heading, .lang-fa .bootstrap input[type="text"], .lang-fa .bootstrap input[type="search"], .lang-fa .bootstrap input[type="password"], .lang-fa .bootstrap input[type="email"], .lang-fa .bootstrap input[type="tel"], .lang-fa #content.bootstrap input, .lang-fa #content.bootstrap button, .lang-fa #content.bootstrap textarea, .lang-fa #content.bootstrap select {
   font-family: Vazir,Tahoma,Helvetica,Arial,sans-serif !important;
 }
+/* Fix Material Icons mirroring for RTL language */
+.menu-collapse .material-icons {
+  transform: scaleX(-1);
+}
 .rtl-flip:not(.rtl-no-flip) {
   -moz-transform: scaleX(-1);
   -o-transform: scaleX(-1);
