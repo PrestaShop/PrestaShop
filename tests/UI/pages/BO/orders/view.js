@@ -106,7 +106,7 @@ class Order extends BOBasePage {
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td#${column}`;
-    this.resendEmailButton = row => `${this.tableRow(row)} td.form[action*='resend-email'] button`;
+    this.resendEmailButton = row => `${this.tableRow(row)} td form[action*='resend-email'] button`;
     this.orderNoteCloseButtun = '#historyTabContent a.js-order-notes-toggle-btn.is-opened';
     this.orderNoteOpenButtun = '#historyTabContent a.js-order-notes-toggle-btn';
     this.orderNoteTextarea = '#internal_note_note';
