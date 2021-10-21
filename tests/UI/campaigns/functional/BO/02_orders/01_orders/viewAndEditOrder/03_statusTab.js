@@ -461,7 +461,6 @@ describe('BO - Orders - View and edit order : Check order status block', async (
 
   // 3 - Check history table and order note after some edit by new employee
   describe('Check history table and order note after some edit by new employee', async () => {
-
     it('should login by new employee account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginWithNewEmployee', baseContext);
 
@@ -681,6 +680,7 @@ describe('BO - Orders - View and edit order : Check order status block', async (
     });
   });
 
+  // 4 - delete order note
   describe('Delete order note by default employee', async () => {
     it('should login with default account', async function () {
       await loginCommon.loginBO(this, page);
