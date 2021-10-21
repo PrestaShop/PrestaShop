@@ -28,7 +28,7 @@
         <div class="component-search-body">
           <div class="component-search-top">
             {include file="components/layout/search_form.tpl"}
-            <button class="component-search-cancel d-none">{l|escape s='Cancel' d='Admin.Navigation.Header'}</button>
+            <button class="component-search-cancel d-none">{l|escape s='Cancel' d='Admin.Actions'}</button>
           </div>
 
           {include file="components/layout/mobile_quickaccess.tpl"}
