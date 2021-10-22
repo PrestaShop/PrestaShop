@@ -10,11 +10,11 @@ const testContext = require('@utils/testContext');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import BO pages
-const loginPage = require('@pages/BO/login/index');
 const dashboardPage = require('@pages/BO/dashboard');
-const customersPage = require('@pages/BO/customers');
+const invoicesPage = require('@pages/BO/orders/invoices/index');
 const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view');
+const customersPage = require('@pages/BO/customers');
 
 // Import FO pages
 const foLoginPage = require('@pages/FO/login');
@@ -46,7 +46,7 @@ Pre-condition :
 - Create order by guest
 - Create order by default customer
 Scenario :
-
+- Disable invoices
 Post-condition :
 - Delete guest account
  */
@@ -194,12 +194,39 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
     });
   });
 
-  // 1 - Go to view order page
-  describe('Go to view order page', async () => {
-    it('should login in BO by default employee', async function () {
+  // 1 - Disable invoices
+  describe('Disable invoices', async () => {
+    it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
+    it('should go to \'Orders > Invoices\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage1', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.ordersParentLink,
+        dashboardPage.invoicesLink,
+      );
+
+      await invoicesPage.closeSfToolBar(page);
+
+      const pageTitle = await invoicesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+    });
+
+    it('should disable invoices', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableInvoices', baseContext);
+
+      await invoicesPage.enableInvoices(page, false);
+
+      const textMessage = await invoicesPage.saveInvoiceOptions(page);
+      await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+    });
+  });
+
+  // 2 - Go to view order page
+  describe('Go to view order page', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
 
@@ -238,6 +265,50 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
 
       const pageTitle = await viewOrderPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+    });
+  });
+
+  // 3 - Check generate invoice button
+  describe('Go to view order page', async () => {
+    it('should click on \'DocumentS\' tab', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab', baseContext);
+
+      const isTabOpened = await viewOrderPage.goToDocumentsTab(page);
+      await expect(isTabOpened).to.be.true;
+    });
+
+    it('should check that \'Generate invoice\' button is not visible', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkGenerateInvoiceButton', baseContext);
+
+      const isVisible = await viewOrderPage.isGenerateInvoiceButtonVisible(page);
+      await expect(isVisible).to.be.false;
+    });
+  });
+
+  // 4 - Enable invoices
+  describe('Disable invoices', async () => {
+    it('should go to \'Orders > Invoices\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage2', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.ordersParentLink,
+        dashboardPage.invoicesLink,
+      );
+
+      await invoicesPage.closeSfToolBar(page);
+
+      const pageTitle = await invoicesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+    });
+
+    it('should enable invoices', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'enableInvoices', baseContext);
+
+      await invoicesPage.enableInvoices(page, true);
+
+      const textMessage = await invoicesPage.saveInvoiceOptions(page);
+      await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
     });
   });
 

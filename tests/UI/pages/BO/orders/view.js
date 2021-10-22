@@ -90,8 +90,10 @@ class Order extends BOBasePage {
     this.orderStatusesSelect = '#update_order_status_action_input';
     this.updateStatusButton = '#update_order_status_action_btn';
 
-    // Documents card
+    // Documents tab
     this.documentTab = 'a#orderDocumentsTab';
+    this.orderDocumentTabContent = '#orderDocumentsTabContent';
+    this.generateInvoiceButton = `${this.orderDocumentTabContent} .btn.btn-primary`;
     this.documentsTableDiv = '#orderDocumentsTabContent';
     this.documentsTableRow = row => `${this.documentsTableDiv} table tbody tr:nth-child(${row})`;
     this.documentNumberLink = row => `${this.documentsTableRow(row)} td.documents-table-column-download-link a`;
@@ -251,28 +253,24 @@ class Order extends BOBasePage {
     return this.getPriceFromText(page, this.orderTotalPriceSpan);
   }
 
-  /**
-   * Get document name
-   * @param page {Page} Browser tab
-   * @param rowChild {number} Document row on table
-   * @returns {Promise<string>}
-   */
-  async getDocumentType(page, rowChild = 1) {
-    await this.goToDocumentsTab(page);
-
-    return this.getTextContent(page, this.documentType(rowChild));
-  }
-
+  // Document tab methods
   /**
    * Go to documents tab
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>}
    */
   async goToDocumentsTab(page) {
-    await Promise.all([
-      page.click(this.documentTab),
-      this.waitForVisibleSelector(page, `${this.documentTab}.active`),
-    ]);
+    await page.click(this.documentTab);
+    return this.elementVisible(page, `${this.documentTab}.active`, 1000);
+  }
+
+  /**
+   * Is generate invoice button visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isGenerateInvoiceButtonVisible(page) {
+    return this.elementVisible(page, this.generateInvoiceButton, 1000);
   }
 
   /**
@@ -287,6 +285,18 @@ class Order extends BOBasePage {
     const fileName = await this.getTextContent(page, this.documentNumberLink(rowChild));
 
     return fileName.replace('#', '').trim();
+  }
+
+  /**
+   * Get document name
+   * @param page {Page} Browser tab
+   * @param rowChild {number} Document row on table
+   * @returns {Promise<string>}
+   */
+  async getDocumentType(page, rowChild = 1) {
+    await this.goToDocumentsTab(page);
+
+    return this.getTextContent(page, this.documentType(rowChild));
   }
 
   /**
