@@ -2215,7 +2215,36 @@ class CartCore extends ObjectModel
         $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
 
         // ROUND AND RETURN
-
+        $hook = Hook::exec(
+            'actionCartGetOrderTotalAfter',
+            array(
+                'order_total' => $value,
+                'cart' => $this,
+                'context' => Context::getContext(),
+                'withTaxes' => $withTaxes,
+                'type' => $type,
+                'products' => $products,
+                'id_carrier' => $id_carrier,
+                'use_cache' => $use_cache,
+                'keepOrderPrices' => $keepOrderPrices
+            ),
+            null,
+            true
+        );
+        if (is_array($hook) && count($hook) > 0) {
+            foreach ($hook as $module_cart_value) {
+                if (isset($module_cart_value['reduction'])
+                    && (float)$module_cart_value['reduction'] > 0
+                ) {
+                    $value -= $module_cart_value['reduction'];
+                }
+                if (isset($module_cart_value['increase'])
+                    && (float)$module_cart_value['increase'] > 0
+                ) {
+                    $value += $module_cart_value['increase'];
+                }
+            }
+        }
         return Tools::ps_round($value, $computePrecision);
     }
 
