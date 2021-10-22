@@ -30,14 +30,14 @@ use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceB
 
 @trigger_error(
     sprintf(
-        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
+        '%s is deprecated since version 8.0.0 and will be removed in the next major version.',
         DeleteSpecificPriceByCartProductHandlerInterface::class
     ),
     E_USER_DEPRECATED
 );
 
 /**
- * @deprecated since 1.7.9.0 and will be removed in the next major version.
+ * @deprecated since 8.0.0 and will be removed in the next major version.
  */
 interface DeleteSpecificPriceByCartProductHandlerInterface
 {
