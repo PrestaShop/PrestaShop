@@ -28,8 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Title;
 
-use HelperList;
-use ImageManager;
+use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 
@@ -44,24 +43,29 @@ class TitleImageThumbnailProvider implements ImageProviderInterface
     private $imageTagSourceParser;
 
     /**
+     * @var ImageManager
+     */
+    private $imageManager;
+
+    /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      */
-    public function __construct(ImageTagSourceParserInterface $imageTagSourceParser)
+    public function __construct(ImageTagSourceParserInterface $imageTagSourceParser, ImageManager $imageManager)
     {
         $this->imageTagSourceParser = $imageTagSourceParser;
+        $this->imageManager = $imageManager;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPath($titleId): string
+    public function getPath($titleId): ?string
     {
-        $pathToImage = _PS_IMG_DIR_ . 'genders' . DIRECTORY_SEPARATOR . $titleId . '.jpg';
-
-        $imageTag = ImageManager::thumbnail(
-            $pathToImage,
-            'title_mini_' . $titleId . '.jpg',
-            HelperList::LIST_THUMBNAIL_SIZE,
+        $imageTag = $this->imageManager->getThumbnailForListing(
+            $titleId,
+            'jpg',
+            'genders',
+            _PS_GENDERS_DIR_
         );
 
         return $this->imageTagSourceParser->parse($imageTag);

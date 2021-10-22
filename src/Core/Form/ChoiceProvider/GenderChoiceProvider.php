@@ -37,6 +37,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class GenderChoiceProvider implements FormChoiceProviderInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
 
     public function __construct(TranslatorInterface $translator)

@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use Context;
 use PrestaShop\PrestaShop\Core\Search\Filters\TitleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -57,7 +58,7 @@ class TitleController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/CustomerSettings/Title/index.html.twig', [
             'titleGrid' => $this->presentGrid($titleGrid),
-            'layoutTitle' => $this->trans('Customers', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Titles', 'Admin.Navigation.Menu'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
@@ -75,7 +76,16 @@ class TitleController extends FrameworkBundleAdminController
      */
     public function createAction(): Response
     {
-        return new Response();
+        return $this->redirect(
+            Context::getContext()->link->getAdminLink(
+                'AdminGenders',
+                true,
+                [],
+                [
+                    'addgender' => '',
+                ]
+            )
+        );
     }
 
     /**
@@ -89,9 +99,19 @@ class TitleController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function editAction(): Response
+    public function editAction(int $titleId): Response
     {
-        return new Response();
+        return $this->redirect(
+            Context::getContext()->link->getAdminLink(
+                'AdminGenders',
+                true,
+                [],
+                [
+                    'updategender' => '',
+                    'id_gender' => $titleId,
+                ]
+            )
+        );
     }
 
     /**
@@ -106,9 +126,19 @@ class TitleController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function deleteAction(): RedirectResponse
+    public function deleteAction(int $titleId): RedirectResponse
     {
-        return $this->redirectToRoute('admin_title_index');
+        return $this->redirect(
+            Context::getContext()->link->getAdminLink(
+                'AdminGenders',
+                true,
+                [],
+                [
+                    'deletegender' => '',
+                    'id_gender' => $titleId,
+                ]
+            )
+        );
     }
 
     /**

@@ -122,7 +122,7 @@ class ImageManagerCore
             return __PS_BASE_URI__ . 'img/tmp/' . $cacheImage . $cacheParam;
         }
 
-        return _PS_TMP_IMG_DIR_ . $cacheImage . $cacheParam;
+        return _PS_TMP_IMG_ . $cacheImage . $cacheParam;
     }
 
     /**

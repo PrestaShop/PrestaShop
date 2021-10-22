@@ -114,7 +114,6 @@ tests/Resources/img/os/*
 !tests/Resources/img/os/.gitkeep
 tests/Resources/img/genders/*
 !tests/Resources/img/genders/.gitkeep
-!tests/Resources/img/genders/1.jpg
 tests/Resources/img/c/*
 !tests/Resources/img/c/.gitkeep
 tests/Resources/img/tmp/*

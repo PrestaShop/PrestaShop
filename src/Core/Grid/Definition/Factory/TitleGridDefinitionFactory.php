@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GenderChoiceProvider;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -58,9 +58,12 @@ final class TitleGridDefinitionFactory extends AbstractGridDefinitionFactory
 
     public const GRID_ID = 'title';
 
+    /**
+     * @var FormChoiceProviderInterface
+     */
     private $genderChoiceProvider;
 
-    public function __construct(HookDispatcherInterface $hookDispatcher = null, GenderChoiceProvider $genderChoiceProvider)
+    public function __construct(HookDispatcherInterface $hookDispatcher, FormChoiceProviderInterface $genderChoiceProvider)
     {
         parent::__construct($hookDispatcher);
         $this->genderChoiceProvider = $genderChoiceProvider;
@@ -103,7 +106,7 @@ final class TitleGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('name'))
-                    ->setName($this->trans('Social title', [], 'Admin.Shopparameters.Feature'))
+                    ->setName($this->trans('Title', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'name',
                     ])
@@ -134,7 +137,7 @@ final class TitleGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     ->setIcon('edit')
                                     ->setOptions([
                                         'route' => 'admin_title_edit',
-                                        'route_param_name' => 'genderId',
+                                        'route_param_name' => 'titleId',
                                         'route_param_field' => 'id_gender',
                                         'clickable_row' => true,
                                     ])
@@ -142,7 +145,7 @@ final class TitleGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->add(
                                 $this->buildDeleteAction(
                                     'admin_title_delete',
-                                    'genderId',
+                                    'titleId',
                                     'id_gender',
                                     Request::METHOD_DELETE
                                 )
@@ -172,7 +175,7 @@ final class TitleGridDefinitionFactory extends AbstractGridDefinitionFactory
                      ->setTypeOptions([
                          'required' => false,
                          'attr' => [
-                             'placeholder' => $this->translator->trans('Search social title', [], 'Admin.Actions'),
+                             'placeholder' => $this->translator->trans('Search title', [], 'Admin.Shopparameters.Feature'),
                          ],
                      ])
                      ->setAssociatedColumn('name')

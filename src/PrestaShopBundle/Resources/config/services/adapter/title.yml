@@ -6,3 +6,4 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Title\TitleImageThumbnailProvider'
     arguments:
       - '@prestashop.core.image.parser.image_tag_source_parser'
+      - '@prestashop.adapter.image_manager'

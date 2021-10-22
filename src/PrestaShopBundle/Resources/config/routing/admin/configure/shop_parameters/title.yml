@@ -22,27 +22,27 @@ admin_title_create:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::createAction'
     _legacy_controller: AdminGenders
-    _legacy_link: AdminGenders:addgenders
+#    _legacy_link: AdminGenders:addgender
 
 admin_title_edit:
-  path: /{genderId}/edit
+  path: /{titleId}/edit
   methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::editAction'
     _legacy_controller: AdminGenders
-    _legacy_link: AdminGenders:updategenders
+#    _legacy_link: AdminGenders:updategender
   requirements:
-    languageId: \d+
+    titleId: \d+
 
 admin_title_delete:
-  path: /{genderId}/delete
+  path: /{titleId}/delete
   methods: [ POST, DELETE ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::deleteAction'
     _legacy_controller: AdminGenders
-    _legacy_link: AdminGenders:deletegenders
+#    _legacy_link: AdminGenders:deletegender
   requirements:
-    languageId: \d+
+    titleId: \d+
 
 admin_title_bulk_delete:
   path: /bulk-delete
@@ -50,4 +50,4 @@ admin_title_bulk_delete:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::bulkDeleteAction'
     _legacy_controller: AdminGenders
-    _legacy_link: AdminGenders:submitBulkdeletegenders
+#    _legacy_link: AdminGenders:submitBulkdeletegender
