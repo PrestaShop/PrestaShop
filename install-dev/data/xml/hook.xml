@@ -3520,5 +3520,10 @@
       <title>Cart summary top</title>
       <description>This hook allows you to display new elements in top of cart summary</description>
     </hook>
+    <hook id="actionPresentPaymentOptions">
+      <name>actionPresentPaymentOptions</name>
+      <title>Payment options Presenter</title>
+      <description>This hook is called before payment options are presented</description>
+    </hook>
   </entities>
 </entity_hook>
