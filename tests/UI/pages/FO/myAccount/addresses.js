@@ -24,7 +24,6 @@ class Addresses extends FOBasePage {
     this.createNewAddressLink = '#content div.addresses-footer a[data-link-action=\'add-address\']';
     this.editAddressLink = 'a[data-link-action=\'edit-address\']';
     this.deleteAddressLink = 'a[data-link-action=\'delete-address\']';
-    this.countrySelect = '#content  select[name=\'id_country\']';
   }
 
   /*
