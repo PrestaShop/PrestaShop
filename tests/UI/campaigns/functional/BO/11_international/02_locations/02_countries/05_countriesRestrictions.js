@@ -14,6 +14,7 @@ const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const myAccountPage = require('@pages/FO/myAccount');
 const addressesPage = require('@pages/FO/myAccount/addresses');
+const newAddressesPage = require('@pages/FO/myAccount/addAddress');
 
 // Import data
 const {countries} = require('@data/demo/countries');
@@ -162,8 +163,8 @@ describe('BO - International - Countries : Restrict country selections in front 
 
       await addressesPage.openNewAddressForm(page);
 
-      const isCountryExist = await addressesPage.isCountryExist(page, countries.afghanistan.name);
-      await expect(isCountryExist).to.equal(status.args.isCountryVisible);
+      const countryExist = await newAddressesPage.countryExist(page, countries.afghanistan.name);
+      await expect(countryExist).to.equal(status.args.isCountryVisible);
     });
 
     it('should sign out from FO', async function () {
