@@ -1136,6 +1136,8 @@ window.virtualProduct = (function () {
         modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue() {
             getOnDeleteVirtualProductFileHandler($deleteButton);
+            $(".progress-bar").width('0%');
+            $(".progress-bar").html('0%');
           },
         }).show();
       });
@@ -1157,6 +1159,17 @@ window.virtualProduct = (function () {
         data.append('product_virtual[nb_days]', $('#form_step3_virtual_product_nb_days').val());
 
         $.ajax({
+          xhr: function() {
+            var xhr = new window.XMLHttpRequest();
+            xhr.upload.addEventListener("progress", function(evt) {
+              if (evt.lengthComputable) {
+                var percentComplete = Math.round(((evt.loaded / evt.total) * 100));
+                $(".progress-bar").width(percentComplete + '%');
+                $(".progress-bar").html(percentComplete + '%');
+              }
+            }, false);
+            return xhr;
+          },
           type: 'POST',
           url: $('#virtual_product').attr('data-action').replace(/save\/\d+/, `save/${idProduct}`),
           data,
@@ -1166,6 +1179,11 @@ window.virtualProduct = (function () {
             that.prop('disabled', 'disabled');
             $('ul.text-danger').remove();
             $('*.has-danger').removeClass('has-danger');
+            $(".progress-bar").removeClass('bg-success');
+            $(".progress-bar").removeClass('bg-danger');
+            $(".progress-bar").addClass('progress-bar-animated');
+            $(".progress-bar").width('0%');
+            $(".progress-bar").html('0%');
           },
           success(response) {
             showSuccessMessage(translate_javascripts['Form update success']);
@@ -1174,6 +1192,8 @@ window.virtualProduct = (function () {
               $('#form_step3_virtual_product_file_input').removeClass('show').addClass('hide');
               $('#form_step3_virtual_product_file_details').removeClass('hide').addClass('show');
             }
+            $(".progress-bar").addClass('bg-success');
+            $(".progress-bar").removeClass('progress-bar-animated');
           },
           error(response) {
             $.each(jQuery.parseJSON(response.responseText), (key, errors) => {
@@ -1186,6 +1206,8 @@ window.virtualProduct = (function () {
               $(`#form_step3_virtual_product_${key}`).parent().append(html);
               $(`#form_step3_virtual_product_${key}`).parent().addClass('has-danger');
             });
+            $(".progress-bar").addClass('bg-danger');
+            $(".progress-bar").removeClass('progress-bar-animated');
           },
           complete() {
             that.removeAttr('disabled');
