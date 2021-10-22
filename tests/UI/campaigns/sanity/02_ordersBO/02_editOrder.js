@@ -1,17 +1,23 @@
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'sanity_ordersBO_editOrder';
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
 
-// importing pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const orderPage = require('@pages/BO/orders/view');
 const ordersPage = require('@pages/BO/orders');
+
+// Import data
 const {Statuses} = require('@data/demo/orderStatuses');
+
+const baseContext = 'sanity_ordersBO_editOrder';
 
 let browserContext;
 let page;
@@ -21,12 +27,13 @@ let page;
   Edit the first order
   Logout from the BO
  */
-describe('Edit Order BO', async () => {
+describe('BO - Orders - Orders : Edit Order BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
   });
+
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
@@ -36,7 +43,7 @@ describe('Edit Order BO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to the Orders page', async function () {
+  it('should go to the \'Orders > Orders\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -46,6 +53,7 @@ describe('Edit Order BO', async () => {
     );
 
     await ordersPage.closeSfToolBar(page);
+
     const pageTitle = await ordersPage.getPageTitle(page);
     await expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
@@ -67,6 +75,7 @@ describe('Edit Order BO', async () => {
 
   it('should modify the order status and check the validation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editOrderStatus', baseContext);
+
     const orderStatus = await orderPage.modifyOrderStatus(page, Statuses.paymentAccepted.status);
     await expect(orderStatus).to.equal(Statuses.paymentAccepted.status);
   });

@@ -1,18 +1,23 @@
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'sanity_productsBO_deleteProduct';
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
 
-// importing pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
 
+// Import data
 const ProductFaker = require('@data/faker/product');
+
+const baseContext = 'sanity_productsBO_deleteProduct';
 
 const productToCreate = {
   type: 'Standard product',
@@ -23,9 +28,8 @@ const productData = new ProductFaker(productToCreate);
 let browserContext;
 let page;
 
-
 // Create Standard product in BO and Delete it with DropDown Menu
-describe('Create Standard product in BO and Delete it with DropDown Menu', async () => {
+describe('BO - Catalog - Products : Create Standard product in BO and Delete it with DropDown Menu', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -35,12 +39,13 @@ describe('Create Standard product in BO and Delete it with DropDown Menu', async
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
+
   // Steps
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to Products page', async function () {
+  it('should go to \'Catalog > Products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage1', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -61,7 +66,7 @@ describe('Create Standard product in BO and Delete it with DropDown Menu', async
     await expect(numberOfProducts).to.be.above(0);
   });
 
-  it('should create Product', async function () {
+  it('should create product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
     await productsPage.goToAddProductPage(page);
@@ -69,7 +74,7 @@ describe('Create Standard product in BO and Delete it with DropDown Menu', async
     await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 
-  it('should go to Products page', async function () {
+  it('should go to \'Catalog > Products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
 
     await addProductPage.goToSubMenu(
@@ -82,7 +87,7 @@ describe('Create Standard product in BO and Delete it with DropDown Menu', async
     await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
 
-  it('should delete product with from DropDown Menu', async function () {
+  it('should delete product from DropDown Menu', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
     const deleteTextResult = await productsPage.deleteProduct(page, productData);

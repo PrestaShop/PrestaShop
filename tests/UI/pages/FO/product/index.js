@@ -89,9 +89,9 @@ class Product extends FOBasePage {
   }
 
   /**
-   * Get Product information (Product name, price, description)
-   * @param page {Page} Browser tab
-   * @returns {Promise<{price: (number), name: (string), description: (string)}>}
+   * Get Product information (Product name, price, short description, description)
+   * @param page
+   * @returns {Promise<{price: number, name: string, description: string, shortDescription: string}>}
    */
   async getProductInformation(page) {
     return {

@@ -1,18 +1,24 @@
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'sanity_productsBO_CRUDStandardProductWithCombinationsInBO';
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
 
-// importing pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
+
+// Import FO pages
 const foProductPage = require('@pages/FO/product');
 const ProductFaker = require('@data/faker/product');
+
+const baseContext = 'sanity_productsBO_CRUDStandardProductWithCombinationsInBO';
 
 const productToCreate = {
   type: 'Standard product',
@@ -21,13 +27,18 @@ const productToCreate = {
 const productWithCombinations = new ProductFaker(productToCreate);
 const editedProductWithCombinations = new ProductFaker(productToCreate);
 
-
 let browserContext;
 let page;
-
+let productInformation = {
+  price: 0,
+  name: '',
+  description: '',
+  shortDescription: '',
+};
 
 // Create, read, update and delete Standard product with combinations in BO
-describe('Create, read, update and delete Standard product with combinations in BO', async () => {
+describe('BO - Catalog - Products : Create, read, update and delete Standard product '
+  + 'with combinations in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -43,7 +54,7 @@ describe('Create, read, update and delete Standard product with combinations in 
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to Products page', async function () {
+  it('should go to \'Catalog > Products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -78,23 +89,38 @@ describe('Create, read, update and delete Standard product with combinations in 
     await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 
-  it('should preview and check product in FO', async function () {
+  it('should preview product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'previewProduct1', baseContext);
 
     page = await addProductPage.previewProduct(page);
-    const result = await foProductPage.getProductInformation(page);
+    productInformation = await foProductPage.getProductInformation(page);
+
+    const pageTitle = await foProductPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(productWithCombinations.name);
+  });
+
+  it('should go back to BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
     page = await foProductPage.closePage(browserContext, page, 0);
 
+    const pageTitle = await addProductPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(addProductPage.pageTitle);
+  });
+
+  it('should check that all product attributes are correct', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkProductAttributes1', baseContext);
+
     // Check that all Product attribute are correct
     await Promise.all([
-      expect(result.name).to.equal(productWithCombinations.name),
-      expect(result.price).to.equal(productWithCombinations.price),
-      expect(result.description).to.contains(productWithCombinations.description),
+      expect(productInformation.name).to.equal(productWithCombinations.name),
+      expect(productInformation.price).to.equal(productWithCombinations.price),
+      expect(productInformation.description).to.contains(productWithCombinations.description),
+      expect(productInformation.shortDescription).to.contains(productWithCombinations.summary),
     ]);
   });
 
-  it('should edit Product', async function () {
+  it('should edit product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
 
     await addProductPage.createEditBasicProduct(page, editedProductWithCombinations);
@@ -105,23 +131,38 @@ describe('Create, read, update and delete Standard product with combinations in 
     await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 
-  it('should preview and check product in FO', async function () {
+  it('should preview product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
 
     page = await addProductPage.previewProduct(page);
-    const result = await foProductPage.getProductInformation(page);
+    productInformation = await foProductPage.getProductInformation(page);
+
+    const pageTitle = await foProductPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(editedProductWithCombinations.name);
+  });
+
+  it('should go back to BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
     page = await foProductPage.closePage(browserContext, page, 0);
 
+    const pageTitle = await addProductPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(addProductPage.pageTitle);
+  });
+
+  it('should check that all product attributes are correct', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkProductAttributes2', baseContext);
+
     // Check that all Product attribute are correct
     await Promise.all([
-      expect(result.name).to.equal(editedProductWithCombinations.name),
-      expect(result.price).to.equal(editedProductWithCombinations.price),
-      expect(result.description).to.contains(editedProductWithCombinations.description),
+      expect(productInformation.name).to.equal(editedProductWithCombinations.name),
+      expect(productInformation.price).to.equal(editedProductWithCombinations.price),
+      expect(productInformation.shortDescription).to.contains(editedProductWithCombinations.summary),
+      expect(productInformation.description).to.contains(editedProductWithCombinations.description),
     ]);
   });
 
-  it('should delete Product and be on product list page', async function () {
+  it('should delete product and be on product list page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
     const testResult = await addProductPage.deleteProduct(page);

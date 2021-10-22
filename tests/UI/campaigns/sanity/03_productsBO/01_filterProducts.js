@@ -1,26 +1,32 @@
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'sanity_productsBO_filterProducts';
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
 
-// importing pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products');
 
+// Import data
 const {Products} = require('@data/demo/products');
 const {Categories} = require('@data/demo/categories');
 const {DefaultFrTax} = require('@data/demo/tax');
 
+const baseContext = 'sanity_productsBO_filterProducts';
+
 let browserContext;
 let page;
 let numberOfProducts = 0;
+let numberOfProductsOnPage = 0;
 
 // Test of filters in products page
-describe('Filter in Products Page', async () => {
+describe('BO - Catalog - Products : Filter in Products Page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -36,7 +42,7 @@ describe('Filter in Products Page', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to Products page', async function () {
+  it('should go to \'Catalog > Products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
     await dashboardPage.closeOnboardingModal(page, 3000);
@@ -50,7 +56,7 @@ describe('Filter in Products Page', async () => {
     await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
 
-  it('should reset all filters and get Number of products in BO', async function () {
+  it('should reset all filters and get number of products in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
     await productsPage.resetFilterCategory(page);
@@ -58,11 +64,15 @@ describe('Filter in Products Page', async () => {
     await expect(numberOfProducts).to.be.above(0);
 
     // Do not loop more than the products displayed via the pagination
-    const numberOfProductsOnPage = await productsPage.getNumberOfProductsOnPage(page);
+    numberOfProductsOnPage = await productsPage.getNumberOfProductsOnPage(page);
+  });
+
+  it('should check that prices have correct tax values', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkTaxRules', baseContext);
 
     // Check that prices have correct tax values
     for (let i = 1; i <= numberOfProducts && i <= numberOfProductsOnPage; i++) {
-      const productPrice = await productsPage.getProductPriceFromList(page, i);
+      const productPrice = await productsPage.getProductPriceFromList(page, i, false);
       const productPriceATI = await productsPage.getProductPriceFromList(page, i, true);
       const conversionRate = (100 + parseInt(DefaultFrTax.rate, 10)) / 100;
       await expect(parseFloat(productPrice)).to.equal(parseFloat((productPriceATI / conversionRate).toFixed(2)));

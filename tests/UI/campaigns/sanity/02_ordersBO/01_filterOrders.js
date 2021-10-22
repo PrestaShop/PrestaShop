@@ -1,18 +1,22 @@
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'sanity_ordersBO_filterOrders';
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
 
-// importing pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 
+// Import data
 const {Orders} = require('@data/demo/orders');
 
+const baseContext = 'sanity_ordersBO_filterOrders';
 let numberOfOrders;
 let browserContext;
 let page;
@@ -22,12 +26,13 @@ let page;
   Filter the Orders table
   Logout from the BO
  */
-describe('Filter the Orders table by ID, REFERENCE, STATUS', () => {
+describe('BO - Orders - Orders : Filter the Orders table by ID, REFERENCE, STATUS', () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
   });
+
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
@@ -37,7 +42,7 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to the Orders page', async function () {
+  it('should go to the \'Orders > Orders\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -52,6 +57,7 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', () => {
 
   it('should reset all filters and get number of orders', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilters1', baseContext);
+
     numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
     await expect(numberOfOrders).to.be.above(0);
   });
@@ -89,6 +95,7 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', () => {
   tests.forEach((test) => {
     it(`should filter the Orders table by '${test.args.filterBy}' and check the result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `filterOrders_${test.args.identifier}`, baseContext);
+
       await ordersPage.filterOrders(
         page,
         test.args.filterType,
@@ -101,6 +108,7 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', () => {
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `resetFilters_${test.args.identifier}`, baseContext);
+
       const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
     });

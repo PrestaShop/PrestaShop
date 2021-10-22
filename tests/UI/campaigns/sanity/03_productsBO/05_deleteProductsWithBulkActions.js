@@ -1,18 +1,23 @@
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'sanity_productsBO_deleteProductsWithBulkActions';
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
 
-// importing pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
 
+// Import data
 const ProductFaker = require('@data/faker/product');
+
+const baseContext = 'sanity_productsBO_deleteProductsWithBulkActions';
 
 const productToCreate = {
   name: 'product To Delete 1',
@@ -26,7 +31,7 @@ let browserContext;
 let page;
 
 // Create 2 Standard products in BO and Delete it with Bulk Actions
-describe('Create Standard product in BO and Delete it with Bulk Actions', async () => {
+describe('BO - Catalog - Product : Create Standard product in BO and Delete it with Bulk Actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -42,7 +47,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to Products page', async function () {
+  it('should go to \'Catalog > Products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage1', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -72,7 +77,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
       await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
     });
 
-    it('should go to Products page', async function () {
+    it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToProductsPageAfterCreate${index + 1}`, baseContext);
 
       await addProductPage.goToSubMenu(
