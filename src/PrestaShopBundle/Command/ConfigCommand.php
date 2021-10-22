@@ -28,10 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Command;
 
-use Employee;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\LegacyContextLoader;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Exception\NotImplementedException;
@@ -77,11 +76,6 @@ class ConfigCommand extends Command
     protected $output;
 
     /**
-     * @var LegacyContext
-     */
-    private $context;
-
-    /**
      * @var ShopConfigurationInterface
      */
     private $configuration;
@@ -107,12 +101,12 @@ class ConfigCommand extends Command
     private $idLang;
 
     public function __construct(
-        LegacyContext $context,
+        LegacyContextLoader $legacyContextLoader,
         ShopConfigurationInterface $configuration,
         LanguageDataProvider $languageDataProvider
     ) {
         parent::__construct();
-        $this->context = $context;
+        $legacyContextLoader->loadGenericContext();
         $this->configuration = $configuration;
         $this->languageDataProvider = $languageDataProvider;
 
@@ -141,12 +135,6 @@ class ConfigCommand extends Command
         $this->formatter = $this->getHelper('formatter');
         $this->input = $input;
         $this->output = $output;
-        //We need to have an employee or the module hooks don't work
-        //see LegacyHookSubscriber
-        if (!$this->context->getContext()->employee) {
-            //Even a non existing employee is fine
-            $this->context->getContext()->employee = new Employee(42);
-        }
 
         // check our action
         $action = $input->getArgument('action');
