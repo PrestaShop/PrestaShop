@@ -67,6 +67,14 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
+        language:
+            paths:
+                - "%paths.base%/Features/Scenario/Language"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\LanguageFeatureContext
         order:
             paths:
                 - "%paths.base%/Features/Scenario/Order"
