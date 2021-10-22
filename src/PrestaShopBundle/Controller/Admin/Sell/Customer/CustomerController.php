@@ -516,13 +516,12 @@ class CustomerController extends AbstractAdminController
     /**
      * @return array
      */
-    private function getLogDataContext($id_customer = null, $error_code = null, $allow_duplicate = null): array
+    private function getLogDataContext(?int $id_customer = null, ?int $error_code = null): array
     {
         return [
             'object_type' => 'Customer',
             'object_id' => $id_customer,
             'error_code' => $error_code,
-            'allow_duplicate' => $allow_duplicate,
         ];
     }
 
