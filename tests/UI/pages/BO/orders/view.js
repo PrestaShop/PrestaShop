@@ -23,6 +23,7 @@ class Order extends BOBasePage {
     this.successfulDeleteProductMessage = 'The product was successfully removed.';
     this.errorMinimumQuantityMessage = 'Minimum quantity of "3" must be added';
     this.errorAddSameProduct = 'This product is already in your order, please edit the quantity instead.';
+    this.noAvailableDocumentsMessage = 'There is no available document';
 
     // Customer card
     this.customerInfoBlock = '#customerInfo';
@@ -96,6 +97,7 @@ class Order extends BOBasePage {
     this.generateInvoiceButton = `${this.orderDocumentTabContent} .btn.btn-primary`;
     this.documentsTableDiv = '#orderDocumentsTabContent';
     this.documentsTableRow = row => `${this.documentsTableDiv} table tbody tr:nth-child(${row})`;
+    this.documentsTableColumn = (row, column) => `${this.documentsTableRow(row)} td.${column}`;
     this.documentNumberLink = row => `${this.documentsTableRow(row)} td.documents-table-column-download-link a`;
     this.documentType = row => `${this.documentsTableRow(row)} td.documents-table-column-type`;
 
@@ -271,6 +273,32 @@ class Order extends BOBasePage {
    */
   isGenerateInvoiceButtonVisible(page) {
     return this.elementVisible(page, this.generateInvoiceButton, 1000);
+  }
+
+  /**
+   * Get documents number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getDocumentsNumber(page) {
+    return this.getNumberFromText(page, `${this.documentTab} .count`);
+  }
+
+  /**
+   * Get text from Column on documents table
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name on table
+   * @param row {number} status row in table
+   * @returns {Promise<string>}
+   */
+  async getTextColumnFromDocumentsTable(page, columnName, row) {
+    return this.getTextContent(page, this.documentsTableColumn(row, columnName));
+  }
+
+  async generateInvoice(page) {
+    await this.clickAndWaitForNavigation(page, this.generateInvoiceButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

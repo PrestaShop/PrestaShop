@@ -269,7 +269,7 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
   });
 
   // 3 - Check generate invoice button
-  describe('Go to view order page', async () => {
+  describe('Check generate invoice button', async () => {
     it('should click on \'DocumentS\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab', baseContext);
 
@@ -286,7 +286,7 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
   });
 
   // 4 - Enable invoices
-  describe('Disable invoices', async () => {
+  describe('Enable invoices', async () => {
     it('should go to \'Orders > Invoices\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage2', baseContext);
 
@@ -309,6 +309,94 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
 
       const textMessage = await invoicesPage.saveInvoiceOptions(page);
       await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+    });
+  });
+
+  // 5 - Go to view order page
+  describe('Go to view order page', async () => {
+    it('should go to \'Orders > Orders\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.ordersParentLink,
+        dashboardPage.ordersLink,
+      );
+
+      await ordersPage.closeSfToolBar(page);
+
+      const pageTitle = await ordersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters2', baseContext);
+
+      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfOrders).to.be.above(0);
+    });
+
+    it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer2', baseContext);
+
+      await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
+
+      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+      await expect(textColumn).to.contains(customerData.lastName);
+    });
+
+    it('should view the order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage2', baseContext);
+
+      await ordersPage.goToOrder(page, 1);
+
+      const pageTitle = await viewOrderPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+    });
+  });
+
+  // 6 - Check documents tab
+  describe('Check documents tab', async () => {
+    it('should click on \'DocumentS\' tab', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab', baseContext);
+
+      const isTabOpened = await viewOrderPage.goToDocumentsTab(page);
+      await expect(isTabOpened).to.be.true;
+    });
+
+    it('should check that \'Generate invoice\' button is visible', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkGenerateInvoiceButton', baseContext);
+
+      const isVisible = await viewOrderPage.isGenerateInvoiceButtonVisible(page);
+      await expect(isVisible).to.be.true;
+    });
+
+    it('should check that documents number is equal to 0', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber1', baseContext);
+
+      const documentsNumber = await viewOrderPage.getDocumentsNumber(page);
+      await expect(documentsNumber).to.be.equal(0);
+    });
+
+    it('should check the existence of the message \'There is no available document\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
+
+      const textMessage = await viewOrderPage.getTextColumnFromDocumentsTable(page, 'text-center', 1);
+      await expect(textMessage).to.be.equal(viewOrderPage.noAvailableDocumentsMessage);
+    });
+
+    it('should create invoice', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'create invoice', baseContext);
+
+      const textResult = await viewOrderPage.generateInvoice(page, Statuses.canceled.status);
+      await expect(textResult).to.equal(viewOrderPage.successfulUpdateMessage);
+    });
+
+    it('should check that documents number is equal to 1', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber1', baseContext);
+
+      const documentsNumber = await viewOrderPage.getDocumentsNumber(page);
+      await expect(documentsNumber).to.be.equal(1);
     });
   });
 
