@@ -62,7 +62,7 @@
 <div class="block-categories">
   <ul class="category-top-menu">
     <li><a class="text-uppercase h6" href="{$categories.link nofilter}">{$categories.name}</a></li>
-    {if is_array($categories.children) &&count($categories.children) > 0}
+    {if !empty($categories.children)}
       <li>{categories nodes=$categories.children}</li>
     {/if}
   </ul>
