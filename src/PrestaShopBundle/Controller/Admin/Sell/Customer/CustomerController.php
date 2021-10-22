@@ -273,11 +273,17 @@ class CustomerController extends AbstractAdminController
      *
      * @param int $customerId
      * @param Request $request
+     * @param CustomerDiscountFilters $customerDiscountFilters
+     * @param CustomerAddressFilters $customerAddressFilters
      *
      * @return Response
      */
-    public function viewAction($customerId, Request $request)
-    {
+    public function viewAction(
+        $customerId,
+        Request $request,
+        CustomerDiscountFilters $customerDiscountFilters,
+        CustomerAddressFilters $customerAddressFilters
+    ) {
         try {
             /** @var ViewableCustomer $customerInformation */
             $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
