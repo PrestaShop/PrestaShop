@@ -56,7 +56,7 @@ services:
 
   PrestaShopBundle\Command\ConfigCommand:
     arguments:
-      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.adapter.legacy_context_loader'
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.data_provider.language'
     tags:
