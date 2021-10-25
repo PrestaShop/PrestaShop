@@ -24,6 +24,7 @@ class Order extends BOBasePage {
     this.errorMinimumQuantityMessage = 'Minimum quantity of "3" must be added';
     this.errorAddSameProduct = 'This product is already in your order, please edit the quantity instead.';
     this.noAvailableDocumentsMessage = 'There is no available document';
+    this.updateSuccessfullMessage = 'Update successful';
 
     // Customer card
     this.customerInfoBlock = '#customerInfo';
@@ -100,6 +101,9 @@ class Order extends BOBasePage {
     this.documentsTableColumn = (row, column) => `${this.documentsTableRow(row)} td.${column}`;
     this.documentNumberLink = row => `${this.documentsTableRow(row)} td.documents-table-column-download-link a`;
     this.documentType = row => `${this.documentsTableRow(row)} td.documents-table-column-type`;
+    this.documentNoteButton = row => `${this.documentsTableRow(row)} td button.js-open-invoice-note-btn`;
+    this.documentNoteInput = row => `${this.documentsTableRow(row)} td input[name='invoice_note']`;
+    this.documentNoteSaveButton = row => `${this.documentsTableRow(row)} td button[type='submit']`;
 
     // Refund form
     this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
@@ -346,6 +350,21 @@ class Order extends BOBasePage {
     await this.goToDocumentsTab(page);
 
     return this.downloadDocument(page, 1);
+  }
+
+  /**
+   * Set document note
+   * @param page {Page} Browser tab
+   * @param note {String} Text to set on note input
+   * @param row {number} Row in documents table
+   * @returns {Promise<string>}
+   */
+  async setDocumentNote(page, note, row = 1) {
+    await this.waitForSelectorAndClick(page, this.documentNoteButton(row));
+    await this.setValue(page, this.documentNoteInput(row + 1), note);
+    await this.waitForSelectorAndClick(page, this.documentNoteSaveButton(row + 1));
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

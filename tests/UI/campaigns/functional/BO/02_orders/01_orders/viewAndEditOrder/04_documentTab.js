@@ -5,6 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
+const files = require('@utils/files');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -37,6 +38,8 @@ const baseContext = 'functional_BO_login_passwordReminder';
 
 let browserContext;
 let page;
+let filePath;
+const note = 'Test note for document';
 
 const addressData = new AddressFaker({country: 'France'});
 const customerData = new CustomerFaker({password: ''});
@@ -397,6 +400,21 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
 
       const documentsNumber = await viewOrderPage.getDocumentsNumber(page);
       await expect(documentsNumber).to.be.equal(1);
+    });
+
+    it('should download invoice', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoice', baseContext);
+
+      filePath = await viewOrderPage.downloadInvoice(page, 1);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
+      await expect(doesFileExist).to.be.true;
+    });
+
+    it('should add note', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addNote', baseContext);
+
+      const textResult = await viewOrderPage.setDocumentNote(page, note, 1);
+      await expect(textResult).to.equal(viewOrderPage.updateSuccessfullMessage);
     });
   });
 
