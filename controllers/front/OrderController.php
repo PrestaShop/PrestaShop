@@ -242,7 +242,6 @@ class OrderControllerCore extends FrontController
         $email = Tools::getValue('email');
         $isGuestAllowed = (bool) Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
         $customerExists = false;
-        $responseData = [];
         $alert = [];
 
         if (Validate::isEmail($email)) {
@@ -265,11 +264,11 @@ class OrderControllerCore extends FrontController
                 );
         }
 
-        $responseData = array_merge($responseData, [
+        $responseData = [
             'guestAllowed' => $isGuestAllowed,
             'alert' => $alert,
             'customerExists' => $customerExists,
-        ]);
+        ];
 
         ob_end_clean();
         header('Content-Type: application/json');
