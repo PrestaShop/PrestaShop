@@ -70,6 +70,7 @@ class PDFCore
      * @param string $template
      * @param Smarty $smarty
      * @param string $orientation
+     * @param Language $language
      */
     public function __construct($objects, $template, $smarty, $orientation = 'P', $language = null)
     {
