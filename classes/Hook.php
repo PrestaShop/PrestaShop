@@ -231,7 +231,7 @@ class HookCore extends ObjectModel
 							FROM `' . _DB_PREFIX_ . 'hook`
 							WHERE `id_hook` = ' . (int) $hook_id);
 
-            if (false === $result) {
+            if ($result === false) {
                 throw new PrestaShopObjectNotFoundException(
                     sprintf('The hook id #%d does not exist in database', $hook_id)
                 );
@@ -619,7 +619,7 @@ class HookCore extends ObjectModel
             }
 
             // If shop lists is null, we fill it with all shops
-            if (null === $shop_list) {
+            if ($shop_list === null) {
                 $shop_list = Shop::getCompleteListOfShopsID();
             }
 
@@ -639,6 +639,7 @@ class HookCore extends ObjectModel
                 $sql = 'SELECT MAX(`position`) AS position
                     FROM `' . _DB_PREFIX_ . 'hook_module`
                     WHERE `id_hook` = ' . (int) $id_hook . ' AND `id_shop` = ' . (int) $shop_id;
+                
                 if (!$position = Db::getInstance()->getValue($sql)) {
                     $position = 0;
                 }
@@ -731,7 +732,7 @@ class HookCore extends ObjectModel
         $allHookRegistrations = static::getAllHookRegistrations(Context::getContext(), $hookName);
 
         // If no hook_name is given, return all registered hooks
-        if (null === $hookName) {
+        if ($hookName === null) {
             return $allHookRegistrations;
         }
 
@@ -796,7 +797,7 @@ class HookCore extends ObjectModel
         }
 
         // $chain & $array_return are incompatible so if chained is set to true, we disable the array_return option
-        if (true === $chain) {
+        if ($chain === true) {
             $array_return = false;
         }
 
@@ -937,7 +938,7 @@ class HookCore extends ObjectModel
                     Tools::waitUntilFileIsModified($moduleInstance->push_filename, $moduleInstance->push_time_limit);
                 }
 
-                if (0 !== $key && true === $chain) {
+                if ($key !== 0 && $chain === true) {
                     $hook_args = $output;
                 }
 
@@ -946,7 +947,7 @@ class HookCore extends ObjectModel
                 if ($array_return) {
                     $output[$moduleInstance->name] = $display;
                 } else {
-                    if (true === $chain) {
+                    if ($chain === true) {
                         $output = $display;
                     } else {
                         $output .= $display;
@@ -957,7 +958,7 @@ class HookCore extends ObjectModel
                 }
             } elseif (Hook::isDisplayHookName($registeredHookName)) {
                 if ($moduleInstance instanceof WidgetInterface) {
-                    if (0 !== $key && true === $chain) {
+                    if ($key !== 0 && $chain === true) {
                         $hook_args = $output;
                     }
 
@@ -966,7 +967,7 @@ class HookCore extends ObjectModel
                     if ($array_return) {
                         $output[$moduleInstance->name] = $display;
                     } else {
-                        if (true === $chain) {
+                        if ($chain === true) {
                             $output = $display;
                         } else {
                             $output .= $display;
@@ -987,7 +988,7 @@ class HookCore extends ObjectModel
             $context->shop->setContext($old_context, $shop->id);
         }
 
-        if (true === $chain) {
+        if ($chain === true) {
             if (isset($output['cookie'])) {
                 unset($output['cookie']);
             }
@@ -1034,7 +1035,7 @@ class HookCore extends ObjectModel
     private static function getHookRegistry()
     {
         $sfContainer = SymfonyContainer::getInstance();
-        if (null !== $sfContainer && 'dev' === $sfContainer->getParameter('kernel.environment')) {
+        if ($sfContainer !== null && $sfContainer->getParameter('kernel.environment') === 'dev') {
             return $sfContainer->get('prestashop.hooks_registry');
         }
 
@@ -1191,6 +1192,7 @@ class HookCore extends ObjectModel
         $sql->orderBy('hm.`position`');
 
         $allHookRegistrations = [];
+
         if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
             foreach ($result as $row) {
                 $row['hook'] = strtolower($row['hook']);
