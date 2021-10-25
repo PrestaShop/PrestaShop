@@ -86,3 +86,10 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Extension\DownloadFileExtension'
     tags:
       - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FileType }
+
+  form.extension.alerts_tracking_extension:
+    class: 'PrestaShopBundle\Form\Admin\Extension\AlertsTrackingExtension'
+    arguments:
+      - '@session.flash_bag'
+    tags:
+      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
