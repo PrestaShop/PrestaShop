@@ -80,8 +80,20 @@ final class CustomerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('a.`id_address`, a.`firstname`, a.`lastname`, a.`address1`, a.`address2`, a.`postcode`, ' .
-                'a.`city`, a.`company`, a.`phone`, a.`phone_mobile`'
+            ->select(
+                'a.`id_address`,
+                CONCAT(a.`firstname`, " ", a.`lastname`) AS full_name,
+                CONCAT(a.`address1`, " ", a.`address2`, " ", a.`postcode`, " ", a.`city`) AS full_address,
+                IF(
+                  a.`company` IS NULL or a.`company` = "",
+                  "--",
+                  a.`company`
+                ) AS company,
+                IF(
+                  a.`phone` IS NULL or a.`phone` = "",
+                  IF(a.`phone_mobile` IS NULL or a.`phone_mobile` = "", "--",  a.`phone_mobile`),
+                  a.`phone`
+                ) AS phone_number'
             )
             ->addSelect('cl.`name` as country_name')
         ;

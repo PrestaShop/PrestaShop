@@ -29,8 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
-use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
-use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -59,50 +57,10 @@ final class CustomerAddressGridDataFactoryDecorator implements GridDataFactoryIn
     {
         $customerData = $this->customerAddressDoctrineGridDataFactory->getData($searchCriteria);
 
-        $customerRecords = $this->applyModifications($customerData->getRecords());
-
         return new GridData(
-            $customerRecords,
+            $customerData->getRecords(),
             $customerData->getRecordsTotal(),
             $customerData->getQuery()
         );
-    }
-
-    /**
-     * @param RecordCollectionInterface $addresses
-     *
-     * @return RecordCollection
-     */
-    private function applyModifications(RecordCollectionInterface $addresses)
-    {
-        $modifiedAddresses = [];
-
-        foreach ($addresses as $address) {
-            if (empty($address['company'])) {
-                $address['company'] = '--';
-            }
-
-            $address['full_name'] = sprintf('%s %s', $address['firstname'], $address['lastname']);
-
-            $address['full_address'] = sprintf(
-                '%s %s %s %s',
-                $address['address1'],
-                $address['address2'],
-                $address['postcode'],
-                $address['city']
-            );
-
-            if (!empty($address['phone'])) {
-                $address['phone_number'] = $address['phone'];
-            } elseif (!empty($address['phone_mobile'])) {
-                $address['phone_number'] = $address['phone_mobile'];
-            } else {
-                $address['phone_number'] = '--';
-            }
-
-            $modifiedAddresses[] = $address;
-        }
-
-        return new RecordCollection($modifiedAddresses);
     }
 }

@@ -98,7 +98,6 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
                     ->setName($this->trans('Name', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'full_name',
-                        'sortable' => false,
                     ])
             )
             ->add(
