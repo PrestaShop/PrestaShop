@@ -755,6 +755,11 @@
 
   .customization-message {
     margin-top: 20px;
+
+    .customization-label {
+      text-align: left;
+      word-break: break-word;
+    }
   }
 
   .custom-file {
