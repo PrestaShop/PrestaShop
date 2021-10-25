@@ -1940,7 +1940,7 @@ class AdminImportControllerCore extends AdminController
 
         // Category default now takes the value of the first new category during import
         if (isset($product->id_category[0])) {
-            if (!isset($product->id_category_default) || !$product->id_category_default || !in_array($product->id_category_default, $product->id_category)) {
+            if (!empty($product->id_category_default) || !in_array($product->id_category_default, $product->id_category)) {
                 $product->id_category_default = (int) $product->id_category[0];
             }
         } else {
