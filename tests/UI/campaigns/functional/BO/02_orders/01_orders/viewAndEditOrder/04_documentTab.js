@@ -15,7 +15,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const invoicesPage = require('@pages/BO/orders/invoices/index');
 const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view');
-const customersPage = require('@pages/BO/customers');
 
 // Import FO pages
 const foLoginPage = require('@pages/FO/login');
@@ -30,19 +29,12 @@ const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Statuses} = require('@data/demo/orderStatuses');
 
-// Import faker data
-const AddressFaker = require('@data/faker/address');
-const CustomerFaker = require('@data/faker/customer');
-
 const baseContext = 'functional_BO_login_passwordReminder';
 
 let browserContext;
 let page;
 let filePath;
 const note = 'Test note for document';
-
-const addressData = new AddressFaker({country: 'France'});
-const customerData = new CustomerFaker({password: ''});
 
 /*
 Pre-condition :
@@ -65,8 +57,8 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Pre-condition - Create order by guest
-  describe('Create order by guest in FO', async () => {
+  // Pre-condition - Create order by default customer
+  describe('Create order by default customer in FO', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
@@ -80,57 +72,6 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
       await expect(isHomePage, 'Fail to open FO home page').to.be.true;
     });
 
-    it('should add product to cart and proceed to checkout', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
-
-      await foHomePage.goToHomePage(page);
-
-      // Go to the fourth product page
-      await foHomePage.goToProductPage(page, 4);
-
-      // Add the created product to the cart
-      await foProductPage.addProductToTheCart(page, 1);
-
-      // Proceed to checkout the shopping cart
-      await foCartPage.clickOnProceedToCheckout(page);
-
-      // Go to checkout page
-      const isCheckoutPage = await foCheckoutPage.isCheckoutPage(page);
-      await expect(isCheckoutPage).to.be.true;
-    });
-
-    it('should fill guest personal information', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
-
-      const isStepPersonalInfoCompleted = await foCheckoutPage.setGuestPersonalInformation(page, customerData);
-      await expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.be.true;
-    });
-
-    it('should fill address form and go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
-
-      const isStepAddressComplete = await foCheckoutPage.setAddress(page, addressData);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should validate the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'validateOrder', baseContext);
-
-      // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await foCheckoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-
-      // Payment step - Choose payment step
-      await foCheckoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-      const cardTitle = await foOrderConfirmationPage.getOrderConfirmationCardTitle(page);
-
-      // Check the confirmation message
-      await expect(cardTitle).to.contains(foOrderConfirmationPage.orderConfirmationCardTitle);
-    });
-  });
-
-  // Pre-condition - Create order by default customer
-  describe('Create order by default customer in FO', async () => {
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
 
@@ -252,13 +193,13 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
       await expect(numberOfOrders).to.be.above(0);
     });
 
-    it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${DefaultCustomer.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(customerData.lastName);
+      await expect(textColumn).to.contains(DefaultCustomer.lastName);
     });
 
     it('should view the order', async function () {
@@ -339,13 +280,13 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
       await expect(numberOfOrders).to.be.above(0);
     });
 
-    it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer2', baseContext);
+    it(`should filter the Orders table by 'Customer: ${DefaultCustomer.lastName}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(customerData.lastName);
+      await expect(textColumn).to.contains(DefaultCustomer.lastName);
     });
 
     it('should view the order', async function () {
@@ -375,7 +316,7 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
     });
 
     it('should check that documents number is equal to 0', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber0', baseContext);
 
       const documentsNumber = await viewOrderPage.getDocumentsNumber(page);
       await expect(documentsNumber).to.be.equal(0);
@@ -388,10 +329,10 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
       await expect(textMessage).to.be.equal(viewOrderPage.noAvailableDocumentsMessage);
     });
 
-    it('should create invoice', async function () {
+    it('should click on \'Generate invoice\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'create invoice', baseContext);
 
-      const textResult = await viewOrderPage.generateInvoice(page, Statuses.canceled.status);
+      const textResult = await viewOrderPage.generateInvoice(page);
       await expect(textResult).to.equal(viewOrderPage.successfulUpdateMessage);
     });
 
@@ -402,7 +343,14 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
       await expect(documentsNumber).to.be.equal(1);
     });
 
-    it('should download invoice', async function () {
+    it('should check if \'Invoice\' document is created', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceDocument', baseContext);
+
+      const documentType = await viewOrderPage.getDocumentType(page, 1);
+      await expect(documentType).to.be.equal('Invoice');
+    });
+
+    it('should download the \'Invoice\' file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoice', baseContext);
 
       filePath = await viewOrderPage.downloadInvoice(page, 1);
@@ -430,42 +378,87 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
       const textResult = await viewOrderPage.setDocumentNote(page, '', 1);
       await expect(textResult).to.equal(viewOrderPage.updateSuccessfullMessage);
     });
-  });
 
-  // Post-condition - Delete guest account
-  describe('Delete the created guest account', async () => {
-    it('should go \'Customers >  Customers\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
+    it('should check that the button \'Add note\' is visible', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkAddNoteButton', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.customersParentLink, dashboardPage.customersLink);
-
-      await customersPage.closeSfToolBar(page);
-
-      const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      const isVisible = await viewOrderPage.isAddDocumentNoteButtonVisible(page);
+      await expect(isVisible).to.be.true;
     });
 
-    it('should filter list by customer email', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
+    it('should click on \'Enter payment\' button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentButton', baseContext);
 
-      await customersPage.filterCustomers(page, 'input', 'email', customerData.email);
-
-      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-      await expect(textResult).to.contains(customerData.email);
+      const amountValue = await viewOrderPage.clickOnEnterPaymentButton(page);
+      await expect(amountValue).to.not.equal('');
     });
 
-    it('should delete customer and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomer', baseContext);
+    it(`should change the order status to '${Statuses.paymentAccepted.status}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusPaymentAccepted', baseContext);
 
-      const deleteTextResult = await customersPage.deleteCustomer(page, 1);
-      await expect(deleteTextResult).to.be.equal(customersPage.successfulDeleteMessage);
+      const textResult = await viewOrderPage.modifyOrderStatus(page, Statuses.paymentAccepted.status);
+      await expect(textResult).to.equal(Statuses.paymentAccepted.status);
     });
 
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteCustomer', baseContext);
+    it('should check that the button \'Enter payment\' is not visible', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEnterPaymentButton', baseContext);
 
-      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomersAfterReset).to.be.above(0);
+      const isVisible = await viewOrderPage.isEnterPaymentButtonVisible(page);
+      await expect(isVisible).to.be.false;
+    });
+
+    it(`should change the order status to '${Statuses.shipped.status}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusShipped', baseContext);
+
+      const textResult = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      await expect(textResult).to.equal(Statuses.shipped.status);
+    });
+
+    it('should check that documents number is equal to 2', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber2', baseContext);
+
+      const documentsNumber = await viewOrderPage.getDocumentsNumber(page);
+      await expect(documentsNumber).to.be.equal(2);
+    });
+
+    it('should check if \'Delivery slip\' document is created', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDeliverySlipDocument', baseContext);
+
+      const documentType = await viewOrderPage.getDocumentType(page, 3);
+      await expect(documentType).to.be.equal('Delivery slip');
+    });
+
+    it('should download \'Delivery slip\' file', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'downloadDeliverySlip', baseContext);
+
+      filePath = await viewOrderPage.downloadInvoice(page, 3);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
+      await expect(doesFileExist).to.be.true;
+    });
+
+    it('should create \'Partial refund\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createPartialRefund', baseContext);
+
+      await viewOrderPage.clickOnPartialRefund(page);
+
+      const textMessage = await viewOrderPage.addPartialRefundProduct(page, 1, 1);
+      await expect(textMessage).to.contains(viewOrderPage.partialRefundValidationMessage);
+    });
+
+    it('should check if \'Credit slip\' document is created', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocument', baseContext);
+
+      // Get document name
+      const documentType = await viewOrderPage.getDocumentType(page, 4);
+      await expect(documentType).to.be.equal('Credit slip');
+    });
+
+    it('should download \'Credit slip\' file', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'downloadCreditSlip', baseContext);
+
+      filePath = await viewOrderPage.downloadInvoice(page, 4);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
+      await expect(doesFileExist).to.be.true;
     });
   });
 });

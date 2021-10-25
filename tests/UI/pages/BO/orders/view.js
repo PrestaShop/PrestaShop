@@ -105,6 +105,10 @@ class Order extends BOBasePage {
     this.documentNoteInput = row => `${this.documentsTableRow(row)} td input.invoice-note`;
     this.documentNoteSaveButton = row => `${this.documentsTableRow(row)} td button.js-save-invoice-note-btn`;
     this.editDocumentNoteButton = row => `${this.documentsTableRow(row)} td button.btn-edit`;
+    this.enterPaymentButton = row => `${this.documentsTableRow(row)} td button.js-enter-payment-btn`;
+
+    // Payment block
+    this.paymentAmountInput = '#order_payment_amount';
 
     // Refund form
     this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
@@ -300,6 +304,11 @@ class Order extends BOBasePage {
     return this.getTextContent(page, this.documentsTableColumn(row, columnName));
   }
 
+  /**
+   * Click on generate invoice button
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
   async generateInvoice(page) {
     await this.clickAndWaitForNavigation(page, this.generateInvoiceButton);
 
@@ -377,7 +386,43 @@ class Order extends BOBasePage {
   async isEditDocumentNoteButtonVisible(page, row = 1) {
     await this.goToDocumentsTab(page);
 
-    return this.elementVisible(page, this.editDocumentNoteButton(row), 2000);
+    return this.elementVisible(page, this.editDocumentNoteButton(row), 1000);
+  }
+
+  /**
+   * Is add note button visible
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table documents
+   * @returns {Promise<boolean>}
+   */
+  async isAddDocumentNoteButtonVisible(page, row = 1) {
+    await this.goToDocumentsTab(page);
+
+    return this.elementVisible(page, this.addDocumentNoteButton(row), 1000);
+  }
+
+  /**
+   * Is enter payment button visible
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table documents
+   * @returns {Promise<boolean>}
+   */
+  async isEnterPaymentButtonVisible(page, row = 1) {
+    await this.goToDocumentsTab(page);
+
+    return this.elementVisible(page, this.enterPaymentButton(row), 1000);
+  }
+
+  /**
+   * Click on enter payment button and get amount value
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<*>}
+   */
+  async clickOnEnterPaymentButton(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.enterPaymentButton(row));
+
+    return page.$eval(this.paymentAmountInput, el => el.value);
   }
 
   /**
