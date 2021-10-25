@@ -21,8 +21,8 @@ class OrderHistory extends FOBasePage {
     this.ordersTableRows = `${this.ordersTable} tbody tr`;
     this.ordersTableRow = row => `${this.ordersTableRows}:nth-child(${row})`;
     this.orderTableColumn = (row, column) => `${this.ordersTableRow(row)} td:nth-child(${column})`;
-    this.reorderLink = id => `${this.ordersTable} td.order-actions a[href*='Reorder=&id_order=${id}']`;
-    this.detailsLink = row => `${this.ordersTableRow(row)} a[data-link-action='view-order-details']`;
+    this.reorderLink = row => `${this.ordersTableRow(row)} a.reorder-link`;
+    this.detailsLink = row => `${this.ordersTableRow(row)} a.view-order-details-link`;
   }
 
   /*
@@ -41,18 +41,18 @@ class OrderHistory extends FOBasePage {
   /**
    * Is reorder link visible
    * @param page {Page} Browser tab
-   * @param idOrder {Number} database id of the order
+   * @param orderRow {Number} Row on orders table
    * @returns {Promise<boolean>}
    */
-  isReorderLinkVisible(page, idOrder = 1) {
-    return this.elementVisible(page, this.reorderLink(idOrder), 1000);
+  isReorderLinkVisible(page, orderRow = 1) {
+    return this.elementVisible(page, this.reorderLink(orderRow), 1000);
   }
 
   /**
    *
    * Click on reorder link
    * @param page {Page} Browser tab
-   * @param orderRow {Number} row in orders table
+   * @param orderRow {Number} Row in orders table
    * @returns {Promise<void>}
    */
   async clickOnReorderLink(page, orderRow = 1) {
