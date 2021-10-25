@@ -416,6 +416,20 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
       const textResult = await viewOrderPage.setDocumentNote(page, note, 1);
       await expect(textResult).to.equal(viewOrderPage.updateSuccessfullMessage);
     });
+
+    it('should check that the button \'Edit note\' is visible', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEditNoteButton', baseContext);
+
+      const isVisible = await viewOrderPage.isEditDocumentNoteButtonVisible(page);
+      await expect(isVisible).to.be.true;
+    });
+
+    it('should delete note', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteNote', baseContext);
+
+      const textResult = await viewOrderPage.setDocumentNote(page, '', 1);
+      await expect(textResult).to.equal(viewOrderPage.updateSuccessfullMessage);
+    });
   });
 
   // Post-condition - Delete guest account

@@ -101,9 +101,10 @@ class Order extends BOBasePage {
     this.documentsTableColumn = (row, column) => `${this.documentsTableRow(row)} td.${column}`;
     this.documentNumberLink = row => `${this.documentsTableRow(row)} td.documents-table-column-download-link a`;
     this.documentType = row => `${this.documentsTableRow(row)} td.documents-table-column-type`;
-    this.documentNoteButton = row => `${this.documentsTableRow(row)} td button.js-open-invoice-note-btn`;
-    this.documentNoteInput = row => `${this.documentsTableRow(row)} td input[name='invoice_note']`;
-    this.documentNoteSaveButton = row => `${this.documentsTableRow(row)} td button[type='submit']`;
+    this.addDocumentNoteButton = row => `${this.documentsTableRow(row)} td button.js-open-invoice-note-btn`;
+    this.documentNoteInput = row => `${this.documentsTableRow(row)} td input.invoice-note`;
+    this.documentNoteSaveButton = row => `${this.documentsTableRow(row)} td button.js-save-invoice-note-btn`;
+    this.editDocumentNoteButton = row => `${this.documentsTableRow(row)} td button.btn-edit`;
 
     // Refund form
     this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
@@ -360,11 +361,23 @@ class Order extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setDocumentNote(page, note, row = 1) {
-    await this.waitForSelectorAndClick(page, this.documentNoteButton(row));
+    await this.waitForSelectorAndClick(page, this.addDocumentNoteButton(row));
     await this.setValue(page, this.documentNoteInput(row + 1), note);
     await this.waitForSelectorAndClick(page, this.documentNoteSaveButton(row + 1));
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Is edit note button visible
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table documents
+   * @returns {Promise<boolean>}
+   */
+  async isEditDocumentNoteButtonVisible(page, row = 1) {
+    await this.goToDocumentsTab(page);
+
+    return this.elementVisible(page, this.editDocumentNoteButton(row), 2000);
   }
 
   /**
