@@ -659,7 +659,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
     protected function manageProductImages()
     {
-        $this->manageDeclinatedImages(_PS_PROD_IMG_DIR_);
+        $this->manageDeclinatedImages(_PS_PRODUCT_IMG_DIR_);
     }
 
     protected function getCustomizations()
@@ -1140,18 +1140,18 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
                     if ($this->imageType == 'products' && isset($image, $product)) {
                         $image = new Image($image->id);
-                        if (!(Configuration::get('PS_OLD_FILESYSTEM') && file_exists(_PS_PROD_IMG_DIR_ . $product->id . '-' . $image->id . '.jpg'))) {
+                        if (!(Configuration::get('PS_OLD_FILESYSTEM') && file_exists(_PS_PRODUCT_IMG_DIR_ . $product->id . '-' . $image->id . '.jpg'))) {
                             $image->createImgFolder();
                         }
 
                         if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($file['tmp_name'], $tmp_name)) {
                             throw new WebserviceException('An error occurred during the image upload', [76, 400]);
-                        } elseif (!ImageManager::resize($tmp_name, _PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format)) {
+                        } elseif (!ImageManager::resize($tmp_name, _PS_PRODUCT_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format)) {
                             throw new WebserviceException('An error occurred while copying image', [76, 400]);
                         } else {
                             $images_types = ImageType::getImagesTypes('products');
                             foreach ($images_types as $imageType) {
-                                if (!ImageManager::resize($tmp_name, _PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
+                                if (!ImageManager::resize($tmp_name, _PS_PRODUCT_IMG_DIR_ . $image->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
                                     $this->getWsObject()->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error');
                                 }
                             }
@@ -1160,7 +1160,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
                         Hook::exec('actionWatermark', ['id_image' => $image->id, 'id_product' => $image->id_product]);
 
-                        $this->imgToDisplay = _PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format;
+                        $this->imgToDisplay = _PS_PRODUCT_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format;
                         $this->objOutput->setFieldsToDisplay('full');
                         $this->output = $this->objOutput->renderEntity($image, 1);
                         $image_content = ['sqlId' => 'content', 'value' => base64_encode(file_get_contents($this->imgToDisplay)), 'encode' => 'base64'];
