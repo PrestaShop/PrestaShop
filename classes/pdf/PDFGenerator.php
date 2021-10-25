@@ -96,6 +96,7 @@ class PDFGeneratorCore extends TCPDF
     /**
      * @param bool $use_cache
      * @param string $orientation
+     * @param Language $language
      */
     public function __construct($use_cache = false, $orientation = 'P', $language = null)
     {
