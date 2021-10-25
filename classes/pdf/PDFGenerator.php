@@ -98,7 +98,7 @@ class PDFGeneratorCore extends TCPDF
      * @param string $orientation
      * @param Language $language
      */
-    public function __construct($use_cache = false, $orientation = 'P', $language = null)
+    public function __construct($use_cache = false, $orientation = 'P', Language $language = null)
     {
         parent::__construct($orientation, 'mm', 'A4', true, 'UTF-8', $use_cache, false);
         if ($language === null) {
