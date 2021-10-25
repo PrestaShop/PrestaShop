@@ -5322,7 +5322,7 @@ class ProductCore extends ObjectModel
 
         $customizations = [];
         if (($customizations['fields'] = Db::getInstance()->executeS('
-            SELECT `id_customization_field`, `type`, `required`
+            SELECT `id_customization_field`, `type`, `required`, `is_deleted`
             FROM `' . _DB_PREFIX_ . 'customization_field`
             WHERE `id_product` = ' . (int) $product_id . '
             ORDER BY `id_customization_field`')) === false) {
@@ -5390,6 +5390,10 @@ class ProductCore extends ObjectModel
             return true;
         }
         foreach ($customizations['fields'] as $customization_field) {
+            if (!empty($customization_field['is_deleted'])) {
+                continue;
+            }
+
             /* The new datas concern the new product */
             $customization_field['id_product'] = (int) $product_id;
             $old_customization_field_id = (int) $customization_field['id_customization_field'];
