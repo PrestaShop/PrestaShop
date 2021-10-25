@@ -22,27 +22,32 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import specificPriceMap from '../specific-price-map';
+
+const {$} = window;
 
 /**
- * Disables price input once "leave initial price" is checked
+ * Shows/hides 'include_tax' field depending from 'reduction_type' field value
  */
-export default class PriceInputToggler {
-  public constructor() {
-    this.init();
+export default class IncludeTaxFieldToggle {
+  $sourceSelector: JQuery;
+
+  $targetSelector: JQuery;
+
+  constructor(sourceSelector: string, targetSelector: string) {
+    this.$sourceSelector = $(sourceSelector);
+    this.$targetSelector = $(targetSelector);
+    this.handle();
+    this.$sourceSelector.on('change', () => this.handle());
   }
 
-  private init(): void {
-    const initialPriceCheckbox = document.querySelector(specificPriceMap.leaveInitialPriceCheckbox) as HTMLInputElement;
-    this.toggle(initialPriceCheckbox.checked);
-
-    initialPriceCheckbox.addEventListener('change', (event: Event) => {
-      this.toggle(initialPriceCheckbox.checked);
-    });
-  }
-
-  private toggle(disable: boolean): void {
-    const priceInput = document.querySelector(specificPriceMap.priceInput) as HTMLInputElement;
-    priceInput.classList.toggle('disabled', disable);
+  /**
+   * When source value is 'percentage', target field is shown, else hidden
+   */
+  private handle(): void {
+    if (this.$sourceSelector.val() === 'percentage') {
+      this.$targetSelector.fadeOut();
+    } else {
+      this.$targetSelector.fadeIn();
+    }
   }
 }

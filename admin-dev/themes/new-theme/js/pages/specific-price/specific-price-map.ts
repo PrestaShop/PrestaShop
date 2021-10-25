@@ -27,4 +27,6 @@ export default {
   customerSearchContainer: '#specific_price_customer',
   priceInput: '#specific_price_price',
   leaveInitialPriceCheckbox: '#specific_price_leave_initial_price',
+  reductionTypeSelect: '#specific_price_reduction_type',
+  includeTaxInput: '#specific_price_include_tax',
 };

@@ -27,6 +27,8 @@ const {$} = window;
 
 /**
  * Shows/hides 'include_tax' field depending from 'reduction_type' field value
+ *
+ * @deprecated use @components/form/include-tax-field-toggle.ts
  */
 export default class IncludeTaxFieldVisibilityHandler {
   $sourceSelector: JQuery;

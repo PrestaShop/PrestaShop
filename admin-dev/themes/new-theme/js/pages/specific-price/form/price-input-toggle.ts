@@ -22,23 +22,27 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import EntitySearchInput from '@components/entity-search-input';
-import PriceInputToggle from '@pages/specific-price/form/price-input-toggle';
-import SpecificPriceMap from '@pages/specific-price/specific-price-map';
-import IncludeTaxFieldToggle from '@components/form/include-tax-field-toggle';
+import specificPriceMap from '@pages/specific-price/specific-price-map';
 
-const {$} = window;
+/**
+ * Disables price input once "leave initial price" is checked
+ */
+export default class PriceInputToggle {
+  public constructor() {
+    this.init();
+  }
 
-$(() => {
-  new PriceInputToggle();
-  new IncludeTaxFieldToggle(SpecificPriceMap.reductionTypeSelect, SpecificPriceMap.includeTaxInput);
-  new EntitySearchInput($(SpecificPriceMap.customerSearchContainer), {
-    responseTransformer: (response: any) => {
-      if (!response) {
-        return [];
-      }
+  private init(): void {
+    const initialPriceCheckbox = document.querySelector(specificPriceMap.leaveInitialPriceCheckbox) as HTMLInputElement;
+    this.toggle(initialPriceCheckbox.checked);
 
-      return response.customers;
-    },
-  });
-});
+    initialPriceCheckbox.addEventListener('change', (event: Event) => {
+      this.toggle(initialPriceCheckbox.checked);
+    });
+  }
+
+  private toggle(disable: boolean): void {
+    const priceInput = document.querySelector(specificPriceMap.priceInput) as HTMLInputElement;
+    priceInput.classList.toggle('disabled', disable);
+  }
+}
