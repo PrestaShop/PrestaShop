@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import IncludeTaxFieldToggle from '@components/form/include-tax-field-toggle';
 import PriceFieldAvailabilityHandler from './price-field-availability-handler';
 
-import IncludeTaxFieldVisibilityHandler from './include-tax-field-visibility-handler';
 import CatalogPriceRuleFormMap from './catalog-price-rule-form-map';
 
 const {$} = window;
@@ -35,7 +35,7 @@ $(() => {
     CatalogPriceRuleFormMap.initialPrice,
     CatalogPriceRuleFormMap.price,
   );
-  new IncludeTaxFieldVisibilityHandler(
+  new IncludeTaxFieldToggle(
     CatalogPriceRuleFormMap.reductionType,
     CatalogPriceRuleFormMap.includeTax,
   );
