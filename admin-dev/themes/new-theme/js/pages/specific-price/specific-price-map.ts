@@ -28,5 +28,8 @@ export default {
   priceInput: '#specific_price_price',
   leaveInitialPriceCheckbox: '#specific_price_leave_initial_price',
   reductionTypeSelect: '#specific_price_reduction_type',
-  includeTaxInput: '#specific_price_include_tax',
+  //@todo: change selector to input container instead of only input (because label must be toggled along with the input)
+  //  blocking PR which introduces way to add row class without modifying whole form view:
+  //    https://github.com/PrestaShop/PrestaShop/pull/22045/files#diff-15917d65b058bfc6b231cca64e96e6a772a7d8f936743b88b3c3105e42d282fe
+  includeTaxInputContainer: '#specific_price_include_tax',
 };
