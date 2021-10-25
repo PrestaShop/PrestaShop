@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip;
 
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -43,12 +44,17 @@ final class CreditSlipOptionsType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('slip_prefix', TranslatableType::class, [
-            'label' => $this->trans('Credit slip prefix', 'Admin.Orderscustomers.Feature'),
-            'help' => $this->trans('Prefix used for credit slips.', 'Admin.Orderscustomers.Help'),
-            'required' => false,
-            'error_bubbling' => true,
-            'type' => TextType::class,
-        ]);
+        $builder
+            ->add('slip_prefix', TranslatableType::class, [
+                'label' => $this->trans('Credit slip prefix', 'Admin.Orderscustomers.Feature'),
+                'help' => $this->trans('Prefix used for credit slips.', 'Admin.Orderscustomers.Help'),
+                'required' => false,
+                'error_bubbling' => true,
+                'type' => TextType::class,
+            ])
+            ->add('slip_reset', SwitchType::class, [
+                'label' => $this->trans('Reset sequential credit slip number at the beginning of the year', 'Admin.Orderscustomers.Feature'),
+                'required' => false,
+            ]);
     }
 }

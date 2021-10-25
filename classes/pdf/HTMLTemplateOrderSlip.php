@@ -59,7 +59,13 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         $products = OrderSlip::getOrdersSlipProducts($this->order_slip->id, $this->order);
 
         foreach ($products as $product) {
-            $customized_datas = Product::getAllCustomizedDatas($this->id_cart, null, true, null, (int) $product['id_customization']);
+            $customized_datas = Product::getAllCustomizedDatas(
+                $this->id_cart,
+                null,
+                true,
+                null,
+                (int) $product['id_customization']
+            );
             Product::addProductCustomizationPrice($product, $customized_datas);
         }
 
@@ -70,9 +76,42 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         // header informations
         $this->date = Tools::displayDate($this->order_slip->date_add);
         $prefix = Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id);
-        $this->title = sprintf(HTMLTemplateOrderSlip::l('%1$s%2$06d'), $prefix, (int) $this->order_slip->id);
+
+        $orderSlipId = (int) $order_slip->id;
+
+        $this->title = sprintf(
+            HTMLTemplateOrderSlip::l('%1$s%2$06d'),
+            $prefix,
+            Configuration::get('PS_CREDIT_SLIP_RESET') ? $this->getOrderSlipNumberForYearByIdOrderSlip($orderSlipId) : $orderSlipId
+        );
 
         $this->shop = new Shop((int) $this->order->id_shop);
+    }
+
+    /**
+     * Returns the numbering of the subscription invoice with respect to the year it was made
+     *
+     * @param int $id_order_slip order_slip
+     *
+     * @return int number for year
+     */
+    public function getOrderSlipNumberForYearByIdOrderSlip(int $id_order_slip): int
+    {
+        $date = Db::getInstance()->getValue(
+            'SELECT date_add FROM `' . _DB_PREFIX_ . 'order_slip` WHERE id_order_slip=' . $id_order_slip
+        );
+
+        if (empty($date)) {
+            return 0;
+        }
+
+        $current_year = date('Y-01-01 00:00:00', strtotime($date));
+
+        $counts = Db::getInstance()->getValue(
+            'SELECT count(*) as "n" FROM `' . _DB_PREFIX_ . 'order_slip` WHERE date_add > "' . $current_year . '" AND date_add <= "' . $date . '"'
+        );
+
+        return (int) $counts;
     }
 
     /**
@@ -83,7 +122,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     public function getHeader()
     {
         $this->assignCommonHeaderData();
-        $this->smarty->assign(['header' => Context::getContext()->getTranslator()->trans('Credit slip', [], 'Shop.Pdf')]);
+        $this->smarty->assign(
+            ['header' => Context::getContext()->getTranslator()->trans('Credit slip', [], 'Shop.Pdf')]
+        );
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }
@@ -113,10 +154,12 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
                 $product['total_price_tax_incl'] = $product['unit_price_tax_incl'] * $product['product_quantity'];
 
                 if ($this->order_slip->partial == 1) {
-                    $order_slip_detail = Db::getInstance()->getRow('
+                    $order_slip_detail = Db::getInstance()->getRow(
+                        '
                         SELECT * FROM `' . _DB_PREFIX_ . 'order_slip_detail`
                         WHERE `id_order_slip` = ' . (int) $this->order_slip->id . '
-                        AND `id_order_detail` = ' . (int) $product['id_order_detail']);
+                        AND `id_order_detail` = ' . (int) $product['id_order_detail']
+                    );
 
                     $product['total_price_tax_excl'] = $order_slip_detail['amount_tax_excl'];
                     $product['total_price_tax_incl'] = $order_slip_detail['amount_tax_incl'];
@@ -159,18 +202,20 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             }
         }
 
-        $this->smarty->assign([
-            'order' => $this->order,
-            'order_slip' => $this->order_slip,
-            'order_details' => $this->order->products,
-            'cart_rules' => $this->order_slip->order_slip_type == 1 ? $this->order->getCartRules() : false,
-            'amount_choosen' => $this->order_slip->order_slip_type == 2 ? true : false,
-            'delivery_address' => $formatted_delivery_address,
-            'invoice_address' => $formatted_invoice_address,
-            'addresses' => ['invoice' => $invoice_address, 'delivery' => $delivery_address],
-            'tax_excluded_display' => $tax_excluded_display,
-            'total_cart_rule' => $total_cart_rule,
-        ]);
+        $this->smarty->assign(
+            [
+                'order' => $this->order,
+                'order_slip' => $this->order_slip,
+                'order_details' => $this->order->products,
+                'cart_rules' => $this->order_slip->order_slip_type == 1 ? $this->order->getCartRules() : false,
+                'amount_choosen' => $this->order_slip->order_slip_type == 2,
+                'delivery_address' => $formatted_delivery_address,
+                'invoice_address' => $formatted_invoice_address,
+                'addresses' => ['invoice' => $invoice_address, 'delivery' => $delivery_address],
+                'tax_excluded_display' => $tax_excluded_display,
+                'total_cart_rule' => $total_cart_rule,
+            ]
+        );
 
         $tpls = [
             'style_tab' => $this->smarty->fetch($this->getTemplate('invoice.style-tab')),
@@ -203,7 +248,12 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
      */
     public function getFilename()
     {
-        return Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop) . sprintf('%06d', $this->order_slip->id) . '.pdf';
+        return Configuration::get(
+                'PS_CREDIT_SLIP_PREFIX',
+                Context::getContext()->language->id,
+                null,
+                $this->order->id_shop
+            ) . sprintf('%06d', $this->order_slip->id) . '.pdf';
     }
 
     /**
@@ -215,19 +265,21 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     {
         $address = new Address((int) $this->order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $tax_exempt = Configuration::get('VATNUMBER_MANAGEMENT')
-                            && !empty($address->vat_number)
-                            && $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
+            && !empty($address->vat_number)
+            && $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
 
-        $this->smarty->assign([
-            'tax_exempt' => $tax_exempt,
-            'product_tax_breakdown' => $this->getProductTaxesBreakdown(),
-            'shipping_tax_breakdown' => $this->getShippingTaxesBreakdown(),
-            'order' => $this->order,
-            'ecotax_tax_breakdown' => $this->order_slip->getEcoTaxTaxesBreakdown(),
-            'is_order_slip' => true,
-            'tax_breakdowns' => $this->getTaxBreakdown(),
-            'display_tax_bases_in_breakdowns' => false,
-        ]);
+        $this->smarty->assign(
+            [
+                'tax_exempt' => $tax_exempt,
+                'product_tax_breakdown' => $this->getProductTaxesBreakdown(),
+                'shipping_tax_breakdown' => $this->getShippingTaxesBreakdown(),
+                'order' => $this->order,
+                'ecotax_tax_breakdown' => $this->order_slip->getEcoTaxTaxesBreakdown(),
+                'is_order_slip' => true,
+                'tax_breakdowns' => $this->getTaxBreakdown(),
+                'display_tax_bases_in_breakdowns' => false,
+            ]
+        );
 
         return $this->smarty->fetch($this->getTemplate('invoice.tax-tab'));
     }
@@ -299,8 +351,16 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         }
 
         foreach ($breakdown as $rate => $data) {
-            $breakdown[$rate]['total_price_tax_excl'] = Tools::ps_round($data['total_price_tax_excl'], Context::getContext()->getComputingPrecision(), $this->order->round_mode);
-            $breakdown[$rate]['total_amount'] = Tools::ps_round($data['total_amount'], Context::getContext()->getComputingPrecision(), $this->order->round_mode);
+            $breakdown[$rate]['total_price_tax_excl'] = Tools::ps_round(
+                $data['total_price_tax_excl'],
+                Context::getContext()->getComputingPrecision(),
+                $this->order->round_mode
+            );
+            $breakdown[$rate]['total_amount'] = Tools::ps_round(
+                $data['total_amount'],
+                Context::getContext()->getComputingPrecision(),
+                $this->order->round_mode
+            );
         }
 
         ksort($breakdown);
