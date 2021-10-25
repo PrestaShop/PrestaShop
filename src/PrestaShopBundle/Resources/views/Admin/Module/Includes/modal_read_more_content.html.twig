@@ -38,8 +38,7 @@
   ats.features,
   ats.badges is defined and ats.badges|length > 0 ? ats.badges : false
 %}
-<div
-  class="modal-dialog module-modal-dialog">
+<div class="modal-dialog module-modal-dialog">
   <!-- Modal content-->
   <div class="modal-content module-modal-content no-padding">
     <div class="modal-header module-modal-header">
@@ -75,8 +74,7 @@
         <img src="{% if cover.big is defined %}{{ cover.big }}{% else %}{{ notFoundImg }}{% endif %}"/>
       </div>
       <div class="module-menu-readmore">
-        <nav
-          class="navbar navbar-light">
+        <nav class="navbar navbar-light">
           {# tab list #}
           <ul class="nav nav-pills">
             <li class="nav-item">
@@ -110,8 +108,7 @@
             {# end tab list #}
           </ul>
         </nav>
-        <div
-          class="tab-content">
+        <div class="tab-content">
           {# tab content list #}
           <div id="overview-{{ name }}" class="tab-pane fade in active show">
             <p class="module-readmore-tab-content">
