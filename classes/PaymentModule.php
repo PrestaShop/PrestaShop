@@ -149,10 +149,6 @@ abstract class PaymentModuleCore extends Module
     public function addCheckboxCountryRestrictionsForModule(array $shops = [])
     {
         $countries = Country::getCountries((int) Context::getContext()->language->id, true); //get only active country
-        $country_ids = [];
-        foreach ($countries as $country) {
-            $country_ids[] = $country['id_country'];
-        }
 
         return Country::addModuleRestrictions($shops, $countries, [['id_module' => (int) $this->id]]);
     }
