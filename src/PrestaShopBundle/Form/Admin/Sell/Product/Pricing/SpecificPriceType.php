@@ -231,6 +231,7 @@ class SpecificPriceType extends TranslatorAwareType
             ])
             //@todo: handle field removal when % reduction type is selected
             ->add('include_tax', ChoiceType::class, [
+                'label' => $this->trans('Reduction with or without taxes', 'Admin.Catalog.Feature'),
                 'placeholder' => false,
                 'required' => false,
                 'choices' => $this->taxInclusionChoiceProvider->getChoices(),
