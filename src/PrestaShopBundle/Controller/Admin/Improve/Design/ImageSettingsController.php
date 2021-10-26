@@ -217,7 +217,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
         }
 
-        return $this->render('@PrestaShop/Admin/Improve/Design/ImageSettings:create.html.twig', [
+        return $this->render('@PrestaShop/Admin/Improve/Design/ImageSettings/create.html.twig', [
             'imageTypeForm' => $imageTypeForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
