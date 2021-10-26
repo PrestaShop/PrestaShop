@@ -38,12 +38,11 @@ const note = 'Test note for document';
 
 /*
 Pre-condition :
-- Create order by guest
 - Create order by default customer
 Scenario :
-- Disable invoices
-Post-condition :
-- Delete guest account
+- Disable/Enable invoices and check result
+- Check all types of documents( invoice, delivery slip, credit slip) and download them
+- Check add note, enter payment buttons
  */
 
 describe('BO - Orders - View and edit order : Check order documents block', async () => {
@@ -325,7 +324,7 @@ describe('BO - Orders - View and edit order : Check order documents block', asyn
     it('should check the existence of the message \'There is no available document\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
 
-      const textMessage = await viewOrderPage.getTextColumnFromDocumentsTable(page, 'text-center', 1);
+      const textMessage = await viewOrderPage.getTextColumnFromDocumentsTable(page, 'alert-available', 1);
       await expect(textMessage).to.be.equal(viewOrderPage.noAvailableDocumentsMessage);
     });
 
