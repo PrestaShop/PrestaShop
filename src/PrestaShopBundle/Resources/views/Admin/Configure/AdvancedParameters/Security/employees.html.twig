@@ -33,6 +33,10 @@
       </div>
     </div>
   {% endblock %}
+
+  {% block security_clear_employees_sessions %}
+    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Security/clear_form.html.twig' with {'route': 'admin_security_sessions_employee_clear'} %}
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}

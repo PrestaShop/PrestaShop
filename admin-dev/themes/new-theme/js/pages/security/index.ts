@@ -25,7 +25,6 @@
 
 import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
-import ConfirmModal from '@components/modal';
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
 import FiltersSubmitButtonEnablerExtension
@@ -71,25 +70,4 @@ $(() => {
   customerSessionsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
   new FormSubmitButton();
-
-
-  $('.btn-confirm-security-modal').on('click', function (e) {
-    e.preventDefault();
-
-    const $button = $(this);
-    const modal = new ConfirmModal(
-      {
-        id: 'modal-confirm-submit-feature-flag',
-        confirmTitle: window.translate_javascripts.ModalTitle,
-        confirmMessage: window.translate_javascripts.ModalMessage,
-        confirmButtonLabel: window.translate_javascripts.ModalApply,
-        closeButtonLabel: window.translate_javascripts.ModalCancel,
-      },
-      () => {
-        document.location.href = <string> $button.attr('href');
-      },
-    );
-
-    modal.show();
-  });
 });
