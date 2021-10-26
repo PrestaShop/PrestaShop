@@ -111,7 +111,7 @@
                     {/if}
 										{if $languages|count > 1}
 										<div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
-											<div class="col-lg-9">
+											<div class="col-lg-10">
 										{/if}
 												{if $input.type == 'tags'}
 													{literal}
@@ -435,7 +435,7 @@
 										{foreach $languages as $language}
 											{if $languages|count > 1}
 											<div class="form-group translatable-field lang-{$language.id_lang}"{if $language.id_lang != $defaultFormLanguage} style="display:none;"{/if}>
-												<div class="col-lg-9">
+												<div class="col-lg-10">
 											{/if}
 													{if isset($input.maxchar) && $input.maxchar}
 													<div class="input-group">
