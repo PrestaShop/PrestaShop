@@ -27,7 +27,7 @@ body:
       label: Describe the solution you'd like
       description: A clear and concise description of what you'd want to happen.
     validations:
-      required: true      
+      required: true
   - type: textarea
     id: alternative
     attributes:
