@@ -26,7 +26,7 @@ body:
       label: Expected behavior
       description: Explain what you expected to happen instead.
     validations:
-      required: false      
+      required: false
   - type: textarea
     id: steps-reproduce
     attributes:
