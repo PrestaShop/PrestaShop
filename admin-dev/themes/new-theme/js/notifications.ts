@@ -38,9 +38,9 @@ const refreshNotifications = function (): void {
     dataType: 'json',
     success(json) {
       if (json) {
-        const nbOrders = parseInt(json.order.total, 10);
-        const nbCustomers = parseInt(json.customer.total, 10);
-        const nbCustomerMessages = parseInt(json.customer_message.total, 10);
+        const nbOrders = undefined === $(GlobalMap.notifications.orderNotificationTemplate).html() ? 0 : parseInt(json.order.total, 10);
+        const nbCustomers = undefined === $(GlobalMap.notifications.customerNotificationTemplate).html() ? 0 : parseInt(json.customer.total, 10);
+        const nbCustomerMessages = undefined === $(GlobalMap.notifications.messageNotificationTemplate).html() ? 0 : parseInt(json.customer_message.total, 10);
         const notificationsTotal = nbOrders + nbCustomers + nbCustomerMessages;
 
         fillTpl(
