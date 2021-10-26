@@ -36,6 +36,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
@@ -96,7 +97,7 @@ class TranslationsController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return array
+     * @return Response
      */
     public function showSettingsAction(Request $request)
     {
