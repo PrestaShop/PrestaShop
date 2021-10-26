@@ -65,9 +65,9 @@ class AdminImagesControllerCore extends AdminController
             'stores' => ['title' => $this->trans('Stores', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
         ];
 
-        // No need to display the old image system migration tool except if product images are in _PS_PROD_IMG_DIR_
+        // No need to display the old image system migration tool except if product images are in _PS_PRODUCT_IMG_DIR_
         $this->display_move = false;
-        $dir = _PS_PROD_IMG_DIR_;
+        $dir = _PS_PRODUCT_IMG_DIR_;
         if (is_dir($dir)) {
             if ($dh = opendir($dir)) {
                 while (($file = readdir($dh)) !== false && $this->display_move == false) {
@@ -354,8 +354,8 @@ class AdminImagesControllerCore extends AdminController
     public function postProcess()
     {
         // When moving images, if duplicate images were found they are moved to a folder named duplicates/
-        if (file_exists(_PS_PROD_IMG_DIR_ . 'duplicates/')) {
-            $this->warnings[] = $this->trans('Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %folder% only contains demonstration images, and then delete it.', ['%folder%' => _PS_PROD_IMG_DIR_ . 'duplicates/'], 'Admin.Design.Notification');
+        if (file_exists(_PS_PRODUCT_IMG_DIR_ . 'duplicates/')) {
+            $this->warnings[] = $this->trans('Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %folder% only contains demonstration images, and then delete it.', ['%folder%' => _PS_PRODUCT_IMG_DIR_ . 'duplicates/'], 'Admin.Design.Notification');
         }
 
         if (Tools::isSubmit('submitRegenerate' . $this->table)) {
@@ -611,7 +611,7 @@ class AdminImagesControllerCore extends AdminController
             foreach ($languages as $language) {
                 $file = $dir . $language['iso_code'] . '.jpg';
                 if (!file_exists($file)) {
-                    $file = _PS_PROD_IMG_DIR_ . Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT')) . '.jpg';
+                    $file = _PS_PRODUCT_IMG_DIR_ . Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT')) . '.jpg';
                 }
                 if (!file_exists($dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.jpg')) {
                     if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.jpg', (int) $image_type['width'], (int) $image_type['height'])) {
@@ -670,7 +670,7 @@ class AdminImagesControllerCore extends AdminController
             ['type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_],
             ['type' => 'manufacturers', 'dir' => _PS_MANU_IMG_DIR_],
             ['type' => 'suppliers', 'dir' => _PS_SUPP_IMG_DIR_],
-            ['type' => 'products', 'dir' => _PS_PROD_IMG_DIR_],
+            ['type' => 'products', 'dir' => _PS_PRODUCT_IMG_DIR_],
             ['type' => 'stores', 'dir' => _PS_STORE_IMG_DIR_],
         ];
 

@@ -1471,7 +1471,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
             }
         }
-        if (isset($image) && Validate::isLoadedObject($image) && !file_exists(_PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format)) {
+        if (isset($image) && Validate::isLoadedObject($image) && !file_exists(_PS_PRODUCT_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format)) {
             $image->delete();
         }
         if (count($this->errors)) {
