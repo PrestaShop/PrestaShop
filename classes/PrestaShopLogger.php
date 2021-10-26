@@ -172,7 +172,7 @@ class PrestaShopLoggerCore extends ObjectModel
             PrestaShopLogger::sendByMail($log);
         }
 
-        if ($allowDuplicate || !$log->_isPresent()) {
+        if ($allowDuplicate || !$log->isPresent()) {
             $res = $log->add();
             if ($res) {
                 self::$is_present[$log->getHash()] = isset(self::$is_present[$log->getHash()]) ? self::$is_present[$log->getHash()] + 1 : 1;
@@ -209,14 +209,6 @@ class PrestaShopLoggerCore extends ObjectModel
     public static function eraseAllLogs()
     {
         return Db::getInstance()->execute('TRUNCATE TABLE ' . _DB_PREFIX_ . 'log');
-    }
-
-    /**
-     * @deprecated 1.7.0
-     */
-    protected function _isPresent()
-    {
-        return $this->isPresent();
     }
 
     /**
