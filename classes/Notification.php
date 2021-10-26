@@ -73,6 +73,16 @@ class NotificationCore
     {
         global $cookie;
 
+        $accesses = Profile::getProfileAccesses(Context::getContext()->employee->id_profile, 'class_name');
+
+        if (
+            (!(isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view']) && $type == 'order') ||
+            (!(isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view']) && $type == 'customer') ||
+            (!(isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view']) && $type == 'customer_message')
+        ) {
+            return ['total' => 0, 'results' => []];
+        }
+
         switch ($type) {
             case 'order':
                 $sql = '
