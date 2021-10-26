@@ -21,6 +21,7 @@
 }
 
 @mixin action-button {
+  min-height: 2.5rem;
   background-color: $white;
   @include border-radius(1.65rem);
 }
