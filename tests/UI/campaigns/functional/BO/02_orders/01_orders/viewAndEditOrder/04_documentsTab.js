@@ -45,7 +45,7 @@ Scenario :
 - Check add note, enter payment buttons
  */
 
-describe('BO - Orders - View and edit order : Check order documents block', async () => {
+describe('BO - Orders - View and edit order : Check order documents tab', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
