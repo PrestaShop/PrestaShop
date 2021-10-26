@@ -23,23 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<table class="table" id="history_grid_table">
+<table class="table" id="history-grid-table">
   <tbody>
     {% for status in orderForViewing.history.statuses %}
     <tr>
-      <td id="status">
+      <td class="status">
         <span class="badge rounded badge-print-light"
               style="background-color: {{ status.color }}; color: {{ is_color_bright(status.color) ? 'black' : 'white' }};"
         >
           {{ status.name }}
         </span>
       </td>
-      <td class="text-right" id="employee">
+      <td class="text-right employee">
         {% if status.employeeLastName is not empty %}
           {{ status.employeeFirstName ~ ' ' ~ status.employeeLastName }}
         {% endif %}
       </td>
-      <td class="text-right" id="date">
+      <td class="text-right date">
         {{ status.createdAt|date_format_full }}
       </td>
       <td class="text-right">

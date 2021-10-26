@@ -102,10 +102,10 @@ class Order extends BOBasePage {
     this.historyTabContent = '#historyTabContent';
     this.secondOrderStatusesSelect = '#update_order_status_new_order_status_id';
     this.secondUpdateStatusButton = `${this.historyTabContent} .card-details-form button.btn-primary`;
-    this.gridTable = '#history_grid_table';
+    this.gridTable = '#history-grid-table';
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
-    this.tableColumn = (row, column) => `${this.tableRow(row)} td#${column}`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td.${column}`;
     this.resendEmailButton = row => `${this.tableRow(row)} td form[action*='resend-email'] button`;
     this.orderNoteCloseButtun = '#historyTabContent a.js-order-notes-toggle-btn.is-opened';
     this.orderNoteOpenButtun = '#historyTabContent a.js-order-notes-toggle-btn';
@@ -203,6 +203,7 @@ class Order extends BOBasePage {
       await this.clickAndWaitForNavigation(page, this.updateStatusButton);
       return this.getOrderStatus(page);
     }
+
     return actualStatus;
   }
 
@@ -213,17 +214,12 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async doesStatusExist(page, statusName) {
-    let options = await page.$$eval(
+    const options = await page.$$eval(
       `${this.orderStatusesSelect} option`,
-      all => all.map(
-        option => ({
-          textContent: option.textContent,
-          value: option.value,
-        })),
+      all => all.map(option => option.textContent),
     );
 
-    options = options.filter(option => statusName === option.textContent);
-    return options.length !== 0;
+    return options.indexOf(statusName) !== -1;
   }
 
   /**
