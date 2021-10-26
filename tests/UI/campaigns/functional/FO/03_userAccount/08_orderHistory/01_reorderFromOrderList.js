@@ -167,8 +167,7 @@ describe('FO - Account : Reorder from order list', async () => {
     it('should reorder the last order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'reorderLastOrder', baseContext);
 
-      const lastOrderRowNumber = await foOrderHistoryPage.getNumberOfOrders(page);
-      await foOrderHistoryPage.clickOnReorderLink(page, lastOrderRowNumber);
+      await foOrderHistoryPage.clickOnReorderLink(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       await expect(isCheckoutPage, 'Browser is not in checkout Page').to.be.true;
