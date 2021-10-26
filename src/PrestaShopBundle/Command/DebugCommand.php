@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Command;
 
-use Exception;
 use PrestaShop\PrestaShop\Adapter\Debug\DebugMode;
 use PrestaShop\PrestaShop\Adapter\LegacyContextLoader;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
@@ -79,7 +78,8 @@ class DebugCommand extends Command
         ;
     }
 
-    protected function printDebugState() {
+    protected function printDebugState()
+    {
         $this->io->success(sprintf('Debug mode is: %s', $this->debugConfiguration->isDebugModeEnabled() ? 'ON' : 'OFF'));
     }
 
@@ -97,6 +97,7 @@ class DebugCommand extends Command
         $inputValue = $input->getArgument('value');
         if ($inputValue === null) {
             $this->printDebugState();
+
             return self::STATUS_OK;
         }
 
