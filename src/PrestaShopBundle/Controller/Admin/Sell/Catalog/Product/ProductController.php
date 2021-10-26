@@ -392,7 +392,7 @@ class ProductController extends FrameworkBundleAdminController
             );
             $this->addFlash(
                 'success',
-                $this->trans('Successful enable.', 'Admin.Notifications.Success')
+                $this->trans('Products successfully activated.', 'Admin.Catalog.Notification')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -425,7 +425,7 @@ class ProductController extends FrameworkBundleAdminController
             );
             $this->addFlash(
                 'success',
-                $this->trans('Successful disable.', 'Admin.Notifications.Success')
+                $this->trans('Products successfully deactivated.', 'Admin.Catalog.Notification')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -457,7 +457,7 @@ class ProductController extends FrameworkBundleAdminController
             );
             $this->addFlash(
                 'success',
-                $this->trans('Successful duplicate.', 'Admin.Notifications.Success')
+                $this->trans('Product(s) successfully duplicated.', 'Admin.Catalog.Notification')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
