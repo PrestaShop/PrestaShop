@@ -66,7 +66,7 @@ class FormHandlerChecker implements FormHandlerInterface
         return $this->formHandler->handleFor($form, $id);
     }
 
-    public function getLastCreatedId(): int
+    public function getLastCreatedId(): ?int
     {
         return $this->lastCreatedId;
     }
