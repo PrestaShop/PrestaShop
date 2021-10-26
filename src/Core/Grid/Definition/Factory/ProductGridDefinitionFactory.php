@@ -331,13 +331,13 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('active')
             )
             ->add((new Filter('position', TextType::class))
-                ->setAssociatedColumn('position')
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
-                    ],
-                ])
+            ->setAssociatedColumn('position')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
+                ],
+            ])
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
