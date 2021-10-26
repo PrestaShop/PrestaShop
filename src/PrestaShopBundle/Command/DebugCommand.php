@@ -44,18 +44,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class DebugCommand extends Command
 {
-    private const STATUS_OK = 0;
-    private const STATUS_ERROR = 1;
-
-    /**
-     * @var InputInterface
-     */
-    protected $input;
-
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
+    public const STATUS_OK = 0;
+    public const STATUS_ERROR = 1;
 
     /**
      * @var SymfonyStyle
@@ -89,6 +79,10 @@ class DebugCommand extends Command
         ;
     }
 
+    protected function printDebugState() {
+        $this->io->success(sprintf('Debug mode is: %s', $this->debugConfiguration->isDebugModeEnabled() ? 'ON' : 'OFF'));
+    }
+
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
@@ -97,17 +91,18 @@ class DebugCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // no new value, just print out the current setting value
-        $inputValue = $this->input->getArgument('value');
-        if (is_null($inputValue)) {
-            $this->io->success(sprintf('Debug mode is: %s', $this->debugConfiguration->isDebugModeEnabled() ? 'ON' : 'OFF'));
+        $this->io = new SymfonyStyle($input, $output);
 
+        // no new value, just print out the current setting value
+        $inputValue = $input->getArgument('value');
+        if ($inputValue === null) {
+            $this->printDebugState();
             return self::STATUS_OK;
         }
 
         // parse incoming to truthy
         $newValue = filter_var($inputValue, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-        if (is_null($newValue)) {
+        if ($newValue === null) {
             $this->io->error(
                 [
                     'Input cannot be determined as neither "true" or "false" by php "filter_var"',
@@ -118,20 +113,9 @@ class DebugCommand extends Command
             return self::STATUS_ERROR;
         }
 
-        try {
-            $this->commandBus->handle(new SwitchDebugModeCommand($newValue));
-        } catch (Exception $e) {
-            $this->io->success($e->getMessage());
-        }
-        $this->io->success(sprintf('Debug mode is now: %s', $this->debugConfiguration->isDebugModeEnabled() ? 'ON' : 'OFF'));
+        $this->commandBus->handle(new SwitchDebugModeCommand($newValue));
+        $this->printDebugState();
 
         return self::STATUS_OK;
-    }
-
-    protected function initialize(InputInterface $input, OutputInterface $output): void
-    {
-        $this->input = $input;
-        $this->output = $output;
-        $this->io = new SymfonyStyle($this->input, $this->output);
     }
 }
