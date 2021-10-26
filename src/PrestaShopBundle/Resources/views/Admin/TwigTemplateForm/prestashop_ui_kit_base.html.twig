@@ -773,7 +773,13 @@
           <th class="checkbox">
             <div class="md-checkbox">
               <label>
-                <input type="checkbox" class="js-choice-table-select-all">
+                <input
+                  type="checkbox"
+                  class="js-choice-table-select-all"
+                  {% if isCheckSelectAll %}
+                    checked
+                  {% endif %}
+                >
                 <i class="md-checkbox-control"></i>
                 {{ 'Select all'|trans({}, 'Admin.Actions') }}
               </label>
