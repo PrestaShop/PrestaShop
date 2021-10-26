@@ -29,7 +29,7 @@ const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Statuses} = require('@data/demo/orderStatuses');
 
-const baseContext = 'functional_BO_login_passwordReminder';
+const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_documentsTab';
 
 let browserContext;
 let page;
