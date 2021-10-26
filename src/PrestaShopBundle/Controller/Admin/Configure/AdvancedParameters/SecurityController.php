@@ -145,22 +145,12 @@ class SecurityController extends FrameworkBundleAdminController
      */
     public function employeeSessionAction(EmployeeFilters $filters): Response
     {
-        $toolbarButtons = [
-            'clear_cache' => [
-                'href' => $this->generateUrl('admin_security_sessions_employee_clear'),
-                'desc' => $this->trans('Clear outdated sessions', 'Admin.Advparameters.Feature'),
-                'icon' => 'delete',
-                'class' => 'btn-primary pointer btn-confirm-security-modal',
-            ],
-        ];
-
         $sessionsEmployeesGridFactory = $this->get('prestashop.core.grid.factory.security.session.employee');
 
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/employees.html.twig',
             [
                 'enableSidebar' => true,
-                'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'layoutTitle' => $this->trans('Employee sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsEmployeesGridFactory->getGrid($filters)),
             ]
@@ -178,21 +168,12 @@ class SecurityController extends FrameworkBundleAdminController
      */
     public function customerSessionAction(CustomerFilters $filters): Response
     {
-        $toolbarButtons = [
-            'clear_cache' => [
-                'href' => $this->generateUrl('admin_security_sessions_customer_clear'),
-                'desc' => $this->trans('Clear outdated sessions', 'Admin.Advparameters.Feature'),
-                'icon' => 'delete',
-            ],
-        ];
-
         $sessionsCustomersGridFactory = $this->get('prestashop.core.grid.factory.security.session.customer');
 
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/customers.html.twig',
             [
                 'enableSidebar' => true,
-                'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'layoutTitle' => $this->trans('Customer sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsCustomersGridFactory->getGrid($filters)),
             ]
