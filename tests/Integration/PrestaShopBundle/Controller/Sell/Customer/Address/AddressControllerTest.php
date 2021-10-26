@@ -164,7 +164,10 @@ class AddressControllerTest extends FormGridControllerTestCase
 
         foreach ($gridFilters as $testFilter) {
             $addresses = $this->getFilteredEntitiesFromGrid($testFilter);
-            $this->assertEquals(1, count($addresses));
+            $this->assertGreaterThanOrEqual(1, count($addresses), sprintf(
+                'Expected at least one address with filters %s',
+                var_export($testFilter, true)
+            ));
             $this->assertCollectionContainsEntity($addresses, $addressId);
         }
 

@@ -100,11 +100,19 @@ abstract class GridControllerTestCase extends WebTestCase
             ));
         }
 
-        $entities = $grid->filter('tbody tr')->each(function ($tr, $i) {
-            return $this->parseEntityFromRow($tr, $i);
-        });
-        foreach ($entities as $entity) {
-            $testEntityDTOCollection->add($entity);
+        // Get rows but filter the one that is used to indicate there is no result
+        $entitiesRows = $grid->filter('tbody tr:not(.empty_row)');
+
+        // If no rows are found the collection is empty
+        if ($entitiesRows->count()) {
+            $entities = $entitiesRows->each(function ($tr, $i) {
+                return $this->parseEntityFromRow($tr, $i);
+            });
+
+            // Fill the collection
+            foreach ($entities as $entity) {
+                $testEntityDTOCollection->add($entity);
+            }
         }
 
         return $testEntityDTOCollection;

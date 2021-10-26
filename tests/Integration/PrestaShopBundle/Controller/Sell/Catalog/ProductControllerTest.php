@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
@@ -37,9 +36,13 @@ use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 
 class ProductControllerTest extends FormGridControllerTestCase
 {
-    private const TEST_NAME = 'testProductName';
-    private const TEST_QUANTITY = 987;
-    private const TEST_PRICE = 87.7;
+    private const TEST_CREATION_NAME = 'testCreationProductName';
+    private const TEST_CREATION_QUANTITY = 456;
+    private const TEST_CREATION_PRICE = 3.14;
+
+    private const TEST_UPDATED_NAME = 'testProductName';
+    private const TEST_UPDATED_QUANTITY = 987;
+    private const TEST_UPDATED_PRICE = 87.7;
 
     /**
      * @var bool
@@ -95,11 +98,13 @@ class ProductControllerTest extends FormGridControllerTestCase
     public function testCreate(int $initialEntityCount): int
     {
         // First create product
-        $productType = ProductType::TYPE_STANDARD;
         $formData = [
-            'product[type]' => $productType,
+            'product[header][name][1]' => static::TEST_CREATION_NAME,
+            'product[stock][quantities][quantity][delta]' => static::TEST_CREATION_QUANTITY,
+            'product[pricing][retail_price][price_tax_excluded]' => static::TEST_CREATION_PRICE,
         ];
         $createdProductId = $this->createEntityFromPage($formData);
+        $this->assertNotNull($createdProductId);
 
         // Check that there is one more product in the list
         $newProducts = $this->getEntitiesFromGrid();
@@ -108,7 +113,9 @@ class ProductControllerTest extends FormGridControllerTestCase
 
         // Check that the product was correctly set with the expected type (the format in the form is not the same)
         $expectedFormData = [
-            'product[header][type]' => $productType,
+            'product[header][name][1]' => static::TEST_CREATION_NAME,
+            'product[stock][quantities][quantity][quantity]' => static::TEST_CREATION_QUANTITY,
+            'product[pricing][retail_price][price_tax_excluded]' => static::TEST_CREATION_PRICE,
         ];
         $this->assertFormValuesFromPage(
             ['productId' => $createdProductId],
@@ -129,16 +136,20 @@ class ProductControllerTest extends FormGridControllerTestCase
     {
         // First update the product with a few data
         $formData = [
-            'product[header][name][1]' => static::TEST_NAME,
-            'product[stock][quantities][quantity]' => static::TEST_QUANTITY,
-            'product[pricing][retail_price][price_tax_excluded]' => static::TEST_PRICE,
+            'product[header][name][1]' => static::TEST_UPDATED_NAME,
+            'product[stock][quantities][quantity][delta]' => static::TEST_UPDATED_QUANTITY,
+            'product[pricing][retail_price][price_tax_excluded]' => static::TEST_UPDATED_PRICE,
         ];
 
         $this->editEntityFromPage(['productId' => $productId], $formData);
 
         // Then check that it was correctly updated
         // Price is reformatted with 6 digits
-        $expectedFormData['product[pricing][retail_price][price_tax_excluded]'] = '87.700000';
+        $expectedFormData = [
+            'product[header][name][1]' => static::TEST_UPDATED_NAME,
+            'product[stock][quantities][quantity][quantity]' => static::TEST_UPDATED_QUANTITY + static::TEST_CREATION_QUANTITY,
+            'product[pricing][retail_price][price_tax_excluded]' => static::TEST_UPDATED_PRICE,
+        ];
         $this->assertFormValuesFromPage(
             ['productId' => $productId],
             $expectedFormData
@@ -160,25 +171,28 @@ class ProductControllerTest extends FormGridControllerTestCase
         // in case the data from fixtures change and match these test data.
         $gridFilters = [
             [
-                'product[name]' => static::TEST_NAME,
+                'product[name]' => static::TEST_UPDATED_NAME,
             ],
             [
                 'product[id_product][min_field]' => $productId,
                 'product[id_product][max_field]' => $productId,
             ],
             [
-                'product[quantity][min_field]' => static::TEST_QUANTITY,
-                'product[quantity][max_field]' => static::TEST_QUANTITY,
+                'product[quantity][min_field]' => static::TEST_CREATION_QUANTITY + static::TEST_UPDATED_QUANTITY,
+                'product[quantity][max_field]' => static::TEST_CREATION_QUANTITY + static::TEST_UPDATED_QUANTITY,
             ],
             [
-                'product[price_tax_excluded][min_field]' => static::TEST_PRICE,
-                'product[price_tax_excluded][max_field]' => static::TEST_PRICE,
+                'product[price_tax_excluded][min_field]' => static::TEST_UPDATED_PRICE,
+                'product[price_tax_excluded][max_field]' => static::TEST_UPDATED_PRICE,
             ],
         ];
 
         foreach ($gridFilters as $testFilter) {
             $products = $this->getFilteredEntitiesFromGrid($testFilter);
-            $this->assertEquals(1, count($products));
+            $this->assertGreaterThanOrEqual(1, count($products), sprintf(
+                'Expected at least one product with filters %s',
+                var_export($testFilter, true)
+            ));
             $this->assertCollectionContainsEntity($products, $productId);
         }
 
@@ -208,7 +222,7 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     protected function getCreateSubmitButtonSelector(): string
     {
-        return 'product_create';
+        return 'product_footer_save';
     }
 
     /**

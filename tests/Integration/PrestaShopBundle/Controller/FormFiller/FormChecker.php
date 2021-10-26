@@ -63,9 +63,10 @@ class FormChecker
      */
     private function assertFormValue($expectedValue, $formValue, string $fieldName): void
     {
-        Assert::assertEquals(
-            $expectedValue,
-            $formValue,
+        // We use assertTrue instead of assertEquals because when it fails it raises an error related to Closure
+        // serialization which makes it very hard to debug (this is because of processIsolation)
+        Assert::assertTrue(
+            $expectedValue == $formValue,
             sprintf(
                 'Invalid value for field %s, expected %s but got %s instead.',
                 $fieldName,
