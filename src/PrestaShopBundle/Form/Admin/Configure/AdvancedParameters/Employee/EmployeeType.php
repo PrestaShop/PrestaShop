@@ -90,11 +90,6 @@ final class EmployeeType extends TranslatorAwareType
     private $defaultAvatarUrl;
 
     /**
-     * @var bool
-     */
-    private $isAddonsConnected;
-
-    /**
      * @var int
      */
     private $superAdminProfileId;
@@ -112,7 +107,6 @@ final class EmployeeType extends TranslatorAwareType
      * @param array $profilesChoices
      * @param bool $isMultistoreFeatureActive
      * @param string $defaultAvatarUrl
-     * @param bool $isAddonsConnected
      * @param int $superAdminProfileId
      * @param Router $router
      */
@@ -124,7 +118,6 @@ final class EmployeeType extends TranslatorAwareType
         array $profilesChoices,
         bool $isMultistoreFeatureActive,
         string $defaultAvatarUrl,
-        bool $isAddonsConnected,
         int $superAdminProfileId,
         Router $router
     ) {
@@ -134,7 +127,6 @@ final class EmployeeType extends TranslatorAwareType
         $this->profilesChoices = $profilesChoices;
         $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
         $this->defaultAvatarUrl = $defaultAvatarUrl;
-        $this->isAddonsConnected = $isAddonsConnected;
         $this->superAdminProfileId = $superAdminProfileId;
         $this->router = $router;
     }
@@ -190,27 +182,6 @@ final class EmployeeType extends TranslatorAwareType
                 ],
             ]);
 
-            if ($options['show_addons_connect_button']) {
-                if ($this->isAddonsConnected) {
-                    $label = $this->trans('Sign out from PrestaShop Addons', 'Admin.Advparameters.Feature');
-                    $target = '#module-modal-addons-logout';
-                } else {
-                    $label = $this->trans('Sign in', 'Admin.Advparameters.Feature');
-                    $target = '#module-modal-addons-connect';
-                }
-                $builder->add(
-                    'prestashop_addons',
-                    AddonsConnectType::class,
-                    [
-                        'label' => $label,
-                        'attr' => [
-                            'class' => 'btn-outline-secondary',
-                            'data-toggle' => 'modal',
-                            'data-target' => $target,
-                        ],
-                    ]
-                );
-            }
             $builder->add('change_password', ChangePasswordType::class);
         } else {
             $builder->add('password', PasswordType::class, [
