@@ -35,6 +35,7 @@ class AddProduct extends BOBasePage {
     this.productPriceAtiInput = '#form_step1_price_ttc_shortcut';
     this.saveProductButton = 'input#submit[value=\'Save\']';
     this.goToCatalogButton = '#product_form_save_go_to_catalog_btn';
+    this.addNewProductButton = '#product_form_save_new_btn';
     this.previewProductLink = 'a#product_form_preview_btn';
     this.productOnlineSwitch = '.product-footer div.switch-input';
     this.productOnlineTitle = 'h2.for-switch.online-title';
@@ -53,6 +54,7 @@ class AddProduct extends BOBasePage {
     this.forNavListItemLink = id => `${this.formNavList} #tab_step${id} a`;
 
     // Selectors of Step 2 : Pricing
+    this.ecoTaxInput = '#form_step2_ecotax';
     this.addSpecificPriceButton = '#js-open-create-specific-price-form';
     this.specificPriceForm = '#specific_price_form';
     this.combinationSelect = '#form_step2_specific_price_sp_id_product_attribute';
@@ -469,6 +471,15 @@ class AddProduct extends BOBasePage {
   }
 
   /**
+   * Go to add product page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToAddProductPage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewProductButton);
+  }
+
+  /**
    * Add product to pack
    * @param page {Page} Browser tab
    * @param product {string} Value of product name to set on input
@@ -566,6 +577,24 @@ class AddProduct extends BOBasePage {
     if (!productData.productHasCombinations) {
       await this.setQuantitiesSettings(page, productData);
     }
+    return this.saveProduct(page);
+  }
+
+  /**
+   * Set ecoTax value and save
+   * @param page
+   * @param ecoTax
+   * @returns {Promise<string>}
+   */
+  async addEcoTax(page, ecoTax) {
+    // Go to pricing tab : id = 2
+    await this.goToFormStep(page, 2);
+    await Promise.all([
+      page.click(this.addSpecificPriceButton),
+      this.waitForVisibleSelector(page, `${this.specificPriceForm}.show`),
+    ]);
+
+    await this.setValue(page, this.ecoTaxInput, ecoTax);
     return this.saveProduct(page);
   }
 }

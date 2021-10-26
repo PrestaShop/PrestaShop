@@ -1,5 +1,9 @@
 const faker = require('faker');
 
+const {Products} = require('@data/demo/products');
+
+const ProductsNames = Object.values(Products).map(product => product.name);
+
 /**
  * Create new cart rule to use on creation cart rule form on BO
  * @class
@@ -94,6 +98,15 @@ class CartRuleData {
         /** @type {string} Tax that will be used for the discount amount */
         tax: cartRuleToCreate.discountAmount === undefined ? 'Tax included' : cartRuleToCreate.discountAmount.tax,
       };
+    }
+
+    /** @type {string} Object to apply discount on it */
+    this.applyDiscountTo = cartRuleToCreate.applyDiscountTo || 'None';
+
+    /** @type {string|undefined} Name of the product to apply cart rule */
+    this.product = undefined;
+    if (this.applyDiscountTo === 'Specific product') {
+      this.product = cartRuleToCreate.product || faker.random.arrayElement(ProductsNames);
     }
 
     /** @type {boolean} True to exclude discount of specific products */
