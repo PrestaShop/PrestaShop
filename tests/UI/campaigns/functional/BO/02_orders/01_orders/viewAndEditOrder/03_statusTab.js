@@ -41,7 +41,7 @@ const CustomerFaker = require('@data/faker/customer');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_login_passwordReminder';
+const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_statusTab';
 
 let browserContext;
 let page;
@@ -95,7 +95,7 @@ Post-condition :
 - Reset default email parameters
  */
 
-describe('BO - Orders - View and edit order : Check order status block', async () => {
+describe('BO - Orders - View and edit order : Check order status tab', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
