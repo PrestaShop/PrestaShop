@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Profile\ProfileSettings;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -40,18 +41,8 @@ use Symfony\Component\Validator\Constraints\Length;
 /**
  * Builds form for Profile
  */
-class ProfileType extends AbstractType
+class ProfileType extends TranslatorAwareType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -60,6 +51,7 @@ class ProfileType extends AbstractType
         $builder
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
+                'label' => $this->trans('Name', 'Admin.Global'),
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
@@ -70,16 +62,17 @@ class ProfileType extends AbstractType
                         ]),
                         new Length([
                             'max' => ProfileSettings::NAME_MAX_LENGTH,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => ProfileSettings::NAME_MAX_LENGTH],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => ProfileSettings::NAME_MAX_LENGTH]
                             ),
                         ]),
                     ],
                 ],
             ])
             ->add('avatarUrl', FileType::class, [
+                'label' => $this->trans('Avatar', 'Admin.Global'),
                 'required' => false,
                 'attr' => [
                     'accept' => 'gif,jpg,jpeg,jpe,png',
