@@ -66,14 +66,15 @@ class PasswordControllerCore extends FrontController
             $this->errors[] = $this->trans('Invalid email address.', [], 'Shop.Notifications.Error');
         } else {
             $customer = new Customer();
-            $customer->getByEmail($email);
+            $customer->getByEmail($email, null, true);
             if (null === $customer->email) {
-                $customer->email = Tools::getValue('email');
+                $this->errors[] = $this->trans('The given e-mail address does not exist in our database.', array(), 'Shop.Notifications.Error');
+                return;
             }
 
             if (!Validate::isLoadedObject($customer)) {
                 $this->success[] = $this->trans(
-                    'If this email address has been registered in our shop, you will receive a link to reset your password at %email%.',
+                    'You will receive a link to reset your password at %email%.',
                     ['%email%' => $customer->email],
                     'Shop.Notifications.Success'
                 );
@@ -109,7 +110,7 @@ class PasswordControllerCore extends FrontController
                         $customer->firstname . ' ' . $customer->lastname
                     )
                 ) {
-                    $this->success[] = $this->trans('If this email address has been registered in our shop, you will receive a link to reset your password at %email%.', ['%email%' => $customer->email], 'Shop.Notifications.Success');
+                    $this->success[] = $this->trans('You will receive a link to reset your password at %email%.', ['%email%' => $customer->email], 'Shop.Notifications.Success');
                     $this->setTemplate('customer/password-infos');
                 } else {
                     $this->errors[] = $this->trans('An error occurred while sending the email.', [], 'Shop.Notifications.Error');
