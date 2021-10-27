@@ -5,14 +5,12 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
-const files = require('@utils/files');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
-const invoicesPage = require('@pages/BO/orders/invoices/index');
 const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view');
 
@@ -27,22 +25,30 @@ const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {Statuses} = require('@data/demo/orderStatuses');
+const {Products} = require('@data/demo/products');
+const {Carriers} = require('@data/demo/carriers');
 
-const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_documentsTab';
+const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_carriersTab';
 
 let browserContext;
 let page;
-let filePath;
-const note = 'Test note for document';
+
+const shippingDetailsData = {trackingNumber: '0523698', carrier: Carriers.myCarrier.name, shippingCost: '€8.40'};
+
+// Get today date format 'mm/dd/yyyy'
+const today = new Date();
+const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
+const dd = (`0${today.getDate()}`).slice(-2); // Current day
+const yyyy = today.getFullYear(); // Current year
+const todayDate = `${mm}/${dd}/${yyyy}`;
 
 /*
 Pre-condition :
 - Create order by default customer
 Scenario :
-- Disable/Enable invoices and check result
-- Check all types of documents( invoice, delivery slip, credit slip) and download them
-- Check add note, enter payment buttons
+- Check carriers number from Carriers tab
+- Check shipping details
+- Update carrier and tracking number and check details
  */
 
 describe('BO - Orders - View and edit order : Check order documents tab', async () => {
@@ -137,39 +143,12 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
     });
   });
 
-  // 1 - Disable invoices
-  describe('Disable invoices', async () => {
+  // 1 - Go to view order page
+  describe('Go to view order page', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to \'Orders > Invoices\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage1', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.invoicesLink,
-      );
-
-      await invoicesPage.closeSfToolBar(page);
-
-      const pageTitle = await invoicesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(invoicesPage.pageTitle);
-    });
-
-    it('should disable invoices', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'disableInvoices', baseContext);
-
-      await invoicesPage.enableInvoices(page, false);
-
-      const textMessage = await invoicesPage.saveInvoiceOptions(page);
-      await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
-    });
-  });
-
-  // 2 - Go to view order page
-  describe('Go to view order page', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
 
@@ -211,7 +190,62 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
     });
   });
 
-  // 6 - Check documents tab
-  describe('Check documents tab', async () => {
+  // 2 - Check carriers tab
+  describe('Check carriers tab', async () => {
+    it('should click on \'Carriers\' tab', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
+
+      const isTabOpened = await viewOrderPage.goToCarriersTab(page);
+      await expect(isTabOpened).to.be.true;
+    });
+
+    it('should check that the carriers number is equal to 1', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersNumber', baseContext);
+
+      const carriersNumber = await viewOrderPage.getCarriersNumber(page);
+      await expect(carriersNumber).to.be.equal(1);
+    });
+
+    it('should check the carrier details', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierDetails', baseContext);
+
+      const result = await viewOrderPage.getCarrierDetails(page);
+      await Promise.all([
+        expect(result.date).to.equal(todayDate),
+        expect(result.carrier).to.equal(Carriers.default.name),
+        expect(result.weight).to.equal(`${Products.demo_1.weight}00 kg`),
+        expect(result.shippingCost).to.equal('€0.00'),
+        expect(result.trackingNumber).to.equal(''),
+      ]);
+    });
+
+    it('should click on \'Edit\' link and check the modal', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditLink', baseContext);
+
+      const isModalVisible = await viewOrderPage.clickOnEditLink(page);
+      await expect(isModalVisible, 'Edit shipping modal is not visible!').to.be.true;
+    });
+
+    it('should update the carrier and add a tracking number', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateTrackingNumber', baseContext);
+
+      const textResult = await viewOrderPage.setShippingDetails(page, shippingDetailsData);
+      await expect(textResult).to.equal(viewOrderPage.successfulUpdateMessage);
+    });
+
+    it('should check the updated carrier details', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierDetails', baseContext);
+
+      await viewOrderPage.goToCarriersTab(page);
+
+      const result = await viewOrderPage.getCarrierDetails(page);
+      await Promise.all([
+        expect(result.date).to.equal(todayDate),
+        expect(result.carrier).to.equal(shippingDetailsData.carrier),
+        expect(result.weight).to.equal(`${Products.demo_1.weight}00 kg`),
+        expect(result.shippingCost).to.equal(shippingDetailsData.shippingCost),
+        expect(result.trackingNumber).to.equal(shippingDetailsData.trackingNumber),
+      ]);
+    });
   });
 });
