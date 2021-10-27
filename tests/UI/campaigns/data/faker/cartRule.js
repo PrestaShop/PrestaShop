@@ -101,7 +101,7 @@ class CartRuleData {
     }
 
     /** @type {string} Object to apply discount on it */
-    this.applyDiscountTo = cartRuleToCreate.applyDiscountTo || 'None';
+    this.applyDiscountTo = cartRuleToCreate.applyDiscountTo || 'Order';
 
     /** @type {string|undefined} Name of the product to apply cart rule */
     this.product = undefined;
