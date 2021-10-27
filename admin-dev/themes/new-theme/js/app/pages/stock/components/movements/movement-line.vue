@@ -100,7 +100,7 @@
       dateAdd() {
         const date = new Date(Date.parse(this.product.date_add));
 
-        return date.toLocaleDateString(window.data.locale, dateOptions);
+        return date.toLocaleDateString(window.data.locale, {hour: 'numeric', minute: 'numeric', second: 'numeric'});
       },
     },
     components: {
