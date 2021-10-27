@@ -53,7 +53,7 @@ abstract class FormGridControllerTestCase extends GridControllerTestCase
      *
      * - generateCreateUrl: returns the creation form url
      * - getFormHandlerChecker: return the form handler service which has been encapsulated and allows to get the created ID
-     * - getCreateSubmitButtonSelector (optional): returns the selector of the button allowing to select the form
+     * - getCreateSubmitButtonSelector: returns the selector of the button allowing to select the form
      *
      * @param array $formData
      *
@@ -76,7 +76,7 @@ abstract class FormGridControllerTestCase extends GridControllerTestCase
      * Edit an entity by filling the form page with the provided data. You will need to implement these methods:
      *
      * - generateEditUrl: returns the edit form url
-     * - getEditSubmitButtonSelector (optional): returns the selector of the button allowing to select the form
+     * - getEditSubmitButtonSelector: returns the selector of the button allowing to select the form
      *
      * @param array $routeParams
      * @param array $formData
@@ -93,7 +93,7 @@ abstract class FormGridControllerTestCase extends GridControllerTestCase
      * these methods:
      *
      * - generateEditUrl: returns the edit form url
-     * - getEditSubmitButtonSelector (optional): returns the selector of the button allowing to select the form
+     * - getEditSubmitButtonSelector: returns the selector of the button allowing to select the form
      *
      * @param array $routeParams
      * @param array $expectedFormData
@@ -117,13 +117,7 @@ abstract class FormGridControllerTestCase extends GridControllerTestCase
             $formData
         );
 
-        /*
-         * Without changing followRedirects to false when submitting the form
-         * $dataChecker->getLastCreatedId() returns null.
-         */
-        $this->client->followRedirects(false);
         $this->client->submit($filledEntityForm);
-        $this->client->followRedirects(true);
     }
 
     /**
@@ -146,10 +140,11 @@ abstract class FormGridControllerTestCase extends GridControllerTestCase
      */
     protected function deleteEntityFromPage(string $deleteRoute, array $routeParams): void
     {
-        $router = $this->client->getContainer()->get('router');
-        $deleteUrl = $router->generate($deleteRoute, $routeParams);
+        $deleteUrl = $this->router->generate($deleteRoute, $routeParams);
+
+        // Delete url performs the deletion and then redirects to the list
         $this->client->request('POST', $deleteUrl);
-        $this->assertResponseIsSuccessful();
+        $this->assertResponseRedirects();
     }
 
     /**

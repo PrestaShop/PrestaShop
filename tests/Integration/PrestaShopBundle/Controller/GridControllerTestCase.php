@@ -53,13 +53,9 @@ abstract class GridControllerTestCase extends WebTestCase
      */
     protected $formFiller;
 
-    /**
-     * Creates a test entity and ensures asserts that amount of entities in the list got increased by one
-     */
     public function setUp(): void
     {
         $this->client = static::createClient();
-        $this->client->followRedirects(true);
         $this->router = $this->client->getContainer()->get('router');
         $this->formFiller = new FormFiller();
     }
@@ -119,7 +115,7 @@ abstract class GridControllerTestCase extends WebTestCase
     }
 
     /**
-     * Calls the gris page with specific filters and return the parsed entities it contains, based on the
+     * Calls the grid page with specific filters and return the parsed entities it contains, based on the
      * parseEntityFromRow that each sub-class must implement.
      *
      * @param array $testFilters
@@ -132,10 +128,22 @@ abstract class GridControllerTestCase extends WebTestCase
         $gridUrl = $this->generateGridUrl($routeParams);
         $crawler = $this->client->request('GET', $gridUrl);
         $this->assertResponseIsSuccessful();
+        $gridRoute = $this->client->getRequest()->attributes->get('_route');
 
         $filterForm = $this->fillFiltersForm($crawler, $testFilters);
-        $this->client->followRedirects(true);
-        $crawler = $this->client->submit($filterForm);
+
+        // Filter url applies the search filter and then redirects to the grid
+        $this->client->submit($filterForm);
+        $this->assertResponseRedirects();
+
+        // Then we manually request the url that was used as redirection, and finally return the parsed entities
+        $redirectUrl = $this->client->getResponse()->headers->get('Location');
+        $crawler = $this->client->request('GET', $redirectUrl);
+        $this->assertResponseIsSuccessful();
+
+        // We check that the redirection happened successfully to the same route
+        $redirectionRoute = $this->client->getRequest()->attributes->get('_route');
+        $this->assertEquals($gridRoute, $redirectionRoute);
 
         return $this->parseEntitiesFromGridTable($crawler);
     }
@@ -189,11 +197,6 @@ abstract class GridControllerTestCase extends WebTestCase
 
         $this->assertContains($searchEntityId, $ids);
     }
-
-    /**
-     * These are the methods that need to be implemented by the sub-classes but since we are not sure that they will
-     * be used they are not pure abstract.
-     */
 
     /**
      * Returns the selector allowing to get the grid's search button.
