@@ -213,7 +213,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
 
   // 3 - Check generate invoice button
   describe('Check generate invoice button', async () => {
-    it('should click on \'DocumentS\' tab', async function () {
+    it('should click on \'Documents\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab', baseContext);
 
       const isTabOpened = await viewOrderPage.goToDocumentsTab(page);

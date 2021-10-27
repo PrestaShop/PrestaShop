@@ -96,8 +96,9 @@ class Order extends BOBasePage {
     this.documentTab = 'a#orderDocumentsTab';
     this.orderDocumentTabContent = '#orderDocumentsTabContent';
     this.generateInvoiceButton = `${this.orderDocumentTabContent} .btn.btn-primary`;
-    this.documentsTableDiv = '#orderDocumentsTabContent';
-    this.documentsTableRow = row => `${this.documentsTableDiv} table tbody tr:nth-child(${row})`;
+    this.documentsTablegrid = '#documents-grid-table';
+    this.documentsTableBody = `${this.documentsTablegrid} tbody`;
+    this.documentsTableRow = row => `${this.documentsTableBody} tr:nth-child(${row})`;
     this.documentsTableColumn = (row, column) => `${this.documentsTableRow(row)} td.${column}`;
     this.documentNumberLink = row => `${this.documentsTableRow(row)} td.documents-table-column-download-link a`;
     this.documentType = row => `${this.documentsTableRow(row)} td.documents-table-column-type`;
@@ -264,7 +265,7 @@ class Order extends BOBasePage {
     return this.getPriceFromText(page, this.orderTotalPriceSpan);
   }
 
-  // Document tab methods
+  // Documents tab methods
   /**
    * Go to documents tab
    * @param page {Page} Browser tab
