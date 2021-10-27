@@ -73,7 +73,7 @@ class NotificationCore
     {
         global $cookie;
 
-        if (!Notification::checkAccess($type)) {
+        if (!static::checkAccess($type)) {
             return ['total' => 0, 'results' => []];
         }
 
