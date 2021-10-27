@@ -49,6 +49,8 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
+    public const GRID_ID = 'contact';
+
     /**
      * @var string
      */
@@ -79,7 +81,7 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'contact';
+        return self::GRID_ID;
     }
 
     /**
@@ -195,10 +197,11 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'attr' => [
-                            'data-url' => $this->resetSearchUrl,
-                            'data-redirect' => $this->redirectionUrl,
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
                         ],
+                        'redirect_route' => 'admin_contacts_index',
                     ])
                     ->setAssociatedColumn('actions')
             );

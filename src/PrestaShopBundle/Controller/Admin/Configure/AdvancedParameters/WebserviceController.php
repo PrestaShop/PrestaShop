@@ -346,21 +346,15 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     protected function renderPage(Request $request, WebserviceKeyFilters $filters, FormInterface $form): Response
     {
-        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice_key');
-        $grid = $gridWebserviceFactory->getGrid($filters);
-
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-        $presentedGrid = $gridPresenter->present($grid);
-
-        $configurationWarnings = $this->lookForWarnings();
+        $grid = $this->get('prestashop.core.grid.factory.webservice_key')->getGrid($filters);
 
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/index.html.twig',
             [
                 'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
                 'webserviceConfigurationForm' => $form->createView(),
-                'grid' => $presentedGrid,
-                'configurationWarnings' => $configurationWarnings,
+                'grid' => $this->presentGrid($grid),
+                'configurationWarnings' => $this->lookForWarnings(),
                 'webserviceStatus' => $this->getWebServiceStatus($request),
             ]
         );

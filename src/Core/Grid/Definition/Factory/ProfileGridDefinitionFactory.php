@@ -50,6 +50,8 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
+    public const GRID_ID = 'profile';
+
     /**
      * @var string
      */
@@ -88,7 +90,7 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'profile';
+        return self::GRID_ID;
     }
 
     /**
@@ -196,10 +198,11 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add((new Filter('actions', SearchAndResetType::class))
             ->setTypeOptions([
-                'attr' => [
-                    'data-url' => $this->resetActionUrl,
-                    'data-redirect' => $this->redirectionUrl,
+                'reset_route' => 'admin_common_reset_search_by_filter_id',
+                'reset_route_params' => [
+                    'filterId' => self::GRID_ID,
                 ],
+                'redirect_route' => 'admin_profiles_index',
             ])
             ->setAssociatedColumn('actions')
             )
