@@ -181,7 +181,13 @@ class AddressControllerTest extends FormGridControllerTestCase
      */
     public function testDelete(int $addressId): void
     {
+        $addresses = $this->getEntitiesFromGrid();
+        $initialEntityCount = $addresses->count();
+
         $this->deleteEntityFromPage('admin_addresses_delete', ['addressId' => $addressId]);
+
+        $newAddresses = $this->getEntitiesFromGrid();
+        $this->assertCount($initialEntityCount - 1, $newAddresses);
     }
 
     /**

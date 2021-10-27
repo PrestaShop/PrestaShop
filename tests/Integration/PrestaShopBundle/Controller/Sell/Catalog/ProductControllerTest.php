@@ -206,7 +206,13 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     public function testDelete(int $productId): void
     {
+        $products = $this->getEntitiesFromGrid();
+        $initialEntityCount = $products->count();
+
         $this->deleteEntityFromPage('admin_products_v2_delete', ['productId' => $productId]);
+
+        $newProducts = $this->getEntitiesFromGrid();
+        $this->assertCount($initialEntityCount - 1, $newProducts);
     }
 
     /**
