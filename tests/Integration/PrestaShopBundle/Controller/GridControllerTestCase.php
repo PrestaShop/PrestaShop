@@ -61,7 +61,7 @@ abstract class GridControllerTestCase extends WebTestCase
     }
 
     /**
-     * Calls the gris page and return the parsed entities it contains, based on the parseEntityFromRow that each
+     * Calls the grid page and return the parsed entities it contains, based on the parseEntityFromRow that each
      * sub-class must implement.
      *
      * @param array $routeParams
