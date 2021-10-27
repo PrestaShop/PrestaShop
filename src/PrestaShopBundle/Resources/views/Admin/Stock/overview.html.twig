@@ -25,7 +25,11 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block stylesheets %}
+{% if not is_lang_rtl %}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/stock_page.css') }}" type="text/css" media="all">
+{% else %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/stock_page_rtl.css') }}" type="text/css" media="all">
+{% endif %}
 {% endblock %}
 
 {% block content %}
