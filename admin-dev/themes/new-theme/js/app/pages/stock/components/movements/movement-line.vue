@@ -99,8 +99,9 @@
       },
       dateAdd() {
         const date = new Date(Date.parse(this.product.date_add));
+        const dateOptions = {hour: 'numeric', minute: 'numeric', second: 'numeric'};
 
-        return date.toLocaleDateString(window.data.locale, {});
+        return date.toLocaleDateString(window.data.locale, dateOptions);
       },
     },
     components: {
