@@ -133,3 +133,9 @@ services:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\AttributeGroup
+
+  prestashop.core.admin.feature_flag.repository:
+    class: Doctrine\ORM\EntityRepository
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\FeatureFlag
