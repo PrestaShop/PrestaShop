@@ -26,7 +26,7 @@
 
 {block name="field"}
 	{if $input.type == 'address_layout'}
-		<div class="col-lg-9">
+		<div class="col-lg-8">
 			<div class="form-group">
 				<div class="col-lg-4">
 					<textarea id="ordered_fields" name="address_layout" style="height:150px;">{$input.address_layout}</textarea>
