@@ -25,7 +25,11 @@
 {% extends '::base.html.twig' %}
 
 {% block stylesheets %}
+{% if not is_lang_rtl %}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme.css') }}" />
+{% else %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme_rtl.css') }}" />
+{% endif %}
 {% endblock %}
 
 {% block title %}
