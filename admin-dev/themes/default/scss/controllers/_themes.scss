@@ -1,7 +1,7 @@
 .theme-container {
   position: relative;
   width: 100%;
-  height: 300px;
+  max-height: 300px;
   overflow: hidden;
   background-color: rgba(#4d576e, 0.3);
   border: solid 1px #ccc;
@@ -17,6 +17,11 @@
     text-align: center;
     background-color: #4d576e;
     border-bottom: solid 1px #fff;
+  }
+
+  .thumbnail {
+    max-width: 100%;
+    margin-bottom: 0px;
   }
 
   .thumbnail-wrapper {
