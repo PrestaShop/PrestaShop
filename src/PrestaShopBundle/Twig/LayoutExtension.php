@@ -102,7 +102,7 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
             'default_currency_symbol' => $defaultCurrency instanceof Currency ? $defaultCurrency->getSymbol() : null,
             'root_url' => $rootUrl,
             'js_translatable' => [],
-            'is_lang_rtl' => $this->context->getContext()->language->is_rtl
+            'is_lang_rtl' => $this->context->getContext()->language->is_rtl,
         ];
     }
 
