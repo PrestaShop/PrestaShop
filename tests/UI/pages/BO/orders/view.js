@@ -102,13 +102,13 @@ class Order extends BOBasePage {
     this.historyTabContent = '#historyTabContent';
     this.secondOrderStatusesSelect = '#update_order_status_new_order_status_id';
     this.secondUpdateStatusButton = `${this.historyTabContent} .card-details-form button.btn-primary`;
-    this.gridTable = '#history-grid-table';
-    this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
-    this.tableColumn = (row, column) => `${this.tableRow(row)} td.${column}`;
-    this.resendEmailButton = row => `${this.tableRow(row)} td form[action*='resend-email'] button`;
-    this.orderNoteCloseButtun = '#historyTabContent a.js-order-notes-toggle-btn.is-opened';
-    this.orderNoteOpenButtun = '#historyTabContent a.js-order-notes-toggle-btn';
+    this.statusGridTable = '#history-grid-table';
+    this.statusTableBody = `${this.statusGridTable} tbody`;
+    this.statusTableRow = row => `${this.statusTableBody} tr:nth-child(${row})`;
+    this.statusTableColumn = (row, column) => `${this.statusTableRow(row)} td.${column}`;
+    this.resendEmailButton = row => `${this.statusTableRow(row)} td form[action*='resend-email'] button`;
+    this.orderNoteCloseButtun = `${this.historyTabContent} a.js-order-notes-toggle-btn.is-opened`;
+    this.orderNoteOpenButtun = `${this.historyTabContent} a.js-order-notes-toggle-btn`;
     this.orderNoteTextarea = '#internal_note_note';
     this.orderNoteSaveButton = 'button.js-order-notes-btn';
 
@@ -1086,7 +1086,7 @@ class Order extends BOBasePage {
    * @returns {Promise<string>}
    */
   async getTextColumnFromHistoryTable(page, columnName, row) {
-    return this.getTextContent(page, this.tableColumn(row, columnName));
+    return this.getTextContent(page, this.statusTableColumn(row, columnName));
   }
 
   /**
