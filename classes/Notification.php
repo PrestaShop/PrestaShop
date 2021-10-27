@@ -73,13 +73,7 @@ class NotificationCore
     {
         global $cookie;
 
-        $accesses = Profile::getProfileAccesses(Context::getContext()->employee->id_profile, 'class_name');
-
-        if (
-            (!(isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view']) && $type == 'order') ||
-            (!(isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view']) && $type == 'customer') ||
-            (!(isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view']) && $type == 'customer_message')
-        ) {
+        if (!Notification::checkAccess($type)) {
             return ['total' => 0, 'results' => []];
         }
 
@@ -159,6 +153,27 @@ class NotificationCore
         }
 
         return $json;
+    }
+
+    /**
+     * checkAccess return false if employee has not access to new orders, customers or customer messages
+     *
+     * @param string $type contains the field name of the notification table
+     *
+     * @return bool if profile has access or not
+     */
+    private static function checkAccess($type) {
+        $accesses = Profile::getProfileAccesses(Context::getContext()->employee->id_profile, 'class_name');
+
+        if (
+            (!(isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view']) && $type == 'order') ||
+            (!(isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view']) && $type == 'customer') ||
+            (!(isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view']) && $type == 'customer_message')
+        ) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
