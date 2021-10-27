@@ -28,7 +28,11 @@
 {% form_theme productForm with ['@PrestaShop/Admin/Sell/Catalog/Product/Form/product_form_theme.html.twig'] only %}
 
 {% block stylesheets %}
+{% if not is_lang_rtl %}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
+{% else %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product_rtl.css') }}" type="text/css" media="all">
+{% endif %}
 {% endblock %}
 
 {# We empty the parent content header block because session alert is gonna be displayed inside the content #}
