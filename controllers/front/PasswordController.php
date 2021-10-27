@@ -68,7 +68,8 @@ class PasswordControllerCore extends FrontController
             $customer = new Customer();
             $customer->getByEmail($email, null, true);
             if (null === $customer->email) {
-                $this->errors[] = $this->trans('The given e-mail address does not exist in our database.', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('The given e-mail address does not exist in our database.', [], 'Shop.Notifications.Error');
+
                 return;
             }
 
