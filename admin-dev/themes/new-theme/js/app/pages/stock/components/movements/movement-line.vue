@@ -33,7 +33,7 @@
           <p>
             {{ product.product_name }}
             <small v-if="hasCombination"><br>
-              {{ combinationName }}
+              {{ product.combination_name }}
             </small>
           </p>
         </PSMedia>
