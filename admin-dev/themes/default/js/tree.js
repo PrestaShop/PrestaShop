@@ -173,18 +173,25 @@ Tree.prototype = {
 
       const useCheckBox = inputType === 'checkbox' ? 1 : 0;
 
+      const data = {
+        controller: 'AdminProducts',
+        token: currentToken,
+        action: 'getCategoryTree',
+        type: idTree,
+        fullTree: 1,
+        selected,
+        inputName: name,
+        useCheckBox,
+      };
+
+      // Fetch the first category of the select
+      if (selected.length > 0) {
+        data.category = selected[0];
+      }
+
       $.get(
         'ajax-tab.php',
-        {
-          controller: 'AdminProducts',
-          token: currentToken,
-          action: 'getCategoryTree',
-          type: idTree,
-          fullTree: 1,
-          selected,
-          inputName: name,
-          useCheckBox,
-        },
+        data,
         (content) => {
           targetTree.html(content);
           targetTree.tree('init');

@@ -256,6 +256,13 @@ class HelperTreeCategoriesCore extends TreeCore
         return $this->_root_category;
     }
 
+    /**
+     * @param array<int> $value
+     *
+     * @return self
+     *
+     * @throws PrestaShopException
+     */
     public function setSelectedCategories($value)
     {
         if (!is_array($value)) {
