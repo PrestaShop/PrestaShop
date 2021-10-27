@@ -13,6 +13,10 @@
     .card-details-actions {
       display: flex;
       align-items: center;
+
+      .btn.update-status{
+        white-space: nowrap;
+      }
     }
   }
 

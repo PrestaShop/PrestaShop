@@ -21,7 +21,7 @@
 }
 
 @mixin action-button {
-  height: 2.5rem;
+  min-height: 2.5rem;
   background-color: $white;
   @include border-radius(1.65rem);
 }
@@ -63,6 +63,7 @@
     left: 50%;
     display: none;
     width: 100%;
+    padding: 0.4rem;
     text-align: center;
     transform: translate(-50%, -80%);
 
