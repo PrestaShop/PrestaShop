@@ -805,6 +805,12 @@ body .mce-abs-layout-item {
 }
 
 .mce-btn-group {
+  > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
   .mce-btn {
     border: solid 1px #ccc;
     border-radius: 0;
