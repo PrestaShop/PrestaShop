@@ -734,20 +734,18 @@
 								{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
 									{$asso_shop}
 								{elseif $input.type == 'color'}
-								<div class="form-group">
-									<div class="col-lg-2">
-										<div class="row">
-											<div class="input-group">
-												<input type="color"
-												data-hex="true"
-												{if isset($input.class)} class="{$input.class}"
-												{else} class="color mColorPickerInput"{/if}
-												name="{$input.name}"
-												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
-											</div>
-										</div>
-									</div>
-								</div>
+                  <div class="form-group">
+                    <div class="col-lg-6">
+                      <div class="input-group">
+                        <input type="color"
+                               data-hex="true"
+                                {if isset($input.class)} class="{$input.class}"
+                                {else} class="color mColorPickerInput"{/if}
+                               name="{$input.name}"
+                               value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
+                      </div>
+                    </div>
+                  </div>
 								{elseif $input.type == 'date'}
 									<div class="row">
 										<div class="input-group col-lg-4">
