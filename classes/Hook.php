@@ -523,6 +523,9 @@ class HookCore extends ObjectModel
         }
         Cache::store($cache_id, $list);
 
+        // @todo remove this in 1.6, we keep it in 1.5 for retrocompatibility
+        Hook::$_hook_modules_cache = $list;
+
         return $list;
     }
 
@@ -1208,6 +1211,9 @@ class HookCore extends ObjectModel
         if ($useCache) {
             Cache::store($cache_id, $allHookRegistrations);
         }
+
+        // @todo remove this in 1.6, we keep it in 1.5 for backward compatibility
+        static::$_hook_modules_cache_exec = $allHookRegistrations;
 
         return $allHookRegistrations;
     }
