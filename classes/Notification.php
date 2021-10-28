@@ -73,8 +73,10 @@ class NotificationCore
     {
         global $cookie;
 
-        if (!static::checkAccess($type)) {
-            return ['total' => 0, 'results' => []];
+        if (Validate::isLoadedObject(Context::getContext()->employee)) {
+            if (!static::checkAccess($type)) {
+                return ['total' => 0, 'results' => []];
+            }
         }
 
         switch ($type) {
@@ -164,17 +166,17 @@ class NotificationCore
      */
     private static function checkAccess($type)
     {
-        $accesses = Profile::getProfileAccesses(Context::getContext()->employee->id_profile, 'class_name');
-
-        if (
-            (!(isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view']) && $type == 'order') ||
-            (!(isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view']) && $type == 'customer') ||
-            (!(isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view']) && $type == 'customer_message')
-        ) {
+        $idProfile = Context::getContext()->employee->id_profile;
+        
+        if (!(Access::isGranted('AdminOrders', $idProfile)) && $type == 'order') {
             return false;
+        } elseif (!(Access::isGranted('AdminCustomers', $idProfile)) && $type == 'customer') {
+            return false;
+        } elseif (!(Access::isGranted('AdminCustomerThreads', $idProfile)) && $type == 'customer_message') {
+            return false;
+        } else {
+            return true;
         }
-
-        return true;
     }
 
     /**
