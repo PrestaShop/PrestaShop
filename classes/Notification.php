@@ -168,11 +168,11 @@ class NotificationCore
     {
         $idProfile = Context::getContext()->employee->id_profile;
         
-        if (!(Access::isGranted('AdminOrders', $idProfile)) && $type == 'order') {
+        if (!Access::isGranted('AdminOrders', $idProfile) && $type == 'order') {
             return false;
-        } elseif (!(Access::isGranted('AdminCustomers', $idProfile)) && $type == 'customer') {
+        } elseif (!Access::isGranted('AdminCustomers', $idProfile) && $type == 'customer') {
             return false;
-        } elseif (!(Access::isGranted('AdminCustomerThreads', $idProfile)) && $type == 'customer_message') {
+        } elseif (!Access::isGranted('AdminCustomerThreads', $idProfile) && $type == 'customer_message') {
             return false;
         } else {
             return true;
