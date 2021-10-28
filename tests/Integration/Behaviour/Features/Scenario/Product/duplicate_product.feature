@@ -19,6 +19,9 @@ Feature: Duplicate product from Back Office (BO).
     And language "language2" with locale "fr-FR" exists
     And carrier carrier1 named "ecoCarrier" exists
     And carrier carrier2 named "Fast carry" exists
+    And attribute group "Color" named "Color" in en language exists
+    And attribute "Red" named "Red" in en language exists
+    And attribute "Blue" named "Blue" in en language exists
     Given I add product "product1" with following information:
       | name[en-US] | smart sunglasses   |
       | name[fr-FR] | lunettes de soleil |
@@ -112,6 +115,36 @@ Feature: Duplicate product from Back Office (BO).
     And product product1 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product2    |
+    When I add a specific price specific_price1 to product product1 with following details:
+      | price           | 0.00   |
+      | reduction type  | amount |
+      | reduction value | 5.00   |
+      | includes tax    | true   |
+      | from quantity   | 1      |
+    Then product "product1" should have 1 specific prices
+    When I add product product_with_combinations with following information:
+      | name[en-US] | Jar of sand  |
+      | type        | combinations |
+    And I generate combinations for product product_with_combinations using following attributes:
+      | Color | [Red,Blue] |
+    Then product "product_with_combinations" should have following combinations:
+      | id reference                   | combination name | reference | attributes    | impact on price | quantity | is default |
+      | product_with_combinationsRed   | Color - Red      |           | [Color:Red]   | 0               | 0        | true       |
+      | product_with_combinationsBlue  | Color - Blue     |           | [Color:Blue]  | 0               | 0        | false      |
+    When I add a specific price specific_price1 to product product_with_combinations with following details:
+      | price           | 123.00                       |
+      | combination     | product_with_combinationsRed |
+      | reduction type  | amount                       |
+      | reduction value | 0.00                         |
+      | includes tax    | true                         |
+      | from quantity   | 1                            |
+    And I add a specific price specific_price2 to product product_with_combinations with following details:
+      | price           | 0.00   |
+      | reduction type  | amount |
+      | reduction value | 5.00   |
+      | includes tax    | true   |
+      | from quantity   | 1      |
+    Then product "product_with_combinations" should have 2 specific prices
 
   Scenario: I duplicate product
 #todo: add specific prices & priorities, test combinations, packs
@@ -202,5 +235,11 @@ Feature: Duplicate product from Back Office (BO).
     And product copy_of_product1 should have identical customization fields to product1
     And product copy_of_product1 should have 1 customizable text field
     And product copy_of_product1 should have 0 customizable file fields
+    And product "copy_of_product1" should have 1 specific prices
 #@todo: assert stock info
 #@todo: add tests for other type of products Pack, Virtual, Combinations
+
+  Scenario: I duplicate product with combinations
+    When I duplicate product product_with_combinations to a copy_of_product_with_combinations
+    Then product "copy_of_product_with_combinations" should have 2 specific prices
+    # TODO: all sorts of other checks
