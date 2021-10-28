@@ -40,6 +40,11 @@ class CustomerAddressFormCore extends AbstractForm
 
     protected $template = 'customer/_partials/address-form.tpl';
 
+    /**
+     * @var CustomerAddressFormatter
+     */
+    protected $formatter;
+
     private $address;
 
     private $persister;

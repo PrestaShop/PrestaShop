@@ -30,10 +30,11 @@
 class CustomerMessageCore extends ObjectModel
 {
     public $id;
+
     /** @var int CustomerThread ID */
     public $id_customer_thread;
 
-    /** @var   */
+    /** @var int */
     public $id_employee;
 
     /** @var string */
@@ -170,7 +171,7 @@ class CustomerMessageCore extends ObjectModel
     /**
      * Get the last message for a thread customer.
      *
-     * @param $id_customer_thread   Thread customer reference
+     * @param int $id_customer_thread Thread customer reference
      *
      * @return string Last message
      */

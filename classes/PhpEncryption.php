@@ -74,8 +74,8 @@ class PhpEncryptionCore
     }
 
     /**
-     * @param $header
-     * @param $bytes
+     * @param string $header
+     * @param string $bytes
      *
      * @return string
      *

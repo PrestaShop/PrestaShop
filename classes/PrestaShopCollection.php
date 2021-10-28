@@ -155,7 +155,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      * @param string $field Field name
      * @param string $operator List of operators : =, !=, <>, <, <=, >, >=, like, notlike, regexp, notregexp
      * @param mixed $value
-     * @param string $type where|having
+     * @param string $method where|having
      *
      * @return PrestaShopCollection
      */
@@ -506,7 +506,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @see ArrayAccess::offsetExists()
      *
-     * @param $offset
+     * @param mixed $offset
      *
      * @return bool
      */
@@ -522,7 +522,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @see ArrayAccess::offsetGet()
      *
-     * @param $offset
+     * @param mixed $offset
      *
      * @return ObjectModel
      */
@@ -541,8 +541,8 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @see ArrayAccess::offsetSet()
      *
-     * @param $offset
-     * @param $value
+     * @param mixed $offset
+     * @param ObjectModel $value
      */
     public function offsetSet($offset, $value)
     {
@@ -563,7 +563,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @see ArrayAccess::offsetUnset()
      *
-     * @param $offset
+     * @param mixed $offset
      */
     public function offsetUnset($offset)
     {

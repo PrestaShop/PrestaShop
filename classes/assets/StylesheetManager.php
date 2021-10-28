@@ -47,7 +47,7 @@ class StylesheetManagerCore extends AbstractAssetManager
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @param string $relativePath
      * @param string $media
      * @param int $priority
@@ -102,7 +102,7 @@ class StylesheetManagerCore extends AbstractAssetManager
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @param string $fullPath
      * @param string $media
      * @param int $priority

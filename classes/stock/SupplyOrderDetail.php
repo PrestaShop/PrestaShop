@@ -210,7 +210,7 @@ class SupplyOrderDetailCore extends ObjectModel
     {
         $this->calculatePrices();
 
-        parent::update($null_values);
+        return parent::update($null_values);
     }
 
     /**
@@ -220,7 +220,7 @@ class SupplyOrderDetailCore extends ObjectModel
     {
         $this->calculatePrices();
 
-        parent::add($autodate, $null_values);
+        return parent::add($autodate, $null_values);
     }
 
     /**

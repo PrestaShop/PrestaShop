@@ -182,7 +182,7 @@ class OrderSlipCore extends ObjectModel
     /**
      * Get resume of all refund for one product line.
      *
-     * @param $id_order_detail
+     * @param int $id_order_detail
      *
      * @deprecated This method should not be used any more because sometimes OrderSlip is not created, you should use the OrderDetail::total_refunded_tax_excl/incl fields instead
      */
@@ -213,7 +213,7 @@ class OrderSlipCore extends ObjectModel
     /**
      * Get refund details for one product line.
      *
-     * @param $id_order_detail
+     * @param int $id_order_detail
      */
     public static function getProductSlipDetail($id_order_detail)
     {
@@ -459,6 +459,12 @@ class OrderSlipCore extends ObjectModel
         return true;
     }
 
+    /**
+     * @param array<int, array<float|int>> $order_detail_list
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function addPartialSlipDetail($order_detail_list)
     {
         foreach ($order_detail_list as $id_order_detail => $tab) {

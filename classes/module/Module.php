@@ -100,6 +100,18 @@ abstract class ModuleCore implements ModuleInterface
 
     public $badges;
 
+    /** @var string */
+    public $message = '';
+
+    /** @var string */
+    public $logo = '';
+
+    /** @var array */
+    public $options;
+
+    /** @var array|string */
+    public $optionsHtml;
+
     /** @var int need_instance */
     public $need_instance = 1;
 
@@ -122,6 +134,9 @@ abstract class ModuleCore implements ModuleInterface
 
     /** @var array names of the controllers */
     public $controllers = [];
+
+    /** @var bool */
+    public $installed;
 
     /** @var array used by AdminTab to determine which lang file to use (admin.php or module lang file) */
     public static $classInModule = [];
@@ -530,7 +545,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Init the upgrade module.
      *
-     * @param Module $module
+     * @param Module|stdClass $module
      *
      * @return bool
      */
@@ -994,7 +1009,7 @@ abstract class ModuleCore implements ModuleInterface
      * @param bool $return define the return way : false for a display, true for a return
      * @param bool $use_vars_instead_of_ids use an js vars instead of ids seperate by "¤"
      *
-     * @return false|string
+     * @return void
      */
     public function displayFlags($languages, $default_language, $ids, $id, $return = false, $use_vars_instead_of_ids = false)
     {
@@ -1311,7 +1326,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param bool $use_config in order to use config.xml file in module dir
      *
-     * @return array Modules
+     * @return array<\stdClass> Modules
      */
     public static function getModulesOnDisk($use_config = false, $logged_on_addons = false, $id_employee = false)
     {
@@ -1692,9 +1707,7 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        if (file_exists($filepath)) {
-            return '../img/tmp/' . $filename;
-        }
+        return file_exists($filepath) ? '../img/tmp/' . $filename : null;
     }
 
     /**
@@ -2630,6 +2643,8 @@ abstract class ModuleCore implements ModuleInterface
             if (!isset(static::$_defered_clearCache[$key])) {
                 static::$_defered_clearCache[$key] = [$this->getTemplatePath($template), $cache_id, $compile_id];
             }
+
+            return 0;
         } else {
             if ($ps_smarty_clear_cache == 'never') {
                 return 0;
@@ -2954,7 +2969,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $msg
      *
-     * @return false|null
+     * @return false|void
      */
     public function adminDisplayWarning($msg)
     {
@@ -2969,7 +2984,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $msg
      *
-     * @return false|null
+     * @return false|void
      */
     protected function adminDisplayInformation($msg)
     {

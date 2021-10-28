@@ -868,9 +868,9 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param $row
-     * @param $shopContext
-     * @param $productQuantity
+     * @param array $row
+     * @param Context $shopContext
+     * @param int|null $productQuantity
      * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return mixed
@@ -1954,8 +1954,8 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param $id_product
-     * @param $id_product_attribute
+     * @param int $id_product
+     * @param int $id_product_attribute
      *
      * @return array
      */
@@ -2053,7 +2053,10 @@ class CartCore extends ObjectModel
 
         $with_taxes = $use_tax_display ? $cart->_taxCalculationMethod != PS_TAX_EXC : true;
 
-        return Context::getContext()->getCurrentLocale()->formatPrice($cart->getOrderTotal($with_taxes, $type), Currency::getIsoCodeById((int) $cart->id_currency), false);
+        return Context::getContext()->getCurrentLocale()->formatPrice(
+            $cart->getOrderTotal($with_taxes, $type),
+            Currency::getIsoCodeById((int) $cart->id_currency)
+        );
     }
 
     /**
@@ -2295,7 +2298,7 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param $products
+     * @param array $products
      *
      * @return array
      */
@@ -2316,7 +2319,7 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param $products
+     * @param array $products
      *
      * @return array
      */
@@ -2335,8 +2338,8 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param $type
-     * @param $withShipping
+     * @param int $type
+     * @param bool $withShipping
      *
      * @return array
      */
@@ -2365,9 +2368,9 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param $withTaxes
-     * @param $product
-     * @param $virtualContext
+     * @param bool $withTaxes
+     * @param array $product
+     * @param Context|null $virtualContext
      *
      * @return int
      */
@@ -2389,7 +2392,7 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param $product
+     * @param array $product
      *
      * @return int|null
      */
@@ -2423,8 +2426,8 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param $withTaxes
-     * @param $type
+     * @param bool $withTaxes
+     * @param int $type
      *
      * @return float|int
      */
@@ -3108,8 +3111,8 @@ class CartCore extends ObjectModel
     /**
      * Sort list of option delivery by parameters define in the BO.
      *
-     * @param $option1
-     * @param $option2
+     * @param array $option1
+     * @param array $option2
      *
      * @return int -1 if $option 1 must be placed before and 1 if the $option1 must be placed after the $option2
      */
@@ -5048,7 +5051,7 @@ class CartCore extends ObjectModel
     /**
      * Are all products of the Cart in stock?
      *
-     * @param bool $ignore_virtual Ignore virtual products
+     * @param bool $ignoreVirtual Ignore virtual products
      * @param bool $exclusive (DEPRECATED) If true, the validation is exclusive : it must be present product in stock and out of stock
      *
      * @since 1.5.0
@@ -5156,7 +5159,7 @@ class CartCore extends ObjectModel
      * Get all the IDs of the delivery Addresses without Carriers.
      *
      * @param bool $return_collection Returns sa collection
-     * @param array &$error Contains an error message if an error occurs
+     * @param array $error Contains an error message if an error occurs
      *
      * @return array Array of address id or of address object
      */
@@ -5351,8 +5354,6 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param Cart $cart
-     *
      * @return float
      */
     public function getCartTotalPrice()
