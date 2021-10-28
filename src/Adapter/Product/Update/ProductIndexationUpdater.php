@@ -58,7 +58,7 @@ class ProductIndexationUpdater
      *
      * @return bool
      */
-    public function isVisibleOnSearch(product $product): bool
+    public function isVisibleOnSearch(Product $product): bool
     {
         return in_array(
             $product->visibility,
