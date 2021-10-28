@@ -35,24 +35,24 @@ use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Exception\NotImplementedException;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ConfigCommand extends Command
 {
     // return values
-    private const STATUS_OK = 0;
-    private const STATUS_INVALID_ACTION = 1;
-    private const STATUS_VALUE_REQUIRED = 2;
-    private const STATUS_FAILED_SET = 3;
-    private const STATUS_FAILED_REMOVE = 4;
-    private const STATUS_INVALID_OPTIONS = 5;
-    private const STATUS_FAILED_SHOPCONSTRAINT = 6;
-    private const STATUS_LANG_REQUIRED = 7;
-    private const STATUS_NOT_IMPLEMENTED = 8;
-    private const STATUS_ERROR = 9;
+    public const STATUS_OK = 0;
+    public const STATUS_INVALID_ACTION = 1;
+    public const STATUS_VALUE_REQUIRED = 2;
+    public const STATUS_FAILED_SET = 3;
+    public const STATUS_FAILED_REMOVE = 4;
+    public const STATUS_INVALID_OPTIONS = 5;
+    public const STATUS_FAILED_SHOPCONSTRAINT = 6;
+    public const STATUS_LANG_REQUIRED = 7;
+    public const STATUS_NOT_IMPLEMENTED = 8;
+    public const STATUS_ERROR = 9;
 
     private $allowedActions = [
         'get',
@@ -61,19 +61,14 @@ class ConfigCommand extends Command
     ];
 
     /**
-     * @var FormatterHelper
+     * @var SymfonyStyle
      */
-    protected $formatter;
+    protected $io;
 
     /**
      * @var InputInterface
      */
     protected $input;
-
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
 
     /**
      * @var ShopConfigurationInterface
@@ -130,14 +125,10 @@ class ConfigCommand extends Command
             ;
     }
 
-    protected function init(InputInterface $input, OutputInterface $output): void
+    protected function init(): void
     {
-        $this->formatter = $this->getHelper('formatter');
-        $this->input = $input;
-        $this->output = $output;
-
         // check our action
-        $action = $input->getArgument('action');
+        $action = $this->input->getArgument('action');
         if (!in_array($action, $this->allowedActions)) {
             $msg = sprintf('Unknown configuration action. It must be one of these values: %s', implode(' / ', $this->allowedActions));
             throw new Exception($msg, self::STATUS_INVALID_ACTION);
@@ -248,7 +239,7 @@ class ConfigCommand extends Command
                 $value = $value[$this->idLang];
             }
 
-            $this->output->writeln(sprintf('%s=%s', $key, $value));
+            $this->io->success(sprintf('%s=%s', $key, $value));
         }
     }
 
@@ -314,7 +305,7 @@ class ConfigCommand extends Command
             throw new Exception($msg, self::STATUS_FAILED_REMOVE);
         }
 
-        $this->output->writeln(sprintf('%s removed', $key));
+        $this->io->success(sprintf('%s removed', $key));
     }
 
     /**
@@ -322,25 +313,18 @@ class ConfigCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->io = new SymfonyStyle($input, $output);
+        $this->input = $input;
+
         try {
-            $this->init($input, $output);
+            $this->init();
             $this->{$this->action}();
         } catch (Exception $e) {
-            $this->displayMessage($e->getMessage(), 'error');
+            $this->io->error($e->getMessage());
 
             return $e->getCode();
         }
 
         return self::STATUS_OK;
-    }
-
-    /**
-     * Helper for showing a nice error message
-     */
-    protected function displayMessage(string $message, string $type = 'info'): void
-    {
-        $this->output->writeln(
-            $this->formatter->formatBlock($message, $type, true)
-        );
     }
 }
