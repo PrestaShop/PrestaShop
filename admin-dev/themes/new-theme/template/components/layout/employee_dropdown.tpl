@@ -29,9 +29,11 @@
   </div>
   <div class="dropdown-menu dropdown-menu-right">
     <div class="employee-wrapper-avatar">
+      <div class="employee-top">
+        <span class="employee-avatar"><img class="avatar rounded-circle" src="{$employee->getImage()}" alt="{$employee->firstname}" /></span>
+        <span class="employee_profile">{l s='Welcome back %name%' sprintf=['%name%' => $employee->firstname] d='Admin.Navigation.Header'}</span>
+      </div>
 
-      <span class="employee-avatar"><img class="avatar rounded-circle" src="{$employee->getImage()}" alt="{$employee->firstname}" /></span>
-      <span class="employee_profile">{l s='Welcome back %name%' sprintf=['%name%' => $employee->firstname] d='Admin.Navigation.Header'}</span>
       <a class="dropdown-item employee-link profile-link" href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}">
       <i class="material-icons">edit</i>
       <span>{l s='Your profile' d='Admin.Navigation.Header'}</span>
