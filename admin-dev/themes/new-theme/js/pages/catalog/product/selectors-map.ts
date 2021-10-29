@@ -29,6 +29,7 @@ export default {
   priceForm: '#specific_price_form',
   save: '#specific_price_form .js-save',
   openCreate: '#js-open-create-specific-price-form',
+  idCurrency: (selectorPrefix: string): string => `${selectorPrefix}sp_id_currency`,
   leavBPrice: (selectorPrefix: string): string => `${selectorPrefix}leave_bprice`,
   reductionType: (selectorPrefix: string): string => `${selectorPrefix}sp_reduction_type`,
   modalCancel: '#form_modal_cancel',
