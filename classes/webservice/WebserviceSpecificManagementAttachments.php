@@ -75,7 +75,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      *
      * @return WebserviceSpecificManagementInterface
      */
-    public function setObjectOutput(WebserviceOutputBuilderCore $obj)
+    public function setObjectOutput(WebserviceOutputBuilder $obj)
     {
         $this->objOutput = $obj;
 
@@ -93,9 +93,9 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     /**
      * Set Webservice Object
      *
-     * @param WebserviceRequestCore $obj
+     * @param WebserviceRequest $obj
      */
-    public function setWsObject(WebserviceRequestCore $obj)
+    public function setWsObject(WebserviceRequest $obj)
     {
         $this->wsObject = $obj;
 

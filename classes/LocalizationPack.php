@@ -77,7 +77,7 @@ class LocalizationPackCore
                 return false;
             }
             if (!$country->active) {
-                $country->active = 1;
+                $country->active = true;
                 if (!$country->update()) {
                     $this->_errors[] = Context::getContext()->getTranslator()->trans(
                         'Cannot enable the associated country: %s',
@@ -91,12 +91,12 @@ class LocalizationPackCore
         $res = true;
 
         if (empty($selection)) {
-            $res &= $this->_installStates($xml);
-            $res &= $this->_installTaxes($xml);
-            $res &= $this->_installCurrencies($xml, $install_mode);
-            $res &= $this->installConfiguration($xml);
-            $res &= $this->installModules($xml);
-            $res &= $this->updateDefaultGroupDisplayMethod($xml);
+            $res = $res && $this->_installStates($xml);
+            $res = $res && $this->_installTaxes($xml);
+            $res = $res && $this->_installCurrencies($xml, $install_mode);
+            $res = $res && $this->installConfiguration($xml);
+            $res = $res && $this->installModules($xml);
+            $res = $res && $this->updateDefaultGroupDisplayMethod($xml);
 
             if (($res || $install_mode) && isset($this->iso_code_lang)) {
                 if (!($id_lang = (int) Language::getIdByIso($this->iso_code_lang, true))) {
@@ -110,18 +110,18 @@ class LocalizationPackCore
             }
 
             if (!empty($id_lang) && !Language::isInstalled(Language::getIsoById($id_lang))) {
-                $res &= $this->_installLanguages($xml, $install_mode);
-                $res &= $this->_installUnits($xml);
+                $res = $res && $this->_installLanguages($xml, $install_mode);
+                $res = $res && $this->_installUnits($xml);
             }
 
             if ($install_mode && $res && isset($this->iso_currency)) {
                 Cache::clean('Currency::getIdByIsoCode_*');
-                $res &= Configuration::updateValue('PS_CURRENCY_DEFAULT', (int) Currency::getIdByIsoCode($this->iso_currency));
+                $res = $res && Configuration::updateValue('PS_CURRENCY_DEFAULT', (int) Currency::getIdByIsoCode($this->iso_currency));
                 Currency::refreshCurrencies();
             }
         } else {
             foreach ($selection as $selected) {
-                $res &= Validate::isLocalizationPackSelection($selected) ? $this->{'_install' . $selected}($xml, $install_mode) : false;
+                $res = $res && Validate::isLocalizationPackSelection($selected) ? $this->{'_install' . $selected}($xml, $install_mode) : false;
             }
         }
 
@@ -175,7 +175,7 @@ class LocalizationPackCore
 
                     $country = new Country($state->id_country);
                     if (!$country->contains_states) {
-                        $country->contains_states = 1;
+                        $country->contains_states = true;
                         if (!$country->update()) {
                             $this->_errors[] = Context::getContext()->getTranslator()->trans('Cannot update the associated country: %s', [$country->name], 'Admin.International.Notification');
                         }
@@ -222,7 +222,7 @@ class LocalizationPackCore
                 $tax = new Tax();
                 $tax->name[(int) Configuration::get('PS_LANG_DEFAULT')] = (string) $attributes['name'];
                 $tax->rate = (float) $attributes['rate'];
-                $tax->active = 1;
+                $tax->active = true;
 
                 if (($error = $tax->validateFields(false, true)) !== true || ($error = $tax->validateFieldsLang(false, true)) !== true) {
                     $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid tax properties.', [], 'Admin.International.Notification') . ' ' . $error;
@@ -252,7 +252,7 @@ class LocalizationPackCore
 
                 $trg = new TaxRulesGroup();
                 $trg->name = $group['name'];
-                $trg->active = 1;
+                $trg->active = true;
 
                 if (!$trg->save()) {
                     $this->_errors[] = Context::getContext()->getTranslator()->trans('This tax rule cannot be saved.', [], 'Admin.International.Notification');

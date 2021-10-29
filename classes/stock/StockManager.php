@@ -213,7 +213,7 @@ class StockManagerCore implements StockManagerInterface
      * @param int $ignore_pack
      * @param Employee|null $employee
      *
-     * @return array
+     * @return array|bool
      *
      * @throws PrestaShopException
      */
@@ -812,7 +812,7 @@ class StockManagerCore implements StockManagerInterface
      * @param int $quantity
      * @param float $price_te
      *
-     * @return int WA
+     * @return float
      */
     protected function calculateWA(Stock $stock, $quantity, $price_te)
     {
@@ -851,7 +851,7 @@ class StockManagerCore implements StockManagerInterface
      * @param int $id_product_attribute optional
      * @param array $delivery_option
      *
-     * @return int quantity
+     * @return bool|int quantity
      */
     public static function getStockByCarrier($id_product = 0, $id_product_attribute = 0, $delivery_option = null)
     {

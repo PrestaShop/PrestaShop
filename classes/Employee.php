@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Crypto\Hashing;
  */
 class EmployeeCore extends ObjectModel
 {
-    /** @var int Employee ID */
+    /** @var int|null Employee ID */
     public $id;
 
     /** @var int Employee profile */
@@ -80,13 +80,13 @@ class EmployeeCore extends ObjectModel
     public $bo_width;
 
     /** @var bool */
-    public $bo_menu = 1;
+    public $bo_menu = true;
 
     /* Deprecated */
     public $bo_show_screencast = false;
 
     /** @var bool Status */
-    public $active = 1;
+    public $active = true;
 
     public $remote_addr;
 
@@ -95,10 +95,10 @@ class EmployeeCore extends ObjectModel
     public $id_last_customer_message;
     public $id_last_customer;
 
-    /** @var string Unique token for forgot password feature */
+    /** @var string|null Unique token for forgot password feature */
     public $reset_password_token;
 
-    /** @var string token validity date for forgot password feature */
+    /** @var string|null token validity date for forgot password feature */
     public $reset_password_validity;
 
     /**
@@ -559,7 +559,7 @@ class EmployeeCore extends ObjectModel
     public function getDefaultShopID()
     {
         if ($this->isSuperAdmin() || in_array(Configuration::get('PS_SHOP_DEFAULT'), $this->associated_shops)) {
-            return Configuration::get('PS_SHOP_DEFAULT');
+            return (int) Configuration::get('PS_SHOP_DEFAULT');
         }
 
         return $this->associated_shops[0];

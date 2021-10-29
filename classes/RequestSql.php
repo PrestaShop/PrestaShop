@@ -150,7 +150,7 @@ class RequestSqlCore extends ObjectModel
     /**
      * Cut the request for check each cutting.
      *
-     * @param array $tab
+     * @param array<string, array> $tab
      * @param bool $in
      * @param string $sql
      *
@@ -264,7 +264,7 @@ class RequestSqlCore extends ObjectModel
      * Cut an attribute with or without the alias.
      *
      * @param string $attr
-     * @param string $from
+     * @param array $from
      *
      * @return array|bool
      */
@@ -298,7 +298,7 @@ class RequestSqlCore extends ObjectModel
     /**
      * Get name of table by alias.
      *
-     * @param bool $alias
+     * @param string|false $alias
      * @param array $tables
      *
      * @return array|bool
@@ -310,7 +310,9 @@ class RequestSqlCore extends ObjectModel
                 if (!isset($table['alias']) || !isset($table['table'])) {
                     continue;
                 }
-                if ($table['alias']['no_quotes'] == $alias || $table['alias']['no_quotes']['parts'][0] == $alias) {
+                /** @var string|array{'parts': array<int, bool>} $tableAlias */
+                $tableAlias = $table['alias']['no_quotes'];
+                if ($tableAlias == $alias || $tableAlias['parts'][0] == $alias) {
                     return [$table['table']];
                 }
             }
@@ -409,7 +411,7 @@ class RequestSqlCore extends ObjectModel
     /**
      * Check a "FROM" sentence.
      *
-     * @param array $from
+     * @param array<int, array<string, mixed>> $from
      *
      * @return bool
      */
@@ -454,8 +456,8 @@ class RequestSqlCore extends ObjectModel
     /**
      * Check a "SELECT" sentence.
      *
-     * @param string $select
-     * @param string $from
+     * @param array<int, array<string, mixed>> $select
+     * @param array $from
      * @param bool $in
      *
      * @return bool
@@ -498,8 +500,8 @@ class RequestSqlCore extends ObjectModel
     /**
      * Check a "WHERE" sentence.
      *
-     * @param string $where
-     * @param string $from
+     * @param array<int, array<string, mixed>> $where
+     * @param array $from
      * @param string $sql
      *
      * @return bool
@@ -546,8 +548,8 @@ class RequestSqlCore extends ObjectModel
     /**
      * Check a "HAVING" sentence.
      *
-     * @param string $having
-     * @param string $from
+     * @param array<int, array<string, mixed>> $having
+     * @param array $from
      *
      * @return bool
      */
@@ -591,8 +593,8 @@ class RequestSqlCore extends ObjectModel
     /**
      * Check a "ORDER" sentence.
      *
-     * @param string $order
-     * @param string $from
+     * @param array $order
+     * @param array $from
      *
      * @return bool
      */
@@ -659,7 +661,7 @@ class RequestSqlCore extends ObjectModel
     /**
      * Check a "LIMIT" sentence.
      *
-     * @param string $limit
+     * @param array $limit
      *
      * @return bool
      */

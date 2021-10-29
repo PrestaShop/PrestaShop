@@ -405,7 +405,7 @@ abstract class PaymentModuleCore extends Module
                             $msg->id_cart = (int) $id_cart;
                             $msg->id_customer = (int) $order->id_customer;
                             $msg->id_order = (int) $order->id;
-                            $msg->private = 1;
+                            $msg->private = true;
                             $msg->add();
                         }
                     }
@@ -524,7 +524,7 @@ abstract class PaymentModuleCore extends Module
                         $customer_message->id_customer_thread = $customer_thread->id;
                         $customer_message->id_employee = 0;
                         $customer_message->message = $update_message->message;
-                        $customer_message->private = 0;
+                        $customer_message->private = false;
 
                         if (!$customer_message->add()) {
                             $this->_errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
@@ -981,7 +981,7 @@ abstract class PaymentModuleCore extends Module
             $order->module = $name;
         }
         $order->recyclable = $cart->recyclable;
-        $order->gift = (int) $cart->gift;
+        $order->gift = (bool) $cart->gift;
         $order->gift_message = $cart->gift_message;
         $order->mobile_theme = $cart->mobile_theme;
         $order->conversion_rate = $currency->conversion_rate;
@@ -1039,8 +1039,8 @@ abstract class PaymentModuleCore extends Module
             $computingPrecision
         );
         $order->total_paid = $order->total_paid_tax_incl;
-        $order->round_mode = Configuration::get('PS_PRICE_ROUND_MODE');
-        $order->round_type = Configuration::get('PS_ROUND_TYPE');
+        $order->round_mode = (int) Configuration::get('PS_PRICE_ROUND_MODE');
+        $order->round_type = (int) Configuration::get('PS_ROUND_TYPE');
 
         $order->invoice_date = '0000-00-00 00:00:00';
         $order->delivery_date = '0000-00-00 00:00:00';

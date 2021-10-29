@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShopBundle\Translation\TranslatorComponent;
 
 abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation\Database\EntityInterface
 {
@@ -142,7 +143,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var string file type of image files. */
     protected $image_format = 'jpg';
 
-    /** @var PrestaShopBundle\Translation\Translator */
+    /** @var TranslatorComponent */
     protected $translator;
 
     /**
@@ -166,7 +167,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var array|null List of specific fields to update (all fields if null). */
     protected $update_fields = null;
 
-    /** @var Db An instance of the db in order to avoid calling Db::getInstance() thousands of times. */
+    /** @var Db|bool An instance of the db in order to avoid calling Db::getInstance() thousands of times. */
     protected static $db = false;
 
     /** @var array|null List of HTML field (based on self::TYPE_HTML) */
@@ -180,6 +181,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     protected static $cache_objects = true;
 
+    /**
+     * @return null
+     */
     public static function getRepositoryClassName()
     {
         return null;
@@ -220,7 +224,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param int|null $id if specified, loads and existing object from DB (optional)
      * @param int|null $id_lang required if object is multilingual (optional)
      * @param int|null $id_shop ID shop for objects with multishop tables
-     * @param PrestaShopBundle\Translation\Translator|null $translator
+     * @param TranslatorComponent|null $translator
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -2077,6 +2081,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         if ($field !== null || !Cache::isStored($cache_id)) {
+            /** @var array<string, mixed> $definition */
             $definition = $class::$definition;
 
             $definition['classname'] = $class;

@@ -41,7 +41,7 @@ class StockMvtReasonCore extends ObjectModel
     public $date_upd;
 
     /** @var bool True if the movement reason has been deleted (staying in database as deleted) */
-    public $deleted = 0;
+    public $deleted = false;
 
     /**
      * @since 1.5.0

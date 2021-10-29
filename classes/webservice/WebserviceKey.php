@@ -170,7 +170,7 @@ class WebserviceKeyCore extends ObjectModel
             pSQL($auth_key)
         );
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
     }
 
     /**

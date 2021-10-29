@@ -32,7 +32,7 @@ class SmartyDevTemplateCore extends Smarty_Internal_Template
      * @param SmartyDevTemplateCore|null $template
      * @param null $cache_id
      * @param null $compile_id
-     * @param null $parent
+     * @param object $parent
      * @param false $display
      * @param bool $merge_tpl_vars
      * @param false $no_output_filter
@@ -41,6 +41,7 @@ class SmartyDevTemplateCore extends Smarty_Internal_Template
      *
      * @throws SmartyException
      */
+    // @phpstan-ignore-next-line
     public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false)
     {
         if (null !== $template) {

@@ -57,7 +57,7 @@ class LinkCore
      */
     public function __construct($protocolLink = null, $protocolContent = null)
     {
-        $this->allow = (int) Configuration::get('PS_REWRITING_SETTINGS');
+        $this->allow = (bool) Configuration::get('PS_REWRITING_SETTINGS');
         $this->url = $_SERVER['SCRIPT_NAME'];
         $this->protocol_link = $protocolLink;
         $this->protocol_content = $protocolContent;
@@ -1010,7 +1010,7 @@ class LinkCore
         if (($psLegacyImages
                 && (file_exists(_PS_PRODUCT_IMG_DIR_ . $ids . ($type ? '-' . $type : '') . $theme . '.jpg')))
             || ($notDefault = strpos($ids, 'default') !== false)) {
-            if ($this->allow == 1 && !$notDefault) {
+            if ($this->allow && !$notDefault) {
                 $uriPath = __PS_BASE_URI__ . $ids . ($type ? '-' . $type : '') . $theme . '/' . $name . '.jpg';
             } else {
                 $uriPath = _THEME_PROD_DIR_ . $ids . ($type ? '-' . $type : '') . $theme . '.jpg';
@@ -1020,7 +1020,7 @@ class LinkCore
             $splitIds = explode('-', $ids);
             $idImage = (isset($splitIds[1]) ? $splitIds[1] : $splitIds[0]);
             $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . ($type ? '-' . $type : '') . '-' . (int) Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
-            if ($this->allow == 1) {
+            if ($this->allow) {
                 $uriPath = __PS_BASE_URI__ . $idImage . ($type ? '-' . $type : '') . $theme . '/' . $name . '.jpg';
             } else {
                 $uriPath = _THEME_PROD_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . ($type ? '-' . $type : '') . $theme . '.jpg';
@@ -1179,7 +1179,7 @@ class LinkCore
      */
     public function getCatImageLink($name, $idCategory, $type = null)
     {
-        if ($this->allow == 1 && $type) {
+        if ($this->allow && $type) {
             $uriPath = __PS_BASE_URI__ . 'c/' . $idCategory . '-' . $type . '/' . $name . '.jpg';
         } else {
             $uriPath = _THEME_CAT_DIR_ . $idCategory . ($type ? '-' . $type : '') . '.jpg';
@@ -1316,7 +1316,7 @@ class LinkCore
 
         if (!$array) {
             if (count($vars)) {
-                return $url . (!strstr($url, '?') && ($this->allow == 1 || $url == $this->url) ? '?' : '&') . http_build_query($vars, '', '&');
+                return $url . (!strstr($url, '?') && ($this->allow || $url == $this->url) ? '?' : '&') . http_build_query($vars, '', '&');
             } else {
                 return $url;
             }
@@ -1328,7 +1328,7 @@ class LinkCore
             $vars['id_' . $type] = (is_object($idObject) ? (int) $idObject->id : (int) $idObject);
         }
 
-        if (!$this->allow == 1) {
+        if (!$this->allow) {
             $vars['controller'] = Dispatcher::getInstance()->getController();
         }
 

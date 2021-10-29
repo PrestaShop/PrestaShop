@@ -79,7 +79,7 @@ jobs:
         run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist
 
       - name: Run phpstan on classes directory
-        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist -l 2 classes/
+        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist -l 3 classes/
 
   phpunit:
     name: PHPUnit
