@@ -169,7 +169,7 @@ class ProductSpecificPrice extends CommonAbstractType
                 'choice_attr' => function ($val, $key, $index) {
                     foreach ($this->currencies as $currency) {
                         if($currency['id'] == $val){
-                            return array('data-currency-symbol' => $currency['symbol']);
+                            return ['data-currency-symbol' => $currency['symbol']];
                         }
                     }
                 },
