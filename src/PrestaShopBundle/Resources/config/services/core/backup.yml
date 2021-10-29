@@ -6,6 +6,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Backup\Configuration\BackupOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.shop.context'
+            - '@prestashop.adapter.multistore_feature'
 
     prestashop.core.backup.listing.grid_data_factory:
         class: 'PrestaShop\PrestaShop\Core\Backup\Listing\BackupGridDataFactory'

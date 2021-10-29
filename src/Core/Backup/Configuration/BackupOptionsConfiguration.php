@@ -26,27 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Core\Backup\Configuration;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
  * Class BackupOptionsConfigurator configures backup options.
  */
-final class BackupOptionsConfiguration implements DataConfigurationInterface
+final class BackupOptionsConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @param ConfigurationInterface $configuration
-     */
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -64,8 +51,9 @@ final class BackupOptionsConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $config)
     {
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_BACKUP_ALL', $config['backup_all']);
-            $this->configuration->set('PS_BACKUP_DROP_TABLE', $config['backup_drop_tables']);
+            $shopConstraint = $this->getShopConstraint();
+            $this->updateConfigurationValue('PS_BACKUP_ALL', 'backup_all', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_BACKUP_DROP_TABLE', 'backup_drop_tables', $config, $shopConstraint);
         }
 
         return [];
