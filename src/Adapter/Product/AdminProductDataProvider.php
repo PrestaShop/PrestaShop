@@ -89,7 +89,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         if (!$cachedFilters->isHit()) {
             $shop = Context::getContext()->shop;
-            $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy([
+            $filter = $this->entityManager->getRepository(AdminFilter::class)->findOneBy([
                 'employee' => $employeeId,
                 'shop' => $shop->id ?: 0,
                 'controller' => 'ProductController',
@@ -142,7 +142,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     {
         $employee = Context::getContext()->employee;
         $shop = Context::getContext()->shop;
-        $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy([
+        $filter = $this->entityManager->getRepository(AdminFilter::class)->findOneBy([
             'employee' => $employee->id ?: 0,
             'shop' => $shop->id ?: 0,
             'controller' => 'ProductController',

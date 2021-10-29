@@ -97,8 +97,8 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
     tags:
-    - name: tactician.handler
-      command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand
 
   prestashop.adapter.category.command_handler.update_category_position_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\UpdateCategoryPositionHandler
@@ -114,11 +114,20 @@ services:
 
   prestashop.adapter.category.repository.category_repository:
     class: PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  prestashop.adapter.category.repository.category_preview_repository:
+    class: PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository
+    arguments:
+      - '@prestashop.adapter.category.repository.category_repository'
+      - '@prestashop.adapter.image.category_image_path_factory'
 
   prestashop.adapter.category.query_handler.get_categories_tree_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoriesTreeHandler
     arguments:
-        - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree

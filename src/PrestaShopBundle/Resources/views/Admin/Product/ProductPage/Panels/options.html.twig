@@ -158,9 +158,9 @@
                   <p class="subtitle">{{ 'Customers can personalize the product by entering some text or by providing custom image files.'|trans({}, 'Admin.Catalog.Feature') }}</p>
                   {{ form_errors(optionsForm.custom_fields) }}
                   <ul class="customFieldCollection nostyle" data-prototype="
-                              {% filter escape %}
+                              {% apply escape %}
                               {{ include('@Product/ProductPage/Forms/form_custom_fields.html.twig', { 'form': optionsForm.custom_fields.vars.prototype }) }}
-                              {% endfilter %}">
+                              {% endapply %}">
                     {% for field in optionsForm.custom_fields %}
                       <li>
                         {{ include('@Product/ProductPage/Forms/form_custom_fields.html.twig', { 'form': field }) }}

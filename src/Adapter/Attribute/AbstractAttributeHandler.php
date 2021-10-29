@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Attribute;
 
-use Attribute;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject\AttributeId;
 use PrestaShopException;
+use ProductAttribute;
 
 /**
  * Provides common methods for attribute command/query handlers
@@ -40,7 +40,7 @@ abstract class AbstractAttributeHandler
     /**
      * @param AttributeId $attributeId
      *
-     * @return Attribute
+     * @return ProductAttribute
      *
      * @throws AttributeException
      */
@@ -49,7 +49,7 @@ abstract class AbstractAttributeHandler
         $idValue = $attributeId->getValue();
 
         try {
-            $attribute = new Attribute($idValue);
+            $attribute = new ProductAttribute($idValue);
 
             if ($attribute->id !== $idValue) {
                 throw new AttributeNotFoundException(sprintf('Attribute with id "%s" was not found.', $idValue));
@@ -62,13 +62,13 @@ abstract class AbstractAttributeHandler
     }
 
     /**
-     * @param Attribute $attribute
+     * @param ProductAttribute $attribute
      *
      * @return bool
      *
      * @throws AttributeException
      */
-    protected function deleteAttribute(Attribute $attribute)
+    protected function deleteAttribute(ProductAttribute $attribute)
     {
         try {
             return $attribute->delete();

@@ -1,19 +1,19 @@
 services:
-    _defaults:
-        public: true
+  _defaults:
+    public: true
 
-    validator.unique.tinymce_max_length_validator:
-        class: PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLengthValidator
-        arguments:
-            - "@prestashop.adapter.validate"
-            - "@translator"
-        tags:
-            - { name: validator.constraint_validator, alias: tinymce_max_length_validator }
+  validator.unique.tinymce_max_length_validator:
+    class: PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLengthValidator
+    arguments:
+      - "@prestashop.adapter.validate"
+      - "@translator"
+    tags:
+      - { name: validator.constraint_validator, alias: tinymce_max_length_validator }
 
-    validator.unique.multiple_emails_with_separator_validator:
-        class: PrestaShopBundle\Form\Validator\Constraints\MultipleEmailsWithSeparatorValidator
-        arguments:
-            - "@prestashop.adapter.validate"
-            - "@translator"
-        tags:
-            - { name: validator.constraint_validator, alias: multiple_emails_with_separator_validator }
+   validator.unique.multiple_emails_with_separator_validator:
+     class: PrestaShopBundle\Form\Validator\Constraints\MultipleEmailsWithSeparatorValidator
+     arguments:
+       - "@prestashop.adapter.validate"
+       - "@translator"
+     tags:
+       - { name: validator.constraint_validator, alias: multiple_emails_with_separator_validator }

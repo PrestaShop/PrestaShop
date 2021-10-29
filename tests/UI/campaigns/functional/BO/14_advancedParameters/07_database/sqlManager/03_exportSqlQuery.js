@@ -27,7 +27,8 @@ let filePath;
 
 let numberOfSQLQueries = 0;
 
-const sqlQueryData = new SQLQueryFaker({tableName: 'ps_alias'});
+const dbPrefix = global.INSTALL.DB_PREFIX;
+const sqlQueryData = new SQLQueryFaker({tableName: `${dbPrefix}alias`});
 const fileContent = `${Tables.ps_alias.columns[1]};${Tables.ps_alias.columns[2]};${Tables.ps_alias.columns[3]}`;
 
 describe('Export SQL query', async () => {

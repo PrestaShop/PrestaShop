@@ -56,6 +56,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\PackOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
@@ -100,7 +101,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         Context::getContext()->currency = $currency;
-        SharedStorage::getStorage()->set($currencyIsoCode, $currency);
+        SharedStorage::getStorage()->set($currencyIsoCode, (int) $currency->id);
     }
 
     /**
@@ -136,9 +137,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateCartCurrency(string $cartReference, string $currencyReference)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($currencyReference);
-
+        $currency = $this->getCurrency($currencyReference);
         $cartId = SharedStorage::getStorage()->get($cartReference);
 
         $this->getCommandBus()->handle(
@@ -196,7 +195,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $command = new AddSpecificPriceCommand(
             $productId,
             Reduction::TYPE_AMOUNT,
-            0,
+            '0',
             true,
             $price,
             1
@@ -277,6 +276,8 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             // Clear cart static cache or it will have no products in next calls
             Cart::resetStaticCache();
         } catch (MinimalQuantityException $e) {
+            $this->setLastException($e);
+        } catch (PackOutOfStockException $e) {
             $this->setLastException($e);
         }
     }
@@ -381,7 +382,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I select :countryIsoCode address as delivery and invoice address for customer :customerReference in cart :cartReference
-     * @Given cart :cartReference delivery and invoice address country for customer :customeReferenceis is :countryIsoCode
+     * @Given cart :cartReference delivery and invoice address country for customer :customerReference is :countryIsoCode
      *
      * @param string $countryIsoCode
      * @param string $customerReference
@@ -971,12 +972,20 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then I should get error that carrier is invalid
      */
-    public function assertLastErrorIsInvalidCarrier()
+    public function assertLastErrorIsInvalidCarrier(): void
     {
         $this->assertLastErrorIs(
             CartConstraintException::class,
             CartConstraintException::INVALID_CARRIER
         );
+    }
+
+    /**
+     * @Then I should get an error that you have the maximum quantity available for this pack
+     */
+    public function assertLastErrorMaxQuantityAvailableForThisProduct(): void
+    {
+        $this->assertLastErrorIs(PackOutOfStockException::class);
     }
 
     /**
@@ -1102,5 +1111,47 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         if ($cartTotal !== $expectedTotal) {
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $cartTotal));
         }
+    }
+
+    /**
+     * @When I create an empty anonymous cart :cartReference
+     *
+     * @param string $cartReference
+     */
+    public function createEmptyAnonymousCart(string $cartReference)
+    {
+        $cart = new Cart();
+        $cart->id_currency = 1;
+        $cart->id_guest = 1;
+        $cart->save();
+        SharedStorage::getStorage()->set($cartReference, (int) $cart->id);
+    }
+
+    /**
+     * @When I assign customer :customerReference to cart :cartReference
+     *
+     * @param string $customerReference
+     * @param string $cartReference
+     */
+    public function assignCustomerToCart(string $customerReference, string $cartReference)
+    {
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+        $customerId = (int) SharedStorage::getStorage()->get($customerReference);
+
+        $cart = new Cart($cartId);
+        $cart->id_guest = null;
+        $cart->id_customer = $customerId;
+        $cart->save();
+        Context::getContext()->cart = $cart;
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return Currency
+     */
+    private function getCurrency(string $reference): Currency
+    {
+        return new Currency(SharedStorage::getStorage()->get($reference));
     }
 }

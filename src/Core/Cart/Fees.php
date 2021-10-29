@@ -82,7 +82,7 @@ class Fees
      * @param Cart $cart
      * @param CartRowCollection $cartRowCollection
      * @param int $computePrecision
-     * @param int $id_carrier
+     * @param int|null $id_carrier
      */
     public function processCalculation(
         Cart $cart,

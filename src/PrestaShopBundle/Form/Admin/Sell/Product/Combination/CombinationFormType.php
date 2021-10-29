@@ -29,9 +29,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
-use PrestaShopBundle\Form\Admin\Sell\Product\Options\ReferencesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\SuppliersType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Specification\ReferencesType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -49,17 +50,25 @@ class CombinationFormType extends TranslatorAwareType
     private $imagesChoiceProvider;
 
     /**
+     * @var EventSubscriberInterface
+     */
+    private $combinationListener;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param ConfigurableFormChoiceProviderInterface $imagesChoiceProvider
+     * @param EventSubscriberInterface $combinationListener
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        ConfigurableFormChoiceProviderInterface $imagesChoiceProvider
+        ConfigurableFormChoiceProviderInterface $imagesChoiceProvider,
+        EventSubscriberInterface $combinationListener
     ) {
         parent::__construct($translator, $locales);
         $this->imagesChoiceProvider = $imagesChoiceProvider;
+        $this->combinationListener = $combinationListener;
     }
 
     /**
@@ -87,6 +96,12 @@ class CombinationFormType extends TranslatorAwareType
                 'expanded' => true,
             ])
         ;
+
+        /*
+         * This listener adapts the content of the form based on the data, it can remove add or transforms some
+         * of the internal fields @see CombinationListener
+         */
+        $builder->addEventSubscriber($this->combinationListener);
     }
 
     /**

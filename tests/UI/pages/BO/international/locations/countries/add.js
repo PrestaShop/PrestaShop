@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add country page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddCountry extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add country page
+   */
   constructor() {
     super();
 
@@ -28,8 +37,8 @@ class AddCountry extends BOBasePage {
    */
   /**
    * Fill form for add/edit country
-   * @param page
-   * @param countryData
+   * @param page {Page} Browser tab
+   * @param countryData {CountryData} Data to set on new country form
    * @returns {Promise<string>}
    */
   async createEditCountry(page, countryData) {
@@ -46,6 +55,7 @@ class AddCountry extends BOBasePage {
     await page.check(this.displayTaxLabel(countryData.displayTaxNumber ? 'on' : 'off'));
     // Save country
     await this.clickAndWaitForNavigation(page, this.saveCountryButton);
+
     return this.getAlertSuccessBlockContent(page);
   }
 }

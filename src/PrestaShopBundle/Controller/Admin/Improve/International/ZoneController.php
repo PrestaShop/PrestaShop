@@ -180,7 +180,7 @@ class ZoneController extends FrameworkBundleAdminController
             }
         }
 
-        if (!isset($editableZone) || !isset($zoneForm)) {
+        if (!isset($zoneForm)) {
             return $this->redirectToRoute('admin_zones_index');
         }
 

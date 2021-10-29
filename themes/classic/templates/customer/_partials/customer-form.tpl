@@ -28,7 +28,7 @@
   {/block}
 
 <form action="{block name='customer_form_actionurl'}{$action}{/block}" id="customer-form" class="js-customer-form" method="post">
-  <section>
+  <div>
     {block "form_fields"}
       {foreach from=$formFields item="field"}
         {block "form_field"}
@@ -37,7 +37,7 @@
       {/foreach}
       {$hook_create_account_form nofilter}
     {/block}
-  </section>
+  </div>
 
   {block name='customer_form_footer'}
     <footer class="form-footer clearfix">

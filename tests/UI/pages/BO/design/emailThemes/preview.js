@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Preview theme page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class PreviewEmailTheme extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on preview theme page
+   */
   constructor() {
     super();
 
@@ -25,7 +34,7 @@ class PreviewEmailTheme extends BOBasePage {
 
   /**
    * Get number of layouts in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async getNumberOfLayoutInGrid(page) {
@@ -34,7 +43,7 @@ class PreviewEmailTheme extends BOBasePage {
 
   /**
    * Click on back to configuration button
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goBackToEmailThemesPage(page) {
@@ -43,8 +52,8 @@ class PreviewEmailTheme extends BOBasePage {
 
   /**
    * View raw html
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<Page>}
    */
   async viewRawHtml(page, row) {
@@ -62,8 +71,8 @@ class PreviewEmailTheme extends BOBasePage {
 
   /**
    * View raw text
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<*>}
    */
   async viewRawText(page, row) {
@@ -81,7 +90,7 @@ class PreviewEmailTheme extends BOBasePage {
 
   /**
    * Get text from view layout page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getTextFromViewLayoutPage(page) {

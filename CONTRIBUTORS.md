@@ -438,8 +438,10 @@ GitHub contributors:
 - Lucas CERDAN
 - Lucas Rolff
 - LucasC
+- Lukas Laurinaitis
 - Ludovic CHEVRAUX
 - Luis David de la Fuente
+- Lukas Laurinaitis
 - Lyo Nick
 - LyoNick
 - M-Mommsen
@@ -520,6 +522,7 @@ GitHub contributors:
 - Mickael ANDRIEU
 - Mickaël Andrieu
 - Mickael Desgranges
+- Mickaël Fernandez
 - Mikael Blotin
 - Mikko Hellsing
 - Milow
@@ -565,6 +568,7 @@ GitHub contributors:
 - oleacorner
 - Oleg Rumyancev
 - Olivier Bonvalet
+- Olivier Le Corre
 - Olivier Monaco
 - OneDotIT
 - Óscar García
@@ -684,6 +688,7 @@ GitHub contributors:
 - sadlyblue
 - sagaradonis
 - sallemiines
+- Sam
 - Sam Sanchez
 - Samir Shah
 - Samuel
@@ -697,6 +702,7 @@ GitHub contributors:
 - Seb33300
 - Sebastian Madejski
 - Sebastien
+- Sébastien Alfaiate
 - Sébastien Bareyre
 - Sebastien Bocahu
 - Sébastien LE BRUCHEC

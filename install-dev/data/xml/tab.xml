@@ -276,26 +276,6 @@
                         <wording>Updates</wording>
                         <wording_domain>Admin.Navigation.Menu</wording_domain>
                     </tab>
-                <tab id="Module_Catalog" id_parent="Modules" active="1" enabled="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentModulesCatalog</class_name>
-                    <wording>Module Catalog</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                    <tab id="Module_Page_Catalog" id_parent="Module_Catalog" active="1" enabled="1" hide_host_mode="0" icon="">
-                        <class_name>AdminModulesCatalog</class_name>
-                        <wording>Module Catalog</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Marketing_tools" id_parent="Module_Catalog" active="1" enabled="1" hide_host_mode="0" icon="">
-                        <class_name>AdminAddonsCatalog</class_name>
-                        <wording>Module Selections</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                <tab id="Module_Page_old" id_parent="Modules" active="0" enabled="1" hide_host_mode="0" icon="">
-                    <class_name>AdminModules</class_name>
-                    <wording/>
-                    <wording_domain/>
-                </tab>
 
             <!--LOOK & FEEL-->
             <tab id="Look_feel" id_parent="IMPROVE" active="1" enabled="1" hide_host_mode="0" icon="desktop_mac">
@@ -307,11 +287,6 @@
                 <tab id="Themes" id_parent="Look_feel" active="1" enabled="1" hide_host_mode="0" icon="">
                     <class_name>AdminThemes</class_name>
                     <wording>Theme &amp; Logo</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Themes_Catalog" id_parent="Look_feel" active="1" enabled="1" hide_host_mode="0" icon="">
-                    <class_name>AdminThemesCatalog</class_name>
-                    <wording>Theme Catalog</wording>
                     <wording_domain>Admin.Navigation.Menu</wording_domain>
                 </tab>
                 <tab id="Mail_Theme_Parent" id_parent="Look_feel" active="1" enabled="1" hide_host_mode="0" icon="">
@@ -703,4 +678,3 @@
       </tab>
     </entities>
 </entity_tab>
-

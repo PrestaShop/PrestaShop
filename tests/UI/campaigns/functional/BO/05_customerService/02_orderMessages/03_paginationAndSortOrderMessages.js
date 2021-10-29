@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -13,9 +17,6 @@ const OrderMessageFaker = require('@data/faker/orderMessage');
 const dashboardPage = require('@pages/BO/dashboard');
 const orderMessagesPage = require('@pages/BO/customerService/orderMessages');
 const addOrderMessagePage = require('@pages/BO/customerService/orderMessages/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customerService_orderMessages_paginationAndSortOrderMessages';
 
@@ -29,7 +30,7 @@ Paginate between pages
 Sort order messages table
 Delete order messages with bulk actions
  */
-describe('Order messages pagination and sort', async () => {
+describe('BO - Customer Service - Order Messages : Pagination and sort order messages', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -44,7 +45,7 @@ describe('Order messages pagination and sort', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to order messages page', async function () {
+  it('should go to \'Customer Message > Order Messages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -66,11 +67,11 @@ describe('Order messages pagination and sort', async () => {
     await expect(numberOfOrderMessages).to.be.above(0);
   });
 
-  const tests = new Array(10).fill(0, 0, 10);
-  tests.forEach((test, index) => {
-    const createOrderMessageData = new OrderMessageFaker({name: `toSortAndPaginate${index}`});
+  describe('Create 10 order messages in BO', async () => {
+    const tests = new Array(10).fill(0, 0, 10);
+    tests.forEach((test, index) => {
+      const createOrderMessageData = new OrderMessageFaker({name: `toSortAndPaginate${index}`});
 
-    describe(`Create order message n°${index + 1} in BO`, async () => {
       it('should go to add new order message page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewOrderMessagePage${index}`, baseContext);
 
@@ -79,7 +80,7 @@ describe('Order messages pagination and sort', async () => {
         await expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);
       });
 
-      it('should create order message', async function () {
+      it(`should create order message n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOrderMessage${index}`, baseContext);
 
         const textResult = await addOrderMessagePage.addEditOrderMessage(page, createOrderMessageData);
@@ -96,8 +97,8 @@ describe('Order messages pagination and sort', async () => {
   });
 
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 10 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+    it('should change the items number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
       const paginationNumber = await orderMessagesPage.selectPaginationLimit(page, '10');
       expect(paginationNumber).to.contains('(page 1 / 2)');
@@ -117,8 +118,8 @@ describe('Order messages pagination and sort', async () => {
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
-    it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+    it('should change the items number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await orderMessagesPage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.contains('(page 1 / 1)');
@@ -144,7 +145,7 @@ describe('Order messages pagination and sort', async () => {
     ];
 
     sortTests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await orderMessagesPage.getAllRowsColumnContent(page, test.args.sortBy);
@@ -179,7 +180,7 @@ describe('Order messages pagination and sort', async () => {
       await expect(textResult).to.contains('toSortAndPaginate');
     });
 
-    it('should delete order messages with Bulk Actions and check Result', async function () {
+    it('should delete order messages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
       const deleteTextResult = await orderMessagesPage.deleteWithBulkActions(page);

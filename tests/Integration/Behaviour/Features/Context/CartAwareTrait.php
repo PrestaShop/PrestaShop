@@ -27,7 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Context;
-use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
+use Tests\Integration\Utility\CartOld;
 
 /**
  * aims to provide access to cart through contexts

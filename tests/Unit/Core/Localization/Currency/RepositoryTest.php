@@ -43,7 +43,7 @@ class RepositoryTest extends TestCase
      */
     protected $currencyRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $dataSource = $this->createMock(CurrencyDataSourceInterface::class);
         $dataSource

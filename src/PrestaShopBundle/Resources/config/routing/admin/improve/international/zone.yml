@@ -2,7 +2,7 @@ admin_zones_index:
   path: /
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:index'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\ZoneController::indexAction'
     _legacy_controller: AdminZones
     _legacy_link: AdminZones
 
@@ -10,23 +10,23 @@ admin_zones_search:
   path: /
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:search'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\ZoneController::searchAction'
     _legacy_controller: AdminZones
     _legacy_link: AdminZones:submitFilterzone
 
 admin_zones_create:
   path: /new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:create'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\ZoneController::createAction'
     _legacy_controller: AdminZones
     _legacy_link: AdminZones:addzone
 
 admin_zones_edit:
   path: /{zoneId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:edit'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\ZoneController::editAction'
     _legacy_controller: AdminZones
     _legacy_link: AdminZones:updatezone
     _legacy_parameters:
@@ -36,9 +36,9 @@ admin_zones_edit:
 
 admin_zones_delete:
   path: /{zoneId}/delete
-  methods: [POST, DELETE]
+  methods: [ POST, DELETE ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:delete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\ZoneController::deleteAction'
     _legacy_controller: AdminZones
     _legacy_link: AdminZones:deletezone
     _legacy_parameters:
@@ -50,7 +50,7 @@ admin_zones_toggle_status:
   path: /{zoneId}/toggle-status
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:toggleStatus'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\ZoneController::toggleStatusAction'
     _legacy_controller: AdminZones
     _legacy_link: AdminZones:enableSelection
     _legacy_parameters:
@@ -60,9 +60,9 @@ admin_zones_toggle_status:
 
 admin_zones_bulk_delete:
   path: /bulk-delete
-  methods: [POST, DELETE]
+  methods: [ POST, DELETE ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:bulkDelete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\ZoneController::bulkDeleteAction'
     _legacy_controller: AdminZones
     _legacy_link: AdminZones:submitBulkdeletezone
 

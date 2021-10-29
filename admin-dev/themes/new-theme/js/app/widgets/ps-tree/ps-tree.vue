@@ -63,11 +63,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
   import {EventBus} from '@app/utils/event-bus';
-  import PSTreeItem from './ps-tree-item';
+  import PSTreeItem from './ps-tree-item.vue';
 
-  export default {
+  export default Vue.extend({
     name: 'PSTree',
     props: {
       model: {
@@ -93,21 +94,21 @@
       },
     },
     methods: {
-      onCheck(obj) {
+      onCheck(obj: any): void {
         this.$emit('checked', obj);
       },
-      expand() {
+      expand(): void {
         EventBus.$emit('expand');
       },
-      reduce() {
+      reduce(): void {
         EventBus.$emit('reduce');
       },
-      setCurrentElement(id) {
+      setCurrentElement(id: string | number): void {
         EventBus.$emit('setCurrentElement', id);
       },
     },
     components: {
       PSTreeItem,
     },
-  };
+  });
 </script>

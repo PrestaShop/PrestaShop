@@ -1,10 +1,14 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -15,9 +19,6 @@ const editCategoryPage = require('@pages/BO/catalog/categories/add');
 // Import data
 const CategoryFaker = require('@data/faker/category');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_catalog_categories_editHomeCategory';
 
 let browserContext;
@@ -25,7 +26,7 @@ let page;
 const editCategoryData = new CategoryFaker({name: 'Home'});
 
 // Edit home category
-describe('Edit home category', async () => {
+describe('BO - Catalog - Categories : Edit home category', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

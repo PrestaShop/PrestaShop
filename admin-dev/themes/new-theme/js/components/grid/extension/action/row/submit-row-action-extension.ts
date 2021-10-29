@@ -25,7 +25,7 @@
 import {Grid} from '@PSTypes/grid';
 import GridMap from '@components/grid/grid-map';
 
-import ConfirmModal from '@components/modal';
+import {ConfirmModal} from '@components/modal';
 
 const {$} = window;
 

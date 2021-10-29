@@ -31,6 +31,18 @@ namespace PrestaShop\PrestaShop\Adapter\Shop\Url;
 use Link;
 use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 8.0.0 and will be removed in the next major version. Use %s instead.',
+        ProductImageFolderProvider::class,
+        ImageFolderProvider::class
+    ),
+    E_USER_DEPRECATED
+);
+
+/**
+ * @deprecated Since 8.0.0 and will be removed in the next major version. Use ImageFolderProvider instead.
+ */
 class ProductImageFolderProvider implements UrlProviderInterface
 {
     /**

@@ -1,8 +1,8 @@
 admin_carts_view:
   path: /{cartId}/view
-  methods: [GET]
+  methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:view
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::viewAction
     _legacy_controller: AdminCarts
     _legacy_link: AdminCarts:viewcart
     _legacy_parameters:
@@ -14,9 +14,9 @@ admin_carts_view:
 
 admin_carts_info:
   path: /{cartId}/info
-  methods: [GET]
+  methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:getInfo
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::getInfoAction
     _legacy_controller: AdminCarts
   requirements:
     cartId: \d+
@@ -25,18 +25,18 @@ admin_carts_info:
 
 admin_carts_create:
   path: /new
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:create
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::createAction
     _legacy_controller: AdminCarts
   options:
     expose: true
 
 admin_carts_edit_addresses:
   path: /{cartId}/addresses
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editAddresses
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::editAddressesAction
     _legacy_controller: AdminCarts
   requirements:
     cartId: \d+
@@ -45,9 +45,9 @@ admin_carts_edit_addresses:
 
 admin_carts_edit_carrier:
   path: /{cartId}/carrier
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editCarrier
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::editCarrierAction
     _legacy_controller: AdminCarts
   requirements:
     cartId: \d+
@@ -56,9 +56,9 @@ admin_carts_edit_carrier:
 
 admin_carts_edit_currency:
   path: /{cartId}/currency
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editCurrency
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::editCurrencyAction
     _legacy_controller: AdminCarts
   requirements:
     cartId: \d+
@@ -67,9 +67,9 @@ admin_carts_edit_currency:
 
 admin_carts_edit_language:
   path: /{cartId}/language
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editLanguage
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::editLanguageAction
     _legacy_controller: AdminCarts
   requirements:
     cartId: \d+
@@ -78,9 +78,9 @@ admin_carts_edit_language:
 
 admin_carts_set_delivery_settings:
   path: /{cartId}/rules/delivery-settings
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:updateDeliverySettings
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::updateDeliverySettingsAction
     _legacy_controller: AdminCarts
   requirements:
     cartId: \d+
@@ -89,27 +89,27 @@ admin_carts_set_delivery_settings:
 
 admin_carts_add_cart_rule:
   path: /{cartId}/cart-rules
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:addCartRule
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::addCartRuleAction
     _legacy_controller: AdminCarts
   options:
     expose: true
 
 admin_carts_delete_cart_rule:
   path: /{cartId}/cart-rules/{cartRuleId}/delete
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:deleteCartRule
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::deleteCartRuleAction
     _legacy_controller: AdminCarts
   options:
     expose: true
 
 admin_carts_add_product:
   path: /{cartId}/products
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:addProduct
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::addProductAction
     _legacy_controller: AdminCarts
   options:
     expose: true
@@ -118,9 +118,9 @@ admin_carts_add_product:
 
 admin_carts_edit_product_price:
   path: /{cartId}/products/{productId}/price
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editProductPrice
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::editProductPriceAction
     _legacy_controller: AdminCarts
   options:
     expose: true
@@ -130,9 +130,9 @@ admin_carts_edit_product_price:
 
 admin_carts_edit_product_quantity:
   path: /{cartId}/products/{productId}/quantity
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editProductQuantity
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::editProductQuantityAction
     _legacy_controller: AdminCarts
   options:
     expose: true
@@ -142,9 +142,9 @@ admin_carts_edit_product_quantity:
 
 admin_carts_delete_product:
   path: /{cartId}/delete-product
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:deleteProduct
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::deleteProductAction
     _legacy_controller: AdminCarts
   options:
     expose: true

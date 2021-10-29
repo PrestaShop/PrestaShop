@@ -55,7 +55,7 @@ class ServerRequirementsCheckerTest extends TestCase
      */
     private $mockedPhpExtensionChecker;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mockedTranslator = $this->createMock(TranslatorInterface::class);
         $this->mockedTranslator

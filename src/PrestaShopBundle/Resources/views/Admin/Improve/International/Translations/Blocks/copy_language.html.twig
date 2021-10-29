@@ -24,7 +24,7 @@
  *#}
 
 {% trans_default_domain 'Admin.International.Feature' %}
-{% form_theme copyLanguageForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme copyLanguageForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block copy_language %}
   {{ form_start(copyLanguageForm, {action: path('admin_international_translations_copy_language')}) }}

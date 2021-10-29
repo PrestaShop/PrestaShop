@@ -109,7 +109,7 @@ class LocalizationPackCore
                 $id_lang = 1;
             }
 
-            if (!Language::isInstalled(Language::getIsoById($id_lang))) {
+            if (!empty($id_lang) && !Language::isInstalled(Language::getIsoById($id_lang))) {
                 $res &= $this->_installLanguages($xml, $install_mode);
                 $res &= $this->_installUnits($xml);
             }
@@ -491,7 +491,7 @@ class LocalizationPackCore
                 /** @var SimpleXMLElement $data */
                 $attributes = $data->attributes();
                 $name = (string) $attributes['name'];
-                if (isset($name) && $module = Module::getInstanceByName($name)) {
+                if ($module = Module::getInstanceByName($name)) {
                     $install = ($attributes['install'] == 1) ? true : false;
                     $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
                     $moduleManager = $moduleManagerBuilder->build();
@@ -535,7 +535,7 @@ class LocalizationPackCore
                 $attributes = $data->attributes();
                 $name = (string) $attributes['name'];
 
-                if (isset($name, $attributes['value']) && Configuration::get($name) !== false) {
+                if (isset($attributes['value']) && Configuration::get($name) !== false) {
                     if (!Configuration::updateValue($name, (string) $attributes['value'])) {
                         $this->_errors[] = Context::getContext()->getTranslator()->trans(
                             'An error occurred during the configuration setup: %1$s',

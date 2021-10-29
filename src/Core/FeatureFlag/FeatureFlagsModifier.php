@@ -76,7 +76,7 @@ class FeatureFlagsModifier implements DataConfigurationInterface
      */
     public function getAllFeatureFlags(): array
     {
-        return $this->doctrineEntityManager->getRepository('PrestaShopBundle:FeatureFlag')->findAll();
+        return $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findAll();
     }
 
     /**
@@ -134,6 +134,6 @@ class FeatureFlagsModifier implements DataConfigurationInterface
      */
     public function getOneFeatureFlagByName(string $featureFlagName): ?FeatureFlag
     {
-        return $this->doctrineEntityManager->getRepository('PrestaShopBundle:FeatureFlag')->findOneBy(['name' => $featureFlagName]);
+        return $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findOneBy(['name' => $featureFlagName]);
     }
 }

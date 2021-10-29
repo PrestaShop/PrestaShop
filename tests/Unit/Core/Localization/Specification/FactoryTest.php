@@ -42,8 +42,9 @@ class FactoryTest extends TestCase
      */
     protected $factory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
+        parent::setUp();
         $this->factory = new FactorySpecification();
     }
 
@@ -55,7 +56,7 @@ class FactoryTest extends TestCase
      *
      * @dataProvider getNumberData
      */
-    public function testBuildNumberSpecification($data, $expected)
+    public function testBuildNumberSpecification(array $data, array $expected): void
     {
         $specification = $this->factory->buildNumberSpecification(
             $this->createLocale(
@@ -70,7 +71,7 @@ class FactoryTest extends TestCase
         );
     }
 
-    public function getNumberData()
+    public function getNumberData(): array
     {
         return [
             [
@@ -142,9 +143,9 @@ class FactoryTest extends TestCase
      * Given a boolean to define if we should group digits in a number's integer part
      * Then calling buildPriceSpecification() should return an NumberSpecification
      *
-     * @dataProvider getPriceData
+     * @dataProvider getPriceDataWithPrecisions
      */
-    public function testBuildPriceSpecification($data, $expected)
+    public function testBuildPriceSpecification(array $data, array $expected): void
     {
         $specification = $this->factory->buildPriceSpecification(
             $data[0],
@@ -181,9 +182,9 @@ class FactoryTest extends TestCase
      * Given an integer to specify max fraction digits
      * Then calling buildPriceSpecification() should return an NumberSpecification
      *
-     * @dataProvider getPriceData
+     * @dataProvider getPriceDataWithPrecisions
      */
-    public function testBuildPriceSpecificationWithMax($data, $expected)
+    public function testBuildPriceSpecificationWithMax(array $data, array $expected): void
     {
         $maxFractionDigits = 3;
         $specification = $this->factory->buildPriceSpecification(
@@ -216,8 +217,57 @@ class FactoryTest extends TestCase
         $this->assertEquals($specification->getMaxFractionDigits(), $maxFractionDigits);
     }
 
-    public function getPriceData()
+    /**
+     * Given a valid CLDR locale
+     * Given a Max Fractions digits to display in a number's decimal
+     * Given a boolean to define if we should group digits in a number's integer part
+     * Given an integer to specify max fraction digits
+     * Then calling buildPriceSpecification() should return an NumberSpecification
+     *
+     * @dataProvider getPriceDataWithPrecisions
+     */
+    public function testBuildPriceSpecificationWithPrecisionFallback(array $data, array $expected): void
     {
+        $currencyPrecision = $data[4]['currencyPrecision'];
+        $maxFractionDigits = $data[4]['maxFractionDigits'];
+        $expectedMinFractionDigits = $data[4]['expectedMinFractionDigits'];
+
+        $specification = $this->factory->buildPriceSpecification(
+            $data[0],
+            $this->createLocale(
+                ...$data
+            ),
+            new Currency(
+                null,
+                null,
+                'EUR',
+                '978',
+                [
+                    $data[0] => '€',
+                ],
+                $currencyPrecision,
+                [
+                    $data[0] => 'Euro',
+                ]
+            ),
+            3,
+            true,
+            $maxFractionDigits
+        );
+        $expected['maxFractionDigits'] = $maxFractionDigits;
+        $expected['minFractionDigits'] = $expectedMinFractionDigits;
+        self::assertEquals(
+            $expected,
+            $specification->toArray()
+        );
+        self::assertEquals($specification->getMaxFractionDigits(), $maxFractionDigits);
+    }
+
+    public function getPriceDataWithPrecisions(): array
+    {
+        // if maxFractionDigits < minFractionDigits, minFractionDigits = maxFractionDigits
+        // see PrestaShop\PrestaShop\Core\Localization\Specification\Number
+        // The dataProvider provides minFractionDigits === 2
         return [
             [
                 [
@@ -225,6 +275,11 @@ class FactoryTest extends TestCase
                     '¤ #,##0.00;¤ -#,##0.00',
                     '#,##0%',
                     '#,##0.###',
+                    [
+                        'currencyPrecision' => 6,
+                        'maxFractionDigits' => 3,
+                        'expectedMinFractionDigits' => 3,
+                    ],
                 ],
                 [
                     'positivePattern' => '¤ #,##0.00',
@@ -257,6 +312,381 @@ class FactoryTest extends TestCase
                     '#,##0.00 ¤',
                     '#,##0 %',
                     '#,##0.###',
+                    [
+                        'currencyPrecision' => 6,
+                        'maxFractionDigits' => 3,
+                        'expectedMinFractionDigits' => 3,
+                    ],
+                ],
+                [
+                    'positivePattern' => '#,##0.00 ¤',
+                    'negativePattern' => '-#,##0.00 ¤',
+                    'maxFractionDigits' => 5,
+                    'minFractionDigits' => 2,
+                    'groupingUsed' => true,
+                    'primaryGroupSize' => 3,
+                    'secondaryGroupSize' => 3,
+                    'currencyCode' => 'EUR',
+                    'currencySymbol' => '€',
+                    'numberSymbols' => [
+                        ',',
+                        '.',
+                        ';',
+                        '%',
+                        '-',
+                        '+',
+                        'E',
+                        "\u{00d7}",
+                        "\u{2030}",
+                        "\u{221e}",
+                        'NaN',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'nl-NL',
+                    '¤ #,##0.00;¤ -#,##0.00',
+                    '#,##0%',
+                    '#,##0.###',
+                    [
+                        'currencyPrecision' => 6,
+                        'maxFractionDigits' => 6,
+                        'expectedMinFractionDigits' => 6,
+                    ],
+                ],
+                [
+                    'positivePattern' => '¤ #,##0.00',
+                    'negativePattern' => '¤ -#,##0.00',
+                    'maxFractionDigits' => 2,
+                    'minFractionDigits' => 2,
+                    'groupingUsed' => true,
+                    'primaryGroupSize' => 3,
+                    'secondaryGroupSize' => 3,
+                    'currencyCode' => 'EUR',
+                    'currencySymbol' => '€',
+                    'numberSymbols' => [
+                        ',',
+                        '.',
+                        ';',
+                        '%',
+                        '-',
+                        '+',
+                        'E',
+                        "\u{00d7}",
+                        "\u{2030}",
+                        "\u{221e}",
+                        'NaN',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'fr-FR',
+                    '#,##0.00 ¤',
+                    '#,##0 %',
+                    '#,##0.###',
+                    [
+                        'currencyPrecision' => 6,
+                        'maxFractionDigits' => 6,
+                        'expectedMinFractionDigits' => 6,
+                    ],
+                ],
+                [
+                    'positivePattern' => '#,##0.00 ¤',
+                    'negativePattern' => '-#,##0.00 ¤',
+                    'maxFractionDigits' => 5,
+                    'minFractionDigits' => 2,
+                    'groupingUsed' => true,
+                    'primaryGroupSize' => 3,
+                    'secondaryGroupSize' => 3,
+                    'currencyCode' => 'EUR',
+                    'currencySymbol' => '€',
+                    'numberSymbols' => [
+                        ',',
+                        '.',
+                        ';',
+                        '%',
+                        '-',
+                        '+',
+                        'E',
+                        "\u{00d7}",
+                        "\u{2030}",
+                        "\u{221e}",
+                        'NaN',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'nl-NL',
+                    '¤ #,##0.00;¤ -#,##0.00',
+                    '#,##0%',
+                    '#,##0.###',
+                    [
+                        'currencyPrecision' => 1,
+                        'maxFractionDigits' => 3,
+                        'expectedMinFractionDigits' => 1,
+                    ],
+                ],
+                [
+                    'positivePattern' => '¤ #,##0.00',
+                    'negativePattern' => '¤ -#,##0.00',
+                    'maxFractionDigits' => 2,
+                    'minFractionDigits' => 2,
+                    'groupingUsed' => true,
+                    'primaryGroupSize' => 3,
+                    'secondaryGroupSize' => 3,
+                    'currencyCode' => 'EUR',
+                    'currencySymbol' => '€',
+                    'numberSymbols' => [
+                        ',',
+                        '.',
+                        ';',
+                        '%',
+                        '-',
+                        '+',
+                        'E',
+                        "\u{00d7}",
+                        "\u{2030}",
+                        "\u{221e}",
+                        'NaN',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'fr-FR',
+                    '#,##0.00 ¤',
+                    '#,##0 %',
+                    '#,##0.###',
+                    [
+                        'currencyPrecision' => 1,
+                        'maxFractionDigits' => 3,
+                        'expectedMinFractionDigits' => 1,
+                    ],
+                ],
+                [
+                    'positivePattern' => '#,##0.00 ¤',
+                    'negativePattern' => '-#,##0.00 ¤',
+                    'maxFractionDigits' => 5,
+                    'minFractionDigits' => 2,
+                    'groupingUsed' => true,
+                    'primaryGroupSize' => 3,
+                    'secondaryGroupSize' => 3,
+                    'currencyCode' => 'EUR',
+                    'currencySymbol' => '€',
+                    'numberSymbols' => [
+                        ',',
+                        '.',
+                        ';',
+                        '%',
+                        '-',
+                        '+',
+                        'E',
+                        "\u{00d7}",
+                        "\u{2030}",
+                        "\u{221e}",
+                        'NaN',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'nl-NL',
+                    '¤ #,##0.00;¤ -#,##0.00',
+                    '#,##0%',
+                    '#,##0.###',
+                    [
+                        'currencyPrecision' => '4',
+                        'maxFractionDigits' => 6,
+                        'expectedMinFractionDigits' => 4,
+                    ],
+                ],
+                [
+                    'positivePattern' => '¤ #,##0.00',
+                    'negativePattern' => '¤ -#,##0.00',
+                    'maxFractionDigits' => 2,
+                    'minFractionDigits' => 2,
+                    'groupingUsed' => true,
+                    'primaryGroupSize' => 3,
+                    'secondaryGroupSize' => 3,
+                    'currencyCode' => 'EUR',
+                    'currencySymbol' => '€',
+                    'numberSymbols' => [
+                        ',',
+                        '.',
+                        ';',
+                        '%',
+                        '-',
+                        '+',
+                        'E',
+                        "\u{00d7}",
+                        "\u{2030}",
+                        "\u{221e}",
+                        'NaN',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'fr-FR',
+                    '#,##0.00 ¤',
+                    '#,##0 %',
+                    '#,##0.###',
+                    [
+                        'currencyPrecision' => '4',
+                        'maxFractionDigits' => 6,
+                        'expectedMinFractionDigits' => 4,
+                    ],
+                ],
+                [
+                    'positivePattern' => '#,##0.00 ¤',
+                    'negativePattern' => '-#,##0.00 ¤',
+                    'maxFractionDigits' => 5,
+                    'minFractionDigits' => 2,
+                    'groupingUsed' => true,
+                    'primaryGroupSize' => 3,
+                    'secondaryGroupSize' => 3,
+                    'currencyCode' => 'EUR',
+                    'currencySymbol' => '€',
+                    'numberSymbols' => [
+                        ',',
+                        '.',
+                        ';',
+                        '%',
+                        '-',
+                        '+',
+                        'E',
+                        "\u{00d7}",
+                        "\u{2030}",
+                        "\u{221e}",
+                        'NaN',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'nl-NL',
+                    '¤ #,##0.00;¤ -#,##0.00',
+                    '#,##0%',
+                    '#,##0.###',
+                    [
+                        'currencyPrecision' => null,
+                        'maxFractionDigits' => 6,
+                        'expectedMinFractionDigits' => 2,
+                    ],
+                ],
+                [
+                    'positivePattern' => '¤ #,##0.00',
+                    'negativePattern' => '¤ -#,##0.00',
+                    'maxFractionDigits' => 2,
+                    'minFractionDigits' => 2,
+                    'groupingUsed' => true,
+                    'primaryGroupSize' => 3,
+                    'secondaryGroupSize' => 3,
+                    'currencyCode' => 'EUR',
+                    'currencySymbol' => '€',
+                    'numberSymbols' => [
+                        ',',
+                        '.',
+                        ';',
+                        '%',
+                        '-',
+                        '+',
+                        'E',
+                        "\u{00d7}",
+                        "\u{2030}",
+                        "\u{221e}",
+                        'NaN',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'fr-FR',
+                    '#,##0.00 ¤',
+                    '#,##0 %',
+                    '#,##0.###',
+                    [
+                        'currencyPrecision' => null,
+                        'maxFractionDigits' => 6,
+                        'expectedMinFractionDigits' => 2,
+                    ],
+                ],
+                [
+                    'positivePattern' => '#,##0.00 ¤',
+                    'negativePattern' => '-#,##0.00 ¤',
+                    'maxFractionDigits' => 5,
+                    'minFractionDigits' => 2,
+                    'groupingUsed' => true,
+                    'primaryGroupSize' => 3,
+                    'secondaryGroupSize' => 3,
+                    'currencyCode' => 'EUR',
+                    'currencySymbol' => '€',
+                    'numberSymbols' => [
+                        ',',
+                        '.',
+                        ';',
+                        '%',
+                        '-',
+                        '+',
+                        'E',
+                        "\u{00d7}",
+                        "\u{2030}",
+                        "\u{221e}",
+                        'NaN',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'nl-NL',
+                    '¤ #,##0.00;¤ -#,##0.00',
+                    '#,##0%',
+                    '#,##0.###',
+                    [
+                        'currencyPrecision' => [],
+                        'maxFractionDigits' => 6,
+                        'expectedMinFractionDigits' => 2,
+                    ],
+                ],
+                [
+                    'positivePattern' => '¤ #,##0.00',
+                    'negativePattern' => '¤ -#,##0.00',
+                    'maxFractionDigits' => 2,
+                    'minFractionDigits' => 2,
+                    'groupingUsed' => true,
+                    'primaryGroupSize' => 3,
+                    'secondaryGroupSize' => 3,
+                    'currencyCode' => 'EUR',
+                    'currencySymbol' => '€',
+                    'numberSymbols' => [
+                        ',',
+                        '.',
+                        ';',
+                        '%',
+                        '-',
+                        '+',
+                        'E',
+                        "\u{00d7}",
+                        "\u{2030}",
+                        "\u{221e}",
+                        'NaN',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'fr-FR',
+                    '#,##0.00 ¤',
+                    '#,##0 %',
+                    '#,##0.###',
+                    [
+                        'currencyPrecision' => [],
+                        'maxFractionDigits' => 6,
+                        'expectedMinFractionDigits' => 2,
+                    ],
                 ],
                 [
                     'positivePattern' => '#,##0.00 ¤',
@@ -294,14 +724,14 @@ class FactoryTest extends TestCase
      * @param string $percentPattern
      * @param string $decimalPattern
      *
-     * @return LocaleData
+     * @return Locale
      */
     private function createLocale(
-        $code,
-        $currencyPattern,
-        $percentPattern,
-        $decimalPattern
-    ) {
+        string $code,
+        string $currencyPattern,
+        string $percentPattern,
+        string $decimalPattern
+    ): Locale {
         $localeData = new LocaleData();
         $localeData->setLocaleCode($code);
         $localeData->setDefaultNumberingSystem('latn');

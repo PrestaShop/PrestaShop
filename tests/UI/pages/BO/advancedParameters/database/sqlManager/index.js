@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Sql manager page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class SqlManager extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on sql manager page
+   */
   constructor() {
     super();
 
@@ -24,7 +33,7 @@ class SqlManager extends BOBasePage {
     this.sqlQueryListTableViewLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-view-row-link`;
     this.sqlQueryListTableEditLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-edit-row-link`;
     this.sqlQueryListTableDeleteLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-delete-row-link`;
-    this.sqlQueryListTableExportLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/export']`;
+    this.sqlQueryListTableExportLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-export-row-link`;
 
     // Filters
     this.filterInput = filterBy => `${this.sqlQueryListForm} #sql_request_${filterBy}`;
@@ -44,7 +53,7 @@ class SqlManager extends BOBasePage {
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.sqlQueryGridPanel} .col-form-label`;
     this.paginationNextLink = `${this.sqlQueryGridPanel} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.sqlQueryGridPanel} [aria-label='Previous']`;
+    this.paginationPreviousLink = `${this.sqlQueryGridPanel} .pagination .previous a.page-link`;
 
     // Bulk Actions
     this.selectAllRowsDiv = `${this.sqlQueryListForm} tr.column-filters .grid_bulk_action_select_all`;
@@ -59,7 +68,7 @@ class SqlManager extends BOBasePage {
   /* Header Methods */
   /**
    * Go to db Backup page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToDbBackupPage(page) {
@@ -68,7 +77,7 @@ class SqlManager extends BOBasePage {
 
   /**
    * Go to new SQL query page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToNewSQLQueryPage(page) {
@@ -77,7 +86,7 @@ class SqlManager extends BOBasePage {
 
   /**
    * Reset filter
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
@@ -88,7 +97,7 @@ class SqlManager extends BOBasePage {
 
   /**
    * Get number of elements in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -97,7 +106,7 @@ class SqlManager extends BOBasePage {
 
   /**
    * Reset input filters
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -107,22 +116,22 @@ class SqlManager extends BOBasePage {
 
   /**
    * Filter SQL manager table
-   * @param page
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to put on filter
    * @returns {Promise<void>}
    */
   async filterSQLQuery(page, filterBy, value = '') {
-    await this.setValue(page, this.filterInput(filterBy), value.toString());
+    await this.setValue(page, this.filterInput(filterBy), value);
     // click on search
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Get text column from table
-   * @param page
-   * @param row
-   * @param column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column to get text value
    * @returns {Promise<string>}
    */
   getTextColumnFromTable(page, row, column) {
@@ -131,9 +140,9 @@ class SqlManager extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param column
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @param column {string} Column to get text value
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -141,7 +150,7 @@ class SqlManager extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTable(page, i, column);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -149,8 +158,8 @@ class SqlManager extends BOBasePage {
 
   /**
    * Go to view sql query page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<void>}
    */
   async goToViewSQLQueryPage(page, row = 1) {
@@ -166,8 +175,8 @@ class SqlManager extends BOBasePage {
 
   /**
    * Go to edit SQL query page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<void>}
    */
   async goToEditSQLQueryPage(page, row = 1) {
@@ -182,8 +191,8 @@ class SqlManager extends BOBasePage {
 
   /**
    * Delete SQL query
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async deleteSQLQuery(page, row = 1) {
@@ -202,6 +211,7 @@ class SqlManager extends BOBasePage {
     ]);
 
     await this.confirmDeleteSQLQuery(page);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -217,7 +227,7 @@ class SqlManager extends BOBasePage {
 
   /**
    * Confirm delete with modal
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async confirmDeleteSQLQuery(page) {
@@ -227,9 +237,9 @@ class SqlManager extends BOBasePage {
   /* Sort functions */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -248,7 +258,7 @@ class SqlManager extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -257,8 +267,8 @@ class SqlManager extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -272,7 +282,7 @@ class SqlManager extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -283,7 +293,7 @@ class SqlManager extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -294,7 +304,7 @@ class SqlManager extends BOBasePage {
 
   /**
    * Delete all sql queries with Bulk Actions
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async deleteWithBulkActions(page) {

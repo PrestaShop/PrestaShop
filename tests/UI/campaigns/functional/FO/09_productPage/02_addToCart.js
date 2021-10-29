@@ -7,10 +7,13 @@ const loginCommon = require('@commonTests/loginBO');
 const files = require('@utils/files');
 
 // Import pages
+// FO
 const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
 const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
+
+// BO
 const boDashboardPage = require('@pages/BO/dashboard');
 const boProductsPage = require('@pages/BO/catalog/products');
 const boAddProductPage = require('@pages/BO/catalog/products/add');
@@ -41,14 +44,14 @@ const productData = new ProductFaker(productToCreate);
 /*
 Check product details
 Change product quantity
-Choose combination( size, color)
+Choose combination (size, color)
 Edit combination and add to cart
 Check product details on the cart
 Change image from product page
 Check share links
  */
 
-describe('Add product to cart', async () => {
+describe('FO - product page : Add product to cart', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

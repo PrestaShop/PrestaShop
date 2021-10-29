@@ -133,7 +133,7 @@
                 {% elseif module.attributes.multistoreCompatibility is same as(constant('\\Module::MULTISTORE_COMPATIBILITY_NOT_CONCERNED')) %}
                   {{ 'This module is not compatible with the multistore feature because it would not be useful.'|trans({}, 'Admin.Modules.Feature') }}
                 {% elseif module.attributes.multistoreCompatibility is same as(constant('\\Module::MULTISTORE_COMPATIBILITY_NO')) %}
-                  {{ 'This module is not compatible with the multistore feature. It means that its configuration applies for all stores.'|trans({}, 'Admin.Modules.Feature') }}
+                  {{ 'This module is not compatible with the multistore feature. It means that its configuration applies to all stores.'|trans({}, 'Admin.Modules.Feature') }}
                 {% endif %}
               </div>
             {% endif %}

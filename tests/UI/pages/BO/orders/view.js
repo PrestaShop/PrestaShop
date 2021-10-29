@@ -34,7 +34,7 @@ class Order extends BOBasePage {
     this.editShippingAddressButton = '#js-delivery-address-edit-btn';
     this.selectAnotherShippingAddressButton = `${this.shippingAddressBlock} .js-update-customer-address-modal-btn`;
     this.changeOrderAddressSelect = '#change_order_address_new_address_id';
-    this.submitAnotherAddressButton = 'form[name="change_order_address"] .modal-footer button[type="submit"]';
+    this.submitAnotherAddressButton = '#change-address-submit-button';
     this.editAddressIframe = 'iframe.fancybox-iframe';
     this.invoiceAddressBlock = '#addressInvoice';
     this.invoiceAddressToolTipLink = `${this.invoiceAddressBlock} .tooltip-link`;
@@ -48,12 +48,13 @@ class Order extends BOBasePage {
     // Products block
     this.productsCountSpan = '#orderProductsPanelCount';
     this.orderProductsTableProductName = row => `${this.orderProductsTableNameColumn(row)} p.productName`;
+    this.orderProductsTableProductReference = row => `${this.orderProductsTableNameColumn(row)} p.productReference`;
     this.orderProductsTableProductBasePrice = row => `${this.orderProductsRowTable(row)} td.cellProductUnitPrice`;
     this.orderProductsTableProductQuantity = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity`;
     this.orderProductsTableProductAvailable = row => `${this.orderProductsRowTable(row)}
      td.cellProductAvailableQuantity`;
     this.orderProductsTableProductPrice = row => `${this.orderProductsRowTable(row)} td.cellProductTotalPrice`;
-    this.deleteProductButton = row => `${this.orderProductsRowTable(row)} button[data-original-title='Delete']`;
+    this.deleteProductButton = row => `${this.orderProductsRowTable(row)} button.js-order-product-delete-btn`;
 
     // Order card
     this.orderProductsTable = '#orderProductsTable';
@@ -75,6 +76,7 @@ class Order extends BOBasePage {
     this.addProductRowQuantity = '#add_product_row_quantity';
     this.addProductRowStockLocation = '#addProductLocation';
     this.addProductAvailable = '#addProductAvailable';
+    this.addProductTotalPrice = '#addProductTotalPrice';
     this.addProductAddButton = '#add_product_row_add';
     this.addProductCancelButton = '#add_product_row_cancel';
 
@@ -92,8 +94,8 @@ class Order extends BOBasePage {
     this.documentTab = 'a#orderDocumentsTab';
     this.documentsTableDiv = '#orderDocumentsTabContent';
     this.documentsTableRow = row => `${this.documentsTableDiv} table tbody tr:nth-child(${row})`;
-    this.documentNumberLink = row => `${this.documentsTableRow(row)} td:nth-child(3) a`;
-    this.documentName = row => `${this.documentsTableRow(row)} td:nth-child(2)`;
+    this.documentNumberLink = row => `${this.documentsTableRow(row)} td.documents-table-column-download-link a`;
+    this.documentType = row => `${this.documentsTableRow(row)} td.documents-table-column-type`;
 
     // Refund form
     this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
@@ -160,7 +162,7 @@ class Order extends BOBasePage {
    * Modify product price
    * @param page {Page} Browser tab
    * @param row {number} Product row on table
-   * @param price {float} Price to edit
+   * @param price {number} Price to edit
    * @returns {Promise<void>}
    */
   async modifyProductPrice(page, row, price) {
@@ -236,7 +238,7 @@ class Order extends BOBasePage {
         })),
     );
 
-    options = await options.filter(option => statusName === option.textContent);
+    options = options.filter(option => statusName === option.textContent);
     return options.length !== 0;
   }
 
@@ -255,10 +257,10 @@ class Order extends BOBasePage {
    * @param rowChild {number} Document row on table
    * @returns {Promise<string>}
    */
-  async getDocumentName(page, rowChild = 1) {
+  async getDocumentType(page, rowChild = 1) {
     await this.goToDocumentsTab(page);
 
-    return this.getTextContent(page, this.documentName(rowChild));
+    return this.getTextContent(page, this.documentType(rowChild));
   }
 
   /**
@@ -342,7 +344,7 @@ class Order extends BOBasePage {
   /**
    * Download delivery slip
    * @param page {Page} Browser tab
-   * @returns {Promise<*>}
+   * @returns {Promise<string>}
    */
   async downloadDeliverySlip(page) {
     /* eslint-disable no-return-assign, no-param-reassign */
@@ -401,7 +403,7 @@ class Order extends BOBasePage {
   /**
    * Edit existing shipping address
    * @param page {Page} Browser tab
-   * @param addressData {object} Shipping address data to edit
+   * @param addressData {AddressData} Shipping address data to edit
    * @returns {Promise<void>}
    */
   async editExistingShippingAddress(page, addressData) {
@@ -416,7 +418,7 @@ class Order extends BOBasePage {
 
     await Promise.all([
       addressFrame.click(addAddressPage.saveAddressButton),
-      page.waitForSelector(this.editAddressIframe, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.editAddressIframe),
     ]);
 
     return this.getShippingAddress(page);
@@ -441,7 +443,7 @@ class Order extends BOBasePage {
   /**
    * Edit existing shipping address
    * @param page {Page} Browser tab
-   * @param addressData {object} Invoice address data to edit
+   * @param addressData {AddressData} Invoice address data to edit
    * @returns {Promise<void>}
    */
   async editExistingInvoiceAddress(page, addressData) {
@@ -456,7 +458,7 @@ class Order extends BOBasePage {
 
     await Promise.all([
       addressFrame.click(addAddressPage.saveAddressButton),
-      page.waitForSelector(this.editAddressIframe, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.editAddressIframe),
     ]);
 
     return this.getInvoiceAddress(page);
@@ -543,12 +545,13 @@ class Order extends BOBasePage {
   /**
    * Get searched product details
    * @param page {Page} Browser tab
-   * @returns {Promise<[]>}
+   * @returns {Promise<{stockLocation: string, available: number}>}
    */
   async getSearchedProductDetails(page) {
     return {
       stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
       available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
+      price: parseFloat(await this.getTextContent(page, this.addProductTotalPrice)),
     };
   }
 
@@ -596,14 +599,24 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Is add product table row visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isAddProductTableRowVisible(page) {
+    return this.elementVisible(page, this.addProductTableRow, 1000);
+  }
+
+  /**
    * Get product details
    * @param page {Page} Browser tab
    * @param row {number} Product row on table
-   * @returns {Promise<[]>}
+   * @returns {Promise<{total: number, quantity: number, name: string, available: number, basePrice: number}>}
    */
   async getProductDetails(page, row) {
     return {
       name: await this.getTextContent(page, this.orderProductsTableProductName(row)),
+      reference: await this.getTextContent(page, this.orderProductsTableProductReference(row)),
       basePrice: parseFloat((await this.getTextContent(
         page,
         this.orderProductsTableProductBasePrice(row))).replace('€', ''),

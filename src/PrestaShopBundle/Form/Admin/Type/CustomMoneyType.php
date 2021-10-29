@@ -27,15 +27,16 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CustomMoneyType extends AbstractTypeExtension
 {
     public const PRESTASHOP_DECIMALS = 6;
 
-    public function getExtendedType()
+    public static function getExtendedTypes(): iterable
     {
-        return 'Symfony\Component\Form\Extension\Core\Type\MoneyType';
+        return [MoneyType::class];
     }
 
     /**

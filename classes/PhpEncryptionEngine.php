@@ -83,8 +83,8 @@ class PhpEncryptionEngineCore
     }
 
     /**
-     * @param $header
-     * @param $bytes
+     * @param string $header
+     * @param string $bytes
      *
      * @return string
      *
@@ -106,7 +106,7 @@ class PhpEncryptionEngineCore
     }
 
     /**
-     * @param $hexString
+     * @param string $hexString
      *
      * @return Key
      */
@@ -119,9 +119,6 @@ class PhpEncryptionEngineCore
      * @return string
      *
      * @throws Exception
-     *
-     * @see https://github.com/paragonie/random_compat/blob/v1.4.1/lib/random_bytes_openssl.php
-     * @see https://github.com/paragonie/random_compat/blob/v1.4.1/lib/random_bytes_mcrypt.php
      */
     public static function randomCompat()
     {
@@ -131,19 +128,8 @@ class PhpEncryptionEngineCore
         $buf = openssl_random_pseudo_bytes($bytes, $secure);
         if (
             $buf !== false
-            &&
-            $secure
-            &&
-            RandomCompat_strlen($buf) === $bytes
-        ) {
-            return $buf;
-        }
-
-        $buf = @mcrypt_create_iv($bytes, MCRYPT_DEV_URANDOM);
-        if (
-            $buf !== false
-            &&
-            RandomCompat_strlen($buf) === $bytes
+            && $secure
+            && mb_strlen($buf, '8bit') === $bytes
         ) {
             return $buf;
         }
@@ -152,7 +138,7 @@ class PhpEncryptionEngineCore
     }
 
     /**
-     * @param $buf
+     * @param string $buf
      *
      * @return string
      */

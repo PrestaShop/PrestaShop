@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Zones page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Zones extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on zones page
+   */
   constructor() {
     super();
 
@@ -61,7 +70,7 @@ class Zones extends BOBasePage {
   /* Header methods */
   /**
    * Go to sub tab countries
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToSubTabCountries(page) {
@@ -70,7 +79,7 @@ class Zones extends BOBasePage {
 
   /**
    * Go to sub tab states
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToSubTabStates(page) {
@@ -78,8 +87,8 @@ class Zones extends BOBasePage {
   }
 
   /**
-   * Go To add new zone page
-   * @param page
+   * Go to add new zone page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewZonePage(page) {
@@ -89,7 +98,7 @@ class Zones extends BOBasePage {
   /* Filter Methods */
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -100,8 +109,8 @@ class Zones extends BOBasePage {
   }
 
   /**
-   * Get Number of zones
-   * @param page
+   * Get number of zones
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -110,20 +119,21 @@ class Zones extends BOBasePage {
 
   /**
    * Reset and get number of zones
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 
   /**
    * Filter zones
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
   async filterZones(page, filterType, filterBy, value = '') {
@@ -147,9 +157,9 @@ class Zones extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Column name to get text column
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -158,8 +168,8 @@ class Zones extends BOBasePage {
 
   /**
    * Get zone status
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
   async getZoneStatus(page, row) {
@@ -175,9 +185,9 @@ class Zones extends BOBasePage {
 
   /**
    * Set zone status
-   * @param page
-   * @param row
-   * @param wantedStatus
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param wantedStatus {boolean} True if we need to enable zone status
    * @return {Promise<boolean>}, true if click has been performed
    */
   async setZoneStatus(page, row, wantedStatus) {
@@ -191,8 +201,8 @@ class Zones extends BOBasePage {
 
   /**
    * Go to edit zone page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async goToEditZonePage(page, row) {
@@ -201,8 +211,8 @@ class Zones extends BOBasePage {
 
   /**
    * Delete zone
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {Number} Row on table
    * @return {Promise<string>}
    */
   async deleteZone(page, row) {
@@ -220,14 +230,15 @@ class Zones extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name to get all rows column content
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -235,7 +246,7 @@ class Zones extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -245,7 +256,7 @@ class Zones extends BOBasePage {
 
   /**
    * Select all rows
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async bulkSelectRows(page) {
@@ -258,7 +269,7 @@ class Zones extends BOBasePage {
 
   /**
    * Bulk delete
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async bulkDeleteZones(page) {
@@ -275,13 +286,14 @@ class Zones extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Bulk set status
-   * @param page
-   * @param wantedStatus
+   * @param page {Page} Browser tab
+   * @param wantedStatus {boolean} True if we need to bulk enable status, false if not
    * @return {Promise<string>}
    */
   async bulkSetStatus(page, wantedStatus) {
@@ -294,14 +306,15 @@ class Zones extends BOBasePage {
     ]);
     // Click to change status
     await this.clickAndWaitForNavigation(page, wantedStatus ? this.enableSelectionButton : this.disableSelectionButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Sort table
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -320,7 +333,7 @@ class Zones extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -329,18 +342,19 @@ class Zones extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Number of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+
     return this.getPaginationLabel(page);
   }
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -351,7 +365,7 @@ class Zones extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {

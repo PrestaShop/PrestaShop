@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Contact us page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class ContactUs extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on contact us page
+   */
   constructor() {
     super();
 
@@ -14,7 +23,7 @@ class ContactUs extends FOBasePage {
     // Form selectors
     this.subjectSelect = '#content select[name=\'id_contact\']';
     this.emailAddressInput = '#content input[name=\'from\']';
-    this.attachmentLabel = '#filestyle-0';
+    this.attachmentLabel = '#file-upload';
     this.orderReferenceSelect = 'select[name=id_order]';
     this.messageTextarea = '#content textarea[name=\'message\']';
     this.sendButton = '#content input[name=\'submitMessage\']';

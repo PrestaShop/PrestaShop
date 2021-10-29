@@ -48,9 +48,13 @@ export default class CombinationsManager {
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$productForm = $(ProductMap.productForm);
-    this.$combinationsContainer = $(ProductMap.combinations.combinationsContainer);
+    this.$combinationsContainer = $(
+      ProductMap.combinations.combinationsContainer,
+    );
     this.combinationIdInputsSelector = ProductMap.combinations.combinationIdInputsSelector;
-    this.$externalCombinationTab = $(ProductMap.combinations.externalCombinationTab);
+    this.$externalCombinationTab = $(
+      ProductMap.combinations.externalCombinationTab,
+    );
 
     this.$preloader = $(ProductMap.combinations.preloader);
     this.$paginatedList = $(CombinationsMap.combinationsPaginatedList);
@@ -76,8 +80,12 @@ export default class CombinationsManager {
    */
   init() {
     // Paginate to first page when tab is shown
-    this.$productForm.find(CombinationsMap.navigationTab).on('shown.bs.tab', () => this.showCombinationTab());
-    this.$productForm.find(CombinationsMap.navigationTab).on('hidden.bs.tab', () => this.hideCombinationTab());
+    this.$productForm
+      .find(CombinationsMap.navigationTab)
+      .on('shown.bs.tab', () => this.showCombinationTab());
+    this.$productForm
+      .find(CombinationsMap.navigationTab)
+      .on('hidden.bs.tab', () => this.hideCombinationTab());
 
     // Finally watch events related to combination listing
     this.watchEvents();
@@ -140,12 +148,14 @@ export default class CombinationsManager {
     this.$paginatedList.toggleClass('d-none', firstTime);
     this.$emptyState.addClass('d-none');
 
-    // When attributes are refreshed we show first page
-    this.paginator.paginate(1);
-
     // Wait for product attributes to adapt rendering depending on their number
-    this.productAttributeGroups = await getProductAttributeGroups(this.productId);
+    this.productAttributeGroups = await getProductAttributeGroups(
+      this.productId,
+    );
     this.filtersApp.filters = this.productAttributeGroups;
+
+    // When attributes are refreshed we show first page (the component will trigger a updateAttributeGroups event
+    // which will itself be caught by this manager which will in turn refresh to first page)
     this.eventEmitter.emit(CombinationEvents.clearFilters);
     this.$preloader.addClass('d-none');
 
@@ -171,58 +181,82 @@ export default class CombinationsManager {
    */
   initPaginatedList() {
     this.combinationsRenderer = new CombinationsGridRenderer();
+    // Initial page is zero, we will load the first page after several other init functions
     this.paginator = new DynamicPaginator(
       CombinationsMap.paginationContainer,
       this.combinationsService,
       this.combinationsRenderer,
+      0,
     );
 
     this.initSubmittableInputs();
 
-    this.$combinationsContainer.on('change', CombinationsMap.isDefaultInputsSelector, async (e) => {
-      if (!e.currentTarget.checked) {
-        return;
-      }
-      await this.updateDefaultCombination(e.currentTarget);
-    });
+    this.$combinationsContainer.on(
+      'change',
+      CombinationsMap.isDefaultInputsSelector,
+      async (e) => {
+        if (!e.currentTarget.checked) {
+          return;
+        }
+        await this.updateDefaultCombination(e.currentTarget);
+      },
+    );
 
-    this.$combinationsContainer.on('click', CombinationsMap.removeCombinationSelector, async (e) => {
-      await this.removeCombination(e.currentTarget);
-    });
+    this.$combinationsContainer.on(
+      'click',
+      CombinationsMap.deleteCombinationSelector,
+      async (e) => {
+        await this.deleteCombination(e.currentTarget);
+      },
+    );
 
     this.initSortingColumns();
-    this.paginator.paginate(1);
   }
 
   /**
    * @private
    */
   watchEvents() {
-    this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.refreshCombinationList(false));
-    this.eventEmitter.on(CombinationEvents.refreshPage, () => this.refreshPage());
-    this.eventEmitter.on(CombinationEvents.updateAttributeGroups, (attributeGroups) => {
-      const currentFilters = this.combinationsService.getFilters();
-      currentFilters.attributes = {};
-      Object.keys(attributeGroups).forEach((attributeGroupId) => {
-        currentFilters.attributes[attributeGroupId] = [];
-        const attributes = attributeGroups[attributeGroupId];
-        attributes.forEach((attribute) => {
-          currentFilters.attributes[attributeGroupId].push(attribute.id);
+    /* eslint-disable */
+    this.eventEmitter.on(CombinationEvents.refreshCombinationList, () =>
+      this.refreshCombinationList(false)
+    );
+    this.eventEmitter.on(CombinationEvents.refreshPage, () =>
+      this.refreshPage()
+    );
+    /* eslint-disable */
+    this.eventEmitter.on(
+      CombinationEvents.updateAttributeGroups,
+      attributeGroups => {
+        const currentFilters = this.combinationsService.getFilters();
+        currentFilters.attributes = {};
+        Object.keys(attributeGroups).forEach(attributeGroupId => {
+          currentFilters.attributes[attributeGroupId] = [];
+          const attributes = attributeGroups[attributeGroupId];
+          attributes.forEach(attribute => {
+            currentFilters.attributes[attributeGroupId].push(attribute.id);
+          });
         });
-      });
 
-      this.combinationsService.setFilters(currentFilters);
-      this.paginator.paginate(1);
-    });
+        this.combinationsService.setFilters(currentFilters);
+        this.paginator.paginate(1);
+      }
+    );
 
     this.eventEmitter.on(CombinationEvents.combinationGeneratorReady, () => {
-      const $generateButtons = $(ProductMap.combinations.generateCombinationsButton);
+      const $generateButtons = $(
+        ProductMap.combinations.generateCombinationsButton
+      );
       $generateButtons.prop('disabled', false);
-      $('body').on('click', ProductMap.combinations.generateCombinationsButton, (event) => {
-        // Stop event or it will be caught by click-outside directive and automatically close the modal
-        event.stopImmediatePropagation();
-        this.eventEmitter.emit(CombinationEvents.openCombinationsGenerator);
-      });
+      $('body').on(
+        'click',
+        ProductMap.combinations.generateCombinationsButton,
+        event => {
+          // Stop event or it will be caught by click-outside directive and automatically close the modal
+          event.stopImmediatePropagation();
+          this.eventEmitter.emit(CombinationEvents.openCombinationsGenerator);
+        }
+      );
     });
   }
 
@@ -231,69 +265,96 @@ export default class CombinationsManager {
    */
   initSubmittableInputs() {
     const combinationToken = this.getCombinationToken();
-    const {quantityKey} = CombinationsMap.combinationItemForm;
-    const {impactOnPriceKey} = CombinationsMap.combinationItemForm;
-    const {referenceKey} = CombinationsMap.combinationItemForm;
-    const {tokenKey} = CombinationsMap.combinationItemForm;
+    const { quantityKey } = CombinationsMap.combinationItemForm;
+    const { impactOnPriceKey } = CombinationsMap.combinationItemForm;
+    const { referenceKey } = CombinationsMap.combinationItemForm;
+    const { tokenKey } = CombinationsMap.combinationItemForm;
 
-    new SubmittableInput(CombinationsMap.quantityInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
-        [quantityKey]: input.value,
-        [tokenKey]: combinationToken,
-      });
-    });
+    /* eslint-disable */
+    new SubmittableInput(CombinationsMap.quantityInputWrapper, input =>
+      this.combinationsService.updateListedCombination(
+        this.findCombinationId(input),
+        {
+          [quantityKey]: input.value,
+          [tokenKey]: combinationToken
+        }
+      )
+    );
 
-    new SubmittableInput(CombinationsMap.impactOnPriceInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
-        [impactOnPriceKey]: input.value,
-        [tokenKey]: combinationToken,
-      });
-    });
+    new SubmittableInput(CombinationsMap.impactOnPriceInputWrapper, input =>
+      this.combinationsService.updateListedCombination(
+        this.findCombinationId(input),
+        {
+          [impactOnPriceKey]: input.value,
+          [tokenKey]: combinationToken
+        }
+      )
+    );
 
-    new SubmittableInput(CombinationsMap.referenceInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
-        [referenceKey]: input.value,
-        [tokenKey]: combinationToken,
-      });
-    });
+    new SubmittableInput(CombinationsMap.referenceInputWrapper, input =>
+      this.combinationsService.updateListedCombination(
+        this.findCombinationId(input),
+        {
+          [referenceKey]: input.value,
+          [tokenKey]: combinationToken
+        }
+      )
+    );
+    /* eslint-enable */
   }
 
   /**
    * @private
    */
   initSortingColumns() {
-    this.$combinationsContainer.on('click', CombinationsMap.sortableColumns, (event) => {
-      const $sortableColumn = $(event.currentTarget);
-      const columnName = $sortableColumn.data('sortColName');
+    this.$combinationsContainer.on(
+      'click',
+      CombinationsMap.sortableColumns,
+      (event) => {
+        const $sortableColumn = $(event.currentTarget);
+        const columnName = $sortableColumn.data('sortColName');
 
-      if (!columnName) {
-        return;
-      }
+        if (!columnName) {
+          return;
+        }
 
-      let direction = $sortableColumn.data('sortDirection');
+        let direction = $sortableColumn.data('sortDirection');
 
-      if (!direction || direction === 'desc') {
-        direction = 'asc';
-      } else {
-        direction = 'desc';
-      }
+        if (!direction || direction === 'desc') {
+          direction = 'asc';
+        } else {
+          direction = 'desc';
+        }
 
-      // Reset all columns, we need to force the attributes for CSS matching
-      $(CombinationsMap.sortableColumns, this.$combinationsContainer).removeData('sortIsCurrent');
-      $(CombinationsMap.sortableColumns, this.$combinationsContainer).removeData('sortDirection');
-      $(CombinationsMap.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-is-current');
-      $(CombinationsMap.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-direction');
+        // Reset all columns, we need to force the attributes for CSS matching
+        $(
+          CombinationsMap.sortableColumns,
+          this.$combinationsContainer,
+        ).removeData('sortIsCurrent');
+        $(
+          CombinationsMap.sortableColumns,
+          this.$combinationsContainer,
+        ).removeData('sortDirection');
+        $(
+          CombinationsMap.sortableColumns,
+          this.$combinationsContainer,
+        ).removeAttr('data-sort-is-current');
+        $(
+          CombinationsMap.sortableColumns,
+          this.$combinationsContainer,
+        ).removeAttr('data-sort-direction');
 
-      // Set correct data in current column, we need to force the attributes for CSS matching
-      $sortableColumn.data('sortIsCurrent', 'true');
-      $sortableColumn.data('sortDirection', direction);
-      $sortableColumn.attr('data-sort-is-current', 'true');
-      $sortableColumn.attr('data-sort-direction', direction);
+        // Set correct data in current column, we need to force the attributes for CSS matching
+        $sortableColumn.data('sortIsCurrent', 'true');
+        $sortableColumn.data('sortDirection', direction);
+        $sortableColumn.attr('data-sort-is-current', 'true');
+        $sortableColumn.attr('data-sort-direction', direction);
 
-      // Finally update list
-      this.combinationsService.setOrderBy(columnName, direction);
-      this.paginator.paginate(1);
-    });
+        // Finally update list
+        this.combinationsService.setOrderBy(columnName, direction);
+        this.paginator.paginate(1);
+      },
+    );
   }
 
   /**
@@ -301,7 +362,7 @@ export default class CombinationsManager {
    *
    * @private
    */
-  async removeCombination(button) {
+  async deleteCombination(button) {
     try {
       const $deleteButton = $(button);
       const modal = new ConfirmModal(
@@ -315,7 +376,9 @@ export default class CombinationsManager {
           closable: true,
         },
         async () => {
-          const response = await this.combinationsService.removeCombination(this.findCombinationId(button));
+          const response = await this.combinationsService.deleteCombination(
+            this.findCombinationId(button),
+          );
           $.growl({message: response.message});
           this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
         },

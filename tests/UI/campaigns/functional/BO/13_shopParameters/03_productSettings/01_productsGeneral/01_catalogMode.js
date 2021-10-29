@@ -4,19 +4,21 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
+
+// Import FO pages
 const homePage = require('@pages/FO/home');
 const productPage = require('@pages/FO/product');
 
 // Import data
 const ProductData = require('@data/FO/product');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_productSetting_productsGeneral_catalogMode';
 
@@ -30,7 +32,7 @@ Enable show prices
 Check catalog page
 Disable catalog mode
  */
-describe('Enable/Disable catalog mode', async () => {
+describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -107,12 +109,7 @@ describe('Enable/Disable catalog mode', async () => {
         });
 
         it('should check product prices in the home page', async function () {
-          await testContext.addContextItem(
-            this,
-            'testIdentifier',
-            `checkPricesInHomePage${productPage.uppercaseFirstCharacter(showPrices.args.action)}`,
-            baseContext,
-          );
+          await testContext.addContextItem(this, 'testIdentifier', `checkPricesInHomePage${index}`, baseContext);
 
           page = await productSettingsPage.viewMyShop(page);
 
@@ -131,21 +128,22 @@ describe('Enable/Disable catalog mode', async () => {
         });
 
         it('should check the existence of product price and add to cart button', async function () {
-          await testContext.addContextItem(
-            this,
-            'testIdentifier',
-            'checkPrice&AddToCartButton'
-              + `${productPage.uppercaseFirstCharacter(showPrices.args.action)}`,
-            baseContext,
-          );
+          await testContext.addContextItem(this, 'testIdentifier', `checkPrice&AddToCartButton${index}`, baseContext);
 
           let isVisible = await productPage.isPriceDisplayed(page);
           await expect(isVisible).to.equal(showPrices.args.isPriceExist);
 
           isVisible = await productPage.isAddToCartButtonDisplayed(page);
           await expect(isVisible).to.equal(showPrices.args.isAddToCartExist);
+        });
+
+        it('should close the page and go back to BO', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
           page = await productPage.closePage(browserContext, page, 0);
+
+          const pageTitle = await productSettingsPage.getPageTitle(page);
+          await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
         });
       });
     } else {
@@ -186,8 +184,15 @@ describe('Enable/Disable catalog mode', async () => {
 
         isVisible = await productPage.isAddToCartButtonDisplayed(page);
         await expect(isVisible).to.be.true;
+      });
+
+      it('should close the page and go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
         page = await productPage.closePage(browserContext, page, 0);
+
+        const pageTitle = await productSettingsPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
       });
     }
   });

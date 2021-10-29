@@ -49,7 +49,7 @@ abstract class AbstractImageUploader
      *
      * @throws UploadedImageConstraintException
      */
-    protected function checkImageIsAllowedForUpload(UploadedFile $image)
+    public function checkImageIsAllowedForUpload(UploadedFile $image)
     {
         $maxFileSize = Tools::getMaxUploadSize();
 

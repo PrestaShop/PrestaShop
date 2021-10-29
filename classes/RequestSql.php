@@ -113,7 +113,7 @@ class RequestSqlCore extends ObjectModel
      *
      * @param string $sql
      *
-     * @return array
+     * @return array|bool
      */
     public function parsingSql($sql)
     {
@@ -203,6 +203,7 @@ class RequestSqlCore extends ObjectModel
     public function getTables()
     {
         $results = Db::getInstance()->executeS('SHOW TABLES');
+        $tables = [];
         foreach ($results as $result) {
             $key = array_keys($result);
             $tables[] = $result[$key[0]];
@@ -214,7 +215,7 @@ class RequestSqlCore extends ObjectModel
     /**
      * Get list of all attributes by an table.
      *
-     * @param $table
+     * @param string $table
      *
      * @return array
      */
@@ -226,10 +227,10 @@ class RequestSqlCore extends ObjectModel
     /**
      * Cut an join sentence.
      *
-     * @param $attrs
-     * @param $from
+     * @param array $attrs
+     * @param array $from
      *
-     * @return array|bool
+     * @return array
      */
     public function cutJoin($attrs, $from)
     {
@@ -239,8 +240,20 @@ class RequestSqlCore extends ObjectModel
             if (in_array($attr['expr_type'], ['operator', 'const'])) {
                 continue;
             }
-            if ($attribut = $this->cutAttribute($attr['base_expr'], $from)) {
-                $tab[] = $attribut;
+
+            if (!empty($attr['sub_tree'])) {
+                foreach ($attr['sub_tree'] as $treeItem) {
+                    if ($treeItem['expr_type'] !== 'colref') {
+                        continue;
+                    }
+                    if ($attribut = $this->cutAttribute($treeItem['base_expr'], $from)) {
+                        $tab[] = $attribut;
+                    }
+                }
+            } else {
+                if ($attribut = $this->cutAttribute($attr['base_expr'], $from)) {
+                    $tab[] = $attribut;
+                }
             }
         }
 
@@ -250,8 +263,8 @@ class RequestSqlCore extends ObjectModel
     /**
      * Cut an attribute with or without the alias.
      *
-     * @param $attr
-     * @param $from
+     * @param string $attr
+     * @param string $from
      *
      * @return array|bool
      */
@@ -286,7 +299,7 @@ class RequestSqlCore extends ObjectModel
      * Get name of table by alias.
      *
      * @param bool $alias
-     * @param $tables
+     * @param array $tables
      *
      * @return array|bool
      */
@@ -294,7 +307,10 @@ class RequestSqlCore extends ObjectModel
     {
         if ($alias) {
             foreach ($tables as $table) {
-                if (isset($table['alias'], $table['table']) && $table['alias']['no_quotes'] == $alias) {
+                if (!isset($table['alias']) || !isset($table['table'])) {
+                    continue;
+                }
+                if ($table['alias']['no_quotes'] == $alias || $table['alias']['no_quotes']['parts'][0] == $alias) {
                     return [$table['table']];
                 }
             }
@@ -314,21 +330,21 @@ class RequestSqlCore extends ObjectModel
             $this->error_sql['returnNameTable'] = false;
 
             return false;
-        } else {
-            $tab = [];
-            foreach ($tables as $table) {
-                $tab[] = $table['table'];
-            }
-
-            return $tab;
         }
+
+        $tab = [];
+        foreach ($tables as $table) {
+            $tab[] = $table['table'];
+        }
+
+        return $tab;
     }
 
     /**
      * Check if an attributes exists in a table.
      *
      * @param string $attr
-     * @param $table
+     * @param array $table
      *
      * @return bool
      */
@@ -393,7 +409,7 @@ class RequestSqlCore extends ObjectModel
     /**
      * Check a "FROM" sentence.
      *
-     * @param string $from
+     * @param array $from
      *
      * @return bool
      */
@@ -409,7 +425,8 @@ class RequestSqlCore extends ObjectModel
                 return false;
             }
             if ($table['ref_type'] == 'ON' && (trim($table['join_type']) == 'LEFT' || trim($table['join_type']) == 'JOIN')) {
-                if ($attrs = $this->cutJoin($table['ref_clause'], $from)) {
+                $attrs = $this->cutJoin($table['ref_clause'], $from);
+                if (is_array($attrs)) {
                     foreach ($attrs as $attr) {
                         if (!$this->attributExistInTable($attr['attribut'], $attr['table'])) {
                             $this->error_sql['checkedFrom']['attribut'] = [$attr['attribut'], implode(', ', $attr['table'])];
@@ -608,15 +625,15 @@ class RequestSqlCore extends ObjectModel
     /**
      * Check a "GROUP BY" sentence.
      *
-     * @param string $group
-     * @param string $from
+     * @param array $group
+     * @param array $from
      *
      * @return bool
      */
     public function checkedGroupBy($group, $from)
     {
         $group = $group[0];
-        if ($group['type'] == 'expression') {
+        if ($group['expr_type'] == 'colref') {
             if ($attr = $this->cutAttribute(trim($group['base_expr']), $from)) {
                 if (!$this->attributExistInTable($attr['attribut'], $attr['table'])) {
                     $this->error_sql['checkedGroupBy']['attribut'] = [$attr['attribut'], implode(', ', $attr['table'])];

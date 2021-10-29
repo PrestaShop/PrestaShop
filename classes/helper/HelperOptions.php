@@ -31,6 +31,9 @@ class HelperOptionsCore extends Helper
 {
     public $required = false;
 
+    /** @var int */
+    public $id;
+
     public function __construct()
     {
         $this->base_folder = 'helpers/options/';
@@ -49,9 +52,7 @@ class HelperOptionsCore extends Helper
     {
         $this->tpl = $this->createTemplate($this->base_tpl);
         $tab = Tab::getTab($this->context->language->id, $this->id);
-        if (!isset($languages)) {
-            $languages = Language::getLanguages(false);
-        }
+        $languages = Language::getLanguages(false);
 
         $has_color_field = false;
         $use_multishop = false;
@@ -244,7 +245,7 @@ class HelperOptionsCore extends Helper
             'tabs' => (isset($tabs)) ? $tabs : null,
             'option_list' => $option_list,
             'current_id_lang' => $this->context->language->id,
-            'languages' => isset($languages) ? $languages : null,
+            'languages' => $languages,
             'currency_left_sign' => $this->context->currency->getSign('left'),
             'currency_right_sign' => $this->context->currency->getSign('right'),
             'use_multishop' => $use_multishop,
@@ -287,7 +288,9 @@ class HelperOptionsCore extends Helper
     public function displayOptionTypePrice($key, $field, $value)
     {
         echo $this->context->currency->getSign('left');
-        $this->displayOptionTypeText($key, $field, $value);
+        if (method_exists($this, 'displayOptionTypeText')) {
+            $this->displayOptionTypeText($key, $field, $value);
+        }
         echo $this->context->currency->getSign('right') . ' ' . $this->l('(tax excl.)', 'Helper');
     }
 

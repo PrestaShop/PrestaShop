@@ -92,7 +92,7 @@ class ModuleRepositoryTest extends TestCase
                 ),
                 $logger,
                 $translator,
-                __DIR__ . '/../../../../Resources/modules/',
+                dirname(__DIR__, 4) . '/Resources/modules/',
             ])
             ->setMethods(['readCacheFile', 'generateCacheFile'])
             ->getMock();

@@ -61,7 +61,7 @@ class Environment implements EnvironmentInterface
         if (null !== $name) {
             $this->name = $name;
         } else {
-            if (defined(_PS_ENV_)) {
+            if (defined('_PS_ENV_')) {
                 $this->name = _PS_ENV_;
             } else {
                 $this->name = $this->isDebug ? 'dev' : 'prod';

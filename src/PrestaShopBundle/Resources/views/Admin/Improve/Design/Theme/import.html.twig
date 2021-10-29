@@ -24,7 +24,7 @@
  *#}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% form_theme importThemeForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme importThemeForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% set layoutTitle = 'Theme & Logo'|trans({}, 'Admin.Navigation.Menu') ~ ' > ' ~ 'Theme'|trans({}, 'Admin.Design.Feature') %}
 {% set layoutHeaderToolbarBtn = {
@@ -120,10 +120,4 @@
       {{ form_end(importThemeForm) }}
     </div>
   </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/themes_import_theme.bundle.js') }}"></script>
 {% endblock %}

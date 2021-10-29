@@ -1,21 +1,28 @@
 require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
+
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
-const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_orders_orders_filterOrders';
-
-// importing pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 
+// Import data
 const {Orders} = require('@data/demo/orders');
 
-let numberOfOrders;
+// Import test context
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_orders_orders_filterOrders';
+// Import expect from chai
+const {expect} = require('chai');
+
 let browserContext;
 let page;
+let numberOfOrders;
 
 // Today date
 const today = new Date();
@@ -39,7 +46,7 @@ const dateTodayToCheck = `${month}/${day}/${year}`;
 Filter orders By :
 Id, reference, new client, delivery, customer, total, payment, status and date from, date to
 */
-describe('Filter the Orders table', async () => {
+describe('BO - Orders : Filter the Orders table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -53,7 +60,7 @@ describe('Filter the Orders table', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to the Orders page', async function () {
+  it('should go to \'Orders > Orders\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
     await dashboardPage.goToSubMenu(

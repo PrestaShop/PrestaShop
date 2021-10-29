@@ -632,7 +632,7 @@ class CartRuleCore extends ObjectModel
     }
 
     /**
-     * @param $id_product_rule_group
+     * @param int $id_product_rule_group
      *
      * @return array ('type' => ? , 'values' => ?)
      */
@@ -707,9 +707,22 @@ class CartRuleCore extends ObjectModel
 			AND ocr.`id_cart_rule` = ' . (int) $this->id . '
 			AND ' . (int) Configuration::get('PS_OS_ERROR') . ' != o.`current_state`
 			');
-            // When checking the cart rules present in that cart the request result is accurate
-            // When we check if using the cart rule one more time is valid then we increment this value
-            if (!$alreadyInCart) {
+
+            if ($alreadyInCart) {
+                // Sometimes a cart rule is already in a cart, but the cart is not yet attached to an order (when logging
+                // in for example), these cart rules are not taken into account by the query above:
+                // so we count cart rules that are already linked to the current cart but not attached to an order yet.
+
+                $quantityUsed += (int) Db::getInstance()->getValue('
+                    SELECT count(*)
+                    FROM `' . _DB_PREFIX_ . 'cart_cart_rule` ccr
+                    INNER JOIN `' . _DB_PREFIX_ . 'cart` c ON c.id_cart = ccr.id_cart
+                    LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON o.id_cart = c.id_cart
+                    WHERE c.id_customer = ' . $cart->id_customer . ' AND c.id_cart = ' . $cart->id . ' AND ccr.id_cart_rule = ' . (int) $this->id . ' AND o.id_order IS NULL
+                ');
+            } else {
+                // When checking the cart rules present in that cart the request result is accurate
+                // When we check if using the cart rule one more time is valid then we increment this value
                 ++$quantityUsed;
             }
             if ($quantityUsed > $this->quantity_per_user) {
@@ -915,26 +928,6 @@ class CartRuleCore extends ObjectModel
     /**
      * Checks if the products chosen by the customer are usable with the cart rule.
      *
-     * @deprecated since 1.7.4.0
-     * @see self::checkProductRestrictionsFromCart
-     *
-     * @param \Context $context
-     * @param bool $returnProducts
-     * @param bool $displayError
-     * @param bool $alreadyInCart
-     *
-     * @return array|bool|string
-     *
-     * @throws PrestaShopDatabaseException
-     */
-    public function checkProductRestrictions(Context $context, $returnProducts = false, $displayError = true, $alreadyInCart = false)
-    {
-        return $this->checkProductRestrictionsFromCart($context->cart, $returnProducts, $displayError, $alreadyInCart);
-    }
-
-    /**
-     * Checks if the products chosen by the customer are usable with the cart rule.
-     *
      * @param \Cart $cart
      * @param bool $returnProducts [default=false]
      *                             If true, this method will return an array of eligible products.
@@ -957,7 +950,7 @@ class CartRuleCore extends ObjectModel
             $product_rule_groups = $this->getProductRuleGroups();
             foreach ($product_rule_groups as $id_product_rule_group => $product_rule_group) {
                 $eligible_products_list = [];
-                if (isset($cart) && is_object($cart) && is_array($products = $cart->getProducts())) {
+                if (is_array($products = $cart->getProducts())) {
                     foreach ($products as $product) {
                         $eligible_products_list[] = (int) $product['id_product'] . '-' . (int) $product['id_product_attribute'];
                     }
@@ -1201,9 +1194,10 @@ class CartRuleCore extends ObjectModel
         }
 
         // Free shipping on selected carriers
+        $reduction_carrier = 0;
         if ($this->free_shipping && in_array($filter, [CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_SHIPPING])) {
             if (!$this->carrier_restriction) {
-                $reduction_value += $context->cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING, null === $package ? null : $package['products'], null === $package ? null : $package['id_carrier']);
+                $reduction_carrier += $context->cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING, null === $package ? null : $package['products'], null === $package ? null : $package['id_carrier']);
             } else {
                 $data = Db::getInstance()->executeS('
 					SELECT crc.id_cart_rule, c.id_carrier
@@ -1214,10 +1208,11 @@ class CartRuleCore extends ObjectModel
 
                 if ($data) {
                     foreach ($data as $cart_rule) {
-                        $reduction_value += $context->cart->getCarrierCost((int) $cart_rule['id_carrier'], $use_tax, $context->country);
+                        $reduction_carrier += $context->cart->getCarrierCost((int) $cart_rule['id_carrier'], $use_tax, $context->country);
                     }
                 }
             }
+            $reduction_value += $reduction_carrier;
         }
 
         if (in_array($filter, [CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_REDUCTION])) {
@@ -1233,7 +1228,7 @@ class CartRuleCore extends ObjectModel
                 $basePriceContainsDiscount = isset($basePriceForPercentReduction) && $order_total === $basePriceForPercentReduction;
                 foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cart_rule) {
                     $freeProductsPrice = Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), Context::getContext()->getComputingPrecision());
-                    if ($basePriceContainsDiscount) {
+                    if ($basePriceContainsDiscount && isset($basePriceForPercentReduction)) {
                         // Gifts haven't been excluded yet, we need to do it
                         $basePriceForPercentReduction -= $freeProductsPrice;
                     }
@@ -1250,7 +1245,7 @@ class CartRuleCore extends ObjectModel
                                 $excludedReduction = Tools::ps_round($product['total'], Context::getContext()->getComputingPrecision());
                             }
                             $order_total -= $excludedReduction;
-                            if ($basePriceContainsDiscount) {
+                            if ($basePriceContainsDiscount && isset($basePriceForPercentReduction)) {
                                 $basePriceForPercentReduction -= $excludedReduction;
                             }
                         }
@@ -1313,7 +1308,10 @@ class CartRuleCore extends ObjectModel
                             if ($use_tax) {
                                 $infos = Product::getTaxesInformations($product, $context);
                                 $tax_rate = $infos['rate'] / 100;
+                                // As the price is tax excluded but ecotax included, we need to substract the ecotax before getting the price tax included
+                                $price -= $product['ecotax'];
                                 $price *= (1 + $tax_rate);
+                                $price += $product['ecotax'];
                             }
 
                             $selected_products_reduction += $price * $product['cart_quantity'];
@@ -1478,10 +1476,17 @@ class CartRuleCore extends ObjectModel
         Cache::store($cache_id, $reduction_value);
 
         // update virtual total values, for percentage reductions that might be applied later
+        // but remove the carrier as free shipping is not a real reduction
         if ($use_tax && !empty($context->virtualTotalTaxIncluded)) {
             $context->virtualTotalTaxIncluded -= $reduction_value;
+            if ($this->free_shipping) {
+                $context->virtualTotalTaxIncluded += $reduction_carrier;
+            }
         } elseif (!$use_tax && !empty($context->virtualTotalTaxExcluded)) {
             $context->virtualTotalTaxExcluded -= $reduction_value;
+            if ($this->free_shipping) {
+                $context->virtualTotalTaxExcluded += $reduction_carrier;
+            }
         }
 
         return $reduction_value;

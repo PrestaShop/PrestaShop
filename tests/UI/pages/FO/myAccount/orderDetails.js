@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
-class OrderHistory extends FOBasePage {
+/**
+ * Order details page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
+class OrderDetails extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on order details page
+   */
   constructor() {
     super();
 
@@ -48,7 +57,8 @@ class OrderHistory extends FOBasePage {
 
   /**
    * Request merchandise return
-   * @param page
+   * @param page {Page} Browser tab
+   * @param messageText {string} Value of message text to set on return input
    * @returns {Promise<void>}
    */
   async requestMerchandiseReturn(page, messageText) {
@@ -102,4 +112,4 @@ class OrderHistory extends FOBasePage {
   }
 }
 
-module.exports = new OrderHistory();
+module.exports = new OrderDetails();

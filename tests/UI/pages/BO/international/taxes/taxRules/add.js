@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add tax rules page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddTaxRules extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add tax rules page
+   */
   constructor() {
     super();
 
@@ -17,6 +26,7 @@ class AddTaxRules extends BOBasePage {
     this.nameInput = `${this.taxRuleGroupForm} #name`;
     this.statusInput = id => `${this.taxRuleGroupForm} input#active_${id}`;
     this.saveTaxButton = `${this.taxRuleGroupForm} #tax_rules_group_form_submit_btn`;
+
     // New tax rule form
     this.taxRuleForm = '#tax_rule_form';
     this.countrySelect = `${this.taxRuleForm} #country`;
@@ -32,8 +42,8 @@ class AddTaxRules extends BOBasePage {
 
   /**
    * Fill form for add/edit tax rules group
-   * @param page
-   * @param taxRuleGroupData
+   * @param page {Page} Browser tab
+   * @param taxRuleGroupData {TaxRulesGroupData} Data to set on tax rule group data
    * @returns {Promise<string>}
    */
   async createEditTaxRulesGroup(page, taxRuleGroupData) {
@@ -41,13 +51,14 @@ class AddTaxRules extends BOBasePage {
     await page.check(this.statusInput(taxRuleGroupData.enabled ? 'on' : 'off'));
     // Save Tax rules group
     await this.clickAndWaitForNavigation(page, this.saveTaxButton);
+
     return this.getAlertSuccessBlockContent(page);
   }
 
   /**
    * Fill form for add/edit tax rules group
-   * @param page
-   * @param taxRuleData
+   * @param page {Page} Browser tab
+   * @param taxRuleData {TaxRuleData} Data to set on new/edit tax rule data
    * @returns {Promise<string>}
    */
   async createEditTaxRules(page, taxRuleData) {
@@ -57,12 +68,13 @@ class AddTaxRules extends BOBasePage {
     await this.setValue(page, this.descriptionInput, taxRuleData.description);
     // Save Tax rules
     await this.clickAndWaitForNavigation(page, this.saveAndStayButton);
+
     return this.getAlertSuccessBlockContent(page);
   }
 
   /**
-   * Click on Add new tax rule
-   * @param page
+   * Click on add new tax rule
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async clickOnAddNewTaxRule(page) {

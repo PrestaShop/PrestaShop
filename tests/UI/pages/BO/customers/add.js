@@ -16,6 +16,7 @@ class AddCustomer extends BOBasePage {
 
     this.pageTitleCreate = 'Creating a new Customer •';
     this.pageTitleEdit = 'Editing customer';
+    this.updateSuccessfullMessage = 'Update successful';
 
     // Selectors
     this.socialTitleInput = id => `#customer_gender_id_${id}`;
@@ -41,7 +42,7 @@ class AddCustomer extends BOBasePage {
   /**
    * Fill form for add/edit customer
    * @param page {Page} Browser tab
-   * @param customerData {customerData} Data to set on new customer form
+   * @param customerData {CustomerData} Data to set on new customer form
    * @return {Promise<void>}
    */
   async fillCustomerForm(page, customerData) {
@@ -71,7 +72,7 @@ class AddCustomer extends BOBasePage {
   /**
    * Fill form for add/edit customer and get successful message after saving
    * @param page {Page} Browser tab
-   * @param customerData {customerData} Data to set on new customer form
+   * @param customerData {CustomerData} Data to set on new customer form
    * @return {Promise<string>}
    */
   async createEditCustomer(page, customerData) {

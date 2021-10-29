@@ -29,7 +29,7 @@ class CustomerSessionCore extends ObjectModel implements SessionInterface
 {
     public $id;
 
-    /** @var Id Customer */
+    /** @var int Id Customer */
     public $id_customer;
 
     /** @var string Token */

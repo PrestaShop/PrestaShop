@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductSearchEmptyPhraseException;
 
 /**
  * Queries for products by provided search phrase
@@ -63,7 +63,7 @@ class SearchProducts
      * @param string $isoCode
      * @param int|null $orderId
      *
-     * @throws ProductException
+     * @throws ProductSearchEmptyPhraseException
      * @throws CurrencyConstraintException
      */
     public function __construct(
@@ -126,12 +126,12 @@ class SearchProducts
     /**
      * @param string $phrase
      *
-     * @throws ProductException
+     * @throws ProductSearchEmptyPhraseException
      */
     private function assertIsNotEmptyString(string $phrase): void
     {
-        if (empty($phrase) || !is_string($phrase)) {
-            throw new ProductException('Product search phrase must be a not empty string');
+        if ($phrase === '') {
+            throw new ProductSearchEmptyPhraseException('Product search phrase must be a not empty string');
         }
     }
 }

@@ -10,11 +10,11 @@ class SearchEngineData {
    * @param searchEngineToCreate {Object} Could be used to force the value of some members
    */
   constructor(searchEngineToCreate = {}) {
-    /** @member {string} Server of the engine */
+    /** @type {string} Server of the engine */
     this.server = searchEngineToCreate.server || `test_${faker.internet.domainWord()}`;
 
-    /** @member {string} Var to use on the search */
-    this.getVar = searchEngineToCreate.getVar || 'qTest_';
+    /** @type {string} Key to use on the search */
+    this.queryKey = searchEngineToCreate.queryKey || 'qTest_';
   }
 }
 

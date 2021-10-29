@@ -1,0 +1,9 @@
+{shop_url}
+
+Hi,
+
+আমাদের নিউজলেটার সাবস্ক্রাইব করার জন্য আপনাকে ধন্যবাদ .
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

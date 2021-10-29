@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
-{% form_theme emailConfigurationForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme emailConfigurationForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block email_configuration %}
   <div class="col-12">
@@ -42,8 +42,8 @@
           {{ form_row(emailConfigurationForm.log_emails) }}
           <div class="alert alert-info" role="alert">
             <p class="alert-text">
-              {{ 'Fill in the fields below to set up DKIM signing of outgoing emails. This will reduce the likelihood of your emails being marked as spam. 
-              You can get the data below from your server administrator or generate it yourself by using one of the freely available tools, such as dkimcore.org. 
+              {{ 'Fill in the fields below to set up DKIM signing of outgoing emails. This will reduce the likelihood of your emails being marked as spam.
+              You can get the data below from your server administrator or generate it yourself by using one of the freely available tools, such as dkimcore.org.
               Also, make sure that your server is registered as an authorized sender in your SPF record. '|trans({}, 'Admin.Advparameters.Help') }}
             </p>
           </div>

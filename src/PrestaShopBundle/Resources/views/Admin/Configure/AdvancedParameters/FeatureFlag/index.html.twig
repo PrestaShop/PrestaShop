@@ -25,10 +25,10 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
-{% form_theme featureFlagsForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme featureFlagsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block content %}
-  {% if displayAllShopsContextForced %}{{ ps.infotip(multistoreForcedContextInfoTip, true) }}{% endif %}
+  {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
   <div class="row justify-content-center">
     {{ form_start(featureFlagsForm, {attr : {class: 'form col', id:'feature-flag-form'}, action: path('admin_feature_flags_index') }) }}
     {% block feature_flag_form %}

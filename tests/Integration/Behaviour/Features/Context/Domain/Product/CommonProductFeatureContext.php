@@ -270,4 +270,36 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
 
         return $constraintErrorFieldMap[$fieldName];
     }
+
+    /**
+     * @Then product :productReference should be indexed
+     *
+     * @param string $productReference
+     */
+    public function assertIsIndexed(string $productReference): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertSame(
+            1,
+            (int) $product->indexed,
+            sprintf('Unexpected indexed field value %s for product "%s"', $product->indexed, $productReference)
+        );
+    }
+
+    /**
+     * @Then product :productReference should not be indexed
+     *
+     * @param string $productReference
+     */
+    public function assertIsNotIndexed(string $productReference): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertSame(
+            0,
+            (int) $product->indexed,
+            sprintf('Unexpected indexed field value %s for product "%s"', $product->indexed, $productReference)
+        );
+    }
 }

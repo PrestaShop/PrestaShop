@@ -1,7 +1,16 @@
 require('module-alias/register');
 const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
 
+/**
+ * Currencies page, contains functions that can be used on the page
+ * @class
+ * @extends LocalizationBasePage
+ */
 class Currencies extends LocalizationBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on currencies page
+   */
   constructor() {
     super();
 
@@ -59,7 +68,7 @@ class Currencies extends LocalizationBasePage {
   /* Header Methods */
   /**
    * Go to add new currency page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewCurrencyPage(page) {
@@ -69,10 +78,10 @@ class Currencies extends LocalizationBasePage {
   /* filter Method */
   /**
    * Filter Table
-   * @param page
-   * @param filterType, input / Select
-   * @param filterBy, which column
-   * @param value, value to put in filter
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to put on filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
@@ -93,7 +102,7 @@ class Currencies extends LocalizationBasePage {
   /* Reset Methods */
   /**
    * Reset filters in table
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -103,8 +112,8 @@ class Currencies extends LocalizationBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @param page
+   * Get number of elements in grid
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -113,20 +122,21 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 
   /* Table methods */
   /**
-   * get text from a column
-   * @param page
-   * @param row, row in table
-   * @param column, which column
+   * Get text from a column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column to get text value
    * @returns {Promise<string>}
    */
   async getTextColumnFromTableCurrency(page, row, column) {
@@ -135,8 +145,8 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Get exchange rate value
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<number>}
    */
   async getExchangeRateValue(page, row) {
@@ -145,9 +155,9 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Get currency row from table
-   * @param page
-   * @param row
-   * @returns {Promise<{symbol: string, isoCode: string, exchangeRate: number, name: string, enabled: string}>}
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<{symbol: string, isoCode: string, exchangeRate: number, name: string, enabled: boolean}>}
    */
   async getCurrencyFromTable(page, row) {
     return {
@@ -160,9 +170,9 @@ class Currencies extends LocalizationBasePage {
   }
 
   /**
-   * Get toggle column value for a row
-   * @param page
-   * @param row
+   * Get a currency status
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
   async getStatus(page, row = 1) {
@@ -178,10 +188,10 @@ class Currencies extends LocalizationBasePage {
   }
 
   /**
-   * Update Enable column for the value wanted in currency list
-   * @param page
-   * @param row
-   * @param valueWanted
+   * Set a currency status
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param valueWanted {boolean} True if we need to enable status
    * @return {Promise<boolean>}, true if click has been performed
    */
   async setStatus(page, row = 1, valueWanted = true) {
@@ -195,8 +205,8 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Delete Row in table
-   * @param page
-   * @param row, row to delete
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table to delete
    * @returns {Promise<string>}
    */
   async deleteCurrency(page, row = 1) {
@@ -213,12 +223,13 @@ class Currencies extends LocalizationBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteCurrency(page);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Confirm delete in modal
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async confirmDeleteCurrency(page) {
@@ -227,8 +238,8 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Go to edit currency page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table to edit
    * @returns {Promise<void>}
    */
   async goToEditCurrencyPage(page, row = 1) {
@@ -237,18 +248,19 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Click on update exchange rates
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async updateExchangeRate(page) {
     await this.clickAndWaitForNavigation(page, this.updateExchangeRatesButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -257,8 +269,8 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination number to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -272,7 +284,7 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -283,7 +295,7 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -295,9 +307,9 @@ class Currencies extends LocalizationBasePage {
   /* Sort methods */
   /**
    * Sort table
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -316,9 +328,9 @@ class Currencies extends LocalizationBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param column
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @param column {string} Column to get all rows content
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -326,7 +338,7 @@ class Currencies extends LocalizationBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableCurrency(page, i, column);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

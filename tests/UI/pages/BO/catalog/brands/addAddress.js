@@ -37,7 +37,7 @@ class AddBrandAddress extends BOBasePage {
   /**
    * Create or edit Brand Address
    * @param page {Page} Browser tab
-   * @param brandAddressData {object} Data to set in address form
+   * @param brandAddressData {BrandAddressData} Data to set in address form
    * @return {Promise<string>}
    */
   async createEditBrandAddress(page, brandAddressData) {
@@ -54,6 +54,7 @@ class AddBrandAddress extends BOBasePage {
     await this.setValue(page, this.homePhoneInput, brandAddressData.homePhone);
     await this.setValue(page, this.mobilePhoneInput, brandAddressData.mobilePhone);
     await this.setValue(page, this.otherInput, brandAddressData.other);
+
     // Click on Save button and successful message
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);

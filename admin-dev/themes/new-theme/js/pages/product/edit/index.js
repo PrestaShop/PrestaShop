@@ -26,12 +26,14 @@
 import NavbarHandler from '@components/navbar-handler';
 import ProductMap from '@pages/product/product-map';
 
-import CategoriesManager from '@pages/product/components/categories';
+import AttachmentsManager from '@pages/product/edit/attachments-manager';
+import CategoriesManager from '@pages/product/components/categories/categories-manager';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
 import CustomizationsManager from '@pages/product/edit/customizations-manager';
 import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
 import ProductFooterManager from '@pages/product/edit/product-footer-manager';
 import ProductFormModel from '@pages/product/edit/product-form-model';
+import ProductModulesManager from '@pages/product/edit/product-modules-manager';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import ProductSEOManager from '@pages/product/edit/product-seo-manager';
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
@@ -50,6 +52,7 @@ $(() => {
     'TranslatableInput',
     'EventEmitter',
     'TextWithLengthCounter',
+    'DeltaQuantityInput',
   ]);
 
   const $productForm = $(ProductMap.productForm);
@@ -71,12 +74,13 @@ $(() => {
   }
 
   new NavbarHandler(ProductMap.navigationBar);
-  new ProductSEOManager();
+  new ProductSEOManager(eventEmitter);
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
   new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
   new CategoriesManager(eventEmitter);
   new ProductFooterManager();
+  new ProductModulesManager();
 
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(
@@ -95,6 +99,7 @@ $(() => {
 
   new FeatureValuesManager(eventEmitter);
   new CustomizationsManager();
+  new AttachmentsManager();
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
     new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true);

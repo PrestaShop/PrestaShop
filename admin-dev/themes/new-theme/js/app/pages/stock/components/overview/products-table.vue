@@ -123,14 +123,15 @@
   </PSTable>
 </template>
 
-<script>
-  import PSAlert from '@app/widgets/ps-alert';
-  import PSTable from '@app/widgets/ps-table/ps-table';
-  import PSSort from '@app/widgets/ps-table/ps-sort';
-  import PSLoader from '@app/widgets/ps-loader';
-  import ProductLine from './product-line';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSAlert from '@app/widgets/ps-alert.vue';
+  import PSTable from '@app/widgets/ps-table/ps-table.vue';
+  import PSSort from '@app/widgets/ps-table/ps-sort.vue';
+  import PSLoader from '@app/widgets/ps-loader.vue';
+  import ProductLine from './product-line.vue';
 
-  export default {
+  export default Vue.extend({
     props: {
       isLoading: {
         type: Boolean,
@@ -145,21 +146,21 @@
       PSLoader,
     },
     methods: {
-      sort(order, sortDirection) {
+      sort(order: string, sortDirection: string): void {
         this.$store.dispatch('updateOrder', order);
         this.$emit('sort', sortDirection === 'desc' ? 'desc' : 'asc');
       },
     },
     computed: {
-      products() {
+      products(): Record<string, any> {
         return this.$store.state.products;
       },
-      emptyProducts() {
+      emptyProducts(): boolean {
         return !this.$store.state.products.length;
       },
-      currentSort() {
+      currentSort(): string {
         return this.$store.state.order;
       },
     },
-  };
+  });
 </script>

@@ -27,14 +27,6 @@
 use PrestaShopBundle\Install\Upgrade;
 
 $parametersFilepath = __DIR__  . '/parameters.php';
-if (!file_exists($parametersFilepath)) {
-    // let's check first if there's some old config files which could be migrated
-    if (Upgrade::migrateSettingsFile() === false) {
-        // nothing to migrate ? return
-        return;
-    }
-}
-
 $parameters = require $parametersFilepath;
 
 if (!array_key_exists('parameters', $parameters)) {
@@ -57,10 +49,13 @@ if (isset($container) && $container instanceof \Symfony\Component\DependencyInje
 
     $driver = 'array';
     $cacheType = [
-        'CacheMemcache' => ['memcache'],
         'CacheMemcached' => ['memcached'],
-        'CacheApc' => ['apcu', 'apc'],
-        'CacheXcache' => ['xcache'],
+        'CacheApc' => ['apcu'],
+    ];
+    $adapters = [
+        'array' => 'cache.adapter.array',
+        'memcached' => 'cache.adapter.memcached',
+        'apcu' => 'cache.adapter.apcu'
     ];
 
     if (isset(
@@ -78,6 +73,8 @@ if (isset($container) && $container instanceof \Symfony\Component\DependencyInje
         }
     }
     $container->setParameter('cache.driver', $driver);
+    $container->setParameter('cache.driver.doctrine', $driver . '_doctrine');
+    $container->setParameter('cache.adapter', $adapters[$driver]);
 
     // Parameter used only in dev and test env
     $envParameter = getenv('DISABLE_DEBUG_TOOLBAR');

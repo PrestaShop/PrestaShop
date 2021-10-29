@@ -1,7 +1,16 @@
 require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
 
-class AddCurrency extends BOBasePage {
+/**
+ * Add currency page, contains functions that can be used on the page
+ * @class
+ * @extends LocalizationBasePage
+ */
+class AddCurrency extends LocalizationBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add currency page
+   */
   constructor() {
     super();
 
@@ -27,8 +36,9 @@ class AddCurrency extends BOBasePage {
 
   /**
    * Add official currency
-   * @param page
-   * @param currencyData, currency to add
+   * @param page {Page} Browser tab
+   * @param currencyData {{name: string, frName:string, symbol: string, isoCode: string, exchangeRate: number,
+   * decimals: number, enabled: boolean}} Data to set on add currency form
    * @returns {Promise<string>}, successful text message that appears
    */
   async addOfficialCurrency(page, currencyData) {
@@ -64,13 +74,15 @@ class AddCurrency extends BOBasePage {
 
     await page.check(this.statusToggleInput(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Create unofficial currency
-   * @param page
-   * @param currencyData
+   * @param page {Page} Browser tab
+   * @param currencyData {{name: string, frName:string, symbol: string, isoCode: string, exchangeRate: number,
+   * decimals: number, enabled: boolean}} Data to set on add currency form
    * @returns {Promise<string>}
    */
   async createUnOfficialCurrency(page, currencyData) {
@@ -82,25 +94,27 @@ class AddCurrency extends BOBasePage {
     await this.setValue(page, this.exchangeRateInput, currencyData.exchangeRate.toString());
     await page.check(this.statusToggleInput(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Update exchange rate
-   * @param page
-   * @param value
+   * @param page {Page} Browser tab
+   * @param value {string} Value to set on exchange rate input
    * @returns {Promise<string>}
    */
   async updateExchangeRate(page, value) {
     await this.setValue(page, this.exchangeRateInput, value.toString());
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Set precision for a currency
-   * @param page
-   * @param value
+   * @param page {Page} Browser tab
+   * @param value {number} Value to set on exchange rate input
    * @return {Promise<string>}
    */
   async setCurrencyPrecision(page, value = 2) {
@@ -108,6 +122,7 @@ class AddCurrency extends BOBasePage {
 
     // Save new value
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

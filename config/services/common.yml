@@ -9,6 +9,9 @@ imports:
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/core/common.yml }
 
 services:
+    _defaults:
+        public: true
+
     hashing:
         class: PrestaShop\PrestaShop\Core\Crypto\Hashing
 

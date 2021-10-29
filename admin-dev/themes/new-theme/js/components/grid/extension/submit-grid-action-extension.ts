@@ -69,7 +69,7 @@ export default class SubmitGridActionExtension {
     $form.attr('action', $submitBtn.data('url'));
     $form.attr('method', $submitBtn.data('method'));
     $form
-      .find(`input[name="${grid.getId()}[_token]"]`)
+      .find(GridMap.actions.tokenInput(grid.getId()))
       .val($submitBtn.data('csrf'));
     $form.submit();
   }

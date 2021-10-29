@@ -34,7 +34,7 @@ use PrestaShopBundle\Install\DatabaseDump;
 
 class LanguageTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

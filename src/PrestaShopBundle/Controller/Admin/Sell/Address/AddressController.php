@@ -97,7 +97,7 @@ class AddressController extends FrameworkBundleAdminController
      * Process addresses required fields configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_addresses_index"
      * )
      *
@@ -232,7 +232,7 @@ class AddressController extends FrameworkBundleAdminController
      * Show "Add new" form and handle form submit.
      *
      * @AdminSecurity(
-     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     "is_granted('create', request.get('_legacy_controller'))",
      *     redirectRoute="admin_addresses_index",
      *     message="You do not have permission to create this."
      * )

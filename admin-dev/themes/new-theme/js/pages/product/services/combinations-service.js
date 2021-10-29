@@ -63,9 +63,7 @@ export default class CombinationsService {
       requestParams[filterId].sortOrder = this.orderWay;
     }
 
-    return $.get(
-      this.router.generate('admin_products_combinations', requestParams),
-    );
+    return $.get(this.router.generate('admin_products_combinations', requestParams));
   }
 
   /**
@@ -73,9 +71,9 @@ export default class CombinationsService {
    *
    * @returns {Promise}
    */
-  removeCombination(combinationId) {
+  deleteCombination(combinationId) {
     return $.ajax({
-      url: this.router.generate('admin_products_combinations_remove_combination', {
+      url: this.router.generate('admin_products_combinations_delete_combination', {
         combinationId,
       }),
       type: 'DELETE',
@@ -115,9 +113,11 @@ export default class CombinationsService {
    * @returns {Promise}
    */
   getCombinationIds() {
-    return $.get(this.router.generate('admin_products_combinations_ids', {
-      productId: this.productId,
-    }));
+    return $.get(
+      this.router.generate('admin_products_combinations_ids', {
+        productId: this.productId,
+      }),
+    );
   }
 
   /**

@@ -577,6 +577,11 @@ class XmlLoader
         $this->storeId($entity, $identifier, $entity_id);
     }
 
+    public function createEntityAttribute($identifier, array $data, array $data_lang = [])
+    {
+        $this->createEntity('attribute', $identifier, 'ProductAttribute', $data, $data_lang);
+    }
+
     public function createEntityConfiguration($identifier, array $data, array $data_lang)
     {
         if (Db::getInstance()->getValue('SELECT id_configuration FROM ' . _DB_PREFIX_ . 'configuration WHERE name = \'' . pSQL($data['name']) . '\'')) {
@@ -1441,7 +1446,7 @@ class XmlLoader
         }
 
         $backup_path = $this->img_path . 'p/';
-        $from_path = _PS_PROD_IMG_DIR_;
+        $from_path = _PS_PRODUCT_IMG_DIR_;
         if (!is_dir($backup_path) && !mkdir($backup_path)) {
             $this->setError(sprintf('Cannot create directory <i>%s</i>', $backup_path));
         }

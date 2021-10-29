@@ -1,0 +1,28 @@
+name: Js
+on: [ push, pull_request ]
+jobs:
+  js-unit-tests:
+    runs-on: ubuntu-latest
+    name: Run unit tests
+    strategy:
+      matrix:
+        js: [ '12', '13', '14', '15' ]
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.js }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache Node Directory
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Run tests
+        run: npm install && npm run test
+        working-directory: ./admin-dev/themes/new-theme

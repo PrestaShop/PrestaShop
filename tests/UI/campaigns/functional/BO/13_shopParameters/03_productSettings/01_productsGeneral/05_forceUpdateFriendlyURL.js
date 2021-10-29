@@ -2,8 +2,11 @@ require('module-alias/register');
 
 const {expect} = require('chai');
 
-// Import test context
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -14,9 +17,6 @@ const addProductPage = require('@pages/BO/catalog/products/add');
 
 // Import data
 const ProductFaker = require('@data/faker/product');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_productSettings_productsGeneral_forceUpdateFriendlyURL';
 
@@ -32,7 +32,7 @@ Create then edit product
 Check that the friendly URL is updated successfully
 Disable force update friendly URL
  */
-describe('Enable/Disable force update friendly URL', async () => {
+describe('BO - Shop Parameters - Product Settings : Enable/Disable force update friendly URL', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -86,13 +86,7 @@ describe('Enable/Disable force update friendly URL', async () => {
   ];
   tests.forEach((test, index) => {
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'goToProductSettingsPageTo'
-          + `${addProductPage.uppercaseFirstCharacter(test.args.action)}FriendlyURL`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPageTo${index}`, baseContext);
 
       await addProductPage.goToSubMenu(
         page,
@@ -107,7 +101,7 @@ describe('Enable/Disable force update friendly URL', async () => {
     it(`should ${test.args.action} force update friendly URL`, async function () {
       await testContext.addContextItem(this,
         'testIdentifier',
-        `${test.args.action}ForceUpdateFriendlyURL`,
+        `forceUpdateFriendlyURL${index}`,
         baseContext,
       );
 
@@ -129,12 +123,7 @@ describe('Enable/Disable force update friendly URL', async () => {
     });
 
     it('should go to the created product page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `goToProductPageToCheckFriendlyURL${productsPage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `goToProductPage${index}`, baseContext);
 
       await productsPage.resetFilter(page);
       await productsPage.goToProductPage(page, 1);
@@ -144,12 +133,7 @@ describe('Enable/Disable force update friendly URL', async () => {
     });
 
     it('should update the product name and check the friendly URL', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `UpdateProductAndCheckFriendlyURL${addProductPage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `UpdateProductAndCheckFriendlyURL${index}`, baseContext);
 
       const validationMessage = await addProductPage.createEditBasicProduct(page, test.args.editProduct);
       await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);

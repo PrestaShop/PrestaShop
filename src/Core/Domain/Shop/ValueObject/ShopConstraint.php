@@ -35,56 +35,60 @@ class ShopConstraint
     /**
      * @var ShopId|null
      */
-    private $shopId;
+    protected $shopId;
 
     /**
      * @var ShopGroupId|null
      */
-    private $shopGroupId;
+    protected $shopGroupId;
 
     /**
      * Indicate if the value returned matches the constraints strictly, else it fallbacks to Shop > Group > Global value
      *
      * @var bool
      */
-    private $strict;
+    protected $strict;
 
     /**
      * Constraint to get configuration for a specific shop
      *
      * @param int $shopId
+     * @param bool $isStrict
      *
      * @return static
      *
      * @throws ShopException
      */
-    public static function shop(int $shopId): self
+    public static function shop(int $shopId, bool $isStrict = false): self
     {
-        return new static($shopId, null, false);
+        return new static($shopId, null, $isStrict);
     }
 
     /**
      * Constraint to get configuration for a specific shop group
      *
      * @param int $shopGroupId
+     * @param bool $isStrict
      *
      * @return static
      *
      * @throws ShopException
      */
-    public static function shopGroup(int $shopGroupId): self
+    public static function shopGroup(int $shopGroupId, bool $isStrict = false): self
     {
-        return new static(null, $shopGroupId, false);
+        return new static(null, $shopGroupId, $isStrict);
     }
 
     /**
      * Constraint to get configuration for all shops (the global value)
      *
+     * @param bool $isStrict
+     *
      * @return static
      */
-    public static function allShops(): self
+    public static function allShops(bool $isStrict = false): self
     {
-        return new static(null, null, false);
+        return new static(null, null, $isStrict);
     }
 
     /**
@@ -94,7 +98,7 @@ class ShopConstraint
      *
      * @throws ShopException
      */
-    public function __construct(?int $shopId, ?int $shopGroupId, bool $strict = false)
+    protected function __construct(?int $shopId, ?int $shopGroupId, bool $strict = false)
     {
         $this->shopId = null !== $shopId ? new ShopId($shopId) : null;
         $this->shopGroupId = null !== $shopGroupId ? new ShopGroupId($shopGroupId) : null;

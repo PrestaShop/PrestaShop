@@ -39,6 +39,7 @@ use Product;
 use Search;
 use Shop;
 use ShopGroup;
+use StockAvailable;
 use Validate;
 
 /**
@@ -233,6 +234,7 @@ class AdminProductDataUpdater implements ProductInterface
                 if (in_array($product->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
                     Search::indexation(false, $product->id);
                 }
+                StockAvailable::setProductOutOfStock($product->id, StockAvailable::outOfStock($id_product_old));
 
                 return $product->id;
             }

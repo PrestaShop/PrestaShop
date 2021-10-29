@@ -74,9 +74,7 @@ class MaintenanceType extends TranslatorAwareType
                 SwitchType::class,
                 [
                     'required' => true,
-                    'attr' => [
-                        'multistore_configuration_key' => 'PS_SHOP_ENABLE',
-                    ],
+                    'multistore_configuration_key' => 'PS_SHOP_ENABLE',
                     'label' => $this->trans('Enable store', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
                         'We recommend that you deactivate your store while performing maintenance. Note that it will not disable the webservice.',
@@ -89,10 +87,10 @@ class MaintenanceType extends TranslatorAwareType
                 IpAddressType::class,
                 [
                     'required' => false,
+                    'multistore_configuration_key' => 'PS_MAINTENANCE_IP',
                     'empty_data' => '',
                     'attr' => [
                         'class' => 'col-md-5',
-                        'multistore_configuration_key' => 'PS_MAINTENANCE_IP',
                     ],
                     'label' => $this->trans('Maintenance IP', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
@@ -113,9 +111,7 @@ class MaintenanceType extends TranslatorAwareType
                     'locales' => $this->locales,
                     'hideTabs' => false,
                     'required' => true,
-                    'attr' => [
-                        'multistore_configuration_key' => 'PS_MAINTENANCE_TEXT',
-                    ],
+                    'multistore_configuration_key' => 'PS_MAINTENANCE_TEXT',
                     'label' => $this->trans('Custom maintenance text', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
                         'Display a customized message when the store is disabled.',

@@ -28,9 +28,12 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Exception;
+use Group;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
@@ -40,6 +43,16 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CustomerFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * Random integer representing group id which should never exist in test database
+     */
+    private const NON_EXISTING_GROUP_ID = 74011211;
+
+    /**
+     * Random integer representing customer id which should never exist in test database
+     */
+    private const NON_EXISTING_CUSTOMER_ID = 8120552;
+
     /**
      * @Given /^"(Partner offers)" is "(required|not required)"$/
      * @Then /^"(Partner offers)" should be "(required|not required)"$/
@@ -155,5 +168,65 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
         /** @var CustomerId $id */
         $id = $commandBus->handle($command);
         SharedStorage::getStorage()->set($customerReference, $id->getValue());
+    }
+
+    /**
+     * @Given customer :reference does not exist
+     *
+     * @param string $reference
+     */
+    public function setNonExistingCustomerReference(string $reference): void
+    {
+        if ($this->getSharedStorage()->exists($reference) && $this->getSharedStorage()->get($reference)) {
+            throw new RuntimeException(sprintf('Expected that customer "%s" should not exist', $reference));
+        }
+
+        $this->getSharedStorage()->set($reference, self::NON_EXISTING_CUSTOMER_ID);
+    }
+
+    /**
+     * @Then I should get error that customer was not found
+     */
+    public function assertCustomerNotFound(): void
+    {
+        $this->assertLastErrorIs(CustomerNotFoundException::class);
+    }
+
+    /**
+     * @Given group :groupReference named :name exists
+     *
+     * @param string $groupReference
+     * @param string $name
+     */
+    public function assertGroupExists(string $groupReference, string $name): void
+    {
+        $group = Group::searchByName($name);
+        if (!$group) {
+            throw new RuntimeException(sprintf('Group "%s" does not exist', $groupReference));
+        }
+
+        $this->getSharedStorage()->set($groupReference, (int) $group['id_group']);
+    }
+
+    /**
+     * @Given group :reference does not exist
+     *
+     * @param string $reference
+     */
+    public function setNonExistingGroupReference(string $reference): void
+    {
+        if ($this->getSharedStorage()->exists($reference) && $this->getSharedStorage()->get($reference)) {
+            throw new RuntimeException(sprintf('Expected that group "%s" should not exist', $reference));
+        }
+
+        $this->getSharedStorage()->set($reference, self::NON_EXISTING_GROUP_ID);
+    }
+
+    /**
+     * @Then I should get error that group was not found
+     */
+    public function assertGroupNotFound(): void
+    {
+        $this->assertLastErrorIs(GroupNotFoundException::class);
     }
 }

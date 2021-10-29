@@ -33,6 +33,8 @@ use Cart;
 use CartRule;
 use Configuration;
 use Context;
+use Cookie;
+use Country;
 use Currency;
 use Customer;
 use Language;
@@ -40,7 +42,6 @@ use Link;
 use Module;
 use ObjectModel;
 use Pack;
-use Phake;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Product;
@@ -53,14 +54,14 @@ use Tools;
  *
  * USAGE :
  *
- * public function setUp()
+ * public function setUp(): void
  * {
  *     parent::setUp();
  *     $this->contextMocker = (new ContextMocker())->mockContext();
  * }
  *
  *
- * public function tearDown()
+ * public function tearDown(): void
  * {
  *     parent::tearDown();
  *     $this->contextMocker->resetContext();
@@ -111,10 +112,9 @@ class ContextMocker
         Module::setContextInstanceForTesting($context);
         $context->shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
-        $context->customer = Phake::mock('Customer');
-        Phake::when($context->customer)->getGroups()->thenReturn(array());
-        $context->cookie   = Phake::mock('Cookie');
-        $context->country  = Phake::mock('Country');
+        $context->customer = new Customer();
+        $context->cookie   = new Cookie('mycookie');
+        $context->country  = new Country();
         $context->language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
         $context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         $protocol_link     = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))

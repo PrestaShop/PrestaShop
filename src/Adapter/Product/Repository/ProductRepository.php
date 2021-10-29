@@ -357,4 +357,57 @@ class ProductRepository extends AbstractObjectModelRepository
             sprintf('Failed to delete following products: "%s"', implode(', ', $failedIds))
         );
     }
+
+    /**
+     * @param string $searchPhrase
+     * @param LanguageId $languageId
+     * @param ShopId $shopId
+     * @param int|null $limit
+     *
+     * @return array<int, array<string, int|string>>
+     */
+    public function searchProducts(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit = null): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->join('p', $this->dbPrefix . 'product_shop', 'ps', 'ps.id_product = p.id_product AND ps.id_shop = :shopId')
+            ->leftJoin('p', $this->dbPrefix . 'product_lang', 'pl', 'pl.id_product = p.id_product AND pl.id_lang = :languageId')
+            ->leftJoin('p', $this->dbPrefix . 'image_shop', 'i', 'i.id_product = p.id_product AND i.id_shop = :shopId AND i.cover = 1')
+            ->leftJoin('p', $this->dbPrefix . 'product_supplier', 'psu', 'psu.id_product = p.id_product')
+            ->leftJoin('p', $this->dbPrefix . 'product_attribute', 'pa', 'pa.id_product = p.id_product')
+            ->setParameter('shopId', $shopId->getValue())
+            ->setParameter('languageId', $languageId->getValue())
+            ->addOrderBy('pl.name', 'ASC')
+            ->addGroupBy('p.id_product')
+        ;
+
+        $dbSearchPhrase = sprintf('"%%%s%%"', $searchPhrase);
+        $qb->where($qb->expr()->or(
+            $qb->expr()->like('pl.name', $dbSearchPhrase),
+
+            // Product references
+            $qb->expr()->like('p.isbn', $dbSearchPhrase),
+            $qb->expr()->like('p.upc', $dbSearchPhrase),
+            $qb->expr()->like('p.mpn', $dbSearchPhrase),
+            $qb->expr()->like('p.reference', $dbSearchPhrase),
+            $qb->expr()->like('p.ean13', $dbSearchPhrase),
+            $qb->expr()->like('p.supplier_reference', $dbSearchPhrase),
+
+            // Combination attributes
+            $qb->expr()->like('pa.isbn', $dbSearchPhrase),
+            $qb->expr()->like('pa.upc', $dbSearchPhrase),
+            $qb->expr()->like('pa.mpn', $dbSearchPhrase),
+            $qb->expr()->like('pa.reference', $dbSearchPhrase),
+            $qb->expr()->like('pa.ean13', $dbSearchPhrase),
+            $qb->expr()->like('pa.supplier_reference', $dbSearchPhrase)
+        ));
+
+        if (!empty($limit)) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->execute()->fetchAllAssociative();
+    }
 }

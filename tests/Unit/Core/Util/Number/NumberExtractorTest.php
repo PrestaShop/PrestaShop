@@ -42,7 +42,7 @@ class NumberExtractorTest extends TestCase
      */
     private $numberExtractor;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->numberExtractor = new NumberExtractor(PropertyAccess::createPropertyAccessor());

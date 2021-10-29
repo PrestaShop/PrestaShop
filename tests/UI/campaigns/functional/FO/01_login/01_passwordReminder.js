@@ -45,7 +45,7 @@ Go to login page in FO
 Use password reminder
  */
 
-describe('FO Password reminder', async () => {
+describe('FO - Login : Password reminder', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

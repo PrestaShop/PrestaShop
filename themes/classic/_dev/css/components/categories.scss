@@ -268,7 +268,7 @@
 
   a {
     font-weight: 600;
-    color: #000;
+    color: $black;
 
     &:not(.previous):not(.next) {
       letter-spacing: 0.125rem;

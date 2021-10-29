@@ -104,7 +104,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getEmployeeQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $sub = $this->connection->createQueryBuilder()
-            ->select(1)
+            ->select('1')
             ->from($this->dbPrefix . 'employee_shop', 'es')
             ->where('e.id_employee = es.id_employee')
             ->andWhere('es.id_shop IN (:context_shop_ids)');

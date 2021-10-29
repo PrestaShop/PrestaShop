@@ -79,7 +79,7 @@ export default class CategoryPositionExtension {
       : 0;
 
     const $categoryPositionContainer = $(row).find(
-      `.js-${this.grid.getId()}-position:first`,
+      GridMap.position(this.grid.getId()),
     );
 
     const categoryId = $categoryPositionContainer.data('id');
@@ -155,7 +155,7 @@ export default class CategoryPositionExtension {
           $row.attr('id', oldId.replace(/_[0-9]$/g, `_${newPosition}`));
         }
 
-        $positionWrapper.find(GridMap.position).text(newPosition + 1);
+        $positionWrapper.find(GridMap.selectPosition).text(newPosition + 1);
         $positionWrapper.data('position', newPosition);
       });
   }

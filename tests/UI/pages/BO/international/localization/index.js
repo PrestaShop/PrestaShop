@@ -1,7 +1,16 @@
 require('module-alias/register');
 const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
 
+/**
+ * Localization page, contains functions that can be used on the page
+ * @class
+ * @extends LocalizationBasePage
+ */
 class Localization extends LocalizationBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on localization page
+   */
   constructor() {
     super();
 
@@ -19,6 +28,7 @@ class Localization extends LocalizationBasePage {
     this.updatepriceDisplayForGroupsCHeckbox = '#import_localization_pack_content_to_import_5';
     this.downloadPackDataToggleInput = toggle => `#import_localization_pack_download_pack_data_${toggle}`;
     this.importButton = '#form-import-localization-save-button';
+
     // Configuration form selectors
     this.defaultLanguageSelector = '#form_default_language';
     this.languageFromBrowserToggleInput = toggle => `#form_detect_language_from_browser_${toggle}`;
@@ -30,10 +40,12 @@ class Localization extends LocalizationBasePage {
   /* Methods */
   /**
    * Import a localization pack
-   * @param page
-   * @param country
-   * @param contentToImport
-   * @param downloadPackData
+   * @param page {Page} Browser tab
+   * @param country {string} Country to select
+   * @param contentToImport {{importStates: boolean, importTaxes: boolean, importCurrencies: boolean,
+   * importLanguages: boolean, importUnits: boolean,
+   * updatePriceDisplayForGroups: boolean}} Data of content to import to choose
+   * @param downloadPackData {boolean} True if we need to download pack data
    * @return {Promise<void>}
    */
   async importLocalizationPack(page, country, contentToImport, downloadPackData = true) {
@@ -57,47 +69,51 @@ class Localization extends LocalizationBasePage {
 
     // Import the pack
     await this.clickAndWaitForNavigation(page, this.importButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
-
   /**
    * Select default language
-   * @param page
-   * @param language
-   * @param languageFromBrowser
+   * @param page {Page} Browser tab
+   * @param language {string} Language to select
+   * @param languageFromBrowser {boolean} True if we need to use language from browser
    * @returns {Promise<string>}
    */
   async setDefaultLanguage(page, language, languageFromBrowser = true) {
     await this.selectByVisibleText(page, this.defaultLanguageSelector, language);
     await page.check(this.languageFromBrowserToggleInput(languageFromBrowser ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveConfigurationFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Set default currency
-   * @param page
-   * @param currency
+   * @param page {Page} Browser tab
+   * @param currency {string} Value of currency to select
    * @returns {Promise<string>}
    */
   async setDefaultCurrency(page, currency) {
     this.dialogListener(page);
     await this.selectByVisibleText(page, this.defaultCurrencySelect, currency);
     await this.waitForSelectorAndClick(page, this.saveConfigurationFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Set default country
-   * @param page
-   * @param country
+   * @param page {Page} Browser tab
+   * @param country {string} Value of country to select
    * @return {Promise<string>}
    */
   async setDefaultCountry(page, country) {
     await this.selectByVisibleText(page, this.defaultCountrySelect, country);
     await this.clickAndWaitForNavigation(page, this.saveConfigurationFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
+
 module.exports = new Localization();

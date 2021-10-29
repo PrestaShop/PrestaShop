@@ -219,7 +219,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             foreach ($order_details as &$order_detail) {
                 if ($order_detail['image'] != null) {
                     $name = 'product_mini_' . (int) $order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int) $order_detail['product_attribute_id'] : '') . '.jpg';
-                    $path = _PS_PROD_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
+                    $path = _PS_PRODUCT_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
 
                     $order_detail['image_tag'] = preg_replace(
                         '/\.*' . preg_quote(__PS_BASE_URI__, '/') . '/',
@@ -238,7 +238,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             unset($order_detail); // don't overwrite the last order_detail later
         }
 
-        $cart_rules = $this->order->getCartRules($this->order_invoice->id);
+        $cart_rules = $this->order->getCartRules();
         $free_shipping = false;
         foreach ($cart_rules as $key => $cart_rule) {
             if ($cart_rule['free_shipping']) {
@@ -423,14 +423,14 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     /**
      * Returns different tax breakdown elements.
      *
-     * @return array Different tax breakdown elements
+     * @return array|bool Different tax breakdown elements
      */
     protected function getTaxBreakdown()
     {
         $breakdowns = [
             'product_tax' => $this->order_invoice->getProductTaxesBreakdown($this->order),
             'shipping_tax' => $this->order_invoice->getShippingTaxesBreakdown($this->order),
-            'ecotax_tax' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
+            'ecotax_tax' => Configuration::get('PS_USE_ECOTAX') ? $this->order_invoice->getEcoTaxTaxesBreakdown() : [],
             'wrapping_tax' => $this->order_invoice->getWrappingTaxesBreakdown(),
         ];
 
@@ -441,7 +441,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         }
 
         if (empty($breakdowns)) {
-            $breakdowns = false;
+            return false;
         }
 
         if (isset($breakdowns['product_tax'])) {

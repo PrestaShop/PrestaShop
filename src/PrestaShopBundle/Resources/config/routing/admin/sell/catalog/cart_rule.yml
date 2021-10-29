@@ -1,37 +1,37 @@
-#@todo: add legacy links after page is fully migrated
+# @todo: add legacy links after page is fully migrated
 admin_cart_rules_index:
   path: /
-  methods: [GET]
+  methods: [ GET ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:index'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::indexAction'
     _legacy_controller: AdminCartRules
-    #    _legacy_link: AdminCartRule
+    #  _legacy_link: AdminCartRule
 
 admin_cart_rules_search:
-    path: /search
-    methods: [GET]
-    defaults:
-        _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:search'
-        _legacy_controller: AdminCartRules
-    options:
-      expose: true
+  path: /search
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::searchAction'
+    _legacy_controller: AdminCartRules
+  options:
+    expose: true
 
 admin_cart_rules_search_grid:
   path: /
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.cart_rule
     redirectRoute: admin_cart_rules_index
     _legacy_controller: AdminCartRules
 
 admin_cart_rule_toggle_status:
   path: /{cartRuleId}/toggle-status
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:toggleStatus'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::toggleStatusAction'
     _legacy_controller: AdminCartRules
-   # _legacy_link: AdminCartRules:statuscart_rule
+    # _legacy_link: AdminCartRules:statuscart_rule
     _legacy_parameters:
       id_cart_rule: cartRuleId
   requirements:
@@ -39,11 +39,11 @@ admin_cart_rule_toggle_status:
 
 admin_cart_rules_delete:
   path: /{cartRuleId}/delete
-  methods: [POST, DELETE]
+  methods: [ POST, DELETE ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CartRule:delete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::deleteAction'
     _legacy_controller: AdminCartRules
-    #    _legacy_link: AdminCartRules:deletecart_rule
+    #  _legacy_link: AdminCartRules:deletecart_rule
     _legacy_parameters:
       id_cart_rule: cartRuleId
   requirements:
@@ -51,24 +51,24 @@ admin_cart_rules_delete:
 
 admin_cart_rules_bulk_delete:
   path: /bulk-delete
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CartRule:bulkDelete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::bulkDeleteAction'
     _legacy_controller: AdminCartRules
-#    _legacy_link: AdminCartRules:submitBulkdeletecart_rule
+#  _legacy_link: AdminCartRules:submitBulkdeletecart_rule
 
 admin_cart_rules_bulk_enable_status:
   path: /bulk-enable
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:bulkEnable'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::bulkEnableAction'
     _legacy_controller: AdminCartRules
-#    _legacy_link: AdminCartRules:submitBulkenableSelectioncart_rule
+#  _legacy_link: AdminCartRules:submitBulkenableSelectioncart_rule
 
 admin_cart_rules_bulk_disable_status:
   path: /bulk-disable
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:bulkDisable'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::bulkDisableAction'
     _legacy_controller: AdminCartRules
 #   _legacy_link: AdminCartRules:submitBulkdisableSelectioncart_rule

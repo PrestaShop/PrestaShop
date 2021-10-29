@@ -49,26 +49,32 @@ class AdminModuleDataProviderTest extends TestCase
      * @var AddonsInterface
      */
     private $addonsDataProvider;
+
     /**
      * @var AdminModuleDataProvider
      */
     private $adminModuleDataProvider;
+
     /**
      * @var CacheProvider
      */
     private $cacheProvider;
+
     /**
      * @var CategoriesProvider
      */
     private $categoriesProvider;
+
     /**
      * @var LoggerInterface
      */
     private $logger;
+
     /**
      * @var ModuleDataProvider
      */
     private $moduleProvider;
+
     /**
      * @var TranslatorInterface
      */
@@ -181,14 +187,13 @@ class AdminModuleDataProviderTest extends TestCase
     {
         $mock = $this->getMockBuilder(AdminModuleDataProvider::class)
             ->setConstructorArgs([
-                'languageISO' => $this->translator,
+                'translator' => $this->translator,
                 'logger' => $this->logger,
                 'addonsDataProvider' => $this->addonsDataProvider,
                 'categoriesProvider' => $this->categoriesProvider,
-                'moduleDataProvider' => $this->moduleProvider,
+                'modulesProvider' => $this->moduleProvider,
                 'cacheProvider' => $this->cacheProvider,
             ])
-            ->setMethods(['convertJsonForNewCatalog'])
             ->getMock();
 
         $mock->clearCatalogCache();

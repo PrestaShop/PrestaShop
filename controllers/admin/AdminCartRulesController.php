@@ -241,6 +241,7 @@ class AdminCartRulesControllerCore extends AdminController
         if (Tools::isSubmit('delete' . $this->table)) {
             $back = rawurldecode(Tools::getValue('back', ''));
             if (!empty($back)) {
+                $back .= (strpos($back, '?') === false ? '?' : '&') . 'conf=1';
                 $this->redirect_after = $back;
             }
         }
@@ -505,16 +506,11 @@ class AdminCartRulesControllerCore extends AdminController
                 break;
             case 'categories':
                 $categories = ['selected' => [], 'unselected' => []];
-                $results = Db::getInstance()->executeS('
-				SELECT DISTINCT name, c.id_category as id
-				FROM ' . _DB_PREFIX_ . 'category c
-				LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
-					ON (c.`id_category` = cl.`id_category`
-					AND cl.`id_lang` = ' . (int) Context::getContext()->language->id . Shop::addSqlRestrictionOnLang('cl') . ')
-				' . Shop::addSqlAssociation('category', 'c') . '
-				WHERE id_lang = ' . (int) Context::getContext()->language->id . '
-				ORDER BY name');
-                foreach ($results as $row) {
+                $categoryTree = Category::getNestedCategories(Category::getRootCategory()->id, (int) Context::getContext()->language->id, false);
+
+                $flatCategories = $this->populateCategories([], $categoryTree);
+
+                foreach ($flatCategories as $row) {
                     $categories[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
                 }
                 Context::getContext()->smarty->assign('product_rule_itemlist', $categories);
@@ -528,6 +524,25 @@ class AdminCartRulesControllerCore extends AdminController
         }
 
         return $this->createTemplate('product_rule.tpl')->fetch();
+    }
+
+    public function populateCategories(array $flatCategories, array $currentCategoryTree, string $currentPath = ''): array
+    {
+        if (!$currentCategoryTree) {
+            return $flatCategories;
+        }
+
+        $separator = ' > ';
+        foreach ($currentCategoryTree as $categoryArray) {
+            $fullName = ($currentPath ? $currentPath . $separator : '') . $categoryArray['name'];
+            $flatCategories[] = ['id' => $categoryArray['id_category'], 'name' => $fullName];
+            // recursive call for childrens
+            if (!empty($categoryArray['children'])) {
+                $flatCategories = $this->populateCategories($flatCategories, $categoryArray['children'], $fullName);
+            }
+        }
+
+        return $flatCategories;
     }
 
     public function ajaxProcess()

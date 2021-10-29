@@ -48,10 +48,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    public const GRID_ID = 'tax';
-
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
+
+    public const GRID_ID = 'tax';
 
     /**
      * {@inheritdoc}
@@ -175,12 +175,9 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('rate')
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'choice_translation_domain' => false,
-            ])
-            ->setAssociatedColumn('active')
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
+                    ->setAssociatedColumn('active')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))

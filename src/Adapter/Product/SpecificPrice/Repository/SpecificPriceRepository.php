@@ -32,11 +32,12 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotAddSpecificPriceException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotUpdateSpecificPriceException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\CannotAddSpecificPriceException;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use SpecificPrice;
 
@@ -109,6 +110,20 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
         );
 
         return $specificPrice;
+    }
+
+    /**
+     * @param SpecificPrice $specificPrice
+     * @param string[] $updatableProperties
+     */
+    public function partialUpdate(SpecificPrice $specificPrice, array $updatableProperties): void
+    {
+        $this->specificPriceValidator->validate($specificPrice);
+        $this->partiallyUpdateObjectModel(
+            $specificPrice,
+            $updatableProperties,
+            CannotUpdateSpecificPriceException::class
+        );
     }
 
     /**

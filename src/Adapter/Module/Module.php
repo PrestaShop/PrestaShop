@@ -233,7 +233,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onInstall()
+    public function onInstall(): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
@@ -260,7 +260,19 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onUninstall()
+    public function onPostInstall(): bool
+    {
+        if (!$this->hasValidInstance()) {
+            return false;
+        }
+
+        return $this->instance->postInstall();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onUninstall(): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
@@ -275,7 +287,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onUpgrade($version)
+    public function onUpgrade($version): bool
     {
         $this->database->set('version', $this->attributes->get('version_available'));
 
@@ -285,7 +297,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onEnable()
+    public function onEnable(): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
@@ -300,7 +312,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onDisable()
+    public function onDisable(): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
@@ -315,7 +327,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onMobileEnable()
+    public function onMobileEnable(): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
@@ -330,7 +342,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onMobileDisable()
+    public function onMobileDisable(): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
@@ -345,7 +357,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onReset()
+    public function onReset(): bool
     {
         if (!$this->hasValidInstance()) {
             return false;

@@ -13,46 +13,46 @@ class AddressData {
    * @param addressToCreate {Object} Could be used to force the value of some members
    */
   constructor(addressToCreate = {}) {
-    /** @member {string} Related customer email */
+    /** @type {string} Related customer email */
     this.email = addressToCreate.email || faker.internet.email(this.firstName, this.lastName, 'prestashop.com');
 
-    /** @member {string} Tax identification number of the customer */
+    /** @type {string} Tax identification number of the customer */
     this.dni = addressToCreate.dni || '';
 
-    /** @member {string} Address alias or name */
+    /** @type {string} Address alias or name */
     this.alias = addressToCreate.alias || faker.address.streetAddress();
 
-    /** @member {string} Customer firstname */
+    /** @type {string} Customer firstname */
     this.firstName = addressToCreate.firstName || faker.name.firstName();
 
-    /** @member {string} Customer lastname */
+    /** @type {string} Customer lastname */
     this.lastName = addressToCreate.lastName || faker.name.lastName();
 
-    /** @member {string} Company name if it's a company address */
+    /** @type {string} Company name if it's a company address */
     this.company = (addressToCreate.company || faker.company.companyName()).substring(0, 63);
 
-    /** @member {string} Tax identification number if it's a company */
+    /** @type {string} Tax identification number if it's a company */
     this.vatNumber = addressToCreate.vatNumber || '';
 
-    /** @member {string} Address first line */
+    /** @type {string} Address first line */
     this.address = addressToCreate.address || faker.address.streetAddress();
 
-    /** @member {string} Address second line */
+    /** @type {string} Address second line */
     this.secondAddress = addressToCreate.secondAddress || faker.address.secondaryAddress();
 
-    /** @member {string} Address postal code (default to this format #####) */
+    /** @type {string} Address postal code (default to this format #####) */
     this.postalCode = addressToCreate.postalCode || faker.address.zipCode('#####');
 
-    /** @member {string} Address city name */
+    /** @type {string} Address city name */
     this.city = addressToCreate.city || faker.address.city();
 
-    /** @member {string} Address country name */
+    /** @type {string} Address country name */
     this.country = addressToCreate.country || faker.random.arrayElement(countriesNames);
 
-    /** @member {string} Phone number */
+    /** @type {string} Phone number */
     this.phone = addressToCreate.homePhone || faker.phone.phoneNumber('01########');
 
-    /** @member {string} Other information to add on address */
+    /** @type {string} Other information to add on address */
     this.other = addressToCreate.other || '';
   }
 }
