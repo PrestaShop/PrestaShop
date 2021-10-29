@@ -31,7 +31,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 /**
  * Class BackupOptionsType builds form for backup options.
  */
@@ -83,11 +83,23 @@ class BackupOptionsType extends TranslatorAwareType
         $builder
             ->add('backup_all', SwitchType::class, [
                 'label' => $this->trans('Ignore statistics tables', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_BACKUP_ALL',
                 'help' => $backupAllHelp,
             ])
             ->add('backup_drop_tables', SwitchType::class, [
                 'label' => $this->trans('Drop existing tables during import', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_BACKUP_DROP_TABLE',
                 'help' => $backupDropTablesHelp,
             ]);
+    }
+
+       /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }
