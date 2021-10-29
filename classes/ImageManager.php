@@ -23,6 +23,25 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+if (version_compare(PHP_VERSION, '8.0.0', '<')) {
+    /**
+     * This class has been introduced since PHP 8.0.0, we need it for older versions so that
+     * PHPStan is happy.
+     */
+    final class GdImage
+    {
+        /**
+         * You cannot initialize a GdImage object except through helper functions.
+         */
+        private function __construct()
+        {
+        }
+
+        private function __clone()
+        {
+        }
+    }
+}
 
 /**
  * Class ImageManagerCore.
