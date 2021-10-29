@@ -35,17 +35,6 @@ export default {
 
       return null;
     },
-    combinationName() {
-      const combinations = this.product.combination_name.split(',');
-      const attributes = this.product.attribute_name.split(',');
-      const separator = ' - ';
-      let attr = '';
-      combinations.forEach((attribute, index) => {
-        const value = attribute.trim().slice(attributes[index].trim().length + separator.length);
-        attr += attr.length ? ` - ${value}` : value;
-      });
-      return attr;
-    },
     hasCombination() {
       return !!this.product.combination_id;
     },
