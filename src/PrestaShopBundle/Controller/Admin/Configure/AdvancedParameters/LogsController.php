@@ -36,6 +36,8 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use InvalidArgumentException;
+use Exception;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Logs" page display.
@@ -106,8 +108,12 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function saveSettingsAction(Request $request)
     {
-        $logsByEmailForm = $this->getFormHandler()->getForm();
-        $logsByEmailForm->handleRequest($request);
+        try {
+            $logsByEmailForm = $this->getFormHandler()->getForm();
+            $logsByEmailForm->handleRequest($request);
+        } catch (Exception $e){
+            $this->addFlash('failure', $e->getMessage());
+        }
 
         $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', ['controller' => $this]);
 
@@ -156,6 +162,8 @@ class LogsController extends FrameworkBundleAdminController
 
     /**
      * @return FormHandlerInterface the form handler to set the severity level
+     *
+     * @throws InvalidArgumentException
      */
     private function getFormHandler(): FormHandlerInterface
     {
