@@ -181,6 +181,9 @@ class SpecificPriceFormHandler {
     // eslint-disable-next-line
     $(SpecificMap.reductionType(selectorPrefix)).on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate),
     );
+
+    $(SpecificMap.idCurrency(selectorPrefix)).on('change', () => this.changeCurrencySymbol(usePrefixForCreate),
+    );
   }
 
   /**
@@ -205,10 +208,14 @@ class SpecificPriceFormHandler {
     $(SpecificMap.reductionType).on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate),
     );
 
+    $(SpecificMap.idCurrency(selectorPrefix)).on('change', () => this.changeCurrencySymbol(usePrefixForCreate),
+    );
+
     this.reinitializeDatePickers();
 
     this.initializeLeaveBPriceField(usePrefixForCreate);
     this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate);
+    this.changeCurrencySymbol(usePrefixForCreate);
   }
 
   /**
@@ -446,6 +453,21 @@ class SpecificPriceFormHandler {
     } else {
       $(`${selectorPrefix}sp_reduction_tax`).show();
     }
+  }
+
+  /**
+   * @param boolean usePrefixForCreate
+   *
+   * @private
+   */
+  private changeCurrencySymbol(
+    usePrefixForCreate: boolean,
+  ): void {
+    const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
+    const currencySymbol = $(`${selectorPrefix}sp_id_currency option:selected`).data('currency-symbol');
+
+    $(`${selectorPrefix}sp_price`).parent().find('.input-group-append .input-group-text').text(currencySymbol);
+    $(`${selectorPrefix}sp_reduction_type option[value="amount"]`).text(currencySymbol);
   }
 
   /**

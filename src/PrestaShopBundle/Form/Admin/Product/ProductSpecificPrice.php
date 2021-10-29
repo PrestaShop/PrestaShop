@@ -122,10 +122,7 @@ class ProductSpecificPrice extends CommonAbstractType
             $countryDataprovider->getCountries($this->locales[0]['id_lang']),
             'id_country'
         );
-        $this->currencies = $this->formatDataChoicesList(
-            $currencyDataprovider->getCurrencies(),
-            'id_currency'
-        );
+        $this->currencies = $currencyDataprovider->getCurrencies();
         $this->groups = $this->formatDataChoicesList(
             $groupDataprovider->getGroups($this->locales[0]['id_lang']),
             'id_group'
@@ -168,7 +165,16 @@ class ProductSpecificPrice extends CommonAbstractType
             'sp_id_currency',
             FormType\ChoiceType::class,
             [
-                'choices' => $this->currencies,
+                'choices' => $this->formatDataChoicesList($this->currencies, 'id_currency'),
+                'choice_attr' => function ($val, $key, $index) {
+                    foreach ($this->currencies as $currency) {
+                        if ($currency['id'] == $val) {
+                            return [
+                                'data-currency-symbol' => $currency['symbol'],
+                            ];
+                        }
+                    }
+                },
                 'required' => false,
                 'label' => false,
                 'attr' => [
