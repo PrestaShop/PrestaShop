@@ -8,7 +8,7 @@ admin_backups_index:
 
 admin_backups_save_options:
   path: /
-  methods: [PATCH, POST]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::saveOptionsAction'
     _legacy_controller: 'AdminBackup'
