@@ -93,7 +93,6 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $controllers = [
             'AdminFeatureFlag',
             'AdminLanguages',
-            'AdminPerformance',
             'AdminProfiles',
             'AdminSpecificPriceRule',
             'AdminStatuses',

@@ -319,6 +319,20 @@ class Taxes extends BOBasePage {
   }
 
   /**
+   * Enable/Disable eco tax
+   * @param page {Page} Browser tab
+   * @param enableEcoTax {boolean} True if we need to enable ecoTax
+   * @returns {Promise<string>}
+   */
+  async enableEcoTax(page, enableEcoTax = true) {
+    await page.check(this.useEcoTaxToggleInput(enableEcoTax ? 1 : 0));
+
+    // Click on save tax Option
+    await this.clickAndWaitForNavigation(page, this.saveTaxOptionButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
    * Go to Tax Rules page
    * @param page {Page} Browser tab
    * @return {Promise<void>}

@@ -73,6 +73,7 @@ module.exports = {
       reference: 'demo_14',
       category: 'Home Accessories',
       price: 13.90,
+      priceTaxIncl: 16.68,
       quantity: 300,
       status: true,
     },

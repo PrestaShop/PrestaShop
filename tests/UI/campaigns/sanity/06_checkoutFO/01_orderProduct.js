@@ -1,21 +1,24 @@
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'sanity_checkoutFO_orderProduct';
-
-// Importing pages
+// Import pages
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const loginPage = require('@pages/FO/login');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
+// Import data
 const {DefaultCustomer} = require('@data/demo/customer');
 const CartData = require('@data/FO/cart');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
+
+const baseContext = 'sanity_checkoutFO_orderProduct';
 
 let browserContext;
 let page;
@@ -23,7 +26,7 @@ let page;
 /*
   Order a product and check order confirmation
  */
-describe('Order a product and check order confirmation', async () => {
+describe('BO - Checkout : Order a product and check order confirmation', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -39,6 +42,7 @@ describe('Order a product and check order confirmation', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
     await homePage.goTo(page, global.FO.URL);
+
     const result = await homePage.isHomePage(page);
     await expect(result).to.be.true;
   });
@@ -47,14 +51,16 @@ describe('Order a product and check order confirmation', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
     await homePage.goToLoginPage(page);
+
     const pageTitle = await loginPage.getPageTitle(page);
     await expect(pageTitle).to.equal(loginPage.pageTitle);
   });
 
-  it('should sign In in FO With default account', async function () {
+  it('should sign In in FO with default account', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
     await loginPage.customerLogin(page, DefaultCustomer);
+
     const connected = await homePage.isCustomerConnected(page);
     await expect(connected, 'Customer is not connected in FO').to.be.true;
   });
@@ -63,6 +69,7 @@ describe('Order a product and check order confirmation', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
     await homePage.goToHomePage(page);
+
     const result = await homePage.isHomePage(page);
     await expect(result).to.be.true;
   });
@@ -72,6 +79,7 @@ describe('Order a product and check order confirmation', async () => {
 
     await homePage.addProductToCartByQuickView(page, 1, '1');
     await homePage.proceedToCheckout(page);
+
     const pageTitle = await cartPage.getPageTitle(page);
     await expect(pageTitle).to.equal(cartPage.pageTitle);
   });
@@ -104,6 +112,7 @@ describe('Order a product and check order confirmation', async () => {
 
   it('should validate Step Address and go to Delivery Step', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryStep', baseContext);
+
     const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
     await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
   });
@@ -119,6 +128,7 @@ describe('Order a product and check order confirmation', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
     await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+
     const pageTitle = await orderConfirmationPage.getPageTitle(page);
     await expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
 

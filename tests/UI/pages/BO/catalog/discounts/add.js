@@ -76,6 +76,13 @@ class AddCartRule extends BOBasePage {
     // Discount others selectors
     this.discountOffRadioButton = this.applyDiscountRadioButton('off');
 
+    // Apply discount to selectors
+    this.applyDiscountToOrderCheckbox = '#apply_discount_to_order';
+    this.applyDiscountToSpecificProductCheckbox = '#apply_discount_to_product';
+    this.productNameInput = '#reductionProductFilter';
+    this.productSearchResultBlock = 'div.ac_results';
+    this.productSearchResultItem = `${this.productSearchResultBlock} .ac_even`;
+
     // Exclude discount products and free gift selectors
     this.excludeDiscountProductsToggle = toggle => `${this.cartRuleForm} #reduction_exclude_special_${toggle}`;
     this.sendFreeGifToggle = toggle => `${this.cartRuleForm} #free_gift_${toggle}`;
@@ -195,6 +202,22 @@ class AddCartRule extends BOBasePage {
       default:
         // Do nothing for this option
         throw new Error(`${cartRuleData.discountType} was not found as a discount option`);
+    }
+
+    // Set apply discount
+    switch (cartRuleData.applyDiscountTo) {
+      case 'Order':
+        await page.check(this.applyDiscountToOrderCheckbox);
+        break;
+      case 'Specific product':
+        await page.check(this.applyDiscountToSpecificProductCheckbox);
+        await this.setValue(page, this.productNameInput, cartRuleData.product);
+        await this.waitForVisibleSelector(page, this.productSearchResultBlock);
+        await this.waitForSelectorAndClick(page, this.productSearchResultItem);
+        break;
+      default:
+        // Do nothing for this option
+        throw new Error(`${cartRuleData.applyDiscountTo} was not found as apply a discount to option`);
     }
 
     // Set free gift

@@ -72,11 +72,19 @@ final class CustomerDiscountGridDataFactory implements GridDataFactoryInterface
             false
         );
 
+        $numDiscounts = count($discounts);
+
+        $discounts = array_slice(
+            $discounts,
+            (int) $searchCriteria->getOffset(),
+            (int) $searchCriteria->getLimit()
+        );
+
         $records = new RecordCollection($discounts);
 
         return new GridData(
             $records,
-            $records->count()
+            $numDiscounts
         );
     }
 }

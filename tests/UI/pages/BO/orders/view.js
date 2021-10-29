@@ -48,6 +48,7 @@ class Order extends BOBasePage {
     // Products block
     this.productsCountSpan = '#orderProductsPanelCount';
     this.orderProductsTableProductName = row => `${this.orderProductsTableNameColumn(row)} p.productName`;
+    this.orderProductsTableProductReference = row => `${this.orderProductsTableNameColumn(row)} p.productReference`;
     this.orderProductsTableProductBasePrice = row => `${this.orderProductsRowTable(row)} td.cellProductUnitPrice`;
     this.orderProductsTableProductQuantity = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity`;
     this.orderProductsTableProductAvailable = row => `${this.orderProductsRowTable(row)}
@@ -75,6 +76,7 @@ class Order extends BOBasePage {
     this.addProductRowQuantity = '#add_product_row_quantity';
     this.addProductRowStockLocation = '#addProductLocation';
     this.addProductAvailable = '#addProductAvailable';
+    this.addProductTotalPrice = '#addProductTotalPrice';
     this.addProductAddButton = '#add_product_row_add';
     this.addProductCancelButton = '#add_product_row_cancel';
 
@@ -549,6 +551,7 @@ class Order extends BOBasePage {
     return {
       stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
       available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
+      price: parseFloat(await this.getTextContent(page, this.addProductTotalPrice)),
     };
   }
 
@@ -596,6 +599,15 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Is add product table row visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isAddProductTableRowVisible(page) {
+    return this.elementVisible(page, this.addProductTableRow, 1000);
+  }
+
+  /**
    * Get product details
    * @param page {Page} Browser tab
    * @param row {number} Product row on table
@@ -604,6 +616,7 @@ class Order extends BOBasePage {
   async getProductDetails(page, row) {
     return {
       name: await this.getTextContent(page, this.orderProductsTableProductName(row)),
+      reference: await this.getTextContent(page, this.orderProductsTableProductReference(row)),
       basePrice: parseFloat((await this.getTextContent(
         page,
         this.orderProductsTableProductBasePrice(row))).replace('€', ''),

@@ -108,8 +108,8 @@ class ImageManagerCore
     }
 
     /**
-     * @param $cacheImage
-     * @param $disableCache
+     * @param string $cacheImage
+     * @param bool $disableCache
      *
      * @return string
      */
@@ -325,22 +325,24 @@ class ImageManagerCore
     }
 
     /**
-     * @param $dstImage
-     * @param $srcImage
-     * @param $dstX
-     * @param $dstY
-     * @param $srcX
-     * @param $srcY
-     * @param $dstW
-     * @param $dstH
-     * @param $srcW
-     * @param $srcH
+     * @param resource|GdImage $dstImage
+     * @param resource|GdImage $srcImage
+     * @param int $dstX
+     * @param int $dstY
+     * @param int $srcX
+     * @param int $srcY
+     * @param int $dstW
+     * @param int $dstH
+     * @param int $srcW
+     * @param int $srcH
      * @param int $quality
      *
      * @return bool
      */
     public static function imagecopyresampled(
+        // @phpstan-ignore-next-line
         &$dstImage,
+        // @phpstan-ignore-next-line
         $srcImage,
         $dstX,
         $dstY,

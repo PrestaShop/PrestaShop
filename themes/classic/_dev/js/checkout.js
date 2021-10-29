@@ -46,7 +46,7 @@ function setUpCheckout() {
   });
 
   $(prestashop.themeSelectors.checkout.giftCheckbox).on('click', () => {
-    $('#gift').collapse('toggle');
+    $('#gift').slideToggle();
   });
 }
 

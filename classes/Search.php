@@ -24,11 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-/*
- * @deprecated This const is deprecated you should use the configuration variable instead Configuration::get('PS_SEARCH_MAX_WORD_LENGTH')
- */
-define('PS_SEARCH_MAX_WORD_LENGTH', 30);
-
 /* Copied from Drupal search module, except for \x{0}-\x{2f} that has been replaced by \x{0}-\x{2c}\x{2e}-\x{2f} in order to keep the char '-' */
 define(
     'PREG_CLASS_SEARCH_EXCLUDE',
@@ -556,7 +551,7 @@ class SearchCore
     }
 
     /**
-     * @param $weight_array
+     * @param array $weight_array
      *
      * @return string
      */
@@ -708,12 +703,12 @@ class SearchCore
     }
 
     /**
-     * @param $product_array
-     * @param $weight_array
-     * @param $key
-     * @param $value
-     * @param $id_lang
-     * @param $iso_code
+     * @param array $product_array
+     * @param array $weight_array
+     * @param string $key
+     * @param string $value
+     * @param int $id_lang
+     * @param string|bool $iso_code
      */
     protected static function fillProductArray(&$product_array, $weight_array, $key, $value, $id_lang, $iso_code)
     {
@@ -1057,7 +1052,8 @@ class SearchCore
     }
 
     /**
-     * @param $context , $queryString
+     * @param Context $context
+     * @param string $queryString
      *
      * @return string
      *

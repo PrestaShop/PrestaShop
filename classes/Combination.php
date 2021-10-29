@@ -369,7 +369,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @param $idsImage
+     * @param array<int> $idsImage
      *
      * @return bool
      */
@@ -401,7 +401,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @param $values
+     * @param array{'id': int} $values
      *
      * @return bool
      */
@@ -416,7 +416,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @param $idLang
+     * @param int $idLang
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
@@ -452,8 +452,8 @@ class CombinationCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param $table
-     * @param $hasActiveColumn
+     * @param string|null $table Name of table linked to entity
+     * @param bool $hasActiveColumn True if the table has an active column
      *
      * @return bool
      */

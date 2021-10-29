@@ -62,6 +62,11 @@ class ProductData {
     /** @type {string} Tac rule to apply the product */
     this.taxRule = productToCreate.taxRule || 'FR Taux standard (20%)';
 
+    /** @type {number} EcoTax tax included of the product */
+    this.ecoTax = productToCreate.ecoTax === undefined
+      ? faker.random.number({min: 10, max: 20})
+      : productToCreate.ecoTax;
+
     /** @type {Object|{combinations: ?string, discount: ?number, startingAt: ?number}} Specific price of the product */
     this.specificPrice = productToCreate.specificPrice || {
       combinations: 'Size - S, Color - White',
@@ -75,10 +80,12 @@ class ProductData {
       : productToCreate.minimumQuantity;
 
     /** @type {string} Stock location of the product */
-    this.stockLocation = productToCreate.stockLocation || '';
+    this.stockLocation = productToCreate.stockLocation || 'stock 1';
 
-    /** @type {string} Low stock level of the product */
-    this.lowStockLevel = productToCreate.lowStockLevel;
+    /** @type {number} Low stock level of the product */
+    this.lowStockLevel = productToCreate.lowStockLevel === undefined
+      ? faker.random.number({min: 1, max: 9})
+      : productToCreate.lowStockLevel;
 
     /** @type {string} Label to add if product is in stock */
     this.labelWhenInStock = productToCreate.labelWhenInStock || 'Label when in stock';

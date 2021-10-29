@@ -1446,7 +1446,7 @@ class XmlLoader
         }
 
         $backup_path = $this->img_path . 'p/';
-        $from_path = _PS_PROD_IMG_DIR_;
+        $from_path = _PS_PRODUCT_IMG_DIR_;
         if (!is_dir($backup_path) && !mkdir($backup_path)) {
             $this->setError(sprintf('Cannot create directory <i>%s</i>', $backup_path));
         }

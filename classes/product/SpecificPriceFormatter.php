@@ -63,7 +63,8 @@ class SpecificPriceFormatterCore
      *
      * @param array $specificPrice
      * @param bool $isTaxIncluded
-     * @param Context $context
+     * @param Currency $currency
+     * @param bool $displayDiscountPrice
      */
     public function __construct(array $specificPrice, bool $isTaxIncluded, Currency $currency, bool $displayDiscountPrice)
     {

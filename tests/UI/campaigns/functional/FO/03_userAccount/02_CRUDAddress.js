@@ -147,7 +147,8 @@ describe('FO - Account : CRUD address', async () => {
     it('should go to edit address page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditAddressPage', baseContext);
 
-      await foAddressesPage.goToEditAddressPage(page);
+      const addressPosition = await foAddressesPage.getAddressPosition(page, createAddressData.alias);
+      await foAddressesPage.goToEditAddressPage(page, addressPosition);
 
       const pageHeaderTitle = await foAddAddressesPage.getHeaderTitle(page);
       await expect(pageHeaderTitle).to.equal(foAddAddressesPage.updateFormTitle);
@@ -195,11 +196,12 @@ describe('FO - Account : CRUD address', async () => {
     });
   });
 
-  describe('Update the created address on FO', async () => {
+  describe('Delete the address on FO', async () => {
     it('should delete the address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress', baseContext);
 
-      const textResult = await foAddressesPage.deleteAddress(page);
+      const addressPosition = await foAddressesPage.getAddressPosition(page, editAddressData.alias);
+      const textResult = await foAddressesPage.deleteAddress(page, addressPosition);
       await expect(textResult).to.equal(foAddressesPage.deleteAddressSuccessfulMessage);
     });
   });

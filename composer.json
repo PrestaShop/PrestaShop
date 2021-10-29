@@ -184,9 +184,6 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "post-update-cmd": [
-            "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile"
-        ],
         "create-release": "@php tools/build/CreateRelease.php",
         "create-test-db": [
             "@php ./tests/bin/create-test-db.php"

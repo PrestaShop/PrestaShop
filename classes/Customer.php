@@ -272,8 +272,8 @@ class CustomerCore extends ObjectModel
     /**
      * Adds current Customer as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
-     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
+     * @param bool $autodate Automatically set `date_upd` and `date_add` columns
+     * @param bool $null_values Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Indicates whether the Customer has been successfully added
      *
@@ -790,7 +790,8 @@ class CustomerCore extends ObjectModel
                         `id_lang` = ' . (int) $idLang . '
                         AND `id_customer` = ' . (int) $this->id . '
                         AND a.`deleted` = 0
-                        AND a.`active` = 1';
+                        AND a.`active` = 1
+                    ORDER BY a.`alias`';
 
         if (null !== $idAddress) {
             $sql .= ' AND a.`id_address` = ' . (int) $idAddress;
@@ -1413,7 +1414,7 @@ class CustomerCore extends ObjectModel
      * Set Customer Groups
      * (for webservice).
      *
-     * @param $result
+     * @param array $result
      *
      * @return bool
      */
