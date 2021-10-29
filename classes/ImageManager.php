@@ -340,7 +340,9 @@ class ImageManagerCore
      * @return bool
      */
     public static function imagecopyresampled(
+        // @phpstan-ignore-next-line
         &$dstImage,
+        // @phpstan-ignore-next-line
         $srcImage,
         $dstX,
         $dstY,
