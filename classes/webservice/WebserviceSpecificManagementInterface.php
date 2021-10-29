@@ -36,9 +36,9 @@ interface WebserviceSpecificManagementInterface
     public function manage();
 
     /**
-     * This must be return an array with specific values as WebserviceRequest expects.
+     * This must be return a string with specific values as WebserviceRequest expects.
      *
-     * @return array
+     * @return string
      */
     public function getContent();
 }

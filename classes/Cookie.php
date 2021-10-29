@@ -55,10 +55,10 @@ class CookieCore
     /** @var array Contain cookie content in a key => value format */
     protected $_content = [];
 
-    /** @var array Crypted cookie name for setcookie() */
+    /** @var string Crypted cookie name for setcookie() */
     protected $_name;
 
-    /** @var array expiration date for setcookie() */
+    /** @var int expiration date for setcookie() */
     protected $_expire;
 
     /** @var bool|string Website domain for setcookie() */
@@ -67,7 +67,7 @@ class CookieCore
     /** @var string|bool SameSite for setcookie() */
     protected $_sameSite;
 
-    /** @var array Path for setcookie() */
+    /** @var string Path for setcookie() */
     protected $_path;
 
     /** @var PhpEncryption cipher tool instance */
@@ -250,7 +250,7 @@ class CookieCore
         }
 
         /* Customer is valid only if it can be load and if cookie password is the same as database one */
-        if ($this->logged == 1 && $this->id_customer && Validate::isUnsignedId($this->id_customer) && Customer::checkPassword((int) ($this->id_customer), $this->passwd)) {
+        if ($this->logged == true && $this->id_customer && Validate::isUnsignedId($this->id_customer) && Customer::checkPassword((int) ($this->id_customer), $this->passwd)) {
             return true;
         }
 
@@ -362,7 +362,7 @@ class CookieCore
 
         //checks if the language exists, if not choose the default language
         if (!$this->_standalone && !Language::getLanguage((int) $this->id_lang)) {
-            $this->id_lang = Configuration::get('PS_LANG_DEFAULT');
+            $this->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
             // set detect_language to force going through Tools::setCookieLanguage to figure out browser lang
             $this->detect_language = true;
         }

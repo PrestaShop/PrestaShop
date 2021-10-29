@@ -30,7 +30,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     /** @var string */
     protected $output;
 
-    /** @var WebserviceRequest */
+    /** @var WebserviceRequestCore */
     protected $wsObject;
 
     /**
@@ -1121,9 +1121,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         $image->position = Image::getHighestPosition($product->id) + 1;
 
                         if (!Image::getCover((int) $product->id)) {
-                            $image->cover = 1;
+                            $image->cover = true;
                         } else {
-                            $image->cover = 0;
+                            $image->cover = false;
                         }
 
                         if (!$image->add()) {

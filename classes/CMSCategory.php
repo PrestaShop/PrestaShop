@@ -34,7 +34,7 @@ class CMSCategoryCore extends ObjectModel
     public $name;
 
     /** @var bool Status for display */
-    public $active = 1;
+    public $active = true;
 
     /** @var string|array<int, string> Description */
     public $description;
@@ -308,10 +308,10 @@ class CMSCategoryCore extends ObjectModel
      */
     public function deleteSelection($categories)
     {
-        $return = 1;
+        $return = true;
         foreach ($categories as $id_category_cms) {
             $category_cms = new CMSCategory($id_category_cms);
-            $return &= $category_cms->delete();
+            $return = $return && $category_cms->delete();
         }
 
         return $return;
@@ -460,7 +460,7 @@ class CMSCategoryCore extends ObjectModel
     /**
      * Return an array of all children of the current CMSCategory.
      *
-     * @return PrestaShopCollection Collection of CMSCategory
+     * @return PrestaShopCollection|array Collection of CMSCategory
      */
     private function getAllChildren()
     {

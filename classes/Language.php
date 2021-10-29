@@ -91,10 +91,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
     protected static $_cache_language_installation_by_locale = null;
 
-    /** @var array Contains data from all languages, indexed by locale */
+    /** @var array|null Contains data from all languages, indexed by locale */
     protected static $_cache_all_language_json = null;
 
-    /** @var array Contains data from all languages, indexed by iso code */
+    /** @var array|null Contains data from all languages, indexed by iso code */
     protected static $_cache_all_languages_iso;
 
     public static $locale_crowdin_lang = 'en-UD';
@@ -117,10 +117,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         ],
     ];
 
-    /** @var array Languages cache */
+    /** @var array|null Languages cache */
     protected static $_checkedLangs;
     /**
-     * @var array[] language information, indexed by id_language
+     * @var array[]|null language information, indexed by id_language
      *
      * @see loadLanguages()
      */
@@ -740,7 +740,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @param int $id_lang Language ID
      *
-     * @return string 2-letter ISO code
+     * @return string|bool 2-letter ISO code
      */
     public static function getIsoById($id_lang)
     {

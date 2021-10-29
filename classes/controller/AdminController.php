@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AdminControllerCore extends Controller
 {
@@ -59,7 +60,7 @@ class AdminControllerCore extends Controller
     /** @var int */
     public $default_form_language;
 
-    /** @var bool */
+    /** @var int */
     public $allow_employee_form_lang;
 
     /** @var string */
@@ -104,7 +105,7 @@ class AdminControllerCore extends Controller
     /** @var string "shop" or "group_shop" */
     public $shopLinkType;
 
-    /** @var string Default ORDER BY clause when `$_orderBy` is not defined */
+    /** @var string|bool Default ORDER BY clause when `$_orderBy` is not defined */
     protected $_defaultOrderBy = false;
 
     /** @var string */
@@ -197,7 +198,7 @@ class AdminControllerCore extends Controller
     /** @var bool Automatically join language table if true */
     public $lang = false;
 
-    /** @var array WHERE clause determined by filter fields */
+    /** @var array|bool WHERE clause determined by filter fields */
     protected $_filter;
 
     /** @var string */
@@ -302,7 +303,7 @@ class AdminControllerCore extends Controller
     /** @var string Having rows into data query to display list */
     protected $_having;
 
-    /** @var string Use SQL_CALC_FOUND_ROWS / FOUND_ROWS to count the number of records */
+    /** @var string|bool Use SQL_CALC_FOUND_ROWS / FOUND_ROWS to count the number of records */
     protected $_use_found_rows = true;
 
     /** @var bool */
@@ -368,7 +369,7 @@ class AdminControllerCore extends Controller
     /** @var int */
     public $multishop_context = -1;
 
-    /** @var false */
+    /** @var bool */
     public $multishop_context_group = true;
 
     /** @var array Current breadcrumb position as an array of tab names */
@@ -1747,7 +1748,7 @@ class AdminControllerCore extends Controller
      *
      * @param bool $opt Return an empty object if load fail
      *
-     * @return ObjectModel|false
+     * @return ObjectModel|bool
      */
     protected function loadObject($opt = false)
     {
@@ -2808,7 +2809,7 @@ class AdminControllerCore extends Controller
         parent::init();
 
         if (Tools::getValue('ajax')) {
-            $this->ajax = '1';
+            $this->ajax = true;
         }
 
         if (null === $this->context->link) {
@@ -3301,7 +3302,7 @@ class AdminControllerCore extends Controller
                 break;
             }
 
-            $this->_listTotal = Db::getInstance()->getValue($list_count, false);
+            $this->_listTotal = (int) Db::getInstance()->getValue($list_count, false);
 
             if ($shouldLimitSqlResults) {
                 $start = (int) $start - (int) $limit;
@@ -4742,7 +4743,7 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * {@inheritdoc}
+     * @return ContainerInterface
      */
     protected function buildContainer()
     {

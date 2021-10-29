@@ -73,10 +73,10 @@ class OrderCore extends ObjectModel
     public $conversion_rate;
 
     /** @var bool Customer is ok for a recyclable package */
-    public $recyclable = 1;
+    public $recyclable = true;
 
     /** @var bool True if the customer wants a gift wrapping */
-    public $gift = 0;
+    public $gift = false;
 
     /** @var string Gift message if specified */
     public $gift_message;
@@ -309,7 +309,7 @@ class OrderCore extends ObjectModel
     public function getFields()
     {
         if (!$this->id_lang) {
-            $this->id_lang = Configuration::get('PS_LANG_DEFAULT', null, null, $this->id_shop);
+            $this->id_lang = (int) Configuration::get('PS_LANG_DEFAULT', null, null, $this->id_shop);
         }
 
         return parent::getFields();
@@ -626,8 +626,8 @@ class OrderCore extends ObjectModel
      * Get order products.
      *
      * @param bool $products
-     * @param bool $selected_products
-     * @param bool $selected_qty
+     * @param bool|array $selected_products
+     * @param bool|array $selected_qty
      * @param bool $fullInfos
      *
      * @return array Products with price, quantity (with taxe and without)
@@ -647,9 +647,11 @@ class OrderCore extends ObjectModel
             // Change qty if selected
             if ($selected_qty) {
                 $row['product_quantity'] = 0;
-                foreach ($selected_products as $key => $id_product) {
-                    if ($row['id_order_detail'] == $id_product) {
-                        $row['product_quantity'] = (int) $selected_qty[$key];
+                if (is_array($selected_products)) {
+                    foreach ($selected_products as $key => $id_product) {
+                        if ($row['id_order_detail'] == $id_product) {
+                            $row['product_quantity'] = (int) $selected_qty[$key];
+                        }
                     }
                 }
                 if (!$row['product_quantity']) {
@@ -770,12 +772,11 @@ class OrderCore extends ObjectModel
     /**
      * Count virtual products in order.
      *
-     * @return int number of virtual products
+     * @return array<int, array<string, int|string|null>> number of virtual products
      */
     public function getVirtualProducts()
     {
-        $sql = '
-            SELECT `product_id`, `product_attribute_id`, `download_hash`, `download_deadline`
+        $sql = 'SELECT `product_id`, `product_attribute_id`, `download_hash`, `download_deadline`
             FROM `' . _DB_PREFIX_ . 'order_detail` od
             WHERE od.`id_order` = ' . (int) $this->id . '
                 AND `download_hash` <> \'\'';
@@ -804,7 +805,7 @@ class OrderCore extends ObjectModel
                 return true;
             }
 
-            $virtual &= (bool) $product['is_virtual'];
+            $virtual = $virtual && (bool) $product['is_virtual'];
         }
 
         return $virtual;
@@ -1082,7 +1083,7 @@ class OrderCore extends ObjectModel
     /**
      * Get product total without taxes.
      *
-     * @return Product total without taxes
+     * @return float total without taxes
      */
     public function getTotalProductsWithoutTaxes($products = false)
     {
@@ -1092,7 +1093,7 @@ class OrderCore extends ObjectModel
     /**
      * Get product total with taxes.
      *
-     * @return Product total with taxes
+     * @return float total with taxes
      */
     public function getTotalProductsWithTaxes($products = false)
     {
@@ -1745,7 +1746,7 @@ class OrderCore extends ObjectModel
      */
     public function getPreviousOrderId()
     {
-        return Db::getInstance()->getValue('
+        return (int) Db::getInstance()->getValue('
             SELECT id_order
             FROM ' . _DB_PREFIX_ . 'orders
             WHERE id_order < ' . (int) $this->id
@@ -1762,7 +1763,7 @@ class OrderCore extends ObjectModel
      */
     public function getNextOrderId()
     {
-        return Db::getInstance()->getValue('
+        return (int) Db::getInstance()->getValue('
             SELECT id_order
             FROM ' . _DB_PREFIX_ . 'orders
             WHERE id_order > ' . (int) $this->id
@@ -2113,7 +2114,7 @@ class OrderCore extends ObjectModel
      */
     public function getOrdersTotalPaid()
     {
-        return Db::getInstance()->getValue(
+        return (float) Db::getInstance()->getValue(
             'SELECT SUM(total_paid_tax_incl)
             FROM `' . _DB_PREFIX_ . 'orders`
             WHERE `reference` = \'' . pSQL($this->reference) . '\'
@@ -2717,7 +2718,7 @@ class OrderCore extends ObjectModel
     /**
      * Re calculate shipping cost.
      *
-     * @return object $order
+     * @return bool|object $order
      */
     public function refreshShippingCost()
     {

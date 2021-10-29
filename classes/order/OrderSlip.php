@@ -49,13 +49,13 @@ class OrderSlipCore extends ObjectModel
     /** @var float */
     public $total_shipping_tax_incl;
 
-    /** @var int */
+    /** @var float */
     public $amount;
 
     /** @var int */
     public $shipping_cost;
 
-    /** @var int */
+    /** @var float */
     public $shipping_cost_amount;
 
     /** @var int */
@@ -307,7 +307,7 @@ class OrderSlipCore extends ObjectModel
         $order_slip->partial = 0;
 
         if ($shipping_cost !== false) {
-            $order_slip->shipping_cost = true;
+            $order_slip->shipping_cost = 1;
             $carrier = new Carrier((int) $order->id_carrier);
             $address = Address::initialize($order->id_address_delivery, false);
             $tax_calculator = $carrier->getTaxCalculator($address);
@@ -319,7 +319,7 @@ class OrderSlipCore extends ObjectModel
                 $order_slip->{'total_shipping_tax_' . $inc_or_ex_2} = $order_slip->{'total_shipping_tax_' . $inc_or_ex_1};
             }
         } else {
-            $order_slip->shipping_cost = false;
+            $order_slip->shipping_cost = 0;
         }
 
         $order_slip->amount = 0;
@@ -446,7 +446,7 @@ class OrderSlipCore extends ObjectModel
         $orderSlip->id_customer = (int) $order->id_customer;
         $orderSlip->id_order = (int) $order->id;
         $orderSlip->amount = (float) $amount;
-        $orderSlip->shipping_cost = false;
+        $orderSlip->shipping_cost = 0;
         $orderSlip->shipping_cost_amount = (float) $shipping_cost_amount;
         $orderSlip->conversion_rate = $currency->conversion_rate;
         $orderSlip->partial = 1;

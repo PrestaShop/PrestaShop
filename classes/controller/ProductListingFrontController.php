@@ -220,7 +220,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      *
      * @param ProductSearchQuery $query
      *
-     * @return ProductSearchProviderInterface or null
+     * @return ProductSearchProviderInterface|null
      */
     private function getProductSearchProviderFromModules($query)
     {

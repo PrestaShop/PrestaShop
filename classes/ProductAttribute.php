@@ -254,7 +254,7 @@ class ProductAttributeCore extends ObjectModel
     /**
      * Return true if the Attribute is a color.
      *
-     * @return bool Color is the attribute type
+     * @return bool|int Color is the attribute type
      */
     public function isColorAttribute()
     {

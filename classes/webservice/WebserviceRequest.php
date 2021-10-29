@@ -96,7 +96,7 @@ class WebserviceRequestCore
     /**
      * The time in microseconds of the start of the execution of the web service request.
      *
-     * @var int
+     * @var float
      */
     protected $_startTime = 0;
 
@@ -167,7 +167,7 @@ class WebserviceRequestCore
     /**
      * Object instance for singleton.
      *
-     * @var WebserviceRequest
+     * @var WebserviceRequest|null
      */
     protected static $_instance;
 
@@ -501,7 +501,9 @@ class WebserviceRequestCore
 
         $this->_key = trim($key);
 
-        $this->outputFormat = isset($params['output_format']) ? $params['output_format'] : $this->outputFormat;
+        if (isset($params['output_format'])) {
+            $this->outputFormat = $params['output_format'];
+        }
         // Set the render object to build the output on the asked format (XML, JSON, CSV, ...)
         $this->objOutput->setObjectRender($this->getOutputObject($this->outputFormat));
         $this->params = $params;

@@ -37,7 +37,7 @@ class ConfigurationCore extends ObjectModel
     public $id_shop_group;
     public $id_shop;
 
-    /** @var string Value */
+    /** @var string|array<string> Value */
     public $value;
 
     /** @var string Object creation date */
@@ -63,10 +63,10 @@ class ConfigurationCore extends ObjectModel
         ],
     ];
 
-    /** @var array Configuration cache (kept for backward compat) */
+    /** @var array|null Configuration cache (kept for backward compat) */
     protected static $_cache = null;
 
-    /** @var array Configuration cache with optimised key order */
+    /** @var array|null Configuration cache with optimised key order */
     protected static $_new_cache_shop = null;
     protected static $_new_cache_group = null;
     protected static $_new_cache_global = null;

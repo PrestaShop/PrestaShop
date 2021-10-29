@@ -34,7 +34,7 @@ interface StockManagerInterface
     /**
      * Checks if the StockManager is available.
      *
-     * @return StockManagerInterface
+     * @return bool
      */
     public static function isAvailable();
 

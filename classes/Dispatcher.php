@@ -174,7 +174,7 @@ class DispatcherCore
     protected $controller_not_found = 'pagenotfound';
 
     /**
-     * @var string Front controller to use
+     * @var int Front controller to use
      */
     protected $front_controller = self::FC_FRONT;
 
@@ -1176,7 +1176,7 @@ class DispatcherCore
      *
      * @param string $controller The controller class name
      *
-     * @return string|null
+     * @return string|void|null
      */
     public static function getControllerPhpself(string $controller)
     {

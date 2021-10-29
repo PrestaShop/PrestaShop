@@ -25,11 +25,13 @@
  */
 class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManagementInterface
 {
-    /** @var WebserviceOutputBuilder */
+    /** @var WebserviceOutputBuilderCore */
     protected $objOutput;
+
+    /** @var string */
     protected $output;
 
-    /** @var WebserviceRequest */
+    /** @var WebserviceRequestCore */
     protected $wsObject;
 
     /**

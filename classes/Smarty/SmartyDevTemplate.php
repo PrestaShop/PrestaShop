@@ -29,7 +29,7 @@ class SmartyDevTemplateCore extends Smarty_Internal_Template
     public $smarty = null;
 
     /**
-     * @param SmartyDevTemplateCore|null $template
+     * @param SmartyDevTemplateCore $template
      * @param null $cache_id
      * @param null $compile_id
      * @param null $parent

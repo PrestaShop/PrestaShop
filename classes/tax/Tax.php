@@ -37,7 +37,7 @@ class TaxCore extends ObjectModel
     public $active;
 
     /** @var bool true if the tax has been historized */
-    public $deleted = 0;
+    public $deleted = false;
 
     /**
      * @see ObjectModel::$definition
@@ -106,7 +106,7 @@ class TaxCore extends ObjectModel
             $res = $this->add();
 
             // change tax id in the tax rule table
-            $res &= TaxRule::swapTaxId($historized_tax->id, $this->id);
+            $res = $res && TaxRule::swapTaxId($historized_tax->id, $this->id);
 
             return $res;
         } elseif (parent::update($null_values)) {

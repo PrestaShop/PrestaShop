@@ -120,7 +120,7 @@ class WarehouseProductLocationCore extends ObjectModel
 			AND wpl.id_warehouse = ' . (int) $id_warehouse
         );
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
     /**

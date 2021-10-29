@@ -67,7 +67,7 @@ abstract class DbCore
     /** @var array List of server settings */
     public static $_servers = [];
 
-    /** @var null Flag used to load slave servers only once.
+    /** @var bool|null Flag used to load slave servers only once.
      * See loadSlaveServers() method
      */
     public static $_slave_servers_loaded = null;
@@ -89,7 +89,7 @@ abstract class DbCore
     /**
      * Last cached query.
      *
-     * @var string
+     * @var bool
      */
     protected $last_cached;
 
@@ -578,7 +578,7 @@ abstract class DbCore
      * @param bool $array Return an array instead of a result object (deprecated since 1.5.0.1, use query method instead)
      * @param bool $use_cache
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|bool|mysqli_result|PDOStatement|resource|null
      *
      * @throws PrestaShopDatabaseException
      */

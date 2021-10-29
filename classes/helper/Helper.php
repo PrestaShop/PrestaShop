@@ -366,7 +366,7 @@ class HelperCore
      *
      * @deprecated deprecated since 1.6.1.0 use HelperShop->getRenderedShopList
      *
-     * @return string
+     * @return string|null
      */
     public static function renderShopList()
     {

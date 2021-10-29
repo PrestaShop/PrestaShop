@@ -66,7 +66,7 @@ class OrderStateCore extends ObjectModel
     public $pdf_delivery;
 
     /** @var bool True if carrier has been deleted (staying in database as deleted) */
-    public $deleted = 0;
+    public $deleted = false;
 
     /**
      * @see ObjectModel::$definition

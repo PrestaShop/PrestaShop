@@ -36,7 +36,7 @@ class FeatureValueCore extends ObjectModel
     public $value;
 
     /** @var bool Custom */
-    public $custom = 0;
+    public $custom = false;
 
     /**
      * @see ObjectModel::$definition

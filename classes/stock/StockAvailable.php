@@ -469,9 +469,7 @@ class StockAvailableCore extends ObjectModel
             return false;
         }
 
-        $result &= $this->postSave();
-
-        return $result;
+        return $result && $this->postSave();
     }
 
     /**
@@ -485,9 +483,7 @@ class StockAvailableCore extends ObjectModel
             return false;
         }
 
-        $result &= $this->postSave();
-
-        return $result;
+        return $result && $this->postSave();
     }
 
     /**

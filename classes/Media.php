@@ -151,7 +151,7 @@ class MediaCore
      * Minify CSS.
      *
      * @param string $cssContent
-     * @param bool $fileUri
+     * @param string|bool $fileUri
      * @param array $importUrl
      *
      * @return bool|string
@@ -291,9 +291,11 @@ class MediaCore
     /**
      * return jqueryUI component path.
      *
-     * @param mixed $component
+     * @param string $component
+     * @param string $theme
+     * @param bool $checkDependencies
      *
-     * @return string
+     * @return array<string, array<string>>
      */
     public static function getJqueryUIPath($component, $theme, $checkDependencies)
     {
@@ -365,7 +367,7 @@ class MediaCore
      * @param mixed $name
      * @param string|null $folder
      *
-     * @return bool|string
+     * @return bool|array<string, bool|string>
      */
     public static function getJqueryPluginPath($name, $folder = null)
     {
@@ -427,11 +429,12 @@ class MediaCore
      */
     public static function cccCss($cssFiles)
     {
-        //inits
+        /** @var array<string, array<string, int|array<string>>> $cssFilesByMedia */
         $cssFilesByMedia = [];
         $externalCssFiles = [];
         $compressedCssFiles = [];
         $compressedCssFilesNotFound = [];
+        /** @var array<string, array<string,string|int>> $compressedCssFilesInfos */
         $compressedCssFilesInfos = [];
         $protocolLink = Tools::getCurrentUrlProtocolPrefix();
         $cachePath = _PS_THEME_DIR_ . 'cache/';

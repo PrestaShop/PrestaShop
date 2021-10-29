@@ -57,7 +57,7 @@ class ProductSupplierCore extends ObjectModel
     public $id_currency;
 
     /**
-     * @var string The unit price tax excluded of the product
+     * @var float The unit price tax excluded of the product
      * */
     public $product_supplier_price_te;
 
@@ -143,7 +143,7 @@ class ProductSupplierCore extends ObjectModel
      * @param int $idSupplier Supplier ID
      * @param bool $withCurrency Optional With currency
      *
-     * @return string
+     * @return string|array
      */
     public static function getProductSupplierPrice($idProduct, $idProductAttribute, $idSupplier, $withCurrency = false)
     {
@@ -183,7 +183,6 @@ class ProductSupplierCore extends ObjectModel
      */
     public static function getIdByProductAndSupplier($idProduct, $idProductAttribute, $idSupplier)
     {
-        // build query
         $query = new DbQuery();
         $query->select('ps.id_product_supplier');
         $query->from('product_supplier', 'ps');
@@ -193,7 +192,7 @@ class ProductSupplierCore extends ObjectModel
 			AND ps.id_supplier = ' . (int) $idSupplier
         );
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
     /**
@@ -224,7 +223,7 @@ class ProductSupplierCore extends ObjectModel
      * @param int $idProductAttribute Optional
      * @param bool $convertedPrice Optional
      *
-     * @return float|null
+     * @return float|void|null
      */
     public static function getProductPrice($idSupplier, $idProduct, $idProductAttribute = 0, $convertedPrice = false)
     {

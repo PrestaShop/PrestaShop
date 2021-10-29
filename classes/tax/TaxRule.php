@@ -124,7 +124,7 @@ class TaxRuleCore extends ObjectModel
     /**
      * @param int $id_tax
      *
-     * @return bool
+     * @return int
      */
     public static function isTaxInUse($id_tax)
     {

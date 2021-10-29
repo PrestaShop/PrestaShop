@@ -55,7 +55,7 @@ class HelperListCore extends Helper
     /** @var string ORDER BY clause determined by field/arrows in list header */
     public $orderBy;
 
-    /** @var string Default ORDER BY clause when `$orderBy` is not defined */
+    /** @var bool|string Default ORDER BY clause when `$orderBy` is not defined */
     public $_defaultOrderBy = false;
 
     /** @var array : list of vars for button delete */
@@ -180,7 +180,7 @@ class HelperListCore extends Helper
      * @param array $list entries to display (rows)
      * @param array $fields_display fields (cols)
      *
-     * @return string html
+     * @return string|bool
      */
     public function generateList($list, $fields_display)
     {

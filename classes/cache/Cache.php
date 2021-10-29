@@ -43,7 +43,7 @@ abstract class CacheCore
     protected $queryCounter = [];
 
     /**
-     * @var Cache
+     * @var Cache|null
      */
     protected static $instance;
 
@@ -290,8 +290,6 @@ abstract class CacheCore
      *  E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');.
      *
      * @param string $key
-     *
-     * @return array List of deleted keys
      */
     public function delete($key)
     {

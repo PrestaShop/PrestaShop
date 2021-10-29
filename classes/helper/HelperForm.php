@@ -335,7 +335,7 @@ class HelperFormCore extends Helper
     /**
      * Render an area to determinate shop association.
      *
-     * @return string
+     * @return string|void
      */
     public function renderAssoShop($disable_shared = false, $template_directory = null)
     {

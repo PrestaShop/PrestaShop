@@ -187,7 +187,7 @@ class ValidateCore
             new CustomerName(),
         ]);
 
-        return (count($violations) !== 0) ? 0 : 1;
+        return count($violations) === 0;
     }
 
     /**

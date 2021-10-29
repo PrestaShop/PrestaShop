@@ -439,7 +439,7 @@ class SupplyOrderCore extends ObjectModel
      *
      * @param int|string $match Either the reference of the order, or the Id of the order
      *
-     * @return int SupplyOrder Id
+     * @return bool|int SupplyOrder Id
      */
     public static function exists($match)
     {

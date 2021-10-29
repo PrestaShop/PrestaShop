@@ -453,7 +453,7 @@ class HookCore extends ObjectModel
      *
      * @param string $hookName Hook name
      *
-     * @return int Hook ID
+     * @return int|string Hook ID
      *
      * @deprecated 1.7.1.0
      */
@@ -601,7 +601,7 @@ class HookCore extends ObjectModel
                 $new_hook = new Hook();
                 $new_hook->name = pSQL($hook_name);
                 $new_hook->title = pSQL($hook_name);
-                $new_hook->position = 1;
+                $new_hook->position = true;
                 $new_hook->add();
                 $id_hook = $new_hook->id;
                 if (!$id_hook) {

@@ -65,7 +65,7 @@ class ImageManagerCore
      * @param bool $disableCache When turned on a timestamp will be added to the image URI to disable the HTTP cache
      * @param bool $regenerate When turned on and the file already exist, the file will be regenerated
      *
-     *@return string
+     * @return string|bool
      */
     public static function thumbnail($image, $cacheImage, $size, $imageType = 'jpg', $disableCache = true, $regenerate = false)
     {

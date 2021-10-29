@@ -52,7 +52,7 @@ class TabCore extends ObjectModel
     /** @var bool enabled */
     public $enabled = true;
 
-    /** @var int hide_host_mode */
+    /** @var bool hide_host_mode */
     public $hide_host_mode = false;
 
     /** @var string Icon font */
@@ -493,9 +493,8 @@ class TabCore extends ObjectModel
      */
     public static function getNewLastPosition($idParent)
     {
-        return Db::getInstance()->getValue(
-            '
-			SELECT IFNULL(MAX(position),0)+1
+        return (int) Db::getInstance()->getValue(
+            'SELECT IFNULL(MAX(position), 0) + 1
 			FROM `' . _DB_PREFIX_ . 'tab`
 			WHERE `id_parent` = ' . (int) $idParent
         );

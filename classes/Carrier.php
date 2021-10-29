@@ -67,7 +67,7 @@ class CarrierCore extends ObjectModel
     public $active = true;
 
     /** @var bool True if carrier has been deleted (staying in database as deleted) */
-    public $deleted = 0;
+    public $deleted = false;
 
     /** @var bool True if extra shipping handling cost should be applied to this Carrier */
     public $shipping_handling = true;
@@ -89,7 +89,7 @@ class CarrierCore extends ObjectModel
      *
      * @see Cart::getPackageShippingCostFromModule()
      */
-    public $shipping_external = 0;
+    public $shipping_external = false;
 
     /** @var string Name of external module responsible for this Carrier */
     public $external_module_name = null;
@@ -99,7 +99,7 @@ class CarrierCore extends ObjectModel
      *
      * @see Cart::getPackageShippingCostFromModule()
      */
-    public $need_range = 0;
+    public $need_range = false;
 
     /** @var int Position */
     public $position;

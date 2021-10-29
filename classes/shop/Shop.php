@@ -94,13 +94,13 @@ class ShopCore extends ObjectModel
         ],
     ];
 
-    /** @var int Store the current context of shop (CONTEXT_ALL, CONTEXT_GROUP, CONTEXT_SHOP) */
+    /** @var int|null Store the current context of shop (CONTEXT_ALL, CONTEXT_GROUP, CONTEXT_SHOP) */
     protected static $context;
 
-    /** @var int ID shop in the current context (will be empty if context is not CONTEXT_SHOP) */
+    /** @var int|null ID shop in the current context (will be empty if context is not CONTEXT_SHOP) */
     protected static $context_id_shop;
 
-    /** @var int ID shop group in the current context (will be empty if context is CONTEXT_ALL) */
+    /** @var int|null ID shop group in the current context (will be empty if context is CONTEXT_ALL) */
     protected static $context_id_shop_group;
 
     /** @var Theme * */
@@ -270,22 +270,22 @@ class ShopCore extends ObjectModel
         }
 
         // removes stock available
-        $res &= Db::getInstance()->delete('stock_available', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('stock_available', 'id_shop = ' . (int) $this->id);
 
         // Remove urls
-        $res &= Db::getInstance()->delete('shop_url', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('shop_url', 'id_shop = ' . (int) $this->id);
 
         // Remove currency restrictions
-        $res &= Db::getInstance()->delete('module_currency', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('module_currency', 'id_shop = ' . (int) $this->id);
 
         // Remove group restrictions
-        $res &= Db::getInstance()->delete('module_group', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('module_group', 'id_shop = ' . (int) $this->id);
 
         // Remove country restrictions
-        $res &= Db::getInstance()->delete('module_country', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('module_country', 'id_shop = ' . (int) $this->id);
 
         // Remove carrier restrictions
-        $res &= Db::getInstance()->delete('module_carrier', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('module_carrier', 'id_shop = ' . (int) $this->id);
 
         Shop::cacheShops(true);
 
@@ -468,8 +468,8 @@ class ShopCore extends ObjectModel
         if (!isset($this->address)) {
             $address = new Address();
             $address->company = Configuration::get('PS_SHOP_NAME');
-            $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID') ? Configuration::get('PS_SHOP_COUNTRY_ID') : Configuration::get('PS_COUNTRY_DEFAULT');
-            $address->id_state = Configuration::get('PS_SHOP_STATE_ID');
+            $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID') ? (int) Configuration::get('PS_SHOP_COUNTRY_ID') : (int) Configuration::get('PS_COUNTRY_DEFAULT');
+            $address->id_state = (int) Configuration::get('PS_SHOP_STATE_ID');
             $address->address1 = Configuration::get('PS_SHOP_ADDR1');
             $address->address2 = Configuration::get('PS_SHOP_ADDR2');
             $address->postcode = Configuration::get('PS_SHOP_CODE');
@@ -799,7 +799,7 @@ class ShopCore extends ObjectModel
      * @param bool $active
      * @param int $id_shop_group
      *
-     * @return PrestaShopCollection<Shop> Collection of Shop
+     * @return PrestaShopCollection Collection of Shop
      */
     public static function getShopsCollection($active = true, $id_shop_group = null)
     {
@@ -839,7 +839,7 @@ class ShopCore extends ObjectModel
      *
      * @param string $name
      *
-     * @return int
+     * @return int|bool
      */
     public static function getIdByName($name)
     {
@@ -1089,7 +1089,7 @@ class ShopCore extends ObjectModel
      * @param bool $inner_join Use or not INNER JOIN
      * @param string $on
      *
-     * @return string
+     * @return string|void
      */
     public static function addSqlAssociation($table, $alias, $inner_join = true, $on = null, $force_not_default = false)
     {
