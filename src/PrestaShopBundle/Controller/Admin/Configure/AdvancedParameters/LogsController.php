@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use Exception;
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\LogsFilters;
@@ -36,8 +38,6 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use InvalidArgumentException;
-use Exception;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Logs" page display.
@@ -116,7 +116,7 @@ class LogsController extends FrameworkBundleAdminController
         try {
             $logsByEmailForm = $this->getFormHandler()->getForm();
             $logsByEmailForm->handleRequest($request);
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $this->addFlash('failure', $e->getMessage());
         }
 
