@@ -215,7 +215,7 @@ class RequestSqlCore extends ObjectModel
     /**
      * Get list of all attributes by an table.
      *
-     * @param $table
+     * @param string $table
      *
      * @return array
      */
@@ -263,8 +263,8 @@ class RequestSqlCore extends ObjectModel
     /**
      * Cut an attribute with or without the alias.
      *
-     * @param $attr
-     * @param $from
+     * @param string $attr
+     * @param string $from
      *
      * @return array|bool
      */
@@ -299,7 +299,7 @@ class RequestSqlCore extends ObjectModel
      * Get name of table by alias.
      *
      * @param bool $alias
-     * @param $tables
+     * @param array $tables
      *
      * @return array|bool
      */
@@ -330,14 +330,14 @@ class RequestSqlCore extends ObjectModel
             $this->error_sql['returnNameTable'] = false;
 
             return false;
-        } else {
-            $tab = [];
-            foreach ($tables as $table) {
-                $tab[] = $table['table'];
-            }
-
-            return $tab;
         }
+
+        $tab = [];
+        foreach ($tables as $table) {
+            $tab[] = $table['table'];
+        }
+
+        return $tab;
     }
 
     /**

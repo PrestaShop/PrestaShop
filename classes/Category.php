@@ -334,7 +334,7 @@ class CategoryCore extends ObjectModel
     /**
      * Recursively add specified category childs to $to_delete array.
      *
-     * @param array &$toDelete Array reference where categories ID will be saved
+     * @param array $toDelete Array reference where categories ID will be saved
      * @param int $idCategory Parent category ID
      */
     protected function recursiveDelete(&$toDelete, $idCategory)
@@ -382,10 +382,12 @@ class CategoryCore extends ObjectModel
 
         $this->clearCache();
 
-        $deletedChildren = $allCat = $this->getAllChildren();
+        /** @var array<Category> $deletedChildren */
+        $deletedChildren = $this->getAllChildren();
+        /** @var array<Category> $allCat */
+        $allCat = $deletedChildren;
         $allCat[] = $this;
         foreach ($allCat as $cat) {
-            /* @var Category $cat */
             $cat->deleteLite();
             if (!$cat->hasMultishopEntries()) {
                 $cat->deleteImage();
@@ -518,9 +520,9 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * @param $categories
-     * @param $idCategory
-     * @param $n
+     * @param array $categories
+     * @param int $idCategory
+     * @param int $n
      *
      * @return bool Indicates whether the sub tree of categories has been successfully updated
      *
@@ -1630,7 +1632,7 @@ class CategoryCore extends ObjectModel
     /**
      * Add Category groups.
      *
-     * @param $groups
+     * @param array $groups
      */
     public function addGroups($groups)
     {
@@ -1738,7 +1740,7 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * @param $idGroup
+     * @param int $idGroup
      *
      * @return bool
      */
@@ -1882,7 +1884,7 @@ class CategoryCore extends ObjectModel
     /**
      * Get URL Rewrite information.
      *
-     * @param $idCategory
+     * @param int $idCategory
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      *

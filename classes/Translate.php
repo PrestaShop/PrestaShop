@@ -68,7 +68,7 @@ class TranslateCore
      *
      * @deprecated Use Context::getContext()->getTranslator()->trans()
      *
-     * @param $string
+     * @param string $string
      * @param string $class
      * @param bool $addslashes
      * @param bool $htmlentities
@@ -268,8 +268,8 @@ class TranslateCore
     /**
      * Check if string use a specif syntax for sprintf and replace arguments if use it.
      *
-     * @param $string
-     * @param $args
+     * @param string $string
+     * @param array $args
      *
      * @return string
      */
