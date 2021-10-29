@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\PDF;
 
 use Context;
 use PDF;
+use PrestaShop\PrestaShop\Core\PDF\Exception\MissingDataException;
 use PrestaShop\PrestaShop\Core\PDF\Exception\PdfException;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -59,10 +60,18 @@ final class DeliverySlipPdfGenerator implements PDFGeneratorInterface
      */
     public function generatePDF(array $orderIds)
     {
+        if (!$orderIds) {
+            throw new MissingDataException('Missing data required to generate PDF');
+        }
+
         try {
             $orders_invoice_collection = new PrestaShopCollection('OrderInvoice');
             $orders_invoice_collection->where('id_order', 'in', $orderIds);
-    
+
+            if (0 === count($orders_invoice_collection)) {
+                throw new RuntimeException($this->translator->trans('The order cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
+            }
+
             $pdf = new PDF($orders_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP, Context::getContext()->smarty);
             $pdf->render();
         } catch (PrestaShopException $e) {
