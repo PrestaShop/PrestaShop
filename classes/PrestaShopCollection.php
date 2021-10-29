@@ -119,7 +119,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      * @param string $on
      * @param int $type
      *
-     * @return PrestaShopCollection
+     * @return $this|void
      */
     public function join($association, $on = '', $type = null)
     {
@@ -157,7 +157,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      * @param mixed $value
      * @param string $method where|having
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function where($field, $operator, $value, $method = 'where')
     {
@@ -223,7 +223,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param string $sql
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function sqlWhere($sql)
     {
@@ -239,7 +239,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      * @param string $operator List of operators : =, !=, <>, <, <=, >, >=, like, notlike, regexp, notregexp
      * @param mixed $value
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function having($field, $operator, $value)
     {
@@ -251,7 +251,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param string $sql
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function sqlHaving($sql)
     {
@@ -266,7 +266,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      * @param string $field Field name
      * @param string $order asc|desc
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function orderBy($field, $order = 'asc')
     {
@@ -284,7 +284,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param string $sql
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function sqlOrderBy($sql)
     {
@@ -298,7 +298,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param string $field Field name
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function groupBy($field)
     {
@@ -312,7 +312,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param string $sql
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function sqlGroupBy($sql)
     {
@@ -326,7 +326,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param bool $display_query If true, query will be displayed (for debug purpose)
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function getAll($display_query = false)
     {
@@ -752,7 +752,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param int $page_number
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function setPageNumber($page_number)
     {
@@ -771,7 +771,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param int $page_size
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function setPageSize($page_size)
     {

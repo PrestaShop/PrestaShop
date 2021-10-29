@@ -107,7 +107,7 @@ class SpecificPriceCore extends ObjectModel
      * Store if the specific_price table contains any global rules in the productId columns
      * i.e. if there is a product_id == 0 somewhere in the specific_price table.
      *
-     * @var bool
+     * @var bool|null
      */
     protected static $_hasGlobalProductRules = null;
 

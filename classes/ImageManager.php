@@ -65,7 +65,7 @@ class ImageManagerCore
      * @param bool $disableCache When turned on a timestamp will be added to the image URI to disable the HTTP cache
      * @param bool $regenerate When turned on and the file already exist, the file will be regenerated
      *
-     *@return string
+     * @return string|bool
      */
     public static function thumbnail($image, $cacheImage, $size, $imageType = 'jpg', $disableCache = true, $regenerate = false)
     {
@@ -609,8 +609,6 @@ class ImageManagerCore
      *
      * @param int $width
      * @param int $height
-     *
-     * @return resource
      */
     public static function createWhiteImage($width, $height)
     {
@@ -618,6 +616,7 @@ class ImageManagerCore
         $white = imagecolorallocate($image, 255, 255, 255);
         imagefill($image, 0, 0, $white);
 
+        // @phpstan-ignore-next-line
         return $image;
     }
 

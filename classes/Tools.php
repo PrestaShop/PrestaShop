@@ -689,7 +689,7 @@ class ToolsCore
     /**
      * Set cookie currency from POST or default currency.
      *
-     * @return Currency object
+     * @return Currency|array
      */
     public static function setCurrency($cookie)
     {
@@ -3199,7 +3199,7 @@ exit;
         }
         self::$_forceCompile = (int) $smarty->force_compile;
         self::$_caching = (int) $smarty->caching;
-        $smarty->force_compile = 0;
+        $smarty->force_compile = false;
         $smarty->caching = (int) $level;
         $smarty->cache_lifetime = 31536000; // 1 Year
     }
@@ -3211,7 +3211,7 @@ exit;
         }
 
         if (isset(self::$_forceCompile)) {
-            $context->smarty->force_compile = (int) self::$_forceCompile;
+            $context->smarty->force_compile = (bool) self::$_forceCompile;
         }
         if (isset(self::$_caching)) {
             $context->smarty->caching = (int) self::$_caching;
@@ -3400,7 +3400,7 @@ exit;
      *
      * @param string $value value to convert
      *
-     * @return int
+     * @return int|string
      */
     public static function convertBytes($value)
     {
@@ -4471,8 +4471,8 @@ exit;
 /**
  * Compare 2 prices to sort products.
  *
- * @param float $a
- * @param float $b
+ * @param array{"price_tmp": float} $a
+ * @param array{"price_tmp": float} $b
  *
  * @return int
  */
@@ -4489,8 +4489,8 @@ function cmpPriceAsc($a, $b)
 }
 
 /**
- * @param array $a
- * @param array $b
+ * @param array{"price_tmp": float} $a
+ * @param array{"price_tmp": float} $b
  *
  * @return int
  */

@@ -57,7 +57,7 @@ class CheckoutSessionCore
     }
 
     /**
-     * @return Cart
+     * @return Cart|CartCore
      */
     public function getCart()
     {
@@ -160,7 +160,7 @@ class CheckoutSessionCore
 
     public function setRecyclable($option)
     {
-        $this->context->cart->recyclable = (int) $option;
+        $this->context->cart->recyclable = (bool) $option;
 
         return $this->context->cart->update();
     }
@@ -172,7 +172,7 @@ class CheckoutSessionCore
 
     public function setGift($gift, $gift_message)
     {
-        $this->context->cart->gift = (int) $gift;
+        $this->context->cart->gift = (bool) $gift;
         $this->context->cart->gift_message = $gift_message;
 
         return $this->context->cart->update();

@@ -23,6 +23,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShopBundle\Translation\TranslatorComponent;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -140,7 +142,7 @@ abstract class ControllerCore
     public $php_self;
 
     /**
-     * @var PrestaShopBundle\Translation\Translator
+     * @var TranslatorComponent
      */
     protected $translator;
 

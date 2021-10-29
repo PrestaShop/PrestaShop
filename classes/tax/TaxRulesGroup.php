@@ -236,7 +236,7 @@ class TaxRulesGroupCore extends ObjectModel
      */
     public static function getIdByName($name)
     {
-        return Db::getInstance()->getValue(
+        return (int) Db::getInstance()->getValue(
             'SELECT `id_tax_rules_group`
 			FROM `' . _DB_PREFIX_ . 'tax_rules_group` rg
 			WHERE `name` = \'' . pSQL($name) . '\''

@@ -134,22 +134,26 @@ class OrderDetailCore extends ObjectModel
     /** @var int */
     public $discount_quantity_applied;
 
-    /** @var string */
+    /** @var string|null */
     public $download_hash;
 
     /** @var int */
     public $download_nb;
 
-    /** @var datetime */
+    /** @var string */
     public $download_deadline;
 
     /**
-     * @var string @deprecated Order Detail Tax is saved in order_detail_tax table now
+     * @var string
+     *
+     * @deprecated Order Detail Tax is saved in order_detail_tax table now
      */
     public $tax_name;
 
     /**
-     * @var float @deprecated Order Detail Tax is saved in order_detail_tax table now
+     * @var float
+     *
+     * @deprecated Order Detail Tax is saved in order_detail_tax table now
      */
     public $tax_rate;
 
@@ -810,7 +814,7 @@ class OrderDetailCore extends ObjectModel
     /**
      * Get the state of the current stock product.
      *
-     * @return array
+     * @return bool
      */
     public function getStockState()
     {

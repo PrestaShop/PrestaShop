@@ -79,7 +79,7 @@ class WebserviceOutputBuilderCore
      * @param WebserviceOutputInterface $obj_render
      * @throw WebserviceException if the object render is not an instance of WebserviceOutputInterface
      *
-     * @return WebserviceOutputBuilder
+     * @return $this
      *
      * @throws WebserviceException
      */
@@ -114,7 +114,7 @@ class WebserviceOutputBuilderCore
      *
      * @param array $resources
      *
-     * @return WebserviceOutputBuilder
+     * @return $this
      */
     public function setWsResources($resources)
     {
@@ -146,7 +146,7 @@ class WebserviceOutputBuilderCore
      * @param string $key The normalized key expected for an http response
      * @param string $value
      *
-     * @return WebserviceOutputBuilder
+     * @return $this
      *
      * @throws WebserviceException If the key or the value are corrupted (use Validate::isCleanHtml method)
      */
@@ -165,12 +165,10 @@ class WebserviceOutputBuilderCore
      * @throw WebserviceException if the key is corrupted (use Validate::isCleanHtml method)
      * @throw WebserviceException if the asked key does'nt exists.
      *
-     * @return array|string
+     * @return array|int
      */
     public function getHeaderParams($key = null)
     {
-        $return = '';
-
         if (null !== $key) {
             if (!Validate::isCleanHtml($key)) {
                 throw new WebserviceException('the key you write is a corrupted text.', [95, 500]);
@@ -189,7 +187,7 @@ class WebserviceOutputBuilderCore
     /**
      * Delete all Header parameters previously set.
      *
-     * @return WebserviceOutputBuilder
+     * @return $this
      */
     public function resetHeaderParams()
     {
@@ -557,7 +555,7 @@ class WebserviceOutputBuilderCore
         $show_field = true;
 
         if (isset($ws_params['hidden_fields']) && in_array($field_name, $ws_params['hidden_fields'])) {
-            return;
+            return '';
         }
 
         if ($this->schemaToDisplay === 'synopsis') {
@@ -772,7 +770,7 @@ class WebserviceOutputBuilderCore
      * @param string $field_name
      * @param string $entity_name
      *
-     * @return self
+     * @return $this
      *
      * @throws Exception
      * @throws WebserviceException

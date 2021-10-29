@@ -27,9 +27,11 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
 {
     /** @var WebserviceOutputBuilder */
     protected $objOutput;
+
+    /** @var string */
     protected $output;
 
-    /** @var WebserviceRequest */
+    /** @var WebserviceRequestCore */
     protected $wsObject;
 
     /**
@@ -47,12 +49,15 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
      * ------------------------------------------------ */
 
     /**
-     * @param WebserviceOutputBuilderCore $obj
+     * @param WebserviceOutputBuilder $obj
      *
      * @return WebserviceSpecificManagementInterface
      */
     public function setObjectOutput(WebserviceOutputBuilderCore $obj)
     {
+        /*
+         * @var WebserviceOutputBuilder $obj
+         */
         $this->objOutput = $obj;
 
         return $this;

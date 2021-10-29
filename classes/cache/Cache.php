@@ -43,7 +43,7 @@ abstract class CacheCore
     protected $queryCounter = [];
 
     /**
-     * @var Cache
+     * @var Cache|null
      */
     protected static $instance;
 
@@ -182,7 +182,9 @@ abstract class CacheCore
         if (!self::$instance) {
             $caching_system = _PS_CACHING_SYSTEM_;
             if (class_exists($caching_system)) {
-                self::$instance = new $caching_system();
+                /** @var Cache $cache */
+                $cache = new $caching_system();
+                self::$instance = $cache;
             }
         }
 
@@ -290,8 +292,6 @@ abstract class CacheCore
      *  E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');.
      *
      * @param string $key
-     *
-     * @return array List of deleted keys
      */
     public function delete($key)
     {

@@ -43,7 +43,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     protected $objOutput;
 
     /**
-     * @var WebserviceRequest
+     * @var WebserviceRequestCore
      */
     protected $wsObject;
 

@@ -96,7 +96,7 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
         $defaultSupplierId = $this->productSupplierRepository->getDefaultProductSupplierId($productId);
         if (null !== $defaultSupplierId) {
             $defaultProductSupplier = $this->productSupplierRepository->get($defaultSupplierId);
-            $defaultProductSupplier->product_supplier_price_te = (string) $wholesalePrice;
+            $defaultProductSupplier->product_supplier_price_te = (float) (string) $wholesalePrice;
             $this->productSupplierRepository->update($defaultProductSupplier);
         }
     }

@@ -108,7 +108,7 @@ abstract class AbstractProductSupplierHandler
         $productSupplier->id_supplier = $productSupplierDTO->getSupplierId()->getValue();
         $productSupplier->id_currency = $productSupplierDTO->getCurrencyId()->getValue();
         $productSupplier->product_supplier_reference = $productSupplierDTO->getReference();
-        $productSupplier->product_supplier_price_te = $productSupplierDTO->getPriceTaxExcluded();
+        $productSupplier->product_supplier_price_te = (float) $productSupplierDTO->getPriceTaxExcluded();
 
         return $productSupplier;
     }

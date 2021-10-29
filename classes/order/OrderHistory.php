@@ -603,7 +603,7 @@ class OrderHistoryCore extends ObjectModel
      */
     public function isValidated()
     {
-        return Db::getInstance()->getValue('
+        return (int) Db::getInstance()->getValue('
         SELECT COUNT(oh.`id_order_history`) AS nb
         FROM `' . _DB_PREFIX_ . 'order_state` os
         LEFT JOIN `' . _DB_PREFIX_ . 'order_history` oh ON (os.`id_order_state` = oh.`id_order_state`)
