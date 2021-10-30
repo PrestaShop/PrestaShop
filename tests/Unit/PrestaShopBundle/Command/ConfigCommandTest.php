@@ -18,6 +18,7 @@ class ConfigCommandTest extends TestCase
         $commandTester = $this->getCommandTester();
 
         $this->assertEquals(ConfigCommand::STATUS_OK, $commandTester->execute(['action' => 'get', 'key' => 'CONFIG_TEST']));
+        $this->assertStringContainsString('CONFIG_TEST=', $commandTester->getDisplay());
     }
 
     public function testSet(): void
@@ -25,6 +26,7 @@ class ConfigCommandTest extends TestCase
         $commandTester = $this->getCommandTester();
 
         $this->assertEquals(ConfigCommand::STATUS_OK, $commandTester->execute(['action' => 'set', 'key' => 'CONFIG_TEST', '--value' => 'testing']));
+        $this->assertStringContainsString('CONFIG_TEST=', $commandTester->getDisplay());
     }
 
     public function testGetLanguage(): void
@@ -32,12 +34,14 @@ class ConfigCommandTest extends TestCase
         $commandTester = $this->getCommandTester();
         $this->assertEquals(ConfigCommand::STATUS_OK, $commandTester->execute(['action' => 'get', 'key' => 'PS_INVOICE_PREFIX', '--lang' => 'en']));
         $this->assertEquals(ConfigCommand::STATUS_INVALID_OPTIONS, $commandTester->execute(['action' => 'get', 'key' => 'PS_INVOICE_PREFIX', '--lang' => 'fr']));
+        $this->assertStringContainsString('Invalid language', $commandTester->getDisplay());
     }
 
     public function testInvalidAction(): void
     {
         $commandTester = $this->getCommandTester();
         $this->assertEquals(ConfigCommand::STATUS_INVALID_ACTION, $commandTester->execute(['action' => 'invalidaction', 'key' => 'CONFIG_TEST']));
+        $this->assertStringContainsString('Unknown configuration action', $commandTester->getDisplay());
     }
 
     public function testNoKey(): void
