@@ -51,7 +51,7 @@ class AddCategory extends BOBasePage {
    */
   async createEditCategory(page, categoryData) {
     await this.setValue(page, this.nameInput, categoryData.name);
-    await page.check(this.displayedToggleInput(categoryData.displayed ? 1 : 0));
+    await this.setChecked(page, this.displayedToggleInput(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(page, this.descriptionIframe, categoryData.description);
     await this.uploadFile(page, this.categoryCoverImage, `${categoryData.name}.jpg`);
     await this.setValue(page, this.metaTitleInput, categoryData.metaTitle);
@@ -71,7 +71,7 @@ class AddCategory extends BOBasePage {
    */
   async editHomeCategory(page, categoryData) {
     await this.setValue(page, this.rootCategoryNameInput, categoryData.name);
-    await page.check(this.rootCategoryDisplayedToggleInput(categoryData.displayed ? 1 : 0));
+    await this.setChecked(page, this.rootCategoryDisplayedToggleInput(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(page, this.rootCategoryDescriptionIframe, categoryData.description);
     await this.uploadFile(page, this.rootCategoryCoverImage, `${categoryData.name}.jpg`);
     await this.setValue(page, this.rootCategoryMetaTitleInput, categoryData.metaTitle);

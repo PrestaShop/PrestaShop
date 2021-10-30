@@ -48,7 +48,7 @@ class AddAttribute extends BOBasePage {
     await this.setValue(page, this.metaTitleInput, attributeData.metaTitle);
 
     // Set indexable toggle
-    await page.check(this.indexableToggle(attributeData.indexable ? 'on' : 'off'));
+    await this.setChecked(page, this.indexableToggle(attributeData.indexable ? 'on' : 'off'));
 
     // Set attribute type
     await this.selectByVisibleText(page, this.attributeTypeSelect, attributeData.attributeType);

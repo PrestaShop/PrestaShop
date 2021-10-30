@@ -292,7 +292,7 @@ class Categories extends BOBasePage {
    * @return {Promise<void>}
    */
   async chooseOptionAndDelete(page, modeID) {
-    await page.check(this.deleteCategoryModalModeInput(modeID));
+    await this.setChecked(page, this.deleteCategoryModalModeInput(modeID));
     await this.clickAndWaitForNavigation(page, this.deleteCategoryModalDeleteButton);
     await this.waitForVisibleSelector(page, this.alertSuccessBlockParagraph);
   }

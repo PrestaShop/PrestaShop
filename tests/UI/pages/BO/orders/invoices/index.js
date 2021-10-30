@@ -135,7 +135,7 @@ class Invoice extends BOBasePage {
    * @returns {Promise<void>}
    */
   async enableInvoices(page, enable = true) {
-    await page.check(this.invoiceOptionsStatusToggleInput(enable ? 1 : 0));
+    await this.setChecked(page, this.invoiceOptionsStatusToggleInput(enable ? 1 : 0));
   }
 
   /**
@@ -155,7 +155,7 @@ class Invoice extends BOBasePage {
    * @returns {Promise<void>}
    */
   async enableProductImage(page, enable = true) {
-    await page.check(this.invoiceOptionStatusToggleInput(enable ? 1 : 0));
+    await this.setChecked(page, this.invoiceOptionStatusToggleInput(enable ? 1 : 0));
   }
 
   /**
@@ -165,7 +165,7 @@ class Invoice extends BOBasePage {
    * @returns {Promise<void>}
    */
   async enableTaxBreakdown(page, enable = true) {
-    await page.check(this.taxBreakdownStatusToggleInput(enable ? 1 : 0));
+    await this.setChecked(page, this.taxBreakdownStatusToggleInput(enable ? 1 : 0));
   }
 
   /**
@@ -186,7 +186,7 @@ class Invoice extends BOBasePage {
    * @returns {Promise<void>}
    */
   async enableAddCurrentYearToInvoice(page, enable = true) {
-    await page.check(this.invoiceAddCurrentYearToggleInput(enable ? 1 : 0));
+    await this.setChecked(page, this.invoiceAddCurrentYearToggleInput(enable ? 1 : 0));
   }
 
   /**

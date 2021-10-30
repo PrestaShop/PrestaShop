@@ -410,7 +410,7 @@ class Customers extends BOBasePage {
    */
   async chooseRegistrationAndDelete(page, allowRegistrationAfterDelete) {
     // Choose deletion method
-    await page.check(this.deleteCustomerModalMethodInput(allowRegistrationAfterDelete ? 0 : 1));
+    await this.setChecked(page, this.deleteCustomerModalMethodInput(allowRegistrationAfterDelete ? 0 : 1));
 
     // Click on delete button and wait for action to finish
     await this.clickAndWaitForNavigation(page, this.deleteCustomerModalDeleteButton);

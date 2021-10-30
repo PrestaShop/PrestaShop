@@ -39,9 +39,12 @@ class AddShopGroup extends BOBasePage {
   async setShopGroup(page, shopGroupData) {
     await this.setValue(page, this.nameInput, shopGroupData.name);
 
-    await page.check(this.shareCustomersToggleInput(shopGroupData.shareCustomer ? 'on' : 'off'));
-    await page.check(this.shareAvailableQuantitiesToggleLabel(shopGroupData.shareAvailableQuantities ? 'on' : 'off'));
-    await page.check(this.statusToggleLabel(shopGroupData.status ? 'on' : 'off'));
+    await this.setChecked(page, this.shareCustomersToggleInput(shopGroupData.shareCustomer ? 'on' : 'off'));
+    await this.setChecked(
+      page,
+      this.shareAvailableQuantitiesToggleLabel(shopGroupData.shareAvailableQuantities ? 'on' : 'off'),
+    );
+    await this.setChecked(page, this.statusToggleLabel(shopGroupData.status ? 'on' : 'off'));
 
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getAlertSuccessBlockContent(page);

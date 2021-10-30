@@ -270,7 +270,7 @@ class AddProduct extends BOBasePage {
    */
   async setCombinationsQuantity(page, quantity) {
     // Select all combinations
-    await page.check(this.productCombinationSelectAllCheckbox);
+    await this.setChecked(page, this.productCombinationSelectAllCheckbox);
 
     // Open combinations bulk form
     if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput, 1000)) {
@@ -348,7 +348,7 @@ class AddProduct extends BOBasePage {
   async deleteAllCombinations(page) {
     if (await this.hasCombinations(page)) {
       // Select all combinations
-      await page.check(this.productCombinationSelectAllCheckbox);
+      await this.setChecked(page, this.productCombinationSelectAllCheckbox);
 
       // Open combinations bulk form
       if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput, 1000)) {

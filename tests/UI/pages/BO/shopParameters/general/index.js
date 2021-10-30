@@ -44,7 +44,7 @@ class ShopParamsGeneral extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setDisplaySuppliers(page, toEnable = true) {
-    await page.check(this.displaySuppliersToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.displaySuppliersToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -56,7 +56,7 @@ class ShopParamsGeneral extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setDisplayBrands(page, toEnable = true) {
-    await page.check(this.displayBrandsToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.displayBrandsToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -68,7 +68,7 @@ class ShopParamsGeneral extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setMultiStoreStatus(page, toEnable = true) {
-    await page.check(this.enableMultiStoreToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.enableMultiStoreToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }

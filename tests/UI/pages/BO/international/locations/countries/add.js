@@ -47,12 +47,15 @@ class AddCountry extends BOBasePage {
     await this.setValue(page, this.callPrefixInput, countryData.callPrefix);
     await this.selectByVisibleText(page, this.defaultCurrencySelect, countryData.currency);
     await this.selectByVisibleText(page, this.zoneSelect, countryData.zone);
-    await page.check(this.needZipCodeLabel(countryData.needZipCode ? 'on' : 'off'));
+    await this.setChecked(page, this.needZipCodeLabel(countryData.needZipCode ? 'on' : 'off'));
     await this.setValue(page, this.zipCodeFormatInput, countryData.zipCodeFormat);
-    await page.check(this.activeLabel(countryData.active ? 'on' : 'off'));
-    await page.check(this.containsStatesLabel(countryData.containsStates ? 'on' : 'off'));
-    await page.check(this.needIdentificationNumberLabel(countryData.needIdentificationNumber ? 'on' : 'off'));
-    await page.check(this.displayTaxLabel(countryData.displayTaxNumber ? 'on' : 'off'));
+    await this.setChecked(page, this.activeLabel(countryData.active ? 'on' : 'off'));
+    await this.setChecked(page, this.containsStatesLabel(countryData.containsStates ? 'on' : 'off'));
+    await this.setChecked(
+      page,
+      this.needIdentificationNumberLabel(countryData.needIdentificationNumber ? 'on' : 'off'),
+    );
+    await this.setChecked(page, this.displayTaxLabel(countryData.displayTaxNumber ? 'on' : 'off'));
     // Save country
     await this.clickAndWaitForNavigation(page, this.saveCountryButton);
 

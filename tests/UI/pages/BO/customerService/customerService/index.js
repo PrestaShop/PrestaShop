@@ -244,7 +244,7 @@ class CustomerService extends BOBasePage {
    * @returns {Promise<string>}
    */
   async allowFileUploading(page, toEnable = true) {
-    await page.check(this.allowFileUploadingToggleInput(toEnable ? 'on' : 'off'));
+    await this.setChecked(page, this.allowFileUploadingToggleInput(toEnable ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.contactOptionSaveButton);
 
     return this.getAlertSuccessBlockContent(page);

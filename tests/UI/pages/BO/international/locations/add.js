@@ -34,7 +34,7 @@ class AddZone extends BOBasePage {
    */
   async createEditZone(page, zoneData) {
     await this.setValue(page, this.nameInput, zoneData.name);
-    await page.check(this.statusToggle(zoneData.status ? 1 : 0));
+    await this.setChecked(page, this.statusToggle(zoneData.status ? 1 : 0));
 
     // Save zone
     await this.clickAndWaitForNavigation(page, this.saveZoneButton);

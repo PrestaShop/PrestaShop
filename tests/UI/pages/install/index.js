@@ -142,7 +142,7 @@ class Install extends CommonPage {
    * @return {Promise<void>}
    */
   async agreeToTermsAndConditions(page) {
-    await this.changeCheckboxValue(page, this.termsConditionsCheckbox);
+    await this.setChecked(page, this.termsConditionsCheckbox);
   }
 
   /**

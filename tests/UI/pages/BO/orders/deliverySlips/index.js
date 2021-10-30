@@ -105,7 +105,7 @@ class DeliverySlips extends BOBasePage {
    * @returns {Promise<void>}
    */
   async setEnableProductImage(page, enable = true) {
-    await page.check(this.deliveryProductImageStatusToggleInput(enable ? 1 : 0));
+    await this.setChecked(page, this.deliveryProductImageStatusToggleInput(enable ? 1 : 0));
   }
 
   /** Save delivery slip options

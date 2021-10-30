@@ -46,11 +46,11 @@ class AddImageType extends BOBasePage {
     await this.setValue(page, this.heightInput, imageTypeData.height.toString());
 
     // Set status for image type
-    await page.check(this.productsToggle(imageTypeData.productsStatus ? 'on' : 'off'));
-    await page.check(this.categoriesToggle(imageTypeData.categoriesStatus ? 'on' : 'off'));
-    await page.check(this.manufacturersToggle(imageTypeData.manufacturersStatus ? 'on' : 'off'));
-    await page.check(this.suppliersToggle(imageTypeData.suppliersStatus ? 'on' : 'off'));
-    await page.check(this.storesToggle(imageTypeData.storesStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.productsToggle(imageTypeData.productsStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.categoriesToggle(imageTypeData.categoriesStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.manufacturersToggle(imageTypeData.manufacturersStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.suppliersToggle(imageTypeData.suppliersStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.storesToggle(imageTypeData.storesStatus ? 'on' : 'off'));
 
     // Save image type
     await this.clickAndWaitForNavigation(page, this.saveButton);
