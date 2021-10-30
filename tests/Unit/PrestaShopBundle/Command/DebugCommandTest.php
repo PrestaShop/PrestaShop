@@ -24,8 +24,13 @@ class DebugCommandTest extends TestCase
 
         $this->assertEquals(DebugCommand::STATUS_OK, $commandTester->execute([]));
         $this->assertEquals(DebugCommand::STATUS_OK, $commandTester->execute(['value' => 'off']));
+        $this->assertStringContainsString('Debug mode is:', $commandTester->getDisplay());
+
         $this->assertEquals(DebugCommand::STATUS_OK, $commandTester->execute(['value' => 'on']));
+        $this->assertStringContainsString('Debug mode is:', $commandTester->getDisplay());
+
         $this->assertEquals(DebugCommand::STATUS_ERROR, $commandTester->execute(['value' => 'asdf']));
+        $this->assertStringContainsString('Input cannot be determined', $commandTester->getDisplay());
     }
 
     protected function mockLegacyContextLoader(): LegacyContextLoader
