@@ -2216,6 +2216,23 @@ class CartCore extends ObjectModel
         // TAXES ?
 
         $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
+        
+        $value = Hook::exec(
+            'actionCartGetOrderTotalAfter',
+            array(
+                'order_total' => $value,
+                'cart' => $this,
+                'context' => Context::getContext(),
+                'withTaxes' => $withTaxes,
+                'type' => $type,
+                'products' => $products,
+                'id_carrier' => $id_carrier,
+                'use_cache' => $use_cache,
+                'keepOrderPrices' => $keepOrderPrices
+            ),
+            null,
+            true
+        );
 
         // ROUND AND RETURN
 

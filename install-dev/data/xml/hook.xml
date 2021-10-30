@@ -3525,5 +3525,10 @@
       <title>Payment options Presenter</title>
       <description>This hook is called before payment options are presented</description>
     </hook>
+    <hook id="actionCartGetOrderTotalAfter">
+      <name>actionCartGetOrderTotalAfter</name>
+      <title>Get cart total after</title>
+      <description>This hook allows you to increase or reduce cart total</description>
+    </hook>
   </entities>
 </entity_hook>
