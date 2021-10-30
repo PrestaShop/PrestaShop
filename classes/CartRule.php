@@ -1239,11 +1239,8 @@ class CartRuleCore extends ObjectModel
                 if ($this->reduction_exclude_special) {
                     foreach ($package_products as $product) {
                         if ($product['reduction_applies']) {
-                            if ($use_tax) {
-                                $excludedReduction = Tools::ps_round($product['total_wt'], Context::getContext()->getComputingPrecision());
-                            } else {
-                                $excludedReduction = Tools::ps_round($product['total'], Context::getContext()->getComputingPrecision());
-                            }
+                            $roundTotal = $use_tax ? $product['total_wt'] : $product['total'];
+                            $excludedReduction = Tools::ps_round($roundTotal, Context::getContext()->getComputingPrecision());
                             $order_total -= $excludedReduction;
                             if ($basePriceContainsDiscount && isset($basePriceForPercentReduction)) {
                                 $basePriceForPercentReduction -= $excludedReduction;
@@ -1336,11 +1333,8 @@ class CartRuleCore extends ObjectModel
                 if ($this->reduction_product > 0) {
                     foreach ($all_products as $product) {
                         if ($product['id_product'] == $this->reduction_product) {
-                            if ($this->reduction_tax) {
-                                $max_reduction_amount = (int) $product['cart_quantity'] * (float) $product['price_wt'];
-                            } else {
-                                $max_reduction_amount = (int) $product['cart_quantity'] * (float) $product['price'];
-                            }
+                            $productPrice = $this->reduction_tax ? $product['price_wt'] : $product['price'];
+                            $max_reduction_amount = (int) $product['cart_quantity'] * (float) $productPrice;
                             $reduction_amount = min($reduction_amount, $max_reduction_amount);
                             break;
                         }
