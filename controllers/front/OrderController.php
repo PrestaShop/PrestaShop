@@ -270,7 +270,6 @@ class OrderControllerCore extends FrontController
             'customerExists' => $customerExists,
         ];
 
-        ob_end_clean();
         header('Content-Type: application/json');
         $this->ajaxRender(json_encode($responseData));
     }
