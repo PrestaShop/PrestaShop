@@ -40,10 +40,10 @@ const BOEvent = {
     });
   },
 
-  emitEvent(eventName: string, eventType: string) {
-    const event = document.createEvent(eventType);
+  emitEvent(eventName: string, eventType: string, datas: JQuery) {
+    const event = new CustomEvent(eventType, <any>datas);
     // true values stand for: can bubble, and is cancellable
-    event.initEvent(eventName, true, true);
+    event.initCustomEvent(eventName, true, true, datas);
     document.dispatchEvent(event);
   },
 };
@@ -419,22 +419,30 @@ export default class ModuleCard {
 
         if (action === 'uninstall') {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
-          mainElement.remove();
+          mainElement.attr('data-installed', '0');
+          mainElement.attr('data-active', '0');
 
-          BOEvent.emitEvent('Module Uninstalled', 'CustomEvent');
+          BOEvent.emitEvent('Module Uninstalled', 'CustomEvent', mainElement);
         } else if (action === 'disable') {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
           mainElement.addClass(`${alteredSelector}-isNotActive`);
           mainElement.attr('data-active', '0');
 
-          BOEvent.emitEvent('Module Disabled', 'CustomEvent');
+          BOEvent.emitEvent('Module Disabled', 'CustomEvent', mainElement);
         } else if (action === 'enable') {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
           mainElement.removeClass(`${alteredSelector}-isNotActive`);
           mainElement.attr('data-active', '1');
 
-          BOEvent.emitEvent('Module Enabled', 'CustomEvent');
-        }
+          BOEvent.emitEvent('Module Enabled', 'CustomEvent', mainElement);
+        } else if (action === 'install') {
+          mainElement = jqElementObj.closest(`.${alteredSelector}`);
+          mainElement.attr('data-installed', '1');
+          mainElement.attr('data-active', '1');
+          mainElement.removeClass(`${alteredSelector}-isNotActive`);
+
+          BOEvent.emitEvent('Module Installed', 'CustomEvent', mainElement);
+        };
 
         jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
       })

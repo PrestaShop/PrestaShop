@@ -220,12 +220,53 @@ class AdminModuleController {
   }
 
   initBOEventRegistering() {
+    window.BOEvent.on('Module Enabled', this.onModuleDisabled, this);
     window.BOEvent.on('Module Disabled', this.onModuleDisabled, this);
-    window.BOEvent.on('Module Uninstalled', this.updateTotalResults, this);
+    window.BOEvent.on('Module Uninstalled', this.installHandler, this);
+    window.BOEvent.on('Module Installed', this.installHandler, this);
   }
 
-  onModuleDisabled() {
+  installHandler(event) {
+    this.updateModuleStatus(event);
+    this.updateModuleVisibility();
+  }
+
+  updateModuleStatus(event) {
+    this.modulesList = this.modulesList.map((module) => {
+      const moduleElement = $(event.detail[0]);
+
+      if (moduleElement.data('tech-name') === module.techName) {
+        const newModule = {
+          domObject: moduleElement,
+          id: moduleElement.data('id'),
+          name: moduleElement.data('name').toLowerCase(),
+          scoring: parseFloat(moduleElement.data('scoring')),
+          logo: moduleElement.data('logo'),
+          author: moduleElement.data('author').toLowerCase(),
+          version: moduleElement.data('version'),
+          description: moduleElement.data('description').toLowerCase(),
+          techName: moduleElement.data('tech-name').toLowerCase(),
+          childCategories: moduleElement.data('child-categories'),
+          categories: String(moduleElement.data('categories')).toLowerCase(),
+          type: moduleElement.data('type'),
+          price: parseFloat(moduleElement.data('price')),
+          active: parseInt(moduleElement.data('active'), 10),
+          installed: moduleElement.data('installed') === 1,
+          access: moduleElement.data('last-access'),
+          display: moduleElement.hasClass('module-item-list') ? this.DISPLAY_LIST : this.DISPLAY_GRID,
+          container: module.container,
+        };
+
+        return newModule;
+      }
+
+      return module;
+    });
+  }
+
+  onModuleDisabled(event) {
     const self = this;
+    self.updateModuleStatus(event);
     self.getModuleItemSelector();
 
     $('.modules-list').each(() => {
@@ -449,6 +490,7 @@ class AdminModuleController {
 
     for (let i = 0; i < modulesListLength; i += 1) {
       currentModule = self.modulesList[i];
+
       if (currentModule.display === self.currentDisplay) {
         isVisible = true;
 
