@@ -391,7 +391,9 @@ class ProductRepository extends AbstractObjectModelRepository
     {
         $qb = $this->getSearchQueryBuilder($searchPhrase, $languageId, $shopId, $limit);
         $qb
-            ->addSelect('p.id_product, pa.id_product_attribute, pl.name, p.reference, i.id_image')
+            ->addSelect('p.id_product, pa.id_product_attribute, pl.name, i.id_image')
+            ->addSelect('p.reference as product_reference')
+            ->addSelect('pa.reference as combination_reference')
             ->addOrderBy('pl.name', 'ASC')
             ->addGroupBy('p.id_product, pa.id_product_attribute')
         ;

@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\SearchCombinationsForAssociationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
 class SearchCombinationsForAssociationHandler implements SearchCombinationsForAssociationHandlerInterface
@@ -97,9 +98,9 @@ class SearchCombinationsForAssociationHandler implements SearchCombinationsForAs
 
         return new CombinationForAssociation(
             (int) $foundProduct['id_product'],
-            (int) $foundProduct['id_product_attribute'],
+            (int) ($foundProduct['id_product_attribute'] ?? NoCombinationId::NO_COMBINATION_ID),
             $foundProduct['name'],
-            $foundProduct['reference'] ?? '',
+            $foundProduct['combination_reference'] ?? ($foundProduct['product_reference'] ?? ''),
             $imagePath
         );
     }
