@@ -394,6 +394,8 @@ class ProductRepository extends AbstractObjectModelRepository
             ->addSelect('p.id_product, pa.id_product_attribute, pl.name, i.id_image')
             ->addSelect('p.reference as product_reference')
             ->addSelect('pa.reference as combination_reference')
+            ->addSelect('ai.id_image as combination_image_id')
+            ->leftJoin('p', $this->dbPrefix . 'product_attribute_image', 'ai', 'ai.id_product_attribute = pa.id_product_attribute')
             ->addOrderBy('pl.name', 'ASC')
             ->addGroupBy('p.id_product, pa.id_product_attribute')
         ;

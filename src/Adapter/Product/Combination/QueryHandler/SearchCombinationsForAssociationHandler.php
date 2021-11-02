@@ -81,26 +81,31 @@ class SearchCombinationsForAssociationHandler implements SearchCombinationsForAs
     }
 
     /**
-     * @param array $foundProduct
+     * @param array $foundCombination
      *
      * @return CombinationForAssociation
      */
-    private function createResult(array $foundProduct): CombinationForAssociation
+    private function createResult(array $foundCombination): CombinationForAssociation
     {
-        if (empty($foundProduct['id_image'])) {
-            $imagePath = $this->productImagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_HOME_DEFAULT);
-        } else {
+        if (!empty($foundCombination['combination_image_id'])) {
             $imagePath = $this->productImagePathFactory->getPathByType(
-                new ImageId((int) $foundProduct['id_image']),
+                new ImageId((int) $foundCombination['combination_image_id']),
                 ProductImagePathFactory::IMAGE_TYPE_HOME_DEFAULT
             );
+        } elseif (!empty($foundCombination['id_image'])) {
+            $imagePath = $this->productImagePathFactory->getPathByType(
+                new ImageId((int) $foundCombination['id_image']),
+                ProductImagePathFactory::IMAGE_TYPE_HOME_DEFAULT
+            );
+        } else {
+            $imagePath = $this->productImagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_HOME_DEFAULT);
         }
 
         return new CombinationForAssociation(
-            (int) $foundProduct['id_product'],
-            (int) ($foundProduct['id_product_attribute'] ?? NoCombinationId::NO_COMBINATION_ID),
-            $foundProduct['name'],
-            $foundProduct['combination_reference'] ?? ($foundProduct['product_reference'] ?? ''),
+            (int) $foundCombination['id_product'],
+            (int) ($foundCombination['id_product_attribute'] ?? NoCombinationId::NO_COMBINATION_ID),
+            $foundCombination['name'],
+            $foundCombination['combination_reference'] ?? ($foundCombination['product_reference'] ?? ''),
             $imagePath
         );
     }
