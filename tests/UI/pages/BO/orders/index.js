@@ -179,14 +179,17 @@ class Order extends BOBasePage {
 
   /**
    * Get text from Column
-   * @param page {Page} Browser tab
+   @param page {Page} Browser tab
    * @param columnName {string} Column name on table
    * @param row {number} Order row in table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|number>}
    */
   async getTextColumn(page, columnName, row) {
     if (columnName === 'osname') {
       return this.getTextContent(page, this.updateStatusInTableButton(row));
+    }
+    if (columnName === 'id_order') {
+      return this.getNumberFromText(page, this.tableColumn(row, 'id_order'));
     }
     return this.getTextContent(page, this.tableColumn(row, columnName));
   }

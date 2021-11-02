@@ -18,6 +18,15 @@ class MerchandiseReturns extends BOBasePage {
     this.successfulUpdateMessage = 'The settings have been successfully updated.';
 
     // Selectors
+    // Merchandise returns table
+    this.gridTable = '#table-order_return';
+    this.filterColumn = filterBy => `${this.gridTable} input[name='order_returnFilter_${filterBy}']`;
+    this.filterSearchButton = `${this.gridTable} #submitFilterButtonorder_return`;
+    this.filterResetButton = `${this.gridTable} button[name='submitResetorder_return']`;
+    this.tableBody = `${this.gridTable} tbody`;
+    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
+
     // Options
     this.generalForm = '#order_return_fieldset_general';
     this.enableOrderReturnLabel = toggle => `${this.generalForm} #PS_ORDER_RETURN_${toggle}`;
@@ -28,6 +37,40 @@ class MerchandiseReturns extends BOBasePage {
   /*
     Methods
   */
+
+  /**
+   * Filter merchandise returns table
+   * @param page {Page} Browser tab
+   * @param filterBy {string} The column name to filter by
+   * @param value {string} Value to filter with
+   * @returns {Promise<void>}
+   */
+  async filterMerchandiseReturnsTable(page, filterBy, value) {
+    await this.setValue(page, this.filterColumn(filterBy), value);
+    // click on search
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+  }
+
+  /**
+   * Get text column from merchandise returns table
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name on the table
+   * @param row {number} Row on the table
+   * @returns {Promise<string>}
+   */
+  getTextColumnFromMerchandiseReturnsTable(page, columnName, row = 1) {
+    return this.getTextContent(page, this.tableColumn(row, columnName));
+  }
+
+  /**
+   * Go to merchandise return page
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<void>}
+   */
+  async goToMerchandiseReturnPage(page, row = 1) {
+    await this.clickAndWaitForNavigation(page, this.tableColumn(row, 'id_order_return'));
+  }
 
   /**
    * Enable/Disable merchandise returns

@@ -36,7 +36,7 @@
 {% endset %}
 
 {% set merchantReturnsTitle %}
-  {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.returns.orderReturns|length }})
+  {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }} (<span class="count">{{ orderForViewing.returns.orderReturns|length }}</span>)
 {% endset %}
 
 <div class="mt-2">
