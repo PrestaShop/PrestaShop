@@ -24,34 +24,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Adapter\Entity\Product;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
+
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStatusCommandHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-/**
- * @internal
- */
-class UpdateProductStatusCommandHandler implements UpdateProductStatusCommandHandlerInterface
+class ProductStatusCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
-     * @param UpdateProductStatusCommand $command
+     * {@inheritDoc}
      */
-    public function handle(UpdateProductStatusCommand $command)
+    public function buildCommands(ProductId $productId, array $formData): array
     {
-        $productId = $command->getProductId()->getValue();
-        $product = new Product($productId);
+        if (!isset($formData['footer']['active'])) {
+            return [];
+        }
 
-        if ($product->id !== $productId) {
-            throw new ProductNotFoundException(sprintf('Product with id "%d" was not found', $productId));
-        }
-        if ($product->active != $command->getEnable()) {
-            if (!$product->toggleStatus()) {
-                throw new CannotUpdateProductException(sprintf('Cannot update status for product with id "%d"', $productId));
-            }
-        }
+        return [new UpdateProductStatusCommand($productId->getValue(), (bool) $formData['footer']['active'])];
     }
 }

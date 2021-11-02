@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand
 /**
  * Interface for service that set product to be enabled or disabled
  */
-interface UpdateProductStatusCommandHandlerInterface
+interface UpdateProductStatusHandlerInterface
 {
     /**
      * @param UpdateProductStatusCommand $command
