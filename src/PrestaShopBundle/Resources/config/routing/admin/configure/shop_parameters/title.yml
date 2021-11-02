@@ -4,7 +4,7 @@ admin_title_index:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::indexAction'
     _legacy_controller: AdminGenders
-   # _legacy_link: AdminGenders
+    #_legacy_link: AdminGenders
 
 admin_title_search:
   path: /
@@ -14,7 +14,7 @@ admin_title_search:
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.title
     redirectRoute: admin_title_index
     _legacy_controller: AdminGenders
-   # _legacy_link: AdminGenders:submitFiltergenders
+    #_legacy_link: AdminGenders:submitFiltergenders
 
 admin_title_create:
   path: /new
@@ -22,7 +22,7 @@ admin_title_create:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::createAction'
     _legacy_controller: AdminGenders
-   # _legacy_link: AdminGenders:addgender
+    #_legacy_link: AdminGenders:addgender
 
 admin_title_edit:
   path: /{titleId}/edit
@@ -30,7 +30,7 @@ admin_title_edit:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::editAction'
     _legacy_controller: AdminGenders
-   # _legacy_link: AdminGenders:updategender
+    #_legacy_link: AdminGenders:updategender
   requirements:
     titleId: \d+
 
@@ -40,7 +40,7 @@ admin_title_delete:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::deleteAction'
     _legacy_controller: AdminGenders
-   # _legacy_link: AdminGenders:deletegender
+    #_legacy_link: AdminGenders:deletegender
   requirements:
     titleId: \d+
 
@@ -50,4 +50,4 @@ admin_title_bulk_delete:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::bulkDeleteAction'
     _legacy_controller: AdminGenders
-   # _legacy_link: AdminGenders:submitBulkdeletegender
+    #_legacy_link: AdminGenders:submitBulkdeletegender
