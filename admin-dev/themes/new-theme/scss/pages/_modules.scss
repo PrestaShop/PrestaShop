@@ -93,7 +93,7 @@
 
 .module-menu-readmore > .tab-content {
   margin-top: 5px;
-  color: #000;
+  color: $black;
   text-align: justify;
 }
 
@@ -658,15 +658,6 @@ form#importDropzone {
 
 .module-import-success-configure {
   display: none;
-}
-
-/**
- * PrestaTrust modal
- **/
-
-#pstrust-img {
-  max-width: 64px;
-  max-height: 64px;
 }
 
 /**

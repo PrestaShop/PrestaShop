@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
-use PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
@@ -88,11 +87,6 @@ class ModuleRepository implements ModuleRepositoryInterface
      * @var string
      */
     private $modulePath;
-
-    /**
-     * @var PrestaTrustChecker|null
-     */
-    private $prestaTrustChecker = null;
 
     /**
      * Key of the cache content.
@@ -151,20 +145,6 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
     }
 
-    /**
-     * Setter for the optional PrestaTrust checker.
-     *
-     * @param PrestaTrustChecker $checker
-     *
-     * @return $this
-     */
-    public function setPrestaTrustChecker(PrestaTrustChecker $checker)
-    {
-        $this->prestaTrustChecker = $checker;
-
-        return $this;
-    }
-
     public function __destruct()
     {
         if ($this->cacheProvider) {
@@ -178,6 +158,8 @@ class ModuleRepository implements ModuleRepositoryInterface
             $this->cacheProvider->delete($this->cacheFilePath);
         }
         $this->cache = [];
+
+        $this->loadedModules->deleteAll();
     }
 
     /**
@@ -201,14 +183,8 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getFilteredList(AddonListFilter $filter, $skip_main_class_attributes = false)
     {
-        if ($filter->status >= AddonListFilterStatus::ON_DISK
-            && $filter->status != AddonListFilterStatus::ALL) {
-            /** @var Module[] $modules */
-            $modules = $this->getModulesOnDisk($skip_main_class_attributes);
-        } else {
-            /** @var Module[] $modules */
-            $modules = $this->getList();
-        }
+        /** @var Module[] $modules */
+        $modules = $this->getList($skip_main_class_attributes);
 
         foreach ($modules as $key => &$module) {
             // Part One : Removing addons not related to the selected product type
@@ -283,17 +259,6 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         return $modules;
-    }
-
-    /**
-     * @return AddonInterface[] retrieve the universe of Modules
-     */
-    public function getList()
-    {
-        return array_merge(
-            $this->getAddonsCatalogModules(),
-            $this->getModulesOnDisk()
-        );
     }
 
     /**
@@ -419,12 +384,13 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @param string $name The technical name of the module
      * @param bool $skip_main_class_attributes
+     * @param bool $cache decide if the cache is used or not to get the module details
      *
      * @return Module
      */
-    public function getModule($name, $skip_main_class_attributes = false)
+    public function getModule($name, $skip_main_class_attributes = false, bool $cache = true)
     {
-        if ($this->loadedModules->contains($name)) {
+        if ($this->loadedModules->contains($name) && $cache) {
             return $this->loadedModules->fetch($name);
         }
 
@@ -506,9 +472,6 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         $module = new Module($attributes, $disk, $database);
         $this->loadedModules->save($name, $module);
-        if ($this->prestaTrustChecker) {
-            $this->prestaTrustChecker->loadDetailsIntoModule($module);
-        }
 
         return $module;
     }
@@ -549,7 +512,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @return \PrestaShop\PrestaShop\Adapter\Module\Module[]
      */
-    private function getModulesOnDisk($skip_main_class_attributes = false)
+    public function getList($skip_main_class_attributes = false)
     {
         $modules = [];
         $modulesDirsList = $this->finder->directories()

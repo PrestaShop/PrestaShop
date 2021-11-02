@@ -39,7 +39,7 @@
                   <small class="float-xs-right">{l s='250 char. max' d='Shop.Forms.Help'}</small>
                   {if $field.text !== ''}
                       <h6 class="customization-message">{l s='Your customization:' d='Shop.Theme.Catalog'}
-                          <label>{$field.text}</label>
+                          <label class="customization-label">{$field.text}</label>
                       </h6>
                   {/if}
                 {elseif $field.type == 'image'}
@@ -53,7 +53,8 @@
                     <input class="file-input js-file-input" {if $field.required} required {/if} type="file" name="{$field.input_name}" id="field-{$field.input_name}">
                     <button class="btn btn-primary">{l s='Choose file' d='Shop.Theme.Actions'}</button>
                   </span>
-                  <small class="float-xs-right">{l s='.png .jpg .gif' d='Shop.Forms.Help'}</small>
+                  {assign var=authExtensions value=' .'|implode:constant('ImageManager::EXTENSIONS_SUPPORTED')}
+                  <small class="float-xs-right">.{$authExtensions}</small>
                 {/if}
               </li>
             {/foreach}

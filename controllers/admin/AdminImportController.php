@@ -1243,7 +1243,6 @@ class AdminImportControllerCore extends AdminController
             $images_types = ImageType::getImagesTypes($entity, true);
 
             if ($regenerate) {
-                $previous_path = null;
                 $path_infos = [];
                 $path_infos[] = [$tgt_width, $tgt_height, $path . '.jpg'];
                 foreach ($images_types as $image_type) {
@@ -4521,9 +4520,9 @@ class AdminImportControllerCore extends AdminController
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_combination`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_image`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'pack`');
-                Image::deleteAllImages(_PS_PROD_IMG_DIR_);
-                if (!file_exists(_PS_PROD_IMG_DIR_)) {
-                    mkdir(_PS_PROD_IMG_DIR_);
+                Image::deleteAllImages(_PS_PRODUCT_IMG_DIR_);
+                if (!file_exists(_PS_PRODUCT_IMG_DIR_)) {
+                    mkdir(_PS_PRODUCT_IMG_DIR_);
                 }
 
                 break;

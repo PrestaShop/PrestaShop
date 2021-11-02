@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
+use GuzzleHttp\Client;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\DuplicateWebserviceKeyException;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceConstraintException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
@@ -46,6 +47,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class WebserviceController extends FrameworkBundleAdminController
 {
+    private const WEBSERVICE_ENTRY_ENDPOINT = '/api';
+
     /**
      * Displays the Webservice main page.
      *
@@ -58,24 +61,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function indexAction(WebserviceKeyFilters $filters, Request $request)
     {
-        $form = $this->getFormHandler()->getForm();
-        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice_key');
-        $grid = $gridWebserviceFactory->getGrid($filters);
-
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-        $presentedGrid = $gridPresenter->present($grid);
-
-        $configurationWarnings = $this->lookForWarnings();
-
-        return $this->render(
-            '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/index.html.twig',
-            [
-                'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
-                'webserviceConfigurationForm' => $form->createView(),
-                'grid' => $presentedGrid,
-                'configurationWarnings' => $configurationWarnings,
-            ]
-        );
+        return $this->renderPage($request, $filters, $this->getFormHandler()->getForm());
     }
 
     /**
@@ -327,7 +313,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param Request $request
      * @param WebserviceKeyFilters $filters
      *
-     * @return Response
+     * @return Response|RedirectResponse
      */
     public function saveSettingsAction(Request $request, WebserviceKeyFilters $filters)
     {
@@ -341,12 +327,12 @@ class WebserviceController extends FrameworkBundleAdminController
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_webservice_keys_index');
             } else {
                 $this->flashErrors($saveErrors);
             }
         }
-
-        $form = $this->getFormHandler()->getForm();
 
         return $this->renderPage($request, $filters, $form);
     }
@@ -360,21 +346,16 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     protected function renderPage(Request $request, WebserviceKeyFilters $filters, FormInterface $form): Response
     {
-        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice_key');
-        $grid = $gridWebserviceFactory->getGrid($filters);
-
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-        $presentedGrid = $gridPresenter->present($grid);
-
-        $configurationWarnings = $this->lookForWarnings();
+        $grid = $this->get('prestashop.core.grid.factory.webservice_key')->getGrid($filters);
 
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/index.html.twig',
             [
                 'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
                 'webserviceConfigurationForm' => $form->createView(),
-                'grid' => $presentedGrid,
-                'configurationWarnings' => $configurationWarnings,
+                'grid' => $this->presentGrid($grid),
+                'configurationWarnings' => $this->lookForWarnings(),
+                'webserviceStatus' => $this->getWebServiceStatus($request),
             ]
         );
     }
@@ -408,5 +389,51 @@ class WebserviceController extends FrameworkBundleAdminController
             ],
             DuplicateWebserviceKeyException::class => $this->trans('This key already exists.', 'Admin.Advparameters.Notification'),
         ];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array<string, bool|string|null>
+     */
+    private function getWebServiceStatus(Request $request): array
+    {
+        $webserviceConfiguration = $this->get('prestashop.admin.webservice.form_data_provider')->getData();
+        $webserviceStatus = [
+            'isEnabled' => (bool) $webserviceConfiguration['enable_webservice'],
+            'isFunctional' => false,
+            'endpoint' => null,
+        ];
+
+        if ($webserviceStatus['isEnabled']) {
+            $webserviceStatus['endpoint'] = rtrim($request->getSchemeAndHttpHost(), '/');
+            $webserviceStatus['endpoint'] .= rtrim($this->getContext()->shop->getBaseURI(), '/');
+            $webserviceStatus['endpoint'] .= self::WEBSERVICE_ENTRY_ENDPOINT;
+            $webserviceStatus['isFunctional'] = $this->checkWebserviceEndpoint($webserviceStatus['endpoint']);
+        }
+
+        return $webserviceStatus;
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return bool
+     */
+    private function checkWebserviceEndpoint(string $url): bool
+    {
+        $client = new Client();
+        $response = $client->request('GET', $url, [
+            'http_errors' => false,
+            'allow_redirects' => true,
+        ]);
+
+        if ($response->getStatusCode() >= Response::HTTP_OK && $response->getStatusCode() < Response::HTTP_MULTIPLE_CHOICES) {
+            return true;
+        } elseif ($response->getStatusCode() == Response::HTTP_UNAUTHORIZED) {
+            return true;
+        }
+
+        return false;
     }
 }

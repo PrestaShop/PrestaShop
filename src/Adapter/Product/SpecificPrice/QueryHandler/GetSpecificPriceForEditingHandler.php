@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler;
 
-use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
@@ -62,9 +61,6 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
     {
         $specificPrice = $this->specificPriceRepository->get($query->getSpecificPriceId());
 
-        $dateFrom = DateTimeUtil::NULL_DATETIME !== $specificPrice->from ? new DateTime($specificPrice->from) : null;
-        $dateTo = DateTimeUtil::NULL_DATETIME !== $specificPrice->to ? new DateTime($specificPrice->to) : null;
-
         return new SpecificPriceForEditing(
             (int) $specificPrice->id,
             $specificPrice->reduction_type,
@@ -72,9 +68,8 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
             (bool) $specificPrice->reduction_tax,
             new DecimalNumber((string) $specificPrice->price),
             (int) $specificPrice->from_quantity,
-            $dateFrom,
-            $dateTo,
-            (int) $specificPrice->id_shop_group ?: null,
+            DateTimeUtil::buildNullableDateTime($specificPrice->from),
+            DateTimeUtil::buildNullableDateTime($specificPrice->to),
             (int) $specificPrice->id_shop ?: null,
             (int) $specificPrice->id_currency ?: null,
             (int) $specificPrice->id_country ?: null,

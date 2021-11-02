@@ -149,10 +149,6 @@ abstract class PaymentModuleCore extends Module
     public function addCheckboxCountryRestrictionsForModule(array $shops = [])
     {
         $countries = Country::getCountries((int) Context::getContext()->language->id, true); //get only active country
-        $country_ids = [];
-        foreach ($countries as $country) {
-            $country_ids[] = $country['id_country'];
-        }
 
         return Country::addModuleRestrictions($shops, $countries, [['id_module' => (int) $this->id]]);
     }
@@ -352,7 +348,7 @@ abstract class PaymentModuleCore extends Module
             }
 
             // The country can only change if the address used for the calculation is the delivery address, and if multi-shipping is activated
-            if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery') {
+            if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery' && isset($context_country)) {
                 $this->context->country = $context_country;
             }
 
@@ -391,7 +387,7 @@ abstract class PaymentModuleCore extends Module
             // Make sure CartRule caches are empty
             CartRule::cleanCache();
             foreach ($order_detail_list as $key => $order_detail) {
-                /** @var OrderDetail $order_detail */
+                /** @var Order $order */
                 $order = $order_list[$key];
                 if (isset($order->id)) {
                     if (!$secure_key) {
@@ -399,15 +395,15 @@ abstract class PaymentModuleCore extends Module
                     }
                     // Optional message to attach to this order
                     if (!empty($message)) {
-                        $msg = new Message();
                         $message = strip_tags($message, '<br>');
                         if (Validate::isCleanHtml($message)) {
                             if (self::DEBUG_MODE) {
                                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Message is about to be added', 1, null, 'Cart', (int) $id_cart, true);
                             }
+                            $msg = new Message();
                             $msg->message = $message;
                             $msg->id_cart = (int) $id_cart;
-                            $msg->id_customer = (int) ($order->id_customer);
+                            $msg->id_customer = (int) $order->id_customer;
                             $msg->id_order = (int) $order->id;
                             $msg->private = 1;
                             $msg->add();
@@ -531,7 +527,7 @@ abstract class PaymentModuleCore extends Module
                         $customer_message->private = 0;
 
                         if (!$customer_message->add()) {
-                            $this->errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
+                            $this->_errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
                         }
                     }
 
@@ -740,7 +736,7 @@ abstract class PaymentModuleCore extends Module
                     'orders' => $order_list,
                     'customer' => $this->context->customer,
                     'currency' => $this->context->currency,
-                    'orderStatus' => new OrderState($order->current_state),
+                    'orderStatus' => new OrderState(isset($order) ? $order->current_state : null),
                 ]
             );
 
@@ -750,20 +746,6 @@ abstract class PaymentModuleCore extends Module
             PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', (int) ($this->context->cart->id));
             die(Tools::displayError($error));
         }
-    }
-
-    /**
-     * @deprecated 1.6.0.7
-     *
-     * @param mixed $content
-     *
-     * @return mixed
-     */
-    public function formatProductAndVoucherForEmail($content)
-    {
-        Tools::displayAsDeprecated('Use $content instead');
-
-        return $content;
     }
 
     /**
@@ -790,7 +772,7 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * @param Address Address $the_address that needs to be txt formatted
+     * @param Address $the_address that needs to be txt formatted
      * @param string $line_sep
      * @param array $fields_style
      *
@@ -898,10 +880,6 @@ abstract class PaymentModuleCore extends Module
 
     public static function preCall($module_name)
     {
-        if (!parent::preCall($module_name)) {
-            return false;
-        }
-
         if (($module_instance = Module::getInstanceByName($module_name))) {
             /** @var PaymentModule $module_instance */
             if (!$module_instance->currencies || ($module_instance->currencies && count(Currency::checkPaymentCurrencies($module_instance->id)))) {

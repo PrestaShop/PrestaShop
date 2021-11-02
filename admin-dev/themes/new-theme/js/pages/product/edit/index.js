@@ -26,7 +26,8 @@
 import NavbarHandler from '@components/navbar-handler';
 import ProductMap from '@pages/product/product-map';
 
-import CategoriesManager from '@pages/product/components/categories';
+import AttachmentsManager from '@pages/product/edit/attachments-manager';
+import CategoriesManager from '@pages/product/components/categories/categories-manager';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
 import CustomizationsManager from '@pages/product/edit/customizations-manager';
 import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
@@ -51,6 +52,7 @@ $(() => {
     'TranslatableInput',
     'EventEmitter',
     'TextWithLengthCounter',
+    'DeltaQuantityInput',
   ]);
 
   const $productForm = $(ProductMap.productForm);
@@ -97,6 +99,7 @@ $(() => {
 
   new FeatureValuesManager(eventEmitter);
   new CustomizationsManager();
+  new AttachmentsManager();
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
     new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true);

@@ -26,6 +26,8 @@
 
 declare(strict_types=1);
 
+use PrestaShop\PrestaShop\Core\File\Exception\FileUploadException;
+use PrestaShop\PrestaShop\Core\File\Exception\MaximumSizeExceededException;
 use PrestaShop\PrestaShop\Core\File\FileUploader;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
@@ -327,7 +329,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         try {
             $file = $uploader->upload($fileToUpload);
             if (!empty($attachment->id)) {
-                unlink(PS_DOWNLOAD_DIR . $attachment->file);
+                unlink(_PS_DOWNLOAD_DIR_ . $attachment->file);
             }
 
             $attachment->file = $file['id'];
@@ -342,13 +344,13 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
             }
             // Remember affected entity
             $this->attachmentId = $attachment->id;
-        } catch (MaximumSizeExceeded $e) {
+        } catch (MaximumSizeExceededException $e) {
             $this->getWsObject()->errors[] = $this->trans(
                 'The file you are trying to upload is %2$d KB, which is larger than the maximum size allowed of %1$d KB.',
                 [$maximumSize, $e->getMessage()],
                 'Admin.Notifications.Error'
             );
-        } catch (FailedToCopyException $e) {
+        } catch (FileUploadException $e) {
             $this->getWsObject()->errors[] = $this->trans(
                 'Failed to copy the file.',
                 [],

@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Adapter\EntityTranslation\EntityTranslatorFactory;
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\Exception\DataLangClassNameNotFoundException;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageImageManager;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
@@ -346,6 +347,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $pPath_from = _PS_ROOT_DIR_ . '/themes/' . (string) $theme_from . '/pdf/';
         $mPath_from = _PS_MAIL_DIR_ . (string) $iso_from . '/';
 
+        $lPath_to = $tPath_to = $pPath_to = $mPath_to = '';
         if ($copy) {
             $lPath_to = _PS_TRANSLATIONS_DIR_ . (string) $iso_to . '/';
             $tPath_to = _PS_ROOT_DIR_ . '/themes/' . (string) $theme_to . '/';
@@ -522,9 +524,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * duplicate translated rows from xxx_lang tables
      * from the shop default language.
      *
-     * @param $tableName
-     * @param $shopDefaultLangId
-     * @param $shopId
+     * @param string $tableName
+     * @param int $shopDefaultLangId
+     * @param int $shopId
      *
      * @return bool
      *
@@ -580,16 +582,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $sql .= ' WHERE `' . bqSQL($identifier) . '` IN (SELECT `' . bqSQL($identifier) . '` FROM `' . bqSQL($tableName) . '`) )';
 
         return Db::getInstance()->execute($sql);
-    }
-
-    /**
-     * @deprecated 1.6.1.1 Use Tools::deleteDirectory($dir) instead
-     *
-     * @param string $dir is the path of the directory to delete
-     */
-    public static function recurseDeleteDir($dir)
-    {
-        return Tools::deleteDirectory($dir);
     }
 
     /**
@@ -1147,19 +1139,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return true;
     }
 
-    /**
-     * @deprecated Since 1.7.7, use LanguageImageManager
-     */
-    protected static function _copyNoneFlag($id)
-    {
-        @trigger_error(
-            __FUNCTION__ . 'is deprecated since version 1.7.7. Use ' . LanguageImageManager::class . ' instead.',
-            E_USER_DEPRECATED
-        );
-
-        return true;
-    }
-
     public static function isInstalled($iso_code)
     {
         if (static::$_cache_language_installation === null) {
@@ -1345,22 +1324,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
 
         return true;
-    }
-
-    /**
-     * @param array $lang_pack
-     * @param array $errors
-     *
-     * @deprecated This method is deprecated since 1.7.6.0 use GenerateThemeMailsCommand instead
-     */
-    public static function installEmailsLanguagePack($lang_pack, &$errors = [])
-    {
-        @trigger_error(
-            'Language::installEmailsLanguagePack() is deprecated since version 1.7.6.0 Use GenerateThemeMailsCommand instead.',
-            E_USER_DEPRECATED
-        );
-
-        static::generateEmailsLanguagePack($lang_pack, $errors, true);
     }
 
     /**
@@ -1697,7 +1660,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             $adminDir,
             $themesDir,
             [
-                _PS_MODULE_DIR_ . 'welcome',
                 _PS_MODULE_DIR_ . 'cronjobs',
             ]
         );

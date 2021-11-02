@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
@@ -37,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFe
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
@@ -71,27 +74,43 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $defaultCategoryId;
 
     /**
+     * @var CategoryDataProvider
+     */
+    private $categoryDataProvider;
+
+    /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
      * @param int $defaultCategoryId
+     * @param CategoryDataProvider $categoryDataProvider
+     * @param int $contextLangId
      */
     public function __construct(
         CommandBusInterface $queryBus,
         bool $defaultProductActivation,
         int $mostUsedTaxRulesGroupId,
-        int $defaultCategoryId
+        int $defaultCategoryId,
+        CategoryDataProvider $categoryDataProvider,
+        int $contextLangId
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
         $this->defaultCategoryId = $defaultCategoryId;
+        $this->contextLangId = $contextLangId;
+        $this->categoryDataProvider = $categoryDataProvider;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData($id)
+    public function getData($id): array
     {
         $productId = (int) $id;
         /** @var ProductForEditing $productForEditing */
@@ -108,7 +127,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
             'footer' => [
-                'active' => $productForEditing->getOptions()->isActive(),
+                'active' => $productForEditing->isActive(),
             ],
         ];
 
@@ -118,8 +137,13 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultData()
+    public function getDefaultData(): array
     {
+        //@todo: If the create product page is decided to be removed anyway (replaced by a creation modal as now discussed)
+        //  then this whole method content can be removed
+        //  If not - don't forget to refactor this - legacy object model cannot stay in Core. Don't forget related test.
+        $defaultCategory = $this->categoryDataProvider->getCategory($this->defaultCategoryId);
+
         return $this->addShortcutData([
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
@@ -127,17 +151,19 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'description' => [
                 'categories' => [
                     'product_categories' => [
-                        $this->defaultCategoryId => [
-                            'is_associated' => true,
-                            'is_default' => true,
+                        [
+                            'id' => $this->defaultCategoryId,
+                            'name' => $defaultCategory->name[$this->contextLangId],
                         ],
                     ],
+                    'default_category_id' => $this->defaultCategoryId,
                 ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
                 'quantities' => [
                     'quantity' => 0,
+                    'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
             ],
@@ -205,16 +231,22 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private function extractCategoriesData(ProductForEditing $productForEditing): array
     {
         $categoriesInformation = $productForEditing->getCategoriesInformation();
+        $defaultCategoryId = $categoriesInformation->getDefaultCategoryId();
+
         $categories = [];
-        foreach ($categoriesInformation->getCategoryIds() as $categoryId) {
-            $categories[$categoryId] = [
-                'is_associated' => true,
-                'is_default' => $categoryId === $categoriesInformation->getDefaultCategoryId(),
+        foreach ($categoriesInformation->getCategoriesInformation() as $categoryInformation) {
+            $localizedNames = $categoryInformation->getLocalizedNames();
+            $categoryId = $categoryInformation->getId();
+
+            $categories[] = [
+                'id' => $categoryId,
+                'name' => $localizedNames[$this->contextLangId],
             ];
         }
 
         return [
             'product_categories' => $categories,
+            'default_category_id' => $defaultCategoryId,
         ];
     }
 
@@ -270,8 +302,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
-            'categories' => $this->extractCategoriesData($productForEditing),
             'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
+            'categories' => $this->extractCategoriesData($productForEditing),
         ];
     }
 
@@ -285,8 +317,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $details = $productForEditing->getDetails();
 
         return [
-            'features' => $this->extractFeatureValues($productForEditing->getProductId()),
-            'customizations' => $this->extractCustomizationsData($productForEditing),
             'references' => [
                 'mpn' => $details->getMpn(),
                 'upc' => $details->getUpc(),
@@ -294,6 +324,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'isbn' => $details->getIsbn(),
                 'reference' => $details->getReference(),
             ],
+            'features' => $this->extractFeatureValues($productForEditing->getProductId()),
+            'attachments' => $this->extractAttachmentsData($productForEditing),
+            'customizations' => $this->extractCustomizationsData($productForEditing),
         ];
     }
 
@@ -342,6 +375,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'quantities' => [
                 'quantity' => $stockInformation->getQuantity(),
+                'stock_movements' => $this->getStockMovements($productForEditing->getProductId()),
                 'minimal_quantity' => $stockInformation->getMinimalQuantity(),
             ],
             'options' => [
@@ -358,6 +392,28 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
             ],
         ];
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return array
+     */
+    private function getStockMovements(int $productId): array
+    {
+        /** @var EmployeeStockMovement[] $stockMovements */
+        $stockMovements = $this->queryBus->handle(new GetEmployeesStockMovements($productId));
+
+        $movementData = [];
+        foreach ($stockMovements as $stockMovement) {
+            $movementData[] = [
+                'date_add' => $stockMovement->getDateAdd()->format(DateTime::DEFAULT_DATETIME_FORMAT),
+                'employee' => $stockMovement->getFirstName() . ' ' . $stockMovement->getLastName(),
+                'delta_quantity' => $stockMovement->getDeltaQuantity(),
+            ];
+        }
+
+        return $movementData;
     }
 
     /**
@@ -473,6 +529,29 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'condition' => $options->getCondition(),
             'suppliers' => $this->extractSuppliersData($productForEditing),
         ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, array<int, array<string, mixed>>>
+     */
+    private function extractAttachmentsData(ProductForEditing $productForEditing): array
+    {
+        $productAttachments = $productForEditing->getAssociatedAttachments();
+
+        $attachmentsData = [];
+        foreach ($productAttachments as $productAttachment) {
+            $localizedNames = $productAttachment->getLocalizedNames();
+            $attachmentsData['attached_files'][] = [
+                'attachment_id' => $productAttachment->getAttachmentId(),
+                'name' => $localizedNames[$this->contextLangId] ?? reset($localizedNames),
+                'file_name' => $productAttachment->getFilename(),
+                'mime_type' => $productAttachment->getMimeType(),
+            ];
+        }
+
+        return $attachmentsData;
     }
 
     /**

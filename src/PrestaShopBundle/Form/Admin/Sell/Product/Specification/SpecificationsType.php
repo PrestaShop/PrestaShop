@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Specification;
 
+use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductAttachmentsType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -43,10 +43,7 @@ class SpecificationsType extends TranslatorAwareType
         $builder
             ->add('references', ReferencesType::class)
             ->add('features', FeaturesType::class)
-            ->add('attached_files', UnavailableType::class, [
-                'label' => $this->trans('Attached files', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-            ])
+            ->add('attachments', ProductAttachmentsType::class)
             ->add('customizations', CustomizationsType::class)
         ;
     }

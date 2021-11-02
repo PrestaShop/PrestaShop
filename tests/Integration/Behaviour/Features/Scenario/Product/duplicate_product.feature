@@ -8,12 +8,13 @@ Feature: Duplicate product from Back Office (BO).
 
   Background:
     Given category "home" in default language named "Home" exists
+    And category "home" is the default one
     And shop "shop1" with name "test_shop" exists
     And single shop shop1 context is loaded
     And category "men" in default language named "Men" exists
     And category "clothes" in default language named "Clothes" exists
     And manufacturer studioDesign named "Studio Design" exists
-    Given language "language1" with locale "en-US" exists
+    And language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
     And language "language2" with locale "fr-FR" exists
     And carrier carrier1 named "ecoCarrier" exists
@@ -103,7 +104,7 @@ Feature: Duplicate product from Back Office (BO).
       | name[en-US]        | puffin           |
       | name[fr-FR]        | macareux         |
       | file_name          | app_icon.png     |
-    And I associate attachment "att1" with product product1
+    When I associate product product1 with following attachments: "[att1]"
     And I enable product "product1"
     When I update product product1 SEO information with following values:
       | redirect_type   | 301-product |
@@ -130,11 +131,12 @@ Feature: Duplicate product from Back Office (BO).
       | en-US  | Simple & nice sunglasses   |
       | fr-FR  | lunettes simples et belles |
     And product copy_of_product1 should be assigned to following categories:
-      | categories       | [home, men, clothes] |
-      | default category | clothes              |
+      | id reference | name[en-US] | name[fr-FR] | is default |
+      | home         | Home        | Home        | false      |
+      | men          | Men         | Men         | false      |
+      | clothes      | Clothes     | Clothes     | true       |
     And product "copy_of_product1" should have following options:
       | product option      | value        |
-      | active              | false        |
       | visibility          | catalog      |
       | available_for_order | false        |
       | online_only         | true         |
@@ -194,7 +196,9 @@ Feature: Duplicate product from Back Office (BO).
       | carriers                                | [carrier1,carrier2]  |
     And product copy_of_product1 should have following related products:
       | product2 |
-    And product copy_of_product1 should have following attachments associated: "[att1]"
+    And product copy_of_product1 should have following attachments associated:
+      | attachment reference | title                       | description                           | file name    | type      | size  |
+      | att1                 | en-US:puffin;fr-Fr:macareux | en-US:puffin photo nr1;fr-Fr:macareux | app_icon.png | image/png | 19187 |
     And product copy_of_product1 should have identical customization fields to product1
     And product copy_of_product1 should have 1 customizable text field
     And product copy_of_product1 should have 0 customizable file fields

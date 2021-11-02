@@ -182,7 +182,7 @@ class OrderSlipCore extends ObjectModel
     /**
      * Get resume of all refund for one product line.
      *
-     * @param $id_order_detail
+     * @param int $id_order_detail
      *
      * @deprecated This method should not be used any more because sometimes OrderSlip is not created, you should use the OrderDetail::total_refunded_tax_excl/incl fields instead
      */
@@ -213,7 +213,7 @@ class OrderSlipCore extends ObjectModel
     /**
      * Get refund details for one product line.
      *
-     * @param $id_order_detail
+     * @param int $id_order_detail
      */
     public static function getProductSlipDetail($id_order_detail)
     {
@@ -278,10 +278,10 @@ class OrderSlipCore extends ObjectModel
                 'amount' => $order_detail->unit_price_tax_incl * $qtyList[$id_order_detail],
             ];
 
-            $shipping = $shipping_cost ? null : false;
+            $shipping_cost = $shipping_cost ? null : false;
         }
 
-        return OrderSlip::create($order, $product_list, $shipping);
+        return OrderSlip::create($order, $product_list, $shipping_cost);
     }
 
     public static function create(Order $order, $product_list, $shipping_cost = false, $amount = 0, $amount_choosen = false, $add_tax = true)
@@ -385,7 +385,7 @@ class OrderSlipCore extends ObjectModel
             $product['unit_price_tax_' . $inc_or_ex_1] = $price;
             $product['unit_price_tax_' . $inc_or_ex_2] = Tools::ps_round($tax_calculator->{$taxCalculatorMethod}($price), Context::getContext()->getComputingPrecision());
             $product['total_price_tax_' . $inc_or_ex_1] = Tools::ps_round($price * $quantity, Context::getContext()->getComputingPrecision());
-            $product['total_price_tax_' . $inc_or_ex_2] = Tools::ps_round($product_tax_incl, Context::getContext()->getComputingPrecision());
+            $product['total_price_tax_' . $inc_or_ex_2] = Tools::ps_round($product_tax_incl ?? 0, Context::getContext()->getComputingPrecision());
         }
         unset($product);
 
@@ -459,6 +459,12 @@ class OrderSlipCore extends ObjectModel
         return true;
     }
 
+    /**
+     * @param array<int, array<float|int>> $order_detail_list
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function addPartialSlipDetail($order_detail_list)
     {
         foreach ($order_detail_list as $id_order_detail => $tab) {

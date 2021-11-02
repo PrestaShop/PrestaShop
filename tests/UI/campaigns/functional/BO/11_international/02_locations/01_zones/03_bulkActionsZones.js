@@ -29,7 +29,7 @@ const zonesToCreate = [
   new ZoneFaker({name: 'todelete2'}),
 ];
 
-describe('Create 2 zones then enable, disable and delete by bulk actions', async () => {
+describe('BO - International - Zones : Bulk enable, disable and delete', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -44,7 +44,7 @@ describe('Create 2 zones then enable, disable and delete by bulk actions', async
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to locations page', async function () {
+  it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(

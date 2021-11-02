@@ -153,7 +153,7 @@ class TemplateFinderCore
     /**
      * Set productListSearch.
      *
-     * @param array $productListSearch
+     * @param array $productListSearchEntities
      *
      * @return TemplateFinderCore
      */

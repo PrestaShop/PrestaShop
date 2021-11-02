@@ -244,7 +244,7 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
 
         $this->truncateTablesIfExist($truncateIfExists);
 
-        $imgDir = $this->configuration->get('_PS_PROD_IMG_DIR_');
+        $imgDir = $this->configuration->get('_PS_PRODUCT_IMG_DIR_');
         $this->imageFileDeleter->deleteFromPath($imgDir, true, true);
     }
 

@@ -85,7 +85,7 @@ class ImageTypeCore extends ObjectModel
     /**
      * Returns image type definitions.
      *
-     * @param string|null Image type
+     * @param string|null $type Image type
      * @param bool $orderBySize
      *
      * @return array Image type definitions
@@ -166,22 +166,6 @@ class ImageTypeCore extends ObjectModel
         }
 
         return $return;
-    }
-
-    /**
-     * Get formatted name.
-     *
-     * @deprecated 1.7.0.0 Use ImageType::getFormattedName($name) instead
-     *
-     * @param string $name
-     *
-     * @return string
-     */
-    public static function getFormatedName($name)
-    {
-        Tools::displayAsDeprecated('Please use ImageType::getFormattedName($name) instead');
-
-        return self::getFormattedName($name);
     }
 
     /**

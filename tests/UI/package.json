@@ -81,16 +81,18 @@
     "js-image-generator": "^1.0.2",
     "maildev": "^1.1.0",
     "mocha": "^6.1.4",
-    "mochawesome": "^2.3.0",
+    "mochawesome": "^6.2.2",
     "module-alias": "^2.2.2",
     "pdfjs-dist": "^2.3.200",
-    "playwright": "1.8.1"
+    "playwright": "1.13.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-html": "^6.0.2",
-    "eslint-plugin-import": "^2.20.2"
+    "eslint-plugin-import": "^2.20.2",
+    "jsdoc-to-markdown": "^7.0.1",
+    "mochawesome-merge": "^4.2.0"
   }
 }

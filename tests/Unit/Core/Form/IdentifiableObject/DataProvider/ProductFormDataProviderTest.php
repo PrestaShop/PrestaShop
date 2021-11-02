@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 
+use Category;
 use DateTime;
 use DateTimeImmutable;
 use Generator;
@@ -35,7 +36,9 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
@@ -44,8 +47,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatu
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoriesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoryInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
@@ -55,6 +59,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductRedirectTarget;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
@@ -77,11 +84,13 @@ class ProductFormDataProviderTest extends TestCase
     private const PRODUCT_ID = 42;
     private const HOME_CATEGORY_ID = 49;
     private const DEFAULT_CATEGORY_ID = 51;
+    private const HOME_CATEGORY_NAME = 'Home';
     private const DEFAULT_VIRTUAL_PRODUCT_FILE_ID = 69;
+    private const CONTEXT_LANG_ID = 1;
     private const DEFAULT_QUANTITY = 12;
     private const COVER_URL = 'http://localhost/cover.jpg';
 
-    public function testGetDefaultData()
+    public function testGetDefaultData(): void
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
 
@@ -94,17 +103,19 @@ class ProductFormDataProviderTest extends TestCase
             'description' => [
                 'categories' => [
                     'product_categories' => [
-                        self::HOME_CATEGORY_ID => [
-                            'is_associated' => true,
-                            'is_default' => true,
+                        [
+                            'id' => self::HOME_CATEGORY_ID,
+                            'name' => self::HOME_CATEGORY_NAME,
                         ],
                     ],
+                    'default_category_id' => self::HOME_CATEGORY_ID,
                 ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
                 'quantities' => [
                     'quantity' => 0,
+                    'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
             ],
@@ -151,6 +162,7 @@ class ProductFormDataProviderTest extends TestCase
         ];
 
         $defaultData = $provider->getDefaultData();
+
         // assertSame is very important here We can't assume null and 0 are the same thing
         $this->assertSame($expectedDefaultData, $defaultData);
 
@@ -163,17 +175,19 @@ class ProductFormDataProviderTest extends TestCase
             'description' => [
                 'categories' => [
                     'product_categories' => [
-                        self::HOME_CATEGORY_ID => [
-                            'is_associated' => true,
-                            'is_default' => true,
+                        [
+                            'id' => self::HOME_CATEGORY_ID,
+                            'name' => self::HOME_CATEGORY_NAME,
                         ],
                     ],
+                    'default_category_id' => self::HOME_CATEGORY_ID,
                 ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
                 'quantities' => [
                     'quantity' => 0,
+                    'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
             ],
@@ -220,6 +234,7 @@ class ProductFormDataProviderTest extends TestCase
         ];
 
         $defaultData = $provider->getDefaultData();
+
         // assertSame is very important here We can't assume null and 0 are the same thing
         $this->assertSame($expectedDefaultData, $defaultData);
     }
@@ -483,6 +498,22 @@ class ProductFormDataProviderTest extends TestCase
             'available_now' => $localizedValues,
             'available_later' => $localizedValues,
             'available_date' => new DateTime('1969/07/20'),
+            'stock_movements' => [
+                [
+                    'id_stock_mvt' => 10,
+                    'delta_quantity' => +42,
+                    'employee_firstname' => 'Paul',
+                    'employee_lastname' => 'Atreide',
+                    'date_add' => '2021-05-24 15:24:32',
+                ],
+                [
+                    'id_stock_mvt' => 11,
+                    'delta_quantity' => -15,
+                    'employee_firstname' => 'Frodo',
+                    'employee_lastname' => 'Baggins',
+                    'date_add' => '2021-05-22 16:35:48',
+                ],
+            ],
         ];
         $expectedOutputData['stock']['quantities']['quantity'] = 42;
         $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
@@ -494,6 +525,19 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['availability']['available_now_label'] = $localizedValues;
         $expectedOutputData['stock']['availability']['available_later_label'] = $localizedValues;
         $expectedOutputData['stock']['availability']['available_date'] = '1969-07-20';
+
+        $expectedOutputData['stock']['quantities']['stock_movements'] = [
+            [
+                'date_add' => '2021-05-24 15:24:32',
+                'employee' => 'Paul Atreide',
+                'delta_quantity' => 42,
+            ],
+            [
+                'date_add' => '2021-05-22 16:35:48',
+                'employee' => 'Frodo Baggins',
+                'delta_quantity' => -15,
+            ],
+        ];
 
         $expectedOutputData['shortcuts']['stock']['quantity'] = 42;
 
@@ -514,19 +558,25 @@ class ProductFormDataProviderTest extends TestCase
 
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
-            'categories' => [42, 51],
+            'categories' => [
+                ['id' => 42, 'localized_names' => [self::CONTEXT_LANG_ID => 'test1', 2 => 'test2']],
+                ['id' => 51, 'localized_names' => [self::CONTEXT_LANG_ID => 'test22', 3 => 'test3']],
+            ],
             'default_category' => 51,
         ];
 
-        $expectedOutputData['description']['categories']['product_categories'] = [];
-        $expectedOutputData['description']['categories']['product_categories'][42] = [
-            'is_associated' => true,
-            'is_default' => false,
+        $expectedOutputData['description']['categories']['product_categories'] = [
+            [
+                'id' => 42,
+                'name' => 'test1',
+            ],
         ];
-        $expectedOutputData['description']['categories']['product_categories'][51] = [
-            'is_associated' => true,
-            'is_default' => true,
+        $expectedOutputData['description']['categories']['product_categories'][] = [
+            'id' => 51,
+            'name' => 'test22',
         ];
+
+        $expectedOutputData['description']['categories']['default_category_id'] = 51;
 
         $datasets[] = [
             $productData,
@@ -600,9 +650,13 @@ class ProductFormDataProviderTest extends TestCase
             $expectedOutputData,
         ];
 
-        $localizedValues = [
-            1 => 'english',
-            2 => 'french',
+        $localizedNames = [
+            1 => 'english name',
+            2 => 'french name',
+        ];
+        $localizedDescriptions = [
+            1 => 'english description',
+            2 => 'french description',
         ];
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
@@ -618,6 +672,16 @@ class ProductFormDataProviderTest extends TestCase
             'ean13' => 'ean13_2',
             'mpn' => 'mpn_2',
             'reference' => 'reference_2',
+            'attachments' => [
+                new AttachmentInformation(
+                    1,
+                    $localizedNames,
+                    $localizedDescriptions,
+                    'test1',
+                    'image/jpeg',
+                    1042
+                ),
+            ],
         ];
         $expectedOutputData['footer']['active'] = false;
         $expectedOutputData['options']['visibility']['visibility'] = ProductVisibility::VISIBLE_IN_CATALOG;
@@ -632,6 +696,15 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['specifications']['references']['ean_13'] = 'ean13_2';
         $expectedOutputData['specifications']['references']['mpn'] = 'mpn_2';
         $expectedOutputData['specifications']['references']['reference'] = 'reference_2';
+
+        $expectedOutputData['specifications']['attachments']['attached_files'] = [
+            [
+                'attachment_id' => 1,
+                'name' => 'english name',
+                'file_name' => 'test1',
+                'mime_type' => 'image/jpeg',
+            ],
+        ];
 
         $datasets[] = [
             $productData,
@@ -879,6 +952,7 @@ class ProductFormDataProviderTest extends TestCase
         return new ProductForEditing(
             static::PRODUCT_ID,
             $product['type'] ?? ProductType::TYPE_STANDARD,
+            $product['active'] ?? true,
             ProductCustomizationOptions::createNotCustomizable(),
             $this->createBasic($product),
             $this->createCategories($product),
@@ -975,6 +1049,34 @@ class ProductFormDataProviderTest extends TestCase
         }
 
         return $customizationFields;
+    }
+
+    /**
+     * @param array $productData
+     *
+     * @return EmployeeStockMovement[]
+     */
+    private function createProductStockMovements(array $productData): array
+    {
+        if (!isset($productData['stock_movements'])) {
+            return [];
+        }
+
+        $stockMovements = [];
+        foreach ($productData['stock_movements'] as $stockMovement) {
+            $stockMovements[] = new EmployeeStockMovement(
+                $stockMovement['id_stock_mvt'],
+                42,
+                11,
+                $stockMovement['delta_quantity'],
+                42,
+                $stockMovement['employee_firstname'],
+                $stockMovement['employee_lastname'],
+                new DateTime($stockMovement['date_add'])
+            );
+        }
+
+        return $stockMovements;
     }
 
     /**
@@ -1079,7 +1181,6 @@ class ProductFormDataProviderTest extends TestCase
     private function createOptions(array $product): ProductOptions
     {
         return new ProductOptions(
-            $product['active'] ?? true,
             $product['visibility'] ?? ProductVisibility::VISIBLE_EVERYWHERE,
             $product['available_for_order'] ?? true,
             $product['online_only'] ?? false,
@@ -1113,13 +1214,20 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @param array $product
      *
-     * @return ProductCategoriesInformation
+     * @return CategoriesInformation
      */
-    private function createCategories(array $product): ProductCategoriesInformation
+    private function createCategories(array $product): CategoriesInformation
     {
-        return new ProductCategoriesInformation(
-            $product['categories'] ?? [self::DEFAULT_CATEGORY_ID],
-            $product['default_category'] ?? self::DEFAULT_CATEGORY_ID
+        $categoriesInfo = [];
+        if (isset($product['categories'])) {
+            foreach ($product['categories'] as $category) {
+                $categoriesInfo[] = new CategoryInformation($category['id'], $category['localized_names']);
+            }
+        }
+
+        return new CategoriesInformation(
+            $categoriesInfo,
+            $product['default_category'] ?? self::HOME_CATEGORY_ID
         );
     }
 
@@ -1153,7 +1261,8 @@ class ProductFormDataProviderTest extends TestCase
                 $this->isInstanceOf(GetProductForEditing::class),
                 $this->isInstanceOf(GetProductSupplierOptions::class),
                 $this->isInstanceOf(GetProductFeatureValues::class),
-                $this->isInstanceOf(GetProductCustomizationFields::class)
+                $this->isInstanceOf(GetProductCustomizationFields::class),
+                $this->isInstanceOf(GetEmployeesStockMovements::class)
             ))
             ->willReturnCallback(function ($query) use ($productData) {
                 return $this->createResultBasedOnQuery($query, $productData);
@@ -1164,10 +1273,10 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
-     * @param $query
+     * @param mixed $query
      * @param array $productData
      *
-     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|null
+     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|StockMovement[]
      */
     private function createResultBasedOnQuery($query, array $productData)
     {
@@ -1176,6 +1285,7 @@ class ProductFormDataProviderTest extends TestCase
             GetProductSupplierOptions::class => $this->createProductSupplierOptions($productData),
             GetProductFeatureValues::class => $this->createProductFeatureValueOptions($productData),
             GetProductCustomizationFields::class => $this->createProductCustomizationFields($productData),
+            GetEmployeesStockMovements::class => $this->createProductStockMovements($productData),
         ];
 
         $queryClass = get_class($query);
@@ -1201,19 +1311,13 @@ class ProductFormDataProviderTest extends TestCase
             'description' => [
                 'description' => [],
                 'description_short' => [],
-                'categories' => [
-                    'product_categories' => [
-                        self::DEFAULT_CATEGORY_ID => [
-                            'is_associated' => true,
-                            'is_default' => true,
-                        ],
-                    ],
-                ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
+                'categories' => [
+                    'product_categories' => [],
+                    'default_category_id' => self::HOME_CATEGORY_ID,
+                ],
             ],
             'specifications' => [
-                'features' => [],
-                'customizations' => [],
                 'references' => [
                     'mpn' => 'mpn',
                     'upc' => 'upc',
@@ -1221,10 +1325,14 @@ class ProductFormDataProviderTest extends TestCase
                     'isbn' => 'isbn',
                     'reference' => 'reference',
                 ],
+                'features' => [],
+                'attachments' => [],
+                'customizations' => [],
             ],
             'stock' => [
                 'quantities' => [
                     'quantity' => static::DEFAULT_QUANTITY,
+                    'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
                 'options' => [
@@ -1324,7 +1432,23 @@ class ProductFormDataProviderTest extends TestCase
             $queryBusMock,
             $activation,
             42,
-            self::HOME_CATEGORY_ID
+            self::HOME_CATEGORY_ID,
+            $this->mockCategoryDataProvider(),
+            self::CONTEXT_LANG_ID
         );
+    }
+
+    private function mockCategoryDataProvider(): CategoryDataProvider
+    {
+        $defaultCategoryMock = $this->createMock(Category::class);
+        $defaultCategoryMock->id = self::HOME_CATEGORY_ID;
+        $defaultCategoryMock->name = [
+            self::CONTEXT_LANG_ID => self::HOME_CATEGORY_NAME,
+        ];
+
+        $categoryDataProvider = $this->createMock(CategoryDataProvider::class);
+        $categoryDataProvider->method('getCategory')->willReturn($defaultCategoryMock);
+
+        return $categoryDataProvider;
     }
 }

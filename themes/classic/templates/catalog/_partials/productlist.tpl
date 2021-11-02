@@ -22,8 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
+
+{capture assign="productClasses"}{if !empty($productClass)}{$productClass}{else}col-xs-6 col-xl-4{/if}{/capture}
+
 <div class="products{if !empty($cssClass)} {$cssClass}{/if}">
     {foreach from=$products item="product" key="position"}
-        {include file="catalog/_partials/miniatures/product.tpl" product=$product position=$position}
+        {include file="catalog/_partials/miniatures/product.tpl" product=$product position=$position productClasses=$productClasses}
     {/foreach}
 </div>

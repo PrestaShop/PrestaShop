@@ -7,17 +7,20 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
+// BO
 const dashboardPage = require('@pages/BO/dashboard');
+const customersPage = require('@pages/BO/customers');
+const addCustomerPage = require('@pages/BO/customers/add');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 const addCartRulePage = require('@pages/BO/catalog/discounts/add');
+
+// FO
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foVouchersPage = require('@pages/FO/myAccount/vouchers');
-const customersPage = require('@pages/BO/customers');
-const addCustomerPage = require('@pages/BO/customers/add');
 
-// import test context
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_userAccount_userDiscounts';
@@ -67,7 +70,7 @@ Sign in
 Check cart rules in account page
 Go Back to BO and delete cart rules
  */
-describe('View vouchers on FO account page', async () => {
+describe('FO - Account : View vouchers', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

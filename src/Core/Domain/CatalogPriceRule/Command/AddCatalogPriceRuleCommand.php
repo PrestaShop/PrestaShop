@@ -100,7 +100,7 @@ class AddCatalogPriceRuleCommand
      * @param int $groupId
      * @param int $fromQuantity
      * @param string $reductionType
-     * @param float $reductionValue
+     * @param string $reductionValue
      * @param int $shopId
      * @param bool $includeTax
      * @param float $price
@@ -114,7 +114,7 @@ class AddCatalogPriceRuleCommand
         int $groupId,
         int $fromQuantity,
         string $reductionType,
-        float $reductionValue,
+        string $reductionValue,
         int $shopId,
         bool $includeTax,
         float $price

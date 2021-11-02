@@ -94,6 +94,7 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
             'is_partner_offers_subscribed' => $editableCustomer->isPartnerOffersSubscribed(),
             'group_ids' => $editableCustomer->getGroupIds(),
             'default_group_id' => $editableCustomer->getDefaultGroupId(),
+            'is_guest' => $editableCustomer->isGuest(),
         ];
 
         if ($this->isB2bFeatureEnabled) {
@@ -127,6 +128,7 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
                 $defaultGroups->getCustomersGroup()->getId(),
             ],
             'default_group_id' => (int) $this->configuration->get('PS_CUSTOMER_GROUP'),
+            'is_guest' => false,
         ];
 
         if ($this->isB2bFeatureEnabled) {

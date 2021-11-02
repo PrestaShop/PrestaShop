@@ -341,7 +341,7 @@ export default class OrderProductAdd {
 
     // Explicit 0 value is used when we the user selected New Invoice
     if (invoiceId === 0) {
-      const modal = new (ConfirmModal as any)(
+      const modal = new ConfirmModal(
         {
           id: 'modal-confirm-new-invoice',
           confirmTitle: this.invoiceSelect.data('modal-title'),
@@ -371,7 +371,7 @@ export default class OrderProductAdd {
     );
 
     if (productPriceMatch === 'invoice') {
-      const modalEditPrice = new (ConfirmModal as any)(
+      const modalEditPrice = new ConfirmModal(
         {
           id: 'modal-confirm-new-price',
           confirmTitle: this.invoiceSelect.data('modal-edit-price-title'),

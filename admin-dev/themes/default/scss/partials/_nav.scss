@@ -81,6 +81,10 @@
 
       .link-leveltwo .link {
         padding-left: 1rem;
+
+        @include media-breakpoint-down(md) {
+          padding-left: 0.625rem;
+        }
       }
     }
 
@@ -331,7 +335,7 @@
       }
 
       span {
-        padding-left: 1rem;
+        padding-left: 0.625rem;
       }
 
       .sub-tabs-arrow {

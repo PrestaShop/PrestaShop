@@ -52,7 +52,6 @@ export default {
     moduleItem: (techName: string): string => `.module-item[data-tech-name='${techName}']`,
   },
   confirmModal: (modalId: string): string => `#${modalId}`,
-  modalPrestaTrust: '#modal-prestatrust',
   translatableField: {
     toggleTab: '.translationsLocales.nav .nav-item a[data-toggle="tab"]',
     nav: '.translationsLocales.nav',
@@ -61,8 +60,21 @@ export default {
   },
   entitySearchInput: {
     searchInputSelector: '.entity-search-input',
-    listSelector: '.entities-list',
-    entityItemSelector: 'li.entity-item',
+    entitiesContainerSelector: '.entities-list',
+    listContainerSelector: '.entities-list-container',
+    entityItemSelector: '.entity-item',
     entityDeleteSelector: '.entity-item-delete',
+    emptyStateSelector: '.empty-entity-list',
   },
+  form: {
+    selectChoice: (language: string): string => `select.translatable_choice[data-language="${language}"]`,
+    selectLanguage: 'select.translatable_choice_language',
+  },
+  currentLength: '.js-current-length',
+  recommendedLengthInput: '.js-recommended-length-input',
+  multistoreCheckbox: '.multistore-checkbox',
+  formGroup: '.form-group',
+  inputNotCheckbox: ':input:not(.multistore-checkbox)',
+  inputContainer: '.input-container',
+  formControlLabel: '.form-control-label',
 };

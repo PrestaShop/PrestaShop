@@ -24,14 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 
 /**
  * Class CurrencyId is responsible for providing currency id data.
  */
-class CurrencyId
+class CurrencyId implements CurrencyIdInterface
 {
     /**
      * @var int
@@ -43,10 +46,13 @@ class CurrencyId
      *
      * @throws CurrencyException
      */
-    public function __construct($currencyId)
+    public function __construct(int $currencyId)
     {
-        if (!is_int($currencyId) || $currencyId <= 0) {
-            throw new CurrencyException(sprintf('Invalid Currency id: %s', var_export($currencyId, true)));
+        if ($currencyId <= 0) {
+            throw new CurrencyConstraintException(
+                sprintf('Invalid Currency id: %d', $currencyId),
+                CurrencyConstraintException::INVALID_ID
+            );
         }
 
         $this->currencyId = $currencyId;
@@ -55,7 +61,7 @@ class CurrencyId
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->currencyId;
     }

@@ -51,6 +51,9 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class EntitySearchInputType extends CollectionType
 {
+    public const LIST_LAYOUT = 'list';
+    public const TABLE_LAYOUT = 'table';
+
     /**
      * @var TranslatorInterface
      */
@@ -75,10 +78,15 @@ class EntitySearchInputType extends CollectionType
             // These are parameters from collection type which default values are modified
             'allow_add' => true,
             'allow_delete' => true,
+            'allow_search' => true,
             'prototype_name' => '__entity_index__',
 
             // Default entry type that matches the default template from the prestashop ui kit form theme
             'entry_type' => EntityItemType::class,
+            'entry_options' => [
+                // Force block prefix to easily profit from the UI kit theme (without changing it in the entity type itself)
+                'block_prefix' => 'entity_item',
+            ],
 
             // This is an optional entity type that can be useful to identify which type of entity is searched
             'entity_type' => null,
@@ -95,16 +103,19 @@ class EntitySearchInputType extends CollectionType
 
             // This mapping array indicate which field from the entity must be used and what placeholder use to replace
             // it (the placeholder must be used in the prototype so that the value is in the right place)
-            'prototype_mapping' => [
-                'id' => EntityItemType::ID_PLACEHOLDER,
-                'name' => EntityItemType::NAME_PLACEHOLDER,
-                'image' => EntityItemType::IMAGE_PLACEHOLDER,
-            ],
+            'prototype_mapping' => null,
+
+            // Layout
+            'layout' => static::LIST_LAYOUT,
 
             // Remove modal wording
             'remove_modal' => null,
+
+            // Empty state wording
+            'empty_state' => null,
         ]);
 
+        $resolver->setAllowedTypes('allow_search', ['bool']);
         $resolver->setAllowedTypes('search_attr', ['array']);
         $resolver->setAllowedTypes('list_attr', ['array']);
         $resolver->setAllowedTypes('placeholder', ['string']);
@@ -113,7 +124,7 @@ class EntitySearchInputType extends CollectionType
         $resolver->setAllowedTypes('limit', ['int']);
         $resolver->setAllowedTypes('entity_type', ['string', 'null']);
 
-        $resolver->setAllowedTypes('prototype_mapping', ['array']);
+        $resolver->setAllowedTypes('prototype_mapping', ['array', 'null']);
 
         $resolver->setAllowedTypes('remove_modal', ['array', 'null']);
         $resolver->setNormalizer('remove_modal', function (Options $options, $value) {
@@ -121,6 +132,10 @@ class EntitySearchInputType extends CollectionType
 
             return $resolver->resolve($value ?? []);
         });
+
+        $resolver->setAllowedTypes('layout', ['string']);
+        $resolver->setAllowedValues('layout', [static::LIST_LAYOUT, static::TABLE_LAYOUT]);
+        $resolver->setAllowedTypes('empty_state', ['string', 'null']);
     }
 
     /**
@@ -128,6 +143,21 @@ class EntitySearchInputType extends CollectionType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        // If no mapping has been defined it is built based on the prototype field names
+        /** @var FormInterface $prototype */
+        $prototype = $form->getConfig()->getAttribute('prototype');
+        if (empty($options['prototype_mapping'])) {
+            $options['prototype_mapping'] = [];
+            foreach ($prototype->all() as $prototypeChild) {
+                $options['prototype_mapping'][$prototypeChild->getName()] = sprintf(
+                    '__%s__',
+                    $prototypeChild->getName()
+                );
+            }
+        }
+
+        // Force the data in prototype so that placeholders are injected in the prototype template then render the view
+        $prototype->setData($options['prototype_mapping']);
         parent::buildView($view, $form, $options);
 
         // Reformat parameter name for javascript (PHP and JS don't have same naming conventions)
@@ -136,6 +166,7 @@ class EntitySearchInputType extends CollectionType
         unset($removeModal['button_class']);
 
         $view->vars = array_replace($view->vars, [
+            'allow_search' => $options['allow_search'],
             'remote_url' => $options['remote_url'],
             'limit' => $options['limit'],
             'search_attr' => $options['search_attr'],
@@ -143,6 +174,8 @@ class EntitySearchInputType extends CollectionType
             'placeholder' => $options['placeholder'],
             'prototype_mapping' => $options['prototype_mapping'],
             'remove_modal' => $removeModal,
+            'list_layout' => $options['layout'],
+            'empty_state' => $options['empty_state'],
         ]);
     }
 

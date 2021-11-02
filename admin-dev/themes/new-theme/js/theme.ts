@@ -55,6 +55,7 @@ import initInvalidFields from '@js/app/utils/fields';
 import initEmailFields from '@js/app/utils/email-idn';
 import initNumberCommaTransformer from '@js/app/utils/number-comma-transformer';
 import initPrestashopComponents from '@js/app/utils/init-components';
+import '@js/components/header/search-form';
 
 const {$} = window;
 

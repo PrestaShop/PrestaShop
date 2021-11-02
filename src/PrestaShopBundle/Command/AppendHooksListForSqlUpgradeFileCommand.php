@@ -129,7 +129,7 @@ class AppendHooksListForSqlUpgradeFileCommand extends Command
         $this
             ->setName('prestashop:update:sql-upgrade-file-hooks-listing')
             ->setDescription(
-                'Adds sql to sql upgrade file which contains hook insert opeartion'
+                'Adds sql to sql upgrade file which contains hook insert operation'
             )
             ->addArgument(
                 'ps-version',

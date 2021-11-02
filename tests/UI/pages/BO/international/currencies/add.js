@@ -1,12 +1,12 @@
 require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
 
 /**
  * Add currency page, contains functions that can be used on the page
  * @class
- * @extends BOBasePage
+ * @extends LocalizationBasePage
  */
-class AddCurrency extends BOBasePage {
+class AddCurrency extends LocalizationBasePage {
   /**
    * @constructs
    * Setting up texts and selectors to use on add currency page
@@ -37,7 +37,8 @@ class AddCurrency extends BOBasePage {
   /**
    * Add official currency
    * @param page {Page} Browser tab
-   * @param currencyData {currencyData} Data to set on add currency form
+   * @param currencyData {{name: string, frName:string, symbol: string, isoCode: string, exchangeRate: number,
+   * decimals: number, enabled: boolean}} Data to set on add currency form
    * @returns {Promise<string>}, successful text message that appears
    */
   async addOfficialCurrency(page, currencyData) {
@@ -80,7 +81,8 @@ class AddCurrency extends BOBasePage {
   /**
    * Create unofficial currency
    * @param page {Page} Browser tab
-   * @param currencyData {currencyData} Data to set on add currency form
+   * @param currencyData {{name: string, frName:string, symbol: string, isoCode: string, exchangeRate: number,
+   * decimals: number, enabled: boolean}} Data to set on add currency form
    * @returns {Promise<string>}
    */
   async createUnOfficialCurrency(page, currencyData) {

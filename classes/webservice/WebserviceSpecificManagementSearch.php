@@ -32,6 +32,16 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
     /** @var WebserviceRequest */
     protected $wsObject;
 
+    /**
+     * @var mixed
+     */
+    public $urlSegment;
+
+    /**
+     * @var array
+     */
+    public $_resourceConfiguration;
+
     /* ------------------------------------------------
      * GETTERS & SETTERS
      * ------------------------------------------------ */

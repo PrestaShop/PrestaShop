@@ -265,4 +265,14 @@ class ProductConstraintException extends ProductException
      * When show_condition is invalid
      */
     public const INVALID_SHOW_CONDITION = 470;
+
+    /**
+     * Search limit must be a positive integer or null
+     */
+    public const INVALID_SEARCH_LIMIT = 480;
+
+    /**
+     * Search phrase must have a minimum length
+     */
+    public const INVALID_SEARCH_PHRASE_LENGTH = 490;
 }

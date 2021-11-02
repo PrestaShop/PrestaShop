@@ -1,0 +1,59 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script>
+    var moduleURLs = {
+      'configurationPage': '{{ path('admin_module_configure_action', {'module_name': ':number:'})|e('js') }}',
+      'moduleImport': '{{ path('admin_module_import')|e('js') }}',
+      'notificationsCount': '{{ path('admin_module_notification_count')|e('js') }}',
+      'maintenancePage': '{{ path('admin_maintenance')|e('js') }}',
+    };
+
+    var moduleTranslations = {
+      'singleModuleModalUpdateTitle': '{{ "Are you sure you want to upgrade this module?"|trans({}, 'Admin.Modules.Notification') }}',
+      'multipleModuleModalUpdateTitle': '{{ "Are you sure you want to upgrade these modules?"|trans({}, 'Admin.Modules.Notification') }}',
+      'moduleModalUpdateCancel': '{{ "Cancel"|trans({}, 'Admin.Actions') }}',
+      'moduleModalUpdateMaintenance': '{{ "Go to maintenance page"|trans({}, 'Admin.Actions') }}',
+      'moduleModalUpdateUpgrade': '{{ "Upgrade"|trans({}, 'Admin.Actions') }}',
+      'upgradeAnywayButtonText': '{{ "Upgrade anyway"|trans({}, 'Admin.Actions') }}',
+      'moduleModalUpdateConfirmMessage': '{{ "We strongly advise you to upgrade the modules on maintenance mode to avoid any cache issues."|trans({}, 'Admin.Modules.Notification') }}',
+    };
+
+    // Need to come from the backend
+    var isShopMaintenance = !{{ 'PS_SHOP_ENABLE'|configuration|intCast }};
+  </script>
+  <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/module.bundle.js') }}"></script>
+{% endblock %}
+
+{% set js_translatable = {
+  "Bulk Action - One module minimum": "You need to select at least one module to use the bulk action."|trans({}, 'Admin.Modules.Notification'),
+  "Bulk Action - Request not found": 'The action "[1]" is not available, impossible to perform your request.'|trans({}, 'Admin.Modules.Notification'),
+  "Bulk Action - Request not available for module": "The action [1] is not available for module [2]. Skipped."|trans({}, 'Admin.Modules.Notification'),
+}|merge(js_translatable)
+%}

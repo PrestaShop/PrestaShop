@@ -1,126 +1,124 @@
 imports:
-    - { resource: set_parameters.php }
-    - { resource: security.yml }
-    - { resource: services.yml }
-    - { resource: addons/*.yml }
-    - { resource: doctrine.yml }
+  - { resource: set_parameters.php }
+  - { resource: security.yml }
+  - { resource: services.yml }
+  - { resource: addons/*.yml }
+  - { resource: doctrine.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    env(PS_THEME_NAME): "classic"
-    AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
-    translator.class: PrestaShopBundle\Translation\Translator
-    translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
-    admin_page: "%kernel.root_dir%/../templates/bundles/PrestaShopBundle/Admin"
-    env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
-    mail_themes_uri: "/mails/themes"
-    mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
-    modules_translation_paths: []
+  env(PS_THEME_NAME): "classic"
+  AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
+  translator.class: PrestaShopBundle\Translation\Translator
+  translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
+  admin_page: "%kernel.root_dir%/../src/PrestaShopBundle/Resources/views/Admin"
+  env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
+  mail_themes_uri: "/mails/themes"
+  mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
+  modules_translation_paths: [ ]
 
 # Autowires Core controllers
 services:
-    PrestaShopBundle\Controller\:
-        resource: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/*"
-        exclude: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Api"
-        tags:
-          - 'controller.service_arguments'
-          - !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG
+  PrestaShopBundle\Controller\:
+    resource: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/*"
+    exclude: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Api"
+    tags:
+      - 'controller.service_arguments'
+      - !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG
 
-    logger:
-        alias: monolog.logger
-        public: true
+  logger:
+    alias: monolog.logger
+    public: true
 
 framework:
-    assets:
-        version: !php/const \AppKernel::VERSION
+  assets:
+    version: !php/const \AppKernel::VERSION
 
-    #esi:             ~
-    secret:          "%secret%"
-    translator:
-        fallbacks: ["default"]
-        paths: "%modules_translation_paths%"
-    router:
-        resource: "%kernel.root_dir%/config/routing.yml"
-        strict_requirements: ~
-    form:            ~
-    csrf_protection: ~
-    validation:      { enable_annotations: true }
-    serializer:      { enable_annotations: true }
-    default_locale:  "%locale%"
-    trusted_hosts:   ~
-    session:
-        handler_id:  ~
-    fragments:       ~
-    http_method_override: true
-    cache:
-        pools:
-            '%cache.driver%':
-                 adapter: '%cache.adapter%'
+  # esi: ~
+  secret: "%secret%"
+  translator:
+    fallbacks: [ "default" ]
+    paths: "%modules_translation_paths%"
+  router:
+    resource: "%kernel.root_dir%/config/routing.yml"
+    strict_requirements: ~
+  form: ~
+  csrf_protection: ~
+  validation: { enable_annotations: true }
+  serializer: { enable_annotations: true }
+  default_locale: "%locale%"
+  trusted_hosts: ~
+  session:
+    handler_id: ~
+  fragments: ~
+  http_method_override: true
+  cache:
+    pools:
+      '%cache.driver%':
+        adapter: '%cache.adapter%'
 
-# Monolog configuration #
+# Monolog configuration
 monolog:
-    handlers:
-        main:
-            type: stream
-            path: '%env(PS_LOG_OUTPUT)%'
-            level: notice
-        legacy:
-            type: service
-            id: prestashop.handler.log
-            level: warning
-            channels: [app]
+  handlers:
+    main:
+      type: stream
+      path: '%env(PS_LOG_OUTPUT)%'
+      level: notice
+    legacy:
+      type: service
+      id: prestashop.handler.log
+      level: warning
+      channels: [ app ]
 
 # Twig Configuration
 twig:
-    autoescape:       "name"
-    debug:            "%kernel.debug%"
-    strict_variables: "%kernel.debug%"
-    exception_controller: null
-    form_themes:
-        - '@PrestaShop/Admin/TwigTemplateForm/bootstrap_4_horizontal_layout.html.twig'
-    paths:
-        '%admin_page%/Product': Product
-        '%admin_page%/TwigTemplateForm': Twig
-        '%admin_page%/Common': Common
-        '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
-        '%admin_page%/Configure/ShopParameters': ShopParameters
-        '%kernel.root_dir%/../modules': Modules
-        '%mail_themes_dir%': MailThemes
-    globals:
-        webpack_server: false
-        multistore_field_prefix: !php/const PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX
+  autoescape: "name"
+  debug: "%kernel.debug%"
+  strict_variables: "%kernel.debug%"
+  exception_controller: null
+  form_themes:
+    - '@PrestaShop/Admin/TwigTemplateForm/bootstrap_4_horizontal_layout.html.twig'
+  paths:
+    '%admin_page%/Product': Product
+    '%admin_page%/TwigTemplateForm': Twig
+    '%admin_page%/Common': Common
+    '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
+    '%admin_page%/Configure/ShopParameters': ShopParameters
+    '%kernel.root_dir%/../modules': Modules
+    '%mail_themes_dir%': MailThemes
+  globals:
+    webpack_server: false
+    multistore_field_prefix: !php/const PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: "%mailer_transport%"
-    host:      "%mailer_host%"
-    username:  "%mailer_user%"
-    password:  "%mailer_password%"
-    spool:     { type: memory }
+  transport: "%mailer_transport%"
+  host: "%mailer_host%"
+  username: "%mailer_user%"
+  password: "%mailer_password%"
+  spool: { type: memory }
 
 # Guzzle configuration
 eight_points_guzzle:
-    logging: "%kernel.debug%"
-    clients:
-        addons_api:
-            base_url: "https://api-addons.prestashop.com"
-            options: # you can specify the options as in http://docs.guzzlephp.org/en/latest/quickstart.html#creating-a-client
-                timeout: "5.0"
-                headers:
-                    Accept: "application/json"
-                curl:
-                    forbid_reuse: true
-                    fresh_connect: true
+  logging: "%kernel.debug%"
+  clients:
+    addons_api:
+      base_url: "https://api-addons.prestashop.com"
+      options:  # you can specify the options as in http://docs.guzzlephp.org/en/latest/quickstart.html#creating-a-client
+        timeout: "5.0"
+        headers:
+          Accept: "application/json"
+        curl:
+          forbid_reuse: true
+          fresh_connect: true
 
 prestashop:
-    addons:
-        prestatrust:
-            enabled: true
-        api_client:
-            ttl: 7200 # 2h
-            # verify_ssl: ~ # Bundle CA by default, declaring "addons.api_client.verify_ssl" parameter overrides its usage
+  addons:
+    api_client:
+      ttl: 7200  # 2h
+      # verify_ssl: ~ # Bundle CA by default, declaring "addons.api_client.verify_ssl" parameter overrides its usage
 
 sensio_framework_extra:
-    router:
-        annotations: false
+  router:
+    annotations: false

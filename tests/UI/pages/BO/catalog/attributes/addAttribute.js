@@ -35,7 +35,7 @@ class AddAttribute extends BOBasePage {
   /**
    * Fill attribute form and save it
    * @param page {Page} Browser tab
-   * @param attributeData {attributeData} Data to set on new/edit attribute form
+   * @param attributeData {AttributeData} Data to set on new/edit attribute form
    * @return {Promise<string>}
    */
   async addEditAttribute(page, attributeData) {

@@ -1,0 +1,111 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain "Admin.Advparameters.Feature" %}
+
+{% set layoutTitle = 'Webservice'|trans({}, 'Admin.Navigation.Menu') %}
+{% set enableSidebar = true %}
+{% set layoutHeaderToolbarBtn = {
+  'add': {
+    'href': path('admin_webservice_keys_create'),
+    'desc': 'Add new webservice key'|trans({}, 'Admin.Advparameters.Feature'),
+    'icon': 'add_circle_outline'
+  }
+} %}
+
+{% block content %}
+
+  {% block webservice_list_notifications %}
+    {% if configurationWarnings is not empty  %}
+      <div class="row">
+        <div class="col">
+          <div class="alert alert-warning" role="alert">
+            {% for warning in configurationWarnings %}
+              <p class="alert-text">{{ warning }}</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endblock %}
+
+  {% block webservice_api_status %}
+    {% set devdocUrl = 'https://devdocs.prestashop.com/1.7/development/webservice/' %}
+
+    {% if webserviceStatus.isEnabled == true %}
+      <div class="card">
+        <h3 class="card-header">
+          <i class="material-icons">info_outline</i> {{ 'Webservice status'|trans }}
+        </h3>
+        <div class="card-block">
+          <p>
+            {{ 'Webservice is enabled. Main entry point is' |trans }}
+            <a href="{{ webserviceStatus.endpoint }}" target="_blank">
+              {{ webserviceStatus.endpoint }}
+            </a>
+          </p>
+          {% if webserviceStatus.isFunctional == false %}
+            <p>
+              {{ 'It seems that the webservice endpoint is not functional. If you are using httpd/apache2, you need to enable URL rewriting on your server.'|trans }}
+            </p>
+          {% endif %}
+          <p>
+            {{ "Read the [1]developer documentation[/1]."|trans({
+              '[1]': '<a href="'~devdocUrl~'" target="_blank">', '[/1]': "</a>"
+            }, 'Admin.Advparameters.Feature')|raw }}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+  {% endblock %}
+
+  <div class="row">
+    <div class="col">
+      {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col">
+      {{ form_start(webserviceConfigurationForm, {'action': path('admin_webservice_save_settings') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
+
+        {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice_settings.html.twig') }}
+
+        {% block webservice_configuration_form_rest %}
+          {{ form_rest(webserviceConfigurationForm) }}
+        {% endblock %}
+
+      {{ form_end(webserviceConfigurationForm) }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/webservice.bundle.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+{% endblock %}

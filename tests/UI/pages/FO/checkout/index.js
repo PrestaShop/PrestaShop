@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Checkout page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class Checkout extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on checkout page
+   */
   constructor() {
     super();
 
@@ -16,6 +25,9 @@ class Checkout extends FOBasePage {
     this.termsOfServiceModalDiv = '#modal div.js-modal-content';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
     this.shippingValueSpan = '#cart-subtotal-shipping span.value';
+    this.noPaymentNeededElement = `${this.paymentStepSection} div.content > p.cart-payment-step-not-needed-info`;
+    this.noPaymentNeededText = 'No payment needed for this order';
+
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
     this.createAccountOptionalNotice = `${this.personalInformationStepForm} `
@@ -33,11 +45,13 @@ class Checkout extends FOBasePage {
     this.checkoutGuestNewsletterCheckbox = `${this.checkoutGuestForm} input[name='newsletter']`;
     this.checkoutGuestGdprCheckbox = `${this.checkoutGuestForm} input[name='psgdpr']`;
     this.checkoutGuestContinueButton = `${this.checkoutGuestForm} button[name='continue']`;
+
     // Checkout login form
     this.checkoutLoginForm = `${this.personalInformationStepForm} #checkout-login-form`;
     this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
     this.passwordInput = `${this.checkoutLoginForm} input[name='password']`;
     this.personalInformationContinueButton = `${this.checkoutLoginForm} #login-form footer button`;
+
     // Checkout address form
     this.addressStepSection = '#checkout-addresses-step';
     this.addressStepCompanyInput = `${this.addressStepSection} input[name='company']`;
@@ -47,6 +61,7 @@ class Checkout extends FOBasePage {
     this.addressStepPhoneInput = `${this.addressStepSection} input[name='phone']`;
     this.addressStepUseSameAddressCheckbox = '#use_same_address';
     this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
+
     // Shipping method step
     this.deliveryStepSection = '#checkout-delivery-step';
     this.deliveryOptionsRadios = 'input[id*=\'delivery_option_\']';
@@ -56,6 +71,7 @@ class Checkout extends FOBasePage {
     this.deliveryOptionAllPricesSpan = '#js-delivery .delivery-option span.carrier-price';
     this.deliveryMessage = '#delivery_message';
     this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
+
     // Gift selectors
     this.giftCheckbox = '#input_gift';
     this.recycableGiftCheckbox = '#input_recyclable';
@@ -120,6 +136,25 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Is confirm button visible and enabled
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  isPaymentConfirmationButtonVisibleAndEnabled(page) {
+    // small side effect note, the selector is the one that checks for disabled
+    return this.elementVisible(page, this.paymentConfirmationButton, 1000);
+  }
+
+  /**
+   * Get No payment needed block content
+   * @param page
+   * @returns {string}
+   */
+  getNoPaymentNeededBlockContent(page) {
+    return this.getTextContent(page, this.noPaymentNeededElement);
+  }
+
+  /**
    * Get selected shipping method name
    * @param page {Page} Browser tab
    * @return {Promise<string>}
@@ -147,7 +182,7 @@ class Checkout extends FOBasePage {
   /**
    * Get all carriers prices
    * @param page {Page} Browser tab
-   * @returns {Promise<[]>}
+   * @returns {Promise<Array<string>>}
    */
   async getAllCarriersPrices(page) {
     return page.$$eval(this.deliveryOptionAllPricesSpan, all => all.map(el => el.textContent));
@@ -165,7 +200,7 @@ class Checkout extends FOBasePage {
   /**
    * Get all carriers names
    * @param page {Page} Browser tab
-   * @returns {Promise<[]>}
+   * @returns {Promise<Array<string>>}
    */
   async getAllCarriersNames(page) {
     return page.$$eval(this.deliveryOptionAllNamesSpan, all => all.map(el => el.textContent));
@@ -193,6 +228,24 @@ class Checkout extends FOBasePage {
       this.waitForVisibleSelector(page, this.paymentConfirmationButton),
       page.click(this.conditionToApproveLabel),
     ]);
+    await this.clickAndWaitForNavigation(page, this.paymentConfirmationButton);
+  }
+
+  /**
+   * Order when no payment is needed
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async orderWithoutPaymentMethod(page) {
+    // Click on terms of services checkbox if visible
+    if (await this.elementVisible(page, this.conditionToApproveLabel, 500)) {
+      await Promise.all([
+        this.waitForVisibleSelector(page, this.paymentConfirmationButton),
+        page.click(this.conditionToApproveLabel),
+      ]);
+    }
+
+    // Validate the order
     await this.clickAndWaitForNavigation(page, this.paymentConfirmationButton);
   }
 

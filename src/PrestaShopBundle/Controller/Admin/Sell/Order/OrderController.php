@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMe
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
@@ -86,6 +85,7 @@ use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
+use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\InvalidModuleException;
@@ -198,24 +198,21 @@ class OrderController extends FrameworkBundleAdminController
     {
         $summaryForm = $this->createForm(CartSummaryType::class);
         $summaryForm->handleRequest($request);
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.cart_summary_form_handler');
 
-        if ($summaryForm->isSubmitted() && $summaryForm->isValid()) {
-            $formData = $summaryForm->getData();
-            try {
-                $orderId = $this->getCommandBus()->handle(new AddOrderFromBackOfficeCommand(
-                    (int) $formData['cart_id'],
-                    $this->getContext()->employee->id,
-                    $formData['order_message'],
-                    $formData['payment_module'],
-                    (int) $formData['order_state']
-                ));
+        try {
+            $result = $formHandler->handle($summaryForm);
+
+            if ($result->getIdentifiableObjectId() instanceof OrderId) {
+                /** @var OrderId $orderId */
+                $orderId = $result->getIdentifiableObjectId();
 
                 return $this->redirectToRoute('admin_orders_view', [
                     'orderId' => $orderId->getValue(),
                 ]);
-            } catch (Exception $e) {
-                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
             }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_orders_create');
@@ -1731,12 +1728,11 @@ class OrderController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $orderId
-     * @param string $name
      * @param string $value
      *
      * @return BinaryFileResponse|RedirectResponse
      */
-    public function displayCustomizationImageAction(int $orderId, string $name, string $value)
+    public function displayCustomizationImageAction(int $orderId, string $value)
     {
         $uploadDir = $this->get('prestashop.adapter.legacy.context')->getUploadDirectory();
         $filePath = $uploadDir . $value;
@@ -1752,7 +1748,7 @@ class OrderController extends FrameworkBundleAdminController
             }
 
             $imageFile = new File($filePath);
-            $fileName = sprintf('%s-customization-%s.%s', $orderId, $name, $imageFile->guessExtension() ?? 'jpg');
+            $fileName = sprintf('%s-customization-%s.%s', $orderId, $value, $imageFile->guessExtension() ?? 'jpg');
 
             return $this->file($filePath, $fileName);
         } catch (Exception $e) {

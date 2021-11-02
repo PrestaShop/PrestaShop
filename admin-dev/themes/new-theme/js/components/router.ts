@@ -23,9 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-// @ts-ignore
 import Routing from 'fos-routing';
-// @ts-ignore
 import routes from '@js/fos_js_routes.json';
 
 const {$} = window;

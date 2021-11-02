@@ -479,16 +479,7 @@ class HookCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @return array<int, array<int, array{
-     *                    id_hook: string|int,
-     *                    title: string,
-     *                    description: string,
-     *                    hm.position: string|int,
-     *                    m.position: string|int,
-     *                    id_module: string,
-     *                    name: string,
-     *                    active: string|int
-     *                    CS }>>
+     * @return array<int, array<int, array{id_hook:string|int,title:string,description:string,'hm.position':string|int,'m.position':string|int,id_module:string,name:string,active:string|int}>>
      */
     public static function getHookModuleList()
     {
@@ -784,7 +775,7 @@ class HookCore extends ObjectModel
         $chain = false
     ) {
         if (defined('PS_INSTALLATION_IN_PROGRESS') || !self::getHookStatusByName($hook_name)) {
-            return null;
+            return $array_return ? [] : null;
         }
 
         $hookRegistry = static::getHookRegistry();
@@ -980,7 +971,9 @@ class HookCore extends ObjectModel
             }
         }
 
-        if ($different_shop) {
+        if ($different_shop
+            && isset($old_shop, $old_context, $shop->id)
+             ) {
             $context->shop = $old_shop;
             $context->shop->setContext($old_context, $shop->id);
         }

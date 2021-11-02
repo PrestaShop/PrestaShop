@@ -1,0 +1,195 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+
+{% block employee_form %}
+  {{ form_start(employeeForm) }}
+  <div class="card">
+    <h3 class="card-header">
+      {{ 'Employees'|trans }}
+    </h3>
+    <div class="card-block row">
+      <div class="card-text">
+        {{ form_errors(employeeForm) }}
+
+        {{ ps.form_group_row(employeeForm.firstname, {}, {
+          'label': 'First name'|trans({}, 'Admin.Global')
+        }) }}
+
+        {{ ps.form_group_row(employeeForm.lastname, {}, {
+          'label': 'Last name'|trans({}, 'Admin.Global')
+        }) }}
+
+        {{ ps.form_group_row(employeeForm.avatarUrl, {}, {
+          'label': 'Avatar'|trans({}, 'Admin.Global')
+        }) }}
+
+        <div class="form-group row">
+          <label class="form-control-label"></label>
+          <div class="col-sm">
+            <img class="img-thumbnail clickable-avatar" src="{{ avatarUrl }}" alt="">
+          </div>
+        </div>
+
+        {{ ps.form_group_row(employeeForm.has_enabled_gravatar, {}, {
+          'label': 'Enable gravatar'|trans({}, 'Admin.Global')
+        }) }}
+
+        {{ ps.form_group_row(employeeForm.email, {}, {
+          'label': 'Email address'|trans({}, 'Admin.Global')
+        }) }}
+
+        {% set passwordHelpMessage = 'Password should be at least %num% characters long.'|trans({ '%num%': 8 }, 'Admin.Advparameters.Help') %}
+
+        {% if isRestrictedAccess %}
+            {% set oldPasswordVars = employeeForm.change_password.old_password.vars|merge(old_password|default({})) %}
+            {% set newPasswordFirstVars = employeeForm.change_password.new_password.children.first.vars|merge(new_password.first_options|default({})) %}
+            {% set newPasswordSecondVars = employeeForm.change_password.new_password.children.second.vars|merge(new_password.second_options|default({})) %}
+
+            <div class="form-group row">
+              <label class="form-control-label">
+                {{ 'Password'|trans({}, 'Admin.Global') }}
+              </label>
+              <div class="col-sm">
+                {# "Change password" button #}
+                {{ form_widget(employeeForm.change_password.change_password_button, {
+                  label: 'Change password...'|trans({}, 'messages'),
+                  attr: {
+                    class: 'btn-outline-secondary js-change-password',
+                  }
+                }) }}
+
+                <div class="card card-body js-change-password-block d-none">
+                  {# Current password input #}
+                  {{ ps.form_group_row(employeeForm.change_password.old_password, oldPasswordVars, {
+                    label: 'Current password'|trans({}, 'messages'),
+                    required: true,
+                  }) }}
+
+                  {# New password first input #}
+                  <div class="form-group row">
+                      {{ ps.label_with_help('New password'|trans({}, 'messages'), passwordHelpMessage, '', employeeForm.change_password.new_password.children.first.vars.id, true) }}
+                    <div class="col-sm">
+                      {{ ps.form_widget_with_error(employeeForm.change_password.new_password.children.first, employeeForm.change_password.new_password.children.first.vars) }}
+                    </div>
+                  </div>
+
+                  {# New password second input (confirmation) #}
+                  {# Empty help text needed to render the text container for validation feedback messages #}
+                  {{ ps.form_group_row(employeeForm.change_password.new_password.children.second, newPasswordSecondVars, {
+                    label: 'Confirm password'|trans({}, 'messages'),
+                    help: '',
+                    required: true,
+                  }) }}
+
+                  <div class="form-group row">
+                    <label class="form-control-label"></label>
+                    <div class="col-sm">
+                      {{ form_widget(employeeForm.change_password.generated_password) }}
+                    </div>
+                    <div class="col-sm">
+                      {{ form_widget(employeeForm.change_password.generate_password_button, {
+                        label: 'Generate password'|trans({}, 'messages'),
+                        attr: {
+                          class: 'btn-outline-secondary',
+                        }
+                      }) }}
+                    </div>
+                  </div>
+
+                  {{ ps.form_group_row(employeeForm.change_password.cancel_button, {
+                    label: 'Cancel'|trans({}, 'Admin.Actions'),
+                    attr: {
+                      class: 'btn-outline-secondary js-change-password-cancel',
+                    }
+                  }) }}
+
+                  {# Password strength feedback messages - used in JS #}
+                  <div class="js-password-strength-feedback d-none">
+                    <span class="strength-low">{{ 'Invalid'|trans({}, 'messages') }}</span>
+                    <span class="strength-medium">{{ 'Okay'|trans({}, 'messages') }}</span>
+                    <span class="strength-high">{{ 'Good'|trans({}, 'messages') }}</span>
+                    <span class="strength-extreme">{{ 'Fabulous'|trans({}, 'messages') }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+        {% else %}
+          {{ ps.form_group_row(employeeForm.password, {}, {
+            'label': 'Password'|trans({}, 'Admin.Global'),
+            'help': passwordHelpMessage,
+          }) }}
+        {% endif %}
+
+        {{ ps.form_group_row(employeeForm.language, {}, {
+          'label': 'Language'|trans({}, 'Admin.Global')
+        }) }}
+
+        {% if not isRestrictedAccess %}
+          {{ ps.form_group_row(employeeForm.active, {}, {
+            'label': 'Active'|trans({}, 'Admin.Global'),
+            'help': 'Allow or disallow this employee to log in to the Admin panel.'|trans({}, 'Admin.Advparameters.Help')
+          }) }}
+
+          {{ ps.form_group_row(employeeForm.profile, {
+            'attr': {
+              'data-admin-profile': superAdminProfileId,
+              'data-get-tabs-url': getTabsUrl,
+            }
+          }, {
+            'label': 'Permission profile'|trans({}, 'Admin.Advparameters.Feature')
+          }) }}
+
+          {% if employeeForm.shop_association is defined %}
+            {{ ps.form_group_row(employeeForm.shop_association, {}, {
+              'label': 'Shop association'|trans({}, 'Admin.Global'),
+              'help': 'Select the shops the employee is allowed to access.'|trans({}, 'Admin.Advparameters.Help')
+            }) }}
+          {% endif %}
+        {% endif %}
+
+        {{ ps.form_group_row(employeeForm.default_page, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}, {
+          'label': 'Default page'|trans,
+          'help': 'This page will be displayed just after login.'|trans({}, 'Admin.Advparameters.Help')
+        }) }}
+
+        {% block employee_form_rest %}
+          {{ form_rest(employeeForm) }}
+        {% endblock %}
+      </div>
+    </div>
+    <div class="card-footer">
+      <a href="{{ path('admin_employees_index') }}" class="btn btn-outline-secondary" id="cancel-link">
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+      <button class="btn btn-primary float-right" id="save-button">
+        {{ 'Save'|trans({}, 'Admin.Actions') }}
+      </button>
+    </div>
+  </div>
+  {{ form_end(employeeForm) }}
+{% endblock %}

@@ -38,7 +38,7 @@ class AddCountry extends BOBasePage {
   /**
    * Fill form for add/edit country
    * @param page {Page} Browser tab
-   * @param countryData {countryData} Data to set on new country form
+   * @param countryData {CountryData} Data to set on new country form
    * @returns {Promise<string>}
    */
   async createEditCountry(page, countryData) {

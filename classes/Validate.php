@@ -510,21 +510,6 @@ class ValidateCore
     }
 
     /**
-     * Check for password validity.
-     *
-     * @param string $passwd Password to validate
-     * @param int $size
-     *
-     * @return bool Validity is ok or not
-     *
-     * @deprecated 1.7.0
-     */
-    public static function isPasswd($passwd, $size = Validate::PASSWORD_LENGTH)
-    {
-        return self::isPlaintextPassword($passwd, $size);
-    }
-
-    /**
      * Check if plaintext password is valid
      * Size is limited by `password_hash()` (72 chars).
      *
@@ -548,7 +533,6 @@ class ValidateCore
      * Anything else is invalid.
      *
      * @param string $hashedPasswd Password to validate
-     * @param int $size
      *
      * @return bool Indicates whether the given string is a valid hashed password
      *

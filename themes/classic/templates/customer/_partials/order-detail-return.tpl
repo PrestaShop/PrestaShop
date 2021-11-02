@@ -40,17 +40,9 @@
         {foreach from=$order.products item=product name=products}
           <tr>
             <td>
-              {if !$product.customizations}
-                <span id="_desktop_product_line_{$product.id_order_detail}">
+              <span id="_desktop_product_line_{$product.id_order_detail}">
                 <input type="checkbox" id="cb_{$product.id_order_detail}" name="ids_order_detail[{$product.id_order_detail}]" value="{$product.id_order_detail}">
               </span>
-              {else}
-                {foreach $product.customizations  as $customization}
-                  <span id="_desktop_product_customization_line_{$product.id_order_detail}_{$customization.id_customization}">
-                  <input type="checkbox" id="cb_{$product.id_order_detail}" name="customization_ids[{$product.id_order_detail}][]" value="{$customization.id_customization}">
-                </span>
-                {/foreach}
-              {/if}
             </td>
             <td>
               <strong>{$product.name}</strong><br/>
@@ -103,37 +95,21 @@
               {/if}
             </td>
             <td class="qty">
-              {if !$product.customizations}
-                <div class="current">
-                  {$product.quantity}
+              <div class="current">
+                {$product.quantity}
+              </div>
+              {if $product.quantity > $product.qty_returned}
+                <div class="select" id="_desktop_return_qty_{$product.id_order_detail}">
+                  <select name="order_qte_input[{$product.id_order_detail}]" class="form-control form-control-select">
+                    {section name=quantity start=1 loop=$product.quantity+1-$product.qty_returned}
+                      <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
+                    {/section}
+                  </select>
+                  {if $product.customizations}
+                    <input type="hidden" value="1" name="customization_qty_input[{$customization.id_customization}]" />
+                  {/if}
                 </div>
-                {if $product.quantity > $product.qty_returned}
-                  <div class="select" id="_desktop_return_qty_{$product.id_order_detail}">
-                    <select name="order_qte_input[{$product.id_order_detail}]" class="form-control form-control-select">
-                      {section name=quantity start=1 loop=$product.quantity+1-$product.qty_returned}
-                        <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
-                      {/section}
-                    </select>
-                  </div>
                 {/if}
-              {else}
-                {foreach $product.customizations as $customization}
-                  <div class="current">
-                    {$customization.quantity}
-                  </div>
-                  <div class="select" id="_desktop_return_qty_{$product.id_order_detail}_{$customization.id_customization}">
-                    <select
-                      name="customization_qty_input[{$customization.id_customization}]"
-                      class="form-control form-control-select"
-                    >
-                      {section name=quantity start=1 loop=$customization.quantity+1}
-                        <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
-                      {/section}
-                    </select>
-                  </div>
-                {/foreach}
-                <div class="clearfix"></div>
-              {/if}
             </td>
             <td class="text-xs-right">{$product.qty_returned}</td>
             <td class="text-xs-right">{$product.price}</td>

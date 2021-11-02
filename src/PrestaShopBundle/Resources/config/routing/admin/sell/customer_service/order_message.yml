@@ -1,6 +1,6 @@
 admin_order_messages_index:
   path: /
-  methods: [GET]
+  methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\OrderMessageController::indexAction
     _legacy_controller: AdminOrderMessage
@@ -8,7 +8,7 @@ admin_order_messages_index:
 
 admin_order_messages_filter:
   path: /
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.order_message
@@ -18,7 +18,7 @@ admin_order_messages_filter:
 
 admin_order_messages_create:
   path: /new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\OrderMessageController::createAction
     _legacy_controller: AdminOrderMessage
@@ -26,7 +26,7 @@ admin_order_messages_create:
 
 admin_order_messages_edit:
   path: /{orderMessageId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\OrderMessageController::editAction
     _legacy_controller: AdminOrderMessage
@@ -38,7 +38,7 @@ admin_order_messages_edit:
 
 admin_order_messages_delete:
   path: /{orderMessageId}/delete
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\OrderMessageController::deleteAction
     _legacy_controller: AdminOrderMessage
@@ -50,7 +50,7 @@ admin_order_messages_delete:
 
 admin_order_messages_bulk_delete:
   path: /bulk-delete
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\OrderMessageController::bulkDeleteAction
     _legacy_controller: AdminOrderMessage

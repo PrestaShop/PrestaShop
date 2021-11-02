@@ -26,36 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-
 /**
  * Is thrown when customer is not found
  */
 class CustomerNotFoundException extends CustomerException
 {
-    /**
-     * @var CustomerId
-     */
-    private $customerId;
-
-    /**
-     * @param CustomerId $customerId
-     * @param string $message
-     * @param int $code
-     * @param \Exception|null $previous
-     */
-    public function __construct(CustomerId $customerId, $message = '', $code = 0, $previous = null)
-    {
-        $this->customerId = $customerId;
-
-        parent::__construct($message, $code, $previous);
-    }
-
-    /**
-     * @return CustomerId
-     */
-    public function getCustomerId()
-    {
-        return $this->customerId;
-    }
 }

@@ -63,10 +63,9 @@ class ModulePresenter implements PresenterInterface
         }
 
         $attributes = $module->attributes->all();
-        $attributes['picos'] = $this->addPicos($attributes);
         $attributes['price'] = $this->getModulePrice($attributes['price']);
         // Round to the nearest 0.5
-        $attributes['starsRate'] = str_replace('.', '', (string) (round($attributes['avgRate'] * 2) / 2));
+        $attributes['starsRate'] = str_replace('.', '', (string) (round(floatval($attributes['avgRate']) * 2) / 2));
 
         $moduleInstance = $module->getInstance();
 
@@ -116,35 +115,5 @@ class ModulePresenter implements PresenterInterface
         }
 
         return $presentedProducts;
-    }
-
-    /**
-     * Generate the list of small icons to be displayed near the module name.
-     *
-     * @param array $attributes Attributes of presented module
-     *
-     * @return array
-     */
-    private function addPicos(array $attributes)
-    {
-        $picos = [];
-
-        // PrestaTrust display
-        if (!empty($attributes['prestatrust']) && !empty($attributes['prestatrust']->pico)) {
-            $text = '';
-            $class = '';
-            if (isset($attributes['prestatrust']->status)) {
-                $text = $attributes['prestatrust']->status ? 'OK' : 'KO';
-                $class = $attributes['prestatrust']->status ? 'text-success' : 'text-warning';
-            }
-            $picos['prestatrust'] = [
-                'img' => $attributes['prestatrust']->pico,
-                'label' => 'prestatrust',
-                'text' => $text,
-                'class' => $class,
-            ];
-        }
-
-        return $picos;
     }
 }

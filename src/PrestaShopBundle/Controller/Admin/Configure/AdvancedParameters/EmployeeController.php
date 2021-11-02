@@ -298,7 +298,6 @@ class EmployeeController extends FrameworkBundleAdminController
 
         $templateVars = [
             'employeeForm' => $employeeForm->createView(),
-            'showAddonsConnectButton' => false,
             'enableSidebar' => true,
         ];
 
@@ -349,13 +348,11 @@ class EmployeeController extends FrameworkBundleAdminController
         }
 
         $isRestrictedAccess = $formAccessChecker->isRestrictedAccess((int) $employeeId);
-        $canAccessAddonsConnect = $formAccessChecker->canAccessAddonsConnect();
 
         try {
             $employeeForm = $this->getEmployeeFormBuilder()->getFormFor((int) $employeeId, [], [
                 'is_restricted_access' => $isRestrictedAccess,
                 'is_for_editing' => true,
-                'show_addons_connect_button' => $canAccessAddonsConnect,
             ]);
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -387,7 +384,6 @@ class EmployeeController extends FrameworkBundleAdminController
         $templateVars = [
             'employeeForm' => $employeeForm->createView(),
             'isRestrictedAccess' => $isRestrictedAccess,
-            'showAddonsConnectButton' => $canAccessAddonsConnect,
             'editableEmployee' => $editableEmployee,
         ];
 
@@ -560,7 +556,6 @@ class EmployeeController extends FrameworkBundleAdminController
 
         return [
             'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
-            'requireAddonsSearch' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'superAdminProfileId' => $configuration->get('_PS_ADMIN_PROFILE_'),
             'getTabsUrl' => $this->generateUrl('admin_employees_get_tabs'),

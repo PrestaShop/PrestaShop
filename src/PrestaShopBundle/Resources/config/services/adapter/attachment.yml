@@ -35,7 +35,7 @@ services:
       - '@prestashop.core.configuration.upload_size_configuration'
 
   prestashop.adapter.attachment.command_handler.abstract_attachment_handler:
-    abstract:  true
+    abstract: true
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler'
     arguments:
       - '@validator'
@@ -60,11 +60,22 @@ services:
 
   prestashop.adapter.attachment.attachment_repository:
     class: PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository
-
-  prestashop.adapter.attachment.query_handler.get_attachment_information_list_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentInformationListHandler'
     arguments:
-      - '@prestashop.adapter.data_provider.attachment'
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  prestashop.adapter.attachment.query_handler.get_attachment_information_handler:
+    class: PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentInformationHandler
+    arguments:
+      - '@prestashop.adapter.attachment.attachment_repository'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformationList'
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation
+
+  prestashop.adapter.attachment.query_handler.search_attachment_handler:
+    class: PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\SearchAttachmentHandler
+    arguments:
+      - '@prestashop.adapter.attachment.attachment_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment

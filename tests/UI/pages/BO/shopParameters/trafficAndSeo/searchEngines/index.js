@@ -143,7 +143,7 @@ class SearchEngines extends BOBasePage {
    * Get column content from all rows
    * @param page {Page} Browser tab
    * @param columnName {string} Column name of the value to return
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -152,7 +152,7 @@ class SearchEngines extends BOBasePage {
     // Get text column from each row
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

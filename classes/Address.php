@@ -280,7 +280,7 @@ class AddressCore extends ObjectModel
      */
     public static function getZoneById($id_address)
     {
-        if (!isset($id_address) || empty($id_address)) {
+        if (empty($id_address)) {
             return false;
         }
 
@@ -323,7 +323,7 @@ class AddressCore extends ObjectModel
      */
     public static function isCountryActiveById($id_address)
     {
-        if (!isset($id_address) || empty($id_address)) {
+        if (empty($id_address)) {
             return false;
         }
 
@@ -443,8 +443,8 @@ class AddressCore extends ObjectModel
     public static function addressExists($id_address)
     {
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT `id_address` 
-            FROM ' . _DB_PREFIX_ . 'address a 
+            'SELECT `id_address`
+            FROM ' . _DB_PREFIX_ . 'address a
             WHERE a.`id_address` = ' . (int) $id_address,
             false
         );

@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -14,11 +18,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const stocksPage = require('@pages/BO/catalog/stocks');
 const movementsPage = require('@pages/BO/catalog/stocks/movements');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_catalog_stocks_updateQuantity';
-
 
 let browserContext;
 let page;
@@ -27,7 +27,7 @@ let numberOfProducts = 0;
 const productStock = Products.demo_18;
 
 // Update Quantity
-describe('Update Quantity', async () => {
+describe('BO - Catalog - Stocks : Update Quantity', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -42,7 +42,7 @@ describe('Update Quantity', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to "Catalog>Stocks" page', async function () {
+  it('should go to \'Catalog > Stocks\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -52,6 +52,7 @@ describe('Update Quantity', async () => {
     );
 
     await stocksPage.closeSfToolBar(page);
+
     const pageTitle = await stocksPage.getPageTitle(page);
     await expect(pageTitle).to.contains(stocksPage.pageTitle);
   });
@@ -73,7 +74,7 @@ describe('Update Quantity', async () => {
     {args: {action: 'subtract', updateValue: -5}},
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     describe(`Update (${test.args.action}) quantity and check movement`, async () => {
       it(`should filter by name '${productStock.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterStocks${test.args.action}`, baseContext);
@@ -113,13 +114,8 @@ describe('Update Quantity', async () => {
         productStock.stocks.available = quantityToCheck.available;
       });
 
-      it('should go to movements page', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `goToMovementsPageAfter${test.args.action}`,
-          baseContext,
-        );
+      it('should go to Movements page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToMovementsPage${index}`, baseContext);
 
         await stocksPage.goToSubTabMovements(page);
         const pageTitle = await movementsPage.getPageTitle(page);
@@ -138,17 +134,12 @@ describe('Update Quantity', async () => {
         await expect(productName).to.equal(productStock.name);
 
         // Check movement quantity
-        const movementQuantity = await movementsPage.getTextColumnFromTable(
-          page,
-          numberOfMovements,
-          'quantity',
-        );
-
+        const movementQuantity = await movementsPage.getTextColumnFromTable(page, numberOfMovements, 'quantity');
         await expect(movementQuantity).to.equal(test.args.updateValue);
       });
 
       it('should go back to stocks page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `gotoStocksPageAfter${test.args.action}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToStocksPageAfter${test.args.action}`, baseContext);
 
         await movementsPage.goToSubTabStocks(page);
         const pageTitle = await stocksPage.getPageTitle(page);
@@ -156,7 +147,7 @@ describe('Update Quantity', async () => {
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `resetFilterStocks${test.args.action}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `resetFilterStocks${index}`, baseContext);
 
         const numberOfProductsAfterReset = await stocksPage.resetFilter(page);
         await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);

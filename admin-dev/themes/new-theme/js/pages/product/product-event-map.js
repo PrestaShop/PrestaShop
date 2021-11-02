@@ -51,4 +51,9 @@ export default {
     clearFilters: 'clearFilters',
     selectCombination: 'selectCombination',
   },
+  categories: {
+    applyCategoryTreeChanges: 'applyCategoryTreeChanges',
+    tagRemoved: 'tagRemoved',
+    categoriesUpdated: 'categoriesUpdated',
+  },
 };

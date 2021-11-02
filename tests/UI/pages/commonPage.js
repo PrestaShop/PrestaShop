@@ -137,7 +137,7 @@ class CommonPage {
    * @param page {Page} Browser tab
    * @param selector, element to check
    * @param timeout {number} Time to wait on milliseconds before throwing an error
-   * @returns {Promise<boolean>}, true if visible, false if not
+   * @returns {Promise<boolean>} True if not visible, false if visible
    */
   async elementNotVisible(page, selector, timeout = 10) {
     try {
@@ -153,7 +153,7 @@ class CommonPage {
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the element for the click
    * @param newPageSelector {string} String to locate the element on the opened page (default to FO logo)
-   * @return newPage {Promise<Page>} Opened tab after the click
+   * @return {Promise<Page>} Opened tab after the click
    */
   async openLinkWithTargetBlank(page, selector, newPageSelector = 'body .logo') {
     const [newPage] = await Promise.all([
@@ -192,7 +192,7 @@ class CommonPage {
    * Delete the existing text from input then set a value
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the input to set its value
-   * @param value {string} Value to set on the input
+   * @param value {?string|number} Value to set on the input
    * @return {Promise<void>}
    */
   async setValue(page, selector, value) {
@@ -271,26 +271,11 @@ class CommonPage {
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the select
    * @param textValue {string/number} Value to select
+   * @param force {boolean} Forcing the value of the select
    * @returns {Promise<void>}
    */
-  async selectByVisibleText(page, selector, textValue) {
-    let found = false;
-    let options = await page.$$eval(
-      `${selector} option`,
-      all => all.map(
-        option => ({
-          textContent: option.textContent,
-          value: option.value,
-        })),
-    );
-
-    options = await options.filter(option => textValue === option.textContent.trim());
-    if (options.length !== 0) {
-      const elementValue = await options[0].value;
-      await page.selectOption(selector, elementValue);
-      found = true;
-    }
-    if (!found) throw new Error(`${textValue} was not found as option of select`);
+  async selectByVisibleText(page, selector, textValue, force = false) {
+    await page.selectOption(selector, {label: textValue.toString()}, {force});
   }
 
   /**
@@ -372,10 +357,10 @@ class CommonPage {
 
   /**
    * Sort array of strings or numbers
-   * @param arrayToSort {Array} Array to sort
+   * @param arrayToSort {Array<string|number>} Array to sort
    * @param isFloat {boolean} True if array values type are float
    * @param isDate {boolean} True if array values type are date
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string|number>>}
    */
   async sortArray(arrayToSort, isFloat = false, isDate = false) {
     if (isFloat) {
@@ -393,7 +378,7 @@ class CommonPage {
    * Drag and drop element
    * @param page {Page} Browser tab
    * @param selectorToDrag {string} String to locate the element to drag
-   * @param selectorWhereToDrop String to locate the element where to drop
+   * @param selectorWhereToDrop {string} String to locate the element where to drop
    * @return {Promise<void>}
    */
   async dragAndDrop(page, selectorToDrag, selectorWhereToDrop) {

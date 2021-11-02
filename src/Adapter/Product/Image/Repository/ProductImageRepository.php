@@ -303,6 +303,7 @@ class ProductImageRepository extends AbstractObjectModelRepository
                 'i.id_image = pai.id_image'
             )
             ->andWhere($qb->expr()->in('pai.id_product_attribute', ':combinationIds'))
+            ->andWhere('pai.id_image != 0')
             ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
             ->orderBy('i.position', 'asc')
         ;

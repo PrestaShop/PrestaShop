@@ -20,7 +20,7 @@
       min-width: 13rem;
       padding: 1rem;
       background-color: $white;
-      box-shadow: 0 8px 16px 0 rgba(#000, 0.1);
+      box-shadow: 0 8px 16px 0 rgba($black, 0.1);
       @include border-radius($card-border-radius);
     }
 

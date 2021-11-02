@@ -71,10 +71,14 @@ class FrameworkBundleAdminController extends AbstractController
     /**
      * @Template
      *
+     * @deprecated Since 8.0, to be removed in the next major version
+     *
      * @return array Template vars
      */
     public function overviewAction()
     {
+        @trigger_error(__FUNCTION__ . 'is deprecated since version 8.0 and will be removed in the next major version.', E_USER_DEPRECATED);
+
         return [
             'is_shop_context' => (new Context())->isShopContext(),
             'layoutTitle' => empty($this->layoutTitle) ? '' : $this->trans($this->layoutTitle, 'Admin.Navigation.Menu'),

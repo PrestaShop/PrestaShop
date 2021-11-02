@@ -251,7 +251,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $orderDetail->createList(
             $order,
             $cart,
-            $order->getCurrentOrderState(),
+            $order->getCurrentState(),
             $cartProducts,
             !empty($invoice->id) ? $invoice->id : 0
         );

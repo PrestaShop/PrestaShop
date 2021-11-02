@@ -66,9 +66,9 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'; import PSNumber from '@app/widgets/ps-number';
-  import PSCheckbox from '@app/widgets/ps-checkbox';
-  import PSButton from '@app/widgets/ps-button';
+  import Vue from 'vue'; import PSNumber from '@app/widgets/ps-number.vue';
+  import PSCheckbox from '@app/widgets/ps-checkbox.vue';
+  import PSButton from '@app/widgets/ps-button.vue';
   import {EventBus} from '@app/utils/event-bus';
 
   export default Vue.extend({

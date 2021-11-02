@@ -4,22 +4,24 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
+
+// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
 
 // Import data
 const ProductFaker = require('@data/faker/product');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_productSettings_displayRemainingQuantities';
 
@@ -38,7 +40,7 @@ Go to FO product page and check that the product availability is not displayed
 Update display remaining quantities to the default value
 Go to FO product page and check that the product availability is displayed
  */
-describe('Display remaining quantities', async () => {
+describe('BO - Shop Parameters - Product Settings : Display remaining quantities', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -102,7 +104,26 @@ describe('Display remaining quantities', async () => {
       await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
 
-    it('should check the product availability in FO product page', async function () {
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${test.args.state}`, baseContext);
+
+      page = await productSettingsPage.viewMyShop(page);
+
+      const isHomePage = await homePage.isHomePage(page);
+      await expect(isHomePage, 'Home page was not opened').to.be.true;
+    });
+
+    it('should search for the product and go to product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goToProductPage${test.args.state}`, baseContext);
+
+      await homePage.searchProduct(page, productData.name);
+      await searchResultsPage.goToProductPage(page, 1);
+
+      const pageTitle = await productPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productData.name);
+    });
+
+    it('should check the product availability', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
@@ -110,15 +131,17 @@ describe('Display remaining quantities', async () => {
         baseContext,
       );
 
-      page = await productSettingsPage.viewMyShop(page);
-
-      await homePage.searchProduct(page, productData.name);
-      await searchResultsPage.goToProductPage(page, 1);
-
       const lastQuantityIsVisible = await productPage.isAvailabilityQuantityDisplayed(page);
       await expect(lastQuantityIsVisible).to.be.equal(test.args.exist);
+    });
+
+    it('should close the page and go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${test.args.state}`, baseContext);
 
       page = await productPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await productSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
   });
 });

@@ -34,17 +34,6 @@ use PHPUnit\Framework\TestCase;
 
 class MediaTest extends TestCase
 {
-    public function testCorrectJQueryNoConflictURL(): void
-    {
-        $domain = Configuration::get('PS_SHOP_DOMAIN');
-        $this->assertTrue(
-            in_array(
-                'http://' . $domain . __PS_BASE_URI__ . 'js/jquery/jquery.noConflict.php?version=1.11',
-                Media::getJqueryPath('1.11')
-            )
-        );
-    }
-
     public function providerCSSInputs(): iterable
     {
         yield ['http://wwww.google.com/images/nav_logo.png', '', 'http://wwww.google.com/images/nav_logo.png', false];

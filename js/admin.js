@@ -362,8 +362,9 @@ function gencode(size)
   getE('code').value = '';
   /* There are no O/0 in the codes in order to avoid confusion */
   var chars = "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ";
+  var randomNumbers = crypto.getRandomValues(new Uint32Array(size));
   for (var i = 1; i <= size; ++i) {
-    getE('code').value += chars.charAt(Math.floor(Math.random() * chars.length));
+    getE('code').value += chars.charAt(Math.floor(randomNumbers[i]/2**32 * chars.length));
   }
 
   getE('cart-rules-highlight').style.display = '';

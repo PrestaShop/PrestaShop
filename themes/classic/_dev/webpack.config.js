@@ -40,7 +40,7 @@ let config = {
     rules: [
       {
         test: /\.js/,
-        loader: 'babel-loader',
+        loader: 'esbuild-loader',
       },
       {
         test: /\.scss$/,

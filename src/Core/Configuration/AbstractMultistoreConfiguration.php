@@ -74,14 +74,7 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
             return null;
         }
 
-        $contextShopGroup = $this->shopContext->getContextShopGroup();
-        $contextShopId = $this->shopContext->getContextShopID();
-        $contextShopId = (int) $contextShopId > 0 ? $contextShopId : null;
-
-        return new ShopConstraint(
-            $contextShopId,
-            $contextShopGroup->id
-        );
+        return $this->shopContext->getShopConstraint();
     }
 
     /**

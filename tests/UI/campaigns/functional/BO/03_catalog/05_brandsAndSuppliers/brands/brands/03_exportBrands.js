@@ -1,10 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import page
@@ -27,7 +30,7 @@ Export brands
 Check csv file was downloaded
 Check existence of brands data in csv file
  */
-describe('Export brands', async () => {
+describe('BO - Catalog - Brands & Suppliers : Export brands', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

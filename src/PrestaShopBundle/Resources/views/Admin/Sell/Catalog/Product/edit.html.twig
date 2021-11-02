@@ -1,0 +1,170 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{# It is very important to use product theme ONLY or the default theme from Symfony config is always preloaded #}
+{% form_theme productForm with ['@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig'] only %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
+{% endblock %}
+
+{# We empty the parent content header block because session alert is gonna be displayed inside the content #}
+{% block content_header %}
+{% endblock %}
+
+{% block content %}
+  {% set productType = productForm.vars.product_type %}
+  {% set productId = productForm.vars.product_id %}
+  {% set extraModulesHooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': productId }) %}
+
+  <div class="header-toolbar d-print-none">
+    {{ multistoreHeader() }}
+  </div>
+
+  {{ form_start(productForm, {'attr': {
+    'class': 'form-horizontal product-page product-page-v2 row justify-content-md-center', 'novalidate': 'novalidate',
+    'data-product-id': productId,
+    'data-product-type': productType
+  }}) }}
+
+  {% block product_header %}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {
+      'productForm': productForm,
+      'isMultiShopContext': isMultiShopContext,
+      'helpLink': helpLink,
+      'statsLink': statsLink
+    })
+    }}
+  {% endblock %}
+
+  <div class="col-xxl-10">
+
+  {{ block('session_alert') }}
+
+  <div class="alert alert-info alert-experimental" role="alert">
+    <p class="mb-1">
+      <strong>{{ 'This is the experimental product page.'|trans({}, 'Admin.Catalog.Notification') }}</strong>
+    </p>
+    <p class="alert-text">
+      {{ 'This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.'|trans({}, 'Admin.Advparameters.Help') }}
+    </p>
+  </div>
+
+    {% block product_tabs_container %}
+      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/tabs.html.twig', {
+        'productForm': productForm,
+        'productType': productType,
+        'extraModulesHooks': extraModulesHooks
+      }) }}
+    {% endblock %}
+
+    <div id="form_content" class="product-tabs tab-content">
+      {% block product_tab_description %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/description.html.twig', {
+          'productForm': productForm,
+        }) }}
+      {% endblock %}
+
+      {% block product_tab_specifications %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/specifications.html.twig', {
+          'productForm': productForm,
+        }) }}
+      {% endblock %}
+
+      {% if productType == 'combinations' %}
+        {% block product_tab_combinations %}
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig') }}
+        {% endblock %}
+      {% endif %}
+
+      {% if productForm.stock is defined %}
+        {% block product_tab_stock %}
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/stock.html.twig') }}
+        {% endblock %}
+      {% endif %}
+
+      {% if productForm.shipping is defined %}
+        {% block product_tab_shipping %}
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/shipping.html.twig', {
+            'productForm': productForm,
+          }) }}
+        {% endblock %}
+      {% endif %}
+
+      {% block product_tab_pricing %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/pricing.html.twig', {
+          'productForm': productForm,
+        }) }}
+      {% endblock %}
+
+      {% block product_tab_seo %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/seo.html.twig', {
+          'productForm': productForm,
+        }) }}
+      {% endblock %}
+
+      {% block product_tab_options %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/options.html.twig', {
+          'productForm': productForm,
+        }) }}
+      {% endblock %}
+
+      {% block product_extra_tab %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/modules.html.twig', {
+          'productForm': productForm,
+          'extraModulesHooks': extraModulesHooks,
+        }) }}
+      {% endblock %}
+    </div>
+  </div>
+
+  {% block product_footer %}
+  {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/footer.html.twig', {
+    'productForm': productForm,
+    'editable': editable,
+    'productId': productId,
+  }) }}
+  {% endblock %}
+
+  {% block product_rest %}
+  {{ form_end(productForm) }}
+  {% endblock %}
+
+  {# We don't want the combinations input to be inside the product form which is why this tab is rendered after the form #}
+  {% block product_external_tab_combinations %}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/external_tab.html.twig') }}
+  {% endblock %}
+
+  {% block category_tree_form %}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Category/category_tree_form.html.twig') }}
+  {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/product_edit.bundle.js') }}"></script>
+{% endblock %}

@@ -307,13 +307,6 @@ class AdminModuleDataProvider implements ModuleInterface
                     unset($urls['configure']);
                 }
 
-                if ($addon->canBeUpgraded()) {
-                    $url_active = 'upgrade';
-                } else {
-                    unset(
-                        $urls['upgrade']
-                    );
-                }
                 if (!$addon->database->getBoolean('active_on_mobile')) {
                     unset($urls['disable_mobile']);
                 } else {

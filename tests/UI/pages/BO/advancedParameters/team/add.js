@@ -37,7 +37,7 @@ class AddEmployee extends BOBasePage {
   /**
    * Fill form for add/edit page Employee
    * @param page {Page} Browser tab
-   * @param employeeData {employeeData} Data to set on add/edit employee form
+   * @param employeeData {EmployeeData} Data to set on add/edit employee form
    * @returns {Promise<string>}
    */
   async createEditEmployee(page, employeeData) {
