@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
@@ -368,6 +369,46 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function searchProducts(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit = null): array
     {
+        $qb = $this->getSearchQueryBuilder($searchPhrase, $languageId, $shopId, $limit);
+        $qb
+            ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
+            ->addOrderBy('pl.name', 'ASC')
+            ->addGroupBy('p.id_product')
+        ;
+
+        return $qb->execute()->fetchAllAssociative();
+    }
+
+    /**
+     * @param string $searchPhrase
+     * @param LanguageId $languageId
+     * @param ShopId $shopId
+     * @param int|null $limit
+     *
+     * @return array<int, array<string, int|string>>
+     */
+    public function searchCombinations(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit = null): array
+    {
+        $qb = $this->getSearchQueryBuilder($searchPhrase, $languageId, $shopId, $limit);
+        $qb
+            ->addSelect('p.id_product, pa.id_product_attribute, pl.name, p.reference, i.id_image')
+            ->addOrderBy('pl.name', 'ASC')
+            ->addGroupBy('p.id_product, pa.id_product_attribute')
+        ;
+
+        return $qb->execute()->fetchAllAssociative();
+    }
+
+    /**
+     * @param string $searchPhrase
+     * @param LanguageId $languageId
+     * @param ShopId $shopId
+     * @param int|null $limit
+     *
+     * @return QueryBuilder
+     */
+    private function getSearchQueryBuilder(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit): QueryBuilder
+    {
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
@@ -408,6 +449,6 @@ class ProductRepository extends AbstractObjectModelRepository
             $qb->setMaxResults($limit);
         }
 
-        return $qb->execute()->fetchAllAssociative();
+        return $qb;
     }
 }
