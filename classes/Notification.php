@@ -167,7 +167,7 @@ class NotificationCore
     private static function checkAccess(string $type): bool
     {
         $idProfile = Context::getContext()->employee->id_profile;
-        
+
         if (!Access::isGranted('AdminOrders', $idProfile) && $type == 'order') {
             return false;
         } elseif (!Access::isGranted('AdminCustomers', $idProfile) && $type == 'customer') {
