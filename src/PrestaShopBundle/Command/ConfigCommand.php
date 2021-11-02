@@ -181,6 +181,7 @@ class ConfigCommand extends Command
 
         $found = current(array_filter($languages, function (array $item) use ($inputlang) {
             $key = is_numeric($inputlang) ? 'id_lang' : 'iso_code';
+
             return isset($item[$key]) && $inputlang == $item[$key];
         }));
 
