@@ -164,7 +164,7 @@ class NotificationCore
      *
      * @return bool if profile has access or not
      */
-    private static function checkAccess($type)
+    private static function checkAccess(string $type): bool
     {
         $idProfile = Context::getContext()->employee->id_profile;
         
