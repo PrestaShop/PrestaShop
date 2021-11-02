@@ -104,9 +104,6 @@ class ConfigCommand extends Command
         $legacyContextLoader->loadGenericContext();
         $this->configuration = $configuration;
         $this->languageDataProvider = $languageDataProvider;
-
-        // default to null for language
-        $this->idLang = null;
     }
 
     protected function configure(): void
@@ -150,7 +147,6 @@ class ConfigCommand extends Command
             throw new Exception('Both shopId and shopGroupId cannot be defined', self::STATUS_INVALID_OPTIONS);
         }
         // init shopConstraint
-        // TODO: this should check that shopId and shopGroupId are valid
         try {
             if ($this->input->getOption('shopGroupId')) {
                 $this->shopConstraint = ShopConstraint::shopGroup((int) $this->input->getOption('shopGroupId'));
@@ -183,16 +179,10 @@ class ConfigCommand extends Command
         }
         $languages = $this->languageDataProvider->getLanguages($onlyActive, $onlyShopId);
 
-        if (is_numeric($inputlang)) {
-            // check that input language is valid
-            $found = current(array_filter($languages, function (array $item) use ($inputlang) {
-                return isset($item['id_lang']) && $inputlang == $item['id_lang'];
-            }));
-        } else {
-            $found = current(array_filter($languages, function (array $item) use ($inputlang) {
-                return isset($item['iso_code']) && $inputlang == $item['iso_code'];
-            }));
-        }
+        $found = current(array_filter($languages, function (array $item) use ($inputlang) {
+            $key = is_numeric($inputlang) ? 'id_lang' : 'iso_code';
+            return isset($item[$key]) && $inputlang == $item[$key];
+        }));
 
         if (!$found) {
             throw new Exception('Invalid language', self::STATUS_INVALID_OPTIONS);
@@ -223,7 +213,7 @@ class ConfigCommand extends Command
                 throw new Exception($msg, self::STATUS_ERROR);
             }
         } else {
-            $keys[] = $key;
+            $keys = [$key];
         }
 
         foreach ($keys as $key) {
@@ -300,8 +290,7 @@ class ConfigCommand extends Command
             $this->get();
             $this->configuration->remove($key);
         } catch (Exception $e) {
-            $msg = $e->getMessage();
-            $msg = sprintf('Failed removing: %s. Original message: %s', $key, $msg);
+            $msg = sprintf('Failed removing: %s. Original message: %s', $key, $e->getMessage());
             throw new Exception($msg, self::STATUS_FAILED_REMOVE);
         }
 
