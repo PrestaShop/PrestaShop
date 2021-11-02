@@ -174,9 +174,9 @@ class NotificationCore
             return false;
         } elseif (!Access::isGranted('AdminCustomerThreads', $idProfile) && $type == 'customer_message') {
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     /**
