@@ -111,6 +111,20 @@ class Order extends BOBasePage {
     // Payment block
     this.paymentAmountInput = '#order_payment_amount';
 
+    // Carriers tab
+    this.carriersTab = '#orderShippingTab';
+    this.orderShippingTabContent = '#orderShippingTabContent';
+    this.carriersGridTable = '#shipping-grid-table';
+    this.carriersTableBody = `${this.carriersGridTable} tbody`;
+    this.carriersTableRow = row => `${this.carriersTableBody} tr:nth-child(${row})`;
+    this.carriersTableColumn = (row, column) => `${this.carriersTableRow(row)} td.${column}`;
+    this.editLink = `${this.orderShippingTabContent} a.js-update-shipping-btn`;
+    this.updateOrderShippingModal = '#updateOrderShippingModal';
+    this.updateOrderShippingModalDialog = `${this.updateOrderShippingModal} div.modal-dialog`;
+    this.trackingNumberInput = `${this.updateOrderShippingModalDialog} #update_order_shipping_tracking_number`;
+    this.carrierSelect = `${this.updateOrderShippingModalDialog} #update_order_shipping_new_carrier_id`;
+    this.updateCarrierButton = `${this.updateOrderShippingModalDialog} button.btn-primary`;
+
     // Refund form
     this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
     this.refundProductAmount = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_amount']`;
@@ -469,6 +483,68 @@ class Order extends BOBasePage {
     // Delete the target because a new tab is opened when downloading the file
     return this.downloadDocument(page, 3);
     /* eslint-enable no-return-assign, no-param-reassign */
+  }
+
+  // Methods for carriers tab
+  /**
+   * Get carriers number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getCarriersNumber(page) {
+    return this.getNumberFromText(page, `${this.carriersTab} .count`);
+  }
+
+  /**
+   * Go to carriers tab
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async goToCarriersTab(page) {
+    await this.waitForSelectorAndClick(page, this.carriersTab);
+
+    return this.elementVisible(page, `${this.carriersTab}.active`, 1000);
+  }
+
+  /**
+   * Get carrier details
+   * @param page {Page} Browser tab
+   * @param row {number} Row on carriers table
+   * @returns {Promise<{date: string, carrier: string, shippingCost: string, weight: string, trackingNumber: string}>}
+   */
+  async getCarrierDetails(page, row = 1) {
+    return {
+      date: await this.getTextContent(page, this.carriersTableColumn(row, 'date')),
+      carrier: await this.getTextContent(page, this.carriersTableColumn(row, 'carrier-name')),
+      weight: await this.getTextContent(page, this.carriersTableColumn(row, 'carrier-weight')),
+      shippingCost: await this.getTextContent(page, this.carriersTableColumn(row, 'carrier-price')),
+      trackingNumber: await this.getTextContent(page, this.carriersTableColumn(row, 'carrier-tracking-number')),
+    };
+  }
+
+  /**
+   * Click on edit link and check if the modal is visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnEditLink(page) {
+    await this.waitForSelectorAndClick(page, this.editLink);
+
+    return this.elementVisible(page, this.updateOrderShippingModalDialog, 1000);
+  }
+
+  /**
+   * Set shipping details
+   * @param page {Page} Browser tab
+   * @param shippingData {shippingData} Data to set on shipping form
+   * @returns {Promise<string>}
+   */
+  async setShippingDetails(page, shippingData) {
+    await this.setValue(page, this.trackingNumberInput, shippingData.trackingNumber);
+    await this.setValue(page, this.carrierSelect, shippingData.carrier);
+    await this.clickAndWaitForNavigation(page, this.updateCarrierButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
