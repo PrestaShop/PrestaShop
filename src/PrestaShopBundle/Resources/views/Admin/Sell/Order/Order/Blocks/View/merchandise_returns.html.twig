@@ -25,7 +25,7 @@
 
 {% if not orderForViewing.virtual %}
   {% if orderForViewing.returns.orderReturns is not empty %}
-    <table class="table" id="returns-grid-table">
+    <table class="table" id="merchandise-returns-grid-table">
       <thead>
       <tr>
         <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
@@ -37,10 +37,10 @@
       <tbody>
       {% for return in orderForViewing.returns.orderReturns %}
         <tr>
-          <td class="return-date">{{ return.date|date_format_full }}</td>
-          <td class="return-type">{{ return.type }}</td>
-          <td class="return-state">{{ return.stateName }}</td>
-          <td class="text-right return-tracking-number">
+          <td class="merchandise-return-date">{{ return.date|date_format_full }}</td>
+          <td class="merchandise-return-type">{{ return.type }}</td>
+          <td class="merchandise-return-state">{{ return.stateName }}</td>
+          <td class="text-right merchandise-return-tracking-number">
             {% if return.trackingNumber and return.trackingUrl %}
               <a href="{{ return.trackingUrl }}">{{ return.trackingNumber }}</a>
             {% elseif return.trackingNumber %}

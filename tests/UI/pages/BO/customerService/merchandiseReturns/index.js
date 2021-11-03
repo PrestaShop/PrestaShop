@@ -46,9 +46,11 @@ class MerchandiseReturns extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterMerchandiseReturnsTable(page, filterBy, value) {
-    await this.setValue(page, this.filterColumn(filterBy), value);
-    // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    if (await this.elementVisible(page, this.filterColumn(filterBy), 2000)) {
+      await this.setValue(page, this.filterColumn(filterBy), value);
+      // click on search
+      await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    }
   }
 
   /**

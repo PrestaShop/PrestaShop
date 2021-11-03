@@ -94,7 +94,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     });
 
     it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);

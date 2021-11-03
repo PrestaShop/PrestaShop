@@ -127,10 +127,11 @@ class Order extends BOBasePage {
 
     // Merchandise returns tab
     this.merchandiseReturnsTab = '#orderReturnsTab';
-    this.merchandiseReturnsGridTable = '#returns-grid-table';
+    this.merchandiseReturnsGridTable = '#merchandise-returns-grid-table';
     this.merchandiseReturnsTableBody = `${this.merchandiseReturnsGridTable} tbody`;
     this.merchandiseReturnsTableRow = row => `${this.merchandiseReturnsTableBody} tr:nth-child(${row})`;
-    this.merchandiseReturnsTableColumn = (row, column) => `${this.merchandiseReturnsTableRow(row)} td.${column}`;
+    this.merchandiseReturnsTableColumn = (row, column) => `${this.merchandiseReturnsTableRow(row)}`
+      + ` td.merchandise-${column}`;
 
     // Refund form
     this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
@@ -904,7 +905,10 @@ class Order extends BOBasePage {
       date: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-date')),
       type: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-type')),
       carrier: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-state')),
-      trackingNumber: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-tracking-number')),
+      trackingNumber: await this.getTextContent(
+        page,
+        this.merchandiseReturnsTableColumn(row, 'return-tracking-number'),
+      ),
     };
   }
 }
