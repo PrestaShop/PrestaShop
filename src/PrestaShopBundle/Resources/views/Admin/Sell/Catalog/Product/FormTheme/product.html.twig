@@ -52,15 +52,14 @@
   </li>
 {% endblock %}
 
-{% block _product_type_row %}
+{% block product_type_row %}
   <div class="product-type-selector">
     <div class="product-type-choices">
       {% for choice in form.vars.choices %}
-        <div class="product-type-choice btn btn-outline-secondary" data-value="{{ choice.value }}" data-description="{{ choice.attr['data-description']|default(choice.label) }}">
-          <div class="product-type-choice-label">
-            {{ choice.label }}
-          </div>
-        </div>
+        <button type="button" class="product-type-choice btn btn-outline-secondary" data-value="{{ choice.value }}" data-description="{{ choice.attr['data-description']|default(choice.label) }}">
+          {{ choice.label }}
+          {% if choice.attr['icon'] is defined %}<i class="material-icons">{{ choice.attr['icon'] }}</i>{% endif %}
+        </button>
       {% endfor %}
     </div>
     <div class="product-type-description">
