@@ -2219,7 +2219,7 @@ class CartCore extends ObjectModel
         
         $value = Hook::exec(
             'actionCartGetOrderTotalAfter',
-            array(
+            [
                 'order_total' => $value,
                 'cart' => $this,
                 'context' => Context::getContext(),
@@ -2229,7 +2229,7 @@ class CartCore extends ObjectModel
                 'id_carrier' => $id_carrier,
                 'use_cache' => $use_cache,
                 'keepOrderPrices' => $keepOrderPrices
-            ),
+            ],
             null,
             true
         );
