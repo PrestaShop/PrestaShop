@@ -18,7 +18,7 @@ const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const profilesPage = require('@pages/BO/advancedParameters/team/profiles/index');
 const addProfilePage = require('@pages/BO/advancedParameters/team/profiles/add');
 
-const baseContext = 'functional_BO_advancedParameters_team_profiles_paginationAndBulkActionsProfiles';
+const baseContext = 'functional_BO_advancedParameters_team_profiles_paginationAndBulkActions';
 
 let browserContext;
 let page;
