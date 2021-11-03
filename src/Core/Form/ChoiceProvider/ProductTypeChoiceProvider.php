@@ -57,15 +57,19 @@ class ProductTypeChoiceProvider implements FormChoiceProviderInterface, FormChoi
         return [
             $this->trans('Standard product', 'Admin.Catalog.Feature') => [
                 'data-description' => $this->trans('A physical product that needs to be shipped.', 'Admin.Catalog.Feature'),
-            ],
-            $this->trans('Pack of products', 'Admin.Catalog.Feature') => [
-                'data-description' => $this->trans('A collection of products from your catalog.', 'Admin.Catalog.Feature'),
-            ],
-            $this->trans('Virtual product', 'Admin.Catalog.Feature') => [
-                'data-description' => $this->trans('An intangible product that doesn\'t require shipping. You can also add a downloadable file.', 'Admin.Catalog.Feature'),
+                'icon' => 'checkroom',
             ],
             $this->trans('Product with combinations', 'Admin.Catalog.Feature') => [
                 'data-description' => $this->trans('A product with different variations (size, color, etc.) from which customers can choose', 'Admin.Catalog.Feature'),
+                'icon' => 'layers',
+            ],
+            $this->trans('Pack of products', 'Admin.Catalog.Feature') => [
+                'data-description' => $this->trans('A collection of products from your catalog.', 'Admin.Catalog.Feature'),
+                'icon' => 'grid_view',
+            ],
+            $this->trans('Virtual product', 'Admin.Catalog.Feature') => [
+                'data-description' => $this->trans('An intangible product that doesn\'t require shipping. You can also add a downloadable file.', 'Admin.Catalog.Feature'),
+                'icon' => 'qr_code',
             ],
         ];
     }
@@ -77,9 +81,9 @@ class ProductTypeChoiceProvider implements FormChoiceProviderInterface, FormChoi
     {
         return [
             $this->trans('Standard product', 'Admin.Catalog.Feature') => ProductType::TYPE_STANDARD,
+            $this->trans('Product with combinations', 'Admin.Catalog.Feature') => ProductType::TYPE_COMBINATIONS,
             $this->trans('Pack of products', 'Admin.Catalog.Feature') => ProductType::TYPE_PACK,
             $this->trans('Virtual product', 'Admin.Catalog.Feature') => ProductType::TYPE_VIRTUAL,
-            $this->trans('Product with combinations', 'Admin.Catalog.Feature') => ProductType::TYPE_COMBINATIONS,
         ];
     }
 
