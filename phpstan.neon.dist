@@ -8,7 +8,7 @@ parameters:
     - bin
     - cache
     # - classes
-    # - config
+    - config
     # - controllers
     - docs
     - download
