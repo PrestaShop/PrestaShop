@@ -372,8 +372,9 @@ class ProductRepository extends AbstractObjectModelRepository
         $qb = $this->getSearchQueryBuilder($searchPhrase, $languageId, $shopId, $limit);
         $qb
             ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
-            ->addOrderBy('pl.name', 'ASC')
             ->addGroupBy('p.id_product')
+            ->addOrderBy('pl.name', 'ASC')
+            ->addOrderBy('p.id_product', 'ASC')
         ;
 
         return $qb->execute()->fetchAllAssociative();
@@ -396,8 +397,10 @@ class ProductRepository extends AbstractObjectModelRepository
             ->addSelect('pa.reference as combination_reference')
             ->addSelect('ai.id_image as combination_image_id')
             ->leftJoin('p', $this->dbPrefix . 'product_attribute_image', 'ai', 'ai.id_product_attribute = pa.id_product_attribute')
-            ->addOrderBy('pl.name', 'ASC')
             ->addGroupBy('p.id_product, pa.id_product_attribute')
+            ->addOrderBy('pl.name', 'ASC')
+            ->addOrderBy('p.id_product', 'ASC')
+            ->addOrderBy('pa.id_product_attribute', 'ASC')
         ;
 
         return $qb->execute()->fetchAllAssociative();
