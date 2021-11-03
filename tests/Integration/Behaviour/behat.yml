@@ -280,6 +280,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\SupplierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CommonDomainFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\DeleteProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateAttachmentFeatureContext

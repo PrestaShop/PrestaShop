@@ -179,7 +179,57 @@ Feature: Update product suppliers from Back Office (BO)
       | ecotax           | 0     |
       | tax rules group  |       |
       | on_sale          | false |
+      | wholesale_price  | 10    |
+      | unit_price       | 0     |
+      | unity            |       |
+      | unit_price_ratio | 0     |
+
+  Scenario: Updating standard product wholesale price should update default supplier price
+    Given I add product "product4" with following information:
+      | name[en-US] | magic staff |
+      | type        | standard    |
+    And product product4 type should be standard
+    And product product4 should not have any suppliers assigned
+    And product product4 should have following prices information:
+      | price            | 0     |
+      | ecotax           | 0     |
+      | tax rules group  |       |
+      | on_sale          | false |
       | wholesale_price  | 0     |
       | unit_price       | 0     |
       | unity            |       |
       | unit_price_ratio | 0     |
+    When I set product product4 suppliers:
+      | reference         | supplier reference | product supplier reference      | currency | price tax excluded |
+      | product4supplier1 | supplier1          | my first supplier for product4  | USD      | 10                 |
+      | product4supplier2 | supplier2          | my second supplier for product4 | EUR      | 11                 |
+    Then product product4 should have following suppliers:
+      | product supplier reference      | currency | price tax excluded |
+      | my first supplier for product4  | USD      | 10                 |
+      | my second supplier for product4 | EUR      | 11                 |
+    And product product4 should have following supplier values:
+      | default supplier | supplier1 |
+    And product product4 should have following prices information:
+      | price            | 0     |
+      | ecotax           | 0     |
+      | tax rules group  |       |
+      | on_sale          | false |
+      | wholesale_price  | 10    |
+      | unit_price       | 0     |
+      | unity            |       |
+      | unit_price_ratio | 0     |
+    When I update product "product4" prices with following information:
+      | wholesale_price  | 20    |
+    Then product product4 should have following suppliers:
+      | product supplier reference      | currency | price tax excluded |
+      | my first supplier for product4  | USD      | 20                 |
+      | my second supplier for product4 | EUR      | 11                 |
+    When I set product product4 default supplier to supplier2
+    And product product4 should have following supplier values:
+      | default supplier           | supplier2                       |
+    When I update product "product4" prices with following information:
+      | wholesale_price  | 30    |
+    Then product product4 should have following suppliers:
+      | product supplier reference      | currency | price tax excluded |
+      | my first supplier for product4  | USD      | 20                 |
+      | my second supplier for product4 | EUR      | 30                 |

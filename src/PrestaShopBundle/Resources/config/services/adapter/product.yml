@@ -133,6 +133,7 @@ services:
     arguments:
       - '@prestashop.adapter.product.repository.product_repository'
       - '@prestashop.adapter.product.update.product_price_properties_filler'
+      - '@prestashop.adapter.product.repository.product_supplier_repository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand

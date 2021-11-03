@@ -28,6 +28,13 @@ import EventEmitter from '@components/event-emitter';
 
 const {$} = window;
 
+export type FormUpdateEvent = {
+  object: Record<string, any>,
+  modelKey: string,
+  value: any,
+  previousValue: any,
+}
+
 /**
  * This is able to watch an HTML form and parse it as a Javascript object based on a configurable
  * mapping. Each field from the model is mapped to a form input, or several, each input is watched
@@ -86,7 +93,7 @@ export default class FormObjectMapper {
 
   formMapping: Record<string, any>;
 
-  watchedProperties: Record<string, any>;
+  watchedProperties: Record<string, Array<(event: FormUpdateEvent) => void>>;
 
   /* eslint-disable */
   /**
@@ -226,7 +233,7 @@ export default class FormObjectMapper {
    * @param {string} modelKey
    * @param {function} callback
    */
-  watch(modelKey: string, callback: () => void): void {
+  watch(modelKey: string, callback: (event: FormUpdateEvent) => void): void {
     if (
       !Object.prototype.hasOwnProperty.call(this.watchedProperties, modelKey)
     ) {
@@ -412,7 +419,7 @@ export default class FormObjectMapper {
 
     $.serializeJSON.deepSet(this.model, modelKeys, value);
 
-    const updateEvent = {
+    const updateEvent: FormUpdateEvent = {
       object: this.model,
       modelKey,
       value,
@@ -425,7 +432,7 @@ export default class FormObjectMapper {
     ) {
       const propertyWatchers = this.watchedProperties[modelKey];
       propertyWatchers.forEach(
-        (callback: (param: typeof updateEvent) => void) => {
+        (callback: (param: FormUpdateEvent) => void) => {
           callback(updateEvent);
         },
       );
