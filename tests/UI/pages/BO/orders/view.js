@@ -104,8 +104,8 @@ class Order extends BOBasePage {
     this.statusTableRow = row => `${this.statusTableBody} tr:nth-child(${row})`;
     this.statusTableColumn = (row, column) => `${this.statusTableRow(row)} td.${column}`;
     this.resendEmailButton = row => `${this.statusTableRow(row)} td form[action*='resend-email'] button`;
-    this.orderNoteCloseButtun = `${this.historyTabContent} a.js-order-notes-toggle-btn.is-opened`;
-    this.orderNoteOpenButtun = `${this.historyTabContent} a.js-order-notes-toggle-btn`;
+    this.orderNoteOpenButton = `${this.historyTabContent} a.js-order-notes-toggle-btn`;
+    this.orderNoteCloseButton = `${this.orderNoteOpenButton}.is-opened`;
     this.orderNoteTextarea = '#internal_note_note';
     this.orderNoteSaveButton = 'button.js-order-notes-btn';
 
@@ -694,7 +694,7 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async isOrderNoteOpened(page) {
-    return this.elementVisible(page, this.orderNoteCloseButtun, 100);
+    return this.elementVisible(page, this.orderNoteCloseButton, 100);
   }
 
   /**
@@ -703,7 +703,7 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async openOrderNoteTextarea(page) {
-    await this.waitForSelectorAndClick(page, this.orderNoteOpenButtun);
+    await this.waitForSelectorAndClick(page, this.orderNoteOpenButton);
 
     return this.isOrderNoteOpened(page);
   }
