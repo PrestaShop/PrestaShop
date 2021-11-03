@@ -270,7 +270,7 @@ class AdminModuleController {
     self.getModuleItemSelector();
 
     $('.modules-list').each(() => {
-      self.updateTotalResults();
+      self.updateModuleVisibility();
     });
   }
 
@@ -513,7 +513,10 @@ class AdminModuleController {
               || (
                 currentModule.installed === false
                   && self.currentRefStatus === 2
-              )
+              ) || (
+              currentModule.installed === true
+                  && self.currentRefStatus === 3
+            )
           );
         }
 

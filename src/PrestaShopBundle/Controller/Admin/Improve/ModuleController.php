@@ -341,7 +341,7 @@ class ModuleController extends ModuleAbstractController
             $logger->error($response[$module]['msg'], ['object_type' => 'Module', 'object_id' => $moduleAccessedId]);
         }
 
-        if ($response[$module]['status'] === true && $action != 'uninstall') {
+        if ($response[$module]['status'] === true) {
             $moduleInstance = $moduleRepository->getModule($module, false, false);
 
             $collection = AddonsCollection::createFrom([$moduleInstance]);
