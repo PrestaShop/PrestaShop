@@ -1060,6 +1060,7 @@ $product-page-padding-bottom: 80px !default;
 
 .product-page-v2 {
   &.create-product-form {
+    width: 100%;
     background-color: $white;
   }
 
@@ -1121,32 +1122,24 @@ $product-page-padding-bottom: 80px !default;
 
     .product-type-choices {
       display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
       width: 100%;
 
       .product-type-choice {
         position: relative;
-        display: block;
-        width: 130px;
-        max-width: 130px;
-        padding: 0;
-        margin: 0.5rem;
+        width: 100%;
+        max-width: 350px;
+        padding-right: 3rem;
+        margin: 0.25rem 0;
+        text-align: left;
 
-        // CSS trick to have responsive square
-        &::after {
-          display: block;
-          padding-bottom: 100%;
-          content: "";
-        }
-
-        &-label {
+        .material-icons {
           position: absolute;
           top: 50%;
-          width: 100%;
-          padding: 0 0.5rem;
-          transform: translate(0%, -50%);
+          right: 0.75rem;
+          margin-top: -0.725rem;
+          font-size: 1.45rem;
         }
       }
     }
