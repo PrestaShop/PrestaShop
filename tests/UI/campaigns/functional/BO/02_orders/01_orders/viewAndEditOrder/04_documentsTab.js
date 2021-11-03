@@ -62,7 +62,6 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
       await foHomePage.goToFo(page);
-      await foHomePage.changeLanguage(page, 'en');
 
       // Change FO language
       await foHomePage.changeLanguage(page, 'en');

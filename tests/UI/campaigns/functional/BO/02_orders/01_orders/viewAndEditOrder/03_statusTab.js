@@ -210,7 +210,6 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
       await foHomePage.goToFo(page);
-      await foHomePage.changeLanguage(page, 'en');
 
       // Change FO language
       await foHomePage.changeLanguage(page, 'en');
@@ -282,7 +281,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
     });
 
     it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultCustomer);
 
