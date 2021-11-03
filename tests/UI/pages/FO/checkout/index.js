@@ -343,7 +343,7 @@ class Checkout extends FOBasePage {
    * @return {Promise<string>}
    */
   async getGiftPrice(page) {
-    await this.changeCheckboxValue(page, this.giftCheckbox, true);
+    await this.setChecked(page, this.giftCheckbox, true);
     return this.getTextContent(page, this.cartSubtotalGiftWrappingValueSpan);
   }
 
@@ -375,11 +375,11 @@ class Checkout extends FOBasePage {
 
     // Set invoice address if not null
     if (invoiceAddress !== null) {
-      await page.uncheck(this.addressStepUseSameAddressCheckbox);
+      await this.setChecked(page, this.addressStepUseSameAddressCheckbox, false);
       await page.click(this.addressStepContinueButton);
       await this.fillAddressForm(page, invoiceAddress);
     } else {
-      await page.check(this.addressStepUseSameAddressCheckbox);
+      await this.setChecked(page, this.addressStepUseSameAddressCheckbox);
     }
 
     await page.click(this.addressStepContinueButton);
@@ -393,7 +393,7 @@ class Checkout extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async setGuestPersonalInformation(page, customerData) {
-    await page.check(this.checkoutGuestGenderInput(customerData.socialTitle === 'Mr.' ? 1 : 2));
+    await this.setChecked(page, this.checkoutGuestGenderInput(customerData.socialTitle === 'Mr.' ? 1 : 2));
 
     await this.setValue(page, this.checkoutGuestFirstnameInput, customerData.firstName);
     await this.setValue(page, this.checkoutGuestLastnameInput, customerData.lastName);
@@ -410,21 +410,21 @@ class Checkout extends FOBasePage {
     );
 
     if (customerData.partnerOffers) {
-      await page.check(this.checkoutGuestOptinCheckbox);
+      await this.setChecked(page, this.checkoutGuestOptinCheckbox);
     }
 
     if (customerData.newsletter) {
-      await page.check(this.checkoutGuestNewsletterCheckbox);
+      await this.setChecked(page, this.checkoutGuestNewsletterCheckbox);
     }
 
     // Check customer privacy input if visible
     if (await this.elementVisible(page, this.checkoutGuestCustomerPrivacyCheckbox, 500)) {
-      await page.check(this.checkoutGuestCustomerPrivacyCheckbox);
+      await this.setChecked(page, this.checkoutGuestCustomerPrivacyCheckbox);
     }
 
     // Check gdpr input if visible
     if (await this.elementVisible(page, this.checkoutGuestGdprCheckbox, 500)) {
-      await page.check(this.checkoutGuestGdprCheckbox);
+      await this.setChecked(page, this.checkoutGuestGdprCheckbox);
     }
 
     // Click on continue

@@ -318,7 +318,7 @@ class Search extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setFuzzySearch(page, toEnable = true) {
-    await page.check(this.fuzzySearchLabel(toEnable ? 'on' : 'off'));
+    await this.setChecked(page, this.fuzzySearchLabel(toEnable ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
     return this.getAlertSuccessBlockContent(page);
   }

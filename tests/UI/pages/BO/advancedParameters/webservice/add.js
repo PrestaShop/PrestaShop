@@ -45,7 +45,7 @@ class AddWebserviceKey extends BOBasePage {
 
     await this.setValue(page, this.keyDescriptionTextarea, webserviceData.keyDescription);
     // id = 1 if active = YES / 0 if active = NO
-    await page.check(this.statusToggleInput(webserviceData.status ? 1 : 0));
+    await this.setChecked(page, this.statusToggleInput(webserviceData.status ? 1 : 0));
 
     await this.clickAndWaitForNavigation(page, this.saveButton);
 

@@ -92,7 +92,7 @@ class AddSupplier extends BOBasePage {
     await this.addKeywords(page, supplierData.metaKeywords, 2);
 
     // Set status value
-    await page.check(this.statusToggleInput(supplierData.enabled ? 1 : 0));
+    await this.setChecked(page, this.statusToggleInput(supplierData.enabled ? 1 : 0));
 
     // Save Supplier
     await this.clickAndWaitForNavigation(page, this.saveButton);

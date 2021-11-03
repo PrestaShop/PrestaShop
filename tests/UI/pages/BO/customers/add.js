@@ -62,8 +62,8 @@ class AddCustomer extends BOBasePage {
     await page.selectOption(this.yearOfBirthSelect, customerData.yearOfBirth);
     await page.selectOption(this.monthOfBirthSelect, customerData.monthOfBirth);
     await page.selectOption(this.dayOfBirthSelect, customerData.dayOfBirth);
-    await page.check(this.statusToggleInput(customerData.enabled ? 1 : 0));
-    await page.check(this.partnerOffersToggleInput(customerData.partnerOffers ? 1 : 0));
+    await this.setChecked(page, this.statusToggleInput(customerData.enabled ? 1 : 0));
+    await this.setChecked(page, this.partnerOffersToggleInput(customerData.partnerOffers ? 1 : 0));
     await this.setCustomerGroupAccess(page, customerData.defaultCustomerGroup);
     await this.selectByVisibleText(page, this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
   }
@@ -93,17 +93,17 @@ class AddCustomer extends BOBasePage {
   async setCustomerGroupAccess(page, customerGroup) {
     switch (customerGroup) {
       case 'Customer':
-        await this.changeCheckboxValue(page, this.selectAllGroupAccessCheckbox);
+        await this.setChecked(page, this.selectAllGroupAccessCheckbox);
         break;
       case 'Guest':
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(0), false);
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(2), false);
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(1));
+        await this.setChecked(page, this.groupAccessCheckbox(0), false);
+        await this.setChecked(page, this.groupAccessCheckbox(2), false);
+        await this.setChecked(page, this.groupAccessCheckbox(1));
         break;
       case 'Visitor':
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(1), false);
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(2), false);
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(0));
+        await this.setChecked(page, this.groupAccessCheckbox(1), false);
+        await this.setChecked(page, this.groupAccessCheckbox(2), false);
+        await this.setChecked(page, this.groupAccessCheckbox(0));
         break;
       default:
         throw new Error(`${customerGroup} was not found as a group access`);
@@ -118,8 +118,8 @@ class AddCustomer extends BOBasePage {
    * @param valueWanted {boolean} True if we want to select checkBox, else otherwise
    * @return {Promise<void>}
    */
-  async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {
-    if (valueWanted !== (await this.isCheckboxSelected(page, checkboxSelector))) {
+  async setChecked(page, checkboxSelector, valueWanted = true) {
+    if (valueWanted !== (await this.isChecked(page, checkboxSelector))) {
       // The selector is not visible, that why '+ i' is required here
       await page.$eval(`${checkboxSelector} + i`, el => el.click());
     }
