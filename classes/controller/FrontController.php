@@ -458,6 +458,11 @@ class FrontControllerCore extends Controller
             // Needed if the merchant want to give a free product to every visitors
             $this->context->cart = $cart;
             CartRule::autoAddToCart($this->context);
+            
+            // New cart created, the old cart id in the cookie is now useless
+            if(isset($this->context->cookie->id_cart)) {
+                unset($this->context->cookie->id_cart);
+            }
         } else {
             $this->context->cart = $cart;
         }
