@@ -1,6 +1,5 @@
 const webpack = require('webpack');
-const keepLicense = require('uglify-save-license');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const common = require('./common.js');
 
 /**
@@ -12,17 +11,11 @@ function prodConfig() {
   const prod = Object.assign(common, {
     stats: 'minimal',
     optimization: {
+      minimize: true,
       minimizer: [
-        new UglifyJsPlugin({
-          sourceMap: false,
-          uglifyOptions: {
-            compress: {
-              drop_console: true,
-            },
-            output: {
-              comments: keepLicense,
-            },
-          },
+        new TerserPlugin({
+          parallel: true,
+          extractComments: /@license/i,
         }),
       ],
     },
