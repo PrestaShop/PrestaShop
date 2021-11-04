@@ -170,10 +170,10 @@ class CartRuleCore extends ObjectModel
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             /* Lang fields */
             'name' => [
-                'type' => self::TYPE_STRING,
+                'type' => self::TYPE_HTML,
                 'lang' => true,
-                'validate' => 'isCleanHtml',
-                'required' => true, 'size' => 254,
+                'required' => true,
+                'size' => 254,
             ],
         ],
     ];
