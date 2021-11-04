@@ -116,6 +116,7 @@ $constantsToDefine = [
     '_THEME_SHIP_DIR_' => 'string',
     '_THEME_SUP_DIR_' => 'string',
     '_PS_CURRENCY_FEED_URL_' => 'string',
+    '_PS_DEFAULT_THEME_NAME_' => 'string',
     '_PS_JS_DIR_' => 'string',
     '_PS_PARENT_THEME_URI_' => 'string',
     '_PS_TAB_MODULE_LIST_URL_' => 'string',
