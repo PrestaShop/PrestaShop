@@ -27,6 +27,16 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
 class AdminShopControllerCore extends AdminController
 {
+    /**
+     * @var int
+     */
+    public $id_shop;
+
+    /**
+     * @var int
+     */
+    public $id_shop_group;
+
     public function __construct()
     {
         $this->bootstrap = true;
@@ -568,7 +578,7 @@ class AdminShopControllerCore extends AdminController
         asort($import_data);
 
         if (!$this->object->id) {
-            $this->fields_import_form = [
+            $fields_import_form = [
                 'radio' => [
                     'type' => 'radio',
                     'label' => $this->trans('Import data', [], 'Admin.Advparameters.Feature'),
@@ -637,8 +647,8 @@ class AdminShopControllerCore extends AdminController
             'defaultShop' => (int) Configuration::get('PS_SHOP_DEFAULT'),
             'ids_category' => $ids_category,
         ];
-        if (isset($this->fields_import_form)) {
-            $this->tpl_form_vars = array_merge($this->tpl_form_vars, ['form_import' => $this->fields_import_form]);
+        if (isset($fields_import_form)) {
+            $this->tpl_form_vars = array_merge($this->tpl_form_vars, ['form_import' => $fields_import_form]);
         }
 
         return parent::renderForm();

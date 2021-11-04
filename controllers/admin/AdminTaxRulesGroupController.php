@@ -218,10 +218,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             return;
         }
         if (!isset($obj->id)) {
-            $this->no_back = false;
             $content = parent::renderForm();
         } else {
-            $this->no_back = true;
             $this->page_header_toolbar_btn['new'] = [
                 'href' => '#',
                 'desc' => $this->trans('Add a new tax rule', [], 'Admin.International.Feature'),

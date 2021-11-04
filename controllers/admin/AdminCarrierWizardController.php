@@ -31,6 +31,21 @@ class AdminCarrierWizardControllerCore extends AdminController
 {
     protected $wizard_access;
 
+    /**
+     * @var int
+     */
+    public $old_context;
+
+    /**
+     * @var int
+     */
+    public $type_context;
+
+    /**
+     * @var array<string, string|array<array<string, string>>>
+     */
+    public $wizard_steps;
+
     public function __construct()
     {
         $this->bootstrap = true;
@@ -40,7 +55,6 @@ class AdminCarrierWizardControllerCore extends AdminController
         $this->className = 'Carrier';
         $this->lang = false;
         $this->deleted = true;
-        $this->step_number = 0;
         $this->type_context = Shop::getContext();
         $this->old_context = Context::getContext();
         $this->multishop_context = Shop::CONTEXT_ALL;

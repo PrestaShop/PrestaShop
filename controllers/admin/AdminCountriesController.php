@@ -70,8 +70,7 @@ class AdminCountriesControllerCore extends AdminController
         ];
 
         $zones_array = [];
-        $this->zones = Zone::getZones();
-        foreach ($this->zones as $zone) {
+        foreach (Zone::getZones() as $zone) {
             $zones_array[$zone['id_zone']] = $zone['name'];
         }
 
