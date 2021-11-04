@@ -428,7 +428,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 }
             }
 
-            $purify = (isset($data['validate']) && Tools::strtolower($data['validate']) == 'iscleanhtml') ? true : false;
+            $purify = isset($data['validate']) && Tools::strtolower($data['validate']) == 'iscleanhtml';
             // Format field value
             $fields[$field] = ObjectModel::formatValue($value, $data['type'], false, $purify, !empty($data['allow_null']));
         }
