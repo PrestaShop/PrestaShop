@@ -24,6 +24,106 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.8.1 - (2021-11-04)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #26492: Fix the display of the State field and the Zip/Postal in the add new Tax rule page (by @khouloudbelguith)
+    - #26465: Fix modal position on safari on order page (by @NeOMakinG)
+    - #26447: Fix Attributes with comma not displayed in Stock management (by @alexandrebrubeyonds)
+    - #26145: Fix time-val input buttons to change calendar date-range (by @mparvazi)
+    - #26227: BO: Fix badly displayed buttons (by @hibatallahAouadni)
+    - #25046: In MultiShop, In new Category, display the top category if there are more one root category (by @Progi1984)
+    - #26365: Fix display of address format in Countries page (by @marwachelly)
+    - #26358: Fix display of Category discount page (by @marwachelly)
+    - #26328: Fix language dropdown when resizing window  in attribute creation page (by @marwachelly)
+    - #26089: Allow multi-store changes on the Performance page (by @kpodemski)
+    - #25822: [BC Break] Fixed pagination in Customer - View Page (by @Progi1984)
+    - #25291: Show error delete product on order page admin (by @ytilotti)
+    - #26026: BO: Fix the search button wrap (by @hibatallahAouadni)
+    - #25760: Fixed error in SqlQueryValidator with multiple conditions in ON clause (by @Progi1984)
+    - #25904: Fixed modal content when bulk delete combinations (by @Progi1984)
+    - #25741: Some buttons should not be allowed to wrap (by @Hlavtox)
+    - #25690: [BC Break] Fix config values not properly fetched in multistore context (by @matthieu-rolland)
+    - #25497: Removed ecotax in invoice/orderslip PDF if ecotax is disabled (by @Progi1984)
+    - #25523: Fixed empty translation for OrderReturn (by @Progi1984)
+    - #25704: Fixed error on View Order when contains a customized product which has been deleted (by @Progi1984)
+    - #25833: Fix exception when switching shop context after pushing a form on some configuration pages (by @matthieu-rolland)
+    - #25725: Fix the save "meta_keywords" field on suppliers (by @gennaris)
+    - #25084: Fix menu active items spacing (by @NeOMakinG)
+    - #25427: Fix overflowing buttons (by @Hlavtox)
+    - #25612: Fix helpbox outside form label on product page (by @NeOMakinG)
+    - #25557: Fix floating button spacing on migrated pages (by @NeOMakinG)
+    - #25205: BO : Moved addresses block in Customer Page (by @Progi1984)
+    - #25386: Fixed selector call for enabling back the confirmation modal when changing the currency by default (by @Progi1984)
+- Front Office:
+  - Bug fix:
+    - #26434: Fix adding to cart with the click on the icon (by @kpodemski)
+    - #26410: Backport Fix Simple anchors do not work #26380 (by @alexandrebrubeyonds)
+    - #26289: Fix disabled attribute on checkout on classic (by @NeOMakinG)
+    - #26225: Prevent BC breaks related to the shop logo (by @kpodemski)
+    - #25903: Fixed preview of product in frontoffice (by @Progi1984)
+    - #25857: [BC Break] Fetch and set logo image size inside template (by @Oksydan)
+    - #25551: Fixed JSON-LD with productcomments module data (by @Progi1984)
+    - #25961: Fixed display of attributes in cart on Frontoffice (by @Progi1984)
+    - #25556: Fix product list layout on responsive on classic theme (by @NeOMakinG)
+    - #25524: Fixed comma in conditional variable for JSON-LD (by @Progi1984)
+    - #25387: Product flags: Fixed spacing with multiples flags on frontoffice (by @Progi1984)
+    - #25569: Fix next icon going outside imageslider on classic theme (by @NeOMakinG)
+    - #25192: Make searchbar full width on md and xs (by @NeOMakinG)
+- Core:
+  - Improvement:
+    - #26525: Update native modules (by @atomiix)
+    - #26085: Update changelog for 1780 RC1 Build6 (by @sowbiba)
+    - #25958: Bump version to 1.7.8.1 (by @Progi1984)
+  - Bug fix:
+    - #26221: Fix SQL query in OrderQueryBuilder (by @atomiix)
+    - #25777: Fix supplier error when trying to see products linked to the supplier (by @atomiix)
+- Installer:
+  - Bug fix:
+    - #25311: In upgrade, fixed configuration update on multi store (by @Seb33300)
+- Tests:
+  - Bug fix:
+    - #25679: Use node_14.x instead of node_10.x (by @PierreRambaud)
+  - Refactoring:
+    - #25828: Fix module's filter and product's quick view tests (by @boubkerbribri)
+    - #25804: JS-doc : Fix argument and returns types for pages (by @boubkerbribri)
+    - #25769: Delete step identifiers for common tests to fix the generated report (by @boubkerbribri)
+    - #25652: Refacto international tests (by @boubkerbribri)
+    - #25188: Change member to type for data files to fix js-doc (by @boubkerbribri)
+    - #25737: Do not delete suppliers to fix errors on "Filter stocks by supplier" test (by @boubkerbribri)
+    - #25707: Add Timeout on stock page function (by @SD1982)
+    - #25699: Add a default value to cart rule code on faker file (by @boubkerbribri)
+    - #25289: Functional tests - Refacto customers/addresses tests (by @nesrineabdmouleh)
+    - #25685: Change db prefix for sql tests (by @boubkerbribri)
+    - #25178: Add js-doc on some data classes (by @boubkerbribri)
+    - #25681: Update stock location default value on faker file (by @boubkerbribri)
+    - #25307: Functional tests - Refacto customer service tests (by @nesrineabdmouleh)
+    - #25354: Functional tests - Refacto shipping and payment tests (by @nesrineabdmouleh)
+    - #25263: Functional tests -  Refacto brands & suppliers tests (by @nesrineabdmouleh)
+    - #25158: Functional tests - Update JS doc for FO pages (by @nesrineabdmouleh)
+    - #25189: Functional tests - Refacto customers tests (by @nesrineabdmouleh)
+    - #25664: Run tests with different DB prefix (by @boubkerbribri)
+    - #25275: Functional tests - Refacto Files, Discounts and Stocks tests (by @nesrineabdmouleh)
+    - #25357: Fix create product with combination (by @nesrineabdmouleh)
+    - #24969: Add new FO test "Write a review" (by @SD1982)
+
+####################################
+#   v1.7.8.0 - (2021-10-04)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #25898: Fixed selector in computePriceTaxIncluded (by @Progi1984)
+- Front Office:
+  - Bug fix:
+    - #25388: FrontOffice : Use formatted ecotax price (by @Progi1984)
+- Core:
+  - Bug fix:
+    - #25982: Fix CLI install (by @atomiix)
+
+####################################
 #   v1.7.8.0-rc.1 - (2021-09-17)
 ####################################
 
@@ -42,7 +142,6 @@ Release Notes for PrestaShop 1.7
     - #24661: Display tab for extra modules in product page (by @jolelievre)
     - #24876: Add classes for sort links on legacy pages (by @boubkerbribri)
   - Bug fix:
-    - #25898: Fixed selector in computePriceTaxIncluded (by @Progi1984)
     - #25874: Apply PR #25833 into 1.7.8.0-build (by @matthieu-rolland)
     - #25875: Apply PR #25690 to 1.7.8.0-build (by @matthieu-rolland)
     - #25749: Product combination price edit : Use blur instead of onkeyup to avoid price flip (by @sowbiba)
@@ -100,7 +199,6 @@ Release Notes for PrestaShop 1.7
   - Improvement:
     - #23480: Improve accessibility of classic theme forms by adding for and ids (by @NeOMakinG)
   - Bug fix:
-    - #25388: FrontOffice : Use formatted ecotax price (by @Progi1984)
     - #25635: Fix html lang attribute to use the locale instead of ISO code (by @NeOMakinG)
     - #25665: Load medium size thumbnail on click on FO product page, instead of large (by @matthieu-rolland)
     - #25629: Use _DB_PREFIX_ constant instead of ps_ in SQL queries (by @PierreRambaud)
@@ -134,7 +232,6 @@ Release Notes for PrestaShop 1.7
     - #24729: Update linklist to v4 (by @atomiix)
     - #24717: Update native modules (by @atomiix)
   - Bug fix:
-    - #25982: Fix CLI install (by @atomiix)
     - #25784: Use null coalescing operator to fix notice (by @kpodemski)
     - #25613: Fix missing hook behavior when we want an array return (by @kpodemski)
     - #25413: Fix performance issue on Smarty template caching (by @lukaslau)
