@@ -202,7 +202,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     it('should get the order ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderID', baseContext);
 
-      orderID = await ordersPage.getTextColumn(page, 'id_order', 1);
+      orderID = await ordersPage.getOrderIDNumber(page);
       expect(orderID).to.not.equal(1);
     });
 

@@ -188,10 +188,18 @@ class Order extends BOBasePage {
     if (columnName === 'osname') {
       return this.getTextContent(page, this.updateStatusInTableButton(row));
     }
-    if (columnName === 'id_order') {
-      return this.getNumberFromText(page, this.tableColumn(row, 'id_order'));
-    }
+
     return this.getTextContent(page, this.tableColumn(row, columnName));
+  }
+
+  /**
+   * Get order ID from table
+   * @param page {Page} Browser tab
+   * @param row {number} Order row in table
+   * @returns {Promise<number>}
+   */
+  async getOrderIDNumber(page, row = 1) {
+    return this.getNumberFromText(page, this.tableColumn(row, 'id_order'));
   }
 
   /**
