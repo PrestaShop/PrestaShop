@@ -15,7 +15,7 @@ function prodConfig() {
       minimizer: [
         new TerserPlugin({
           parallel: true,
-          extractComments: /@license/i,
+          extractComments: false,
         }),
       ],
     },
