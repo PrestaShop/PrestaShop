@@ -15,12 +15,13 @@
   .stepContainer {
     position: relative;
     display: block;
+    height: 100% !important;
     clear: both;
 
     div.content {
-      position: absolute;
       display: block;
       width: 100%;
+      height: 100% !important;
       clear: both;
     }
 
@@ -156,11 +157,11 @@
     background-color: #ffd;
     border: 1px solid #ffd700;
     @include border-radius(5px);
-  }
 
-  .msgBox .content {
-    float: left;
-    padding: 0;
+    .content {
+      float: left;
+      padding: 0;
+    }
   }
 
   #carrier_logo_block {
@@ -206,11 +207,11 @@
   }
 
   .actionBar {
-    height: 30px;
-  }
+    display: flex;
+    flex-direction: row-reverse;
 
-  .actionBar a {
-    float: right;
-    margin-right: 10px;
+    a {
+      margin-right: 10px;
+    }
   }
 }
