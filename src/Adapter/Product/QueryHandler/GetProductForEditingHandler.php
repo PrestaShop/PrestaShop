@@ -442,7 +442,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $product->available_now,
             $product->available_later,
             $stockAvailable->location,
-            DateTimeUtil::isNull($product->available_date) ? null : new DateTime($product->available_date)
+            DateTimeUtil::buildDateTimeOrNull($product->available_date)
         );
     }
 
@@ -468,7 +468,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $virtualProductFile->display_filename,
             (int) $virtualProductFile->nb_days_accessible,
             (int) $virtualProductFile->nb_downloadable,
-            DateTimeUtil::isNull($virtualProductFile->date_expiration) ? null : new DateTime($virtualProductFile->date_expiration)
+            DateTimeUtil::buildDateTimeOrNull($virtualProductFile->date_expiration)
         );
     }
 
