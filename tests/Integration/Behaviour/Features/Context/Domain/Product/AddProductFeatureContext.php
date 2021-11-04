@@ -54,8 +54,8 @@ class AddProductFeatureContext extends AbstractProductFeatureContext
      */
     public function addProductToShop(string $productReference, string $shopReference, TableNode $table): void
     {
-        $shop = $this->getSharedStorage()->get($shopReference);
-        $this->addProduct($productReference, (int) $shop->id, $table);
+        $shopId = $this->getSharedStorage()->get($shopReference);
+        $this->addProduct($productReference, $shopId, $table);
     }
 
     /**
