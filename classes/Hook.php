@@ -479,16 +479,7 @@ class HookCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @return array<int, array<int, array{
-     *                    id_hook: string|int,
-     *                    title: string,
-     *                    description: string,
-     *                    hm.position: string|int,
-     *                    m.position: string|int,
-     *                    id_module: string,
-     *                    name: string,
-     *                    active: string|int
-     *                    CS }>>
+     * @return array<int, array<int, array{id_hook:string|int,title:string,description:string,'hm.position':string|int,'m.position':string|int,id_module:string,name:string,active:string|int}>>
      */
     public static function getHookModuleList()
     {

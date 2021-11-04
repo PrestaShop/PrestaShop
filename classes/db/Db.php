@@ -251,8 +251,8 @@ abstract class DbCore
     }
 
     /**
-     * @param $test_db Db
-     * Unit testing purpose only
+     * @param Db $test_db
+     *                    Unit testing purpose only
      */
     public static function setInstanceForTesting($test_db)
     {
@@ -719,6 +719,8 @@ abstract class DbCore
         } elseif ($this->is_cache_enabled && $this->last_cached) {
             return Cache::getInstance()->get($this->last_query_hash . '_nrows');
         }
+
+        return 0;
     }
 
     /**

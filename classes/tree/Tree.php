@@ -23,6 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShopBundle\Translation\TranslatorComponent;
+
 class TreeCore
 {
     const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
@@ -47,10 +50,10 @@ class TreeCore
     private $_title;
     private $_no_js;
 
-    /** @var TreeToolbar|ITreeToolbar */
+    /** @var TreeToolbar|ITreeToolbarCore */
     private $_toolbar;
 
-    /** @var Translator */
+    /** @var TranslatorComponent */
     public $translator;
 
     public function __construct($id, $data = null)
@@ -269,9 +272,9 @@ class TreeCore
     }
 
     /**
-     * @param $value
+     * @param array|string $value
      *
-     * @return Tree
+     * @return self
      */
     public function setTemplateDirectory($value)
     {
@@ -502,6 +505,11 @@ class TreeCore
         return isset($this->_toolbar);
     }
 
+    /**
+     * @param string|array $directory
+     *
+     * @return string|array
+     */
     private function _normalizeDirectory($directory)
     {
         $last = $directory[strlen($directory) - 1];

@@ -178,6 +178,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         return new ProductForEditing(
             (int) $product->id,
             $product->getProductType(),
+            (bool) $product->active,
             $this->getCustomizationOptions($product),
             $this->getBasicInformation($product),
             $this->getCategoriesInformation($product),
@@ -292,7 +293,6 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private function getOptions(Product $product): ProductOptions
     {
         return new ProductOptions(
-            (bool) $product->active,
             $product->visibility,
             (bool) $product->available_for_order,
             (bool) $product->online_only,

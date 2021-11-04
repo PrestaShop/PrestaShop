@@ -429,8 +429,7 @@ class MetaController extends FrameworkBundleAdminController
         if ($isGridDisplayed) {
             $grid = $seoUrlsGridFactory->getGrid($filters);
 
-            $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-            $presentedGrid = $gridPresenter->present($grid);
+            $presentedGrid = $this->presentGrid($grid);
         }
 
         $tools = $this->get('prestashop.adapter.tools');

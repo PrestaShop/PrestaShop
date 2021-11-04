@@ -152,6 +152,9 @@
       <div class="card-body">
         <p class="mb-0 js-customer-email"></p>
         <p class="mb-0 js-customer-birthday"></p>
+        {% if isB2BEnabled %}
+          <p class="mb-0 js-customer-company"></p>
+        {% endif %}
       </div>
       <div class="card-footer">
         <a class="btn btn-outline-secondary js-details-customer-btn">

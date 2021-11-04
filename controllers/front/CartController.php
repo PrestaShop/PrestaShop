@@ -237,8 +237,8 @@ class CartControllerCore extends FrontController
 
     protected function updateCart()
     {
-        // Update the cart ONLY if $this->cookies are available, in order to avoid ghost carts created by bots
-        if ($this->context->cookie->exists()
+        // Update the cart ONLY if it's not a bot, in order to avoid ghost carts
+        if (!Connection::isBot()
             && !$this->errors
             && !($this->context->customer->isLogged() && !$this->isTokenValid())
         ) {

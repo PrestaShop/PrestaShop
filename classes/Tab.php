@@ -394,8 +394,8 @@ class TabCore extends ObjectModel
     /**
      * Get collection from module name.
      *
-     * @param $module string Module name
-     * @param null $idLang integer Language ID
+     * @param string $module Module name
+     * @param int|null $idLang integer Language ID
      *
      * @return array|PrestaShopCollection Collection of tabs (or empty array)
      */
@@ -418,7 +418,7 @@ class TabCore extends ObjectModel
     /**
      * Enabling tabs for module.
      *
-     * @param $module string Module Name
+     * @param string $module Module Name
      *
      * @return bool Status
      */
@@ -440,7 +440,7 @@ class TabCore extends ObjectModel
     /**
      * Disabling tabs for module.
      *
-     * @param $module string Module name
+     * @param string $module Module name
      *
      * @return bool Status
      */
@@ -462,8 +462,8 @@ class TabCore extends ObjectModel
     /**
      * Get Instance from tab class name.
      *
-     * @param $className string Name of tab class
-     * @param $idLang     integer id_lang
+     * @param string $className Name of tab class
+     * @param int|null $idLang id_lang
      *
      * @return Tab Tab object (empty if bad id or class name)
      */

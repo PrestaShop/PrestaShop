@@ -137,7 +137,6 @@ Feature: Duplicate product from Back Office (BO).
       | clothes      | Clothes     | Clothes     | true       |
     And product "copy_of_product1" should have following options:
       | product option      | value        |
-      | active              | false        |
       | visibility          | catalog      |
       | available_for_order | false        |
       | online_only         | true         |

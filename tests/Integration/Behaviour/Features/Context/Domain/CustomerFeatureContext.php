@@ -27,14 +27,17 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Configuration;
 use Exception;
 use Group;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use RuntimeException;
@@ -165,6 +168,10 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
             (isset($data['birthday']) ? $data['birthday'] : null)
         );
 
+        if (Configuration::get('PS_B2B_ENABLE')) {
+            $command->setCompanyName($data['companyName']);
+        }
+
         /** @var CustomerId $id */
         $id = $commandBus->handle($command);
         SharedStorage::getStorage()->set($customerReference, $id->getValue());
@@ -228,5 +235,107 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
     public function assertGroupNotFound(): void
     {
         $this->assertLastErrorIs(GroupNotFoundException::class);
+    }
+
+    /**
+     * @Transform table:firstName,lastName,email,birthday
+     * @Transform table:firstName,lastName,email,birthday,companyName
+     *
+     * @param TableNode $tableNode
+     *
+     * @return array
+     */
+    public function transformCustomers(TableNode $customersTable): array
+    {
+        return $customersTable->getHash();
+    }
+
+    /**
+     * @When I search for the phrases :searchPhrases I should get the following results:
+     *
+     * @param string $searchPhrases
+     * @param array $expectedCustomers
+     */
+    public function assertFoundCustomers(string $searchPhrases, array $expectedCustomers): void
+    {
+        $foundCustomers = $this->getQueryBus()->handle(new SearchCustomers(explode(' ', $searchPhrases)));
+        $isB2BEnabled = Configuration::get('PS_B2B_ENABLE');
+
+        foreach ($expectedCustomers as $currentExpectedCustomer) {
+            $wasCurrentExpectedCustomerFound = false;
+            foreach ($foundCustomers as $currentFoundCustomer) {
+                if ($currentExpectedCustomer['email'] === $currentFoundCustomer['email']) {
+                    $wasCurrentExpectedCustomerFound = true;
+
+                    Assert::assertEquals(
+                        $currentExpectedCustomer['firstName'],
+                        $currentFoundCustomer['firstname'],
+                        sprintf(
+                            'Expected and found customers\'s first names don\'t match (%s and %s)',
+                            $currentExpectedCustomer['firstName'],
+                            $currentFoundCustomer['firstname']
+                        )
+                    );
+
+                    Assert::assertEquals(
+                        $currentExpectedCustomer['lastName'],
+                        $currentFoundCustomer['lastname'],
+                        sprintf(
+                            'Expected and found customers\'s last names don\'t match (%s and %s)',
+                            $currentExpectedCustomer['lastName'],
+                            $currentFoundCustomer['lastname']
+                        )
+                    );
+
+                    Assert::assertEquals(
+                        $currentExpectedCustomer['birthday'],
+                        $currentFoundCustomer['birthday'],
+                        sprintf(
+                            'Expected and found customers\'s birthdays don\'t match (%s and %s)',
+                            $currentExpectedCustomer['birthday'],
+                            $currentFoundCustomer['birthday']
+                        )
+                    );
+
+                    if (!$isB2BEnabled) {
+                        if (isset($currentExpectedCustomer['companyName'])
+                            || isset($currentFoundCustomer['company'])
+                        ) {
+                            throw new RuntimeException(sprintf(
+                                'Company name isn\'t expected when B2B mode is disabled',
+                                $currentExpectedCustomer['email']
+                            ));
+                        }
+                    } else {
+                        Assert::assertEquals(
+                            $currentExpectedCustomer['companyName'],
+                            $currentFoundCustomer['company'],
+                            sprintf(
+                                'Expected and found customers\'s companies don\'t match (%s and %s)',
+                                $currentExpectedCustomer['companyName'],
+                                $currentFoundCustomer['company']
+                            )
+                        );
+                    }
+                }
+            }
+            if (!$wasCurrentExpectedCustomerFound) {
+                throw new RuntimeException(sprintf(
+                    'Expected customer with email %s was not found',
+                    $currentExpectedCustomer['email']
+                ));
+            }
+        }
+    }
+
+    /**
+     * @When I search for the phrases :searchPhrases I should not get any results
+     *
+     * @param string $searchPhrases
+     */
+    public function assertNoCustomersWasFound(string $searchPhrases): void
+    {
+        $foundCustomers = $this->getQueryBus()->handle(new SearchCustomers(explode(' ', $searchPhrases)));
+        Assert::assertEmpty($foundCustomers);
     }
 }

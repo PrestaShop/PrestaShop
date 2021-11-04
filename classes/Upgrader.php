@@ -274,7 +274,7 @@ class UpgraderCore
     }
 
     /**
-     * @param $node
+     * @param SimpleXMLElement $node
      * @param array $currentPath
      * @param int $level
      */

@@ -98,7 +98,7 @@ class CommonPage {
     if (waitForSelector) {
       await this.waitForVisibleSelector(page, selector);
     }
-    const textContent = await page.$eval(selector, el => el.textContent);
+    const textContent = await page.textContent(selector);
 
     return textContent.replace(/\s+/g, ' ').trim();
   }
@@ -111,9 +111,7 @@ class CommonPage {
    * @returns {Promise<string>}
    */
   async getAttributeContent(page, selector, attribute) {
-    await page.waitForSelector(selector, {state: 'attached'});
-    return page.$eval(selector, (el, attr) => el
-      .getAttribute(attr), attribute);
+    return page.getAttribute(selector, attribute);
   }
 
   /**
@@ -196,11 +194,8 @@ class CommonPage {
    * @return {Promise<void>}
    */
   async setValue(page, selector, value) {
-    await this.waitForSelectorAndClick(page, selector);
-    await page.click(selector, {clickCount: 3});
-    // Delete text from input before typing
-    await page.waitForTimeout(100);
-    await page.press(selector, 'Delete');
+    await this.clearInput(page, selector);
+
     if (value !== null) {
       await page.type(selector, value.toString());
     }
@@ -212,12 +207,10 @@ class CommonPage {
    * @param selector {string} String to locate the element for the deletion
    * @returns {Promise<void>}
    */
-  async deleteTextFromInput(page, selector) {
-    await this.waitForSelectorAndClick(page, selector);
-    await page.click(selector, {clickCount: 3});
-    // Delete text from input before typing
-    await page.waitForTimeout(100);
-    await page.press(selector, 'Delete');
+  async clearInput(page, selector) {
+    await this.waitForVisibleSelector(page, selector);
+    // eslint-disable-next-line no-return-assign,no-param-reassign
+    await page.$eval(selector, el => el.value = '');
   }
 
   /**
@@ -323,8 +316,8 @@ class CommonPage {
    * @param selector {string} String to locate the checkbox
    * @return {Promise<boolean>}
    */
-  async isCheckboxSelected(page, selector) {
-    return page.$eval(selector, el => el.checked);
+  isChecked(page, selector) {
+    return page.isChecked(selector);
   }
 
   /**
@@ -334,10 +327,8 @@ class CommonPage {
    * @param valueWanted {boolean} Value wanted on the selector
    * @return {Promise<void>}
    */
-  async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {
-    if (valueWanted !== (await this.isCheckboxSelected(page, checkboxSelector))) {
-      await page.click(checkboxSelector);
-    }
+  async setChecked(page, checkboxSelector, valueWanted = true) {
+    await page.setChecked(checkboxSelector, valueWanted);
   }
 
   /**
@@ -348,10 +339,23 @@ class CommonPage {
    * @return {Promise<void>}
    */
   async setHiddenCheckboxValue(page, checkboxSelector, valueWanted = true) {
-    const checkboxElement = await page.$(checkboxSelector);
-    if (valueWanted !== (await checkboxElement.isChecked())) {
+    if (valueWanted !== (await this.isChecked(page, checkboxSelector))) {
       const parentElement = await this.getParentElement(page, checkboxSelector);
       await parentElement.click();
+    }
+  }
+
+  /**
+   * Select, unselect checkbox with icon click
+   * @param page {Page} Browser tab
+   * @param checkboxSelector {string} Selector of checkbox
+   * @param valueWanted {boolean} True if we want to select checkBox, else otherwise
+   * @return {Promise<void>}
+   */
+  async setCheckedWithIcon(page, checkboxSelector, valueWanted = true) {
+    if (valueWanted !== (await this.isChecked(page, checkboxSelector))) {
+      // The selector is not visible, that why '+ i' is required here
+      await page.$eval(`${checkboxSelector} + i`, el => el.click());
     }
   }
 
@@ -377,15 +381,12 @@ class CommonPage {
   /**
    * Drag and drop element
    * @param page {Page} Browser tab
-   * @param selectorToDrag {string} String to locate the element to drag
-   * @param selectorWhereToDrop {string} String to locate the element where to drop
+   * @param source {string} String to locate the element to drag
+   * @param target {string} String to locate the element where to drop
    * @return {Promise<void>}
    */
-  async dragAndDrop(page, selectorToDrag, selectorWhereToDrop) {
-    await page.hover(selectorToDrag);
-    await page.mouse.down();
-    await page.hover(selectorWhereToDrop);
-    await page.mouse.up();
+  async dragAndDrop(page, source, target) {
+    await page.dragAndDrop(source, target);
   }
 
   /**

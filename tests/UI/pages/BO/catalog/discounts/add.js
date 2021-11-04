@@ -112,20 +112,20 @@ class AddCartRule extends BOBasePage {
     if (cartRuleData.generateCode) {
       await page.click(this.generateButton);
     } else if (cartRuleData.code === null) {
-      await this.deleteTextFromInput(page, this.codeInput);
+      await this.clearInput(page, this.codeInput);
     } else {
       await this.setValue(page, this.codeInput, cartRuleData.code);
     }
 
     // Set toggles
-    await page.check(this.highlightToggle(cartRuleData.highlight ? 'on' : 'off'));
-    await page.check(this.partialUseToggle(cartRuleData.partialUse ? 'on' : 'off'));
+    await this.setChecked(page, this.highlightToggle(cartRuleData.highlight ? 'on' : 'off'));
+    await this.setChecked(page, this.partialUseToggle(cartRuleData.partialUse ? 'on' : 'off'));
 
     // Set priority
     await this.setValue(page, this.priorityInput, cartRuleData.priority);
 
     // Set status
-    await page.check(this.statusToggle(cartRuleData.status ? 'on' : 'off'));
+    await this.setChecked(page, this.statusToggle(cartRuleData.status ? 'on' : 'off'));
   }
 
   /**
@@ -181,23 +181,29 @@ class AddCartRule extends BOBasePage {
     await page.click(this.actionsTabLink);
 
     // Set free shipping toggle
-    await page.check(this.freeShippingToggle(cartRuleData.freeShipping ? 'on' : 'off'));
+    await this.setChecked(page, this.freeShippingToggle(cartRuleData.freeShipping ? 'on' : 'off'));
 
     switch (cartRuleData.discountType) {
       case 'Percent':
-        await page.check(this.discountPercentRadioButton);
+        await this.setChecked(page, this.discountPercentRadioButton);
         await this.setValue(page, this.discountPercentInput, cartRuleData.discountPercent);
-        await page.check(this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'));
+        await this.setChecked(
+          page,
+          this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'),
+        );
         break;
       case 'Amount':
-        await page.check(this.discountAmountRadioButton);
+        await this.setChecked(page, this.discountAmountRadioButton);
         await this.setValue(page, this.discountAmountInput, cartRuleData.discountAmount.value);
         await this.selectByVisibleText(page, this.discountAmountCurrencySelect, cartRuleData.discountAmount.currency);
         await this.selectByVisibleText(page, this.discountAmountTaxSelect, cartRuleData.discountAmount.tax);
         break;
       case 'None':
-        await page.check(this.discountOffRadioButton);
-        await page.check(this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'));
+        await this.setChecked(page, this.discountOffRadioButton);
+        await this.setChecked(
+          page,
+          this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'),
+        );
         break;
       default:
         // Do nothing for this option
@@ -207,10 +213,10 @@ class AddCartRule extends BOBasePage {
     // Set apply discount
     switch (cartRuleData.applyDiscountTo) {
       case 'Order':
-        await page.check(this.applyDiscountToOrderCheckbox);
+        await this.setChecked(page, this.applyDiscountToOrderCheckbox);
         break;
       case 'Specific product':
-        await page.check(this.applyDiscountToSpecificProductCheckbox);
+        await this.setChecked(page, this.applyDiscountToSpecificProductCheckbox);
         await this.setValue(page, this.productNameInput, cartRuleData.product);
         await this.waitForVisibleSelector(page, this.productSearchResultBlock);
         await this.waitForSelectorAndClick(page, this.productSearchResultItem);
@@ -221,7 +227,7 @@ class AddCartRule extends BOBasePage {
     }
 
     // Set free gift
-    await page.check(this.sendFreeGifToggle(cartRuleData.freeGift ? 'on' : 'off'));
+    await this.setChecked(page, this.sendFreeGifToggle(cartRuleData.freeGift ? 'on' : 'off'));
 
     if (cartRuleData.freeGift) {
       await this.setValue(page, this.freeGiftFilterInput, cartRuleData.freeGiftProduct.name);

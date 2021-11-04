@@ -106,18 +106,16 @@ class StockAvailableCore extends ObjectModel
     ];
 
     /**
-     * For a given {id_product, id_product_attribute and id_shop}, gets the stock available id associated.
-     *
-     * @param int $id_product
-     * @param int $id_product_attribute Optional
-     * @param int $id_shop Optional
-     *
-     * @return int
+     * @return bool
      */
     public function updateWs()
     {
         if ($this->depends_on_stock) {
-            return WebserviceRequest::getInstance()->setError(500, $this->trans('You cannot update the available stock when it depends on stock.', [], 'Admin.Catalog.Notification'), 133);
+            return WebserviceRequest::getInstance()->setError(
+                500,
+                $this->trans('You cannot update the available stock when it depends on stock.', [], 'Admin.Catalog.Notification'),
+                133
+            );
         }
 
         return $this->update();
@@ -340,8 +338,9 @@ class StockAvailableCore extends ObjectModel
      * For a given id_product, sets if product is available out of stocks.
      *
      * @param int $id_product
-     * @param int $out_of_stock Optional false by default
-     * @param int $id_shop Optional gets context by default
+     * @param int|bool $out_of_stock Optional false by default
+     * @param int|null $id_shop Optional gets context by default
+     * @param int $id_product_attribute
      */
     public static function setProductOutOfStock($id_product, $out_of_stock = false, $id_shop = null, $id_product_attribute = 0)
     {
@@ -377,7 +376,7 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_shop Optional
      * @param int $id_product_attribute Optional
      *
-     * @return bool
+     * @return void
      *
      * @throws PrestaShopDatabaseException
      */
@@ -564,11 +563,11 @@ class StockAvailableCore extends ObjectModel
      *
      * @param int $id_product
      * @param int $id_product_attribute
-     * @param $quantity
+     * @param int $quantity
      * @param int|null $id_shop
      * @param bool $add_movement
      *
-     * @return bool
+     * @return bool|void
      */
     public static function setQuantity($id_product, $id_product_attribute, $quantity, $id_shop = null, $add_movement = true)
     {
@@ -769,8 +768,8 @@ class StockAvailableCore extends ObjectModel
 
     /**
      * @param int $id_product
-     * @param int id_product_attribute Optional
-     * @param int $id_shop Optional
+     * @param int|null $id_product_attribute Optional
+     * @param int|null $id_shop Optional
      *
      * @return bool|string
      */

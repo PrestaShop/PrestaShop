@@ -52,6 +52,9 @@ jobs:
           restore-keys: |
                  ${{ runner.os }}-composer-
 
+      - name: Update npm
+        run: npm install npm -g
+
       - name: Install Composer dependencies
         run: composer install --prefer-dist
 
@@ -70,6 +73,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          branch: cron-js-routing
           commit-message: Updated JS Routing file
           committer: PrestonBot <noreply@github.com>
           author: prestonBot <prestonBot@users.noreply.github.com>

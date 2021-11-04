@@ -78,6 +78,8 @@ class ContactsController extends FrameworkBundleAdminController
     }
 
     /**
+     * @deprecated since 8.0 and will be removed in next major. Use CommonController:searchGridAction instead
+     *
      * Grid search action.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")

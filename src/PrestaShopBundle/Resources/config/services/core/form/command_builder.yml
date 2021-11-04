@@ -7,6 +7,20 @@ services:
     arguments:
       - !tagged core.product_command_builder
 
+  # IMPORTANT these two builders update the product indexation, since the indexes are based on other product data
+  # like names, references and so on they should be executed last for more up-to-date indexes, this can be done
+  # before the product type though as it doesn't influence the indexes
+  prestashop.core.form.command_builder.product.options_commands_builder:
+    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\OptionsCommandsBuilder
+    tags:
+      - { name: 'core.product_command_builder', priority: -15 }
+
+  # Status update should be after the visibility as it is the final dependency on the product indexation
+  prestashop.core.form.command_builder.product.product_status_commands_builder:
+    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductStatusCommandsBuilder
+    tags:
+      - { name: 'core.product_command_builder', priority: -21 }
+
   # VERY IMPORTANT this builder must be the last one, it will avoid conflicts with previous commands
   # that may not be compatible with the updated type, its priority musk be kept lower than others
   prestashop.core.form.command_builder.product.type:
@@ -28,10 +42,6 @@ services:
 
   prestashop.core.form.command_builder.product.shipping:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ShippingCommandsBuilder
-    tags: [ 'core.product_command_builder' ]
-
-  prestashop.core.form.command_builder.product.options_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\OptionsCommandsBuilder
     tags: [ 'core.product_command_builder' ]
 
   prestashop.core.form.command_builder.product.stock_commands_builder:

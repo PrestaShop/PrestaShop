@@ -23,6 +23,8 @@ class Order extends BOBasePage {
     this.successfulDeleteProductMessage = 'The product was successfully removed.';
     this.errorMinimumQuantityMessage = 'Minimum quantity of "3" must be added';
     this.errorAddSameProduct = 'This product is already in your order, please edit the quantity instead.';
+    this.noAvailableDocumentsMessage = 'There is no available document';
+    this.updateSuccessfullMessage = 'Update successful';
 
     // Customer card
     this.customerInfoBlock = '#customerInfo';
@@ -90,12 +92,38 @@ class Order extends BOBasePage {
     this.orderStatusesSelect = '#update_order_status_action_input';
     this.updateStatusButton = '#update_order_status_action_btn';
 
-    // Documents card
+    // Documents tab
     this.documentTab = 'a#orderDocumentsTab';
-    this.documentsTableDiv = '#orderDocumentsTabContent';
-    this.documentsTableRow = row => `${this.documentsTableDiv} table tbody tr:nth-child(${row})`;
+    this.orderDocumentTabContent = '#orderDocumentsTabContent';
+    this.generateInvoiceButton = `${this.orderDocumentTabContent} .btn.btn-primary`;
+    this.documentsTablegrid = '#documents-grid-table';
+    this.documentsTableBody = `${this.documentsTablegrid} tbody`;
+    this.documentsTableRow = row => `${this.documentsTableBody} tr:nth-child(${row})`;
+    this.documentsTableColumn = (row, column) => `${this.documentsTableRow(row)} td.${column}`;
     this.documentNumberLink = row => `${this.documentsTableRow(row)} td.documents-table-column-download-link a`;
     this.documentType = row => `${this.documentsTableRow(row)} td.documents-table-column-type`;
+    this.addDocumentNoteButton = row => `${this.documentsTableRow(row)} td button.js-open-invoice-note-btn`;
+    this.documentNoteInput = row => `${this.documentsTableRow(row)} td input.invoice-note`;
+    this.documentNoteSaveButton = row => `${this.documentsTableRow(row)} td button.js-save-invoice-note-btn`;
+    this.editDocumentNoteButton = row => `${this.documentsTableRow(row)} td button.btn-edit`;
+    this.enterPaymentButton = row => `${this.documentsTableRow(row)} td button.js-enter-payment-btn`;
+
+    // Payment block
+    this.paymentAmountInput = '#order_payment_amount';
+
+    // Carriers tab
+    this.carriersTab = '#orderShippingTab';
+    this.orderShippingTabContent = '#orderShippingTabContent';
+    this.carriersGridTable = '#shipping-grid-table';
+    this.carriersTableBody = `${this.carriersGridTable} tbody`;
+    this.carriersTableRow = row => `${this.carriersTableBody} tr:nth-child(${row})`;
+    this.carriersTableColumn = (row, column) => `${this.carriersTableRow(row)} td.${column}`;
+    this.editLink = `${this.orderShippingTabContent} a.js-update-shipping-btn`;
+    this.updateOrderShippingModal = '#updateOrderShippingModal';
+    this.updateOrderShippingModalDialog = `${this.updateOrderShippingModal} div.modal-dialog`;
+    this.trackingNumberInput = `${this.updateOrderShippingModalDialog} #update_order_shipping_tracking_number`;
+    this.carrierSelect = `${this.updateOrderShippingModalDialog} #update_order_shipping_new_carrier_id`;
+    this.updateCarrierButton = `${this.updateOrderShippingModalDialog} button.btn-primary`;
 
     // Refund form
     this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
@@ -251,28 +279,55 @@ class Order extends BOBasePage {
     return this.getPriceFromText(page, this.orderTotalPriceSpan);
   }
 
-  /**
-   * Get document name
-   * @param page {Page} Browser tab
-   * @param rowChild {number} Document row on table
-   * @returns {Promise<string>}
-   */
-  async getDocumentType(page, rowChild = 1) {
-    await this.goToDocumentsTab(page);
-
-    return this.getTextContent(page, this.documentType(rowChild));
-  }
-
+  // Documents tab methods
   /**
    * Go to documents tab
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>}
    */
   async goToDocumentsTab(page) {
-    await Promise.all([
-      page.click(this.documentTab),
-      this.waitForVisibleSelector(page, `${this.documentTab}.active`),
-    ]);
+    await page.click(this.documentTab);
+    return this.elementVisible(page, `${this.documentTab}.active`, 1000);
+  }
+
+  /**
+   * Is generate invoice button visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isGenerateInvoiceButtonVisible(page) {
+    return this.elementVisible(page, this.generateInvoiceButton, 1000);
+  }
+
+  /**
+   * Get documents number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getDocumentsNumber(page) {
+    return this.getNumberFromText(page, `${this.documentTab} .count`);
+  }
+
+  /**
+   * Get text from Column on documents table
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name on table
+   * @param row {number} status row in table
+   * @returns {Promise<string>}
+   */
+  async getTextColumnFromDocumentsTable(page, columnName, row) {
+    return this.getTextContent(page, this.documentsTableColumn(row, columnName));
+  }
+
+  /**
+   * Click on generate invoice button
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async generateInvoice(page) {
+    await this.clickAndWaitForNavigation(page, this.generateInvoiceButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -287,6 +342,18 @@ class Order extends BOBasePage {
     const fileName = await this.getTextContent(page, this.documentNumberLink(rowChild));
 
     return fileName.replace('#', '').trim();
+  }
+
+  /**
+   * Get document name
+   * @param page {Page} Browser tab
+   * @param rowChild {number} Document row on table
+   * @returns {Promise<string>}
+   */
+  async getDocumentType(page, rowChild = 1) {
+    await this.goToDocumentsTab(page);
+
+    return this.getTextContent(page, this.documentType(rowChild));
   }
 
   /**
@@ -308,6 +375,69 @@ class Order extends BOBasePage {
     await this.goToDocumentsTab(page);
 
     return this.downloadDocument(page, 1);
+  }
+
+  /**
+   * Set document note
+   * @param page {Page} Browser tab
+   * @param note {String} Text to set on note input
+   * @param row {number} Row in documents table
+   * @returns {Promise<string>}
+   */
+  async setDocumentNote(page, note, row = 1) {
+    await this.waitForSelectorAndClick(page, this.addDocumentNoteButton(row));
+    await this.setValue(page, this.documentNoteInput(row + 1), note);
+    await this.waitForSelectorAndClick(page, this.documentNoteSaveButton(row + 1));
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Is edit note button visible
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table documents
+   * @returns {Promise<boolean>}
+   */
+  async isEditDocumentNoteButtonVisible(page, row = 1) {
+    await this.goToDocumentsTab(page);
+
+    return this.elementVisible(page, this.editDocumentNoteButton(row), 1000);
+  }
+
+  /**
+   * Is add note button visible
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table documents
+   * @returns {Promise<boolean>}
+   */
+  async isAddDocumentNoteButtonVisible(page, row = 1) {
+    await this.goToDocumentsTab(page);
+
+    return this.elementVisible(page, this.addDocumentNoteButton(row), 1000);
+  }
+
+  /**
+   * Is enter payment button visible
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table documents
+   * @returns {Promise<boolean>}
+   */
+  async isEnterPaymentButtonVisible(page, row = 1) {
+    await this.goToDocumentsTab(page);
+
+    return this.elementVisible(page, this.enterPaymentButton(row), 1000);
+  }
+
+  /**
+   * Click on enter payment button and get amount value
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<*>}
+   */
+  async clickOnEnterPaymentButton(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.enterPaymentButton(row));
+
+    return page.$eval(this.paymentAmountInput, el => el.value);
   }
 
   /**
@@ -353,6 +483,68 @@ class Order extends BOBasePage {
     // Delete the target because a new tab is opened when downloading the file
     return this.downloadDocument(page, 3);
     /* eslint-enable no-return-assign, no-param-reassign */
+  }
+
+  // Methods for carriers tab
+  /**
+   * Get carriers number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getCarriersNumber(page) {
+    return this.getNumberFromText(page, `${this.carriersTab} .count`);
+  }
+
+  /**
+   * Go to carriers tab
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async goToCarriersTab(page) {
+    await this.waitForSelectorAndClick(page, this.carriersTab);
+
+    return this.elementVisible(page, `${this.carriersTab}.active`, 1000);
+  }
+
+  /**
+   * Get carrier details
+   * @param page {Page} Browser tab
+   * @param row {number} Row on carriers table
+   * @returns {Promise<{date: string, carrier: string, shippingCost: string, weight: string, trackingNumber: string}>}
+   */
+  async getCarrierDetails(page, row = 1) {
+    return {
+      date: await this.getTextContent(page, this.carriersTableColumn(row, 'date')),
+      carrier: await this.getTextContent(page, this.carriersTableColumn(row, 'carrier-name')),
+      weight: await this.getTextContent(page, this.carriersTableColumn(row, 'carrier-weight')),
+      shippingCost: await this.getTextContent(page, this.carriersTableColumn(row, 'carrier-price')),
+      trackingNumber: await this.getTextContent(page, this.carriersTableColumn(row, 'carrier-tracking-number')),
+    };
+  }
+
+  /**
+   * Click on edit link and check if the modal is visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnEditLink(page) {
+    await this.waitForSelectorAndClick(page, this.editLink);
+
+    return this.elementVisible(page, this.updateOrderShippingModalDialog, 1000);
+  }
+
+  /**
+   * Set shipping details
+   * @param page {Page} Browser tab
+   * @param shippingData {shippingData} Data to set on shipping form
+   * @returns {Promise<string>}
+   */
+  async setShippingDetails(page, shippingData) {
+    await this.setValue(page, this.trackingNumberInput, shippingData.trackingNumber);
+    await this.setValue(page, this.carrierSelect, shippingData.carrier);
+    await this.clickAndWaitForNavigation(page, this.updateCarrierButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

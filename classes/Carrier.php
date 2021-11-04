@@ -694,9 +694,9 @@ class CarrierCore extends ObjectModel
      * Get available Carriers for Order.
      *
      * @param int $id_zone Zone ID
-     * @param array $groups Group of the Customer
+     * @param array|null $groups Group of the Customer
      * @param Cart|null $cart Optional Cart object
-     * @param array &$error Contains an error message if an error occurs
+     * @param array $error Contains an error message if an error occurs
      *
      * @return array Carriers for the order
      */
@@ -914,7 +914,7 @@ class CarrierCore extends ObjectModel
     /**
      * Clean delivery prices (weight/price).
      *
-     * @param string $rangeTable Table name to clean (weight or price according to shipping method)
+     * @param string $range_table Table name to clean (weight or price according to shipping method)
      *
      * @return bool Deletion result
      */
@@ -936,7 +936,8 @@ class CarrierCore extends ObjectModel
     /**
      * Add new delivery prices.
      *
-     * @param array $priceList Prices list in multiple arrays (changed to array since 1.5.0)
+     * @param array $price_list Prices list in multiple arrays (changed to array since 1.5.0)
+     * @param bool $delete
      *
      * @return bool Insertion result
      */
@@ -996,7 +997,7 @@ class CarrierCore extends ObjectModel
     /**
      * Copy old carrier informations when update carrier.
      *
-     * @param int $oldId Old id carrier (copy from that id)
+     * @param int $old_id Old id carrier (copy from that id)
      */
     public function copyCarrierData($old_id)
     {
@@ -1475,10 +1476,10 @@ class CarrierCore extends ObjectModel
      *
      * @param Product $product The id of the product, or an array with at least the package size and weight
      * @param int $id_warehouse Warehouse ID
-     * @param int $id_address_delivery Delivery Address ID
-     * @param int $id_shop Shop ID
-     * @param Cart $cart Cart object
-     * @param array &$error contain an error message if an error occurs
+     * @param int|null $id_address_delivery Delivery Address ID
+     * @param int|null$id_shop Shop ID
+     * @param Cart|null $cart Cart object
+     * @param array $error contain an error message if an error occurs
      *
      * @return array Available Carriers
      *

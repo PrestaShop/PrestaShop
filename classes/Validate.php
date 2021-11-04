@@ -533,7 +533,6 @@ class ValidateCore
      * Anything else is invalid.
      *
      * @param string $hashedPasswd Password to validate
-     * @param int $size
      *
      * @return bool Indicates whether the given string is a valid hashed password
      *

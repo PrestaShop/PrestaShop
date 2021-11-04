@@ -38,7 +38,7 @@ class AddPageCategory extends BOBasePage {
    */
   async createEditPageCategory(page, pageCategoryData) {
     await this.setValue(page, this.nameInput, pageCategoryData.name);
-    await page.check(this.displayedToggleInput(pageCategoryData.displayed ? 1 : 0));
+    await this.setChecked(page, this.displayedToggleInput(pageCategoryData.displayed ? 1 : 0));
     await this.setValue(page, this.descriptionIframe, pageCategoryData.description);
     await this.setValue(page, this.metaTitleInput, pageCategoryData.metaTitle);
     await this.setValue(page, this.metaDescriptionInput, pageCategoryData.metaDescription);

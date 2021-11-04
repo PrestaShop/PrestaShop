@@ -127,7 +127,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
             'footer' => [
-                'active' => $productForEditing->getOptions()->isActive(),
+                'active' => $productForEditing->isActive(),
             ],
         ];
 

@@ -41,7 +41,7 @@ class AddFeature extends BOBasePage {
     await this.setValue(page, this.metaTitleInput, featureData.metaTitle);
 
     // Set indexable toggle
-    await page.check(this.indexableToggle(featureData.indexable ? 'on' : 'off'));
+    await this.setChecked(page, this.indexableToggle(featureData.indexable ? 'on' : 'off'));
 
     // Save feature
     await this.clickAndWaitForNavigation(page, this.saveButton);

@@ -278,6 +278,8 @@ class FeatureCore extends ObjectModel
 
             return (int) $rq['id_feature'];
         }
+
+        return 0;
     }
 
     /**

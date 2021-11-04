@@ -192,7 +192,7 @@ abstract class CacheCore
     /**
      * Unit testing purpose only.
      *
-     * @param $test_instance Cache
+     * @param Cache $test_instance
      */
     public static function setInstanceForTesting($test_instance)
     {

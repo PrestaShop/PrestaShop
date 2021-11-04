@@ -83,8 +83,8 @@ class PhpEncryptionEngineCore
     }
 
     /**
-     * @param $header
-     * @param $bytes
+     * @param string $header
+     * @param string $bytes
      *
      * @return string
      *
@@ -106,7 +106,7 @@ class PhpEncryptionEngineCore
     }
 
     /**
-     * @param $hexString
+     * @param string $hexString
      *
      * @return Key
      */
@@ -138,7 +138,7 @@ class PhpEncryptionEngineCore
     }
 
     /**
-     * @param $buf
+     * @param string $buf
      *
      * @return string
      */

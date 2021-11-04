@@ -28,35 +28,32 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DomCrawler\Crawler;
-use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
+use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
+use Tests\Integration\PrestaShopBundle\Controller\FormGridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 
-class ProductControllerTest extends GridControllerTestCase
+class ProductControllerTest extends FormGridControllerTestCase
 {
+    private const TEST_CREATION_NAME = 'testCreationProductName';
+    private const TEST_CREATION_QUANTITY = 456;
+    private const TEST_CREATION_PRICE = 3.14;
+
+    private const TEST_UPDATED_NAME = 'testProductName';
+    private const TEST_UPDATED_QUANTITY = 987;
+    private const TEST_UPDATED_PRICE = 87.7;
+
     /**
      * @var bool
      */
     private $changedProductFeatureFlag = false;
 
-    public function __construct($name = null, array $data = [], $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-
-        $this->createEntityRoute = 'admin_products_v2_create';
-        $this->testEntityName = 'product';
-        $this->deleteEntityRoute = 'admin_products_v2_delete';
-        $this->formHandlerServiceId = 'prestashop.core.form.identifiable_object.product_form_handler';
-        $this->saveButtonId = 'product_footer_save';
-    }
-
     public function setUp(): void
     {
-        $this->client = static::createClient();
-        $productFeatureFlag = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('PrestaShopBundle:FeatureFlag')->findOneBy(['name' => FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2]);
+        parent::setUp();
+        $featureFlagRepository = $this->client->getContainer()->get('prestashop.core.admin.feature_flag.repository');
+        $productFeatureFlag = $featureFlagRepository->findOneBy(['name' => FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2]);
         if (!$productFeatureFlag->isEnabled()) {
             $featureFlagModifier = $this->client->getContainer()->get('prestashop.core.feature_flags.modifier');
             $featureFlagModifier->updateConfiguration(
@@ -66,13 +63,10 @@ class ProductControllerTest extends GridControllerTestCase
             );
             $this->changedProductFeatureFlag = true;
         }
-
-        parent::setUp();
     }
 
     public function tearDown(): void
     {
-        parent::tearDown();
         if ($this->changedProductFeatureFlag) {
             $featureFlagModifier = $this->client->getContainer()->get('prestashop.core.feature_flags.modifier');
             $featureFlagModifier->updateConfiguration(
@@ -81,78 +75,201 @@ class ProductControllerTest extends GridControllerTestCase
                 ]
             );
         }
+
+        // Call parent tear down later or the kernel will be shut down
+        parent::tearDown();
     }
 
-    protected function getIndexRoute(Router $router): string
+    public function testIndex(): int
     {
-        /* Asserts amount of entities in the list increased by one and test entity exists */
-        return $router->generate('admin_products_v2_index',
-            [
-                '_route' => 0,
-                'product[offset]' => 0,
-                'product[limit]' => 100,
-            ]
-        );
+        $products = $this->getEntitiesFromGrid();
+        $this->assertNotEmpty($products);
+
+        return $products->count();
     }
 
     /**
-     * Tests all provided entity filters
-     * All filters are tested in one test make tests run faster
+     * @depends testIndex
      *
-     * @throws TypeException
+     * @param int $initialEntityCount
+     *
+     * @return int
      */
-    public function testProductFilters(): void
+    public function testCreate(int $initialEntityCount): int
     {
-        foreach ($this->getTestFilters() as $testFilter) {
-            $this->assertFiltersFindOnlyTestEntity($testFilter);
-        }
+        // First create product
+        $formData = [
+            'product[header][name][1]' => static::TEST_CREATION_NAME,
+            'product[stock][quantities][quantity][delta]' => static::TEST_CREATION_QUANTITY,
+            'product[pricing][retail_price][price_tax_excluded]' => static::TEST_CREATION_PRICE,
+        ];
+        $createdProductId = $this->createEntityFromPage($formData);
+        $this->assertNotNull($createdProductId);
+
+        // Check that there is one more product in the list
+        $newProducts = $this->getEntitiesFromGrid();
+        $this->assertCount($initialEntityCount + 1, $newProducts);
+        $this->assertCollectionContainsEntity($newProducts, $createdProductId);
+
+        // Check that the product was correctly set with the expected type (the format in the form is not the same)
+        $expectedFormData = [
+            'product[header][name][1]' => static::TEST_CREATION_NAME,
+            'product[stock][quantities][quantity][quantity]' => static::TEST_CREATION_QUANTITY,
+            'product[pricing][retail_price][price_tax_excluded]' => static::TEST_CREATION_PRICE,
+        ];
+        $this->assertFormValuesFromPage(
+            ['productId' => $createdProductId],
+            $expectedFormData
+        );
+
+        return $createdProductId;
     }
 
     /**
-     * @return array
+     * @depends testCreate
+     *
+     * @param int $productId
+     *
+     * @return int
      */
-    protected function getTestFilters(): array
+    public function testEdit(int $productId): int
     {
-        /* @todo add rest of the tests, need for product form to be complete */
-        return [
-            ['product[name]' => 'stProd'],
+        // First update the product with a few data
+        $formData = [
+            'product[header][name][1]' => static::TEST_UPDATED_NAME,
+            'product[stock][quantities][quantity][delta]' => static::TEST_UPDATED_QUANTITY,
+            'product[pricing][retail_price][price_tax_excluded]' => static::TEST_UPDATED_PRICE,
+        ];
+
+        $this->editEntityFromPage(['productId' => $productId], $formData);
+
+        // Then check that it was correctly updated
+        // Price is reformatted with 6 digits
+        $expectedFormData = [
+            'product[header][name][1]' => static::TEST_UPDATED_NAME,
+            'product[stock][quantities][quantity][quantity]' => static::TEST_UPDATED_QUANTITY + static::TEST_CREATION_QUANTITY,
+            'product[pricing][retail_price][price_tax_excluded]' => static::TEST_UPDATED_PRICE,
+        ];
+        $this->assertFormValuesFromPage(
+            ['productId' => $productId],
+            $expectedFormData
+        );
+
+        return $productId;
+    }
+
+    /**
+     * @depends testEdit
+     *
+     * @param int $productId
+     *
+     * @return int
+     */
+    public function testFilters(int $productId): int
+    {
+        // These are filters which are only supposed to match the created product, they might need to be updated
+        // in case the data from fixtures change and match these test data.
+        $gridFilters = [
             [
-                'product[id_product][min_field]' => $this->getTestEntity()->getId(),
-                'product[id_product][max_field]' => $this->getTestEntity()->getId(),
+                'product[name]' => static::TEST_UPDATED_NAME,
             ],
             [
-                'product[quantity][min_field]' => $this->getTestEntity()->quantity,
-                'product[quantity][max_field]' => $this->getTestEntity()->quantity,
+                'product[id_product][min_field]' => $productId,
+                'product[id_product][max_field]' => $productId,
             ],
             [
-                'product[price_tax_excluded][min_field]' => $this->getTestEntity()->price,
-                'product[price_tax_excluded][max_field]' => $this->getTestEntity()->price,
+                'product[quantity][min_field]' => static::TEST_CREATION_QUANTITY + static::TEST_UPDATED_QUANTITY,
+                'product[quantity][max_field]' => static::TEST_CREATION_QUANTITY + static::TEST_UPDATED_QUANTITY,
+            ],
+            [
+                'product[price_tax_excluded][min_field]' => static::TEST_UPDATED_PRICE,
+                'product[price_tax_excluded][max_field]' => static::TEST_UPDATED_PRICE,
             ],
         ];
+
+        foreach ($gridFilters as $testFilter) {
+            $products = $this->getFilteredEntitiesFromGrid($testFilter);
+            $this->assertGreaterThanOrEqual(1, count($products), sprintf(
+                'Expected at least one product with filters %s',
+                var_export($testFilter, true)
+            ));
+            $this->assertCollectionContainsEntity($products, $productId);
+        }
+
+        return $productId;
     }
 
     /**
-     * @return TestEntityDTO
-     */
-    protected function getTestEntity(): TestEntityDTO
-    {
-        return new TestEntityDTO(
-            $this->testEntityId,
-            [
-                'name' => 'testProductName',
-                'quantity' => 987,
-                'price' => '87,7',
-            ]
-        );
-    }
-
-    /**
-     * @param $tr
-     * @param $i
+     * @depends testFilters
      *
-     * @return TestEntityDTO
+     * @param int $productId
      */
-    protected function getEntity(Crawler $tr, int $i): TestEntityDTO
+    public function testDelete(int $productId): void
+    {
+        $products = $this->getEntitiesFromGrid();
+        $initialEntityCount = $products->count();
+
+        $this->deleteEntityFromPage('admin_products_v2_delete', ['productId' => $productId]);
+
+        $newProducts = $this->getEntitiesFromGrid();
+        $this->assertCount($initialEntityCount - 1, $newProducts);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getFilterSearchButtonSelector(): string
+    {
+        return 'product[actions][search]';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getCreateSubmitButtonSelector(): string
+    {
+        return 'product_footer_save';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getEditSubmitButtonSelector(): string
+    {
+        return 'product_footer_save';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function generateCreateUrl(): string
+    {
+        return $this->router->generate('admin_products_v2_create');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function generateEditUrl(array $routeParams): string
+    {
+        return $this->router->generate('admin_products_v2_edit', $routeParams);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getFormHandlerChecker(): FormHandlerChecker
+    {
+        /** @var FormHandlerChecker $checker */
+        $checker = $this->client->getContainer()->get('prestashop.core.form.identifiable_object.product_form_handler');
+
+        return $checker;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function parseEntityFromRow(Crawler $tr, int $i): TestEntityDTO
     {
         return new TestEntityDTO(
             (int) trim($tr->filter('.column-id_product')->text()),
@@ -162,23 +279,25 @@ class ProductControllerTest extends GridControllerTestCase
     }
 
     /**
-     * Gets modifications that are needed to fill address form
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    protected function getCreateEntityFormModifications(): array
+    protected function generateGridUrl(array $routeParams = []): string
     {
-        /** @todo add rest of the tests, need for product form to be complete */
-        $testEntity = $this->getTestEntity();
+        if (empty($routeParams)) {
+            $routeParams = [
+                'product[offset]' => 0,
+                'product[limit]' => 100,
+            ];
+        }
 
-        return [
-            'product[header][name][1]' => $testEntity->name,
-            // 'product[shortcuts][stock][quantity]' => $testEntity->quantity,
-            'product[stock][quantities][quantity][delta]' => $testEntity->quantity,
-            'product[shipping][additional_shipping_cost]' => 0,
-            'product[pricing][retail_price][price_tax_excluded]' => $testEntity->price,
-            // 'product[shortcuts][retail_price][price_tax_excluded]' => $testEntity->price,
-            // 'product[shortcuts][retail_price][price_tax_included]' => $testEntity->price,
-        ];
+        return $this->router->generate('admin_products_v2_index', $routeParams);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getGridSelector(): string
+    {
+        return '#product_grid_table';
     }
 }

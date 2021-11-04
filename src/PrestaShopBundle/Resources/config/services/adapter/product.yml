@@ -46,7 +46,10 @@ services:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand }
 
   prestashop.adapter.product.command_handler.update_product_status_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStatusCommandHandler
+    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStatusHandler
+    arguments:
+      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.update.product_indexation_updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand
@@ -130,6 +133,7 @@ services:
     arguments:
       - '@prestashop.adapter.product.repository.product_repository'
       - '@prestashop.adapter.product.update.product_price_properties_filler'
+      - '@prestashop.adapter.product.repository.product_supplier_repository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
@@ -156,9 +160,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductOptionsHandler
     arguments:
       - '@prestashop.adapter.product.repository.product_repository'
-      - '@prestashop.adapter.manufacturer.repository.manufacturer_repository'
       - '@prestashop.adapter.product.update.product_indexation_updater'
-      - '@prestashop.adapter.legacy.configuration'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand
@@ -403,6 +405,8 @@ services:
 
   prestashop.adapter.product.update.product_indexation_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater
+    arguments:
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_SEARCH_INDEXATION')"
 
   prestashop.adapter.product.repository.product_preview_repository:
     class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository

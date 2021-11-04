@@ -410,7 +410,7 @@ class Customers extends BOBasePage {
    */
   async chooseRegistrationAndDelete(page, allowRegistrationAfterDelete) {
     // Choose deletion method
-    await page.check(this.deleteCustomerModalMethodInput(allowRegistrationAfterDelete ? 0 : 1));
+    await this.setChecked(page, this.deleteCustomerModalMethodInput(allowRegistrationAfterDelete ? 0 : 1));
 
     // Click on delete button and wait for action to finish
     await this.clickAndWaitForNavigation(page, this.deleteCustomerModalDeleteButton);
@@ -477,11 +477,7 @@ class Customers extends BOBasePage {
     }
 
     // Click on checkbox if not selected
-    const isCheckboxSelected = await this.isCheckboxSelected(page, this.requiredFieldCheckBox(id));
-
-    if (valueWanted !== isCheckboxSelected) {
-      await page.$eval(`${this.requiredFieldCheckBox(id)} + i`, el => el.click());
-    }
+    await this.setCheckedWithIcon(page, this.requiredFieldCheckBox(id), valueWanted);
 
     // Save setting
     await this.clickAndWaitForNavigation(page, this.saveButton);

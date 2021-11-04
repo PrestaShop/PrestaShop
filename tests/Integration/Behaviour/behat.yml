@@ -67,6 +67,14 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
+        language:
+            paths:
+                - "%paths.base%/Features/Scenario/Language"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\LanguageFeatureContext
         order:
             paths:
                 - "%paths.base%/Features/Scenario/Order"
@@ -140,8 +148,10 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\WebserviceKeyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\WebserviceKeyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\WebserviceEndpointFeatureContext
         tax:
             paths:
                 - "%paths.base%/Features/Scenario/Tax"
@@ -270,6 +280,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\SupplierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CommonDomainFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\DeleteProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateAttachmentFeatureContext

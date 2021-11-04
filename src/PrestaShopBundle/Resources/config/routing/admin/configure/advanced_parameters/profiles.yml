@@ -10,7 +10,9 @@ admin_profiles_search:
   path: /
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ProfileController::searchAction'
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.profile
+    redirectRoute: admin_profiles_index
     _legacy_controller: AdminProfiles
     _legacy_link: AdminProfiles:submitFilterprofile
 

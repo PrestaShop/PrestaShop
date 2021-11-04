@@ -33,12 +33,15 @@ class UploaderCore
 
     /** @var bool */
     private $_check_file_size;
-    private $_accept_types;
+    /** @var array<string> */
+    private $_accept_types = [];
     /** @var array */
-    private $_files;
+    private $_files = [];
+    /** @var int */
     private $_max_size;
     /** @var string|null */
     private $_name;
+    /** @var string */
     private $_save_path;
 
     /**
@@ -50,13 +53,12 @@ class UploaderCore
     {
         $this->setName($name);
         $this->setCheckFileSize(true);
-        $this->_files = [];
     }
 
     /**
-     * @param $value
+     * @param array<string> $value
      *
-     * @return $this
+     * @return self
      */
     public function setAcceptTypes($value)
     {
@@ -66,7 +68,7 @@ class UploaderCore
     }
 
     /**
-     * @return mixed
+     * @return array<string>
      */
     public function getAcceptTypes()
     {
@@ -76,7 +78,7 @@ class UploaderCore
     /**
      * @param bool $value
      *
-     * @return $this
+     * @return self
      */
     public function setCheckFileSize($value)
     {
@@ -117,9 +119,9 @@ class UploaderCore
     }
 
     /**
-     * @param $value
+     * @param int $value
      *
-     * @return $this
+     * @return self
      */
     public function setMaxSize($value)
     {
@@ -141,9 +143,9 @@ class UploaderCore
     }
 
     /**
-     * @param $value
+     * @param string $value
      *
-     * @return $this
+     * @return self
      */
     public function setName($value)
     {
@@ -161,9 +163,9 @@ class UploaderCore
     }
 
     /**
-     * @param $value
+     * @param string $value
      *
-     * @return $this
+     * @return self
      */
     public function setSavePath($value)
     {
@@ -295,9 +297,9 @@ class UploaderCore
     }
 
     /**
-     * @param $error_code
+     * @param int $error_code
      *
-     * @return array|int|mixed|string
+     * @return string|int
      */
     protected function checkUploadError($error_code)
     {
@@ -339,7 +341,7 @@ class UploaderCore
     }
 
     /**
-     * @param $file
+     * @param array $file
      *
      * @return bool
      */
@@ -364,7 +366,7 @@ class UploaderCore
         $types = $this->getAcceptTypes();
 
         //TODO check mime type.
-        if (isset($types) && !in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types)) {
+        if (!in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types)) {
             $file['error'] = Context::getContext()->getTranslator()->trans('Filetype not allowed', [], 'Admin.Notifications.Error');
 
             return false;
@@ -397,7 +399,7 @@ class UploaderCore
     }
 
     /**
-     * @param $var
+     * @param string $var
      *
      * @return string
      *
@@ -409,7 +411,7 @@ class UploaderCore
     }
 
     /**
-     * @param $directory
+     * @param string $directory
      *
      * @return string
      *

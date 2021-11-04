@@ -264,9 +264,7 @@ class OrderHistoryCore extends ObjectModel
                         ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']),
                         Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
                         true,
-                        (int) $order->id,
-                        0,
-                        $employee
+                        (int) $order->id
                     );
                 } elseif ($new_os->shipped == 0 && Validate::isLoadedObject($old_os) && $old_os->shipped == 1 &&
                     Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
@@ -291,8 +289,7 @@ class OrderHistoryCore extends ObjectModel
                                         null,
                                         $mvt['price_te'],
                                         true,
-                                        null,
-                                        $employee
+                                        null
                                     );
                                 }
                                 if (!StockAvailable::dependsOnStock($product['id_product'])) {
@@ -462,8 +459,8 @@ class OrderHistoryCore extends ObjectModel
 
     /**
      * @param bool $autodate Optional
-     * @param array $template_vars Optional
-     * @param Context $context Deprecated
+     * @param array|bool $template_vars Optional
+     * @param Context|null $context Deprecated
      *
      * @return bool
      */

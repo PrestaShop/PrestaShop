@@ -96,7 +96,7 @@ class Product extends FOBasePage {
   async getProductInformation(page) {
     return {
       name: await this.getTextContent(page, this.productName),
-      price: await this.getPriceFromText(page, this.productPrice, 'content'),
+      price: await this.getPriceFromText(page, this.productPrice),
       shortDescription: await this.getTextContent(page, this.shortDescription, false),
       description: await this.getTextContent(page, this.productDescription),
     };

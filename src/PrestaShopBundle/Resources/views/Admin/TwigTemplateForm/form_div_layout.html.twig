@@ -166,7 +166,6 @@
 {%- block number_widget -%}
   {# type="number" doesn't work with floats #}
   {%- set type = type|default('text') -%}
-
   {{ block('form_widget_simple') }}
 {%- endblock number_widget -%}
 
@@ -315,7 +314,10 @@
     {% set form_method = "POST" %}
   {%- endif -%}
   <form name="{{ name }}"
-        method="{{ form_method|lower }}" action="{{ action }}"{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+        method="{{ form_method|lower }}" 
+        action="{{ action }}"
+        {% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}
+        {% if multipart %} enctype="multipart/form-data"{% endif %}>
   {%- if form_method != method -%}
     <input type="hidden" name="_method" value="{{ method }}"/>
   {%- endif -%}

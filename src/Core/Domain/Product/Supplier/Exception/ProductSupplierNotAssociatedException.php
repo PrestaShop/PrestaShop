@@ -24,17 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception;
 
 /**
- * Interface for service that set product to be enabled or disabled
+ * Exception thrown when trying to set a default supplier which is not associated
  */
-interface UpdateProductStatusCommandHandlerInterface
+class ProductSupplierNotAssociatedException extends ProductSupplierException
 {
-    /**
-     * @param UpdateProductStatusCommand $command
-     */
-    public function handle(UpdateProductStatusCommand $command);
 }

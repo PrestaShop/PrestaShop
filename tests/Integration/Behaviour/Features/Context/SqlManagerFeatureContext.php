@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFields
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\DatabaseTableField;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use RuntimeException;
-use Symfony\Component\HttpFoundation\Request;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 
 /**

@@ -95,7 +95,7 @@ class ReferrerCore extends ObjectModel
     /**
      * Cache new source.
      *
-     * @param $idConnectionsSource
+     * @param int $idConnectionsSource
      */
     public static function cacheNewSource($idConnectionsSource)
     {

@@ -304,7 +304,7 @@ class WebserviceOutputBuilderCore
     /**
      * Build the resource list in the output format specified by WebserviceOutputBuilder::objectRender.
      *
-     * @param $key_permissions
+     * @param array $key_permissions
      *
      * @return string
      */
@@ -611,10 +611,10 @@ class WebserviceOutputBuilderCore
     }
 
     /**
-     * @param $object
-     * @param $depth
-     * @param $associations
-     * @param $ws_params
+     * @param ObjectModel $object
+     * @param int $depth
+     * @param array $associations
+     * @param array $ws_params
      *
      * @return string
      */
@@ -769,10 +769,10 @@ class WebserviceOutputBuilderCore
     /**
      * @param string|object $object
      * @param string $method
-     * @param $field_name
-     * @param $entity_name
+     * @param string $field_name
+     * @param string $entity_name
      *
-     * @return WebserviceOutputBuilder
+     * @return self
      *
      * @throws Exception
      * @throws WebserviceException

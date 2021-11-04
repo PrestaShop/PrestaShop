@@ -70,7 +70,7 @@ Sign in
 Check cart rules in account page
 Go Back to BO and delete cart rules
  */
-describe('FO - Account : View vouchersFO - Account  account page', async () => {
+describe('FO - Account : View vouchers', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -20,6 +20,7 @@ module.exports = {
         size: ['S', 'M', 'L', 'XL'],
         color: ['White', 'Black'],
       },
+      weight: 0.300,
       status: true,
     },
     demo_3: {

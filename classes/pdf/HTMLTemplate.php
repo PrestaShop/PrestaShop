@@ -208,7 +208,7 @@ abstract class HTMLTemplateCore
      * If the template is not present in the theme directory, it will return the default template
      * in _PS_PDF_DIR_ directory.
      *
-     * @param $template_name
+     * @param string $template_name
      *
      * @return string
      */

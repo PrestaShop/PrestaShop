@@ -247,8 +247,8 @@ class ProductDownloadCore extends ObjectModel
     /**
      * Return text link.
      *
-     * @param bool $admin specific to backend (optionnal)
-     * @param string $hash hash code in table order detail (optionnal)
+     * @param bool $admin specific to backend (optional)
+     * @param string|false $hash hash code in table order detail (optional)
      *
      * @return string Html all the code for print a link to the file
      */
@@ -265,7 +265,7 @@ class ProductDownloadCore extends ObjectModel
     /**
      * Return html link.
      *
-     * @param string $class CSS selector
+     * @param string|bool $class CSS selector
      * @param bool $admin specific to backend
      * @param bool $hash hash code in table order detail
      *

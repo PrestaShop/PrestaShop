@@ -1835,8 +1835,8 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @param int[] $combinations
-     * @param $langId
+     * @param array<int> $combinations
+     * @param int $langId
      *
      * @return array
      */
@@ -4670,8 +4670,10 @@ class ProductCore extends ObjectModel
     /**
      * Link accessories with product. No need to inflate a full Product (better performances).
      *
-     * @param array $accessories_id Accessories ids
-     * @param int Product identifier
+     * @param array<int> $accessories_id Accessories ids
+     * @param int $product_id Product identifier
+     *
+     * @return void
      */
     public static function changeAccessoriesForProduct($accessories_id, $product_id)
     {
@@ -7852,8 +7854,8 @@ class ProductCore extends ObjectModel
         $result = true;
         $collection_download = new PrestaShopCollection('ProductDownload');
         $collection_download->where('id_product', '=', $this->id);
+        /** @var ProductDownload $product_download */
         foreach ($collection_download as $product_download) {
-            /* @var ProductDownload $product_download */
             $result &= $product_download->delete($product_download->checkFile());
         }
 
@@ -8339,7 +8341,7 @@ class ProductCore extends ObjectModel
      * @param bool $include_tax
      * @param bool $formated
      *
-     * @return ecotax
+     * @return string|float
      */
     public function getEcotax($precision = null, $include_tax = true, $formated = false)
     {

@@ -219,11 +219,12 @@ class ProductSupplierCore extends ObjectModel
     /**
      * For a given Supplier, Product, returns the purchased price.
      *
+     * @param int $idSupplier
      * @param int $idProduct
      * @param int $idProductAttribute Optional
      * @param bool $convertedPrice Optional
      *
-     * @return array keys: price_te, id_currency
+     * @return float|null
      */
     public static function getProductPrice($idSupplier, $idProduct, $idProductAttribute = 0, $convertedPrice = false)
     {

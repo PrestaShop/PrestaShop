@@ -25,6 +25,7 @@
  */
 class ChartCore
 {
+    /** @var int */
     protected static $poolId = 0;
 
     protected $width = 600;

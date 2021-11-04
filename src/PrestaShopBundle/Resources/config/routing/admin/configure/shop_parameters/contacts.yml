@@ -10,7 +10,9 @@ admin_contacts_search:
   path: /
   methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\ContactsController::searchAction'
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.contacts
+    redirectRoute: admin_contacts_index
     _legacy_controller: AdminContacts
     _legacy_link: AdminContacts:submitFiltercontact
 

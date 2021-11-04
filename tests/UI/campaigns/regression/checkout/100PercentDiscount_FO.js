@@ -60,7 +60,7 @@ let page;
  * add new discount (-100% free shipping)
  * Change terms and conditions setting
  */
-describe('Create 100% discount with free shipping discount code', async () => {
+describe('Regression - Checkout: Create 100% discount with free shipping discount code', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

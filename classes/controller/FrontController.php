@@ -1245,7 +1245,7 @@ class FrontControllerCore extends Controller
      * Adds jQuery plugin(s) to queued JS file list.
      *
      * @param string|array $name
-     * @param string null $folder
+     * @param string|null $folder
      * @param bool $css
      */
     public function addJqueryPlugin($name, $folder = null, $css = true)
@@ -1300,9 +1300,9 @@ class FrontControllerCore extends Controller
                     return $id_cart;
                 }
             }
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
