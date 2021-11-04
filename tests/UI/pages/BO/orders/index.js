@@ -182,7 +182,7 @@ class Order extends BOBasePage {
    @param page {Page} Browser tab
    * @param columnName {string} Column name on table
    * @param row {number} Order row in table
-   * @returns {Promise<string|number>}
+   * @returns {Promise<string>}
    */
   async getTextColumn(page, columnName, row) {
     if (columnName === 'osname') {
