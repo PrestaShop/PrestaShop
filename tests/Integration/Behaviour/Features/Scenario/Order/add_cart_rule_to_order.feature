@@ -43,6 +43,14 @@ Feature: Add discounts to order from Back Office (BO)
       | taxes         | $1.85    |
       | total         | $32.65   |
 
+  Scenario: Add amount type discount to order which has no invoices with HTML characters
+    Given order "bo_order1" does not have any invoices
+    When I add discount to order "bo_order1" with following details:
+      | name      | <<           |
+      | type      | amount      |
+      | value     | 5.50         |
+    Then I should get no error
+
   Scenario: Add amount type discount to order which has no invoices
     Given order "bo_order1" does not have any invoices
     When I add discount to order "bo_order1" with following details:
