@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Util\DateTime;
 
+use DateTime as NativeDateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use RuntimeException;
@@ -84,7 +85,7 @@ final class DateTime
     }
 
     /**
-     * Returns NullDateTime if input value is nullable (including 0000-00-00 value), return a DateTime object otherwise.
+     * Returns NullDateTime if input value is nullable (including 0000-00-00 value), return a DateTimeImmutable object otherwise.
      *
      * @param string|null $value
      *
@@ -93,5 +94,17 @@ final class DateTime
     public static function buildNullableDateTime(?string $value): DateTimeImmutable
     {
         return empty($value) || $value === self::NULL_DATETIME || $value === self::NULL_DATE ? new NullDateTime() : new DateTimeImmutable($value);
+    }
+
+    /**
+     * Returns null if input value is nullable (including 0000-00-00 value), return a DateTimeImmutable object otherwise.
+     *
+     * @param string|null $value
+     *
+     * @return DateTimeImmutable|NullDateTime|null
+     */
+    public static function buildDateTimeOrNull(?string $value): ?DateTimeImmutable
+    {
+        return empty($value) || $value === self::NULL_DATETIME || $value === self::NULL_DATE ? null : new DateTimeImmutable($value);
     }
 }
