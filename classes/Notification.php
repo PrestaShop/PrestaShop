@@ -166,13 +166,13 @@ class NotificationCore
      */
     private static function checkAccess(string $type): bool
     {
-        $idProfile = Context::getContext()->employee->id_profile;
+        $accesses = Profile::getProfileAccesses(Context::getContext()->employee->id_profile, 'class_name');
 
-        if (!Access::isGranted('AdminOrders', $idProfile) && $type == 'order') {
+        if (!(isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view']) && $type == 'order') {
             return false;
-        } elseif (!Access::isGranted('AdminCustomers', $idProfile) && $type == 'customer') {
+        } elseif (!(isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view']) && $type == 'customer') {
             return false;
-        } elseif (!Access::isGranted('AdminCustomerThreads', $idProfile) && $type == 'customer_message') {
+        } elseif (!(isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view']) && $type == 'customer_message') {
             return false;
         }
 
