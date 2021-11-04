@@ -79,17 +79,17 @@
 
 <script lang="ts">
   import CombinationsService from '@pages/product/services/combinations-service';
-  import AttributesSelector from '@pages/product/components/generator/AttributesSelector';
+  import AttributesSelector from '@pages/product/components/generator/AttributesSelector.vue';
   import isSelected from '@pages/product/mixins/is-attribute-selected';
   import {getAllAttributeGroups} from '@pages/product/services/attribute-groups';
-  import Modal from '@vue/components/Modal';
+  import Modal from '@vue/components/Modal.vue';
   import ProductEventMap from '@pages/product/product-event-map';
 
   const {$} = window;
 
   const CombinationEvents = ProductEventMap.combinations;
 
-  interface States {
+  interface CombinationGeneratorStates {
     attributeGroups: Array<Record<string, any>>,
     selectedAttributeGroups: Record<string, any>,
     combinationsService: CombinationsService,
@@ -101,7 +101,7 @@
 
   export default isSelected.extend({
     name: 'CombinationGenerator',
-    data(): States {
+    data(): CombinationGeneratorStates {
       return {
         attributeGroups: [],
         selectedAttributeGroups: {},

@@ -114,7 +114,7 @@ export default class EntitySearchInput {
    *
    * @param values {Array<any>}
    */
-  setValues(values?: any[]): void {
+  setValues(values: any[] = []): void {
     this.clearSelectedItems();
     if (!values || values.length <= 0) {
       return;

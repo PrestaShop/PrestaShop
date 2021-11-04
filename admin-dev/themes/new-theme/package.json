@@ -55,11 +55,12 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.15.7",
     "@types/bootstrap": "^4.0.0",
+    "@types/dropzone": "^5.7.4",
     "@types/jquery": "^3.5.5",
     "@types/jquery.growl": "^1.3.4",
     "@types/lodash": "^4.14.170",
-    "@types/typeahead.js": "^0.11.0",
     "@types/photoswipe": "^4.1.2",
+    "@types/typeahead.js": "^0.11.0",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "@typescript-eslint/parser": "^4.28.1",
     "@vue/compiler-sfc": "^3.0.11",

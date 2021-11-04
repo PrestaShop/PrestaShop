@@ -181,7 +181,7 @@ export default {
     checkedCheckboxInputs: '[type=checkbox]:checked',
     // eslint-disable-next-line
     checkboxName: (categoryId: string): string => `product[description][categories][product_categories][${categoryId}][is_associated]`,
-    inputByValue: (value: string): string => `input[value="${value}"]`,
+    inputByValue: (value: number): string => `input[value="${value}"]`,
     defaultCategorySelectInput: '#product_description_categories_default_category_id',
     materialCheckbox: '.md-checkbox',
     radioInput: '[type=radio]',
