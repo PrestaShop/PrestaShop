@@ -49,6 +49,17 @@ class DateTimeTest extends TestCase
         $this->assertInstanceOf(NullDateTime::class, $output);
     }
 
+    /**
+     * @dataProvider getNullableDates
+     *
+     * @param string|null $input
+     */
+    public function testBuildDateTimeOrNull(?string $input): void
+    {
+        $output = DateTime::buildDateTimeOrNull($input);
+        $this->assertNull($output);
+    }
+
     public function getNullableDates(): iterable
     {
         yield [null];

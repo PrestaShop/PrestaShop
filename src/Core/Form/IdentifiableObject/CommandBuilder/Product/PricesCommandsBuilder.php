@@ -78,6 +78,6 @@ class PricesCommandsBuilder implements MultistoreProductCommandsBuilderInterface
         $shopCommand = new UpdateProductPricesCommand($productId->getValue(), $singleShopConstraint);
         $allShopsCommand = new UpdateProductPricesCommand($productId->getValue(), ProductShopConstraint::allShops());
 
-        return $commandAccessor->buildCommands($priceData, $shopCommand, $allShopsCommand);
+        return $commandAccessor->prepareCommands($priceData, $shopCommand, $allShopsCommand);
     }
 }
