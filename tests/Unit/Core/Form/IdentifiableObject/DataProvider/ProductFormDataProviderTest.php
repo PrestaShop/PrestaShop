@@ -1367,7 +1367,8 @@ class ProductFormDataProviderTest extends TestCase
                 $this->isInstanceOf(GetProductForEditing::class),
                 $this->isInstanceOf(GetProductSupplierOptions::class),
                 $this->isInstanceOf(GetProductFeatureValues::class),
-                $this->isInstanceOf(GetProductCustomizationFields::class)
+                $this->isInstanceOf(GetProductCustomizationFields::class),
+                $this->isInstanceOf(GetEmployeesStockMovements::class)
             ))
             ->willReturnCallback(function ($query) use ($expectedShopId) {
                 if ($query instanceof GetProductForEditing) {
