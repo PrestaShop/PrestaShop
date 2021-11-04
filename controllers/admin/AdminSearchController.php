@@ -28,6 +28,11 @@ class AdminSearchControllerCore extends AdminController
     const TOKEN_CHECK_START_POS = 34;
     const TOKEN_CHECK_LENGTH = 8;
 
+    /**
+     * @var string
+     */
+    public $query;
+
     public function __construct()
     {
         $this->bootstrap = true;

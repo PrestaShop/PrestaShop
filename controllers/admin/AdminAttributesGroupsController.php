@@ -80,9 +80,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Info'),
             ],
         ];
-        $this->fieldImageSettings = ['name' => 'texture', 'dir' => 'co'];
-
-        $this->image_dir = 'co';
+        $this->fieldImageSettings = [
+            'name' => 'texture',
+            'dir' => 'co',
+        ];
     }
 
     /**

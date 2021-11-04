@@ -29,13 +29,22 @@
  */
 class AdminShopUrlControllerCore extends AdminController
 {
+    /**
+     * @var int
+     */
+    public $id_shop;
+
+    /**
+     * @var bool
+     */
+    public $redirect_shop_url;
+
     public function __construct()
     {
         $this->bootstrap = true;
         $this->table = 'shop_url';
         $this->className = 'ShopUrl';
         $this->lang = false;
-        $this->requiredDatabase = true;
         $this->multishop_context = Shop::CONTEXT_ALL;
         $this->bulk_actions = [];
 
