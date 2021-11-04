@@ -516,17 +516,6 @@ class ProductRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param ShopId $shopId
-     *
-     * @return bool
-     */
-    public function isAssociatedToShop(ProductId $productId, ShopId $shopId): bool
-    {
-        return $this->hasShopAssociation($productId->getValue(), Product::class, $shopId);
-    }
-
-    /**
-     * @param ProductId $productId
      *
      * @return ShopId[]
      */
