@@ -237,13 +237,14 @@ class OrderControllerCore extends FrontController
         ]));
     }
 
-    public function displayAjaxCheckProductsStillOrderable(): void
+    public function displayAjaxCheckCartStillOrderable(): void
     {
         $responseData = [
             'errors' => false,
             'cartUrl' => '',
         ];
 
+        // TODO - move to separate single function in Cart and also check if discounts and rules are valid
         if ($this->context->cart->isAllProductsInStock() !== true ||
             $this->context->cart->checkAllProductsAreStillAvailableInThisState() !== true ||
             $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) {
@@ -277,6 +278,7 @@ class OrderControllerCore extends FrontController
         }
 
         // Check that products are still orderable, at any point in checkout
+        // TODO - move to separate single function in Cart and also check if discounts and rules are valid
         if ($this->context->cart->isAllProductsInStock() !== true ||
             $this->context->cart->checkAllProductsAreStillAvailableInThisState() !== true ||
             $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) {
