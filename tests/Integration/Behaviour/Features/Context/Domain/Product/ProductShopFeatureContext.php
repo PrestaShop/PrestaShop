@@ -45,11 +45,11 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
      */
     public function checkNoShopAssociation(string $productReference, string $shopReference): void
     {
-        $shop = $this->getSharedStorage()->get($shopReference);
+        $shopId = $this->getSharedStorage()->get($shopReference);
 
         $caughtException = null;
         try {
-            $this->getProductForEditing($productReference, (int) $shop->id);
+            $this->getProductForEditing($productReference, $shopId);
         } catch (ShopAssociationNotFound $e) {
             $caughtException = $e;
         }
@@ -65,12 +65,11 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
      */
     public function checkShopAssociation(string $productReference, string $shopReference): void
     {
-        $productId = $this->getSharedStorage()->get($productReference);
-        $shop = $this->getSharedStorage()->get($shopReference);
+        $shopId = $this->getSharedStorage()->get($shopReference);
 
         $caughtException = null;
         try {
-            $this->getProductForEditing($productReference, (int) $shop->id);
+            $this->getProductForEditing($productReference, $shopId);
         } catch (ShopAssociationNotFound $e) {
             $caughtException = $e;
         }
@@ -87,12 +86,12 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
     public function checkDefaultShop(string $productReference, string $shopReference): void
     {
         $productId = $this->getSharedStorage()->get($productReference);
-        $shop = $this->getSharedStorage()->get($shopReference);
+        $shopId = $this->getSharedStorage()->get($shopReference);
 
         /** @var ProductRepository $productRepository */
         $productRepository = CommonFeatureContext::getContainer()->get('prestashop.adapter.product.repository.product_repository');
         $defaultShopId = $productRepository->getProductDefaultShopId(new ProductId($productId));
-        Assert::assertEquals((int) $shop->id, $defaultShopId->getValue());
+        Assert::assertEquals($shopId, $defaultShopId->getValue());
     }
 
     /**
@@ -105,13 +104,13 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
     public function copyProductToShop(string $productReference, string $shopSourceReference, string $shopTargetReference): void
     {
         $productId = $this->getSharedStorage()->get($productReference);
-        $shopSource = $this->getSharedStorage()->get($shopSourceReference);
-        $shopTarget = $this->getSharedStorage()->get($shopTargetReference);
+        $shopSourceId = $this->getSharedStorage()->get($shopSourceReference);
+        $shopTargetId = $this->getSharedStorage()->get($shopTargetReference);
 
         $this->getCommandBus()->handle(new CopyProductToShop(
             $productId,
-            (int) $shopSource->id,
-            (int) $shopTarget->id
+            $shopSourceId,
+            $shopTargetId
         ));
     }
 }
