@@ -477,11 +477,7 @@ class Customers extends BOBasePage {
     }
 
     // Click on checkbox if not selected
-    const isCheckboxSelected = await this.isCheckboxSelected(page, this.requiredFieldCheckBox(id));
-
-    if (valueWanted !== isCheckboxSelected) {
-      await page.$eval(`${this.requiredFieldCheckBox(id)} + i`, el => el.click());
-    }
+    await this.setCheckedWithIcon(page, this.requiredFieldCheckBox(id), valueWanted);
 
     // Save setting
     await this.clickAndWaitForNavigation(page, this.saveButton);

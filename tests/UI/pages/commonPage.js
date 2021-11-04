@@ -316,8 +316,8 @@ class CommonPage {
    * @param selector {string} String to locate the checkbox
    * @return {Promise<boolean>}
    */
-  async isChecked(page, selector) {
-    await page.isChecked(selector);
+  isChecked(page, selector) {
+    return page.isChecked(selector);
   }
 
   /**
@@ -342,6 +342,20 @@ class CommonPage {
     if (valueWanted !== (await this.isChecked(page, checkboxSelector))) {
       const parentElement = await this.getParentElement(page, checkboxSelector);
       await parentElement.click();
+    }
+  }
+
+  /**
+   * Select, unselect checkbox with icon click
+   * @param page {Page} Browser tab
+   * @param checkboxSelector {string} Selector of checkbox
+   * @param valueWanted {boolean} True if we want to select checkBox, else otherwise
+   * @return {Promise<void>}
+   */
+  async setCheckedWithIcon(page, checkboxSelector, valueWanted = true) {
+    if (valueWanted !== (await this.isChecked(page, checkboxSelector))) {
+      // The selector is not visible, that why '+ i' is required here
+      await page.$eval(`${checkboxSelector} + i`, el => el.click());
     }
   }
 

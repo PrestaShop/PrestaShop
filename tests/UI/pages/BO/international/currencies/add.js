@@ -86,9 +86,7 @@ class AddCurrency extends LocalizationBasePage {
    * @returns {Promise<string>}
    */
   async createUnOfficialCurrency(page, currencyData) {
-    if (!(await this.isCheckboxSelected(page, this.alternativeCurrencyCheckBox))) {
-      await page.$eval(`${this.alternativeCurrencyCheckBox} + i`, el => el.click());
-    }
+    await this.setCheckedWithIcon(page, this.alternativeCurrencyCheckBox);
     await this.setValue(page, this.currencyNameInput(1), currencyData.name);
     await this.setValue(page, this.isoCodeInput, currencyData.isoCode);
     await this.setValue(page, this.exchangeRateInput, currencyData.exchangeRate.toString());
