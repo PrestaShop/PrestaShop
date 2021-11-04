@@ -54,8 +54,8 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
      */
     public function updateProductPricesForShop(string $productReference, string $shopReference, TableNode $table): void
     {
-        $shop = $this->getSharedStorage()->get(trim($shopReference));
-        $shopConstraint = ProductShopConstraint::shop((int) $shop->id);
+        $shopId = $this->getSharedStorage()->get(trim($shopReference));
+        $shopConstraint = ProductShopConstraint::shop($shopId);
         $this->updatePrices($productReference, $table, $shopConstraint);
     }
 
@@ -158,10 +158,10 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
 
         $shopReferences = explode(',', $shopReferences);
         foreach ($shopReferences as $shopReference) {
-            $shop = $this->getSharedStorage()->get(trim($shopReference));
+            $shopId = $this->getSharedStorage()->get(trim($shopReference));
             $pricesInfo = $this->getProductForEditing(
                 $productReference,
-                (int) $shop->id
+                $shopId
             )->getPricesInformation();
 
             $this->assertPricesInfos($pricesInfo, $data, $shopReference);
