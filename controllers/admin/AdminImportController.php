@@ -2625,7 +2625,8 @@ class AdminImportControllerCore extends AdminController
                             );
                         }
                         if ($field_error !== true || $lang_field_error !== true) {
-                            $this->errors[] = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '') . mysql_error();
+                            $this->errors[] = ($field_error !== true ? $field_error : '')
+                                . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
                         }
                     }
                 }
@@ -3730,10 +3731,6 @@ class AdminImportControllerCore extends AdminController
             }
 
             $info = AdminImportController::getMaskedRow($line);
-
-            if ($offset > 0) {
-                $this->toto = true;
-            }
 
             $this->supplierImportOne(
                 $info,
