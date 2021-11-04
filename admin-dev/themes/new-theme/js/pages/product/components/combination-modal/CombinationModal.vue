@@ -141,26 +141,30 @@
   import CombinationsService from '@pages/product/services/combinations-service';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
-  import Modal from '@vue/components/Modal';
+  import Modal from '@vue/components/Modal.vue';
   import Router from '@components/router';
   import Vue from 'vue';
-  import History from './History';
+  import History from './History.vue';
 
-  interface States {
+  export interface Combination {
+    id: number;
+  }
+
+  interface CombinationModalStates {
     combinationsService: null | CombinationsService,
     combinationIds: Array<number>,
-    selectedCombinationId: null | number,
-    selectedCombinationName: null | string,
-    previousCombinationId: null | number,
-    nextCombinationId: null | number,
-    editCombinationUrl: null | string,
+    selectedCombinationId: number | null,
+    selectedCombinationName: string | null,
+    previousCombinationId: number | null,
+    nextCombinationId: number | null,
+    editCombinationUrl: string | null,
     loadingCombinationForm: boolean,
     submittingCombinationForm: boolean,
-    combinationList: null | JQuery,
+    combinationList: JQuery,
     hasSubmittedCombinations: boolean,
     combinationsHistory: Array<Record<string, any>>,
     showConfirm: boolean,
-    temporarySelection: null | number,
+    temporarySelection: number | null,
     isFormUpdated: boolean,
     isClosing: boolean,
   }
@@ -173,7 +177,7 @@
   export default Vue.extend({
     name: 'CombinationModal',
     components: {Modal, History},
-    data(): States {
+    data(): CombinationModalStates {
       return {
         combinationsService: null,
         combinationIds: [],
@@ -184,7 +188,7 @@
         editCombinationUrl: '',
         loadingCombinationForm: false,
         submittingCombinationForm: false,
-        combinationList: null,
+        combinationList: <JQuery>$(ProductMap.combinations.combinationsContainer),
         hasSubmittedCombinations: false,
         combinationsHistory: [],
         showConfirm: false,
@@ -208,7 +212,6 @@
       },
     },
     mounted() {
-      this.combinationList = $(ProductMap.combinations.combinationsContainer);
       this.combinationsService = new CombinationsService(this.productId);
       this.initCombinationIds();
       this.watchEditButtons();
@@ -217,7 +220,7 @@
     },
     methods: {
       watchEditButtons(): void {
-        this.combinationList?.on(
+        this.combinationList.on(
           'click',
           ProductMap.combinations.editCombinationButtons,
           (event) => {
@@ -236,22 +239,27 @@
       frameLoading(): void {
         this.applyIframeStyling();
       },
+      getIframeDocument(): typeof document {
+        const iframeDocument = <typeof document>(<HTMLIFrameElement> this.$refs.iframe).contentDocument;
+
+        return iframeDocument;
+      },
       onFrameLoaded(): void {
         this.loadingCombinationForm = false;
         this.submittingCombinationForm = false;
-        const iframeBody = (<HTMLIFrameElement> this.$refs.iframe).contentDocument?.body;
+        const iframeBody = <HTMLElement> this.getIframeDocument().body;
 
         this.applyIframeStyling();
 
-        this.selectedCombinationName = iframeBody!.querySelector(
+        this.selectedCombinationName = iframeBody.querySelector(
           ProductMap.combinations.combinationName,
         )!.innerHTML;
 
-        const iframeInputs = iframeBody!.querySelectorAll(
+        const iframeInputs = <NodeListOf<Element>>iframeBody.querySelectorAll(
           ProductMap.combinations.editionFormInputs,
         );
 
-        iframeInputs?.forEach((input: Element) => {
+        iframeInputs.forEach((input: Element) => {
           input.addEventListener('keyup', () => {
             this.isFormUpdated = true;
           });
@@ -260,13 +268,13 @@
             this.isFormUpdated = true;
           });
 
-          (<HTMLIFrameElement> this.$refs.iframe)?.contentDocument?.addEventListener('datepickerChange', () => {
+          this.getIframeDocument().addEventListener('datepickerChange', () => {
             this.isFormUpdated = true;
           });
         });
       },
       applyIframeStyling(): void {
-        (<HTMLIFrameElement> this.$refs.iframe).contentDocument!.body.style.overflowX = 'hidden';
+        this.getIframeDocument().body.style.overflowX = 'hidden';
       },
       tryClose(): void {
         if (this.isFormUpdated) {
@@ -314,7 +322,7 @@
           this.navigateToCombination(this.nextCombinationId);
         }
       },
-      selectCombination(combination: Record<string, any>): void {
+      selectCombination(combination: Combination): void {
         this.navigateToCombination(combination.id);
       },
       confirmSelection(): void {
@@ -329,7 +337,7 @@
       },
       submitForm(): void {
         this.submittingCombinationForm = true;
-        const iframeBody = (<HTMLIFrameElement> this.$refs.iframe)?.contentDocument!.body;
+        const iframeBody = this.getIframeDocument().body;
         const editionForm = <HTMLFormElement> iframeBody.querySelector(
           ProductMap.combinations.editionForm,
         );

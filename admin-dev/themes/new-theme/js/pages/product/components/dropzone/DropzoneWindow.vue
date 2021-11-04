@@ -175,8 +175,9 @@
 </template>
 
 <script lang="ts">
+  import {PSDropzoneFile} from '@pages/product/components/dropzone/Dropzone.vue';
   import ProductMap from '@pages/product/product-map';
-  import Vue from 'vue';
+  import Vue, {PropType} from 'vue';
 
   const DropzoneMap = ProductMap.dropzone;
 
@@ -184,7 +185,7 @@
     name: 'DropzoneWindow',
     props: {
       selectedFiles: {
-        type: Array,
+        type: Array as PropType<Array<PSDropzoneFile>>,
         default: () => [],
       },
       files: {
@@ -192,7 +193,7 @@
         default: () => [],
       },
       locales: {
-        type: Array,
+        type: Array as PropType<Array<string>>,
         required: true,
       },
       selectedLocale: {
@@ -204,7 +205,7 @@
         default: false,
       },
     },
-    data(): {captionValue: Record<string, any>, coverData: boolean | string} {
+    data(): {captionValue: KeyStringRecord, coverData: boolean | string} {
       return {
         captionValue: {},
         coverData: false,
@@ -216,11 +217,11 @@
        * of only one file or multiple files then the value is sent
        * on save.
        */
-      selectedFiles(value: Array<Record<string, any>>): void {
+      selectedFiles(value: Array<PSDropzoneFile>): void {
         if (value.length > 1) {
           this.captionValue = {};
-          this.locales.forEach((locale) => {
-            this.captionValue[<string>locale] = '';
+          this.locales.forEach((locale: string) => {
+            this.captionValue[locale] = '';
           });
         } else if (this.selectedFile) {
           this.captionValue = this.selectedFile.legends;
@@ -229,8 +230,8 @@
       },
     },
     computed: {
-      selectedFile(): any {
-        return this.selectedFiles.length === 1 ? this.selectedFiles[0] : null;
+      selectedFile(): PSDropzoneFile | null {
+        return this.selectedFiles.length === 1 ? <PSDropzoneFile> this.selectedFiles[0] : null;
       },
       isCover(): boolean {
         return !!(this.selectedFile && this.selectedFile.is_cover);

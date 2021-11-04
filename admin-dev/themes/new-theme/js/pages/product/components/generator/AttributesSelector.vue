@@ -120,6 +120,7 @@
 </template>
 
 <script lang="ts">
+  import {PropType} from 'vue';
   import isSelected from '@pages/product/mixins/is-attribute-selected';
   import ProductMap from '@pages/product/product-map';
   import PerfectScrollbar from 'perfect-scrollbar';
@@ -132,10 +133,10 @@
 
   const CombinationsMap = ProductMap.combinations;
 
-  interface States {
+  interface AttributesSelectorStates {
     dataSetConfig: Record<string, any>;
     searchSource: Record<string, any>;
-    scrollbar: null | PerfectScrollbar;
+    scrollbar: PerfectScrollbar | null;
     hasGeneratedCombinations: boolean;
     checkboxList: Array<Record<string, any>>
   }
@@ -144,7 +145,7 @@
     name: 'AttributesSelector',
     props: {
       attributeGroups: {
-        type: Array,
+        type: Array as PropType<Array<Record<string, any>>>,
         default: () => [],
       },
       selectedAttributeGroups: {
@@ -152,7 +153,7 @@
         default: () => {},
       },
     },
-    data(): States {
+    data(): AttributesSelectorStates {
       return {
         dataSetConfig: {},
         searchSource: {},
@@ -212,8 +213,8 @@
        */
       getSearchableAttributes(): Array<Record<string, any>> {
         const searchableAttributes: Array<Record<string, any>> = [];
-        (<Array<Record<string, any>>> this.attributeGroups).forEach((attributeGroup: Record<string, any>) => {
-          (<Array<Record<string, any>>> attributeGroup.attributes).forEach((attribute: Record<string, any>) => {
+        this.attributeGroups.forEach((attributeGroup: Record<string, any>) => {
+          attributeGroup.attributes.forEach((attribute: Record<string, any>) => {
             if (
               this.isSelected(
                 attribute,

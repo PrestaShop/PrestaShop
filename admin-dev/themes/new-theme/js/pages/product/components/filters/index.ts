@@ -25,7 +25,7 @@
 
 import Vue from 'vue';
 import EventEmitter from '@components/event-emitter';
-import Filters from '@pages/product/components/filters/Filters';
+import Filters from '@pages/product/components/filters/Filters.vue';
 import VueI18n from 'vue-i18n';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 

@@ -75,10 +75,11 @@
 
 <script lang="ts">
   import ProductEventMap from '@pages/product/product-event-map';
-  import Pagination from '@vue/components/Pagination';
+  import {Combination} from '@pages/product/components/combination-modal/CombinationModal.vue';
+  import Pagination from '@vue/components/Pagination.vue';
   import Vue from 'vue';
 
-  interface States {
+  interface HistoryStates {
     paginatedDatas: Array<Record<string, any>>;
     currentPage: number;
     currentCombination: Record<string, any> | null
@@ -88,7 +89,7 @@
 
   export default Vue.extend({
     name: 'CombinationHistory',
-    data(): States {
+    data(): HistoryStates {
       return {
         paginatedDatas: [],
         currentPage: 1,
@@ -128,7 +129,7 @@
        *
        * @param {object} combination
        */
-      selectCombination(combination: Record<string, any>): void {
+      selectCombination(combination: Combination): void {
         this.$emit(CombinationsEventMap.selectCombination, combination);
       },
       /**

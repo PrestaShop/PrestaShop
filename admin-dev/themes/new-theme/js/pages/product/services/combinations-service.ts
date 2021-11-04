@@ -24,10 +24,11 @@
  */
 
 import Router from '@components/router';
+import ServiceType from '@PSTypes/services';
 
 const {$} = window;
 
-export default class CombinationsService {
+export default class CombinationsService implements ServiceType {
   productId: number;
 
   router: Router;
