@@ -39,9 +39,9 @@ export default class NavbarHandler {
 
   $navigationContainer: JQuery;
 
-  constructor($navigationContainer: JQuery, tabPrefix?: string) {
+  constructor($navigationContainer: JQuery, tabPrefix: string = 'tab-') {
     // We use a tab prefix for hastag so that on reload the page doesn't auto scroll to the anchored element
-    this.tabPrefix = tabPrefix || 'tab-';
+    this.tabPrefix = tabPrefix;
     this.$navigationContainer = $navigationContainer;
 
     this.watchNavbar();

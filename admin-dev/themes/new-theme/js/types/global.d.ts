@@ -20,7 +20,7 @@ interface Window {
   modalConfirmation: any;
   // eslint-disable-next-line
   ps_round: any;
-  Dropzone: any;
+  Dropzone: Dropzone;
   data: any;
   pstooltip: any;
 }
@@ -104,4 +104,8 @@ type VCheckboxDatas = Vue & {
 
 interface SelectorsMap extends Record<string, string> {
   [key: string]: string;
+}
+
+interface KeyStringRecord extends Dropzone.DropzoneOptions {
+  [key: string]: any;
 }
