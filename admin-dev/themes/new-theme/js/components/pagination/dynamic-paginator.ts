@@ -24,7 +24,6 @@
  */
 
 import ServiceType from '@PSTypes/services';
-import CombinationsService from '@pages/product/services/combinations-service';
 import RendererType from '@PSTypes/renderers';
 
 const {$} = window;
@@ -79,7 +78,7 @@ const {$} = window;
 export default class DynamicPaginator {
   private $paginationContainer: JQuery;
 
-  private paginationService: ServiceType | CombinationsService;
+  private paginationService: ServiceType;
 
   private renderer: RendererType;
 
@@ -98,7 +97,7 @@ export default class DynamicPaginator {
    */
   constructor(
     containerSelector: string,
-    paginationService: ServiceType | CombinationsService,
+    paginationService: ServiceType,
     renderer: RendererType,
     startingPage = 0,
     selectorsMap = {},

@@ -89,7 +89,7 @@ export const saveImagePosition = async (productImageId: number, newPosition: num
   });
 };
 
-export const removeProductImage = async (productImageId: number): Promise<JQuery.jqXHR<any>> => {
+export const removeProductImage = async (productImageId: string): Promise<JQuery.jqXHR<any>> => {
   const deleteUrl = router.generate('admin_products_v2_delete_image', {
     productImageId,
   });

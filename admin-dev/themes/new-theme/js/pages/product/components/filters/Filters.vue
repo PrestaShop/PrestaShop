@@ -57,7 +57,7 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import FilterDropdown from '@pages/product/components/filters/FilterDropdown';
+  import FilterDropdown from '@pages/product/components/filters/FilterDropdown.vue';
   import ProductEventMap from '@pages/product/product-event-map';
 
   const CombinationEvents = ProductEventMap.combinations;
