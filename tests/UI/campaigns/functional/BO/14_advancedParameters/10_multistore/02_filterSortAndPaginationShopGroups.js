@@ -4,6 +4,9 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -14,9 +17,6 @@ const addShopGroupPage = require('@pages/BO/advancedParameters/multistore/add');
 
 // Import data
 const ShopGroupFaker = require('@data/faker/shopGroup');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_multistore_filterSortAndPaginationShopGroups';
 
@@ -34,7 +34,7 @@ Sort table
 Delete the created shop groups
 Disable multistore
  */
-describe('Filter, sort and pagination shop group', async () => {
+describe('BO - Advanced Parameters - MultiStore : Filter, sort and pagination shop group table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -50,8 +50,8 @@ describe('Filter, sort and pagination shop group', async () => {
   });
 
   // 1 : Enable multi store
-  describe('Enable multistore', async () => {
-    it('should go to \'Shop parameters > General\' page', async function () {
+  describe('Enable \'Multistore\'', async () => {
+    it('should go to \'Shop Parameters > General\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -66,7 +66,7 @@ describe('Filter, sort and pagination shop group', async () => {
       await expect(pageTitle).to.contains(generalPage.pageTitle);
     });
 
-    it('should enable \'Multi store\'', async function () {
+    it('should enable \'Multistore\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableMultiStore', baseContext);
 
       const result = await generalPage.setMultiStoreStatus(page, true);
@@ -75,8 +75,8 @@ describe('Filter, sort and pagination shop group', async () => {
   });
 
   // 2 : Go to multistore page
-  describe('Go to multistore page and get number of store groups', async () => {
-    it('should go to \'Advanced parameters > Multi store\' page', async function () {
+  describe('Go to \'Advanced Parameters > Multistore\' page', async () => {
+    it('should go to \'Advanced Parameters > Multistore\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMultiStorePage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -100,8 +100,8 @@ describe('Filter, sort and pagination shop group', async () => {
   });
 
   // 3 : Create 20 shop groups
-  new Array(20).fill(0, 0, 20).forEach((test, index) => {
-    describe(`Create shop group n°${index + 1}`, async () => {
+  describe('Create 20 shop groups', async () => {
+    new Array(20).fill(0, 0, 20).forEach((test, index) => {
       const shopGroupData = new ShopGroupFaker({name: `todelete${index}`});
       it('should go to add new shop group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewShopGroupPage${index}`, baseContext);
@@ -112,7 +112,7 @@ describe('Filter, sort and pagination shop group', async () => {
         await expect(pageTitle).to.contains(addShopGroupPage.pageTitleCreate);
       });
 
-      it('should create shop group and check result', async function () {
+      it(`should create shop group n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createShopGroup${index}`, baseContext);
 
         const textResult = await addShopGroupPage.setShopGroup(page, shopGroupData);
@@ -154,7 +154,7 @@ describe('Filter, sort and pagination shop group', async () => {
 
   // 5 : Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 20 per page', async function () {
+    it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await multiStorePage.selectPaginationLimit(page, '20');
@@ -175,7 +175,7 @@ describe('Filter, sort and pagination shop group', async () => {
       expect(paginationNumber).to.equal('1');
     });
 
-    it('should change the item number to 50 per page', async function () {
+    it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await multiStorePage.selectPaginationLimit(page, '50');
@@ -234,7 +234,7 @@ describe('Filter, sort and pagination shop group', async () => {
   });
 
   // 7 : Delete shop groups created
-  describe('delete all shop groups created', async () => {
+  describe('Delete all shop groups created', async () => {
     new Array(20).fill(0, 0, 20).forEach((test, index) => {
       it(`should delete the shop group 'todelete${index}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteShopGroup${index}`, baseContext);
@@ -251,8 +251,8 @@ describe('Filter, sort and pagination shop group', async () => {
   });
 
   // 8 : Disable multi store
-  describe('Disable multistore', async () => {
-    it('should go to "Shop parameters > General" page', async function () {
+  describe('Disable \'Multistore\'', async () => {
+    it('should go to \'Shop Parameters > General\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -267,7 +267,7 @@ describe('Filter, sort and pagination shop group', async () => {
       await expect(pageTitle).to.contains(generalPage.pageTitle);
     });
 
-    it('should disable "Multi store"', async function () {
+    it('should disable \'Multistore\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableMultiStore', baseContext);
 
       const result = await generalPage.setMultiStoreStatus(page, false);
