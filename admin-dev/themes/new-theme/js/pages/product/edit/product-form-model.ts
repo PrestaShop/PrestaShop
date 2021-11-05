@@ -25,14 +25,14 @@
 
 import BigNumber from 'bignumber.js';
 import EventEmitter from '@components/event-emitter';
-import ObjectFormMapper from '@components/form/form-object-mapper';
+import FormObjectMapper, {FormUpdateEvent} from '@components/form/form-object-mapper';
 import ProductFormMapping from '@pages/product/edit/product-form-mapping';
 import ProductEventMap from '@pages/product/product-event-map';
 
 export default class ProductFormModel {
   eventEmitter: typeof EventEmitter;
 
-  mapper: ObjectFormMapper;
+  mapper: FormObjectMapper;
 
   precision: number;
 
@@ -40,7 +40,7 @@ export default class ProductFormModel {
     this.eventEmitter = eventEmitter;
 
     // Init form mapper
-    this.mapper = new ObjectFormMapper(
+    this.mapper = new FormObjectMapper(
       $form,
       ProductFormMapping,
       eventEmitter,
@@ -76,7 +76,7 @@ export default class ProductFormModel {
    *
    * @private
    */
-  watchProductModel(productModelKey: string, callback: (...args: any[]) => any): void {
+  watchProductModel(productModelKey: string, callback: (event: FormUpdateEvent) => void): void {
     this.mapper.watch(`product.${productModelKey}`, callback);
   }
 
@@ -95,7 +95,7 @@ export default class ProductFormModel {
    *
    * @private
    */
-  private productFieldUpdated(event: Record<string, any>): void {
+  private productFieldUpdated(event: FormUpdateEvent): void {
     this.updateProductPrices(event);
   }
 

@@ -50,7 +50,7 @@ export default class VirtualProductManager {
     this.toggleContentVisibility();
   }
 
-  toggleContentVisibility(): void {
+  private toggleContentVisibility(): void {
     const hasVirtualFile = Number(this.productFormModel.getProduct().stock.hasVirtualProductFile) === 1;
     const hasErrors = this.$virtualProductContainer
       .find(ProductMap.invalidField)

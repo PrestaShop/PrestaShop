@@ -79,7 +79,8 @@
 
 <script lang="ts">
   import CombinationsService from '@pages/product/services/combinations-service';
-  import AttributesSelector from '@pages/product/components/generator/AttributesSelector.vue';
+  import AttributesSelector, {Attribute, AttributeGroup}
+    from '@pages/product/components/generator/AttributesSelector.vue';
   import isSelected from '@pages/product/mixins/is-attribute-selected';
   import {getAllAttributeGroups} from '@pages/product/services/attribute-groups';
   import Modal from '@vue/components/Modal.vue';
@@ -90,8 +91,8 @@
   const CombinationEvents = ProductEventMap.combinations;
 
   interface CombinationGeneratorStates {
-    attributeGroups: Array<Record<string, any>>,
-    selectedAttributeGroups: Record<string, any>,
+    attributeGroups: Array<AttributeGroup>,
+    selectedAttributeGroups: AttributeGroup,
     combinationsService: CombinationsService,
     isModalShown: boolean,
     preLoading: boolean,
@@ -104,7 +105,7 @@
     data(): CombinationGeneratorStates {
       return {
         attributeGroups: [],
-        selectedAttributeGroups: {},
+        selectedAttributeGroups: <AttributeGroup>{},
         combinationsService: new CombinationsService(this.productId),
         isModalShown: false,
         preLoading: true,
@@ -176,7 +177,7 @@
         }
         document.querySelector('body')?.classList.add('overflow-hidden');
         this.hasGeneratedCombinations = false;
-        this.selectedAttributeGroups = {};
+        this.selectedAttributeGroups = <AttributeGroup>{};
         this.isModalShown = true;
       },
       /**
@@ -200,7 +201,7 @@
         Object.keys(this.selectedAttributeGroups).forEach((attributeGroupId) => {
           data.attributes[attributeGroupId] = [];
           this.selectedAttributeGroups[attributeGroupId].attributes.forEach(
-            (attribute: Record<string, any>) => {
+            (attribute: Attribute) => {
               data.attributes[attributeGroupId].push(attribute.id);
             },
           );
@@ -215,7 +216,7 @@
               '%combinationsNb%': response.combination_ids.length,
             }),
           });
-          this.selectedAttributeGroups = {};
+          this.selectedAttributeGroups = <AttributeGroup>{};
           this.hasGeneratedCombinations = true;
         } catch (error) {
           if (error.responseJSON && error.responseJSON.error) {
@@ -235,8 +236,8 @@
        */
       changeSelected(
         {selectedAttribute, attributeGroup}: {
-          selectedAttribute: Record<string, any>,
-          attributeGroup: Record<string, any>
+          selectedAttribute: Attribute,
+          attributeGroup: AttributeGroup
         },
       ): void {
         if (
@@ -259,8 +260,8 @@
        * @param {{id: int, name: string}} attributeGroup
        */
       addSelected({selectedAttribute, attributeGroup}: {
-        selectedAttribute: Record<string, any>,
-        attributeGroup: Record<string, any>
+        selectedAttribute: Attribute,
+        attributeGroup: AttributeGroup
       }) {
         // Extra check to avoid adding same attribute twice which would cause a duplicate key error
         if (
@@ -299,8 +300,8 @@
        * @param {Object} selectedAttributeGroup
        */
       removeSelected({selectedAttribute, selectedAttributeGroup}: {
-        selectedAttribute: Record<string, any>,
-        selectedAttributeGroup: Record<string, any>
+        selectedAttribute: Attribute,
+        selectedAttributeGroup: AttributeGroup
       }) {
         if (
           !Object.prototype.hasOwnProperty.call(
@@ -322,13 +323,13 @@
        * @param {Object} selectedAttribute
        * @param {{id: int, name: string}} attributeGroup
        */
-      toggleAll({attributeGroup, select}: {attributeGroup: Record<string, any>, select: Record<string, any>}) {
+      toggleAll({attributeGroup, select}: {attributeGroup: AttributeGroup, select: Record<string, any>}) {
         if (select) {
-          attributeGroup.attributes.forEach((attribute: Record<string, any>) => {
+          attributeGroup.attributes.forEach((attribute: Attribute) => {
             this.addSelected({selectedAttribute: attribute, attributeGroup});
           });
         } else {
-          attributeGroup.attributes.forEach((attribute: Record<string, any>) => {
+          attributeGroup.attributes.forEach((attribute: Attribute) => {
             this.removeSelected({
               selectedAttribute: attribute,
               selectedAttributeGroup: attributeGroup,

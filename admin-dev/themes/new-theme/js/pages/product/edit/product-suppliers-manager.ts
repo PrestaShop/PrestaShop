@@ -85,7 +85,7 @@ export default class ProductSuppliersManager {
     this.init();
   }
 
-  init(): void {
+  private init(): void {
     this.memorizeCurrentSuppliers();
     this.toggleTableVisibility();
     this.refreshDefaultSupplierBlock();
@@ -175,7 +175,7 @@ export default class ProductSuppliersManager {
     return defaultSupplier.first().val();
   }
 
-  toggleTableVisibility(): void {
+  private toggleTableVisibility(): void {
     if (this.getSelectedSuppliers().length === 0) {
       this.hideTable();
 
@@ -187,8 +187,10 @@ export default class ProductSuppliersManager {
 
   /**
    * @param {Object} supplier
+   *
+   * @private
    */
-  addSupplier(supplier: Record<string, any>): void {
+  private addSupplier(supplier: Record<string, any>): void {
     if (this.productFormModel) {
       const wholeSalePrice = this.productFormModel.getProduct().price.wholesalePrice;
 
@@ -207,12 +209,14 @@ export default class ProductSuppliersManager {
 
   /**
    * @param {int} supplierId
+   *
+   * @private
    */
-  removeSupplier(supplierId: number): void {
+  private removeSupplier(supplierId: number): void {
     this.suppliers[supplierId].removed = true;
   }
 
-  renderSuppliers(): void {
+  private renderSuppliers(): void {
     this.$productsTableBody.empty();
 
     // Loop through select suppliers so that we use the same order as in the select list
@@ -241,7 +245,7 @@ export default class ProductSuppliersManager {
     });
   }
 
-  getSelectedSuppliers(): Array<Record<string, any>> {
+  private getSelectedSuppliers(): Array<Record<string, any>> {
     const selectedSuppliers: Array<Record<string, any>> = [];
     this.$supplierIdsGroup.find('input:checked').each((index, input) => {
       const inputElement = <HTMLInputElement> input;
@@ -255,7 +259,7 @@ export default class ProductSuppliersManager {
     return selectedSuppliers;
   }
 
-  refreshDefaultSupplierBlock(): void {
+  private refreshDefaultSupplierBlock(): void {
     const suppliers = this.getSelectedSuppliers();
 
     if (suppliers.length === 0) {
@@ -285,35 +289,39 @@ export default class ProductSuppliersManager {
     }
   }
 
-  hideDefaultSuppliers(): void {
+  private hideDefaultSuppliers(): void {
     this.$defaultSupplierGroup.addClass('d-none');
   }
 
-  showDefaultSuppliers(): void {
+  private showDefaultSuppliers(): void {
     this.$defaultSupplierGroup.removeClass('d-none');
   }
 
   /**
    * @param {int[]} selectedSupplierIds
+   *
+   * @private
    */
-  checkFirstAvailableDefaultSupplier(selectedSupplierIds: Array<number>): void {
+  private checkFirstAvailableDefaultSupplier(selectedSupplierIds: Array<number>): void {
     const firstSupplierId = selectedSupplierIds[0];
     this.$defaultSupplierGroup.find(`input[value="${firstSupplierId}"]`).prop('checked', true);
   }
 
-  showTable(): void {
+  private showTable(): void {
     this.$productsTable.removeClass('d-none');
   }
 
-  hideTable(): void {
+  private hideTable(): void {
     this.$productsTable.addClass('d-none');
   }
 
   /**
    * Memorize suppliers to be able to re-render them later.
    * Flag `removed` allows identifying whether supplier was removed from list or should be rendered
+   *
+   * @private
    */
-  memorizeCurrentSuppliers(): void {
+  private memorizeCurrentSuppliers(): void {
     this.getSelectedSuppliers().forEach((supplier) => {
       this.suppliers[supplier.supplierId] = {
         supplierId: supplier.supplierId,
@@ -333,9 +341,11 @@ export default class ProductSuppliersManager {
    * Create a "shadow" prototype just to parse default values set inside the input fields,
    * this allow to build an object with default values set in the FormType
    *
+   * @private
+   *
    * @returns {{reference, removed: boolean, price, currencyId, productSupplierId}}
    */
-  getDefaultDataForSupplier(): Record<string, any> {
+  private getDefaultDataForSupplier(): Record<string, any> {
     const rowPrototype = new DOMParser().parseFromString(
       this.prototypeTemplate,
       'text/html',
@@ -354,9 +364,11 @@ export default class ProductSuppliersManager {
    * @param selectorGenerator {function}
    * @param rowPrototype {Document}
    *
+   * @private
+   *
    * @returns {*}
    */
-  getDataFromRow(selectorGenerator: (name: string) => string, rowPrototype: Document): any {
+  private getDataFromRow(selectorGenerator: (name: string) => string, rowPrototype: Document): any {
     return (<HTMLInputElement> rowPrototype?.querySelector(selectorGenerator(this.prototypeName)))?.value;
   }
 }
