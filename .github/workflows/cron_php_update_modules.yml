@@ -2,6 +2,8 @@ name: Cron Update PHP Modules
 on:
   schedule:
     - cron: '0 23 * * *'
+  workflow_dispatch:
+
 jobs:
   js-routing-dump:
     runs-on: ubuntu-latest
@@ -21,7 +23,7 @@ jobs:
         run: composer install --prefer-dist
 
       - name: Update PrestaShop packages
-        run: echo "PULL_REQUEST_BODY=$(php .github/workflows/cron_update_modules/script.php)" >> $GITHUB_ENV
+        run: echo "PULL_REQUEST_BODY='$(php .github/workflows/cron_update_modules/script.php)'" >> $GITHUB_ENV
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3

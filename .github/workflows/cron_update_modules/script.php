@@ -85,7 +85,6 @@ foreach ($modulesGit as $moduleGit) {
     if (!in_array(VENDOR_NAME . $moduleGit['path'], $modulesComposer)) {
         continue;
     }
-    echo PHP_EOL . ' === Module prestashop/' . $moduleGit['path'] . PHP_EOL;
     exec(sprintf(
         'composer update prestashop/%s',
         $moduleGit['path']
