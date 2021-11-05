@@ -252,7 +252,6 @@ class OrderControllerCore extends FrontController
             $responseData['cartUrl'] = $this->context->link->getPageLink('cart', null, null, ['action' => 'show']);
         }
 
-        ob_end_clean();
         header('Content-Type: application/json');
         $this->ajaxRender(Tools::jsonEncode($responseData));
     }
