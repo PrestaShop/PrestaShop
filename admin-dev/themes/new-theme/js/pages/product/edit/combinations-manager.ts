@@ -60,15 +60,15 @@ export default class CombinationsManager {
 
   $emptyState: JQuery;
 
-  paginator: DynamicPaginator | null;
+  paginator!: DynamicPaginator;
 
-  combinationsRenderer: CombinationsGridRenderer | null;
+  combinationsRenderer!: CombinationsGridRenderer;
 
-  filtersApp: Record<string, any> | null;
+  filtersApp!: Record<string, any>;
 
   combinationModalApp: Record<string, any> | null;
 
-  combinationGeneratorApp: Record<string, any> | null;
+  combinationGeneratorApp!: Record<string, any>;
 
   initialized: boolean;
 
@@ -91,11 +91,7 @@ export default class CombinationsManager {
     this.$paginatedList = $(CombinationsMap.combinationsPaginatedList);
     this.$emptyState = $(CombinationsMap.emptyState);
 
-    this.paginator = null;
-    this.combinationsRenderer = null;
-    this.filtersApp = null;
     this.combinationModalApp = null;
-    this.combinationGeneratorApp = null;
 
     this.initialized = false;
     this.combinationsService = new CombinationsService(this.productId);

@@ -89,8 +89,9 @@ export default class ProductModulesManager {
     this.$selectorPreviews.addClass('d-none');
     this.$moduleContents.addClass('d-none');
 
-    const moduleId = this.$moduleSelector.val();
-    $(ProductMap.modules.selectorPreview(<string>moduleId)).removeClass('d-none');
-    $(ProductMap.modules.moduleContent(<string>moduleId)).removeClass('d-none');
+    const moduleId = <string> this.$moduleSelector.val();
+
+    $(ProductMap.modules.selectorPreview(moduleId)).removeClass('d-none');
+    $(ProductMap.modules.moduleContent(moduleId)).removeClass('d-none');
   }
 }

@@ -133,23 +133,41 @@
 
   const CombinationsMap = ProductMap.combinations;
 
-  interface AttributesSelectorStates {
+  export interface AttributesSelectorStates {
     dataSetConfig: Record<string, any>;
     searchSource: Record<string, any>;
     scrollbar: PerfectScrollbar | null;
     hasGeneratedCombinations: boolean;
-    checkboxList: Array<Record<string, any>>
+    checkboxList: Array<Record<string, any>>;
   }
+
+  export interface AttributeGroup {
+    [key: string]: any;
+    id: number;
+    name: string;
+    publicName: string;
+    attributes: Array<Attribute>;
+  }
+
+  /* eslint-disable camelcase */
+  export interface Attribute {
+    id: number;
+    color: string;
+    group_id: number;
+    group_name: string;
+    name: string;
+  }
+  /* eslint-enable camelcase */
 
   export default isSelected.extend({
     name: 'AttributesSelector',
     props: {
       attributeGroups: {
-        type: Array as PropType<Array<Record<string, any>>>,
+        type: Array as PropType<Array<AttributeGroup>>,
         default: () => [],
       },
       selectedAttributeGroups: {
-        type: Object,
+        type: Object as PropType<AttributeGroup>,
         default: () => {},
       },
     },
@@ -193,13 +211,15 @@
 
         this.dataSetConfig = {
           source: this.searchSource,
-          display: (item: Record<string, any>) => `${item.group_name}: ${item.name}`,
+          display: (item: Attribute) => `${item.group_name}: ${item.name}`,
           value: 'name',
           minLength: 1,
-          onSelect: (attribute: Record<string, any>, e: Record<string, any>, $searchInput: JQuery) => {
-            const attributeGroup = {
+          onSelect: (attribute: Attribute, e: Record<string, any>, $searchInput: JQuery) => {
+            const attributeGroup: AttributeGroup = {
               id: attribute.group_id,
               name: attribute.group_name,
+              attributes: [],
+              publicName: attribute.group_name,
             };
             this.sendAddEvent(attribute, attributeGroup);
 
@@ -211,15 +231,15 @@
       /**
        * @returns {Array}
        */
-      getSearchableAttributes(): Array<Record<string, any>> {
-        const searchableAttributes: Array<Record<string, any>> = [];
-        this.attributeGroups.forEach((attributeGroup: Record<string, any>) => {
-          attributeGroup.attributes.forEach((attribute: Record<string, any>) => {
+      getSearchableAttributes(): Array<Attribute> {
+        const searchableAttributes: Array<Attribute> = [];
+        this.attributeGroups.forEach((attributeGroup: AttributeGroup) => {
+          attributeGroup.attributes.forEach((attribute: Attribute) => {
             if (
               this.isSelected(
                 attribute,
                 attributeGroup,
-                this.selectedAttributeGroups,
+                <AttributeGroup> this.selectedAttributeGroups,
               )
             ) {
               return;
@@ -239,16 +259,16 @@
        *
        * @returns {string}
        */
-      getSelectedClass(attribute: Record<string, any>, attributeGroup: Record<string, any>): string {
+      getSelectedClass(attribute: Attribute, attributeGroup: AttributeGroup): string {
         return this.isSelected(
           attribute,
           attributeGroup,
-          this.selectedAttributeGroups,
+          <AttributeGroup> this.selectedAttributeGroups,
         )
           ? 'selected'
           : 'unselected';
       },
-      sendRemoveEvent(selectedAttribute: Record<string, any>, selectedAttributeGroup: Record<string, any>): void {
+      sendRemoveEvent(selectedAttribute: Attribute, selectedAttributeGroup: AttributeGroup): void {
         this.$emit('removeSelected', {
           selectedAttribute,
           selectedAttributeGroup,
@@ -256,12 +276,12 @@
         this.updateSearchableAttributes();
         this.updateCheckboxes(selectedAttributeGroup);
       },
-      sendChangeEvent(selectedAttribute: Record<string, any>, attributeGroup: Record<string, any>): void {
+      sendChangeEvent(selectedAttribute: Attribute, attributeGroup: AttributeGroup): void {
         this.$emit('changeSelected', {selectedAttribute, attributeGroup});
         this.updateSearchableAttributes();
         this.updateCheckboxes(attributeGroup);
       },
-      sendAddEvent(selectedAttribute: Record<string, any>, attributeGroup: Record<string, any>): void {
+      sendAddEvent(selectedAttribute: Attribute, attributeGroup: AttributeGroup): void {
         this.$emit('addSelected', {selectedAttribute, attributeGroup});
         this.updateSearchableAttributes();
         this.updateCheckboxes(attributeGroup);
@@ -274,7 +294,7 @@
         this.searchSource.clear();
         this.searchSource.add(searchableAttributes);
       },
-      toggleAll(attributeGroup: Record<string, any>): void {
+      toggleAll(attributeGroup: AttributeGroup): void {
         if (this.checkboxList.includes(attributeGroup)) {
           this.checkboxList = this.checkboxList.filter(
             (e) => e.id !== attributeGroup.id,
@@ -288,11 +308,11 @@
           select: this.checkboxList.includes(attributeGroup),
         });
       },
-      updateCheckboxes(attributeGroup: Record<string, any>): void {
+      updateCheckboxes(attributeGroup: AttributeGroup): void {
         if (
-          this.selectedAttributeGroups[attributeGroup.id]
+          (<AttributeGroup> this.selectedAttributeGroups)[attributeGroup.id]
           && !this.checkboxList.includes(attributeGroup)
-          && this.selectedAttributeGroups[attributeGroup.id].attributes.length
+          && (<AttributeGroup> this.selectedAttributeGroups)[attributeGroup.id].attributes.length
             === attributeGroup.attributes.length
         ) {
           this.checkboxList.push(attributeGroup);

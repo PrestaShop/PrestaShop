@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import Vue from 'vue';
+import {Attribute, AttributeGroup} from '@pages/product/components/generator/AttributesSelector.vue';
 
 export default Vue.extend({
   methods: {
@@ -36,7 +37,7 @@ export default Vue.extend({
      *
      * @returns {boolean}
      */
-    isSelected(attribute: Record<string, any>, attributeGroup: Record<string, any>, attributeGroups: Record<string, any>) {
+    isSelected(attribute: Attribute, attributeGroup: AttributeGroup, attributeGroups: AttributeGroup) {
       if (!Object.prototype.hasOwnProperty.call(attributeGroups, attributeGroup.id)) {
         return false;
       }
