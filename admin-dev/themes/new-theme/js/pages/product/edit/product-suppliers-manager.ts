@@ -53,7 +53,7 @@ export default class ProductSuppliersManager {
 
   $initialDefault!: JQuery;
 
-  productFormModel: ProductFormModel | null;
+  productFormModel!: ProductFormModel | null | undefined;
 
   /**
    *
@@ -67,7 +67,7 @@ export default class ProductSuppliersManager {
    *        It is now also initialized for combinations as temporary fix to, but should be fixed in other PR.
    *        Dedicated issue- https://github.com/PrestaShop/PrestaShop/issues/26906
    */
-  constructor(suppliersFormId: string, forceUpdateDefault: boolean, productFormModel: ProductFormModel = null) {
+  constructor(suppliersFormId: string, forceUpdateDefault: boolean, productFormModel: ProductFormModel | null = null) {
     this.productFormModel = productFormModel;
     this.forceUpdateDefault = forceUpdateDefault;
     this.suppliersMap = SuppliersMap(suppliersFormId);
@@ -123,8 +123,8 @@ export default class ProductSuppliersManager {
       this.updateProductWholesalePrice();
     });
 
-    if (this.productFormModel !== null) {
-      this.productFormModel.watch('price.wholesalePrice', (event) => {
+    if (this.productFormModel) {
+      this.productFormModel.watchProductModel('price.wholesalePrice', (event) => {
         this.updateDefaultProductSupplierPrice(event.value);
       });
     }
@@ -133,7 +133,7 @@ export default class ProductSuppliersManager {
   /**
    * @param {string} newPrice
    */
-  updateDefaultProductSupplierPrice(newPrice) {
+  updateDefaultProductSupplierPrice(newPrice: number): void {
     const defaultProductSupplierId = this.getDefaultProductSupplierId();
 
     if (defaultProductSupplierId) {
@@ -144,7 +144,7 @@ export default class ProductSuppliersManager {
     }
   }
 
-  updateProductWholesalePrice() {
+  updateProductWholesalePrice(): void {
     const defaultProductSupplierId = this.getDefaultProductSupplierId();
 
     if (defaultProductSupplierId) {
@@ -154,14 +154,17 @@ export default class ProductSuppliersManager {
         return;
       }
       const newDefaultPrice = $defaultPriceInput.val();
-      this.productFormModel.set('price.wholesalePrice', newDefaultPrice);
+
+      if (this.productFormModel) {
+        this.productFormModel.setProductValue('price.wholesalePrice', newDefaultPrice);
+      }
     }
   }
 
   /**
    * @returns {null|int}
    */
-  getDefaultProductSupplierId() {
+  getDefaultProductSupplierId(): string | number | string[] | undefined | null {
     if (this.getSelectedSuppliers().length === 0) {
       return null;
     }
