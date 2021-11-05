@@ -28,10 +28,10 @@ namespace Tests\TestCase;
 
 use AppKernel;
 use Exception;
-use LegacyTests\Unit\ContextMocker;
 use PrestaShopBundle\Install\DatabaseDump;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Tests\Integration\Utility\ContextMocker;
 
 class SymfonyIntegrationTestCase extends WebTestCase
 {

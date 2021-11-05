@@ -26,8 +26,8 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use LegacyTests\Unit\ContextMocker;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Tests\Integration\Utility\ContextMocker;
 
 class ContextFeatureContext extends AbstractPrestaShopFeatureContext
 {
