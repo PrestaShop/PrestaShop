@@ -126,4 +126,4 @@ $pullRequestBody =
     . '| How to test?      | N/A' . PHP_EOL
     . '| Possible impacts? | N/A' . PHP_EOL
 ;
-echo $pullRequestBody;
+putenv("SCRIPT_PULL_REQUEST_BODY=$pullRequestBody");
