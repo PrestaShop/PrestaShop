@@ -38,7 +38,7 @@ export default class ProductTypeManager {
 
   productId: number;
 
-  initialType: string | number | string[] | undefined;
+  initialType: string;
 
   /**
    * @param {jQuery} $typeSelector Select element to choose the product type
@@ -48,7 +48,7 @@ export default class ProductTypeManager {
     this.$typeSelector = $typeSelector;
     this.$productForm = $productForm;
     this.productId = parseInt($productForm.data('productId'), 10);
-    this.initialType = $typeSelector.val();
+    this.initialType = <string>$typeSelector.val();
 
     this.$typeSelector.on('change', () => this.confirmTypeSubmit());
   }
@@ -84,7 +84,7 @@ export default class ProductTypeManager {
     }
     confirmMessage = `<div class="alert alert-info">${confirmMessage}</div>`;
 
-    const modal = new (ConfirmModal as any)(
+    const modal = new ConfirmModal(
       {
         id: 'modal-confirm-product-type',
         confirmTitle: this.$typeSelector.data('modal-title'),
@@ -99,6 +99,8 @@ export default class ProductTypeManager {
       },
       () => {
         this.$typeSelector.val(<string> this.initialType);
+
+        return true;
       },
     );
     modal.show();

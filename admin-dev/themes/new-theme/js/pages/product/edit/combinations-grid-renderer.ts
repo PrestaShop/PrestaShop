@@ -71,7 +71,7 @@ export default class CombinationsGridRenderer {
    *
    * @private
    */
-  renderCombinations(combinations: Record<string, any>): void {
+  renderCombinations(combinations: Array<Record<string, any>>): void {
     this.$combinationsTableBody.empty();
 
     let rowIndex = 0;
@@ -79,15 +79,15 @@ export default class CombinationsGridRenderer {
       const $row = $(this.getPrototypeRow(rowIndex));
 
       // fill inputs
-      const $combinationCheckbox = $(ProductMap.combinations.tableRow.combinationCheckbox(rowIndex.toString()), $row);
-      const $combinationIdInput = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex.toString()), $row);
-      const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex.toString()), $row);
-      const $quantityInput = $(ProductMap.combinations.tableRow.quantityInput(rowIndex.toString()), $row);
-      const $impactOnPriceInput = $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex.toString()), $row);
-      const $referenceInput = $(ProductMap.combinations.tableRow.referenceInput(rowIndex.toString()), $row);
+      const $combinationCheckbox = $(ProductMap.combinations.tableRow.combinationCheckbox(rowIndex), $row);
+      const $combinationIdInput = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex), $row);
+      const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex), $row);
+      const $quantityInput = $(ProductMap.combinations.tableRow.quantityInput(rowIndex), $row);
+      const $impactOnPriceInput = $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex), $row);
+      const $referenceInput = $(ProductMap.combinations.tableRow.referenceInput(rowIndex), $row);
       // @todo final price should be calculated based on price impact and product price,
       //    so it doesnt need to be in api response
-      const $finalPriceInput = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex.toString()), $row);
+      const $finalPriceInput = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex), $row);
       $combinationIdInput.val(combination.id);
       $combinationNameInput.val(combination.name);
       // This adds the ID in the checkbox label
@@ -101,14 +101,14 @@ export default class CombinationsGridRenderer {
       $quantityInput.data('initial-value', combination.quantity);
       $impactOnPriceInput.val(combination.impactOnPrice);
       $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
-      $(ProductMap.combinations.tableRow.editButton(rowIndex.toString()), $row).data('id', combination.id);
-      $(ProductMap.combinations.tableRow.deleteButton(rowIndex.toString()), $row).data('id', combination.id);
+      $(ProductMap.combinations.tableRow.editButton(rowIndex), $row).data('id', combination.id);
+      $(ProductMap.combinations.tableRow.deleteButton(rowIndex), $row).data('id', combination.id);
       $(ProductMap.combinations.tableRow.combinationImg, $row)
         .attr('src', combination.imageUrl)
         .attr('alt', combination.name);
 
       if (combination.isDefault) {
-        $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex.toString()), $row).prop('checked', true);
+        $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex), $row).prop('checked', true);
       }
 
       this.$combinationsTableBody.append($row);
