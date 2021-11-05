@@ -81,23 +81,29 @@ export default class ProductPartialUpdater {
 
   /**
    * Watch events specifically related to customizations subform
+   *
+   * @private
    */
-  watchCustomizations(): void {
+  private watchCustomizations(): void {
     this.eventEmitter.on(ProductEventMap.customizations.rowAdded, () => this.updateSubmitButtonState());
     this.eventEmitter.on(ProductEventMap.customizations.rowRemoved, () => this.updateSubmitButtonState());
   }
 
   /**
    * Watch events specifically related to categories subform
+   *
+   * @private
    */
-  watchCategories(): void {
+  private watchCategories(): void {
     this.eventEmitter.on(ProductEventMap.categories.categoriesUpdated, () => this.updateSubmitButtonState());
   }
 
   /**
    * Rich editors apply a layer over initial textarea fields therefore they need to be watched differently.
+   *
+   * @private
    */
-  initFormattedTextarea(): void {
+  private initFormattedTextarea(): void {
     this.eventEmitter.on('tinymceEditorSetup', (event) => {
       event.editor.on('change', () => this.updateSubmitButtonState());
     });
@@ -140,8 +146,10 @@ export default class ProductPartialUpdater {
    * Dynamically build a form with provided updated data and submit this "shadow" form
    *
    * @param updatedData {Object} Contains an object with all form fields to update indexed by query parameters name
+   *
+   * @private
    */
-  submitUpdatedData(updatedData: Record<string, any>): void {
+  private submitUpdatedData(updatedData: Record<string, any>): void {
     this.$productFormSubmitButton.prop('disabled', true);
     const $updatedForm = this.createShadowForm(updatedData);
 
@@ -152,9 +160,11 @@ export default class ProductPartialUpdater {
   /**
    * @param updatedData
    *
+   * @private
+   *
    * @returns {Object} Form clone (Jquery object)
    */
-  createShadowForm(updatedData: Record<string, any>): JQuery {
+  private createShadowForm(updatedData: Record<string, any>): JQuery {
     const $updatedForm = this.$productForm.clone();
     $updatedForm.empty();
     $updatedForm.prop('class', '');
@@ -173,8 +183,10 @@ export default class ProductPartialUpdater {
 
   /**
    * Adapt the submit button state, as long as no data has been updated the button is disabled
+   *
+   * @private
    */
-  updateSubmitButtonState(): void {
+  private updateSubmitButtonState(): void {
     const updatedData = this.getUpdatedFormData();
     this.$productFormSubmitButton.prop('disabled', updatedData === null);
   }
@@ -185,9 +197,11 @@ export default class ProductPartialUpdater {
    *
    * If no fields have been modified this method returns null.
    *
+   * @private
+   *
    * @returns {{}|null}
    */
-  getUpdatedFormData(): Record<string, any> | null {
+  private getUpdatedFormData(): Record<string, any> | null {
     const currentData: Record<string, any> = this.getFormDataAsObject();
     // Loop through current form data and remove the one that did not change
     // This way only updated AND new values remain
@@ -228,9 +242,11 @@ export default class ProductPartialUpdater {
   /**
    * Returns the serialized form data as an Object indexed by field name
    *
+   * @private
+   *
    * @returns {{}}
    */
-  getFormDataAsObject(): Record<string, any> {
+  private getFormDataAsObject(): Record<string, any> {
     const formArray = this.$productForm.serializeArray();
     const serializedForm: Record<string, any> = {};
 
@@ -273,7 +289,7 @@ export default class ProductPartialUpdater {
    *
    * @private
    */
-  appendInputToForm($form: JQuery, name: string, value: string): void {
+  private appendInputToForm($form: JQuery, name: string, value: string): void {
     $('<input>').attr({
       name,
       type: 'hidden',

@@ -24,15 +24,16 @@
  */
 /* eslint-disable max-len */
 import Router from '@components/router';
+import {AttributeGroup} from '@pages/product/components/generator/AttributesSelector.vue';
 
 const router = new Router();
 const {$} = window;
 
-export const getProductAttributeGroups = async (productId: number): Promise<Array<Record<string, any>>> => $.get(router.generate('admin_products_attribute_groups', {
+export const getProductAttributeGroups = async (productId: number): Promise<Array<AttributeGroup>> => $.get(router.generate('admin_products_attribute_groups', {
   productId,
 }));
 
-export const getAllAttributeGroups = async (): Promise<Array<Record<string, any>>> => $.get(router.generate('admin_all_attribute_groups'));
+export const getAllAttributeGroups = async (): Promise<Array<AttributeGroup>> => $.get(router.generate('admin_all_attribute_groups'));
 
 export default {
   getProductAttributeGroups,

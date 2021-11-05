@@ -79,8 +79,10 @@ export default class RedirectOptionManager {
 
   /**
    * Watch the selected redirection type and adapt the inputs accordingly.
+   *
+   * @private
    */
-  watchRedirectType(): void {
+  private watchRedirectType(): void {
     this.lastSelectedType = this.$redirectTypeInput.val();
 
     this.$redirectTypeInput.change(() => {
@@ -94,7 +96,7 @@ export default class RedirectOptionManager {
           this.$redirectTargetLabel.html(this.$redirectTargetInput.data('categoryLabel'));
           // If previous type was not a category we reset the selected value
           if (this.lastSelectedType !== '301-category' && this.lastSelectedType !== '302-category') {
-            this.entitySearchInput.setValues();
+            this.entitySearchInput.setValues([]);
           }
           this.$redirectTargetHint.html(this.$redirectTargetInput.data('categoryHelp'));
           this.entitySearchInput.setOption('allowDelete', true);
@@ -108,7 +110,7 @@ export default class RedirectOptionManager {
           this.$redirectTargetLabel.html(this.$redirectTargetInput.data('productLabel'));
           // If previous type was not a category we reset the selected value
           if (this.lastSelectedType !== '301-product' && this.lastSelectedType !== '302-product') {
-            this.entitySearchInput.setValues();
+            this.entitySearchInput.setValues([]);
           }
           this.$redirectTargetHint.html(this.$redirectTargetInput.data('productHelp'));
           this.entitySearchInput.setOption('allowDelete', false);
@@ -117,7 +119,7 @@ export default class RedirectOptionManager {
           break;
         case '404':
         default:
-          this.entitySearchInput.setValues();
+          this.entitySearchInput.setValues([]);
           this.hideTarget();
           break;
       }
@@ -125,7 +127,7 @@ export default class RedirectOptionManager {
     });
   }
 
-  buildAutoCompleteSearchInput(): void {
+  private buildAutoCompleteSearchInput(): void {
     const redirectType = this.$redirectTypeInput.val();
     // On first load only allow delete for category target
     let initialAllowDelete;
@@ -151,11 +153,11 @@ export default class RedirectOptionManager {
     });
   }
 
-  showTarget(): void {
+  private showTarget(): void {
     this.$redirectTargetRow.removeClass('d-none');
   }
 
-  hideTarget(): void {
+  private hideTarget(): void {
     this.$redirectTargetRow.addClass('d-none');
   }
 }
