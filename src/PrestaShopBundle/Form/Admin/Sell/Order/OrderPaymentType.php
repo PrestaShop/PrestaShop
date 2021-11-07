@@ -110,14 +110,6 @@ class OrderPaymentType extends AbstractType
                 'required' => false,
             ])
             ->add('amount', NumberType::class, [
-                'constraints' => [
-                    new GreaterThan([
-                        'value' => 0,
-                        'message' => $this->translator->trans(
-                            'Invalid value: the payment must be a positive amount.', [], 'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
             ])
             ->add('id_currency', ChoiceType::class, [
                 'choices' => $this->currencySymbolByIdChoiceProvider->getChoices([
