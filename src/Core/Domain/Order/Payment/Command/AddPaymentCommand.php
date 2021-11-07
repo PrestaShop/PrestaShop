@@ -102,7 +102,6 @@ class AddPaymentCommand
         ?string $transactionId = null
     ) {
         $amount = new DecimalNumber($paymentAmount);
-        $this->assertAmountIsPositive($amount);
         $this->assertPaymentMethodIsGenericName($paymentMethod);
 
         $this->orderId = new OrderId($orderId);
