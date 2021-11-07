@@ -46,7 +46,7 @@ class OrderPaymentCore extends ObjectModel
         'fields' => [
             'order_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 9],
             'id_currency' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'amount' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'amount' => ['type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'required' => true],
             'payment_method' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
             'conversion_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
             'transaction_id' => ['type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254],
