@@ -45,6 +45,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SpecificPriceController extends FrameworkBundleAdminController
 {
+    private const UNSPECIFIED_VALUE_FORMAT = '--';
+
     public function listAction(int $productId): JsonResponse
     {
         $specificPricesList = $this->getQueryBus()->handle(
@@ -137,7 +139,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         foreach ($specificPriceListForEditing->getSpecificPrices() as $specificPrice) {
             $list[] = [
                 'id' => $specificPrice->getSpecificPriceId(),
-                'combination' => $specificPrice->getCombinationName() ?: $this->getUnspecifiedValueFormat(),
+                'combination' => $specificPrice->getCombinationName() ?: self::UNSPECIFIED_VALUE_FORMAT,
                 'currency' => $specificPrice->getCurrency() ?? $this->trans('All currencies', 'Admin.Global'),
                 'country' => $specificPrice->getCountry() ?? $this->trans('All countries', 'Admin.Global'),
                 'group' => $specificPrice->getGroup() ?? $this->trans('All groups', 'Admin.Global'),
@@ -155,7 +157,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     private function formatPrice(Price $price): string
     {
         if ($price->isInitialPrice()) {
-            return $this->getUnspecifiedValueFormat();
+            return self::UNSPECIFIED_VALUE_FORMAT;
         }
 
         return $this->getContextLocale()->formatPrice((string) $price, $this->getContextCurrencyIso());
@@ -164,16 +166,17 @@ class SpecificPriceController extends FrameworkBundleAdminController
     private function formatImpact(string $reductionType, DecimalNumber $reductionValue): string
     {
         if ($reductionValue->equalsZero()) {
-            return $this->getUnspecifiedValueFormat();
+            return self::UNSPECIFIED_VALUE_FORMAT;
         }
 
-        //@todo: locale seems to have smth like negative percentage/price specifications, but have no idea how to use it??
+        $reductionValue = $reductionValue->toNegative();
+
         $locale = $this->getContextLocale();
         if ($reductionType === Reduction::TYPE_AMOUNT) {
-            return sprintf('-%s', $locale->formatPrice((string) $reductionValue, $this->getContextCurrencyIso()));
+            return sprintf('%s', $locale->formatPrice((string) $reductionValue, $this->getContextCurrencyIso()));
         }
 
-        return sprintf('-%s %%', (string) $reductionValue);
+        return sprintf('%s %%', (string) $reductionValue);
     }
 
     private function formatPeriod(DateTimeInterface $from, DateTimeInterface $to): ?array
@@ -190,10 +193,5 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 $this->trans('Unlimited', 'Admin.Global') :
                 $to->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
         ];
-    }
-
-    private function getUnspecifiedValueFormat(): string
-    {
-        return '--';
     }
 }
