@@ -47,8 +47,8 @@
             {if !$product.is_virtual}
                 {if !$product.customizations}
                   <span id="_desktop_product_line_{$product.id_order_detail}">
-                  <input type="checkbox" id="cb_{$product.id_order_detail}" name="ids_order_detail[{$product.id_order_detail}]" value="{$product.id_order_detail}">
-                </span>
+                    <input type="checkbox" id="cb_{$product.id_order_detail}" name="ids_order_detail[{$product.id_order_detail}]" value="{$product.id_order_detail}">
+                  </span>
                 {else}
                   {foreach $product.customizations as $customization}
                     <span id="_desktop_product_customization_line_{$product.id_order_detail}_{$customization.id_customization}">
