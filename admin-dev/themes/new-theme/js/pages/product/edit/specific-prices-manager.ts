@@ -42,8 +42,6 @@ export default class SpecificPricesManager {
 
   specificPriceList: SpecificPriceList;
 
-  specificPriceModalApp: null;
-
   constructor(
     productId: number,
   ) {
