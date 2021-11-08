@@ -248,7 +248,7 @@ class SEOType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'product_id' => null,
-                'label' => $this->trans('Search Engine Optimization', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Search engine optimization', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
                 'label_subtitle' => $this->trans('Improve your ranking and how your product page will appear in search engines results.', 'Admin.Catalog.Feature'),
                 'required' => false,
