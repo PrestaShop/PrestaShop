@@ -129,10 +129,9 @@
         addButton.addEventListener('click', (e) => {
           e.stopImmediatePropagation();
           this.url = router.generate(
-            'admin_products_specific_prices_create',
+            'admin_products_specific_prices_create_iframe',
             {
               productId: this.productId,
-              liteDisplaying: 1,
             },
           );
           this.loadingForm = true;
@@ -144,10 +143,9 @@
         $(SpecificPriceMap.listContainer).on('click', SpecificPriceMap.listFields.editBtn, (e) => {
           e.stopImmediatePropagation();
           this.url = router.generate(
-            'admin_products_specific_prices_edit',
+            'admin_products_specific_prices_edit_iframe',
             {
               specificPriceId: e.currentTarget.dataset.specificPriceId,
-              liteDisplaying: 1,
             },
           );
           this.loadingForm = true;
