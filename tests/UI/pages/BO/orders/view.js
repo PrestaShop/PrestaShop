@@ -193,7 +193,7 @@ class Order extends BOBasePage {
     this.refundShippingCost = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_shipping_amount']`;
     this.partialRefundSubmitButton = 'button#cancel_product_save';
 
-    // Message block
+    // Messages block
     this.messageBlock = '#messageCard';
     this.messageBlockTitle = `${this.messageBlock} .card-header-title`;
     this.orderMessageSelect = '#order_message_order_message';
@@ -201,8 +201,9 @@ class Order extends BOBasePage {
     this.messageTextarea = '#order_message_message';
     this.sendMessageButton = `${this.messageBlock} .btn-primary`;
     this.messageBlockList = `${this.messageBlock} .messages-block`;
-    this.messageBlockEmployee = messageID => `${this.messageBlockList} li:nth-child(${messageID}).messages-block-employee`;
-    this.messageBlockCustomer = messageID => `${this.messageBlockList} li:nth-child(${messageID}).messages-block-customer`;
+    this.messageListChild = messageID => `${this.messageBlockList} li:nth-child(${messageID})`;
+    this.messageBlockEmployee = messageID => `${this.messageListChild(messageID)}.messages-block-employee`;
+    this.messageBlockCustomer = messageID => `${this.messageListChild(messageID)}.messages-block-customer`;
     this.messageEmployeeBlockContent = messageID => `${this.messageBlockEmployee(messageID)} .messages-block-content`;
     this.messageCustomerBlockContent = messageID => `${this.messageBlockCustomer(messageID)} .messages-block-content`;
     this.messageBlockIcon = messageID => `${this.messageBlockEmployee(messageID)} .messages-block-icon`;
@@ -1253,8 +1254,7 @@ class Order extends BOBasePage {
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
-  // Message block
-
+  // Messages block
   /**
    * Send message
    * @param page {Page} Browser tab
@@ -1297,11 +1297,23 @@ class Order extends BOBasePage {
     return this.elementVisible(page, this.messageCustomerBlockContent(messageID), 1000);
   }
 
+  /**
+   * Is employee icon visible
+   * @param page {Page} Browser tab
+   * @param messageID {number} Message id number
+   * @returns {Promise<boolean>}
+   */
   isEmployeeIconVisible(page, messageID = 1) {
     return this.elementVisible(page, `${this.messageBlockIcon(messageID)} .employee-icon`, 1000);
   }
 
-  isEmployeeIconPrivateVisible(page, messageID = 1) {
+  /**
+   * Is employee private icon visible
+   * @param page {Page} Browser tab
+   * @param messageID {number} Message id number
+   * @returns {Promise<boolean>}
+   */
+  isEmployeePrivateIconVisible(page, messageID = 1) {
     return this.elementVisible(page, `${this.messageBlockIcon(messageID)} .employee-icon--private`, 1000);
   }
 
@@ -1320,6 +1332,11 @@ class Order extends BOBasePage {
     return this.getTextContent(page, this.messageCustomerBlockContent(messageID));
   }
 
+  /**
+   * Click on configure message link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnConfigureMessageLink(page) {
     await this.waitForSelectorAndClick(page, this.configureLink);
   }

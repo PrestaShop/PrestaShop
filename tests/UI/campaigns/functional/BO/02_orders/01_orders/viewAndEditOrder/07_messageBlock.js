@@ -356,7 +356,7 @@ describe('BO - Orders - View and edit order : Check message block', async () => 
     it('should check that the employee icon is private', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmployeeIcon', baseContext);
 
-      const isVisible = await viewOrderPage.isEmployeeIconPrivateVisible(page, 2);
+      const isVisible = await viewOrderPage.isEmployeePrivateIconVisible(page, 2);
       await expect(isVisible).to.be.true;
     });
 
