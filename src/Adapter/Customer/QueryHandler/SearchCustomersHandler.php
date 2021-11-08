@@ -121,8 +121,8 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
                     foreach ($group_ids as $id_group) {
                         $customerArray['groups'][$id_group] = [
                             'id_group' => $id_group,
-                            'name' => (isset($groupNames[$id_group]) ? $groupNames[$id_group] : ''),
-                            'default' => ($id_group == $customerArray['id_default_group'] ? true : false),
+                            'name' => $groupNames[$id_group]) ?? '',
+                            'default' => $id_group == $customerArray['id_default_group'],
                         ];
                     }
                 }

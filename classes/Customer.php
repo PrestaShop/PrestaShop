@@ -868,9 +868,9 @@ class CustomerCore extends ObjectModel
      */
     public static function searchByName($query, $limit = null)
     {
-        $sql = "SELECT c.*, 
-                GROUP_CONCAT(cg.id_group SEPARATOR ',') AS group_ids 
-                FROM `" . _DB_PREFIX_ . 'customer` c
+        $sql = 'SELECT c.*, 
+                GROUP_CONCAT(cg.id_group SEPARATOR \',\') AS group_ids 
+                FROM `' . _DB_PREFIX_ . 'customer` c
                 LEFT JOIN `' . _DB_PREFIX_ . 'customer_group` cg ON c.id_customer = cg.id_customer
                 WHERE 1';
         $search_items = explode(' ', $query);

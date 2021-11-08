@@ -97,7 +97,7 @@ export default class CustomerRenderer {
 
         Object.values(customerResult.groups).forEach((customerGroup) => {
           if (customerGroup.default === true) {
-            output.push(`${customerGroup.name} -  ${window.translate_javascripts['Customer search - group default']}`);
+            output.push(`${customerGroup.name} - ${window.translate_javascripts['Customer search - group default']}`);
           } else {
             output.push(customerGroup.name);
           }
