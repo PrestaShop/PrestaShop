@@ -67,7 +67,8 @@ class SpecificPriceController extends FrameworkBundleAdminController
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Creation successful', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_products_specific_prices_edit_iframe', [
+                return $this->redirectToRoute('admin_products_specific_prices_edit', [
+                    'liteDisplaying' => $request->query->has('liteDisplaying'),
                     'specificPriceId' => $result->getIdentifiableObjectId(),
                 ]);
             }
@@ -91,8 +92,9 @@ class SpecificPriceController extends FrameworkBundleAdminController
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_products_specific_prices_edit_iframe', [
+                return $this->redirectToRoute('admin_products_specific_prices_edit', [
                     'specificPriceId' => $specificPriceId,
+                    'liteDisplaying' => $request->query->has('liteDisplaying'),
                 ]);
             }
         } catch (Exception $e) {
