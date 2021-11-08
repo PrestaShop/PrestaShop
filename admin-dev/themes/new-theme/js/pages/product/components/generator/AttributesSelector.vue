@@ -198,13 +198,15 @@
     methods: {
       initDataSetConfig(): void {
         const searchItems = this.getSearchableAttributes();
+
+        const letters = [
+          'name',
+          'value',
+          'group_name',
+        ];
+
         this.searchSource = new Bloodhound({
-          datumTokenizer: Tokenizers.obj.letters([
-            'name',
-            'value',
-            'group_name',
-          ] as any,
-          ),
+          datumTokenizer: Tokenizers.obj.letters(letters),
           queryTokenizer: Bloodhound.tokenizers.nonword,
           local: searchItems,
         });
