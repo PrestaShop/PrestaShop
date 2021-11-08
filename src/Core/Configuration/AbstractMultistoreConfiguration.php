@@ -109,7 +109,7 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
      * - Only defined configuration fields exist
      * - In single or group shop context, multistore fields are added to the list of defined fields, so that no error
      * is triggered because of additional checkboxes
-     * - In all shop context, all fields must be there
+     * - In all shop context, all fields are required
      *
      * @param array $configurationInputValues
      *
