@@ -25,6 +25,7 @@ class Order extends BOBasePage {
     this.errorAddSameProduct = 'This product is already in your order, please edit the quantity instead.';
     this.noAvailableDocumentsMessage = 'There is no available document';
     this.updateSuccessfullMessage = 'Update successful';
+    this.commentSuccessfullMessage = 'Comment successfully added.';
     this.validationSendMessage = 'The message was successfully sent to the customer.';
     this.errorAssignSameStatus = 'The order has already been assigned this status.';
     this.updateSuccessfullMessage = 'Update successful';
@@ -174,6 +175,21 @@ class Order extends BOBasePage {
     this.refundProductAmount = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_amount']`;
     this.refundShippingCost = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_shipping_amount']`;
     this.partialRefundSubmitButton = 'button#cancel_product_save';
+
+    // Message block
+    this.messageBlock = '#messageCard';
+    this.messageBlockTitle = `${this.messageBlock} .card-header-title`;
+    this.orderMessageSelect = '#order_message_order_message';
+    this.displayToCustometCheckbox = `${this.messageBlock} .md-checkbox label`;
+    this.messageTextarea = '#order_message_message';
+    this.sendMessageButton = `${this.messageBlock} .btn-primary`;
+    this.messageBlockList = `${this.messageBlock} .messages-block`;
+    this.messageBlockEmployee = messageID => `${this.messageBlockList} li:nth-child(${messageID}).messages-block-employee`;
+    this.messageBlockCustomer = messageID => `${this.messageBlockList} li:nth-child(${messageID}).messages-block-customer`;
+    this.messageEmployeeBlockContent = messageID => `${this.messageBlockEmployee(messageID)} .messages-block-content`;
+    this.messageCustomerBlockContent = messageID => `${this.messageBlockCustomer(messageID)} .messages-block-content`;
+    this.messageBlockIcon = messageID => `${this.messageBlockEmployee(messageID)} .messages-block-icon`;
+    this.configureLink = `${this.messageBlock} .configure-link`;
   }
 
   /*
@@ -183,6 +199,7 @@ class Order extends BOBasePage {
   /**
    * Get order status
    * @param page {Page} Browser tab
+   * @param row {number} Product row on table
    * @returns {Promise<string>}
    */
   async getOrderStatus(page) {
@@ -1144,6 +1161,77 @@ class Order extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.updateCarrierButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  // Message block
+
+  /**
+   * Send message
+   * @param page {Page} Browser tab
+   * @param messageData {{orderMessage: string, displayToCustomer : boolean, message : string}} Data to set on the form
+   * @returns {Promise<string>}
+   */
+  async sendMessage(page, messageData) {
+    await this.selectByVisibleText(page, this.orderMessageSelect, messageData.orderMessage);
+    if (messageData.displayToCustomer) {
+      await this.setChecked(page, this.displayToCustometCheckbox, messageData.displayToCustomer);
+    }
+    if (messageData.message !== '') {
+      await this.setValue(page, this.messageTextarea, messageData.message);
+    }
+    await this.waitForSelectorAndClick(page, this.sendMessageButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Get messages number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getMessagesNumber(page) {
+    return this.getNumberFromText(page, this.messageBlockTitle);
+  }
+
+  /**
+   * Is message visible
+   * @param page {Page} Browser tab
+   * @param messageID {number} Message ID on the list
+   * @param messageFrom {string} The message sender
+   * @returns {Promise<boolean>}
+   */
+  isMessageVisible(page, messageID = 1, messageFrom = 'employee') {
+    if (messageFrom === 'employee') {
+      return this.elementVisible(page, this.messageEmployeeBlockContent(messageID), 1000);
+    }
+    return this.elementVisible(page, this.messageCustomerBlockContent(messageID), 1000);
+  }
+
+  isEmployeeIconVisible(page, messageID = 1) {
+    return this.elementVisible(page, `${this.messageBlockIcon(messageID)} .employee-icon`, 1000);
+  }
+
+  isEmployeeIconPrivateVisible(page, messageID = 1) {
+    return this.elementVisible(page, `${this.messageBlockIcon(messageID)} .employee-icon--private`, 1000);
+  }
+
+  /**
+   * Get text message
+   * @param page {Page} Browser tab
+   * @param messageID {number} Message ID on the list
+   * @param messageFrom {string} The message sender
+   * @returns {Promise<string>}
+   */
+  getTextMessage(page, messageID = 1, messageFrom = 'employee') {
+    if (messageFrom === 'employee') {
+      return this.getTextContent(page, this.messageEmployeeBlockContent(messageID));
+    }
+
+    return this.getTextContent(page, this.messageCustomerBlockContent(messageID));
+  }
+
+  async clickOnConfigureMessageLink(page) {
+    await this.waitForSelectorAndClick(page, this.configureLink);
   }
 }
 
