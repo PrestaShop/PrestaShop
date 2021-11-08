@@ -69,7 +69,7 @@ class FloatParserTest extends TestCase
     {
         $expected = 1234567.89;
 
-        return [
+        $data = [
             ['1234567.89', $expected],
             ['1234567,89', $expected],
             ['1,234,567.89', $expected],
@@ -97,6 +97,29 @@ class FloatParserTest extends TestCase
             ['', 0.0],
             ['   ', 0.0],
         ];
+
+        // cldr minus signs
+        $cldr_minus_signs = $this->str_split_unicode('-‒⁻₋−➖﹣－');
+        foreach ($cldr_minus_signs as $cldr_minus_sign) {
+            $data[] = [$cldr_minus_sign . $expected, $expected * -1];
+        }
+
+        return $data;
+    }
+
+    /**
+     * php str_split is not unicode aware..
+     * do the split ourself
+     */
+    private function str_split_unicode($str)
+    {
+        $len = mb_strlen($str, 'UTF-8');
+        $result = [];
+        for ($i = 0; $i < $len; ++$i) {
+            $result[] = mb_substr($str, $i, 1, 'UTF-8');
+        }
+
+        return $result;
     }
 
     public function provideInvalidValues()
