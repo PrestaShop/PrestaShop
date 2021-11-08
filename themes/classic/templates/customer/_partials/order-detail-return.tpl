@@ -126,9 +126,7 @@
                     <input type="hidden" value="1" name="customization_qty_input[{$customization.id_customization}]" />
                   {/if}
                 </div>
-<<<<<<< HEAD
                 {/if}
-=======
                 {if $product.quantity > $product.qty_returned && !$product.is_virtual}
                   <div class="select" id="_desktop_return_qty_{$product.id_order_detail}">
                     <select name="order_qte_input[{$product.id_order_detail}]" class="form-control form-control-select">
@@ -158,7 +156,6 @@
                 {/foreach}
                 <div class="clearfix"></div>
               {/if}
->>>>>>> 31c6b231ad (Fix template Conflit)
             </td>
             <td class="text-xs-right">{$product.qty_returned}</td>
             <td class="text-xs-right">{$product.price}</td>
