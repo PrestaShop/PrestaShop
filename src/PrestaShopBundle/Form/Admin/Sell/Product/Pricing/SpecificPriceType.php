@@ -226,6 +226,9 @@ class SpecificPriceType extends TranslatorAwareType
                 ],
             ])
             ->add('include_tax', ChoiceType::class, [
+                'row_attr' => [
+                    'class' => 'js-include-tax-row',
+                ],
                 'label' => $this->trans('Reduction with or without taxes', 'Admin.Catalog.Feature'),
                 'placeholder' => false,
                 'required' => false,
