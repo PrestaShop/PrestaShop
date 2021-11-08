@@ -165,8 +165,9 @@
       },
       closeAfterSubmit() {
         const form = this.$refs.iframe.contentDocument.querySelector(SpecificPriceMap.form);
+        const successAlertsCount = Number(form.dataset.alertsSuccess);
 
-        if (form.dataset.afterSubmit) {
+        if (successAlertsCount !== 0) {
           if (this.openForCreate) {
             this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceCreated);
           }
