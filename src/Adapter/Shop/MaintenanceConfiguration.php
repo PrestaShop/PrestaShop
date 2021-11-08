@@ -37,7 +37,7 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
     /**
      * @var array<int, string>
      */
-    private $fields = ['enable_shop', 'maintenance_ip', 'maintenance_text'];
+    const CONFIGURATION_FIELDS = ['enable_shop', 'maintenance_ip', 'maintenance_text'];
 
     /**
      * {@inheritdoc}
@@ -75,7 +75,7 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
     protected function buildResolver(): OptionsResolver
     {
         $resolver = new OptionsResolver();
-        $resolver->setDefined($this->fields);
+        $resolver->setDefined(self::CONFIGURATION_FIELDS);
         $resolver->setAllowedTypes('enable_shop', 'bool');
         $resolver->setAllowedTypes('maintenance_ip', 'string');
         $resolver->setAllowedTypes('maintenance_text', 'array');
