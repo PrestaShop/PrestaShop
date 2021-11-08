@@ -28,12 +28,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\NoGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
-//@todo: rename to ProductSpecificPriceFormDataHandler? and related services
 class SpecificPriceFormDataHandler implements FormDataHandlerInterface
 {
     /**
@@ -60,11 +62,15 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
             (string) $data['price'],
             (int) $data['from_quantity']
         );
+        $currencyId = $data['currency_id'] ? (int) $data['currency_id'] : NoCurrencyId::NO_CURRENCY_ID;
+        $groupId = $data['group_id'] ? (int) $data['group_id'] : NoGroupId::NO_GROUP_ID;
+        $combinationId = $data['combination_id'] ? (int) $data['combination_id'] : NoCombinationId::NO_COMBINATION_ID;
 
         $command
-            ->setCurrencyId((int) $data['currency_id'])
+            ->setCurrencyId($currencyId)
+            ->setGroupId($groupId)
+            ->setCombinationId($combinationId)
             ->setCountryId((int) $data['country_id'])
-            ->setGroupId((int) $data['group_id'])
             ->setCustomerId($this->getCustomerId($data))
         ;
         if (isset($data['shop_id'])) {
@@ -80,42 +86,24 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
     public function update($id, array $data): void
     {
         $command = new EditProductSpecificPriceCommand((int) $id);
-        $command->setCustomerId($this->getCustomerId($data));
+        $currencyId = $data['currency_id'] ? (int) $data['currency_id'] : NoCurrencyId::NO_CURRENCY_ID;
+        $groupId = $data['group_id'] ? (int) $data['group_id'] : NoGroupId::NO_GROUP_ID;
+        $combinationId = $data['combination_id'] ? (int) $data['combination_id'] : NoCombinationId::NO_COMBINATION_ID;
 
-        if (null !== $data['currency_id']) {
-            $command->setCurrencyId((int) $data['currency_id']);
-        }
-        if (null !== $data['country_id']) {
-            $command->setCountryId((int) $data['country_id']);
-        }
-        if (null !== $data['group_id']) {
-            $command->setGroupId((int) $data['group_id']);
-        }
-        if (null !== $data['from_quantity']) {
-            $command->setFromQuantity((int) $data['from_quantity']);
-        }
-
-        if (null !== $data['leave_initial_price']) {
-            $command->setLeaveInitialPrice((bool) $data['leave_initial_price']);
-        }
-
-        if (null !== $data['price']) {
-            $command->setPrice((string) $data['price']);
-        }
-
-        if (isset($data['date_range']['from'])) {
-            $command->setDateTimeFrom(DateTime::buildNullableDateTime($data['date_range']['from']));
-        }
-        if (isset($data['date_range']['to'])) {
-            $command->setDateTimeTo(DateTime::buildNullableDateTime($data['date_range']['to']));
-        }
-        if (null !== $data['reduction']) {
-            $command->setReduction((string) $data['reduction']['type'], (string) $data['reduction']['value']);
-        }
-        if (null !== $data['include_tax']) {
-            $command->setIncludesTax((bool) $data['include_tax']);
-        }
-
+        $command
+            ->setCurrencyId($currencyId)
+            ->setGroupId($groupId)
+            ->setCombinationId($combinationId)
+            ->setCustomerId($this->getCustomerId($data))
+            ->setCountryId((int) $data['country_id'])
+            ->setFromQuantity((int) $data['from_quantity'])
+            ->setLeaveInitialPrice((bool) $data['leave_initial_price'])
+            ->setPrice((string) $data['price'])
+            ->setDateTimeFrom(DateTime::buildNullableDateTime($data['date_range']['from']))
+            ->setDateTimeTo(DateTime::buildNullableDateTime($data['date_range']['to']))
+            ->setReduction((string) $data['reduction']['type'], (string) $data['reduction']['value'])
+            ->setIncludesTax((bool) $data['include_tax'])
+        ;
         $this->commandBus->handle($command);
     }
 

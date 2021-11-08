@@ -29,9 +29,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\NoGroupId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
@@ -141,21 +138,20 @@ class SpecificPriceType extends TranslatorAwareType
             ->add('product_id', HiddenType::class)
             ->add('currency_id', ChoiceType::class, [
                 'label' => $this->trans('Currency', 'Admin.Global'),
-                'required' => false,
-                'placeholder' => false,
-                'choices' => $this->getModifiedCurrencyChoices(),
+                'placeholder' => $this->trans('All currencies', 'Admin.Global'),
+                'choices' => $this->currencyByIdChoiceProvider->getChoices(),
             ])
             ->add('country_id', ChoiceType::class, [
                 'label' => $this->trans('Country', 'Admin.Global'),
                 'required' => false,
-                'placeholder' => false,
-                'choices' => $this->getModifiedCountryChoices(),
+                'placeholder' => $this->trans('All countries', 'Admin.Global'),
+                'choices' => $this->countryByIdChoiceProvider->getChoices(),
             ])
             ->add('group_id', ChoiceType::class, [
                 'label' => $this->trans('Group', 'Admin.Global'),
                 'required' => false,
-                'placeholder' => false,
-                'choices' => $this->getModifiedGroupChoices(),
+                'placeholder' => $this->trans('All groups', 'Admin.Global'),
+                'choices' => $this->groupByIdChoiceProvider->getChoices(),
             ])
             ->add('customer', EntitySearchInputType::class, [
                 'label' => $this->trans('Customer', 'Admin.Global'),
@@ -168,11 +164,11 @@ class SpecificPriceType extends TranslatorAwareType
                 'placeholder' => $this->trans('All Customers', 'Admin.Global'),
                 'suggestion_field' => 'fullname_and_email',
             ])
-            ->add('combinationId', ChoiceType::class, [
+            ->add('combination_id', ChoiceType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),
                 'required' => false,
-                'placeholder' => false,
-                'choices' => $this->getModifiedCombinationChoices($builder->getData()['product_id']),
+                'placeholder' => $this->trans('All combinations', 'Admin.Global'),
+                'choices' => $this->combinationIdChoiceProvider->getChoices(['product_id' => $builder->getData()['product_id']]),
             ])
             ->add('from_quantity', NumberType::class, [
                 'label' => $this->trans('From quantity', 'Admin.Catalog.Feature'),
@@ -246,61 +242,5 @@ class SpecificPriceType extends TranslatorAwareType
 //                'choices' => $this->shopByIdChoiceProvider->getChoices(),
 //            ]);
 //        }
-    }
-
-    //@todo: all bellow getModified{fooBar} methods might be worth moving to some reusable services (used in CatalogPriceRuleType too)
-
-    /**
-     * Prepends 'All currencies' option with id of 0 to currency choices
-     *
-     * @return array<string, int>
-     */
-    private function getModifiedCurrencyChoices(): array
-    {
-        return array_merge(
-            [$this->trans('All currencies', 'Admin.Global') => NoCurrencyId::NO_CURRENCY_ID],
-            $this->currencyByIdChoiceProvider->getChoices()
-        );
-    }
-
-    /**
-     * Prepends 'All countries' option with id of 0 to country choices
-     *
-     * @return array<string, int>
-     */
-    private function getModifiedCountryChoices(): array
-    {
-        return array_merge(
-            [$this->trans('All countries', 'Admin.Global') => 0],
-            $this->countryByIdChoiceProvider->getChoices()
-        );
-    }
-
-    /**
-     * Prepends 'All groups' option with id of 0 to group choices
-     *
-     * @return array<string, int>
-     */
-    private function getModifiedGroupChoices(): array
-    {
-        return array_merge(
-            [$this->trans('All groups', 'Admin.Global') => NoGroupId::NO_GROUP_ID],
-            $this->groupByIdChoiceProvider->getChoices()
-        );
-    }
-
-    /**
-     * Prepends 'All combinations' option with id of 0 to group choices
-     *
-     * @param int $productId
-     *
-     * @return array<string, int>
-     */
-    private function getModifiedCombinationChoices(int $productId): array
-    {
-        return array_merge(
-            [$this->trans('All combinations', 'Admin.Global') => NoCombinationId::NO_COMBINATION_ID],
-            $this->combinationIdChoiceProvider->getChoices(['product_id' => $productId])
-        );
     }
 }
