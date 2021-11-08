@@ -34,6 +34,12 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
+/**
+ * Appends alert messages from session flashbag to form vars.
+ *
+ * Usage example: when form is rendered in iframe modal, success alerts allows identifying if it was rendered after
+ * successful redirect. This way we can automatically close the modal knowing that the action was successful.
+ */
 class AlertsTrackingExtension extends AbstractTypeExtension
 {
     /**
@@ -55,8 +61,11 @@ class AlertsTrackingExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        //@todo: format alerts by type;
-        //@todo: how to make form vars show only in parent form? (cuz every child will have them now)
+        //We dont want to add alerts on every single child form, just the parent one.
+        if ($form->getParent()) {
+            return;
+        }
+
         $view->vars['alerts'] = $this->flashBag->peekAll();
     }
 

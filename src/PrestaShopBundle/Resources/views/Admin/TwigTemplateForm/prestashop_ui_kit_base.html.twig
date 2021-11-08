@@ -54,6 +54,11 @@
 
 {# Widgets #}
 
+{% block form_start %}
+  {% set attr = attr|merge({'data-alerts-success': form.vars.alerts.success|default([])|length()}) %}
+  {{ parent() }}
+{% endblock form_start %}
+
 {%- block form_widget -%}
   {% if columns_number is defined %}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-columns-' ~ columns_number)|trim}) %}
