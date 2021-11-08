@@ -28,7 +28,6 @@ const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultEmployee} = require('@data/demo/employees');
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_messageBlock';
 
@@ -147,7 +146,8 @@ describe('BO - Orders - View and edit order : Check message block', async () => 
 
       // Check the confirmation message
       const cardTitle = await foOrderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle, 'Payment step is not completed!').to.contains(foOrderConfirmationPage.orderConfirmationCardTitle);
+      await expect(cardTitle, 'Payment step is not completed!')
+        .to.contains(foOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should sign out from FO', async function () {
@@ -300,7 +300,7 @@ describe('BO - Orders - View and edit order : Check message block', async () => 
     });
 
     // Issue https://github.com/PrestaShop/PrestaShop/issues/26532
-    /*it('should check the message text', async function () {
+    /* it('should check the message text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderMessageBlock2', baseContext);
 
       const message = await foOrderHistoryPage.getMessageRow(page);
@@ -308,7 +308,7 @@ describe('BO - Orders - View and edit order : Check message block', async () => 
         .to.contain(todayDate)
         .and.to.contain(`${DefaultEmployee.firstName} ${DefaultEmployee.lastName}`)
         .and.to.contain(textMessage);
-    });*/
+    }); */
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO2', baseContext);
