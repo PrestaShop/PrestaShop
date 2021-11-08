@@ -91,7 +91,7 @@ class AbstractMultistoreConfigurationTest extends TestCase
     {
         // this will test that inside the `UpdateConfigurationValue` method, the right update method will be called depending on situation
         $abstractMultistoreConfiguration = $this->getTestableClass(false, $expectedMethodToBeCalled, $isMultistoreUsed);
-        $abstractMultistoreConfiguration->updateConfigurationValue('PS_CONF_KEY', $fieldName, $inputValues, $this->getShopConstraintMock());
+        $abstractMultistoreConfiguration->dummyUpdateConfigurationValue($fieldName, $inputValues, $this->getShopConstraintMock());
     }
 
     /**
@@ -144,6 +144,12 @@ class AbstractMultistoreConfigurationTest extends TestCase
             public function buildResolver(): OptionsResolver
             {
                 return new OptionsResolver();
+            }
+
+            // wrapper public method to test the protected "updateConfigurationValue" method
+            public function dummyUpdateConfigurationValue($fieldName, $inputValues, $shopConstraint)
+            {
+                $this->updateConfigurationValue('PS_CONF_KEY', $fieldName, $inputValues, $shopConstraint);
             }
         };
     }
