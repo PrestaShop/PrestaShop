@@ -23,6 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+// @ts-ignore-next-line
+import Bloodhound from 'typeahead.js';
+
 /**
  * This component is an overlay of typeahead it allows to have a single config input (since
  * typeahead weirdly uses two different configs). It also provides some default rendering
@@ -51,52 +54,41 @@ export interface TypeaheadJQueryOptions extends Twitter.Typeahead.Options {
   onClose: (event: JQueryEventObject, searchInput: JQuery) => void;
 }
 
+export type AutoCompleteSearchConfig = {
+  minLength: number;
+  highlight: boolean;
+  hint: boolean;
+  source: Bloodhound<Record<string, any>> | (
+    (query: string, syncResults: (result: any[]) => void, asyncResults?: (result: any[]) => void
+  ) => void);
+  onSelect: (
+    selectedItem: any,
+    event: JQueryEventObject,
+    searchInput: JQuery
+  ) => boolean;
+  onClose: (event: JQueryEventObject, searchInput: JQuery) => void;
+  suggestionLimit: number;
+  dataLimit: number;
+  display: string | DisplayFunction;
+  value: string;
+  templates: any;
+}
+export type InputAutoCompleteSearchConfig = Partial<AutoCompleteSearchConfig> & {
+  source: Bloodhound<Record<string, any>> | (
+    (query: string, syncResults: (result: any[]) => void, asyncResults?: (result: any[]) => void
+  ) => void); // source is mandatory option
+};
+
 export default class AutoCompleteSearch {
   private $searchInput: JQuery;
 
   private searchInputId: string;
 
-  private config: TypeaheadJQueryOptions;
+  private config: AutoCompleteSearchConfig;
 
-  private dataSetConfig: TypeaheadJQueryDataset;
-
-  constructor($searchInput: JQuery, config: Record<string, unknown>) {
+  constructor($searchInput: JQuery, inputConfig: InputAutoCompleteSearchConfig) {
     this.$searchInput = $searchInput;
     this.searchInputId = this.$searchInput.prop('id');
-
-    const inputConfig = config || {};
-    // Merge default and input config
-    this.config = {
-      minLength: 2,
-      highlight: true,
-      hint: false,
-      onSelect: (
-        selectedItem: any,
-        event: JQueryEventObject,
-        searchInput: JQuery,
-      ): boolean => {
-        searchInput.typeahead('val', selectedItem[this.dataSetConfig.value]);
-        return true;
-      },
-      onClose(
-        event: Event,
-        searchInput: JQuery,
-      ) {
-        searchInput.typeahead('val', '');
-        return true;
-      },
-      ...inputConfig,
-    };
-
-    // Merge default and input dataSetConfig
-    // @ts-ignore-next-line
-    this.dataSetConfig = {
-      display: 'name', // Which field of the object from the list is used for display (can be a string or a callback)
-      value: 'id', // Which field of the object from the list is used for value (can be a string or a callback)
-      limit: 20, // Limit the number of displayed suggestion
-      dataLimit: 0, // How many elements can be selected max
-      ...inputConfig,
-    };
 
     // Merging object works fine on one level, but on two it erases sub elements even if not present, so
     // we handle templates separately, these are the default rendering functions which can be overridden
@@ -106,15 +98,15 @@ export default class AutoCompleteSearch {
       suggestion: (item: Record<string, string>) => {
         let displaySuggestion: Record<string, string> | string = item;
 
-        if (typeof this.dataSetConfig.display === 'function') {
-          displaySuggestion = this.dataSetConfig.display(item);
+        if (typeof this.config.display === 'function') {
+          displaySuggestion = this.config.display(item);
         } else if (
           Object.prototype.hasOwnProperty.call(
             item,
-            <string> this.dataSetConfig.display,
+            <string> this.config.display,
           )
         ) {
-          displaySuggestion = item[<string> this.dataSetConfig.display];
+          displaySuggestion = item[<string> this.config.display];
         }
 
         return `<div class="px-2">${displaySuggestion}</div>`;
@@ -127,13 +119,40 @@ export default class AutoCompleteSearch {
       },
     };
 
+    // Merge default and input config
+    this.config = {
+      minLength: 2,
+      highlight: true,
+      hint: false,
+      onSelect: (
+        selectedItem: any,
+        event: JQueryEventObject,
+        searchInput: JQuery,
+      ): boolean => {
+        searchInput.typeahead('val', selectedItem[this.config.value]);
+        return true;
+      },
+      onClose(
+        event: Event,
+        searchInput: JQuery,
+      ) {
+        searchInput.typeahead('val', '');
+        return true;
+      },
+      suggestionLimit: 20,
+      dataLimit: 0,
+      display: 'name',
+      value: 'id',
+      templates: defaultTemplates,
+      ...inputConfig,
+    };
+
+    // If input has templates override me merge them with default ones
     if (Object.prototype.hasOwnProperty.call(inputConfig, 'templates')) {
-      this.dataSetConfig.templates = {
+      this.config.templates = {
         ...defaultTemplates,
         ...(<Record<string, unknown>>inputConfig.templates),
       };
-    } else {
-      this.dataSetConfig.templates = defaultTemplates;
     }
 
     this.buildTypeahead();
@@ -143,9 +162,27 @@ export default class AutoCompleteSearch {
    * Build the typeahead component based on provided configuration.
    */
   private buildTypeahead(): void {
+    // Create the two config object for typeahead based on the full config
+    const typeaheadOptions = {
+      minLength: this.config.minLength,
+      highlight: this.config.highlight,
+      hint: this.config.hint,
+      onSelect: this.config.onSelect,
+      onClose: this.config.onClose,
+    };
+
+    const dataSetConfig = {
+      source: this.config.source,
+      display: this.config.display,
+      value: this.config.value,
+      limit: 30,
+      dataLimit: this.config.dataLimit,
+      templates: this.config.templates,
+    };
+
     /* eslint-disable */
     this.$searchInput
-      .typeahead(this.config, this.dataSetConfig)
+      .typeahead(<TypeaheadJQueryOptions>typeaheadOptions, <TypeaheadJQueryDataset>dataSetConfig)
       .bind('typeahead:select', (e: any, selectedItem: any) =>
         this.config.onSelect(selectedItem, e, this.$searchInput)
       )
