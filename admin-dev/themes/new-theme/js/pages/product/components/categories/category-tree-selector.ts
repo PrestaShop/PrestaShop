@@ -25,7 +25,7 @@
 
 // @ts-ignore-next-line
 import Bloodhound from 'typeahead.js';
-import AutoCompleteSearch from '@components/auto-complete-search';
+import AutoCompleteSearch, {InputAutoCompleteSearchConfig} from '@components/auto-complete-search';
 import Tokenizers from '@components/bloodhound/tokenizers';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
@@ -304,26 +304,28 @@ export default class CategoryTreeSelector {
   }
 
   private initTypeahead(): void {
-    const source = new Bloodhound({
+    const source: Bloodhound = new Bloodhound({
       // @ts-ignore
       datumTokenizer: Tokenizers.obj.letters('breadcrumb'),
       queryTokenizer: Bloodhound.tokenizers.nonword,
       local: this.typeaheadCategories,
     });
 
-    const dataSetConfig = {
+    const searchConfig: InputAutoCompleteSearchConfig = {
       source,
       display: 'breadcrumb',
       value: 'id',
-      onSelect: (selectedItem: any, e: JQueryEventObject, $searchInput: JQuery) => {
+      onSelect: (selectedItem: any, e: JQueryEventObject, searchInput: JQuery): boolean => {
         this.updateCategory(Number(selectedItem.id), true);
 
         // This resets the search input or else previous search is cached and can be added again
-        $searchInput.typeahead('val', '');
+        searchInput.typeahead('val', '');
+
+        return true;
       },
     };
 
-    new AutoCompleteSearch($(ProductCategoryMap.searchInput), dataSetConfig);
+    new AutoCompleteSearch($(ProductCategoryMap.searchInput), searchConfig);
   }
 
   private updateSelectedCategories(): void {

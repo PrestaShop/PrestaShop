@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import AutoCompleteSearch from '@components/auto-complete-search';
+import AutoCompleteSearch, {InputAutoCompleteSearchConfig} from '@components/auto-complete-search';
 import ComponentsMap from '@components/components-map';
 import ConfirmModal from '@components/modal';
 // @ts-ignore-next-line
@@ -80,19 +80,19 @@ export interface ModalOptions extends OptionsObject {
  * either override it in a theme or create your own entity type if you need to customize the behaviour.
  */
 export default class EntitySearchInput {
-  private $entitySearchInputContainer: JQuery;
+  private readonly $entitySearchInputContainer: JQuery;
 
-  private $entitySearchInput: JQuery;
+  private readonly $entitySearchInput: JQuery;
 
-  private $entitiesContainer: JQuery;
+  private readonly $entitiesContainer: JQuery;
 
   private $listContainer: JQuery;
 
   private $emptyState: JQuery;
 
-  private options!: EntitySearchInputOptions;
+  private readonly options!: EntitySearchInputOptions;
 
-  private entityRemoteSource?: Bloodhound<Record<string, any>>;
+  private entityRemoteSource!: Bloodhound;
 
   private autoSearch!: AutoCompleteSearch;
 
@@ -273,7 +273,7 @@ export default class EntitySearchInput {
    * Build the AutoCompleteSearch component
    */
   private buildAutoCompleteSearch(): void {
-    const autoSearchConfig = {
+    const autoSearchConfig: InputAutoCompleteSearchConfig = {
       source: this.entityRemoteSource,
       dataLimit: this.options.dataLimit,
       value: this.options.identifierField,
@@ -479,6 +479,11 @@ export default class EntitySearchInput {
     return template;
   }
 
+  /**
+   * Parses the selection container and extract the IDs this allows to filter the already selected items.
+   *
+   * @private
+   */
   private getSelectedIds(): string[] {
     const selectedIds: string[] = [];
     const selectedChildren = $(this.options.entityItemSelector, this.$entitiesContainer);
