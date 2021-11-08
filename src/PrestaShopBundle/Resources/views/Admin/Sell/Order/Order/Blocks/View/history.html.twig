@@ -27,19 +27,19 @@
   <tbody>
     {% for status in orderForViewing.history.statuses %}
     <tr>
-      <td class="status">
+      <td class="status-column">
         <span class="badge rounded badge-print-light"
               style="background-color: {{ status.color }}; color: {{ is_color_bright(status.color) ? 'black' : 'white' }};"
         >
           {{ status.name }}
         </span>
       </td>
-      <td class="text-right employee">
+      <td class="text-right employee-column">
         {% if status.employeeLastName is not empty %}
           {{ status.employeeFirstName ~ ' ' ~ status.employeeLastName }}
         {% endif %}
       </td>
-      <td class="text-right date">
+      <td class="text-right date-column">
         {{ status.createdAt|date_format_full }}
       </td>
       <td class="text-right">
