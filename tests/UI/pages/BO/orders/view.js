@@ -105,7 +105,7 @@ class Order extends BOBasePage {
     this.statusGridTable = '#history-grid-table';
     this.statusTableBody = `${this.statusGridTable} tbody`;
     this.statusTableRow = row => `${this.statusTableBody} tr:nth-child(${row})`;
-    this.statusTableColumn = (row, column) => `${this.statusTableRow(row)} td.${column}`;
+    this.statusTableColumn = (row, column) => `${this.statusTableRow(row)} td.${column}-column`;
     this.resendEmailButton = row => `${this.statusTableRow(row)} td form[action*='resend-email'] button`;
     this.orderNoteOpenButton = `${this.historyTabContent} a.js-order-notes-toggle-btn`;
     this.orderNoteCloseButton = `${this.orderNoteOpenButton}.is-opened`;
