@@ -266,6 +266,18 @@ class CustomerCore extends ObjectModel
         $success = parent::add($autoDate, $nullValues);
         $this->updateGroup($this->groupBox);
 
+        PrestaShopLogger::addLog(
+            Context::getContext()->getTranslator()->trans(
+                'Customer created: (' . $this->id . ')',
+                [],
+                'Admin.Advparameters.Notification'
+            ),
+            1,
+            null,
+            'Customer',
+            $this->id
+        );
+
         return $success;
     }
 
@@ -295,6 +307,18 @@ class CustomerCore extends ObjectModel
 
             return false;
         }
+
+        PrestaShopLogger::addLog(
+            Context::getContext()->getTranslator()->trans(
+                'Customer created: (' . $this->id . ')',
+                [],
+                'Admin.Advparameters.Notification'
+            ),
+            1,
+            null,
+            'Customer',
+            $this->id
+        );
 
         return $this->add($autodate, $null_values);
     }
@@ -328,6 +352,18 @@ class CustomerCore extends ObjectModel
                 $obj->save();
             }
         }
+
+        PrestaShopLogger::addLog(
+            Context::getContext()->getTranslator()->trans(
+                'Customer updated: (' . $this->id . ')',
+                [],
+                'Admin.Advparameters.Notification'
+            ),
+            1,
+            null,
+            'Customer',
+            $this->id
+        );
 
         try {
             return parent::update(true);
@@ -366,6 +402,18 @@ class CustomerCore extends ObjectModel
 
             return false;
         }
+
+        PrestaShopLogger::addLog(
+            Context::getContext()->getTranslator()->trans(
+                'Customer updated: (' . $this->id . ')',
+                [],
+                'Admin.Advparameters.Notification'
+            ),
+            1,
+            null,
+            'Customer',
+            $this->id
+        );
 
         return $this->update($nullValues = false);
     }
@@ -407,6 +455,18 @@ class CustomerCore extends ObjectModel
         }
 
         CartRule::deleteByIdCustomer((int) $this->id);
+
+        PrestaShopLogger::addLog(
+            Context::getContext()->getTranslator()->trans(
+                'Customer deleted: (' . $this->id . ')',
+                [],
+                'Admin.Advparameters.Notification'
+            ),
+            1,
+            null,
+            'Customer',
+            $this->id
+        );
 
         return parent::delete();
     }

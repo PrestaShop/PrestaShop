@@ -157,9 +157,6 @@ class CustomerController extends AbstractAdminController
             return $this->redirectToRoute('admin_customers_index');
         }
 
-        /** @var LoggerInterface $logger */
-        $logger = $this->get('logger');
-
         $this->addGroupSelectionToRequest($request);
 
         $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm();
@@ -172,8 +169,6 @@ class CustomerController extends AbstractAdminController
 
             if ($customerId = $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
-
-                $logger->info('Customer created: (' . $customerId . ').', $this->getLogDataContext($customerId));
 
                 if ($request->query->has('submitFormAjax')) {
                     /** @var ViewableCustomer $customerInformation */
@@ -189,8 +184,6 @@ class CustomerController extends AbstractAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-            $logger->warning('Customer creation error.', $this->getLogDataContext(null, $e->getCode()));
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/create.html.twig', [
@@ -232,9 +225,6 @@ class CustomerController extends AbstractAdminController
             return $this->redirectToRoute('admin_customers_index');
         }
 
-        /** @var LoggerInterface $logger */
-        $logger = $this->get('logger');
-
         try {
             $customerForm->handleRequest($request);
             $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
@@ -242,18 +232,13 @@ class CustomerController extends AbstractAdminController
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                $logger->info('Customer updated: (' . $customerId . ').', $this->getLogDataContext($customerId));
-
                 return $this->redirectToRoute('admin_customers_index');
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
             if ($e instanceof CustomerNotFoundException) {
                 return $this->redirectToRoute('admin_customers_index');
             }
-
-            $logger->warning('Customer updation error: (' . $customerId . ').', $this->getLogDataContext($customerId, $e->getCode()));
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/edit.html.twig', [
@@ -514,19 +499,6 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
-     * @return array
-     */
-    private function getLogDataContext($id_customer = null, $error_code = null, $allow_duplicate = null): array
-    {
-        return [
-            'object_type' => 'Customer',
-            'object_id' => $id_customer,
-            'error_code' => $error_code,
-            'allow_duplicate' => $allow_duplicate,
-        ];
-    }
-
-    /**
      * Toggle customer status.
      *
      * @AdminSecurity(
@@ -660,9 +632,6 @@ class CustomerController extends AbstractAdminController
         $form = $this->createForm(DeleteCustomersType::class);
         $form->handleRequest($request);
 
-        /** @var LoggerInterface $logger */
-        $logger = $this->get('logger');
-
         if ($form->isSubmitted()) {
             $data = $form->getData();
 
@@ -682,12 +651,8 @@ class CustomerController extends AbstractAdminController
                     'success',
                     $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
                 );
-
-                $logger->info('Customers bulk deleted.', $this->getLogDataContext());
             } catch (CustomerException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-                $logger->warning('Customers bulk deletion error.', $this->getLogDataContext(null, $e->getCode()));
             }
         }
 
@@ -712,9 +677,6 @@ class CustomerController extends AbstractAdminController
         $form = $this->createForm(DeleteCustomersType::class);
         $form->handleRequest($request);
 
-        /** @var LoggerInterface $logger */
-        $logger = $this->get('logger');
-
         if ($form->isSubmitted()) {
             $data = $form->getData();
 
@@ -729,12 +691,8 @@ class CustomerController extends AbstractAdminController
                 $this->getCommandBus()->handle($command);
 
                 $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
-
-                $logger->info('Customer deleted: (' . $customerId . ').', $this->getLogDataContext($customerId));
             } catch (CustomerException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-                $logger->warning('Customer deletion error (' . $customerId . ').', $this->getLogDataContext($customerId, $e->getCode()));
             }
         }
 
