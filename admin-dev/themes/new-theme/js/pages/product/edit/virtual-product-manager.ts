@@ -45,7 +45,7 @@ export default class VirtualProductManager {
   /**
    * @private
    */
-  private init() {
+  private init(): void {
     this.productFormModel.watch('stock.hasVirtualProductFile', () => this.toggleContentVisibility());
     this.toggleContentVisibility();
   }

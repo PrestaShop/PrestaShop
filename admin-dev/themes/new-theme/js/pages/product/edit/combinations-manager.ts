@@ -309,28 +309,28 @@ export default class CombinationsManager {
 
     /* eslint-disable */
     new SubmittableInput(CombinationsMap.quantityInputWrapper, input => {
-      if (input) {
-        this.combinationsService.updateListedCombination(
-          this.findCombinationId(input),
-          {
-            [quantityKey]: input.value,
-            [tokenKey]: combinationToken
-          }
-        )
-      }
+        if (input) {
+          this.combinationsService.updateListedCombination(
+            this.findCombinationId(input),
+            {
+              [quantityKey]: input.value,
+              [tokenKey]: combinationToken
+            }
+          )
+        }
       }
     );
 
     new SubmittableInput(CombinationsMap.impactOnPriceInputWrapper, input =>
       {
         if(input) {
-      this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {
-          [impactOnPriceKey]: input.value,
-          [tokenKey]: combinationToken
-        }
-      )
+          this.combinationsService.updateListedCombination(
+            this.findCombinationId(input),
+            {
+              [impactOnPriceKey]: input.value,
+              [tokenKey]: combinationToken
+            }
+          )
         }
       }
     );
@@ -338,13 +338,13 @@ export default class CombinationsManager {
     new SubmittableInput(CombinationsMap.referenceInputWrapper, input =>
       {
         if(input) {
-      this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {
-          [referenceKey]: input.value,
-          [tokenKey]: combinationToken
-        }
-      )
+          this.combinationsService.updateListedCombination(
+            this.findCombinationId(input),
+            {
+              [referenceKey]: input.value,
+              [tokenKey]: combinationToken
+            }
+          )
         }
       }
     );
