@@ -9,7 +9,7 @@ admin_products_specific_prices_list:
   requirements:
     productId: \d+
 
-admin_products_specific_prices_create_iframe:
+admin_products_specific_prices_create:
   path: /{productId}/specific-prices/create
   methods: [GET, POST]
   options:
@@ -17,11 +17,10 @@ admin_products_specific_prices_create_iframe:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\SpecificPriceController::createAction
     _legacy_controller: AdminProducts
-    liteDisplaying: 1
   requirements:
     productId: \d+
 
-admin_products_specific_prices_edit_iframe:
+admin_products_specific_prices_edit:
   path: /specific-prices/{specificPriceId}/edit
   methods: [GET, POST]
   options:
@@ -29,6 +28,5 @@ admin_products_specific_prices_edit_iframe:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\SpecificPriceController::editAction
     _legacy_controller: AdminProducts
-    liteDisplaying: 1
   requirements:
     specificPriceId: \d+
