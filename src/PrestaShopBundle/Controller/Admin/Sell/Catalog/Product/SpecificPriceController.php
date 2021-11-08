@@ -68,7 +68,6 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_products_specific_prices_edit', [
                     'liteDisplaying' => $request->query->has('liteDisplaying'),
                     'specificPriceId' => $result->getIdentifiableObjectId(),
-                    'afterSubmit' => true,
                 ]);
             }
         } catch (Exception $e) {
@@ -94,8 +93,6 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_products_specific_prices_edit', [
                     'specificPriceId' => $specificPriceId,
                     'liteDisplaying' => $request->query->has('liteDisplaying'),
-                    // afterSubmit allows us to recognize if we need to close modal in js
-                    'afterSubmit' => true,
                 ]);
             }
         } catch (Exception $e) {
@@ -104,7 +101,6 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/edit.html.twig', [
             'specificPriceForm' => $form->createView(),
-            'afterSubmit' => $request->query->getBoolean('afterSubmit'),
         ]);
     }
 
