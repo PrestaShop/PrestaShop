@@ -139,7 +139,7 @@ export default class AutoCompleteSearch {
         searchInput.typeahead('val', '');
         return true;
       },
-      suggestionLimit: 20,
+      suggestionLimit: 30,
       dataLimit: 0,
       display: 'name',
       value: 'id',
@@ -175,7 +175,7 @@ export default class AutoCompleteSearch {
       source: this.config.source,
       display: this.config.display,
       value: this.config.value,
-      limit: 30,
+      limit: this.config.suggestionLimit,
       dataLimit: this.config.dataLimit,
       templates: this.config.templates,
     };
