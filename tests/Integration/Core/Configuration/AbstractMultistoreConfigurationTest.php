@@ -76,10 +76,6 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
      */
     public function testUpdate(?ShopConstraint $shopConstraint): void
     {
-        if (null === $shopConstraint) {
-            $shopConstraint = ShopConstraint::shop((int) $this->newShop->id);
-        }
-
         // we mock the shop context so that its `getShopConstraint` method returns the ShopConstraint from our provider
         $this->shopContext = $this->createShopContextMock();
         $this->shopContext
