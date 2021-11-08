@@ -35,13 +35,7 @@ const initMultistoreForm = () => {
   const $modalItem = $(MultistoreHeaderMap.modal);
   const translations = $(MultistoreHeaderMap.header).data('translations');
 
-  const generateFormValuesHash = () => {
-    window.tinyMCE.triggerSave(true);
-
-    return multistoreForm.serialize();
-  };
-
-  const originalFormValuesHash = generateFormValuesHash();
+  const generateFormValuesHash = () => multistoreForm.serialize();
 
   /**
    * @param {string} path
@@ -72,6 +66,18 @@ const initMultistoreForm = () => {
   };
 
   if (multistoreForm) {
+    let originalFormValuesHash = generateFormValuesHash();
+
+    window.tinyMCE.each($('textarea'), (textarea: HTMLTextAreaElement) => {
+      const editor = window.tinyMCE.get(textarea.id);
+
+      // overrides the textarea value after initialization to have the P tags
+      editor.on('init', () => {
+        textarea.value = editor.getContent(); // eslint-disable-line no-param-reassign
+        originalFormValuesHash = generateFormValuesHash();
+      });
+    });
+
     // Bind click on header's links
     $modalItem.find('a').each((index, itemLink) => {
       $(itemLink).on('click', () => {

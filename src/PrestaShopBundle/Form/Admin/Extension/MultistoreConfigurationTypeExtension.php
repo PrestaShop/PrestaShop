@@ -90,7 +90,7 @@ class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
             return;
         }
 
-        $resolver->setNormalizer('attr', function (Options $options, $value) {
+        $resolver->setNormalizer('attr', function (Options $options, array $value): array {
             $classes = 'js-multishop-form-row';
             if (!empty($value['class'])) {
                 $classes .= ' ' . $value['class'];
