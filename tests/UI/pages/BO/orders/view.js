@@ -102,7 +102,7 @@ class Order extends BOBasePage {
     this.statusGridTable = '#history-grid-table';
     this.statusTableBody = `${this.statusGridTable} tbody`;
     this.statusTableRow = row => `${this.statusTableBody} tr:nth-child(${row})`;
-    this.statusTableColumn = (row, column) => `${this.statusTableRow(row)} td.${column}-column`;
+    this.statusTableColumn = (row, column) => `${this.statusTableRow(row)} td.js-test-${column}-column`;
     this.resendEmailButton = row => `${this.statusTableRow(row)} td form[action*='resend-email'] button`;
     this.orderNoteOpenButton = `${this.historyTabContent} a.js-order-notes-toggle-btn`;
     this.orderNoteCloseButton = `${this.orderNoteOpenButton}.is-opened`;
@@ -971,7 +971,7 @@ class Order extends BOBasePage {
   /**
    * Set shipping details
    * @param page {Page} Browser tab
-   * @param shippingData {shippingData} Data to set on shipping form
+   * @param shippingData {{carrier: string, shippingCost: string, trackingNumber: string}} Data to set on shipping form
    * @returns {Promise<string>}
    */
   async setShippingDetails(page, shippingData) {
