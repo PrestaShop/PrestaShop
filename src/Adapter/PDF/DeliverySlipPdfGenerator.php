@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShopException;
 use PrestaShopCollection;
+use RuntimeException;
 
 /**
  * Generates delivery slip for given orders
