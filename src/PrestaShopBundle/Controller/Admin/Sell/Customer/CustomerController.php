@@ -297,7 +297,7 @@ class CustomerController extends AbstractAdminController
             'filters' => [
                 'id_customer' => $customerId,
             ],
-        ]);
+        ] + $customerDiscountFilters->all());
         $customerDiscountGrid = $customerDiscountGridFactory->getGrid($customerDiscountFilters);
 
         $customerAddressGridFactory = $this->get('prestashop.core.grid.factory.customer.address');
@@ -305,7 +305,7 @@ class CustomerController extends AbstractAdminController
             'filters' => [
                 'id_customer' => $customerId,
             ],
-        ]);
+        ] + $customerAddressFilters->all());
         $customerAddressGrid = $customerAddressGridFactory->getGrid($customerAddressFilters);
 
         if ($request->query->has('conf')) {
