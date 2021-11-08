@@ -52,8 +52,8 @@
                 {else}
                   {foreach $product.customizations as $customization}
                     <span id="_desktop_product_customization_line_{$product.id_order_detail}_{$customization.id_customization}">
-                    <input type="checkbox" id="cb_{$product.id_order_detail}" name="customization_ids[{$product.id_order_detail}][]" value="{$customization.id_customization}">
-                  </span>
+                      <input type="checkbox" id="cb_{$product.id_order_detail}" name="customization_ids[{$product.id_order_detail}][]" value="{$customization.id_customization}">
+                    </span>
                   {/foreach}
                 {/if}
             {/if}
