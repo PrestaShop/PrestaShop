@@ -1264,3 +1264,10 @@
   {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity-delta')|trim}) -%}
   {{- block('form_widget_simple') -}}
 {% endblock %}
+
+{%- block number_widget -%}
+  {# type="number" doesn't work with floats #}
+  {%- set type = type|default('text') -%}
+  {{ block('form_widget_simple') }}
+  {{ block('form_help') }}
+{%- endblock number_widget -%}
