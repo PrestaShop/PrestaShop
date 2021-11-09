@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
+use \PrestaShopLogger;
+use \Context;
 
 /**
  * Handles commands which edits given customer with provided data.
@@ -104,6 +106,18 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         if (false === $customer->update()) {
             throw new CustomerException('Failed to update customer');
         }
+
+        PrestaShopLogger::addLog(
+            Context::getContext()->getTranslator()->trans(
+                'Customer updated: (' . $customer->id . ')',
+                [],
+                'Admin.Advparameters.Notification'
+            ),
+            1,
+            null,
+            'Customer',
+            $customer->id
+        );
     }
 
     /**

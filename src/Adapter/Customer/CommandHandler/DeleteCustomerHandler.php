@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\DeleteCustomerHandlerInterface;
+use \PrestaShopLogger;
+use \Context;
 
 /**
  * Handles delete customer command.
@@ -46,6 +48,18 @@ final class DeleteCustomerHandler extends AbstractCustomerHandler implements Del
         $customer = new Customer($customerId->getValue());
 
         $this->assertCustomerWasFound($customerId, $customer);
+
+        PrestaShopLogger::addLog(
+            Context::getContext()->getTranslator()->trans(
+                'Customer deleted: (' . $customer->id . ')',
+                [],
+                'Admin.Advparameters.Notification'
+            ),
+            1,
+            null,
+            'Customer',
+            $customer->id
+        );
 
         if ($command->getDeleteMethod()->isAllowedToRegisterAfterDelete()) {
             $customer->delete();
