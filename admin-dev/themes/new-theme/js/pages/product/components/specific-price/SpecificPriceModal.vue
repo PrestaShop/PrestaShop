@@ -122,7 +122,6 @@
         const iframeBody = this.$refs.iframe.contentDocument.body;
         const form = iframeBody.querySelector(SpecificPriceMap.form);
         form.submit();
-        this.submittedForm = true;
       },
       watchAddButton() {
         const addButton = this.container.querySelector(SpecificPriceMap.addSpecificPriceBtn);
