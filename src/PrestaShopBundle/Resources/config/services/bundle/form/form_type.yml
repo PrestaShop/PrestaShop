@@ -1549,6 +1549,7 @@ services:
       - '@prestashop.core.form.choice_provider.tax_inclusion'
       - '@prestashop.adapter.form.choice_provider.combination_id_choice_provider'
       - '@prestashop.core.admin.url_generator'
+      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
     public: true
     tags:
       - { name: form.type }
