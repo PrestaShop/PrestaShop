@@ -35,7 +35,7 @@ const {Statuses} = require('@data/demo/orderStatuses');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {ReturnStatuses} = require('@data/demo/orderReturnStatuses');
 
-const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_merchandiseReturns';
+const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_merchandiseReturnsTab';
 
 let browserContext;
 let page;

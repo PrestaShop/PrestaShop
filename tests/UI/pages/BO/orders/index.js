@@ -179,7 +179,7 @@ class Order extends BOBasePage {
 
   /**
    * Get text from Column
-   @param page {Page} Browser tab
+   * @param page {Page} Browser tab
    * @param columnName {string} Column name on table
    * @param row {number} Order row in table
    * @returns {Promise<string>}

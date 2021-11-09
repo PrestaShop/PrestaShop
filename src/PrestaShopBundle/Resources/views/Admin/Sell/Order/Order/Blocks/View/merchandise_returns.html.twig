@@ -37,10 +37,10 @@
       <tbody>
       {% for return in orderForViewing.returns.orderReturns %}
         <tr>
-          <td class="merchandise-return-date">{{ return.date|date_format_full }}</td>
-          <td class="merchandise-return-type">{{ return.type }}</td>
-          <td class="merchandise-return-state">{{ return.stateName }}</td>
-          <td class="text-right merchandise-return-tracking-number">
+          <td class="js-test-merchandise-return-date">{{ return.date|date_format_full }}</td>
+          <td class="js-test-merchandise-return-type">{{ return.type }}</td>
+          <td class="js-test-merchandise-return-state">{{ return.stateName }}</td>
+          <td class="text-right js-test-merchandise-return-tracking-number">
             {% if return.trackingNumber and return.trackingUrl %}
               <a href="{{ return.trackingUrl }}">{{ return.trackingNumber }}</a>
             {% elseif return.trackingNumber %}

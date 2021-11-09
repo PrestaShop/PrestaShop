@@ -131,7 +131,7 @@ class Order extends BOBasePage {
     this.merchandiseReturnsTableBody = `${this.merchandiseReturnsGridTable} tbody`;
     this.merchandiseReturnsTableRow = row => `${this.merchandiseReturnsTableBody} tr:nth-child(${row})`;
     this.merchandiseReturnsTableColumn = (row, column) => `${this.merchandiseReturnsTableRow(row)}`
-      + ` td.merchandise-${column}`;
+      + ` td.js-test-merchandise-${column}`;
 
     // Refund form
     this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
