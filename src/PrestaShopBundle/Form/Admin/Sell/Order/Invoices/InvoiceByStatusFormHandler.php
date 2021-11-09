@@ -42,8 +42,6 @@ use Symfony\Component\Form\FormFactoryInterface;
  */
 final class InvoiceByStatusFormHandler extends Handler
 {
-    public const ERROR_NO_INVOICES_FOUND_FOR_STATUS = 'error_no_invoices_found_for_status';
-
     /**
      * @var OrderInvoiceDataProviderInterface
      */
@@ -101,7 +99,7 @@ final class InvoiceByStatusFormHandler extends Handler
 
             $errorCollection->add(
                 new InvalidConfigurationDataError(
-                    static::ERROR_NO_INVOICES_FOUND_FOR_STATUS,
+                    InvalidConfigurationDataError::ERROR_NO_INVOICES_FOUND_FOR_STATUS,
                     GenerateByStatusType::FIELD_ORDER_STATES
                 )
             );
