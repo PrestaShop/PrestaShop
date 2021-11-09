@@ -24,9 +24,7 @@
  *#}
 
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-
-{% form_theme generateByStatusForm _self %}
+{% form_theme generateByStatusForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block invoices_generate_by_status %}
   <div id="by-status-block" class="col-xl-12">
@@ -37,15 +35,9 @@
         </h3>
         <div class="card-block row">
           <div class="card-text">
-            <div class="form-group row">
-              {{ ps.label_with_help(('Order statuses'|trans), ('You can also export orders which have not been charged yet.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
-              <div class="col-sm">
-                {{ form_errors(generateByStatusForm.order_states) }}
-                {{ form_widget(generateByStatusForm.order_states) }}
-              </div>
-            </div>
-          </div>
-          {{ form_rest(generateByStatusForm) }}
+            {% block generate_by_status_form_widget %}
+              {{ form_widget(generateByStatusForm) }}
+            {% endblock %}
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-end">
