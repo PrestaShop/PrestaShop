@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailE
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
+use \PrestaShopLogger;
+use \Context;
 
 /**
  * Handles command that adds new customer
@@ -87,6 +89,18 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
         $this->assertCustomerCanAccessDefaultGroup($command);
 
         $customer->add();
+
+        PrestaShopLogger::addLog(
+            Context::getContext()->getTranslator()->trans(
+                'Customer created: (' . $customer->id . ')',
+                [],
+                'Admin.Advparameters.Notification'
+            ),
+            1,
+            null,
+            'Customer',
+            $customer->id
+        );
 
         return new CustomerId((int) $customer->id);
     }
