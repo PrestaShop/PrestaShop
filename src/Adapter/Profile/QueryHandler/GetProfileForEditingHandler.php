@@ -68,7 +68,7 @@ final class GetProfileForEditingHandler extends AbstractObjectModelHandler imple
     /**
      * {@inheritdoc}
      */
-    public function handle(GetProfileForEditing $query)
+    public function handle(GetProfileForEditing $query): EditableProfile
     {
         $profileId = $query->getProfileId();
         $profile = $this->getProfile($profileId);
