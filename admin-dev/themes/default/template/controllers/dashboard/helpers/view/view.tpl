@@ -87,8 +87,34 @@
 		<div class="col-md-4 col-lg-3" id="hookDashboardZoneOne">
 			{$hookDashboardZoneOne}
 		</div>
-		<div class="col-md-8 col-lg-9" id="hookDashboardZoneTwo">
+		<div class="col-md-8 col-lg-7" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
+			<div id="dashaddons" class="row-margin-bottom">
+				<a href="https://addons.prestashop.com/en/209-dashboards?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" target="_blank" rel="noopener noreferrer nofollow">
+					<i class="icon-plus"></i> {l s='Add more dashboard modules' d='Admin.Dashboard.Feature'}
+				</a>
+			</div>
+		</div>
+		<div class="col-md-12 col-lg-2">
+			<section class="dash_news panel">
+				<h3><i class="icon-rss"></i> {l s='PrestaShop News' d='Admin.Dashboard.Feature'}</h3>
+				<div class="dash_news_content"></div>
+				<div class="text-center"><h4><a href="http://www.prestashop.com/blog/" onclick="return !window.open(this.href);">{l s='Find more news' d='Admin.Dashboard.Feature'}</a></h4></div>
+			</section>
+			<section id="dash_version" class="visible-lg">
+				<iframe style="overflow:hidden;border:none" src="{$new_version_url|escape:'html':'UTF-8'}" ></iframe>
+			</section>
+			<section class="dash_links panel">
+				<h3><i class="icon-link"></i> {l s="We stay by your side!" d='Admin.Dashboard.Feature'}</h3>
+					<dl>
+						<dt><a href="{$help_center_link}" target="_blank" rel="noopener noreferrer nofollow">{l s="Help Center" d='Admin.Global'}</a></dt>
+						<dd>{l s="Documentation, support, experts, training... PrestaShop and all of its community are here to guide you" d='Admin.Dashboard.Feature'}</dd>
+					</dl>
+					<dl>
+						<dt><a href="https://addons.prestashop.com?utm_source=back-office&amp;utm_medium=links&amp;utm_campaign=addons-{$lang_iso}&amp;utm_content=download17" target="_blank" rel="noopener noreferrer nofollow">{l s="PrestaShop Marketplace" d='Admin.Dashboard.Feature'}</a></dt>
+						<dd>{l s="Traffic, conversion rate, customer loyalty... Increase your sales with all of the PrestaShop modules and themes" d='Admin.Dashboard.Feature'}</dd>
+					</dl>
+			</section>
 		</div>
 	</div>
 </div>
