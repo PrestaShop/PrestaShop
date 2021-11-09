@@ -297,15 +297,15 @@ class ProductLazyArrayTest extends TestCase
             static::PRODUCT_AVAILABLE_LATER,
         ];
 
-        // one of the combinations is out of stock,
-        // product is available in different one,
+        // the combination is out of stock,
+        // product is not available in different one,
         // not allowed to order when out of stock
         yield [
             array_merge(
                 $product,
                 [
                     'cache_default_attribute' => 1,
-                    'quantity_all_versions' => 1000,
+                    'quantity_all_versions' => 10,
                     'quantity_wanted' => 11,
                     'stock_quantity' => 10,
                     'quantity' => 10,
@@ -317,11 +317,11 @@ class ProductLazyArrayTest extends TestCase
                     'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
                 ]
             ),
-            static::PRODUCT_ATTRIBUTE_NOT_AVAILABLE,
+            static::PRODUCT_WITH_NOT_ENOUGH_STOCK,
         ];
 
-        // one of the combinations is out of stock,
-        // product is available in different one,
+        // combinations is out of stock,
+        // product is available in different one (higher "quantity_all_versions"),
         // allowed to order when out of stock
         yield [
             array_merge(

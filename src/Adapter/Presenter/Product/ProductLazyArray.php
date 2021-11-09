@@ -906,7 +906,7 @@ class ProductLazyArray extends AbstractLazyArray
 
             $remainingQuantityOfAlternativeCombinations = 0;
             if ($product['cache_default_attribute'] && !empty($product['quantity_all_versions'])) {
-                $remainingQuantityOfAlternativeCombinations = $product['quantity_all_versions'] - $product['quantity_wanted'];
+                $remainingQuantityOfAlternativeCombinations = $product['quantity_all_versions'];
             }
 
             if ($availableQuantity >= 0) {
@@ -926,14 +926,6 @@ class ProductLazyArray extends AbstractLazyArray
                     : ($config[$language->id] ?? null);
                 $this->product['availability_date'] = $product['available_date'];
                 $this->product['availability'] = 'available';
-            } elseif ($remainingQuantityOfAlternativeCombinations > 0) {
-                $this->product['availability_message'] = $this->translator->trans(
-                    'Product available with different options',
-                    [],
-                    'Shop.Theme.Catalog'
-                );
-                $this->product['availability_date'] = $product['available_date'];
-                $this->product['availability'] = 'unavailable';
             } elseif ($product['quantity'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'There are not enough products in stock',
@@ -942,6 +934,14 @@ class ProductLazyArray extends AbstractLazyArray
                 );
                 $this->product['availability'] = 'unavailable';
                 $this->product['availability_date'] = null;
+            } elseif ($remainingQuantityOfAlternativeCombinations > 0) {
+                $this->product['availability_message'] = $this->translator->trans(
+                    'Product available with different options',
+                    [],
+                    'Shop.Theme.Catalog'
+                );
+                $this->product['availability_date'] = $product['available_date'];
+                $this->product['availability'] = 'unavailable';
             } else {
                 $config = $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOD');
                 $this->product['availability_message'] = $config[$language->id] ?? null;
