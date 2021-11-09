@@ -143,7 +143,6 @@ class SpecificPriceType extends TranslatorAwareType
             ])
             ->add('country_id', ChoiceType::class, [
                 'label' => $this->trans('Country', 'Admin.Global'),
-                'required' => false,
                 'placeholder' => $this->trans('All countries', 'Admin.Global'),
                 'choices' => $this->countryByIdChoiceProvider->getChoices(),
             ])
@@ -159,14 +158,12 @@ class SpecificPriceType extends TranslatorAwareType
                 'entry_type' => SearchedCustomerType::class,
                 'remove_modal' => null,
                 'limit' => 1,
-                'required' => false,
                 'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
                 'placeholder' => $this->trans('All Customers', 'Admin.Global'),
                 'suggestion_field' => 'fullname_and_email',
             ])
             ->add('combination_id', ChoiceType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),
-                'required' => false,
                 'placeholder' => $this->trans('All combinations', 'Admin.Global'),
                 'choices' => $this->combinationIdChoiceProvider->getChoices(['product_id' => $builder->getData()['product_id']]),
             ])

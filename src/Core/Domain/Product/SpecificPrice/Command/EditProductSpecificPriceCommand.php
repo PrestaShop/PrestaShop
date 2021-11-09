@@ -91,7 +91,7 @@ class EditProductSpecificPriceCommand
     private $currencyId;
 
     /**
-     * @var CountryId|null
+     * @var int|null
      */
     private $countryId;
 
@@ -101,7 +101,10 @@ class EditProductSpecificPriceCommand
     private $groupId;
 
     /**
-     * @var CustomerId|null
+     * @var int|null
+     *
+     * @todo: countryId & customerId should also use the same convention of {Foo}IdInterface,
+     *        but it requires some refactoring as it was already used in many places this primitive way
      */
     private $customerId;
 
@@ -284,9 +287,9 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return CountryId|null
+     * @return int|null
      */
-    public function getCountryId(): ?CountryId
+    public function getCountryId(): ?int
     {
         return $this->countryId;
     }
@@ -324,9 +327,9 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return CustomerId|null
+     * @return int|null
      */
-    public function getCustomerId(): ?CustomerId
+    public function getCustomerId(): ?int
     {
         return $this->customerId;
     }
