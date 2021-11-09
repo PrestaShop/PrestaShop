@@ -28,11 +28,7 @@
 {% block content %}
   {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
   {% block profiles_list_panel %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': grid} %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': grid} %}
   {% endblock %}
 {% endblock %}
 
