@@ -93,6 +93,11 @@ class SpecificPriceType extends TranslatorAwareType
     private $urlGenerator;
 
     /**
+     * @var bool
+     */
+    private $isMultishopEnabled;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param string $defaultCurrencyIso
@@ -103,6 +108,7 @@ class SpecificPriceType extends TranslatorAwareType
      * @param FormChoiceProviderInterface $taxInclusionChoiceProvider
      * @param ConfigurableFormChoiceProviderInterface $configurableFormChoiceProvider
      * @param UrlGeneratorInterface $urlGenerator
+     * @param bool $isMultishopEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -114,7 +120,8 @@ class SpecificPriceType extends TranslatorAwareType
         FormChoiceProviderInterface $shopByIdChoiceProvider,
         FormChoiceProviderInterface $taxInclusionChoiceProvider,
         ConfigurableFormChoiceProviderInterface $configurableFormChoiceProvider,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        bool $isMultishopEnabled
     ) {
         parent::__construct($translator, $locales);
         $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
@@ -125,6 +132,7 @@ class SpecificPriceType extends TranslatorAwareType
         $this->defaultCurrencyIso = $defaultCurrencyIso;
         $this->combinationIdChoiceProvider = $configurableFormChoiceProvider;
         $this->urlGenerator = $urlGenerator;
+        $this->isMultishopEnabled = $isMultishopEnabled;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -227,20 +235,18 @@ class SpecificPriceType extends TranslatorAwareType
                     'class' => 'js-include-tax-row',
                 ],
                 'label' => $this->trans('Reduction with or without taxes', 'Admin.Catalog.Feature'),
-                'placeholder' => false,
+                'placeholder' => $this->trans('All Shops', 'Admin.Global'),
                 'required' => false,
                 'choices' => $this->taxInclusionChoiceProvider->getChoices(),
             ])
         ;
 
-        //@todo: handle multishop. Check if we need this?
-        //@todo: Also do we need both shop and shop group? check how old page behaved, AddProductSpecificPriceCommand has both values.
-//        if ($this->isMultishopEnabled) {
-//            $builder->add('id_shop', ChoiceType::class, [
-//                'required' => false,
-//                'placeholder' => false,
-//                'choices' => $this->shopByIdChoiceProvider->getChoices(),
-//            ]);
-//        }
+        if ($this->isMultishopEnabled) {
+            $builder->add('shop_id', ChoiceType::class, [
+                'required' => false,
+                'placeholder' => false,
+                'choices' => $this->shopByIdChoiceProvider->getChoices(),
+            ]);
+        }
     }
 }
