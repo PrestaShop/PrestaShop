@@ -28,11 +28,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\NoGroupId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Price;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
@@ -54,28 +52,21 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
 
     public function create(array $data): int
     {
+        $price = isset($data['leave_initial_price']) && $data['leave_initial_price'] ?
+            Price::LEAVE_PRODUCT_INITIAL_PRICE_VALUE :
+            (string) $data['price']
+        ;
+
         $command = new AddProductSpecificPriceCommand(
             (int) $data['product_id'],
             $data['reduction']['type'],
             (string) $data['reduction']['value'],
             (bool) $data['include_tax'],
-            (string) $data['price'],
+            $price,
             (int) $data['from_quantity']
         );
-        $currencyId = $data['currency_id'] ? (int) $data['currency_id'] : NoCurrencyId::NO_CURRENCY_ID;
-        $groupId = $data['group_id'] ? (int) $data['group_id'] : NoGroupId::NO_GROUP_ID;
-        $combinationId = $data['combination_id'] ? (int) $data['combination_id'] : NoCombinationId::NO_COMBINATION_ID;
 
-        $command
-            ->setCurrencyId($currencyId)
-            ->setGroupId($groupId)
-            ->setCombinationId($combinationId)
-            ->setCountryId((int) $data['country_id'])
-            ->setCustomerId($this->getCustomerId($data))
-        ;
-        if (isset($data['shop_id'])) {
-            $command->setShopId((int) $data['shop_id']);
-        }
+        $this->fillRelations($command, $data);
 
         /** @var SpecificPriceId $specificPriceId */
         $specificPriceId = $this->commandBus->handle($command);
@@ -86,25 +77,57 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
     public function update($id, array $data): void
     {
         $command = new EditProductSpecificPriceCommand((int) $id);
-        $currencyId = $data['currency_id'] ? (int) $data['currency_id'] : NoCurrencyId::NO_CURRENCY_ID;
-        $groupId = $data['group_id'] ? (int) $data['group_id'] : NoGroupId::NO_GROUP_ID;
-        $combinationId = $data['combination_id'] ? (int) $data['combination_id'] : NoCombinationId::NO_COMBINATION_ID;
+        $this->fillRelations($command, $data);
 
-        $command
-            ->setCurrencyId($currencyId)
-            ->setGroupId($groupId)
-            ->setCombinationId($combinationId)
-            ->setCustomerId($this->getCustomerId($data))
-            ->setCountryId((int) $data['country_id'])
-            ->setFromQuantity((int) $data['from_quantity'])
-            ->setLeaveInitialPrice((bool) $data['leave_initial_price'])
-            ->setPrice((string) $data['price'])
-            ->setDateTimeFrom(DateTime::buildNullableDateTime($data['date_range']['from']))
-            ->setDateTimeTo(DateTime::buildNullableDateTime($data['date_range']['to']))
-            ->setReduction((string) $data['reduction']['type'], (string) $data['reduction']['value'])
-            ->setIncludesTax((bool) $data['include_tax'])
-        ;
+        if (isset($data['leave_initial_price']) && $data['leave_initial_price']) {
+            $command->setPrice(Price::LEAVE_PRODUCT_INITIAL_PRICE_VALUE);
+        } elseif (isset($data['price'])) {
+            $command->setPrice((string) $data['price']);
+        }
+
+        if (isset($data['from_quantity'])) {
+            $command->setFromQuantity((int) $data['from_quantity']);
+        }
+        if (isset($data['date_range']['from'])) {
+            $command->setDateTimeFrom(DateTime::buildNullableDateTime($data['date_range']['from']));
+        }
+        if (isset($data['date_range']['to'])) {
+            $command->setDateTimeTo(DateTime::buildNullableDateTime($data['date_range']['to']));
+        }
+        if (isset($data['reduction']['type'])) {
+            $command->setReduction((string) $data['reduction']['type'], (string) $data['reduction']['value']);
+        }
+        if (isset($data['include_tax'])) {
+            $command->setIncludesTax((bool) $data['include_tax']);
+        }
+
         $this->commandBus->handle($command);
+    }
+
+    /**
+     * @param AddProductSpecificPriceCommand|EditProductSpecificPriceCommand $command
+     * @param array<string, mixed> $data
+     */
+    private function fillRelations($command, array $data): void
+    {
+        if (array_key_exists('currency_id', $data)) {
+            $command->setCurrencyId((int) $data['currency_id']);
+        }
+        if (array_key_exists('group_id', $data)) {
+            $command->setGroupId((int) $data['group_id']);
+        }
+        if (array_key_exists('combination_id', $data)) {
+            $command->setCombinationId((int) $data['combination_id']);
+        }
+        if (array_key_exists('country_id', $data)) {
+            $command->setCountryId((int) $data['combination_id']);
+        }
+        if (array_key_exists('shop_id', $data)) {
+            $command->setShopId((int) $data['shop_id']);
+        }
+        if (isset($data['customer'])) {
+            $command->setCustomerId($this->getCustomerId($data));
+        }
     }
 
     /**
