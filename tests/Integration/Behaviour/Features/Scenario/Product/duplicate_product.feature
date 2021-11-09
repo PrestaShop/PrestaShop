@@ -122,29 +122,6 @@ Feature: Duplicate product from Back Office (BO).
       | includes tax    | true   |
       | from quantity   | 1      |
     Then product "product1" should have 1 specific prices
-    When I add product product_with_combinations with following information:
-      | name[en-US] | Jar of sand  |
-      | type        | combinations |
-    And I generate combinations for product product_with_combinations using following attributes:
-      | Color | [Red,Blue] |
-    Then product "product_with_combinations" should have following combinations:
-      | id reference                   | combination name | reference | attributes    | impact on price | quantity | is default |
-      | product_with_combinationsRed   | Color - Red      |           | [Color:Red]   | 0               | 0        | true       |
-      | product_with_combinationsBlue  | Color - Blue     |           | [Color:Blue]  | 0               | 0        | false      |
-    When I add a specific price specific_price1 to product product_with_combinations with following details:
-      | price           | 123.00                       |
-      | combination     | product_with_combinationsRed |
-      | reduction type  | amount                       |
-      | reduction value | 0.00                         |
-      | includes tax    | true                         |
-      | from quantity   | 1                            |
-    And I add a specific price specific_price2 to product product_with_combinations with following details:
-      | price           | 0.00   |
-      | reduction type  | amount |
-      | reduction value | 5.00   |
-      | includes tax    | true   |
-      | from quantity   | 1      |
-    Then product "product_with_combinations" should have 2 specific prices
 
   Scenario: I duplicate product
 #todo: add specific prices & priorities, test combinations, packs
@@ -241,6 +218,29 @@ Feature: Duplicate product from Back Office (BO).
 #@todo: add tests for other type of products Pack, Virtual, Combinations
 
   Scenario: I duplicate product with combinations
+    When I add product product_with_combinations with following information:
+      | name[en-US] | Jar of sand  |
+      | type        | combinations |
+    And I generate combinations for product product_with_combinations using following attributes:
+      | Color | [Red,Blue] |
+    Then product "product_with_combinations" should have following combinations:
+      | id reference                   | combination name | reference | attributes    | impact on price | quantity | is default |
+      | product_with_combinationsRed   | Color - Red      |           | [Color:Red]   | 0               | 0        | true       |
+      | product_with_combinationsBlue  | Color - Blue     |           | [Color:Blue]  | 0               | 0        | false      |
+    When I add a specific price specific_price1 to product product_with_combinations with following details:
+      | price           | 123.00                       |
+      | combination     | product_with_combinationsRed |
+      | reduction type  | amount                       |
+      | reduction value | 0.00                         |
+      | includes tax    | true                         |
+      | from quantity   | 1                            |
+    And I add a specific price specific_price2 to product product_with_combinations with following details:
+      | price           | 0.00   |
+      | reduction type  | amount |
+      | reduction value | 5.00   |
+      | includes tax    | true   |
+      | from quantity   | 1      |
+    Then product "product_with_combinations" should have 2 specific prices
     When I duplicate product product_with_combinations to a copy_of_product_with_combinations
     Then product "copy_of_product_with_combinations" should have 2 specific prices
     # TODO: all sorts of other checks
