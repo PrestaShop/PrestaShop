@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,6 +48,9 @@ class SpecificPriceController extends FrameworkBundleAdminController
 {
     private const UNSPECIFIED_VALUE_FORMAT = '--';
 
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     */
     public function listAction(int $productId): JsonResponse
     {
         $specificPricesList = $this->getQueryBus()->handle(
@@ -56,6 +60,11 @@ class SpecificPriceController extends FrameworkBundleAdminController
         return $this->json(['specificPrices' => $this->formatSpecificPricesList($specificPricesList)]);
     }
 
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
+     * @return Response
+     */
     public function createAction(Request $request, int $productId): Response
     {
         $form = $this->getFormBuilder()->getForm(['product_id' => $productId]);
@@ -81,6 +90,11 @@ class SpecificPriceController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @return Response
+     */
     public function editAction(Request $request, int $specificPriceId): Response
     {
         $form = $this->getFormBuilder()->getFormFor($specificPriceId);
@@ -123,16 +137,27 @@ class SpecificPriceController extends FrameworkBundleAdminController
         ];
     }
 
+    /**
+     * @return FormBuilderInterface
+     */
     private function getFormBuilder(): FormBuilderInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.specific_price_form_builder');
     }
 
+    /**
+     * @return FormHandlerInterface
+     */
     private function getFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.handler.specific_price_form_handler');
     }
 
+    /**
+     * @param SpecificPriceList $specificPriceListForEditing
+     *
+     * @return array<int, array<string, mixed>>
+     */
     private function formatSpecificPricesList(SpecificPriceList $specificPriceListForEditing): array
     {
         $list = [];
@@ -154,6 +179,11 @@ class SpecificPriceController extends FrameworkBundleAdminController
         return $list;
     }
 
+    /**
+     * @param Price $price
+     *
+     * @return string
+     */
     private function formatPrice(Price $price): string
     {
         if ($price->isInitialPrice()) {
@@ -163,6 +193,12 @@ class SpecificPriceController extends FrameworkBundleAdminController
         return $this->getContextLocale()->formatPrice((string) $price, $this->getContextCurrencyIso());
     }
 
+    /**
+     * @param string $reductionType
+     * @param DecimalNumber $reductionValue
+     *
+     * @return string
+     */
     private function formatImpact(string $reductionType, DecimalNumber $reductionValue): string
     {
         if ($reductionValue->equalsZero()) {
@@ -179,6 +215,12 @@ class SpecificPriceController extends FrameworkBundleAdminController
         return sprintf('%s %%', (string) $reductionValue);
     }
 
+    /**
+     * @param DateTimeInterface $from
+     * @param DateTimeInterface $to
+     *
+     * @return array<string, string>|null
+     */
     private function formatPeriod(DateTimeInterface $from, DateTimeInterface $to): ?array
     {
         if (DateTimeUtil::isNull($from) && DateTimeUtil::isNull($to)) {
