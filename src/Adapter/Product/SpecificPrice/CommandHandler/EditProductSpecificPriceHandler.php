@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\EditProductSpecificPriceHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Price;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use SpecificPrice;
 
@@ -85,7 +84,8 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
             ];
         }
 
-        if ($this->setPrice($command, $specificPrice)) {
+        if ($command->getPrice()) {
+            $specificPrice->price = (float) (string) $command->getPrice();
             $updatableProperties[] = 'price';
         }
 
@@ -115,7 +115,7 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
         }
 
         if (null !== $command->getCountryId()) {
-            $specificPrice->id_country = $command->getCountryId()->getValue();
+            $specificPrice->id_country = $command->getCountryId();
             $updatableProperties[] = 'id_country';
         }
 
@@ -125,7 +125,7 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
         }
 
         if (null !== $command->getCustomerId()) {
-            $specificPrice->id_customer = $command->getCustomerId()->getValue();
+            $specificPrice->id_customer = $command->getCustomerId();
             $updatableProperties[] = 'id_customer';
         }
 
@@ -140,30 +140,5 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
         }
 
         return $updatableProperties;
-    }
-
-    /**
-     * SpecificPrice price depends on "leave initial price" option.
-     *
-     * @param EditProductSpecificPriceCommand $command
-     * @param SpecificPrice $specificPrice
-     *
-     * @return bool whether price was set or not
-     */
-    private function setPrice(EditProductSpecificPriceCommand $command, SpecificPrice $specificPrice): bool
-    {
-        if ($command->leaveInitialPrice() === true) {
-            $specificPrice->price = Price::LEAVE_PRODUCT_INITIAL_PRICE_VALUE;
-
-            return true;
-        }
-
-        if (null !== $command->getPrice()) {
-            $specificPrice->price = (float) (string) $command->getPrice();
-
-            return true;
-        }
-
-        return false;
     }
 }
