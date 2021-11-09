@@ -39,10 +39,6 @@ use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
  */
 final class InvoicesByDateDataProvider implements FormDataProviderInterface
 {
-    public const ERROR_INVALID_DATE_FROM = 'error_invalid_date_from';
-    public const ERROR_INVALID_DATE_TO = 'error_invalid_date_to';
-    public const ERROR_NO_INVOICES_FOUND = 'error_no_invoices_found';
-
     /**
      * @var OrderInvoiceDataProviderInterface
      */
@@ -89,11 +85,11 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
         $errorCollection = new InvalidConfigurationDataErrorCollection();
 
         if (!isset($data[GenerateByDateType::FIELD_DATE_FROM]) || false === $data[GenerateByDateType::FIELD_DATE_FROM]) {
-            $errorCollection->add(new InvalidConfigurationDataError(static::ERROR_INVALID_DATE_FROM, GenerateByDateType::FIELD_DATE_FROM));
+            $errorCollection->add(new InvalidConfigurationDataError(InvalidConfigurationDataError::ERROR_INVALID_DATE_FROM, GenerateByDateType::FIELD_DATE_FROM));
         }
 
         if (!isset($data[GenerateByDateType::FIELD_DATE_TO]) || false === $data[GenerateByDateType::FIELD_DATE_TO]) {
-            $errorCollection->add(new InvalidConfigurationDataError(static::ERROR_INVALID_DATE_TO, GenerateByDateType::FIELD_DATE_TO));
+            $errorCollection->add(new InvalidConfigurationDataError(InvalidConfigurationDataError::ERROR_INVALID_DATE_TO, GenerateByDateType::FIELD_DATE_TO));
         }
 
         if (!$errorCollection->isEmpty()) {
@@ -106,7 +102,7 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
         if (!$this->orderInvoiceDataProvider->getByDateInterval($dateFrom, $dateTo)) {
             $errorCollection->add(
                 new InvalidConfigurationDataError(
-                    static::ERROR_NO_INVOICES_FOUND,
+                    InvalidConfigurationDataError::ERROR_NO_INVOICES_FOUND,
                     GenerateByDateType::FIELD_DATE_TO
                 )
             );

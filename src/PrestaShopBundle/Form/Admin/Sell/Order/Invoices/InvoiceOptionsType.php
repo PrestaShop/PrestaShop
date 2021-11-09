@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\NoTags;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -40,7 +39,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 /**
  * Class InvoiceOptionsType generates "Invoice options" form
@@ -48,19 +46,18 @@ use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
  */
 class InvoiceOptionsType extends TranslatorAwareType
 {
-    public const ENABLE_INVOICES = 'enable_invoices';
-    public const ENABLE_TAX_BREAKDOWN = 'enable_tax_breakdown';
-    public const ENABLE_PRODUCT_IMAGES = 'enable_product_images';
-    public const INVOICE_PREFIX = 'invoice_prefix';
-    public const ADD_CURRENT_YEAR = 'add_current_year';
-    public const RESET_NUMBER_ANNUALLY = 'reset_number_annually';
-    public const YEAR_POSITION = 'year_position';
-    public const INVOICE_NUMBER = 'invoice_number';
-    public const LEGAL_FREE_TEXT = 'legal_free_text';
-    public const FOOTER_TEXT = 'footer_text';
-    public const INVOICE_MODEL = 'invoice_model';
-    public const USE_DISK_CACHE = 'use_disk_cache';
-
+    public const FIELD_ENABLE_INVOICES = 'enable_invoices';
+    public const FIELD_ENABLE_TAX_BREAKDOWN = 'enable_tax_breakdown';
+    public const FIELD_ENABLE_PRODUCT_IMAGES = 'enable_product_images';
+    public const FIELD_INVOICE_PREFIX = 'invoice_prefix';
+    public const FIELD_ADD_CURRENT_YEAR = 'add_current_year';
+    public const FIELD_RESET_NUMBER_ANNUALLY = 'reset_number_annually';
+    public const FIELD_YEAR_POSITION = 'year_position';
+    public const FIELD_INVOICE_NUMBER = 'invoice_number';
+    public const FIELD_LEGAL_FREE_TEXT = 'legal_free_text';
+    public const FIELD_FOOTER_TEXT = 'footer_text';
+    public const FIELD_INVOICE_MODEL = 'invoice_model';
+    public const FIELD_USE_DISK_CACHE = 'use_disk_cache';
     /**
      * @var FormChoiceProviderInterface
      */
@@ -94,19 +91,19 @@ class InvoiceOptionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add(static::ENABLE_INVOICES, SwitchType::class, [
+            ->add(static::FIELD_ENABLE_INVOICES, SwitchType::class, [
                 'label' => $this->trans('Enable invoices', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans('If enabled, your customers will receive an invoice for the purchase.', 'Admin.Orderscustomers.Help'),
             ])
-            ->add(static::ENABLE_TAX_BREAKDOWN, SwitchType::class, [
+            ->add(static::FIELD_ENABLE_TAX_BREAKDOWN, SwitchType::class, [
                 'label' => $this->trans('Enable tax breakdown', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans('If required, show the total amount per rate of the corresponding tax.', 'Admin.Orderscustomers.Help'),
             ])
-            ->add(static::ENABLE_PRODUCT_IMAGES, SwitchType::class, [
+            ->add(static::FIELD_ENABLE_PRODUCT_IMAGES, SwitchType::class, [
                 'label' => $this->trans('Enable product image', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans('Add an image in front of the product name on the invoice.', 'Admin.Orderscustomers.Help'),
             ])
-            ->add(static::INVOICE_PREFIX, TranslatableType::class, [
+            ->add(static::FIELD_INVOICE_PREFIX, TranslatableType::class, [
                 'options' => [
                 ],
                 'required' => false,
@@ -114,13 +111,13 @@ class InvoiceOptionsType extends TranslatorAwareType
                 'label' => $this->trans('Invoice prefix', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans('Freely definable prefix for invoice number (e.g. #IN00001).', 'Admin.Orderscustomers.Help'),
             ])
-            ->add(static::ADD_CURRENT_YEAR, SwitchType::class, [
+            ->add(static::FIELD_ADD_CURRENT_YEAR, SwitchType::class, [
                 'label' => $this->trans('Add current year to invoice number', 'Admin.Orderscustomers.Feature'),
             ])
-            ->add(static::RESET_NUMBER_ANNUALLY, SwitchType::class, [
+            ->add(static::FIELD_RESET_NUMBER_ANNUALLY, SwitchType::class, [
                 'label' => $this->trans('Reset sequential invoice number at the beginning of the year', 'Admin.Orderscustomers.Feature'),
             ])
-            ->add(static::YEAR_POSITION, ChoiceType::class, [
+            ->add(static::FIELD_YEAR_POSITION, ChoiceType::class, [
                 'choices' => [
                     $this->trans('After the sequential number', 'Admin.Orderscustomers.Feature') => 0,
                     $this->trans('Before the sequential number', 'Admin.Orderscustomers.Feature') => 1,
@@ -128,19 +125,8 @@ class InvoiceOptionsType extends TranslatorAwareType
                 'expanded' => true,
                 'label' => $this->trans('Position of the year date', 'Admin.Orderscustomers.Feature'),
             ])
-            ->add(static::INVOICE_NUMBER, NumberType::class, [
+            ->add(static::FIELD_INVOICE_NUMBER, NumberType::class, [
                 'required' => false,
-                'constraints' => [
-                    new GreaterThanOrEqual(
-                        [
-                            'value' => 0,
-                            'message' => $this->trans(
-                                'Invoice number must be a positive integer, or 0 if you want to keep the current number.',
-                                'Admin.Orderscustomers.Notification'
-                            ),
-                        ]
-                    ),
-                ],
                 'label' => $this->trans('Invoice number', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans(
                     'The next invoice number will begin with this number, and then increase with each additional invoice. Enter a positive integer greater than the last invoice number or set to 0 if you want to keep the current number (which is %number%).',
@@ -148,26 +134,26 @@ class InvoiceOptionsType extends TranslatorAwareType
                     ['%number%' => $this->nextInvoiceNumber]
                 ),
             ])
-            ->add(static::LEGAL_FREE_TEXT, TranslatableType::class, [
+            ->add(static::FIELD_LEGAL_FREE_TEXT, TranslatableType::class, [
                 'required' => false,
                 'type' => TextareaType::class,
                 'label' => $this->trans('Legal free text', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans('Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).', 'Admin.Orderscustomers.Help'),
             ])
-            ->add(static::FOOTER_TEXT, TranslatableType::class, [
+            ->add(static::FIELD_FOOTER_TEXT, TranslatableType::class, [
                 'required' => false,
                 'type' => TextType::class,
                 'label' => $this->trans('Footer text', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans('This text will appear at the bottom of the invoice, below your company details.', 'Admin.Orderscustomers.Help'),
             ])
-            ->add(static::INVOICE_MODEL, ChoiceType::class, [
+            ->add(static::FIELD_INVOICE_MODEL, ChoiceType::class, [
                 'placeholder' => false,
                 'choices' => $this->invoiceModelChoiceProvider->getChoices(),
                 'translation_domain' => false,
                 'label' => $this->trans('Invoice model', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans('Choose an invoice model.', 'Admin.Orderscustomers.Help'),
             ])
-            ->add(static::USE_DISK_CACHE, SwitchType::class, [
+            ->add(static::FIELD_USE_DISK_CACHE, SwitchType::class, [
                 'label' => $this->trans('Use the disk as cache for PDF invoices', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans('Note that it saves memory but slows down the PDF generation.', 'Admin.Orderscustomers.Help'),
             ]);
