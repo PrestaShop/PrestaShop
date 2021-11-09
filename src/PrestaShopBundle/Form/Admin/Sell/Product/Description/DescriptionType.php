@@ -152,7 +152,7 @@ class DescriptionType extends TranslatorAwareType
                 ]),
                 'min_length' => 3,
                 'filtered_identities' => $productId > 0 ? [$productId] : [],
-                'placeholder' => $this->trans('Search product', 'Admin.Catalog.Feature'),
+                'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
             ])
         ;
     }
