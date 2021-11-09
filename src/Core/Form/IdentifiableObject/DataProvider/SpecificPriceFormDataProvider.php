@@ -105,6 +105,7 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
             'reduction' => [
                 'value' => 0,
             ],
+            'leave_initial_price' => false,
         ];
     }
 }
