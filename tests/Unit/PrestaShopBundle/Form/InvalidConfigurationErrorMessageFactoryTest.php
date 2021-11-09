@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
-use PrestaShopBundle\Form\InvalidConfigurationErrorMessageFactory;
+use PrestaShopBundle\Form\ErrorMessage\InvalidConfigurationErrorMessageFactory;
 use ReflectionClass;
 use Symfony\Component\Translation\Translator;
 
