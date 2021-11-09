@@ -36,10 +36,8 @@
       <i class="material-icons">attach_money</i>
       {{ 'Specific prices'|trans({}, 'Admin.Catalog.Feature') }}
     </h3>
-    <div class="card-block row">
-      <div class="card-text">
-        {{ form_widget(specificPriceForm) }}
-      </div>
+    <div class="card-body">
+      {{ form_widget(specificPriceForm) }}
     </div>
   </div>
   {{ form_end(specificPriceForm) }}
