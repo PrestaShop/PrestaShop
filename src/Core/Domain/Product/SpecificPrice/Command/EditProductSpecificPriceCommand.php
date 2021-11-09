@@ -124,10 +124,6 @@ class EditProductSpecificPriceCommand
      */
     private $dateTimeTo;
 
-    /**
-     * @var bool|null
-     */
-    private $leaveInitialPrice;
 
     /**
      * @param int $specificPriceId
@@ -301,7 +297,7 @@ class EditProductSpecificPriceCommand
      */
     public function setCountryId(int $countryId): self
     {
-        $this->countryId = new CountryId($countryId);
+        $this->countryId = $countryId;
 
         return $this;
     }
@@ -341,7 +337,7 @@ class EditProductSpecificPriceCommand
      */
     public function setCustomerId(int $customerId): self
     {
-        $this->customerId = new CustomerId($customerId);
+        $this->customerId = $customerId;
 
         return $this;
     }
@@ -382,26 +378,6 @@ class EditProductSpecificPriceCommand
     public function setDateTimeTo(DateTimeInterface $dateTimeTo): self
     {
         $this->dateTimeTo = $dateTimeTo;
-
-        return $this;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function leaveInitialPrice(): ?bool
-    {
-        return $this->leaveInitialPrice;
-    }
-
-    /**
-     * @param bool $leaveInitialPrice
-     *
-     * @return EditProductSpecificPriceCommand
-     */
-    public function setLeaveInitialPrice(bool $leaveInitialPrice): self
-    {
-        $this->leaveInitialPrice = $leaveInitialPrice;
 
         return $this;
     }
