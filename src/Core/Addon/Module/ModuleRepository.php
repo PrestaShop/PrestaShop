@@ -31,6 +31,7 @@ use Exception;
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository as AdapterModuleRepository;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
@@ -104,18 +105,25 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     private $loadedModules;
 
+    /**
+     * @var AdapterModuleRepository
+     */
+    private $adapterModuleRepository;
+
     public function __construct(
         ModuleDataProvider $modulesProvider,
         LoggerInterface $logger,
         TranslatorInterface $translator,
         $modulePath,
-        CacheProvider $cacheProvider = null
+        CacheProvider $cacheProvider = null,
+        AdapterModuleRepository $moduleRepository = null
     ) {
         $this->logger = $logger;
         $this->moduleProvider = $modulesProvider;
         $this->translator = $translator;
         $this->finder = new Finder();
         $this->modulePath = $modulePath;
+        $this->adapterModuleRepository = $moduleRepository ?? new AdapterModuleRepository();
 
         list($isoLang) = explode('-', $translator->getLocale());
 
@@ -163,12 +171,13 @@ class ModuleRepository implements ModuleRepositoryInterface
      * @param AddonListFilter $filter
      * @param bool $skip_main_class_attributes
      *
-     * @return AddonInterface[] retrieve a list of addons, regarding the $filter used
+     * @return Module[] retrieve a list of addons, regarding the $filter used
      */
     public function getFilteredList(AddonListFilter $filter, $skip_main_class_attributes = false)
     {
         /** @var Module[] $modules */
         $modules = $this->getList($skip_main_class_attributes);
+        $natives = $this->adapterModuleRepository->getNativeModules();
 
         foreach ($modules as $key => &$module) {
             // Part One : Removing addons not related to the selected product type
@@ -206,8 +215,8 @@ class ModuleRepository implements ModuleRepositoryInterface
 
                 if ($module->database->get('installed') == 1
                     && $module->database->get('active') == 1
-                    && !$filter->hasStatus(AddonListFilterStatus::DISABLED)
-                    && $filter->hasStatus(AddonListFilterStatus::ENABLED)) {
+                    && $filter->hasStatus(AddonListFilterStatus::DISABLED)
+                    && !$filter->hasStatus(AddonListFilterStatus::ENABLED)) {
                     unset($modules[$key]);
 
                     continue;
@@ -215,8 +224,8 @@ class ModuleRepository implements ModuleRepositoryInterface
 
                 if ($module->database->get('installed') == 1
                     && $module->database->get('active') == 0
-                    && !$filter->hasStatus(AddonListFilterStatus::ENABLED)
-                    && $filter->hasStatus(AddonListFilterStatus::DISABLED)) {
+                    && $filter->hasStatus(AddonListFilterStatus::ENABLED)
+                    && !$filter->hasStatus(AddonListFilterStatus::DISABLED)) {
                     unset($modules[$key]);
 
                     continue;
@@ -225,16 +234,17 @@ class ModuleRepository implements ModuleRepositoryInterface
 
             // Part Three : Remove addons not related to the proper source (ex Addons)
             if ($filter->origin != AddonListFilterOrigin::ALL) {
-                if (!$module->attributes->has('origin_filter_value') &&
-                    !$filter->hasOrigin(AddonListFilterOrigin::DISK)
-                ) {
+                if ($filter->hasOrigin(AddonListFilterOrigin::NATIVE_MODULE)
+                    && !$filter->hasOrigin(AddonListFilterOrigin::NON_NATIVE_MODULE)
+                    && !in_array($module->attributes->get('name'), $natives)) {
                     unset($modules[$key]);
 
                     continue;
                 }
-                if ($module->attributes->has('origin_filter_value') &&
-                    !$filter->hasOrigin($module->attributes->get('origin_filter_value'))
-                ) {
+
+                if ($filter->hasOrigin(AddonListFilterOrigin::NON_NATIVE_MODULE)
+                    && !$filter->hasOrigin(AddonListFilterOrigin::NATIVE_MODULE)
+                    && in_array($module->attributes->get('name'), $natives)) {
                     unset($modules[$key]);
 
                     continue;

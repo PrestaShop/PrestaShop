@@ -23,18 +23,35 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-define('_PS_IN_TEST_', true);
-define('_PS_ROOT_DIR_', __DIR__ . '/../..');
-define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests/Resources/modules/');
-require_once __DIR__ . '/../../config/defines.inc.php';
-require_once _PS_CONFIG_DIR_ . 'autoload.php';
 
-if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
-    define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../../vendor/autoload.php');
-}
+declare(strict_types=1);
 
-define('_NEW_COOKIE_KEY_', PhpEncryption::createNewRandomKey());
+namespace PrestaShop\PrestaShop\Adapter\Module\CommandHandler;
 
-if (!defined('__PS_BASE_URI__')) {
-    define('__PS_BASE_URI__', '');
+use Module;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\BulkToggleModuleStatusHandlerInterface;
+
+/**
+ * Bulk toggles Module status
+ */
+class BulkToggleModuleStatusHandler implements BulkToggleModuleStatusHandlerInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(BulkToggleModuleStatusCommand $command): void
+    {
+        foreach ($command->getModules() as $moduleName) {
+            $module = Module::getInstanceByName($moduleName);
+            if (!$module) {
+                continue;
+            }
+            if ($command->getExpectedStatus()) {
+                $module->enable();
+            } else {
+                $module->disable();
+            }
+        }
+    }
 }
