@@ -118,8 +118,8 @@ class ConfigurationCore extends ObjectModel
 
     /**
      * @param string $key
-     * @param int $idShopGroup
-     * @param int $idShop
+     * @param int|null $idShopGroup
+     * @param int|null $idShop
      *
      * @return int Configuration key ID
      */
