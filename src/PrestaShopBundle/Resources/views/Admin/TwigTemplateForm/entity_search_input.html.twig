@@ -131,16 +131,6 @@
   </li>
 {% endblock %}
 
-{% block searched_customer_row %}
-  <li class="media entity-item" id="{{ form.vars.name }}">
-    <div class="media-body media-middle">
-      {{ form_widget(form.fullname_and_email) }}
-      <i class="material-icons delete entity-item-delete">clear</i>
-    </div>
-    {{ form_widget(form.id_customer) }}
-  </li>
-{% endblock %}
-
 {%- block entity_item_table_row -%}
   <tr class="entity-item" id="{{ form.vars.name }}">
   {% for child in form.children %}
