@@ -45,7 +45,7 @@ use Tab;
  *
  * @internal
  */
-final class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigurationHandlerInterface
+class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigurationHandlerInterface
 {
     /**
      * @internal Max nesting level for building tabs tree
