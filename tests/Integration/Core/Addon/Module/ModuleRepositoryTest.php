@@ -31,6 +31,7 @@ namespace Tests\Integration\Core\Addon\Module;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository as AdapterModuleRepository;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
@@ -45,6 +46,11 @@ class ModuleRepositoryTest extends TestCase
      * @var ModuleRepository
      */
     private $moduleRepository;
+
+    private const MOCK_NATIVE_MODULES = [
+        'ps_banner', // Like a Bruce
+        'ps_emailsubscription',
+    ];
 
     protected function setUp(): void
     {
@@ -62,12 +68,17 @@ class ModuleRepositoryTest extends TestCase
         $translator = $this->getMockBuilder(Translator::class)->disableOriginalConstructor()->getMock();
         $translator->method('trans')->willReturnArgument(0);
 
+        $moduleRepository = $this->getMockBuilder(AdapterModuleRepository::class)->getMock();
+        $moduleRepository->method('getNativeModules')->willReturn(static::MOCK_NATIVE_MODULES);
+
         $this->moduleRepository = $this->getMockBuilder(ModuleRepository::class)
             ->setConstructorArgs([
                 $moduleDataProvider,
                 $logger,
                 $translator,
                 dirname(__DIR__, 4) . '/Resources/modules/',
+                null,
+                $moduleRepository,
             ])
             ->setMethods(['readCacheFile', 'generateCacheFile'])
             ->getMock();
@@ -204,15 +215,33 @@ class ModuleRepositoryTest extends TestCase
         }
     }
 
-    public function testGetAddonsFromMarketplaceOnly(): void
+    public function testGetOnlyNativeModules(): void
     {
         $filters = new AddonListFilter();
-        $filters->setOrigin(AddonListFilterOrigin::ADDONS_ALL);
+        $filters
+            ->setType(AddonListFilterType::MODULE)
+            ->setOrigin(AddonListFilterOrigin::NATIVE_MODULE);
 
-        // Each module must have its origin attribute
-        /** @var Module $module */
-        foreach ($this->moduleRepository->getFilteredList($filters) as $module) {
-            $this->assertTrue($module->attributes->has('origin'), $module->attributes->get('name') . ' has not an origin attribute');
+        $nativeModules = $this->moduleRepository->getFilteredList($filters);
+
+        // Each module MUST have its database installed and enabled attributes as true
+        foreach ($nativeModules as $module) {
+            $this->assertTrue(in_array($module->attributes->get('name'), static::MOCK_NATIVE_MODULES));
+        }
+    }
+
+    public function testGetNotNativeModules(): void
+    {
+        $filters = new AddonListFilter();
+        $filters
+            ->setType(AddonListFilterType::MODULE)
+            ->setOrigin(AddonListFilterOrigin::NON_NATIVE_MODULE);
+
+        $nonNativeModules = $this->moduleRepository->getFilteredList($filters);
+
+        // Each module MUST have its database installed and enabled attributes as true
+        foreach ($nonNativeModules as $module) {
+            $this->assertFalse(in_array($module->attributes->get('name'), static::MOCK_NATIVE_MODULES));
         }
     }
 

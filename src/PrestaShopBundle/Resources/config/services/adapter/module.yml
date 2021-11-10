@@ -2,6 +2,12 @@ services:
   _defaults:
     public: true
 
+  prestashop.adapter.module.sql_management.command_handler.save_settings:
+    class: 'PrestaShop\PrestaShop\Adapter\Module\CommandHandler\BulkToggleModuleStatusHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand'
+
   prestashop.adapter.module.self_configurator:
     class: PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator
     arguments:

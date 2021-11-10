@@ -40,6 +40,13 @@ use Symfony\Component\Finder\Finder;
  */
 class ModuleRepository extends AbstractObjectModelRepository
 {
+    /** @var string[] */
+    public const ADDITIONAL_ALLOWED_MODULES = [
+        'autoupgrade',
+    ];
+
+    private const COMPOSER_PACKAGE_TYPE = 'prestashop-module';
+
     /**
      * @var array
      */
@@ -106,5 +113,35 @@ class ModuleRepository extends AbstractObjectModelRepository
         }
 
         return $this->activeModulesPaths;
+    }
+
+    /**
+     * Returns an array of native modules
+     *
+     * @return array<string>
+     */
+    public function getNativeModules(): array
+    {
+        // Native modules are the one integrated in PrestaShop release via composer
+        // so we use the lock files to generate the list
+        $content = file_get_contents(_PS_ROOT_DIR_ . '/composer.lock');
+        $content = json_decode($content, true);
+        if (empty($content['packages'])) {
+            return [];
+        }
+
+        $modules = array_filter($content['packages'], function (array $package) {
+            return static::COMPOSER_PACKAGE_TYPE === $package['type'] && !empty($package['name']);
+        });
+        $modules = array_map(function (array $package) {
+            $vendorName = explode('/', $package['name']);
+
+            return $vendorName[1];
+        }, $modules);
+
+        return array_merge(
+            $modules,
+            static::ADDITIONAL_ALLOWED_MODULES
+        );
     }
 }

@@ -416,7 +416,11 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Install module and retrieve the installation id
-        $result = Db::getInstance()->insert($this->table, ['name' => $this->name, 'active' => 1, 'version' => $this->version]);
+        $result = Db::getInstance()->insert($this->table, [
+            'name' => $this->name,
+            'active' => 1,
+            'version' => $this->version,
+        ]);
         if (!$result) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('Technical error: PrestaShop could not install this module.', [], 'Admin.Modules.Notification');
             if (method_exists($this, 'uninstallTabs')) {
@@ -431,8 +435,16 @@ abstract class ModuleCore implements ModuleInterface
         Cache::clean('Module::isInstalled' . $this->name);
         Cache::clean('Module::getModuleIdByName_' . pSQL($this->name));
 
-        // Enable the module for current shops in context
-        if (!$this->enable()) {
+        $disable_non_native_modules = (bool) Configuration::get('PS_DISABLE_NON_NATIVE_MODULE');
+        if ($disable_non_native_modules) {
+            // Enable the module for current shops in context if it's a native module
+            $changeStatus = in_array($this->name, static::getNativeModuleList()) ? $this->enable() : $this->disable();
+        } else {
+            // Enable the module for current shops in context
+            $changeStatus = $this->enable();
+        }
+
+        if (!$changeStatus) {
             return false;
         }
 
@@ -1629,9 +1641,15 @@ abstract class ModuleCore implements ModuleInterface
         return false;
     }
 
+    /**
+     * @return array<string>
+     */
     public static function getNativeModuleList()
     {
-        return false;
+        $finder = new ContainerFinder(Context::getContext());
+        $sfContainer = $finder->getContainer();
+
+        return $sfContainer->get('prestashop.adapter.module.repository.module_repository')->getNativeModules();
     }
 
     /**
@@ -3365,6 +3383,12 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         $this->getContainer()->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
+    }
+
+    public static function resetStaticCache()
+    {
+        static::$_INSTANCE = [];
+        Cache::clean('Module::isEnabled*');
     }
 }
 

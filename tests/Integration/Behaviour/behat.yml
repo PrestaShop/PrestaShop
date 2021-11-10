@@ -26,6 +26,15 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+        module:
+            paths:
+                - "%paths.base%/Features/Scenario/Module"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ModuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
         category:
             paths:
                 - "%paths.base%/Features/Scenario/Category"
