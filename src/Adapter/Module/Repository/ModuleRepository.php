@@ -40,6 +40,11 @@ use Symfony\Component\Finder\Finder;
  */
 class ModuleRepository extends AbstractObjectModelRepository
 {
+    /** @var string[] */
+    public const ADDITIONAL_ALLOWED_MODULES = [
+        'autoupgrade',
+    ];
+
     /**
      * @var array
      */
@@ -106,5 +111,33 @@ class ModuleRepository extends AbstractObjectModelRepository
         }
 
         return $this->activeModulesPaths;
+    }
+
+    /**
+     * Returns an array of native modules
+     *
+     * @return array<string>
+     */
+    public function getNativeModules(): array
+    {
+        $content = file_get_contents(_PS_ROOT_DIR_ . '/composer.lock');
+        $content = json_decode($content, true);
+        if (empty($content['packages'])) {
+            return [];
+        }
+
+        $modules = array_filter($content['packages'], function (array $package) {
+            return 'prestashop-module' === $package['type'] && !empty($package['name']);
+        });
+        $modules = array_map(function (array $package) {
+            $vendorName = explode('/', $package['name']);
+
+            return $vendorName[1];
+        }, $modules);
+
+        return array_merge(
+            $modules,
+            static::ADDITIONAL_ALLOWED_MODULES
+        );
     }
 }

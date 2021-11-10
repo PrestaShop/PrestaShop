@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\Translator;
@@ -76,6 +77,8 @@ class ModuleRepositoryTest extends TestCase
 
         $adminModuleDataProvider->method('getCatalogModulesNames')->willReturn([]);
 
+        $configuration = $this->getMockBuilder(ConfigurationInterface::class)->getMock();
+
         $this->moduleRepository = $this->getMockBuilder(ModuleRepository::class)
             ->setConstructorArgs([
                 $adminModuleDataProvider,
@@ -93,6 +96,7 @@ class ModuleRepositoryTest extends TestCase
                 $logger,
                 $translator,
                 dirname(__DIR__, 4) . '/Resources/modules/',
+                $configuration,
             ])
             ->setMethods(['readCacheFile', 'generateCacheFile'])
             ->getMock();
