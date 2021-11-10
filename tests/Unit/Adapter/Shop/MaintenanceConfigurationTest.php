@@ -36,22 +36,17 @@ use Tests\TestCase\AbstractConfigurationTestCase;
 
 class MaintenanceConfigurationTest extends AbstractConfigurationTestCase
 {
-    /**
-     * @var PreferencesConfiguration
-     */
-    private $maintenanceConfiguration;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->maintenanceConfiguration = new MaintenanceConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
-    }
+    private const SHOP_ID = 42;
 
     /**
      * @dataProvider provideShopConstraints
+     *
+     * @param ShopConstraint $shopConstraint
      */
     public function testGetConfiguration(ShopConstraint $shopConstraint): void
     {
+        $maintenanceConfiguration = new MaintenanceConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+
         $this->mockShopConfiguration
             ->method('getShopConstraint')
             ->willReturn($shopConstraint);
@@ -61,21 +56,12 @@ class MaintenanceConfigurationTest extends AbstractConfigurationTestCase
             ->willReturnMap(
                 [
                     ['PS_MAINTENANCE_IP', null, $shopConstraint, 'test'],
-                    ['PS_MAINTENANCE_IP', null, null, null],
                     ['PS_MAINTENANCE_TEXT', null, $shopConstraint, 'test'],
-                    ['PS_MAINTENANCE_TEXT', null, null, null],
+                    ['PS_SHOP_ENABLE', false, $shopConstraint, true],
                 ]
             );
 
-        $this->mockConfiguration
-            ->method('getBoolean')
-            ->willReturnMap(
-                [
-                    ['PS_SHOP_ENABLE', false, true],
-                ]
-            );
-
-        $result = $this->maintenanceConfiguration->getConfiguration();
+        $result = $maintenanceConfiguration->getConfiguration();
         $this->assertSame(
             [
                 'enable_shop' => true,
@@ -86,16 +72,44 @@ class MaintenanceConfigurationTest extends AbstractConfigurationTestCase
         );
     }
 
-    public function testUpdateConfigurationWithInvalidConfiguration(): void
+    /**
+     * @dataProvider provideInvalidConfiguration
+     *
+     * @param string $exception
+     * @param array $values
+     */
+    public function testUpdateConfigurationWithInvalidConfiguration(string $exception, array $values): void
     {
-        $this->expectException(UndefinedOptionsException::class);
-        $this->maintenanceConfiguration->updateConfiguration(['does_not_exist' => 'does_not_exist']);
-        $this->expectException(InvalidOptionsException::class);
-        $this->maintenanceConfiguration->updateConfiguration(['enable_shop' => 'wrong_type']);
-        $this->expectException(InvalidOptionsException::class);
-        $this->maintenanceConfiguration->updateConfiguration(['maintenance_ip' => ['wrong_type']]);
-        $this->expectException(InvalidOptionsException::class);
-        $this->maintenanceConfiguration->updateConfiguration(['maintenance_text' => 'wrong_type']);
+        $maintenanceConfiguration = new MaintenanceConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+
+        $this->expectException($exception);
+        $maintenanceConfiguration->updateConfiguration($values);
+    }
+
+    /**
+     * @return array[]
+     */
+    public function provideInvalidConfiguration(): array
+    {
+        return [
+            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
+            [InvalidOptionsException::class, ['enable_shop' => 'wrong_type', 'maintenance_ip' => 'test', 'maintenance_text' => ['fr' => 'test string']]],
+            [InvalidOptionsException::class, ['enable_shop' => true, 'maintenance_ip' => ['wrong_type'], 'maintenance_text' => ['fr' => 'test string']]],
+            [InvalidOptionsException::class, ['enable_shop' => true, 'maintenance_ip' => 'test', 'maintenance_text' => 'wrong_type']],
+        ];
+    }
+
+    public function testSuccessfulUpdate(): void
+    {
+        $maintenanceConfiguration = new MaintenanceConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+
+        $res = $maintenanceConfiguration->updateConfiguration([
+            'enable_shop' => true,
+            'maintenance_ip' => 'test',
+            'maintenance_text' => ['fr' => 'test string'],
+        ]);
+
+        $this->assertSame([], $res);
     }
 
     /**
@@ -104,8 +118,8 @@ class MaintenanceConfigurationTest extends AbstractConfigurationTestCase
     public function provideShopConstraints(): array
     {
         return [
-            [ShopConstraint::shop(2)],
-            [ShopConstraint::shopGroup(2)],
+            [ShopConstraint::shop(self::SHOP_ID)],
+            [ShopConstraint::shopGroup(self::SHOP_ID)],
             [ShopConstraint::allShops()],
         ];
     }

@@ -103,7 +103,7 @@ class ShopCore extends ObjectModel
     /** @var int ID shop group in the current context (will be empty if context is CONTEXT_ALL) */
     protected static $context_id_shop_group;
 
-    /** @var bool is multistore activated */
+    /** @var bool|null is multistore activated */
     protected static $feature_active;
 
     /** @var Theme * */
