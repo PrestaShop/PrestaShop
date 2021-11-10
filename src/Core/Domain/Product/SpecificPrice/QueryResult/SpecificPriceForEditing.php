@@ -55,7 +55,7 @@ class SpecificPriceForEditing
     private $includesTax;
 
     /**
-     * @var DecimalNumber
+     * @var Price
      */
     private $price;
 
