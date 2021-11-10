@@ -49,6 +49,18 @@ final class BulkDeleteCustomerHandler extends AbstractCustomerHandler implements
 
             $this->assertCustomerWasFound($customerId, $customer);
 
+            PrestaShopLogger::addLog(
+                Context::getContext()->getTranslator()->trans(
+                    'Customer deleted: (' . $customer->id . ')',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
+                1,
+                null,
+                'Customer',
+                $customer->id
+            );
+
             if ($command->getDeleteMethod()->isAllowedToRegisterAfterDelete()) {
                 $customer->delete();
 
@@ -58,17 +70,5 @@ final class BulkDeleteCustomerHandler extends AbstractCustomerHandler implements
             $customer->deleted = true;
             $customer->update();
         }
-
-        PrestaShopLogger::addLog(
-            Context::getContext()->getTranslator()->trans(
-                'Customers bulk deleted',
-                [],
-                'Admin.Advparameters.Notification'
-            ),
-            1,
-            null,
-            'Customer',
-            $customer->id
-        );
     }
 }
