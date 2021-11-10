@@ -12,6 +12,7 @@ services:
       - "@translator"
       - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
       - "@doctrine.cache.provider"
+      - "@prestashop.adapter.module.repository.module_repository"
 
   prestashop.core.addon.theme.repository:
     class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository

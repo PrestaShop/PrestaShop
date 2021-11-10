@@ -36,6 +36,9 @@ class AddonListFilterOrigin
     public const ADDONS_NATIVE_ALL = 16;
     public const ADDONS_CUSTOMER = 32;
     public const ADDONS_ALL = 62;
+    public const NATIVE_MODULE = 64;
+    public const NON_NATIVE_MODULE = 128;
 
-    public const ALL = 63;
+    public const ALL = self::DISK | self::ADDONS_MUST_HAVE | self::ADDONS_SERVICE | self::ADDONS_NATIVE
+        | self::ADDONS_NATIVE_ALL | self::ADDONS_CUSTOMER | self::NATIVE_MODULE | self::NON_NATIVE_MODULE;
 }

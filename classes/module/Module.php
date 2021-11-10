@@ -1633,9 +1633,15 @@ abstract class ModuleCore implements ModuleInterface
         return false;
     }
 
+    /**
+     * @return array<string>
+     */
     public static function getNativeModuleList()
     {
-        return false;
+        $finder = new ContainerFinder(Context::getContext());
+        $sfContainer = $finder->getContainer();
+
+        return $sfContainer->get('prestashop.adapter.module.repository.module_repository')->getNativeModules();
     }
 
     /**
@@ -3369,6 +3375,12 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         $this->getContainer()->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
+    }
+
+    public static function resetStaticCache()
+    {
+        static::$_INSTANCE = [];
+        Cache::clean('Module::isEnabled*');
     }
 }
 
