@@ -615,7 +615,7 @@ class ConfigurationCore extends ObjectModel
 
         $configurationId = Configuration::getIdByName($key, $idShopGroup, $idShop);
 
-        self::deleteFromGivenContext($key, $configurationId, $idShopGroup, $idShop);
+        self::deleteMultiShopConfigurationByKey($key, $configurationId, $idShopGroup, $idShop);
     }
 
     /**
@@ -624,7 +624,7 @@ class ConfigurationCore extends ObjectModel
      * @param int|null $idShopGroup
      * @param int|null $idShop
      */
-    public static function deleteFromGivenContext($key, int $configurationId = null, int $idShopGroup = null, int $idShop = null)
+    public static function deleteMultiShopConfigurationByKey($key, ?int $configurationId, ?int $idShopGroup, ?int $idShop): void
     {
         $configurationId = $configurationId ?: Configuration::getIdByNameFromGivenContext($key, $idShopGroup, $idShop);
         Db::getInstance()->execute('
