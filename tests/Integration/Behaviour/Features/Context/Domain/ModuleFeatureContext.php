@@ -24,20 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Addon;
+declare(strict_types=1);
 
-class AddonListFilterOrigin
+namespace Tests\Integration\Behaviour\Features\Context\Domain;
+
+use Cache;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+
+class ModuleFeatureContext extends CommonDomainFeatureContext
 {
-    /* Bitwise operators */
-    public const DISK = 1;
-    public const ADDONS_MUST_HAVE = 2;
-    public const ADDONS_SERVICE = 4;
-    public const ADDONS_NATIVE = 8;
-    public const ADDONS_NATIVE_ALL = 16;
-    public const ADDONS_CUSTOMER = 32;
-    public const ADDONS_ALL = 62;
-    public const NATIVE_MODULE = 64;
-    public const NON_NATIVE_MODULE = 128;
+    /**
+     * @When /^I bulk (enable|disable) modules: "(.+)"$/
+     */
+    public function bulkToggleStatus(string $action, string $modulesRef): void
+    {
+        $modules = [];
+        foreach (PrimitiveUtils::castStringArrayIntoArray($modulesRef) as $modulesReference) {
+            $modules[] = $modulesReference;
+        }
 
-    public const ALL = 255;
+        $this->getQueryBus()->handle(new BulkToggleModuleStatusCommand(
+            $modules,
+            'enable' === $action
+        ));
+
+        // Clean the cache
+        foreach ($modules as $module) {
+            Cache::clean('Module::isEnabled' . $module);
+        }
+    }
 }

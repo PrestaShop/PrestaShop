@@ -24,20 +24,48 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Addon;
+declare(strict_types=1);
 
-class AddonListFilterOrigin
+namespace PrestaShop\PrestaShop\Core\Domain\Module\Command;
+
+/**
+ * Bulk toggles module status
+ */
+class BulkToggleModuleStatusCommand
 {
-    /* Bitwise operators */
-    public const DISK = 1;
-    public const ADDONS_MUST_HAVE = 2;
-    public const ADDONS_SERVICE = 4;
-    public const ADDONS_NATIVE = 8;
-    public const ADDONS_NATIVE_ALL = 16;
-    public const ADDONS_CUSTOMER = 32;
-    public const ADDONS_ALL = 62;
-    public const NATIVE_MODULE = 64;
-    public const NON_NATIVE_MODULE = 128;
+    /**
+     * @var array<string>
+     */
+    private $modules;
 
-    public const ALL = 255;
+    /**
+     * @var bool
+     */
+    private $expectedStatus;
+
+    /**
+     * @param array<string> $modules
+     * @param bool $expectedStatus
+     */
+    public function __construct(array $modules, bool $expectedStatus)
+    {
+        $this->modules = $modules;
+        $this->expectedStatus = $expectedStatus;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getModules(): array
+    {
+        return $this->modules;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getExpectedStatus(): bool
+    {
+        return $this->expectedStatus;
+    }
 }

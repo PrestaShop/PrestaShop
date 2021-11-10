@@ -24,20 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Addon;
+namespace PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler;
 
-class AddonListFilterOrigin
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
+
+/**
+ * Defines contract for BulkToggleModuleStatusHandler
+ */
+interface BulkToggleModuleStatusHandlerInterface
 {
-    /* Bitwise operators */
-    public const DISK = 1;
-    public const ADDONS_MUST_HAVE = 2;
-    public const ADDONS_SERVICE = 4;
-    public const ADDONS_NATIVE = 8;
-    public const ADDONS_NATIVE_ALL = 16;
-    public const ADDONS_CUSTOMER = 32;
-    public const ADDONS_ALL = 62;
-    public const NATIVE_MODULE = 64;
-    public const NON_NATIVE_MODULE = 128;
-
-    public const ALL = 255;
+    /**
+     * @param BulkToggleModuleStatusCommand $command
+     */
+    public function handle(BulkToggleModuleStatusCommand $command): void;
 }

@@ -26,9 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Debug;
 
+use Module;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\ClassIndexCacheClearer;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
 
 /**
  * This class manages Debug mode configuration for a Shop.
@@ -56,16 +64,37 @@ class DebugModeConfiguration implements DataConfigurationInterface
     private $classIndexCacheClearer;
 
     /**
+     * @var ModuleRepository
+     */
+    private $moduleRepository;
+
+    /**
+     * @var CommandBusInterface
+     */
+    private $commandBus;
+
+    /**
      * @param DebugMode $debugMode
      * @param Configuration $configuration
      * @param string $configDefinesPath
+     * @param ClassIndexCacheClearer $classIndexCacheClearer
+     * @param ModuleRepository $moduleRepository
+     * @param CommandBusInterface $commandBus
      */
-    public function __construct(DebugMode $debugMode, Configuration $configuration, $configDefinesPath, ClassIndexCacheClearer $classIndexCacheClearer)
-    {
+    public function __construct(
+        DebugMode $debugMode,
+        Configuration $configuration,
+        $configDefinesPath,
+        ClassIndexCacheClearer $classIndexCacheClearer,
+        ModuleRepository $moduleRepository,
+        CommandBusInterface $commandBus
+    ) {
         $this->debugMode = $debugMode;
         $this->configuration = $configuration;
         $this->configDefinesPath = $configDefinesPath;
         $this->classIndexCacheClearer = $classIndexCacheClearer;
+        $this->moduleRepository = $moduleRepository;
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -90,16 +119,37 @@ class DebugModeConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($configuration)) {
+            // Set configuration
             $this->configuration->set('PS_DISABLE_NON_NATIVE_MODULE', $configuration['disable_non_native_modules']);
             $this->configuration->set('PS_DISABLE_OVERRIDES', $configuration['disable_overrides']);
 
             $this->classIndexCacheClearer->clear();
 
-            $status = $this->updateDebugMode((bool) $configuration['debug_mode']);
+            // Update Module Status
+            $modules = [];
+            $filters = (new AddonListFilter())
+                ->setOrigin(AddonListFilterOrigin::NON_NATIVE_MODULE)
+                ->setStatus(AddonListFilterStatus::INSTALLED)
+                ->setType(AddonListFilterType::MODULE);
+            $filters->addStatus(
+                $configuration['disable_non_native_modules'] ? AddonListFilterStatus::ENABLED : AddonListFilterStatus::DISABLED
+            );
+            foreach ($this->moduleRepository->getFilteredList($filters) as $moduleAddonInterface) {
+                $modules[] = $moduleAddonInterface->attributes->get('name');
+            }
 
+            $this->commandBus->handle(
+                new BulkToggleModuleStatusCommand(
+                    $modules,
+                    !$configuration['disable_non_native_modules']
+                )
+            );
+
+            // Update Debug Mode
+            $status = $this->updateDebugMode((bool) $configuration['debug_mode']);
             switch ($status) {
-                case DebugMode::DEBUG_MODE_SUCCEEDED:
-                    break;
+                case DebugMode::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM:
+                case DebugMode::DEBUG_MODE_ERROR_NO_READ_ACCESS:
                 case DebugMode::DEBUG_MODE_ERROR_NO_WRITE_ACCESS:
                     $errors[] = [
                         'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
@@ -116,22 +166,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
                     ];
 
                     break;
-                case DebugMode::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM:
-                    $errors[] = [
-                        'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
-                        'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => [$this->configDefinesPath],
-                    ];
-
-                    break;
-                case DebugMode::DEBUG_MODE_ERROR_NO_READ_ACCESS:
-                    $errors[] = [
-                        'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
-                        'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => [$this->configDefinesPath],
-                    ];
-
-                    break;
+                case DebugMode::DEBUG_MODE_SUCCEEDED:
                 default:
                     break;
             }
@@ -159,7 +194,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
      *
      * @return int|null Status of update
      */
-    private function updateDebugMode($enableStatus)
+    private function updateDebugMode(bool $enableStatus): ?int
     {
         $currentDebugMode = $this->debugMode->isDebugModeEnabled();
 
