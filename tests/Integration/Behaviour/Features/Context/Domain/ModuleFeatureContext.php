@@ -23,18 +23,33 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-define('_PS_IN_TEST_', true);
-define('_PS_ROOT_DIR_', __DIR__ . '/../..');
-define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests/Resources/modules/');
-require_once __DIR__ . '/../../config/defines.inc.php';
-require_once _PS_CONFIG_DIR_ . 'autoload.php';
 
-if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
-    define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../../vendor/autoload.php');
-}
+declare(strict_types=1);
 
-define('_NEW_COOKIE_KEY_', PhpEncryption::createNewRandomKey());
+namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-if (!defined('__PS_BASE_URI__')) {
-    define('__PS_BASE_URI__', '');
+use Module;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+
+class ModuleFeatureContext extends AbstractDomainFeatureContext
+{
+    /**
+     * @When /^I bulk (enable|disable) modules: "(.+)"$/
+     */
+    public function bulkToggleStatus(string $action, string $modulesRef): void
+    {
+        $modules = [];
+        foreach (PrimitiveUtils::castStringArrayIntoArray($modulesRef) as $modulesReference) {
+            $modules[] = $modulesReference;
+        }
+
+        $this->getQueryBus()->handle(new BulkToggleModuleStatusCommand(
+            $modules,
+            'enable' === $action
+        ));
+
+        // Clean the cache
+        Module::resetStaticCache();
+    }
 }
