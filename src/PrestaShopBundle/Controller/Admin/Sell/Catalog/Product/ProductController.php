@@ -287,7 +287,7 @@ class ProductController extends FrameworkBundleAdminController
             /** @var ProductForEditing $editableProduct */
             $editableProduct = $this->getQueryBus()->handle(new GetProductForEditing((int) $productId));
             $this->getCommandBus()->handle(
-                new ToggleProductStatusCommand((int) $productId, !$editableProduct->getOptions()->isActive())
+                new ToggleProductStatusCommand((int) $productId, !$editableProduct->isActive())
             );
             $this->addFlash(
                 'success',

@@ -409,7 +409,7 @@ services:
       - '@prestashop.adapter.product.repository.product_repository'
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Pro
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand
 
   prestashop.adapter.product.query_handler.get_related_products_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetRelatedProductsHandler
