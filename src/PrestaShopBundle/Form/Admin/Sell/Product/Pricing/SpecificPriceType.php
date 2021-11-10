@@ -235,8 +235,6 @@ class SpecificPriceType extends TranslatorAwareType
                     'class' => 'js-include-tax-row',
                 ],
                 'label' => $this->trans('Reduction with or without taxes', 'Admin.Catalog.Feature'),
-                'placeholder' => $this->trans('All Shops', 'Admin.Global'),
-                'required' => false,
                 'choices' => $this->taxInclusionChoiceProvider->getChoices(),
             ])
         ;
