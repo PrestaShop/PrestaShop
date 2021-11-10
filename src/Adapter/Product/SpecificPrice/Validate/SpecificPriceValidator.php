@@ -56,7 +56,6 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
-use PrestaShopException;
 use SpecificPrice;
 
 /**
@@ -171,7 +170,6 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         $this->validateSpecificPriceProperty($specificPrice, 'id_shop_group', SpecificPriceConstraintException::INVALID_RELATION_ID);
         $this->validateSpecificPriceProperty($specificPrice, 'id_specific_price_rule', SpecificPriceConstraintException::INVALID_RELATION_ID);
         $this->assertRelatedEntitiesExist($specificPrice);
-        $this->assertSpecificPriceIsUniquePerProduct($specificPrice);
     }
 
     /**
@@ -277,45 +275,6 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         $customerId = (int) $specificPrice->id_customer;
         if ($customerId) {
             $this->customerRepository->assertCustomerExists(new CustomerId($customerId));
-        }
-    }
-
-    private function assertSpecificPriceIsUniquePerProduct(SpecificPrice $specificPrice): void
-    {
-        $productId = (int) $specificPrice->id_product;
-        $combinationId = (int) $specificPrice->id_product_attribute;
-
-        try {
-            $alreadyExistingId = (int) SpecificPrice::exists(
-                $productId,
-                $combinationId,
-                $specificPrice->id_shop,
-                $specificPrice->id_group,
-                $specificPrice->id_country,
-                $specificPrice->id_currency,
-                $specificPrice->id_customer,
-                $specificPrice->from_quantity,
-                $specificPrice->from,
-                $specificPrice->to
-            );
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                'Something went wrong when checking if specific price is unique',
-                0,
-                $e->getPrevious()
-            );
-        }
-
-        // It is valid if its the same specific price that we are updating
-        if ($alreadyExistingId && $alreadyExistingId !== (int) $specificPrice->id) {
-            throw new SpecificPriceConstraintException(
-                sprintf(
-                    'Identical specific price already exists for product "%d" and combination "%d',
-                    $productId,
-                    $combinationId
-                ),
-                SpecificPriceConstraintException::NOT_UNIQUE_PER_PRODUCT
-            );
         }
     }
 }
