@@ -123,7 +123,7 @@ class ConfigurationCore extends ObjectModel
      *
      * @return int Configuration key ID
      */
-    public static function getIdByNameFromGivenContext($key, $idShopGroup = null, $idShop = null)
+    public static function getIdByNameFromGivenContext(string $key, int $idShopGroup = null, int $idShop = null): int
     {
         $sql = 'SELECT `' . bqSQL(self::$definition['primary']) . '`
                 FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
