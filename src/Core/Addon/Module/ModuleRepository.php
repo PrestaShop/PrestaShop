@@ -347,7 +347,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         foreach ($this->adminModuleProvider->getCatalogModulesNames() as $name) {
             try {
                 $module = $this->getModule($name);
-                if ($module instanceof Module) {
+                if ($module instanceof ModuleInterface) {
                     $modules[$name] = $module;
                 }
             } catch (\ParseError $e) {
@@ -529,7 +529,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
             try {
                 $module = $this->getModule($moduleName, $skip_main_class_attributes);
-                if ($module instanceof Module) {
+                if ($module instanceof ModuleInterface) {
                     $modules[$moduleName] = $module;
                 }
             } catch (\ParseError $e) {
