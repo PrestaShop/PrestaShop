@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ModulePermission;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\PermissionInterface;
 use Tab;
 
@@ -63,19 +64,66 @@ class PermissionFeatureContext extends AbstractDomainFeatureContext
             Assert::assertNotFalse($tabId, sprintf('No tab found for %s', $tabName));
 
             $tabPermissions = $this->getPermissionsFromTabArray($profileTabsPermissions[$tabId]);
-            $expectedTabsPermissions = $this->unserializeTabPermissions($serializedTabPermissions);
+            $expectedTabPermissions = $this->unserializeTabPermissions($serializedTabPermissions);
             Assert::assertEquals(
-                $expectedTabsPermissions,
+                $expectedTabPermissions,
                 $tabPermissions,
                 sprintf(
                     'Incorrect permissions for profile %s for tab %s expected %s but got %s instead',
                     $profileReference,
                     $tabName,
-                    var_export($expectedTabsPermissions, true),
+                    var_export($expectedTabPermissions, true),
                     var_export($tabPermissions, true)
                 )
             );
         }
+    }
+
+    /**
+     * @Then profile :profileReference should have the following permissions for modules:
+     *
+     * @param string $profileReference
+     * @param TableNode $table
+     */
+    public function assertModulesPermissionForProfile(string $profileReference, TableNode $table): void
+    {
+        $configuration = $this->getConfiguration();
+        $modulesPermissionsForAllProfiles = $configuration->getProfilePermissionsForModules();
+        $profileId = $this->getSharedStorage()->get($profileReference);
+
+        Assert::assertNotEmpty($modulesPermissionsForAllProfiles[$profileId]);
+        $profileModulesPermissions = $modulesPermissionsForAllProfiles[$profileId];
+
+        $expectedModulesPermissions = $table->getRowsHash();
+        foreach ($expectedModulesPermissions as $moduleName => $serializedModulePermissions) {
+            $modulePermissions = $this->getPermissionsFromModuleArray($profileModulesPermissions[strtoupper($moduleName)]);
+            $expectedModulePermissions = $this->unserializeModulePermissions($serializedModulePermissions);
+            Assert::assertEquals(
+                $expectedModulePermissions,
+                $modulePermissions,
+                sprintf(
+                    'Incorrect permissions for profile %s for module %s expected %s but got %s instead',
+                    $profileReference,
+                    $moduleName,
+                    var_export($expectedModulePermissions, true),
+                    var_export($modulePermissions, true)
+                )
+            );
+        }
+    }
+
+    /**
+     * @param array $tab
+     *
+     * @return array<string, bool>
+     */
+    private function getPermissionsFromModuleArray(array $tab): array
+    {
+        return [
+            ModulePermission::VIEW => (bool) $tab[ModulePermission::VIEW],
+            ModulePermission::CONFIGURE => (bool) $tab[ModulePermission::CONFIGURE],
+            ModulePermission::UNINSTALL => (bool) $tab[ModulePermission::UNINSTALL],
+        ];
     }
 
     /**
@@ -112,6 +160,27 @@ class PermissionFeatureContext extends AbstractDomainFeatureContext
             PermissionInterface::ADD => in_array(PermissionInterface::ADD, $permissions),
             PermissionInterface::EDIT => in_array(PermissionInterface::EDIT, $permissions),
             PermissionInterface::DELETE => in_array(PermissionInterface::DELETE, $permissions),
+        ];
+    }
+
+    /**
+     * Transforms serialized string into array of permissions
+     *
+     *    "view,configure" => [view => true, configure => true, uninstall => false]
+     *    "view,uninstall" => [view => true, configure => false, uninstall => true]
+     *
+     * @param string $serializedTabPermissions
+     *
+     * @return array<string, bool>
+     */
+    private function unserializeModulePermissions(string $serializedTabPermissions): array
+    {
+        $permissions = explode(',', $serializedTabPermissions);
+
+        return [
+            ModulePermission::VIEW => in_array(PermissionInterface::VIEW, $permissions),
+            ModulePermission::CONFIGURE => in_array(ModulePermission::CONFIGURE, $permissions),
+            ModulePermission::UNINSTALL => in_array(ModulePermission::UNINSTALL, $permissions),
         ];
     }
 
