@@ -143,6 +143,7 @@ class ModuleManagerBuilder
                     self::$legacyLogger,
                     self::$translator,
                     _PS_MODULE_DIR_,
+                    new Configuration(),
                     self::$cacheProvider
                 );
             }

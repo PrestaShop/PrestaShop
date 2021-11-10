@@ -33,12 +33,14 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository as AdapterModuleRepository;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\DoctrineProvider;
@@ -110,11 +112,21 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $cacheProvider;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * Keep loaded modules in cache.
      *
      * @var DoctrineProvider
      */
     private $loadedModules;
+
+    /**
+     * @var AdapterModuleRepository
+     */
+    private $adapterModuleRepository;
 
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,
@@ -123,7 +135,9 @@ class ModuleRepository implements ModuleRepositoryInterface
         LoggerInterface $logger,
         TranslatorInterface $translator,
         $modulePath,
-        CacheProvider $cacheProvider = null
+        ConfigurationInterface $configuration,
+        CacheProvider $cacheProvider = null,
+        AdapterModuleRepository $moduleRepository = null
     ) {
         $this->adminModuleProvider = $adminModulesProvider;
         $this->logger = $logger;
@@ -131,7 +145,9 @@ class ModuleRepository implements ModuleRepositoryInterface
         $this->moduleUpdater = $modulesUpdater;
         $this->translator = $translator;
         $this->finder = new Finder();
+        $this->configuration = $configuration;
         $this->modulePath = $modulePath;
+        $this->adapterModuleRepository = $moduleRepository ?? new AdapterModuleRepository();
 
         list($isoLang) = explode('-', $translator->getLocale());
 
@@ -185,6 +201,8 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         /** @var Module[] $modules */
         $modules = $this->getList($skip_main_class_attributes);
+        $natives = $this->adapterModuleRepository->getNativeModules();
+        $isNonNativeModulesDisabled = (bool) $this->configuration->get('PS_DISABLE_NON_NATIVE_MODULE');
 
         foreach ($modules as $key => &$module) {
             // Part One : Removing addons not related to the selected product type
@@ -251,6 +269,15 @@ class ModuleRepository implements ModuleRepositoryInterface
                 if ($module->attributes->has('origin_filter_value') &&
                     !$filter->hasOrigin($module->attributes->get('origin_filter_value'))
                 ) {
+                    unset($modules[$key]);
+
+                    continue;
+                }
+            }
+
+            // Part Four : Remove non native modules (relative to configuration)
+            if ($isNonNativeModulesDisabled) {
+                if (!in_array($module->attributes->get('name'), $natives)) {
                     unset($modules[$key]);
 
                     continue;
