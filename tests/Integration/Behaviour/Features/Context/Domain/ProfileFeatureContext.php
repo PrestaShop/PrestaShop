@@ -37,9 +37,31 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
+use Profile;
 
 class ProfileFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @Given profile :productReference with default name :profileName exists
+     *
+     * @param string $profileReference
+     * @param string $profileName
+     */
+    public function assertProfileExists(string $profileReference, string $profileName): void
+    {
+        $profiles = Profile::getProfiles($this->getDefaultLangId());
+        $foundProfile = null;
+        foreach ($profiles as $profile) {
+            if ($profileName === $profile['name']) {
+                $foundProfile = $profile;
+                break;
+            }
+        }
+
+        Assert::assertNotNull($foundProfile);
+        $this->getSharedStorage()->set($profileReference, (int) $foundProfile['id_profile']);
+    }
+
     /**
      * @When I add a profile :profileReference with following information:
      *

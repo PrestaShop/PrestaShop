@@ -351,5 +351,6 @@ default:
                 - "%paths.base%/Features/Scenario/Profile"
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\ProfileFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ProfileFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\PermissionFeatureContext
