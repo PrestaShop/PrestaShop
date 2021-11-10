@@ -145,16 +145,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
     ): array {
         $qb = $this->getSpecificPricesQueryBuilder($productId, $langId, $filters)
             ->select('
-                sp.id_specific_price,
-                sp.id_product_attribute,
-                sp.reduction_type,
-                sp.reduction,
-                sp.reduction_tax,
-                sp.price,
-                sp.from_quantity,
-                sp.id_customer,
-                sp.from,
-                sp.to,
+                sp.*,
                 shop.name as shop_name,
                 currency_lang.name as currency_name,
                 customer.firstname as customer_firstname,
