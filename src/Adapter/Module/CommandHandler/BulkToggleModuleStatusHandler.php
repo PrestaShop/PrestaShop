@@ -24,20 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Addon;
+declare(strict_types=1);
 
-class AddonListFilterOrigin
+namespace PrestaShop\PrestaShop\Adapter\Module\CommandHandler;
+
+use Module;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\BulkToggleModuleStatusHandlerInterface;
+
+/**
+ * Bulk toggles Module status
+ */
+class BulkToggleModuleStatusHandler implements BulkToggleModuleStatusHandlerInterface
 {
-    /* Bitwise operators */
-    public const DISK = 1;
-    public const ADDONS_MUST_HAVE = 2;
-    public const ADDONS_SERVICE = 4;
-    public const ADDONS_NATIVE = 8;
-    public const ADDONS_NATIVE_ALL = 16;
-    public const ADDONS_CUSTOMER = 32;
-    public const ADDONS_ALL = 62;
-    public const NATIVE_MODULE = 64;
-    public const NON_NATIVE_MODULE = 128;
-
-    public const ALL = 255;
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(BulkToggleModuleStatusCommand $command): void
+    {
+        foreach ($command->getModules() as $moduleName) {
+            $module = Module::getInstanceByName($moduleName);
+            if (!$module) {
+                continue;
+            }
+            if ($command->getExpectedStatus()) {
+                $module->enable();
+            } else {
+                $module->disable();
+            }
+        }
+    }
 }

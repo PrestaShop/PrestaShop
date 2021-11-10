@@ -68,19 +68,7 @@ class ModuleController extends ModuleAbstractController
     public function manageAction()
     {
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        $shopService = $this->get('prestashop.adapter.shop.context');
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
-        $themeRepository = $this->get('prestashop.core.addon.theme.repository');
-
-        // Retrieve current shop
-        $shopId = $shopService->getContextShopId();
-        $shops = $shopService->getShops();
-        $modulesTheme = [];
-        if (isset($shops[$shopId]) && is_array($shops[$shopId])) {
-            $shop = $shops[$shopId];
-            $currentTheme = $themeRepository->getInstanceByName($shop['theme_name']);
-            $modulesTheme = $currentTheme->getModulesToEnable();
-        }
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE);
