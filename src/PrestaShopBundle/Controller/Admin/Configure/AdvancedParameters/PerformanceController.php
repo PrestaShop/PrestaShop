@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -248,6 +249,29 @@ class PerformanceController extends FrameworkBundleAdminController
             } else {
                 $this->flashErrors($saveErrors);
             }
+        }
+
+        return $this->redirectToRoute('admin_performance');
+    }
+
+    /**
+     * @DemoRestricted(redirectRoute="admin_performance")
+     *
+     * @return RedirectResponse
+     */
+    public function disableNonBuiltInAction(): RedirectResponse
+    {
+        try {
+            $bulkToggleModuleStatusCommand = new BulkToggleModuleStatusCommand(
+                $this->get('prestashop.adapter.module.repository.module_repository')->getNonNativeModules(),
+                false
+            );
+
+            $this->getCommandBus()->handle($bulkToggleModuleStatusCommand);
+
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+        } catch (\Exception $e) {
+            $this->addFlash('error', $e->getMessage());
         }
 
         return $this->redirectToRoute('admin_performance');

@@ -193,7 +193,7 @@ class AppKernel extends Kernel
     {
         $activeModules = [];
         try {
-            $activeModules = (new ModuleRepository())->getActiveModules();
+            $activeModules = (new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_))->getActiveModules();
         } catch (\Exception $e) {
             //Do nothing because the modules retrieval must not block the kernel, and it won't work
             //during the installation process

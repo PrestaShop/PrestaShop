@@ -417,7 +417,11 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Install module and retrieve the installation id
-        $result = Db::getInstance()->insert($this->table, ['name' => $this->name, 'active' => 1, 'version' => $this->version]);
+        $result = Db::getInstance()->insert($this->table, [
+            'name' => $this->name,
+            'active' => 1,
+            'version' => $this->version,
+        ]);
         if (!$result) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('Technical error: PrestaShop could not install this module.', [], 'Admin.Modules.Notification');
             if (method_exists($this, 'uninstallTabs')) {
@@ -1626,12 +1630,21 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getNonNativeModuleList()
     {
-        return false;
+        $finder = new ContainerFinder(Context::getContext());
+        $sfContainer = $finder->getContainer();
+
+        return $sfContainer->get('prestashop.adapter.module.repository.module_repository')->getNonNativeModules();
     }
 
+    /**
+     * @return array<string>
+     */
     public static function getNativeModuleList()
     {
-        return false;
+        $finder = new ContainerFinder(Context::getContext());
+        $sfContainer = $finder->getContainer();
+
+        return $sfContainer->get('prestashop.adapter.module.repository.module_repository')->getNativeModules();
     }
 
     /**
@@ -3487,6 +3500,12 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         $this->getContainer()->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
+    }
+
+    public static function resetStaticCache()
+    {
+        static::$_INSTANCE = [];
+        Cache::clean('Module::isEnabled*');
     }
 }
 
