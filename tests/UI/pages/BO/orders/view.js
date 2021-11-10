@@ -109,7 +109,18 @@ class Order extends BOBasePage {
     this.enterPaymentButton = row => `${this.documentsTableRow(row)} td button.js-enter-payment-btn`;
 
     // Payment block
+    this.orderPaymentsBlock = '#view_order_payments_block';
+    this.orderPaymentsTitle = `${this.orderPaymentsBlock} .card-header-title`;
+    this.paymentDateInput = '#order_payment_date';
+    this.paymentMethodInput = '#order_payment_payment_method';
+    this.transactionIDInput = '#order_payment_transaction_id';
     this.paymentAmountInput = '#order_payment_amount';
+    this.paymentAddButton = `${this.orderPaymentsBlock} .btn.btn-primary.btn-sm`;
+    this.paymentWarning = `${this.orderPaymentsBlock} .alert-danger`;
+    this.paymentsGridTable = '#js-test-payments-grid-table';
+    this.paymentsTableBody = `${this.paymentsGridTable} tbody`;
+    this.paymentsTableRow = row => `${this.paymentsTableBody} tr:nth-child(${row})`;
+    this.paymentsTableColumn = (row, column) => `${this.paymentsTableRow(row)} td.js-test-${column}-column`;
 
     // Carriers tab
     this.carriersTab = '#orderShippingTab';
@@ -314,7 +325,7 @@ class Order extends BOBasePage {
    * @returns {Promise<number>}
    */
   getDocumentsNumber(page) {
-    return this.getNumberFromText(page, `${this.documentTab} .js-test-count`);
+    return this.getNumberFromText(page, `${this.documentTab} .count`);
   }
 
   /**
@@ -910,6 +921,39 @@ class Order extends BOBasePage {
         page,
         this.merchandiseReturnsTableColumn(row, 'return-tracking-number'),
       ),
+    };
+  }
+
+  /**
+   * Get payments number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getPaymentsNumber(page) {
+    return this.getNumberFromText(page, this.orderPaymentsTitle);
+  }
+
+  async addPayment(page, paymentData) {
+    await this.setValue(page, this.paymentDateInput, paymentData.date);
+    await this.setValue(page, this.paymentMethodInput, paymentData.paymentMethod);
+    await this.setValue(page, this.transactionIDInput, paymentData.transactionID);
+    await this.setValue(page, this.paymentAmountInput, paymentData.amount);
+    await this.clickAndWaitForNavigation(page, this.paymentAddButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  getPaymentWarning(page) {
+    return this.getTextContent(page, this.paymentWarning);
+  }
+
+  async getPaymentsDetails(page, row = 1) {
+    return {
+      date: await this.getTextContent(page, this.paymentsTableColumn(row, 'date')),
+      paymentMethod: await this.getTextContent(page, this.paymentsTableColumn(row, 'payment-method')),
+      transactionID: await this.getNumberFromText(page, this.paymentsTableColumn(row, 'transaction-id')),
+      amount: await this.getTextContent(page, this.paymentsTableColumn(row, 'amount')),
+      invoice: await this.getTextContent(page, this.paymentsTableColumn(row, 'invoice')),
     };
   }
 }
