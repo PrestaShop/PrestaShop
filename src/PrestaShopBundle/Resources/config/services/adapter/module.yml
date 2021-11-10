@@ -2,6 +2,15 @@ services:
   _defaults:
     public: true
 
+  prestashop.adapter.module.command_handler.bulk_toggle_module_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Module\CommandHandler\BulkToggleModuleStatusHandler'
+    arguments:
+      - "@prestashop.module.manager"
+      - '@prestashop.adapter.legacy.logger'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand'
+
   prestashop.adapter.module.self_configurator:
     class: PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator
     arguments:
@@ -64,3 +73,6 @@ services:
 
   prestashop.adapter.module.repository.module_repository:
     class: 'PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository'
+    arguments:
+      - !php/const _PS_ROOT_DIR_
+      - !php/const _PS_MODULE_DIR_
