@@ -99,7 +99,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
         }
 
         $res = $testedObject->getConfiguration();
-        $this->assertSame(true, (bool) $res['test_conf_1']);
+        $this->assertSame(true, $res['test_conf_1']);
         $this->assertSame('string_result', $res['test_conf_2']);
 
         if ($isAllShopContext) {
@@ -112,7 +112,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
         $testedObject->updateConfiguration(['test_conf_1' => false]);
         $testedObject->updateConfiguration(['test_conf_2' => 'string_result_not_saved']);
         $res = $testedObject->getConfiguration();
-        $this->assertSame(true, (bool) $res['test_conf_1']);
+        $this->assertSame(true, $res['test_conf_1']);
         $this->assertSame('string_result', $res['test_conf_2']);
     }
 
