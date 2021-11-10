@@ -41,7 +41,7 @@ class DummyMultistoreConfiguration extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            'test_conf_1' => $this->configuration->get('TEST_CONF_1', null, $shopConstraint),
+            'test_conf_1' => (bool) $this->configuration->get('TEST_CONF_1', null, $shopConstraint),
             'test_conf_2' => $this->configuration->get('TEST_CONF_2', null, $shopConstraint),
         ];
     }

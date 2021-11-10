@@ -47,7 +47,7 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            'enable_shop' => (bool) $this->configuration->get('PS_SHOP_ENABLE'),
+            'enable_shop' => (bool) $this->configuration->get('PS_SHOP_ENABLE', false, $shopConstraint),
             'maintenance_ip' => $this->configuration->get('PS_MAINTENANCE_IP', null, $shopConstraint),
             'maintenance_text' => $this->configuration->get('PS_MAINTENANCE_TEXT', null, $shopConstraint),
         ];
