@@ -169,7 +169,7 @@ class AttributeRepository extends AbstractObjectModelRepository
      * @param int[] $attributeIds
      * @param int $langId
      *
-     * @return array<int, array<int, mixed>>
+     * @return array<int, array<string, mixed>>
      */
     private function getAttributesInformation(array $attributeIds, int $langId): array
     {

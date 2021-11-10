@@ -96,9 +96,9 @@ final class AddSpecificPriceHandler extends AbstractSpecificPriceHandler impleme
 
         $specificPrice->id_product = $command->getProductId()->getValue();
         $specificPrice->reduction_type = $command->getReduction()->getType();
-        $specificPrice->reduction = $command->getReduction()->getValue();
+        $specificPrice->reduction = (string) $command->getReduction()->getValue();
         $specificPrice->reduction_tax = $command->isIncludeTax();
-        $specificPrice->price = $command->getPrice();
+        $specificPrice->price = (string) $command->getPrice();
         $specificPrice->from_quantity = $command->getFromQuantity();
         $specificPrice->id_shop_group = $command->getShopGroupId() ?? 0;
         $specificPrice->id_shop = $command->getShopId() ?? 0;
