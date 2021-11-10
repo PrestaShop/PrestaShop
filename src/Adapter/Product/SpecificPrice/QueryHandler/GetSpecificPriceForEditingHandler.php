@@ -85,11 +85,11 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
             DateTimeUtil::buildNullableDateTime($specificPrice->to),
             (int) $specificPrice->id_product,
             $this->getCustomerInfo($specificPrice),
+            (int) $specificPrice->id_product_attribute ?: null,
             (int) $specificPrice->id_shop ?: null,
             (int) $specificPrice->id_currency ?: null,
             (int) $specificPrice->id_country ?: null,
-            (int) $specificPrice->id_group ?: null,
-            (int) $specificPrice->id_customer ?: null
+            (int) $specificPrice->id_group ?: null
         );
     }
 

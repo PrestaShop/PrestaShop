@@ -33,6 +33,8 @@ use DateTime;
 use DateTimeInterface;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -43,8 +45,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPr
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\CustomerInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Price;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
@@ -63,21 +67,36 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     public function transformSpecificPrice(TableNode $tableNode): SpecificPriceForEditing
     {
         $dataRows = $tableNode->getRowsHash();
+        $customerId = $this->getStoredId($dataRows, 'customer');
+
+        if ($customerId) {
+            /** @var EditableCustomer $editableCustomer */
+            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
+
+            $customerInfo = new CustomerInfo(
+                $editableCustomer->getCustomerId()->getValue(),
+                $editableCustomer->getFirstName()->getValue(),
+                $editableCustomer->getLastName()->getValue(),
+                $editableCustomer->getEmail()->getValue()
+            );
+        }
 
         return new SpecificPriceForEditing(
             42, // The ID does not matter we don't check it
             $dataRows['reduction type'],
             new DecimalNumber($dataRows['reduction value']),
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
-            new DecimalNumber($dataRows['price']),
+            new Price($dataRows['price']),
             (int) $dataRows['from quantity'],
             DateTimeUtil::buildNullableDateTime($dataRows['from']),
             DateTimeUtil::buildNullableDateTime($dataRows['to']),
+            $this->getSharedStorage()->get($dataRows['product']),
+            $customerInfo ?? null,
+            $this->getStoredId($dataRows, 'combination'),
             $this->getStoredId($dataRows, 'shop'),
             $this->getStoredId($dataRows, 'currency'),
             $this->getStoredId($dataRows, 'country'),
-            $this->getStoredId($dataRows, 'group'),
-            $this->getStoredId($dataRows, 'customer')
+            $this->getStoredId($dataRows, 'group')
         );
     }
 
@@ -151,13 +170,14 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     public function assertProductSpecificPrice(string $specificPriceReference, SpecificPriceForEditing $expectedSpecificPrice): void
     {
         $specificPriceId = (int) $this->getSharedStorage()->get($specificPriceReference);
+        /** @var SpecificPriceForEditing $productSpecificPrice */
         $productSpecificPrice = $this->getQueryBus()->handle(new GetSpecificPriceForEditing($specificPriceId));
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         $specificPricePropertyNames = [
-            'reductionType', 'includesTax', 'fromQuantity',
-            'shopId', 'currencyId', 'countryId', 'groupId', 'customerId',
+            'reductionType', 'includesTax', 'fromQuantity', 'shopId',
+            'currencyId', 'countryId', 'groupId', 'productId',
         ];
         foreach ($specificPricePropertyNames as $propertyName) {
             Assert::assertSame(
@@ -166,6 +186,8 @@ class SpecificPriceContext extends AbstractProductFeatureContext
                 sprintf('Unexpected %s of "%s"', $propertyName, $specificPriceReference)
             );
         }
+
+        Assert::assertEquals($expectedSpecificPrice->getCustomerInfo(), $productSpecificPrice->getCustomerInfo());
 
         $specificPriceDateTimeProperties = ['dateTimeFrom', 'dateTimeTo'];
         foreach ($specificPriceDateTimeProperties as $dateTimeProperty) {
@@ -225,6 +247,17 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         $this->assertLastErrorIs(
             SpecificPriceConstraintException::class,
             SpecificPriceConstraintException::NOT_UNIQUE_PER_PRODUCT
+        );
+    }
+
+    /**
+     * @Then I should get error that specific price reduction or price must be set
+     */
+    public function assertLastErrorIsSpecificPriceReductionOrPriceMustBeSet(): void
+    {
+        $this->assertLastErrorIs(
+            SpecificPriceConstraintException::class,
+            SpecificPriceConstraintException::REDUCTION_OR_PRICE_MUST_BE_SET
         );
     }
 
@@ -398,7 +431,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         }
 
         if (!$this->getSharedStorage()->exists($dataRows[$fieldId])) {
-            throw new RuntimeException(sprintf('Trying to access to non saved id with key %s', $dataRows[$fieldId]));
+            throw new RuntimeException(sprintf('Trying to access a non saved id by key %s', $dataRows[$fieldId]));
         }
 
         return (int) $this->getSharedStorage()->get($dataRows[$fieldId]);

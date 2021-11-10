@@ -108,7 +108,7 @@ class SpecificPriceForListing
      * @param string $reductionType
      * @param DecimalNumber $reductionValue
      * @param bool $includesTax
-     * @param DecimalNumber $price
+     * @param Price $price
      * @param int $fromQuantity
      * @param DateTimeInterface $dateTimeFrom
      * @param DateTimeInterface $dateTimeTo
@@ -124,7 +124,7 @@ class SpecificPriceForListing
         string $reductionType,
         DecimalNumber $reductionValue,
         bool $includesTax,
-        DecimalNumber $price,
+        Price $price,
         int $fromQuantity,
         DateTimeInterface $dateTimeFrom,
         DateTimeInterface $dateTimeTo,
