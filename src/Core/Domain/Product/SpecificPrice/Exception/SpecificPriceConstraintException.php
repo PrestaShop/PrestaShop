@@ -102,4 +102,9 @@ class SpecificPriceConstraintException extends SpecificPriceException
      * When exactly same specific price already exists for product
      */
     public const NOT_UNIQUE_PER_PRODUCT = 14;
+
+    /**
+     * When neither price nor reduction value is set
+     */
+    public const REDUCTION_OR_PRICE_MUST_BE_SET = 15;
 }

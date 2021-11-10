@@ -81,7 +81,7 @@ class AddProductSpecificPriceHandler implements AddProductSpecificPriceHandlerIn
 
         $specificPrice->id_product = $command->getProductId()->getValue();
         $specificPrice->reduction_type = $command->getReduction()->getType();
-        $specificPrice->reduction = $command->getReduction()->getValue();
+        $specificPrice->reduction = (string) $command->getReduction()->getValue();
         $specificPrice->reduction_tax = $command->includesTax();
         $specificPrice->price = (string) $command->getPrice();
         $specificPrice->from_quantity = $command->getFromQuantity();
