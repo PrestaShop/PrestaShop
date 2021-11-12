@@ -613,7 +613,7 @@ abstract class PaymentModuleCore extends Module
                     Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
                     $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
                     $file_attachement['content'] = $pdf->render(false);
-                    $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
+                    $file_attachement['name'] = $pdf->getFilename();
                     $file_attachement['mime'] = 'application/pdf';
                     $this->context->language = $currentLanguage;
                     $this->context->getTranslator()->setLocale($currentLanguage->locale);
