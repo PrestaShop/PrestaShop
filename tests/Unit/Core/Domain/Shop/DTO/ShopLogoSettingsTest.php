@@ -38,7 +38,7 @@ class ShopLogoSettingsTest extends TestCase
         $shopLogoSettings = new ShopLogoSettings();
 
         self::assertSame(
-            ['.gif', '.jpg', '.jpeg', '.jpe', '.png', '.webp'],
+            ['.gif', '.jpg', '.jpeg', '.jpe', '.png', '.webp', '.svg'],
             $shopLogoSettings->getLogoImageExtensionsWithDot()
         );
     }

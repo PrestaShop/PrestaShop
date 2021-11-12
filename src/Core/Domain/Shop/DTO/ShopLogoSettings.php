@@ -57,7 +57,7 @@ class ShopLogoSettings
     /**
      * Gets the list of available extensions with dot attached to the front of the extension
      *
-     * @param string optional configuration key
+     * @param string $fieldName optional configuration key
      *
      * @return array<int, string>
      */
