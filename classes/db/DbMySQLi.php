@@ -448,27 +448,27 @@ class DbMySQLiCore extends Db
             return false;
         }
 
-        if ($engine === null) {
-            $engine = 'MyISAM';
+        $enginesToTest = ['InnoDB', 'MyISAM'];
+        if ($engine !== null) {
+            $enginesToTest = [$engine];
         }
 
-        // Create a table
-        $link->query('
-		CREATE TABLE `' . $prefix . 'test` (
-			`test` tinyint(1) unsigned NOT NULL
-		) ENGINE=' . $engine);
+        foreach ($enginesToTest as $engineToTest) {
+            $link->query('
+            CREATE TABLE `' . $prefix . 'test` (
+                `test` tinyint(1) unsigned NOT NULL
+            ) ENGINE=' . $engineToTest);
 
-        // Select content
-        $result = $link->query('SELECT * FROM `' . $prefix . 'test`');
+            $result = $link->query('SELECT * FROM `' . $prefix . 'test`');
 
-        // Drop the table
-        $link->query('DROP TABLE `' . $prefix . 'test`');
+            if ($result) {
+                $link->query('DROP TABLE `' . $prefix . 'test`');
 
-        if (!$result) {
-            return $link->error;
+                return true;
+            }
         }
 
-        return true;
+        return $link->error;
     }
 
     /**
