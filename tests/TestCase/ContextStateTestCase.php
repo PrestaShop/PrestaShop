@@ -27,9 +27,11 @@
 namespace Tests\TestCase;
 
 use Context;
+use Language;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use Shop;
 
 abstract class ContextStateTestCase extends TestCase
@@ -45,8 +47,24 @@ abstract class ContextStateTestCase extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $contextMock
+            ->method('getTranslator')
+            ->willReturn(
+                $this
+                    ->getMockBuilder(Translator::class)
+                    ->disableOriginalConstructor()
+                    ->setMethodsExcept([
+                        'setLocale',
+                        'getLocale',
+                    ])
+                    ->getMock()
+            );
+
         foreach ($contextFields as $fieldName => $contextValue) {
             $contextMock->$fieldName = $contextValue;
+            if ($fieldName === 'language' && $contextValue instanceof Language) {
+                $contextMock->getTranslator()->setLocale('test' . $contextValue->id);
+            }
         }
         LegacyContext::setInstanceForTesting($contextMock);
 
@@ -66,6 +84,10 @@ abstract class ContextStateTestCase extends TestCase
             ->getMock();
 
         $contextField->id = $objectId;
+
+        if ($className == Language::class) {
+            $contextField->locale = 'test' . $objectId;
+        }
 
         return $contextField;
     }
