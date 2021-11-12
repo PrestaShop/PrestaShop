@@ -157,7 +157,7 @@ class LogoUploader
             if (!count($this->errors) && @filemtime(_PS_IMG_DIR_ . Configuration::get($fieldName)) && $deleteOldLogo) {
                 if (Shop::isFeatureActive()) {
                     $this->updateInMultiShopContext($idShop, $idShopGroup, $fieldName);
-                } elseif ($deleteOldLogo) {
+                } else {
                     @unlink(_PS_IMG_DIR_ . Configuration::get($fieldName));
                 }
             }
