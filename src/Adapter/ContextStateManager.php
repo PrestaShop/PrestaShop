@@ -157,6 +157,14 @@ final class ContextStateManager
         return $this;
     }
 
+    public function setTranslatorLocale(string $locale): self
+    {
+        $this->saveContextField('locale');
+        $this->getContext()->getTranslator()->setLocale($locale);
+
+        return $this;
+    }
+
     /**
      * Sets context shop and saves previous value
      *
@@ -241,11 +249,16 @@ final class ContextStateManager
         $currentStashIndex = $this->getCurrentStashIndex();
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
         if (!array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
-            if ('shop' === $fieldName) {
-                $this->contextFieldsStack[$currentStashIndex]['shop'] = $this->getContext()->$fieldName;
-                $this->contextFieldsStack[$currentStashIndex]['shopContext'] = Shop::getContext();
-            } else {
-                $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->getContext()->$fieldName;
+            switch ($fieldName) {
+                case 'locale':
+                    $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->getContext()->getTranslator()->getLocale();
+                    break;
+                case 'shop':
+                    $this->contextFieldsStack[$currentStashIndex]['shop'] = $this->getContext()->$fieldName;
+                    $this->contextFieldsStack[$currentStashIndex]['shopContext'] = Shop::getContext();
+                    break;
+                default:
+                    $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->getContext()->$fieldName;
             }
         }
     }
@@ -263,7 +276,11 @@ final class ContextStateManager
             if ('shop' === $fieldName) {
                 $this->restoreShopContext($currentStashIndex);
             }
-            $this->getContext()->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
+            if ('locale' === $fieldName) {
+                $this->getContext()->getTranslator()->setLocale($this->contextFieldsStack[$currentStashIndex][$fieldName]);
+            } else {
+                $this->getContext()->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
+            }
             unset($this->contextFieldsStack[$currentStashIndex][$fieldName]);
         }
     }
