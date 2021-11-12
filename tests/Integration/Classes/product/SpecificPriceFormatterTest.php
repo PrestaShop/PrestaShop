@@ -42,6 +42,11 @@ use Symfony\Component\Translation\Translator;
 
 class SpecificPriceFormatterTest extends KernelTestCase
 {
+    /**
+     * @var Context
+     */
+    private $context;
+
     protected function setUp(): void
     {
         parent::setUp();

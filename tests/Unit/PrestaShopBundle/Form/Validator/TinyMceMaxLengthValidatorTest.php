@@ -44,9 +44,10 @@ class TinyMceMaxLengthValidatorTest extends ConstraintValidatorTestCase
 
     protected function createValidator(): TinyMceMaxLengthValidator
     {
-        $this->translator = $this->createMock(TranslatorInterface::class);
-
-        return new TinyMceMaxLengthValidator(new Validate(), $this->translator);
+        return new TinyMceMaxLengthValidator(
+            new Validate(),
+            $this->createMock(TranslatorInterface::class)
+        );
     }
 
     /**

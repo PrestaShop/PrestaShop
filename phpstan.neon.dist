@@ -31,6 +31,8 @@ parameters:
     - admin-dev/filemanager
     - admin-dev/themes
     - classes/lang/KeysReference
+    - tests/Resources
+    - tests/Unit/Core/Foundation/IoC/Fixtures
   ignoreErrors:
     - '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
     - '#^Unsafe usage of new static\(\)\.$#'

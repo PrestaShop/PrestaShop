@@ -109,6 +109,7 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
     {
         $data = $table->getColumnsHash();
         $packId = $this->getSharedStorage()->get($packReference);
+        /** @var array<int, PackedProduct> $packedProducts */
         $packedProducts = $this->getQueryBus()->handle(new GetPackedProducts($packId));
         $notExistingProducts = [];
 
@@ -120,10 +121,6 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
 
             $foundProduct = false;
 
-            /**
-             * @var int
-             * @var PackedProduct $packedProduct
-             */
             foreach ($packedProducts as $key => $packedProduct) {
                 if ($packedProduct->getProductId() === $expectedPackedProductId) {
                     $foundProduct = true;

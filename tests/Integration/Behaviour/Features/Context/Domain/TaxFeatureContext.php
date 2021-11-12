@@ -152,6 +152,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
      */
     public function bulkDeleteTax($taxReferences)
     {
+        $taxIds = [];
         foreach (PrimitiveUtils::castStringArrayIntoArray($taxReferences) as $taxReference) {
             $tax = SharedStorage::getStorage()->get($taxReference);
             $taxIds[] = (int) $tax->id;

@@ -37,6 +37,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class AdapterSecurityAdmin
 {
+    /** @phpstan-ignore-next-line */
     public function __construct(LegacyContext $context, TokenStorageInterface $securityTokenStorage)
     {
     }

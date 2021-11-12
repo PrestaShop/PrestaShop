@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin;
 
 use Context;
+use Country;
 use Currency;
 use Employee;
 use Language;
