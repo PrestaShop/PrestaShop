@@ -75,6 +75,9 @@ global_settings:
         - ps_featuredproducts
         - ps_banner
         - ps_customtext
+        - ps_specials
+        - ps_newproducts
+        - ps_bestsellers
       displayFooterBefore:
         - ps_emailsubscription
         - ps_socialfollow
