@@ -37,6 +37,11 @@ use PrestaShop\PrestaShop\Core\Foundation\Database\Exception as DatabaseExceptio
 
 class EntityRepositoryTest extends TestCase
 {
+    /**
+     * @var EntityRepository
+     */
+    private $repository;
+
     protected function setUp(): void
     {
         $mockDb = $this->createMock(DatabaseInterface::class);

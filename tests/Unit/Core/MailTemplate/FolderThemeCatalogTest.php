@@ -166,7 +166,8 @@ class FolderThemeCatalogTest extends TestCase
 
     public function testInvalidTheme()
     {
-        $this->expectException(InvalidArgumentException::class, 'Invalid requested theme "unknown", only available themes are: classic, modern');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid requested theme "unknown", only available themes are: classic, modern');
 
         /** @var HookDispatcherInterface $dispatcherMock */
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)

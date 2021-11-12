@@ -48,6 +48,10 @@ class StockManagerTest extends TestCase
      * @var Container
      */
     private $container;
+    /**
+     * @var PackItemsManager
+     */
+    private $packItemsManager;
 
     public function setUp(): void
     {

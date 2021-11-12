@@ -245,6 +245,7 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
 
         ob_start();
         require _PS_ROOT_DIR_ . '/webservice/dispatcher.php';
+        /* @phpstan-ignore-next-line */
         if (isset($request) && $request instanceof WebserviceRequest) {
             $request::resetStaticCache();
         }
