@@ -149,7 +149,7 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
     {
         return [
             self::ISSUE_APACHE_MOD_AUTH_BASIC_NOT_AVAILABLE => $this->translator->trans(
-                'Please activate the \'mod_rewrite\' Apache module to allow the PrestaShop webservice.',
+                'Please activate the \'mod_auth_basic\' Apache module to allow the use of the PrestaShop webservice.',
                 [],
                 'Admin.Advparameters.Notification'
             ),
