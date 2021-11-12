@@ -41,9 +41,6 @@ $(() => {
   backupGrid.addExtension(new LinkRowActionExtension());
   backupGrid.addExtension(new SubmitRowActionExtension());
   backupGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-});
-
-$(() => {
   window.prestashop.component.initComponents(
     [
       'MultistoreConfigField',
