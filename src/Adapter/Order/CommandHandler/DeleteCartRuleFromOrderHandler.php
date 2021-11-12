@@ -30,6 +30,7 @@ use Cart;
 use CartRule;
 use Currency;
 use Customer;
+use Language;
 use Order;
 use OrderCartRule;
 use OrderDetail;
@@ -98,6 +99,7 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
         $this->contextStateManager
             ->setCurrency(new Currency($order->id_currency))
             ->setCustomer(new Customer($order->id_customer))
+            ->setLanguage(new Language($order->id_lang))
             ->setShop(new Shop($order->id_shop))
         ;
 
