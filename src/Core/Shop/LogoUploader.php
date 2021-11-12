@@ -107,7 +107,8 @@ class LogoUploader
         $files = empty($files) ? $_FILES : $files;
 
         if (isset($files[$fieldName]['tmp_name'], $files[$fieldName]['tmp_name'], $files[$fieldName]['size'])) {
-            if ($error = ImageManager::validateUpload($files[$fieldName], Tools::getMaxUploadSize(), ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS)) {
+            $availableExtensions = (in_array($fieldName, ['PS_LOGO_MAIL', 'PS_LOGO_INVOICE'])) ? ShopLogoSettings::AVAILABLE_MAIL_AND_INVOICE_LOGO_IMAGE_EXTENSIONS : ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS;
+            if ($error = ImageManager::validateUpload($files[$fieldName], Tools::getMaxUploadSize(), $availableExtensions)) {
                 throw new PrestaShopException($error);
             }
             $tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
@@ -139,10 +140,24 @@ class LogoUploader
             $idShop = $this->shop->id;
             $idShopGroup = null;
 
-            if (!count($this->errors) && @filemtime(_PS_IMG_DIR_ . Configuration::get($fieldName))) {
+            // on updating PS_LOGO if the new file is an svg, keep old logo for mail and invoice
+            $deleteOldLogo = true;
+            if ($fieldName == 'PS_LOGO' && $this->isSvgMimeType($files[$fieldName]['type'])) {
+                if (empty(Configuration::get('PS_LOGO_MAIL'))) {
+                    Configuration::updateValue('PS_LOGO_MAIL', Configuration::get('PS_LOGO'));
+                    $deleteOldLogo = false;
+                }
+                if (empty(Configuration::get('PS_LOGO_INVOICE'))) {
+                    Configuration::updateValue('PS_LOGO_INVOICE', Configuration::get('PS_LOGO'));
+                    $deleteOldLogo = false;
+                }
+            }
+
+            // manage deleting old logo
+            if (!count($this->errors) && @filemtime(_PS_IMG_DIR_ . Configuration::get($fieldName)) && $deleteOldLogo) {
                 if (Shop::isFeatureActive()) {
                     $this->updateInMultiShopContext($idShop, $idShopGroup, $fieldName);
-                } else {
+                } elseif ($deleteOldLogo) {
                     @unlink(_PS_IMG_DIR_ . Configuration::get($fieldName));
                 }
             }

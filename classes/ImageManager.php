@@ -691,6 +691,7 @@ class ImageManagerCore
             'image/jpeg' => ['jpg', 'jpeg'],
             'image/png' => ['png'],
             'image/webp' => ['webp'],
+            'image/svg+xml' => ['svg'],
         ];
         $extension = substr($fileName, strrpos($fileName, '.') + 1);
 

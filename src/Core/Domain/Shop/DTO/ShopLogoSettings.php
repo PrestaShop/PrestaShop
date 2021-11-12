@@ -45,6 +45,11 @@ class ShopLogoSettings
     public const AVAILABLE_LOGO_IMAGE_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'jpe', 'png', 'webp', 'svg'];
 
     /**
+     * @var array<int, string> List of available image mime types for mail and invoice
+     */
+    public const AVAILABLE_MAIL_AND_INVOICE_LOGO_IMAGE_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'jpe', 'png', 'webp'];
+
+    /**
      * @var string - a type used for icon images for shop logo
      */
     public const AVAILABLE_ICON_IMAGE_EXTENSION = 'ico';
@@ -52,12 +57,16 @@ class ShopLogoSettings
     /**
      * Gets the list of available extensions with dot attached to the front of the extension
      *
+     * @param string optional configuration key
+     *
      * @return array<int, string>
      */
-    public function getLogoImageExtensionsWithDot()
+    public function getLogoImageExtensionsWithDot($fieldName = '')
     {
         $mimeTypes = [];
-        foreach (self::AVAILABLE_LOGO_IMAGE_EXTENSIONS as $imageExtension) {
+        $availableExtensions = (in_array($fieldName, ['PS_LOGO_MAIL', 'PS_LOGO_INVOICE'])) ? ShopLogoSettings::AVAILABLE_MAIL_AND_INVOICE_LOGO_IMAGE_EXTENSIONS : ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS;
+
+        foreach ($availableExtensions as $imageExtension) {
             $mimeTypes[] = '.' . $imageExtension;
         }
 
