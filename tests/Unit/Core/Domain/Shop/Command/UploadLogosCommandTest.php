@@ -50,7 +50,7 @@ class UploadLogosCommandTest extends TestCase
     public function testSetUploadedHeaderLogoNotValidHeaderLogoImage(): void
     {
         $this->expectException(NotSupportedLogoImageExtensionException::class);
-        $this->expectExceptionMessage('Not supported "php" image logo extension. Supported extensions are "gif,jpg,jpeg,jpe,png,webp"');
+        $this->expectExceptionMessage('Not supported "php" image logo extension. Supported extensions are "gif,jpg,jpeg,jpe,png,webp,svg"');
 
         $uploadLogosCommand = new UploadLogosCommand();
         $uploadedFile = new UploadedFile(__FILE__, basename(__FILE__));
