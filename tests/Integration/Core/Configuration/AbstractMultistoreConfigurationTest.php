@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Core\Configuration;
 
 use Configuration as LegacyConfiguration;
+use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -60,6 +61,11 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
      * @var Shop
      */
     protected $newShop;
+
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
 
     public function setUp(): void
     {

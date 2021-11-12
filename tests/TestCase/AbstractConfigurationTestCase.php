@@ -27,6 +27,7 @@
 namespace Tests\TestCase;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
@@ -49,6 +50,21 @@ abstract class AbstractConfigurationTestCase extends KernelTestCase
      * @var FeatureInterface
      */
     protected $mockMultistoreFeature;
+
+    /**
+     * @var Context
+     */
+    protected $shopContext;
+
+    /**
+     * @var Configuration
+     */
+    protected $legacyConfigurationAdapter;
+
+    /**
+     * @var FeatureInterface
+     */
+    protected $multistoreFeature;
 
     protected function setUp(): void
     {
@@ -88,13 +104,11 @@ abstract class AbstractConfigurationTestCase extends KernelTestCase
 
     /**
      * @param ShopConstraint $shopConstraint
-     * @param bool $isAllShopContext
      *
      * @return DummyMultistoreConfiguration
      */
     protected function getDummyMultistoreConfiguration(ShopConstraint $shopConstraint): DummyMultistoreConfiguration
     {
-        $isAllShopContext = ($shopConstraint->getShopGroupId() === null && $shopConstraint->getShopId() === null);
         // we mock the shop context so that its `getShopConstraint` method returns the ShopConstraint from our provider
         $this->shopContext = $this->createShopContextMock();
         $this->shopContext

@@ -1491,6 +1491,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $address = $orderPreview->getInvoiceAddressFormatted();
         }
 
+        if (!isset($address)) {
+            return;
+        }
+
         Assert::assertEquals(
             $address,
             $pyStringNode->getRaw(),
@@ -1892,6 +1896,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $address = $orderForViewing->getInvoiceAddress();
         }
 
+        if (!isset($address)) {
+            return;
+        }
+
         $expectedDetails = $table->getRowsHash();
         $arrayActual = [
             'Address' => $address->getAddress1(),
@@ -1939,6 +1947,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         } elseif ($addressType == 'invoice') {
             /** @var OrderInvoiceAddressForViewing $address */
             $address = $orderForViewing->getInvoiceAddressFormatted();
+        }
+
+        if (!isset($address)) {
+            return;
         }
 
         Assert::assertEquals(

@@ -34,6 +34,11 @@ class ModuleGraphTest extends TestCase
 {
     public static $data;
 
+    /**
+     * @var ModuleGraph
+     */
+    private $object;
+
     protected function setUp(): void
     {
         $this->object = new class() extends ModuleGraph {

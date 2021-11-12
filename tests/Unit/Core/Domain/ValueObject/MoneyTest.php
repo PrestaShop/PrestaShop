@@ -44,8 +44,9 @@ class MoneyTest extends TestCase
 
     public function testCreateWithNegativeValue()
     {
-        $this->expectException(DomainConstraintException::class, 'Money amount cannot be lower than zero, -100 given');
+        $this->expectException(DomainConstraintException::class);
+        $this->expectExceptionMessage('Money amount cannot be lower than zero, -100.000000 given');
 
-        $money = new Money(new DecimalNumber('-100'), new CurrencyId(10));
+        new Money(new DecimalNumber('-100'), new CurrencyId(10));
     }
 }
