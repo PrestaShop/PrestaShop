@@ -6,7 +6,13 @@ const files = require('@utils/files');
 let screenshotNumber = 1;
 
 /**
- * Create unique browser for all mocha run
+ * @module MochaHelper
+ * @description Helper to define mocha hooks
+ */
+
+/**
+ * @function before
+ * @description Create unique browser for all mocha run
  */
 before(async function () {
   this.browser = await helper.createBrowser();
@@ -22,7 +28,8 @@ before(async function () {
 });
 
 /**
- * Close browser after finish the run
+ * @function after
+ * @description Close browser after finish the run
  */
 after(async function () {
   await helper.closeBrowser(this.browser);
@@ -41,6 +48,10 @@ after(async function () {
 });
 
 
+/**
+ * @function afterEach
+ * @description Take a screenshot if a step is failed
+ */
 afterEach(async function () {
   // Take screenshot if demanded after failed step
   if (global.TAKE_SCREENSHOT_AFTER_FAIL && this.currentTest.state === 'failed') {

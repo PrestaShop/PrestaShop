@@ -3,10 +3,10 @@ About PrestaShop
 
 [![PHP checks and unit tests](https://github.com/PrestaShop/PrestaShop/actions/workflows/php.yml/badge.svg)](https://github.com/PrestaShop/PrestaShop/actions/workflows/php.yml)
 [![Integration tests](https://github.com/PrestaShop/PrestaShop/actions/workflows/integration.yml/badge.svg)](https://github.com/PrestaShop/PrestaShop/actions/workflows/integration.yml)
-[![UI tests - PHP 7.4](https://github.com/PrestaShop/PrestaShop/actions/workflows/sanity-74.yml/badge.svg)](https://github.com/PrestaShop/PrestaShop/actions/workflows/sanity-74.yml)
+[![UI tests](https://github.com/PrestaShop/PrestaShop/actions/workflows/sanity.yml/badge.svg)](https://github.com/PrestaShop/PrestaShop/actions/workflows/sanity.yml)
 [![Nightly Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi-nightly.prestashop.com%2Fdata%2Fbadge&label=Nightly%20Status&cacheSeconds=3600)](https://nightly.prestashop.com/)
 
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.1-8892BF.svg?style=flat-square)](https://php.net/)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.2-8892BF.svg?style=flat-square)](https://php.net/)
 [![GitHub release](https://img.shields.io/github/v/release/prestashop/prestashop)](https://github.com/PrestaShop/PrestaShop)
 [![Slack chat](https://img.shields.io/badge/Chat-on%20Slack-red)](https://github.com/PrestaShop/open-source/blob/master/slack/readme.md)
 [![GitHub forks](https://img.shields.io/github/forks/PrestaShop/PrestaShop)](https://github.com/PrestaShop/PrestaShop/network)
@@ -15,7 +15,7 @@ About PrestaShop
 PrestaShop is an Open Source e-commerce web application, committed to providing the best shopping cart experience for both merchants and customers. It is written in PHP, is highly customizable, supports all the major payment services, is translated in many languages and localized for many countries, has a fully responsive design (both front and back office), etc. [See all the available features][available-features].
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/1009343/61462749-8fb19f00-a949-11e9-801f-70ab0a84192d.png" alt="PrestaShop 1.7 back office"/>
+  <img src="https://user-images.githubusercontent.com/92941405/138826023-3523bbbc-8d51-4997-92c7-607c237653c1.png" alt="PrestaShop 1.7 back office"/>
 </p>
 
 This repository contains the source code of PrestaShop, which is intended for development and preview only. To download the latest stable public version of PrestaShop (currently, version 1.7), please go to [the download page][download] on the official PrestaShop site.
@@ -24,7 +24,7 @@ This repository contains the source code of PrestaShop, which is intended for de
 About the 'develop' branch
 --------
 
-The 'develop' branch of this repository contains the work in progress source code for the next version of PrestaShop 1.7.
+The 'develop' branch of this repository contains the work in progress source code for the next version of PrestaShop.
  
 For more information on our branch system, read our guide on [installing PrestaShop for development][install-guide-dev].
 
@@ -78,7 +78,7 @@ First-time users will be particularly interested in the following guides:
 * [User Guide][user-guide]: All there is to know to put PrestaShop to good use.
 * [Updating Guide][updating-guide]: Switching to the newest version is not trivial. Make sure you do it right.
 * [Merchant's Guide][merchant-guide]: Tips and tricks for first-time online sellers.
-* The [FAQ][faq-17] and the [Troubleshooting][troubleshooting] pages should also be of tremendous help to you.
+* The [FAQ][faq-17] page should also be of tremendous help to you.
 
 
 Contributing
@@ -119,8 +119,6 @@ Extending PrestaShop
 
 PrestaShop is a very extensible e-commerce platform, both through modules and themes. Developers can even override the default components and behaviors. Learn more about this on the [Modules documentation][modules-devdocs] and the [Themes documentation][themes-devdocs].
 
-Themes and modules can be obtained (and sold!) on [PrestaShop Addons][addons], the official marketplace for PrestaShop.
-
 
 Community forums
 --------
@@ -132,27 +130,25 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [available-features]: https://www.prestashop.com/en/online-store-builder
 [download]: https://www.prestashop.com/en/download
 [forums]: https://www.prestashop.com/forums/
-[chat]: https://github.com/PrestaShop/open-source/blob/master/slack/readme.md
+[chat]: https://www.prestashop-project.org/slack/
 [user-doc]: https://doc.prestashop.com
 [contributing-md]: CONTRIBUTING.md
-[contributing-tutorial]: https://devdocs.prestashop.com/1.7/contribute/
+[contributing-tutorial]: https://devdocs.prestashop.com/8/contribute/
 [crowdin]: https://crowdin.net/project/prestashop-official
 [getting-started]: https://doc.prestashop.com/display/PS17/Getting+Started
 [user-guide]: https://doc.prestashop.com/display/PS17/User+Guide
 [updating-guide]: https://doc.prestashop.com/display/PS16/Updating+PrestaShop
 [merchant-guide]: https://doc.prestashop.com/display/PS16/Merchant%27s+Guide
-[faq-17]: https://devdocs.prestashop.com/1.7/faq/
-[troubleshooting]: https://doc.prestashop.com/display/PS16/Troubleshooting
+[faq-17]: https://devdocs.prestashop.com/8/faq/
 [sysadmin-guide]: https://doc.prestashop.com/display/PS16/System+Administrator+Guide
-[addons]: https://addons.prestashop.com/
 [contributors-md]: CONTRIBUTORS.md
-[example-nginx]: https://devdocs.prestashop.com/1.7/basics/installation/nginx/
+[example-nginx]: https://devdocs.prestashop.com/8/basics/installation/nginx/
 [docker-compose]: https://docs.docker.com/compose/
-[install-guide-dev]: https://devdocs.prestashop.com/1.7/basics/installation/
-[system-requirements]: https://devdocs.prestashop.com/1.7/basics/installation/system-requirements/
+[install-guide-dev]: https://devdocs.prestashop.com/8/basics/installation/
+[system-requirements]: https://devdocs.prestashop.com/8/basics/installation/system-requirements/
 [install-guide]: https://doc.prestashop.com/display/PS17/Installing+PrestaShop
 [devdocs]: https://devdocs.prestashop.com/
 [create-issue]: https://github.com/PrestaShop/PrestaShop/issues/new/choose
-[reporting-issues]: https://devdocs.prestashop.com/1.7/contribute/contribute-reporting-issues/
-[modules-devdocs]: https://devdocs.prestashop.com/1.7/modules/
-[themes-devdocs]: https://devdocs.prestashop.com/1.7/themes/
+[reporting-issues]: https://devdocs.prestashop.com/8/contribute/contribute-reporting-issues/
+[modules-devdocs]: https://devdocs.prestashop.com/8/modules/
+[themes-devdocs]: https://devdocs.prestashop.com/8/themes/

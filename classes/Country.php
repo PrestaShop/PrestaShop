@@ -344,7 +344,7 @@ class CountryCore extends ObjectModel
 		FROM `' . _DB_PREFIX_ . 'country`
 		WHERE `id_country` = ' . (int) $idCountry);
 
-        if (isset($zipCodeFormat) && $zipCodeFormat) {
+        if ($zipCodeFormat) {
             return $zipCodeFormat;
         }
 

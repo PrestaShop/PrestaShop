@@ -64,7 +64,7 @@ $(document).ready(() => {
       $(prestashop.themeSelectors.product.modalProductCover).attr('src', newSelectedThumb.data('image-large-src'));
       selectedThumb.removeClass('selected');
       newSelectedThumb.addClass('selected');
-      productCover.prop('src', newSelectedThumb.data('image-large-src'));
+      productCover.prop('src', newSelectedThumb.data('image-medium-src'));
     };
 
     $(prestashop.themeSelectors.product.thumb).on('click', (event) => {

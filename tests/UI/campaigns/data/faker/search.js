@@ -10,10 +10,10 @@ class SearchAliasData {
    * @param aliasToCreate {Object} Could be used to force the value of some members
    */
   constructor(aliasToCreate = {}) {
-    /** @member {string} Name of the alias */
+    /** @type {string} Name of the alias */
     this.alias = aliasToCreate.alias || `alias_${faker.lorem.word()}`;
 
-    /** @member {string} Result to display on the search */
+    /** @type {string} Result to display on the search */
     this.result = aliasToCreate.result || `result_${faker.lorem.word()}`;
   }
 }

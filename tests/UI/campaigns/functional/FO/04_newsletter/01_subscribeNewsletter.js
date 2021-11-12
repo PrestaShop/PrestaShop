@@ -44,7 +44,7 @@ Go back to the FO homepage
 Try to subscribe again with the same email
 Go to back to BO and delete subscription
  */
-describe('FO Subscribe to Newsletter', async () => {
+describe('FO - Newsletter : Subscribe to Newsletter', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

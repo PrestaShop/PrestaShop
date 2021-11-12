@@ -59,6 +59,7 @@ import SortingExtension from '@components/grid/extension/sorting-extension';
 import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-action-extension';
 import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
+import DeltaQuantityInput from '@components/form/delta-quantity-input';
 
 const GridExtensions = {
   AsyncToggleColumnExtension,
@@ -139,6 +140,7 @@ const initPrestashopComponents = () => {
     GridExtensions,
     Router,
     ColorPicker,
+    DeltaQuantityInput,
   };
 };
 export default initPrestashopComponents;

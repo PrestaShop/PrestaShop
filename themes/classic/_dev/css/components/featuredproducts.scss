@@ -11,6 +11,11 @@ $product-description-height: 70px;
     justify-content: flex-start;
   }
 
+  .product {
+    display: flex;
+    justify-content: center;
+  }
+
   .product-thumbnail {
     display: block;
   }
@@ -25,7 +30,6 @@ $product-description-height: 70px;
 
   .thumbnail-container {
     position: relative;
-    width: $thumbnail-size;
     height: auto;
     margin-bottom: 1.563rem;
     overflow: hidden;
@@ -133,25 +137,14 @@ $product-description-height: 70px;
     position: relative;
     bottom: 0;
     z-index: 3;
-    width: $thumbnail-size;
     height: auto;
+    padding: 0.25rem;
     padding-bottom: 0.7rem;
     overflow: hidden;
     background: $white;
   }
 
-  .product {
-    padding: 0;
-
-    @at-root .page-index &, .page-search & {
-      width: 25%;
-      min-width: 250px;
-    }
-  }
-
   .product-miniature {
-    margin: 0 0.8125rem;
-
     .product-flags {
       li.product-flag {
         min-width: 3.125rem;

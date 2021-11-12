@@ -81,6 +81,7 @@ class ProductFormType extends TranslatorAwareType
             ])
             ->add('specifications', SpecificationsType::class)
             ->add('stock', StockType::class, [
+                'product_id' => $productId,
                 'virtual_product_file_id' => $options['virtual_product_file_id'],
             ])
             ->add('shipping', ShippingType::class)

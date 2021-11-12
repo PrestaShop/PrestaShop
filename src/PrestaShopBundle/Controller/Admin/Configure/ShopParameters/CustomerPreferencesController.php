@@ -54,7 +54,6 @@ class CustomerPreferencesController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/customer_preferences.html.twig', [
             'layoutTitle' => $this->trans('Customers', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'generalForm' => $form->createView(),
@@ -97,7 +96,6 @@ class CustomerPreferencesController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/customer_preferences.html.twig', [
             'layoutTitle' => $this->trans('Customers', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'generalForm' => $form->createView(),

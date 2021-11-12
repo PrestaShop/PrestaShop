@@ -155,7 +155,7 @@ class ProductAttributeCore extends ObjectModel
     public function add($autoDate = true, $nullValues = false)
     {
         if ($this->position <= 0) {
-            $this->position = ProductAttribute::getHigherPosition($this->id_attribute_group) + 1;
+            $this->position = static::getHigherPosition($this->id_attribute_group) + 1;
         }
 
         $return = parent::add($autoDate, $nullValues);
@@ -326,7 +326,7 @@ class ProductAttributeCore extends ObjectModel
             }
         }
 
-        if (!isset($movedAttribute) || !isset($position)) {
+        if (!isset($movedAttribute)) {
             return false;
         }
 

@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Form\Admin\Type;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form type is used to display a text value without providing an interactive input to edit it.
@@ -46,6 +47,7 @@ class TextPreviewType extends HiddenType
     {
         parent::buildView($view, $form, $options);
         $view->vars['type'] = 'hidden';
+        $view->vars['preview_class'] = $options['preview_class'];
     }
 
     /**
@@ -54,5 +56,18 @@ class TextPreviewType extends HiddenType
     public function getBlockPrefix()
     {
         return 'text_preview';
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver
+            ->setRequired(['preview_class'])
+            ->setAllowedTypes('preview_class', 'string')
+            ->setDefaults([
+                'preview_class' => 'text-preview',
+            ])
+        ;
     }
 }

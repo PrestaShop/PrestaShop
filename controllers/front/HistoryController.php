@@ -78,25 +78,47 @@ class HistoryControllerCore extends FrontController
         return $orders;
     }
 
+    /**
+     * Generates a URL to download the PDF invoice of a given order
+     *
+     * @param Order $order
+     * @param Context $context
+     *
+     * @return string
+     */
     public static function getUrlToInvoice($order, $context)
     {
         $url_to_invoice = '';
 
         if ((bool) Configuration::get('PS_INVOICE') && OrderState::invoiceAvailable($order->current_state) && count($order->getInvoicesCollection())) {
-            $url_to_invoice = $context->link->getPageLink('pdf-invoice', true, null, 'id_order=' . $order->id);
-            if (!$context->customer->isLogged()) {
-                $url_to_invoice .= '&secure_key=' . $order->secure_key;
-            }
+            $params = [
+                'id_order' => (int) $order->id,
+                'secure_key' => (!$context->customer->isLogged()) ? $order->secure_key : null,
+            ];
+
+            $url_to_invoice = $context->link->getPageLink('pdf-invoice', true, null, $params);
         }
 
         return $url_to_invoice;
     }
 
+    /**
+     * Generates a URL to reorder a given order
+     *
+     * @param int $id_order
+     * @param Context $context
+     *
+     * @return string
+     */
     public static function getUrlToReorder($id_order, $context)
     {
         $url_to_reorder = '';
         if (!(bool) Configuration::get('PS_DISALLOW_HISTORY_REORDERING')) {
-            $url_to_reorder = $context->link->getPageLink('order', true, null, 'submitReorder&id_order=' . (int) $id_order);
+            $params = [
+                'submitReorder' => 1,
+                'id_order' => (int) $id_order,
+            ];
+            $url_to_reorder = $context->link->getPageLink('order', true, null, $params);
         }
 
         return $url_to_reorder;

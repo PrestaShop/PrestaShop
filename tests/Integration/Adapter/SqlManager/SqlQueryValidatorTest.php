@@ -59,6 +59,30 @@ class SqlQueryValidatorTest extends TestCase
             . 'GROUP BY c.id_customer;',
             [],
         ];
+        yield [
+            'SELECT SQL_CALC_FOUND_ROWS b.*, a.* '
+            . 'FROM `ps_cart_rule` a '
+            . 'LEFT JOIN `ps_cart_rule_lang` b ON (b.`id_cart_rule` = a.`id_cart_rule` AND b.`id_lang` = 1) '
+            . 'WHERE 1 '
+            . 'ORDER BY a.id_cart_rule DESC',
+            [],
+        ];
+        yield [
+            'SELECT SQL_CALC_FOUND_ROWS b.*, a.* '
+            . 'FROM `ps_cart_rule` a '
+            . 'LEFT JOIN `ps_cart_rule_lang` b ON (b.`id_cart_rule` = a.`id_cart_rule` AND b.`id_lang` = a.`id_cart_rule`) '
+            . 'WHERE 1 '
+            . 'ORDER BY a.id_cart_rule DESC',
+            [],
+        ];
+        yield [
+            'SELECT SQL_CALC_FOUND_ROWS b.*, a.* '
+            . 'FROM `ps_cart_rule` a '
+            . 'LEFT JOIN `ps_cart_rule_lang` b ON (b.`id_cart_rule` = a.`id_cart_rule` AND 1) '
+            . 'WHERE 1 '
+            . 'ORDER BY a.id_cart_rule DESC',
+            [],
+        ];
         // Invalid queries
         yield [
             'SELECT * FROM ps_customera',

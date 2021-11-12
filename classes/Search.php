@@ -24,11 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-/*
- * @deprecated This const is deprecated you should use the configuration variable instead Configuration::get('PS_SEARCH_MAX_WORD_LENGTH')
- */
-define('PS_SEARCH_MAX_WORD_LENGTH', 30);
-
 /* Copied from Drupal search module, except for \x{0}-\x{2f} that has been replaced by \x{0}-\x{2c}\x{2e}-\x{2f} in order to keep the char '-' */
 define(
     'PREG_CLASS_SEARCH_EXCLUDE',
@@ -286,55 +281,65 @@ class SearchCore
 
         $scoreArray = [];
         $fuzzyLoop = 0;
-        $eligibleProducts2 = null;
-        $words = Search::extractKeyWords($expr, $id_lang, false, $context->language->iso_code);
+        $wordCnt = 0;
+        $eligibleProducts2Full = [];
+        $expressions = explode(';', $expr);
         $fuzzyMaxLoop = (int) Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP');
         $psFuzzySearch = (int) Configuration::get('PS_SEARCH_FUZZY');
         $psSearchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
-
-        foreach ($words as $key => $word) {
-            if (empty($word) || strlen($word) < $psSearchMinWordLength) {
-                unset($words[$key]);
-                continue;
-            }
-
-            $sql_param_search = self::getSearchParamFromWord($word);
-            $sql = 'SELECT DISTINCT si.id_product ' .
-                 'FROM ' . _DB_PREFIX_ . 'search_word sw ' .
-                 'LEFT JOIN ' . _DB_PREFIX_ . 'search_index si ON sw.id_word = si.id_word ' .
-                 'LEFT JOIN ' . _DB_PREFIX_ . 'product_shop product_shop ON (product_shop.`id_product` = si.`id_product`) ' .
-                 'WHERE sw.id_lang = ' . (int) $id_lang . ' ' .
-                 'AND sw.id_shop = ' . $context->shop->id . ' ' .
-                 'AND product_shop.`active` = 1 ' .
-                 'AND product_shop.`visibility` IN ("both", "search") ' .
-                 'AND product_shop.indexed = 1 ' .
-                 'AND sw.word LIKE ';
-
-            while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
-                if (!$psFuzzySearch
-                    || $fuzzyLoop++ > $fuzzyMaxLoop
-                    || !($sql_param_search = static::findClosestWeightestWord($context, $word))
-                ) {
-                    break;
+        foreach ($expressions as $expression) {
+            $eligibleProducts2 = null;
+            $words = Search::extractKeyWords($expression, $id_lang, false, $context->language->iso_code);
+            foreach ($words as $key => $word) {
+                if (empty($word) || strlen($word) < $psSearchMinWordLength) {
+                    unset($words[$key]);
+                    continue;
                 }
-            }
 
-            if (!$result) {
-                unset($words[$key]);
-                continue;
-            }
+                $sql_param_search = self::getSearchParamFromWord($word);
+                $sql = 'SELECT DISTINCT si.id_product ' .
+                    'FROM ' . _DB_PREFIX_ . 'search_word sw ' .
+                    'LEFT JOIN ' . _DB_PREFIX_ . 'search_index si ON sw.id_word = si.id_word ' .
+                    'LEFT JOIN ' . _DB_PREFIX_ . 'product_shop product_shop ON (product_shop.`id_product` = si.`id_product`) ' .
+                    'WHERE sw.id_lang = ' . (int) $id_lang . ' ' .
+                    'AND sw.id_shop = ' . $context->shop->id . ' ' .
+                    'AND product_shop.`active` = 1 ' .
+                    'AND product_shop.`visibility` IN ("both", "search") ' .
+                    'AND product_shop.indexed = 1 ' .
+                    'AND sw.word LIKE ';
 
-            $productIds = array_column($result, 'id_product');
-            if ($eligibleProducts2 === null) {
-                $eligibleProducts2 = $productIds;
-            } else {
-                $eligibleProducts2 = array_intersect($eligibleProducts2, $productIds);
-            }
+                while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
+                    if (!$psFuzzySearch
+                        || $fuzzyLoop++ > $fuzzyMaxLoop
+                        || !($sql_param_search = static::findClosestWeightestWord($context, $word))
+                    ) {
+                        break;
+                    }
+                }
 
-            $scoreArray[] = 'sw.word LIKE \'' . $sql_param_search . '\'';
+                if (!$result) {
+                    unset($words[$key]);
+                    continue;
+                }
+
+                $productIds = array_column($result, 'id_product');
+                if ($eligibleProducts2 === null) {
+                    $eligibleProducts2 = $productIds;
+                } else {
+                    $eligibleProducts2 = array_intersect($eligibleProducts2, $productIds);
+                }
+
+                $scoreArray[] = 'sw.word LIKE \'' . $sql_param_search . '\'';
+            }
+            $wordCnt += count($words);
+            if ($eligibleProducts2) {
+                $eligibleProducts2Full = array_merge($eligibleProducts2Full, $eligibleProducts2);
+            }
         }
 
-        if (!count($words) || !count($eligibleProducts2)) {
+        $eligibleProducts2Full = array_unique($eligibleProducts2Full);
+
+        if (!$wordCnt || !count($eligibleProducts2Full)) {
             return $ajax ? [] : ['total' => 0, 'result' => []];
         }
 
@@ -368,7 +373,7 @@ class SearchCore
             'AND product_shop.`active` = 1 ' .
             'AND product_shop.`visibility` IN ("both", "search") ' .
             'AND product_shop.indexed = 1 ' .
-            'AND cp.id_product IN (' . implode(',', $eligibleProducts2) . ')' . $sqlGroups,
+            'AND cp.id_product IN (' . implode(',', $eligibleProducts2Full) . ')' . $sqlGroups,
             true,
             false
         );
@@ -546,7 +551,7 @@ class SearchCore
     }
 
     /**
-     * @param $weight_array
+     * @param array $weight_array
      *
      * @return string
      */
@@ -698,12 +703,12 @@ class SearchCore
     }
 
     /**
-     * @param $product_array
-     * @param $weight_array
-     * @param $key
-     * @param $value
-     * @param $id_lang
-     * @param $iso_code
+     * @param array $product_array
+     * @param array $weight_array
+     * @param string $key
+     * @param string $value
+     * @param int $id_lang
+     * @param string|bool $iso_code
      */
     protected static function fillProductArray(&$product_array, $weight_array, $key, $value, $id_lang, $iso_code)
     {
@@ -1047,7 +1052,8 @@ class SearchCore
     }
 
     /**
-     * @param $context , $queryString
+     * @param Context $context
+     * @param string $queryString
      *
      * @return string
      *

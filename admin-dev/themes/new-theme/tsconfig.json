@@ -8,6 +8,8 @@
     "strict": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "allowJs": true,
     "baseUrl": "./",
     "paths": {

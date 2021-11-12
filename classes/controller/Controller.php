@@ -162,6 +162,16 @@ abstract class ControllerCore
     abstract public function viewAccess();
 
     /**
+     * Errors displayed after post processing
+     *
+     * @var array<string>
+     */
+    public $errors = [];
+
+    /** @var string */
+    public $layout;
+
+    /**
      * Initialize the page.
      *
      * @throws Exception
@@ -585,7 +595,7 @@ abstract class ControllerCore
      * Adds jQuery plugin(s) to queued JS file list.
      *
      * @param string|array $name
-     * @param string null $folder
+     * @param string|null $folder
      * @param bool $css
      */
     public function addJqueryPlugin($name, $folder = null, $css = true)
@@ -675,7 +685,7 @@ abstract class ControllerCore
     /**
      * Custom error handler.
      *
-     * @param string $errno
+     * @param int $errno
      * @param string $errstr
      * @param string $errfile
      * @param int $errline

@@ -22,8 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
+
+{include file='_partials/helpers.tpl'}
+
 <!doctype html>
-<html lang="{$language.iso_code}">
+<html lang="{$language.locale}">
 
   <head>
     {block name='head'}
@@ -59,35 +62,37 @@
             {include file='_partials/breadcrumb.tpl'}
           {/block}
 
-          {block name="left_column"}
-            <div id="left-column" class="col-xs-12 col-sm-4 col-md-3">
-              {if $page.page_name == 'product'}
-                {hook h='displayLeftColumnProduct' product=$product category=$category}
-              {else}
-                {hook h="displayLeftColumn"}
-              {/if}
-            </div>
-          {/block}
+          <div class="row">
+            {block name="left_column"}
+              <div id="left-column" class="col-xs-12 col-sm-4 col-md-3">
+                {if $page.page_name == 'product'}
+                  {hook h='displayLeftColumnProduct' product=$product category=$category}
+                {else}
+                  {hook h="displayLeftColumn"}
+                {/if}
+              </div>
+            {/block}
 
-          {block name="content_wrapper"}
-            <div id="content-wrapper" class="js-content-wrapper left-column right-column col-sm-4 col-md-6">
-              {hook h="displayContentWrapperTop"}
-              {block name="content"}
-                <p>Hello world! This is HTML5 Boilerplate.</p>
-              {/block}
-              {hook h="displayContentWrapperBottom"}
-            </div>
-          {/block}
+            {block name="content_wrapper"}
+              <div id="content-wrapper" class="js-content-wrapper left-column right-column col-sm-4 col-md-6">
+                {hook h="displayContentWrapperTop"}
+                {block name="content"}
+                  <p>Hello world! This is HTML5 Boilerplate.</p>
+                {/block}
+                {hook h="displayContentWrapperBottom"}
+              </div>
+            {/block}
 
-          {block name="right_column"}
-            <div id="right-column" class="col-xs-12 col-sm-4 col-md-3">
-              {if $page.page_name == 'product'}
-                {hook h='displayRightColumnProduct'}
-              {else}
-                {hook h="displayRightColumn"}
-              {/if}
-            </div>
-          {/block}
+            {block name="right_column"}
+              <div id="right-column" class="col-xs-12 col-sm-4 col-md-3">
+                {if $page.page_name == 'product'}
+                  {hook h='displayRightColumnProduct'}
+                {else}
+                  {hook h="displayRightColumn"}
+                {/if}
+              </div>
+            {/block}
+          </div>
         </div>
         {hook h="displayWrapperBottom"}
       </section>

@@ -22,10 +22,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-// @ts-ignore-next-line
 import Jets from 'jets/jets';
 
-export default function (): Jets | boolean {
+export default function (): typeof Jets | boolean {
   $(() => {
     const searchSelector = '.search-translation';
     $(`${searchSelector} form`).submit((event) => {

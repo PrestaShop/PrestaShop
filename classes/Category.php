@@ -278,19 +278,6 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * Toggles the `active` flag.
-     *
-     * @return bool Indicates whether the status was successfully toggled
-     */
-    public function toggleStatus()
-    {
-        $result = parent::toggleStatus();
-        Hook::exec('actionCategoryUpdate', ['category' => $this]);
-
-        return $result;
-    }
-
-    /**
      * Recursive scan of subcategories.
      *
      * @param int $maxDepth Maximum depth of the tree (i.e. 2 => 3 levels depth)
@@ -347,7 +334,7 @@ class CategoryCore extends ObjectModel
     /**
      * Recursively add specified category childs to $to_delete array.
      *
-     * @param array &$toDelete Array reference where categories ID will be saved
+     * @param array $toDelete Array reference where categories ID will be saved
      * @param int $idCategory Parent category ID
      */
     protected function recursiveDelete(&$toDelete, $idCategory)
@@ -395,10 +382,12 @@ class CategoryCore extends ObjectModel
 
         $this->clearCache();
 
-        $deletedChildren = $allCat = $this->getAllChildren();
+        /** @var array<Category> $deletedChildren */
+        $deletedChildren = $this->getAllChildren();
+        /** @var array<Category> $allCat */
+        $allCat = $deletedChildren;
         $allCat[] = $this;
         foreach ($allCat as $cat) {
-            /* @var Category $cat */
             $cat->deleteLite();
             if (!$cat->hasMultishopEntries()) {
                 $cat->deleteImage();
@@ -508,18 +497,6 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * @param $categories
-     * @param $idCategory
-     * @param $n
-     *
-     * @deprecated 1.7.0
-     */
-    protected static function _subTree(&$categories, $idCategory, &$n)
-    {
-        self::subTree($categories, $idCategory, $n);
-    }
-
-    /**
      * @param array $categories
      * @param int $idCategory
      * @param int $n
@@ -543,9 +520,9 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * @param $categories
-     * @param $idCategory
-     * @param $n
+     * @param array $categories
+     * @param int $idCategory
+     * @param int $n
      *
      * @return bool Indicates whether the sub tree of categories has been successfully updated
      *
@@ -655,15 +632,13 @@ class CategoryCore extends ObjectModel
 
     /**
      * @param int $idRootCategory ID of root Category
-     * @param int|bool $idLang Language ID
-     *                         `false` if language filter should not be applied
+     * @param int|bool $idLang Language ID `false` if language filter should not be applied
      * @param bool $active Only return active categories
      * @param array|null $groups
      * @param bool $useShopRestriction Restrict to current Shop
      * @param string $sqlFilter Additional SQL clause(s) to filter results
      * @param string $orderBy Change the default order by
-     * @param string $limit Set the limit
-     *                      Both the offset and limit can be given
+     * @param string $limit Set the limit Both the offset and limit can be given
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null Array with `id_category` and `name`
      */
@@ -695,9 +670,9 @@ class CategoryCore extends ObjectModel
             (int) $active .
             (int) $useShopRestriction .
             (isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '') .
-            (isset($sqlFilter) ? $sqlFilter : '') .
-            (isset($orderBy) ? $orderBy : '') .
-            (isset($limit) ? $limit : '')
+            $sqlFilter .
+            $orderBy .
+            $limit
         );
 
         if (!Cache::isStored($cacheId)) {
@@ -733,7 +708,7 @@ class CategoryCore extends ObjectModel
      * @param int|bool $idLang Language ID
      *                         `false` if language filter should not be used
      * @param bool $active Whether the category must be active
-     * @param null $groups
+     * @param array|null $groups
      * @param bool $useShopRestriction Restrict to current Shop
      * @param string $sqlFilter Additional SQL clause(s) to filter results
      * @param string $orderBy Change the default order by
@@ -770,9 +745,9 @@ class CategoryCore extends ObjectModel
                 (int) $active .
                 (int) $useShopRestriction .
                 (isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '') .
-                (isset($sqlFilter) ? $sqlFilter : '') .
-                (isset($orderBy) ? $orderBy : '') .
-                (isset($limit) ? $limit : '')
+                $sqlFilter .
+                $orderBy .
+                $limit
             );
 
         if (!Cache::isStored($cacheId)) {
@@ -887,18 +862,6 @@ class CategoryCore extends ObjectModel
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-    }
-
-    /**
-     * Get Shop ID.
-     *
-     * @return int
-     *
-     * @deprecated 1.7.0
-     */
-    public function getShopID()
-    {
-        return $this->id_shop;
     }
 
     /**
@@ -1118,7 +1081,7 @@ class CategoryCore extends ObjectModel
             return new Category($shop->getCategory(), $idLang);
         }
         $isMoreThanOneRootCategory = count(Category::getCategoriesWithoutParent()) > 1;
-        if (Shop::isFeatureActive() && $isMoreThanOneRootCategory && Shop::getContext() != Shop::CONTEXT_SHOP) {
+        if (Shop::isFeatureActive() && $isMoreThanOneRootCategory) {
             $category = Category::getTopCategory($idLang);
         } else {
             $category = new Category($shop->getCategory(), $idLang);
@@ -1669,7 +1632,7 @@ class CategoryCore extends ObjectModel
     /**
      * Add Category groups.
      *
-     * @param $groups
+     * @param array $groups
      */
     public function addGroups($groups)
     {
@@ -1777,7 +1740,7 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * @param $idGroup
+     * @param int $idGroup
      *
      * @return bool
      */
@@ -1919,18 +1882,9 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * @see self::getUrlRewriteInformation()
-     * @deprecated 1.7.0
-     */
-    public static function getUrlRewriteInformations($idCategory)
-    {
-        return self::getUrlRewriteInformation($idCategory);
-    }
-
-    /**
      * Get URL Rewrite information.
      *
-     * @param $idCategory
+     * @param int $idCategory
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      *
@@ -2112,15 +2066,6 @@ class CategoryCore extends ObjectModel
         }
 
         return $nbProductRecursive;
-    }
-
-    /**
-     * @see self::getCategoryInformation()
-     * @deprecated 1.7.0
-     */
-    public static function getCategoryInformations($idsCategory, $idLang = null)
-    {
-        return self::getCategoryInformation($idsCategory, $idLang);
     }
 
     /**

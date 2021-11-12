@@ -107,6 +107,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                         'actions' => (new RowActionCollection())
                             ->add(
                                 (new LinkRowAction('export'))
+                                    ->setName($this->trans('Export', [], 'Admin.Actions'))
                                     ->setIcon('cloud_download')
                                     ->setOptions([
                                         'route' => 'admin_sql_requests_export',

@@ -111,11 +111,15 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
             $customizations = [];
             if (is_array($product['customizedDatas'])) {
                 foreach ($product['customizedDatas'] as $customizationPerAddress) {
-                    foreach ($customizationPerAddress as $customizationId => $customization) {
+                    foreach ($customizationPerAddress as $customization) {
                         $customized_product_quantity += (int) $customization['quantity'];
                         foreach ($customization['datas'] as $datas) {
                             foreach ($datas as $data) {
-                                $customizations[] = new OrderProductCustomizationForViewing((int) $data['type'], $data['name'], $data['value']);
+                                $customizations[] = new OrderProductCustomizationForViewing(
+                                    (int) $data['type'],
+                                    (string) $data['name'],
+                                    $data['value']
+                                );
                             }
                         }
                     }

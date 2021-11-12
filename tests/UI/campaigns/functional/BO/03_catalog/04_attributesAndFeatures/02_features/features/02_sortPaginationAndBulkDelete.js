@@ -13,7 +13,7 @@ const featuresPage = require('@pages/BO/catalog/features');
 const addFeaturePage = require('@pages/BO/catalog/features/addFeature');
 
 // Import data
-const {Feature} = require('@data/faker/featureAndValue');
+const {FeatureData} = require('@data/faker/featureAndValue');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -83,7 +83,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and delete by 
   const creationTests = new Array(19).fill(0, 0, 19);
   describe('Create 19 new features in BO', async () => {
     creationTests.forEach((test, index) => {
-      const createFeatureData = new Feature({name: `todelete${index}`});
+      const createFeatureData = new FeatureData({name: `todelete${index}`});
       it('should go to add new feature page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewFeaturePage${index}`, baseContext);
 

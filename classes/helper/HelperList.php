@@ -132,6 +132,21 @@ class HelperListCore extends Helper
     private $linkBuilderFactory;
 
     /**
+     * @var string
+     */
+    public $shopLinkType;
+
+    /**
+     * @var string Image type
+     */
+    public $imageType;
+
+    /**
+     * @var string
+     */
+    public $list_id;
+
+    /**
      * You can use $controllerMapping to add entity/controller mapping in order to have migrated links
      * in a legacy list (this requires to have correctly set the _legacy_link in the routing of course)
      *
@@ -332,11 +347,11 @@ class HelperListCore extends Helper
                     $this->_list[$index][$key] = [
                         'position' => $tr[$key],
                         'position_url_down' => $this->currentIndex .
-                            (isset($key_to_get) ? '&' . $key_to_get . '=' . (int) $position_group_identifier : '') .
+                            (isset($key_to_get) ? '&' . $key_to_get . '=' . (int) ($position_group_identifier ?? 0) : '') .
                             '&' . $this->position_identifier . '=' . $id .
                             '&way=1&position=' . ((int) $tr['position'] + 1) . '&token=' . $this->token,
                         'position_url_up' => $this->currentIndex .
-                            (isset($key_to_get) ? '&' . $key_to_get . '=' . (int) $position_group_identifier : '') .
+                            (isset($key_to_get) ? '&' . $key_to_get . '=' . (int) ($position_group_identifier ?? 0) : '') .
                             '&' . $this->position_identifier . '=' . $id .
                             '&way=0&position=' . ((int) $tr['position'] - 1) . '&token=' . $this->token,
                     ];
@@ -386,15 +401,15 @@ class HelperListCore extends Helper
         $this->content_tpl->assign(array_merge($this->tpl_vars, [
             'shop_link_type' => $showShopColumn,
             'multishop_active' => $isMultiShopActive,
-            'name' => isset($name) ? $name : null,
+            'name' => $name ?? null,
             'position_identifier' => $this->position_identifier,
             'identifier' => $this->identifier,
             'table' => $this->table,
             'token' => $this->token,
             'color_on_bg' => $this->colorOnBackground,
-            'position_group_identifier' => isset($position_group_identifier) ? $position_group_identifier : false,
+            'position_group_identifier' => $position_group_identifier ?? false,
             'bulk_actions' => $this->bulk_actions,
-            'positions' => isset($positions) ? $positions : null,
+            'positions' => $positions ?? null,
             'order_by' => $this->orderBy,
             'order_way' => $this->orderWay,
             'is_cms' => $this->is_cms,
@@ -408,8 +423,8 @@ class HelperListCore extends Helper
             'has_actions' => !empty($this->actions),
             'list_skip_actions' => $this->list_skip_actions,
             'row_hover' => $this->row_hover,
-            'list_id' => isset($this->list_id) ? $this->list_id : $this->table,
-            'checked_boxes' => Tools::getValue((isset($this->list_id) ? $this->list_id : $this->table) . 'Box'),
+            'list_id' => $this->list_id ?? $this->table,
+            'checked_boxes' => Tools::getValue(($this->list_id ?? $this->table) . 'Box'),
         ]));
 
         return $this->content_tpl->fetch();
@@ -623,10 +638,6 @@ class HelperListCore extends Helper
 
         $id_cat = (int) Tools::getValue('id_' . ($this->is_cms ? 'cms_' : '') . 'category');
 
-        if (!isset($token) || empty($token)) {
-            $token = $this->token;
-        }
-
         /* Determine total page number */
         $pagination = $this->_default_pagination;
         if (in_array((int) Tools::getValue($this->list_id . '_pagination'), $this->_pagination)) {
@@ -638,12 +649,8 @@ class HelperListCore extends Helper
         $total_pages = max(1, ceil($this->listTotal / $pagination));
 
         $identifier = Tools::getIsset($this->identifier) ? '&' . $this->identifier . '=' . (int) Tools::getValue($this->identifier) : '';
-        $order = '';
-        if (Tools::getIsset($this->table . 'Orderby')) {
-            $order = '&' . $this->table . 'Orderby=' . urlencode($this->orderBy) . '&' . $this->table . 'Orderway=' . urlencode(strtolower($this->orderWay));
-        }
 
-        $action = $this->currentIndex . $identifier . '&token=' . $token . '#' . $this->list_id;
+        $action = $this->currentIndex . $identifier . '&token=' . $this->token . '#' . $this->list_id;
 
         /* Determine current page number */
         $page = (int) Tools::getValue('submitFilter' . $this->list_id);

@@ -667,7 +667,7 @@ class Install extends AbstractInstall
         }
 
         $list = [
-            'products' => _PS_PROD_IMG_DIR_,
+            'products' => _PS_PRODUCT_IMG_DIR_,
             'categories' => _PS_CAT_IMG_DIR_,
             'manufacturers' => _PS_MANU_IMG_DIR_,
             'suppliers' => _PS_SUPP_IMG_DIR_,

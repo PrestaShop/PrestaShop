@@ -63,7 +63,7 @@ class ProductFormDataHandler implements FormDataHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function create(array $data)
+    public function create(array $data): int
     {
         $createCommand = new AddProductCommand(
             $data['header']['name'],

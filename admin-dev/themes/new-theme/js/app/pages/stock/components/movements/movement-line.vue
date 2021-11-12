@@ -33,7 +33,7 @@
           <p>
             {{ product.product_name }}
             <small v-if="hasCombination"><br>
-              {{ combinationName }}
+              {{ product.combination_name }}
             </small>
           </p>
         </PSMedia>
@@ -63,7 +63,7 @@
       </span>
     </td>
     <td class="text-sm-center">
-      {{ product.date_add }}
+      {{ dateAdd }}
     </td>
     <td>
       {{ employeeName }}
@@ -73,7 +73,7 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import PSMedia from '@app/widgets/ps-media';
+  import PSMedia from '@app/widgets/ps-media.vue';
   import productDesc from '@app/pages/stock/mixins/product-desc';
 
   export default Vue.extend({
@@ -96,6 +96,11 @@
       },
       orderLink(): string | null {
         return this.product.order_link !== 'N/A' ? this.product.order_link : null;
+      },
+      dateAdd() {
+        const date = new Date(Date.parse(this.product.date_add));
+
+        return date.toLocaleDateString(window.data.locale, {});
       },
     },
     components: {

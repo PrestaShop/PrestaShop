@@ -47,26 +47,29 @@
       {foreach $tax_breakdowns as $label => $bd}
         {assign var=label_printed value=false}
 
-			{foreach $bd as $line}
-				{if $line.rate == 0 and $label != 'ecotax_tax'}
-					{continue}
-				{/if}
-				{assign var=has_line value=true}
-				<tr>
-					<td class="white">
-						{if !$label_printed}
-							{if $label == 'product_tax'}
-								{l s='Products' d='Shop.Pdf' pdf='true'}
-							{elseif $label == 'shipping_tax'}
-								{l s='Shipping' d='Shop.Pdf' pdf='true'}
-							{elseif $label == 'ecotax_tax'}
-								{l s='Ecotax' d='Shop.Pdf' pdf='true'}
-							{elseif $label == 'wrapping_tax'}
-								{l s='Wrapping' d='Shop.Pdf' pdf='true'}
-							{/if}
-							{assign var=label_printed value=true}
-						{/if}
-					</td>
+			  {foreach $bd as $line}
+          {* We force the display of the ecotax even if the ecotax rate is equals to 0 *}
+          {if $line.rate == 0 and $label != 'ecotax_tax'}
+            {continue}
+          {/if}
+
+          {assign var=has_line value=true}
+
+          <tr>
+            <td class="white">
+              {if !$label_printed}
+                {if $label == 'product_tax'}
+                  {l s='Products' d='Shop.Pdf' pdf='true'}
+                {elseif $label == 'shipping_tax'}
+                  {l s='Shipping' d='Shop.Pdf' pdf='true'}
+                {elseif $label == 'ecotax_tax'}
+                  {l s='Ecotax' d='Shop.Pdf' pdf='true'}
+                {elseif $label == 'wrapping_tax'}
+                  {l s='Wrapping' d='Shop.Pdf' pdf='true'}
+                {/if}
+                {assign var=label_printed value=true}
+              {/if}
+            </td>
 
             <td class="center white">
               {$line.rate} %

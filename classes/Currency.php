@@ -754,8 +754,8 @@ class CurrencyCore extends ObjectModel
     /**
      * Add Cldr datas to result query or signe object/array.
      *
-     * @param $currencies mixed object|array
-     * @param $isObject bool
+     * @param array|object $currencies
+     * @param bool $isObject
      *
      * @return mixed object|array
      */

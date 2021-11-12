@@ -125,7 +125,7 @@ class Profiles extends BOBasePage {
   async filterProfiles(page, filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.profileFilterInput(filterBy), value.toString());
+        await this.setValue(page, this.profileFilterInput(filterBy), value);
         break;
       case 'select':
         await this.selectByVisibleText(page, this.profileFilterInput(filterBy), value ? 'Yes' : 'No');
@@ -237,7 +237,7 @@ class Profiles extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column name to get text content
-   * @returns {Promise<[]>}
+   * @returns {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -245,7 +245,7 @@ class Profiles extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextContent(page, this.profilesListTableColumn(i, column));
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

@@ -1,6 +1,6 @@
 admin_outstanding_index:
   path: /
-  methods: [GET]
+  methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Customer\OutstandingController::indexAction
     _legacy_controller: AdminOutstanding
@@ -8,7 +8,7 @@ admin_outstanding_index:
 
 admin_outstanding_search:
   path: /
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Customer\OutstandingController::searchAction
     _legacy_controller: AdminOutstanding

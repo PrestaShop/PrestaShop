@@ -184,7 +184,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $invoiceManagementIsEnabled = (bool) $this->configuration->get(
             'PS_INVOICE',
             null,
-            new ShopConstraint((int) $order->id_shop, (int) $order->id_shop_group)
+            ShopConstraint::shop((int) $order->id_shop)
         );
 
         $orderInvoiceAddress = $this->getOrderInvoiceAddress($order);
@@ -434,7 +434,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 $conf = $this->configuration->get(
                     'PS_DELIVERY_PREFIX',
                     null,
-                    new ShopConstraint($order->id_shop, $order->id_shop_group)
+                    ShopConstraint::shop((int) $order->id_shop)
                 );
                 $number = sprintf(
                     '%s%06d',
@@ -584,7 +584,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 isset($orderReturn['id_carrier']) ? (int) $orderReturn['id_carrier'] : 0,
                 new DateTimeImmutable($orderReturn['date_add']),
                 $orderReturn['type'],
-                $orderReturn['state_name'],
+                $orderReturn['state_name'] ?? '',
                 $trackingUrl,
                 $trackingNumber
             );

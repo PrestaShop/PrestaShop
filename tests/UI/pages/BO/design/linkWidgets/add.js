@@ -51,7 +51,7 @@ class AddLinkBlock extends BOBasePage {
   /**
    * Select content pages
    * @param page {Page} Browser tab
-   * @param contentPages {array} List of content pages
+   * @param contentPages {Array<string>} List of content pages
    * @return {Promise<void>}
    */
   async selectContentPages(page, contentPages) {
@@ -86,7 +86,7 @@ class AddLinkBlock extends BOBasePage {
   /**
    * Select product pages
    * @param page {Page} Browser tab
-   * @param productPages {array} List of product pages
+   * @param productPages {Array<string>} List of product pages
    * @return {Promise<void>}
    */
   async selectProductPages(page, productPages) {
@@ -115,7 +115,7 @@ class AddLinkBlock extends BOBasePage {
   /**
    * Select static pages
    * @param page {Page} Browser tab
-   * @param staticPages {array} List of statistic pages
+   * @param staticPages {Array<string>} List of statistic pages
    * @return {Promise<void>}
    */
   async selectStaticPages(page, staticPages) {
@@ -150,7 +150,7 @@ class AddLinkBlock extends BOBasePage {
   /**
    * Add custom pages
    * @param page {Page} Browser tab
-   * @param customPages {array} List of custom pages
+   * @param customPages {Array<{name: string, url: string}>} List of custom pages
    * @return {Promise<void>}
    */
   async addCustomPages(page, customPages) {
@@ -171,7 +171,9 @@ class AddLinkBlock extends BOBasePage {
   /**
    * Add linkWidget
    * @param page {Page} Browser tab
-   * @param linkWidgetData {linkWidgetData} Data of link widget to set on link widget form
+   * @param linkWidgetData {{name: string, frName: string, hook: string, contentPages: Array<string>,
+   * productsPages: Array<string>, staticPages: Array<string>, customPages: Array<{name:string, url: string}>}}
+   * Data of link widget to set on link widget form
    * @return {Promise<string>}
    */
   async addLinkWidget(page, linkWidgetData) {

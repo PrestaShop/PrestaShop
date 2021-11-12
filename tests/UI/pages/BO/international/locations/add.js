@@ -29,12 +29,12 @@ class AddZone extends BOBasePage {
   /**
    * Fill form for add/edit zone
    * @param page {Page} Browser tab
-   * @param zoneData {zoneData} Data to set on new/edit zone page
+   * @param zoneData {ZoneData} Data to set on new/edit zone page
    * @returns {Promise<string>}
    */
   async createEditZone(page, zoneData) {
     await this.setValue(page, this.nameInput, zoneData.name);
-    await page.check(this.statusToggle(zoneData.status ? 1 : 0));
+    await this.setChecked(page, this.statusToggle(zoneData.status ? 1 : 0));
 
     // Save zone
     await this.clickAndWaitForNavigation(page, this.saveZoneButton);

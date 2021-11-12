@@ -21,16 +21,17 @@ const baseContext = 'functional_BO_international_locations_zones_filterAndQuickE
 // Import expect from chai
 const {expect} = require('chai');
 
-
 // Browser and tab
 let browserContext;
 let page;
 
-
 let numberOfZones = 0;
 
-
-describe('Filter and quick edit zones', async () => {
+/*
+Filter zones by : is, name, status
+Quick Edit 'North America'
+ */
+describe('BO - International - Zones : Filter and quick edit', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -45,7 +46,7 @@ describe('Filter and quick edit zones', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to zones page', async function () {
+  it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToZonesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -68,7 +69,7 @@ describe('Filter and quick edit zones', async () => {
   });
 
   describe('Filter zones', async () => {
-    const tests = [
+    [
       {
         args: {
           testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_zone', filterValue: Zones.europe.id,
@@ -84,9 +85,7 @@ describe('Filter and quick edit zones', async () => {
           testIdentifier: 'filterStatus', filterType: 'select', filterBy: 'active', filterValue: Zones.europe.enabled,
         },
       },
-    ];
-
-    tests.forEach((test) => {
+    ].forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
@@ -126,7 +125,7 @@ describe('Filter and quick edit zones', async () => {
   });
 
   describe('Quick edit zone', async () => {
-    it('should filter by name \'North America\'', async function () {
+    it(`should filter by name '${Zones.northAmerica.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
       await zonesPage.filterZones(
@@ -143,12 +142,10 @@ describe('Filter and quick edit zones', async () => {
       await expect(textColumn).to.contains(Zones.northAmerica.name);
     });
 
-    const statuses = [
+    [
       {args: {status: 'disable', enable: false}},
       {args: {status: 'enable', enable: true}},
-    ];
-
-    statuses.forEach((status) => {
+    ].forEach((status) => {
       it(`should ${status.args.status} the first zone`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}Zone`, baseContext);
 

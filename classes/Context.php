@@ -106,6 +106,12 @@ class ContextCore
     /** @var ContainerBuilder */
     public $container;
 
+    /** @var float */
+    public $virtualTotalTaxExcluded = 0;
+
+    /** @var float */
+    public $virtualTotalTaxIncluded = 0;
+
     /** @var Translator */
     protected $translator = null;
 
@@ -308,8 +314,7 @@ class ContextCore
     }
 
     /**
-     * @param $testInstance Context
-     * Unit testing purpose only
+     * @param Context $testInstance Unit testing purpose only
      */
     public static function setInstanceForTesting($testInstance)
     {

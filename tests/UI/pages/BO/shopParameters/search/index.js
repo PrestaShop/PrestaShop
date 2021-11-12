@@ -17,7 +17,8 @@ class Search extends BOBasePage {
     this.pageTitle = 'Search •';
     this.successfulCreationMessage = 'Successful creation';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
-    this.successfulUpdateMessage = 'The settings have been successfully updated.';
+    this.successfulUpdateMessage = 'Update successful';
+    this.settingsUpdateMessage = 'The settings have been successfully updated.';
 
     // Selectors
     // Header links
@@ -317,7 +318,7 @@ class Search extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setFuzzySearch(page, toEnable = true) {
-    await page.check(this.fuzzySearchLabel(toEnable ? 'on' : 'off'));
+    await this.setChecked(page, this.fuzzySearchLabel(toEnable ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
     return this.getAlertSuccessBlockContent(page);
   }

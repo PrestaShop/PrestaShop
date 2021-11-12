@@ -37,7 +37,7 @@ class AddBrandAddress extends BOBasePage {
   /**
    * Create or edit Brand Address
    * @param page {Page} Browser tab
-   * @param brandAddressData {object} Data to set in address form
+   * @param brandAddressData {BrandAddressData} Data to set in address form
    * @return {Promise<string>}
    */
   async createEditBrandAddress(page, brandAddressData) {

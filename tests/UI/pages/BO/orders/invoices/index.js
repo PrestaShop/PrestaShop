@@ -67,8 +67,8 @@ class Invoice extends BOBasePage {
   /**
    * Get message error after generate invoice by status fail
    * @param page {Page} Browser tab
-   * @param dateFrom Value to set on filter date from input
-   * @param dateTo Value to set on filter date to input
+   * @param dateFrom {string} Value to set on filter date from input
+   * @param dateTo {string} Value to set on filter date to input
    * @returns {Promise<string>}
    */
   async generatePDFByDateAndFail(page, dateFrom = '', dateTo = '') {
@@ -81,8 +81,8 @@ class Invoice extends BOBasePage {
   /**
    * Set values to generate pdf by date
    * @param page {Page} Browser tab
-   * @param dateFrom Value to set on filter date from input
-   * @param dateTo Value to set on filter date to input
+   * @param dateFrom {string} Value to set on filter date from input
+   * @param dateTo {string} Value to set on filter date to input
    * @returns {Promise<void>}
    */
   async setValuesForGeneratingPDFByDate(page, dateFrom = '', dateTo = '') {
@@ -135,7 +135,7 @@ class Invoice extends BOBasePage {
    * @returns {Promise<void>}
    */
   async enableInvoices(page, enable = true) {
-    await page.check(this.invoiceOptionsStatusToggleInput(enable ? 1 : 0));
+    await this.setChecked(page, this.invoiceOptionsStatusToggleInput(enable ? 1 : 0));
   }
 
   /**
@@ -155,7 +155,7 @@ class Invoice extends BOBasePage {
    * @returns {Promise<void>}
    */
   async enableProductImage(page, enable = true) {
-    await page.check(this.invoiceOptionStatusToggleInput(enable ? 1 : 0));
+    await this.setChecked(page, this.invoiceOptionStatusToggleInput(enable ? 1 : 0));
   }
 
   /**
@@ -165,7 +165,7 @@ class Invoice extends BOBasePage {
    * @returns {Promise<void>}
    */
   async enableTaxBreakdown(page, enable = true) {
-    await page.check(this.taxBreakdownStatusToggleInput(enable ? 1 : 0));
+    await this.setChecked(page, this.taxBreakdownStatusToggleInput(enable ? 1 : 0));
   }
 
   /**
@@ -186,7 +186,7 @@ class Invoice extends BOBasePage {
    * @returns {Promise<void>}
    */
   async enableAddCurrentYearToInvoice(page, enable = true) {
-    await page.check(this.invoiceAddCurrentYearToggleInput(enable ? 1 : 0));
+    await this.setChecked(page, this.invoiceAddCurrentYearToggleInput(enable ? 1 : 0));
   }
 
   /**

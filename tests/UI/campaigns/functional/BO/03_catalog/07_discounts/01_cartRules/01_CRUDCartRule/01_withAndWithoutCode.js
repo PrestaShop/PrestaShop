@@ -32,8 +32,20 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
+// Today date
+const now = new Date();
+// Day before
+const today = (`0${now.getDate()}`).slice(-2);
+// Current month
+const month = (`0${now.getMonth() + 1}`).slice(-2);
+// Current year
+const year = now.getFullYear();
+// Date yesterday format (yyyy-mm-dd)
+const dateFrom = `${year}-${month}-${today} 01:00:00`;
+
 const cartRuleWithoutCode = new CartRuleFaker(
   {
+    dateFrom,
     name: 'withoutCode',
     discountType: 'Percent',
     discountPercent: 20,

@@ -73,8 +73,8 @@ class AddTitle extends BOBasePage {
     // Upload image
     await this.uploadFile(page, this.imageInput, titleData.imageName);
 
-    await this.setValue(page, this.imageWidthInput, titleData.imageWidth.toString());
-    await this.setValue(page, this.imageHeightInput, titleData.imageHeight.toString());
+    await this.setValue(page, this.imageWidthInput, titleData.imageWidth);
+    await this.setValue(page, this.imageHeightInput, titleData.imageHeight);
 
     // Save title
     await this.clickAndWaitForNavigation(page, this.saveButton);

@@ -32,7 +32,7 @@ class AddShop extends BOBasePage {
   /**
    * Fill form for add/edit shop
    * @param page {Page} Browser tab
-   * @param shopData {shopData} Data to set on create/edit shop form
+   * @param shopData {ShopData} Data to set on create/edit shop form
    * @returns {Promise<string>}
    */
   async setShop(page, shopData) {

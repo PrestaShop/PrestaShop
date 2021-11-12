@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -13,18 +17,16 @@ const addressesPage = require('@pages/BO/customers/addresses');
 // Import data
 const Address = require('@data/demo/address');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_customers_addresses_filterAddresses';
-
 
 let browserContext;
 let page;
 let numberOfAddresses = 0;
 
-// Filter addresses
-describe('Filter Addresses', async () => {
+/*
+Filter addresses table by Id, firstname, lastname, address, postcode, city and country
+ */
+describe('BO - Customers - Addresses : Filter Addresses table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -39,7 +41,7 @@ describe('Filter Addresses', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Customer>Addresses\' page', async function () {
+  it('should go to \'Customer > Addresses\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -60,7 +62,7 @@ describe('Filter Addresses', async () => {
   });
 
   // Filter addresses with all inputs and selects in grid table
-  describe('Filter addresses', async () => {
+  describe('Filter addresses table', async () => {
     const tests = [
       {
         args:

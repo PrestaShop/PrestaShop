@@ -910,7 +910,7 @@ class ProductCore extends ObjectModel
             }
         }
 
-        if (!isset($moved_product) || !isset($position)) {
+        if (!isset($moved_product)) {
             return false;
         }
 
@@ -1835,8 +1835,8 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @param int[] $combinations
-     * @param $langId
+     * @param array<int> $combinations
+     * @param int $langId
      *
      * @return array
      */
@@ -2488,7 +2488,7 @@ class ProductCore extends ObjectModel
             WHERE `id_product` = ' . (int) $this->id
         );
 
-        if (isset($update_attachment_cache) && (bool) $update_attachment_cache === true) {
+        if ((bool) $update_attachment_cache === true) {
             Product::updateCacheAttachment((int) $this->id);
         }
 
@@ -3825,8 +3825,8 @@ class ProductCore extends ObjectModel
                     $array_tmp = [
                         'price' => $row['price'],
                         'ecotax' => $row['ecotax'],
-                        'attribute_price' => $row['attribute_price'] ?: null,
-                        'attribute_ecotax' => $row['attribute_ecotax'] ?: null,
+                        'attribute_price' => $row['attribute_price'] ?? null,
+                        'attribute_ecotax' => $row['attribute_ecotax'] ?? null,
                     ];
                     self::$_pricesLevel2[$cache_id_2][(int) $row['id_product_attribute']] = $array_tmp;
 
@@ -4670,8 +4670,10 @@ class ProductCore extends ObjectModel
     /**
      * Link accessories with product. No need to inflate a full Product (better performances).
      *
-     * @param array $accessories_id Accessories ids
-     * @param int Product identifier
+     * @param array<int> $accessories_id Accessories ids
+     * @param int $product_id Product identifier
+     *
+     * @return void
      */
     public static function changeAccessoriesForProduct($accessories_id, $product_id)
     {
@@ -4936,6 +4938,7 @@ class ProductCore extends ObjectModel
 
         foreach ($result as $row) {
             $id_product_attribute_old = (int) $row['id_product_attribute'];
+            $result2 = [];
             if (!isset($combinations[$id_product_attribute_old])) {
                 $id_combination = null;
                 $id_shop = null;
@@ -4976,7 +4979,9 @@ class ProductCore extends ObjectModel
                     $return &= Db::getInstance()->insert('product_attribute_combination', $row2);
                 }
             } else {
-                Shop::setContext($context_old, $context_shop_id_old);
+                if (isset($context_old, $context_shop_id_old)) {
+                    Shop::setContext($context_old, $context_shop_id_old);
+                }
             }
 
             //Copy suppliers
@@ -5322,6 +5327,7 @@ class ProductCore extends ObjectModel
             SELECT `id_customization_field`, `type`, `required`
             FROM `' . _DB_PREFIX_ . 'customization_field`
             WHERE `id_product` = ' . (int) $product_id . '
+            AND `is_deleted` = 0
             ORDER BY `id_customization_field`')) === false) {
             return false;
         }
@@ -7849,8 +7855,8 @@ class ProductCore extends ObjectModel
         $result = true;
         $collection_download = new PrestaShopCollection('ProductDownload');
         $collection_download->where('id_product', '=', $this->id);
+        /** @var ProductDownload $product_download */
         foreach ($collection_download as $product_download) {
-            /* @var ProductDownload $product_download */
             $result &= $product_download->delete($product_download->checkFile());
         }
 
@@ -8336,7 +8342,7 @@ class ProductCore extends ObjectModel
      * @param bool $include_tax
      * @param bool $formated
      *
-     * @return ecotax
+     * @return string|float
      */
     public function getEcotax($precision = null, $include_tax = true, $formated = false)
     {

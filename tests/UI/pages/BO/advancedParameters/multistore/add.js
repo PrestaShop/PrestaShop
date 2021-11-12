@@ -33,15 +33,18 @@ class AddShopGroup extends BOBasePage {
   /**
    * Fill form for add/edit shop group
    * @param page {Page} Browser tab
-   * @param shopGroupData {shopGroupData} Data to set on add/edit shop group form
+   * @param shopGroupData {ShopGroupData} Data to set on add/edit shop group form
    * @returns {Promise<string>}
    */
   async setShopGroup(page, shopGroupData) {
     await this.setValue(page, this.nameInput, shopGroupData.name);
 
-    await page.check(this.shareCustomersToggleInput(shopGroupData.shareCustomer ? 'on' : 'off'));
-    await page.check(this.shareAvailableQuantitiesToggleLabel(shopGroupData.shareAvailableQuantities ? 'on' : 'off'));
-    await page.check(this.statusToggleLabel(shopGroupData.status ? 'on' : 'off'));
+    await this.setChecked(page, this.shareCustomersToggleInput(shopGroupData.shareCustomer ? 'on' : 'off'));
+    await this.setChecked(
+      page,
+      this.shareAvailableQuantitiesToggleLabel(shopGroupData.shareAvailableQuantities ? 'on' : 'off'),
+    );
+    await this.setChecked(page, this.statusToggleLabel(shopGroupData.status ? 'on' : 'off'));
 
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getAlertSuccessBlockContent(page);

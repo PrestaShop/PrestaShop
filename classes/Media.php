@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use JSMin\JSMin;
+
 /**
  * Class MediaCore.
  */
@@ -284,62 +286,6 @@ class MediaCore
         }
 
         return $mediaUri;
-    }
-
-    /**
-     * return jquery path.
-     *
-     * @param mixed $version
-     *
-     * @return array
-     *
-     * @deprecated 1.7.7 jQuery is always included, this method should no longer be used
-     */
-    public static function getJqueryPath($version = null, $folder = null, $minifier = true)
-    {
-        @trigger_error(
-            'Media::getJqueryPath() is deprecated since version 1.7.7.0, jquery is always included',
-            E_USER_DEPRECATED
-        );
-        $addNoConflict = false;
-        if ($version === null) {
-            $version = _PS_JQUERY_VERSION_;
-        } //set default version
-        elseif (preg_match('/^([0-9\.]+)$/Ui', $version)) {
-            $addNoConflict = true;
-        } else {
-            return false;
-        }
-
-        if ($folder === null) {
-            $folder = _PS_JS_DIR_ . 'jquery/';
-        } //set default folder
-        //check if file exist
-        $file = $folder . 'jquery-' . $version . ($minifier ? '.min.js' : '.js');
-
-        // remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
-        $urlData = parse_url($file);
-        $fileUri = _PS_ROOT_DIR_ . Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $urlData['path']);
-        $fileUriHostMode = _PS_CORE_DIR_ . Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $urlData['path']);
-        // check if js files exists, if not try to load query from ajax.googleapis.com
-
-        $return = [];
-
-        if (@filemtime($fileUri) || (defined('_PS_HOST_MODE_') && @filemtime($fileUriHostMode))) {
-            $return[] = Media::getJSPath($file);
-        } else {
-            $return[] = Media::getJSPath(Tools::getCurrentUrlProtocolPrefix() . 'ajax.googleapis.com/ajax/libs/jquery/' . $version . '/jquery' . ($minifier ? '.min.js' : '.js'));
-        }
-
-        if ($addNoConflict) {
-            $return[] = Media::getJSPath(Context::getContext()->shop->getBaseURL(true, false) . _PS_JS_DIR_ . 'jquery/jquery.noConflict.php?version=' . $version);
-        }
-
-        // added jQuery migrate for compatibility with new version of jQuery
-        // will be removed when using latest version of jQuery
-        $return[] = Media::getJSPath(_PS_JS_DIR_ . 'jquery/jquery-migrate-1.2.1.min.js');
-
-        return $return;
     }
 
     /**
@@ -685,6 +631,7 @@ class MediaCore
         }
 
         // rebuild the original js_files array
+        $url = '';
         if (strpos($compressedJsPath, _PS_ROOT_DIR_) !== false) {
             $url = str_replace(_PS_ROOT_DIR_ . '/', __PS_BASE_URI__, $compressedJsPath);
         }
@@ -778,7 +725,7 @@ class MediaCore
     }
 
     /**
-     * @param $output
+     * @param string $output
      *
      * @return string|string[]|null
      */
@@ -787,7 +734,7 @@ class MediaCore
         /* Try to enqueue in js_files inline scripts with src but without conditionnal comments */
         $dom = new DOMDocument();
         libxml_use_internal_errors(true);
-        @$dom->loadHTML(($output));
+        @$dom->loadHTML($output);
         libxml_use_internal_errors(false);
         $scripts = $dom->getElementsByTagName('script');
         if (is_object($scripts) && $scripts->length) {
@@ -848,15 +795,9 @@ class MediaCore
         if (!is_array($matches)) {
             return false;
         }
-        $inline = '';
 
-        if (isset($matches[0])) {
-            $original = trim($matches[0]);
-        }
-
-        if (isset($matches[2])) {
-            $inline = trim($matches[2]);
-        }
+        $original = isset($matches[0]) ? trim($matches[0]) : '';
+        $inline = isset($matches[2]) ? trim($matches[2]) : '';
 
         /* This is an inline script, add its content to inline scripts stack then remove it from content */
         if (!empty($inline) && preg_match(Media::$pattern_js, $original) !== false && !preg_match('/' . Media::$pattern_keepinline . '/', $original) && Media::$inline_script[] = $inline) {

@@ -4,7 +4,7 @@ const LocalizationBasePage = require('@pages/BO/international/localization/local
 /**
  * Languages page, contains functions that can be used on the page
  * @class
- * @extends BOBasePage
+ * @extends LocalizationBasePage
  */
 class Languages extends LocalizationBasePage {
   /**
@@ -149,7 +149,7 @@ class Languages extends LocalizationBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column to get all rows
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -157,7 +157,7 @@ class Languages extends LocalizationBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTable(page, i, column);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

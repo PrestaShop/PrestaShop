@@ -85,6 +85,7 @@ use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
+use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\InvalidModuleException;
@@ -261,6 +262,7 @@ class OrderController extends FrameworkBundleAdminController
             'recycledPackagingEnabled' => (bool) $configuration->get('PS_RECYCLABLE_PACK'),
             'giftSettingsEnabled' => (bool) $configuration->get('PS_GIFT_WRAPPING'),
             'stockManagementEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
+            'isB2BEnabled' => (bool) $configuration->get('PS_B2B_ENABLE'),
         ]);
     }
 
@@ -1727,12 +1729,11 @@ class OrderController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $orderId
-     * @param string $name
      * @param string $value
      *
      * @return BinaryFileResponse|RedirectResponse
      */
-    public function displayCustomizationImageAction(int $orderId, string $name, string $value)
+    public function displayCustomizationImageAction(int $orderId, string $value)
     {
         $uploadDir = $this->get('prestashop.adapter.legacy.context')->getUploadDirectory();
         $filePath = $uploadDir . $value;
@@ -1748,7 +1749,7 @@ class OrderController extends FrameworkBundleAdminController
             }
 
             $imageFile = new File($filePath);
-            $fileName = sprintf('%s-customization-%s.%s', $orderId, $name, $imageFile->guessExtension() ?? 'jpg');
+            $fileName = sprintf('%s-customization-%s.%s', $orderId, $value, $imageFile->guessExtension() ?? 'jpg');
 
             return $this->file($filePath, $fileName);
         } catch (Exception $e) {

@@ -39,6 +39,12 @@ abstract class ModuleGraphCore extends Module
     /** @var ModuleGraphEngine graph engine */
     protected $_render;
 
+    /** @var int */
+    protected $_id_lang;
+
+    /** @var string */
+    protected $_csv;
+
     abstract protected function getData($layers);
 
     public function setEmployee($id_employee)

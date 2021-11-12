@@ -39,8 +39,8 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import Breadcrumb from './breadcrumb';
-  import Tabs from './tabs';
+  import Breadcrumb from './breadcrumb.vue';
+  import Tabs from './tabs.vue';
 
   const {$} = window;
 

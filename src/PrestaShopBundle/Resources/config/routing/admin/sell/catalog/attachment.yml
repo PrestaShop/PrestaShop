@@ -8,7 +8,7 @@ admin_attachments_index:
 
 admin_attachments_filter:
   path: /
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     _legacy_controller: AdminAttachments
@@ -18,7 +18,7 @@ admin_attachments_filter:
 
 admin_attachments_create:
   path: /new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::createAction
     _legacy_controller: AdminAttachments
@@ -26,7 +26,7 @@ admin_attachments_create:
 
 admin_attachments_edit:
   path: /{attachmentId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::editAction
     _legacy_controller: AdminAttachments
@@ -38,7 +38,7 @@ admin_attachments_edit:
 
 admin_attachments_view:
   path: /{attachmentId}/view
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::viewAction
     _legacy_controller: AdminAttachments
@@ -50,7 +50,7 @@ admin_attachments_view:
 
 admin_attachments_delete_bulk:
   path: /delete-bulk
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::deleteBulkAction
     _legacy_controller: AdminAttachments
@@ -58,7 +58,7 @@ admin_attachments_delete_bulk:
 
 admin_attachments_delete:
   path: /{attachmentId}/delete
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::deleteAction
     _legacy_controller: AdminAttachments
@@ -67,3 +67,23 @@ admin_attachments_delete:
       id_attachment: attachmentId
   requirements:
     attachmentId: \d+
+
+admin_attachments_attachment_info:
+  path: /{attachmentId}/info
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::getAttachmentInfoAction
+  requirements:
+    attachmentId: \d+
+  options:
+    expose: true
+
+admin_attachments_search:
+  path: /search/{searchPhrase}
+  methods: GET
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::searchAction
+    _legacy_controller: AdminAttachments
+    _legacy_link: AdminAttachments:search
+  options:
+    expose: true

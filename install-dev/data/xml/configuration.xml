@@ -401,6 +401,9 @@
   <configuration id="PS_JPEG_QUALITY" name="PS_JPEG_QUALITY">
     <value>90</value>
   </configuration>
+  <configuration id="PS_WEBP_QUALITY" name="PS_WEBP_QUALITY">
+    <value>80</value>
+  </configuration>
   <configuration id="PS_COOKIE_LIFETIME_FO" name="PS_COOKIE_LIFETIME_FO">
     <value>480</value>
   </configuration>

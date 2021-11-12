@@ -43,7 +43,7 @@ class AddBrand extends BOBasePage {
   /**
    * Create or edit Brand
    * @param page {Page} Browser tab
-   * @param brandData {object} Data to set in brand form
+   * @param brandData {BrandData} Data to set in brand form
    * @returns {Promise<string>}
    */
   async createEditBrand(page, brandData) {
@@ -71,7 +71,7 @@ class AddBrand extends BOBasePage {
     await this.uploadFile(page, this.logoFileInput, brandData.logo);
 
     // Set Enabled value
-    await page.check(this.statusToggleInput(brandData.enabled ? 1 : 0));
+    await this.setChecked(page, this.statusToggleInput(brandData.enabled ? 1 : 0));
 
     // Save Created brand
     await this.clickAndWaitForNavigation(page, this.saveButton);
@@ -97,7 +97,7 @@ class AddBrand extends BOBasePage {
   /**
    * Add keywords
    * @param page {Page} Browser tab
-   * @param keywords {array} Array of keywords
+   * @param keywords {Array<string>} Array of keywords
    * @param id {number} ID for lang (1 for en, 2 for fr)
    * @return {Promise<void>}
    */

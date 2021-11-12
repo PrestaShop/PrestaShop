@@ -1,5 +1,5 @@
 name: UI tests
-on: [push, pull_request]
+on: [ push, pull_request ]
 jobs:
 
   sanity:
@@ -7,7 +7,7 @@ jobs:
     name: Sanity
     strategy:
       matrix:
-        php: ['7.2', '7.3', '7.4', '8.0']
+        php: [ '7.2', '7.3', '7.4', '8.0' ]
       fail-fast: false
 
     steps:
@@ -37,7 +37,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: '10'
+          node-version: '14'
 
       - name: PrestaShop Configuration
         run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
@@ -76,7 +76,7 @@ jobs:
           key: ${{ runner.os }}-browsers
 
       - name: Run tests
-        run: npm install && npm run sanity-tests-fast-fail
+        run: npm install && npm run test:sanity:fast-fail
         env:
           URL_FO: http://localhost/
           DB_NAME: prestashop
@@ -88,5 +88,5 @@ jobs:
       - uses: actions/upload-artifact@v2
         if: ${{ always() }}
         with:
-          name: fail
+          name: screenshots-${{ matrix.php }}
           path: ./tests/UI/screenshots/

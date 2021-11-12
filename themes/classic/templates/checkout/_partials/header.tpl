@@ -27,9 +27,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6 hidden-sm-down" id="_desktop_logo">
-          <a href="{$urls.pages.index}">
-            <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name} {l s='logo' d='Shop.Theme.Global'}" loading="lazy">
-          </a>
+            {renderLogo}
         </div>
         <div class="col-md-6 text-xs-right hidden-sm-down">
           {hook h='displayNav1'}

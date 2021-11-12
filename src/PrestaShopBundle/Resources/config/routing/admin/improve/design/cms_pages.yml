@@ -16,7 +16,7 @@ admin_cms_pages_search:
 
 admin_cms_pages_create:
   path: /new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\CmsPageController::createAction'
     _legacy_controller: AdminCmsContent
@@ -24,7 +24,7 @@ admin_cms_pages_create:
 
 admin_cms_pages_edit:
   path: /{cmsPageId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\CmsPageController::editAction'
     _legacy_controller: AdminCmsContent
@@ -95,7 +95,7 @@ admin_cms_pages_search_cms_category:
 
 admin_cms_pages_category_create:
   path: /category/new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\CmsPageController::createCmsCategoryAction'
     _legacy_controller: AdminCmsContent
@@ -103,7 +103,7 @@ admin_cms_pages_category_create:
 
 admin_cms_pages_category_edit:
   path: /category/{cmsCategoryId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\CmsPageController::editCmsCategoryAction'
     _legacy_controller: AdminCmsContent

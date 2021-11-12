@@ -129,7 +129,7 @@ class ShopURLSettings extends BOBasePage {
   async filterTable(page, filterType, filterBy, value) {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(filterBy), value);
         await this.clickAndWaitForNavigation(page, this.filterSearchButton);
         break;
 
@@ -190,7 +190,7 @@ class ShopURLSettings extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param columnName {string} Column name to get text content
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -198,7 +198,7 @@ class ShopURLSettings extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -324,7 +324,7 @@ class ShopURLSettings extends BOBasePage {
   async setStatus(page, row, column, valueWanted = true) {
     await this.waitForVisibleSelector(page, this.tableColumn(row, column), 2000);
     if (await this.getStatus(page, row, column) !== valueWanted) {
-      page.click(this.tableColumn(row, column));
+      await page.click(this.tableColumn(row, column));
       await this.waitForVisibleSelector(
         page,
         (valueWanted ? this.columnValidIcon : this.columnNotValidIcon)(row, column),

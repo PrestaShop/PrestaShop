@@ -1,19 +1,22 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Importing pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const brandsPage = require('@pages/BO/catalog/brands');
 const addBrandAddressPage = require('@pages/BO/catalog/brands/addAddress');
 
-// Importing data
+// Import data
 const BrandAddressFaker = require('@data/faker/brandAddress');
-
-// Test context imports
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_addresses_sortPaginationAndBulkActions';
 
@@ -28,7 +31,7 @@ Paginate between pages
 Sort Addresses table
 Enable/Disable/Delete Addresses by bulk actions
  */
-describe('Sort, pagination and bulk actions Addresses table', async () => {
+describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions Addresses table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -93,8 +96,8 @@ describe('Sort, pagination and bulk actions Addresses table', async () => {
 
   // 2 : Pagination of addresses table
   describe('Pagination next and previous of Addresses table', async () => {
-    it('should change the item number to 10 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addressesChangeItemNumberTo10', baseContext);
+    it('should change the items number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addressesChangeItemsNumberTo10', baseContext);
 
       const paginationNumber = await brandsPage.selectPaginationLimit(page, tableName, '10');
       expect(paginationNumber).to.contains('(page 1 / 2)');
@@ -114,8 +117,8 @@ describe('Sort, pagination and bulk actions Addresses table', async () => {
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
-    it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addressesChangeItemNumberTo50', baseContext);
+    it('should change the items number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addressesChangeItemsNumberTo50', baseContext);
 
       const paginationNumber = await brandsPage.selectPaginationLimit(page, tableName, '50');
       expect(paginationNumber).to.contains('(page 1 / 1)');

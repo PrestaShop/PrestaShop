@@ -89,7 +89,9 @@ class PositionsControllerTest extends TestCase
             ->getMock();
         $configurationMock->method('get')->will($this->returnValueMap([
             ['_PS_MODULE_DIR_', null, null, dirname(__DIR__, 6) . '/Resources/modules/'],
+            ['_PS_ALL_THEMES_DIR_', null, null, dirname(__DIR__, 7) . '/themes/'],
         ]));
+
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
 
         /** @var ModuleManager */

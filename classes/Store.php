@@ -137,25 +137,18 @@ class StoreCore extends ObjectModel
     /**
      * Get Stores by language.
      *
-     * @param $idLang
+     * @param int $idLang
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array
      */
     public static function getStores($idLang)
     {
-        $stores = Db::getInstance()->executeS(
-            '
-            SELECT s.id_store AS `id`, s.*, sl.*
-            FROM ' . _DB_PREFIX_ . 'store s
-            ' . Shop::addSqlAssociation('store', 's') . '
-            LEFT JOIN ' . _DB_PREFIX_ . 'store_lang sl ON (
-            sl.id_store = s.id_store
-            AND sl.id_lang = ' . (int) $idLang . '
-            )
+        return Db::getInstance()->executeS(
+            'SELECT s.id_store AS `id`, s.*, sl.*
+            FROM ' . _DB_PREFIX_ . 'store s  ' . Shop::addSqlAssociation('store', 's') . '
+            LEFT JOIN ' . _DB_PREFIX_ . 'store_lang sl ON (sl.id_store = s.id_store AND sl.id_lang = ' . (int) $idLang . ')
             WHERE s.active = 1'
         );
-
-        return $stores;
     }
 
     /**

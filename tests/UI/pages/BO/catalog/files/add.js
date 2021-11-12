@@ -30,7 +30,7 @@ class AddFile extends BOBasePage {
   /**
    * Create or edit file
    * @param page {Page} Browser tab
-   * @param fileData {fileData} Data to set on add/edit file form
+   * @param fileData {FileData} Data to set on add/edit file form
    * @returns {Promise<string>}
    */
   async createEditFile(page, fileData) {

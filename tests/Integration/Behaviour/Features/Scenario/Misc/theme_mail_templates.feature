@@ -1,5 +1,6 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s misc
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s misc --tags theme_mail_templates
 @reset-database-before-feature
+@theme_mail_templates
 Feature: Theme mail templates
   In order to use customized email templates in the Back Office (BO)
   As a BO user

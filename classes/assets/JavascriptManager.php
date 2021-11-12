@@ -48,7 +48,7 @@ class JavascriptManagerCore extends AbstractAssetManager
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @param string $relativePath
      * @param string $position
      * @param int $priority
@@ -88,7 +88,7 @@ class JavascriptManagerCore extends AbstractAssetManager
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @param string $fullPath
      * @param string $position
      * @param int $priority

@@ -1,6 +1,6 @@
 admin_employees_index:
   path: /
-  methods: [GET]
+  methods: [ GET ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::indexAction'
     _legacy_controller: AdminEmployees
@@ -8,17 +8,17 @@ admin_employees_index:
 
 admin_employees_search:
   path: /
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::searchGridAction'
-    _legacy_controller: AdminEmployees
-    _legacy_link: AdminEmployees:submitFilteremployee
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.employee
     redirectRoute: admin_employees_index
+    _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:submitFilteremployee
 
 admin_employees_save_options:
   path: /save-options
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::saveOptionsAction'
     _legacy_controller: AdminEmployees
@@ -26,7 +26,7 @@ admin_employees_save_options:
 
 admin_employees_toggle_status:
   path: /{employeeId}/toggle-status
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::toggleStatusAction'
     _legacy_controller: AdminEmployees
@@ -36,7 +36,7 @@ admin_employees_toggle_status:
 
 admin_employees_bulk_enable_status:
   path: /bulk-enable-status
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::bulkStatusEnableAction'
     _legacy_controller: AdminEmployees
@@ -44,7 +44,7 @@ admin_employees_bulk_enable_status:
 
 admin_employees_bulk_disable_status:
   path: /bulk-disable-status
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::bulkStatusDisableAction'
     _legacy_controller: AdminEmployees
@@ -52,7 +52,7 @@ admin_employees_bulk_disable_status:
 
 admin_employees_delete:
   path: /{employeeId}/delete
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::deleteAction'
     _legacy_controller: AdminEmployees
@@ -62,7 +62,7 @@ admin_employees_delete:
 
 admin_employees_bulk_delete:
   path: /bulk-delete
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::bulkDeleteAction'
     _legacy_controller: AdminEmployees
@@ -70,7 +70,7 @@ admin_employees_bulk_delete:
 
 admin_employees_create:
   path: /new
-  methods: [GET,POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::createAction'
     _legacy_controller: AdminEmployees
@@ -78,7 +78,7 @@ admin_employees_create:
 
 admin_employees_edit:
   path: /{employeeId}/edit
-  methods: [GET,POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::editAction'
     _legacy_controller: AdminEmployees
@@ -90,19 +90,19 @@ admin_employees_edit:
 
 admin_employees_toggle_navigation:
   path: /toggle-navigation
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::toggleNavigationMenuAction'
 
 admin_employees_change_form_language:
   path: /change-form-language
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::changeFormLanguageAction'
 
 admin_employees_get_tabs:
   path: /tabs
-  methods: [GET]
+  methods: [ GET ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::getAccessibleTabsAction'
     _legacy_controller: AdminEmployees

@@ -45,9 +45,11 @@ export interface EntitySearchInputOptions extends OptionsObject {
   removeModal: ModalOptions,
 
   searchInputSelector: string,
-  listSelector: string,
+  entitiesContainerSelector: string,
+  listContainerSelector: string,
   entityItemSelector: string,
   entityDeleteSelector: string,
+  emptyStateSelector: string,
   queryWildcard: string,
 
   onRemovedContent: RemoveFunction | undefined,
@@ -78,11 +80,15 @@ export default class EntitySearchInput {
 
   private $entitySearchInput: JQuery;
 
-  private $selectionContainer: JQuery;
+  private $entitiesContainer: JQuery;
+
+  private $listContainer: JQuery;
+
+  private $emptyState: JQuery;
 
   private options!: EntitySearchInputOptions;
 
-  private entityRemoteSource: Bloodhound;
+  private entityRemoteSource?: Bloodhound<Record<string, any>>;
 
   private autoSearch!: AutoCompleteSearch;
 
@@ -92,11 +98,14 @@ export default class EntitySearchInput {
     this.buildOptions(options);
 
     this.$entitySearchInput = $(this.options.searchInputSelector, this.$entitySearchInputContainer);
-    this.$selectionContainer = $(this.options.listSelector, this.$entitySearchInputContainer);
+    this.$entitiesContainer = $(this.options.entitiesContainerSelector, this.$entitySearchInputContainer);
+    this.$listContainer = $(this.options.listContainerSelector, this.$entitySearchInputContainer);
+    this.$emptyState = $(this.options.emptyStateSelector, this.$entitySearchInputContainer);
 
     this.buildRemoteSource();
     this.buildAutoCompleteSearch();
     this.buildActions();
+    this.updateEmptyState();
   }
 
   /**
@@ -117,6 +126,18 @@ export default class EntitySearchInput {
   }
 
   /**
+   * Append the item to the selection, respecting the configured limit so if limit is already reached the item is not
+   * added.
+   *
+   * @param newItem
+   *
+   * @return boolean
+   */
+  addItem(newItem: any): boolean {
+    return this.appendSelectedItem(newItem);
+  }
+
+  /**
    * @param optionName
    */
   getOption(optionName: string): any {
@@ -131,8 +152,8 @@ export default class EntitySearchInput {
     this.options[optionName] = value;
 
     // Apply special options to components when needed
-    if (optionName === 'remoteUrl') {
-      this.entityRemoteSource.remote.url = this.options.remoteUrl;
+    if (optionName === 'remoteUrl' && this.entityRemoteSource) {
+      (<Record<string, any>> this.entityRemoteSource).remote.url = this.options.remoteUrl;
     }
   }
 
@@ -166,9 +187,11 @@ export default class EntitySearchInput {
       // Most of the previous config are configurable via the EntitySearchInputForm options, the following ones are only
       // overridable via js config (as long as you use the default template)
       searchInputSelector: EntitySearchInputMap.searchInputSelector,
-      listSelector: EntitySearchInputMap.listSelector,
+      entitiesContainerSelector: EntitySearchInputMap.entitiesContainerSelector,
+      listContainerSelector: EntitySearchInputMap.listContainerSelector,
       entityItemSelector: EntitySearchInputMap.entityItemSelector,
       entityDeleteSelector: EntitySearchInputMap.entityDeleteSelector,
+      emptyStateSelector: EntitySearchInputMap.emptyStateSelector,
       queryWildcard: '__QUERY__',
 
       // These are configurable callbacks
@@ -202,7 +225,7 @@ export default class EntitySearchInput {
 
   private buildActions(): void {
     // Always check for click even if it is useless when allowDelete options is false, it can be changed dynamically
-    $(this.$selectionContainer).on('click', this.options.entityDeleteSelector, (event) => {
+    $(this.$entitiesContainer).on('click', this.options.entityDeleteSelector, (event) => {
       if (!this.options.allowDelete) {
         return;
       }
@@ -221,6 +244,7 @@ export default class EntitySearchInput {
         },
         () => {
           $entity.remove();
+          this.updateEmptyState();
           if (typeof this.options.onRemovedContent !== 'undefined') {
             this.options.onRemovedContent($entity);
           }
@@ -230,7 +254,7 @@ export default class EntitySearchInput {
     });
 
     // For now adapt the display based on the allowDelete option
-    const $entityDelete = $(this.options.entityDeleteSelector, this.$selectionContainer);
+    const $entityDelete = $(this.options.entityDeleteSelector, this.$entitiesContainer);
     $entityDelete.toggle(!!this.options.allowDelete);
   }
 
@@ -244,7 +268,7 @@ export default class EntitySearchInput {
       value: '',
       templates: {
         suggestion: (entity: any) => {
-          let entityImage;
+          let entityImage = '';
 
           if (Object.prototype.hasOwnProperty.call(entity, 'image')) {
             entityImage = `<img src="${entity.image}" /> `;
@@ -266,10 +290,14 @@ export default class EntitySearchInput {
     if (this.options.mappingValue !== undefined) {
       autoSearchConfig.value = <string> this.options.mappingValue;
     }
-    this.autoSearch = new AutoCompleteSearch(
-      this.$entitySearchInput,
-      autoSearchConfig,
-    );
+
+    // The search feature may be disabled so the search input won't be present
+    if (this.$entitySearchInput.length) {
+      this.autoSearch = new AutoCompleteSearch(
+        this.$entitySearchInput,
+        autoSearchConfig,
+      );
+    }
   }
 
   /**
@@ -308,7 +336,8 @@ export default class EntitySearchInput {
    * Removes selected items.
    */
   private clearSelectedItems(): void {
-    this.$selectionContainer.empty();
+    this.$entitiesContainer.empty();
+    this.updateEmptyState();
   }
 
   /**
@@ -334,7 +363,7 @@ export default class EntitySearchInput {
    */
   private appendSelectedItem(selectedItem: any): boolean {
     // If collection length is up to limit, return
-    const $entityItems = $(this.options.entityItemSelector, this.$selectionContainer);
+    const $entityItems = $(this.options.entityItemSelector, this.$entitiesContainer);
 
     if (this.options.dataLimit !== 0 && $entityItems.length >= this.options.dataLimit) {
       return false;
@@ -345,6 +374,12 @@ export default class EntitySearchInput {
     return true;
   }
 
+  private updateEmptyState(): void {
+    const $entityItems = $(this.options.entityItemSelector, this.$entitiesContainer);
+    this.$emptyState.toggle($entityItems.length === 0);
+    this.$listContainer.toggle($entityItems.length !== 0);
+  }
+
   /**
    * Add the selected content to the selection container, the HTML is generated based on the render that relies on the
    * prototype template and mapping, and finally the rendered selection is added to the list.
@@ -352,18 +387,19 @@ export default class EntitySearchInput {
    * @param {Object} selectedItem
    */
   private addSelectedContentToContainer(selectedItem: any): void {
-    const newIndex = this.$selectionContainer.children().length;
+    const newIndex = this.$entitiesContainer.children().length;
     const selectedHtml = this.renderSelected(selectedItem, newIndex);
 
     const $selectedNode = $(selectedHtml);
     const $entityDelete = $(this.options.entityDeleteSelector, $selectedNode);
     $entityDelete.toggle(!!this.options.allowDelete);
 
-    this.$selectionContainer.append($selectedNode);
+    this.$entitiesContainer.append($selectedNode);
 
     if (typeof this.options.onSelectedContent !== 'undefined') {
       this.options.onSelectedContent($selectedNode, selectedItem);
     }
+    this.updateEmptyState();
   }
 
   /**

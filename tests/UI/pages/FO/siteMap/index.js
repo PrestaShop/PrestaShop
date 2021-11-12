@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Site map page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class SiteMap extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on site map page
+   */
   constructor() {
     super();
 
@@ -50,7 +59,7 @@ class SiteMap extends FOBasePage {
   /**
    * Is suppliers link visible
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isSuppliersLinkVisible(page) {
     return this.elementVisible(page, this.suppliersPageLink, 2000);
@@ -59,7 +68,7 @@ class SiteMap extends FOBasePage {
   /**
    * Is brands link visible
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isBrandsLinkVisible(page) {
     return this.elementVisible(page, this.brandsPageLink, 2000);

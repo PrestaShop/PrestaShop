@@ -632,7 +632,7 @@ class CartRuleCore extends ObjectModel
     }
 
     /**
-     * @param $id_product_rule_group
+     * @param int $id_product_rule_group
      *
      * @return array ('type' => ? , 'values' => ?)
      */
@@ -715,9 +715,9 @@ class CartRuleCore extends ObjectModel
 
                 $quantityUsed += (int) Db::getInstance()->getValue('
                     SELECT count(*)
-                    FROM ps_cart_cart_rule ccr
-                    INNER JOIN ps_cart c ON c.id_cart = ccr.id_cart
-                    LEFT JOIN ps_orders o ON o.id_cart = c.id_cart
+                    FROM `' . _DB_PREFIX_ . 'cart_cart_rule` ccr
+                    INNER JOIN `' . _DB_PREFIX_ . 'cart` c ON c.id_cart = ccr.id_cart
+                    LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON o.id_cart = c.id_cart
                     WHERE c.id_customer = ' . $cart->id_customer . ' AND c.id_cart = ' . $cart->id . ' AND ccr.id_cart_rule = ' . (int) $this->id . ' AND o.id_order IS NULL
                 ');
             } else {
@@ -928,26 +928,6 @@ class CartRuleCore extends ObjectModel
     /**
      * Checks if the products chosen by the customer are usable with the cart rule.
      *
-     * @deprecated since 1.7.4.0
-     * @see self::checkProductRestrictionsFromCart
-     *
-     * @param \Context $context
-     * @param bool $returnProducts
-     * @param bool $displayError
-     * @param bool $alreadyInCart
-     *
-     * @return array|bool|string
-     *
-     * @throws PrestaShopDatabaseException
-     */
-    public function checkProductRestrictions(Context $context, $returnProducts = false, $displayError = true, $alreadyInCart = false)
-    {
-        return $this->checkProductRestrictionsFromCart($context->cart, $returnProducts, $displayError, $alreadyInCart);
-    }
-
-    /**
-     * Checks if the products chosen by the customer are usable with the cart rule.
-     *
      * @param \Cart $cart
      * @param bool $returnProducts [default=false]
      *                             If true, this method will return an array of eligible products.
@@ -970,7 +950,7 @@ class CartRuleCore extends ObjectModel
             $product_rule_groups = $this->getProductRuleGroups();
             foreach ($product_rule_groups as $id_product_rule_group => $product_rule_group) {
                 $eligible_products_list = [];
-                if (isset($cart) && is_object($cart) && is_array($products = $cart->getProducts())) {
+                if (is_array($products = $cart->getProducts())) {
                     foreach ($products as $product) {
                         $eligible_products_list[] = (int) $product['id_product'] . '-' . (int) $product['id_product_attribute'];
                     }
@@ -1248,7 +1228,7 @@ class CartRuleCore extends ObjectModel
                 $basePriceContainsDiscount = isset($basePriceForPercentReduction) && $order_total === $basePriceForPercentReduction;
                 foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cart_rule) {
                     $freeProductsPrice = Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), Context::getContext()->getComputingPrecision());
-                    if ($basePriceContainsDiscount) {
+                    if ($basePriceContainsDiscount && isset($basePriceForPercentReduction)) {
                         // Gifts haven't been excluded yet, we need to do it
                         $basePriceForPercentReduction -= $freeProductsPrice;
                     }
@@ -1259,13 +1239,10 @@ class CartRuleCore extends ObjectModel
                 if ($this->reduction_exclude_special) {
                     foreach ($package_products as $product) {
                         if ($product['reduction_applies']) {
-                            if ($use_tax) {
-                                $excludedReduction = Tools::ps_round($product['total_wt'], Context::getContext()->getComputingPrecision());
-                            } else {
-                                $excludedReduction = Tools::ps_round($product['total'], Context::getContext()->getComputingPrecision());
-                            }
+                            $roundTotal = $use_tax ? $product['total_wt'] : $product['total'];
+                            $excludedReduction = Tools::ps_round($roundTotal, Context::getContext()->getComputingPrecision());
                             $order_total -= $excludedReduction;
-                            if ($basePriceContainsDiscount) {
+                            if ($basePriceContainsDiscount && isset($basePriceForPercentReduction)) {
                                 $basePriceForPercentReduction -= $excludedReduction;
                             }
                         }
@@ -1356,11 +1333,8 @@ class CartRuleCore extends ObjectModel
                 if ($this->reduction_product > 0) {
                     foreach ($all_products as $product) {
                         if ($product['id_product'] == $this->reduction_product) {
-                            if ($this->reduction_tax) {
-                                $max_reduction_amount = (int) $product['cart_quantity'] * (float) $product['price_wt'];
-                            } else {
-                                $max_reduction_amount = (int) $product['cart_quantity'] * (float) $product['price'];
-                            }
+                            $productPrice = $this->reduction_tax ? $product['price_wt'] : $product['price'];
+                            $max_reduction_amount = (int) $product['cart_quantity'] * (float) $productPrice;
                             $reduction_amount = min($reduction_amount, $max_reduction_amount);
                             break;
                         }

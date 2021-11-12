@@ -400,7 +400,7 @@ class SpecificPriceCore extends ObjectModel
     /**
      * Check if the given product could have a specific price.
      *
-     * @param $idProduct
+     * @param int $idProduct
      *
      * @return bool
      */

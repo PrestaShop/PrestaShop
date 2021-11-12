@@ -1,21 +1,24 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
-const homePage = require('@pages/FO/home');
-const contactUsPage = require('@pages/FO/contactUs');
 const customerServicePage = require('@pages/BO/customerService/customerService');
 const viewPage = require('@pages/BO/customerService/customerService/view');
 
-// Import test context
-const testContext = require('@utils/testContext');
+// Import FO pages
+const homePage = require('@pages/FO/home');
+const contactUsPage = require('@pages/FO/contactUs');
 
 const baseContext = 'functional_BO_customerService_orderMessages_viewCustomerService';
 
@@ -32,7 +35,7 @@ let messageDateTime = '';
 Send message by customer to customer service in FO
 View customer message in BO
  */
-describe('View customer service messages', async () => {
+describe('BO - Customer Service : View messages', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -56,7 +59,7 @@ describe('View customer service messages', async () => {
     await expect(isHomePage).to.be.true;
   });
 
-  it('should go on contact us page', async function () {
+  it('should go to contact us page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
     // Go to contact us page
@@ -77,7 +80,7 @@ describe('View customer service messages', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to customer service page', async function () {
+  it('should go to \'Customer Service > Customer Service\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
 
     await dashboardPage.goToSubMenu(

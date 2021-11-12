@@ -32,7 +32,7 @@ class AddWebserviceKey extends BOBasePage {
   /**
    * Fill form for add/edit webservice key
    * @param page {Page} Browser tab
-   * @param webserviceData {webserviceData} Data to set on add/edit webservice form
+   * @param webserviceData {WebserviceData} Data to set on add/edit webservice form
    * @param toGenerate
    * @returns {Promise<string>}
    */
@@ -45,7 +45,7 @@ class AddWebserviceKey extends BOBasePage {
 
     await this.setValue(page, this.keyDescriptionTextarea, webserviceData.keyDescription);
     // id = 1 if active = YES / 0 if active = NO
-    await page.check(this.statusToggleInput(webserviceData.status ? 1 : 0));
+    await this.setChecked(page, this.statusToggleInput(webserviceData.status ? 1 : 0));
 
     await this.clickAndWaitForNavigation(page, this.saveButton);
 

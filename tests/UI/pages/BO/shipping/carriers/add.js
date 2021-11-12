@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add carrier page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddCarrier extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on add carrier page
+   */
   constructor() {
     super();
 
@@ -62,8 +71,8 @@ class AddCarrier extends BOBasePage {
     await page.click(this.nextButton);
 
     // Set shipping locations and costs
-    await page.check(this.addHandlingCostsToggle(carrierData.handlingCosts ? 'on' : 'off'));
-    await page.check(this.freeShippingToggle(carrierData.freeShipping ? 'on' : 'off'));
+    await this.setChecked(page, this.addHandlingCostsToggle(carrierData.handlingCosts ? 'on' : 'off'));
+    await this.setChecked(page, this.freeShippingToggle(carrierData.freeShipping ? 'on' : 'off'));
 
     if (carrierData.billing === 'According to total price') {
       await page.click(this.billingPriceRadioButton);
@@ -94,7 +103,7 @@ class AddCarrier extends BOBasePage {
     await page.click(this.nextButton);
 
     // Summary
-    await page.check(this.enableToggle(carrierData.enable ? 'on' : 'off'));
+    await this.setChecked(page, this.enableToggle(carrierData.enable ? 'on' : 'off'));
     await page.click(this.finishButton);
 
     // Return successful message
@@ -109,7 +118,7 @@ class AddCarrier extends BOBasePage {
    */
   async setHandlingCosts(page, toEnable = true) {
     await page.click(this.nextButton);
-    await page.check(this.addHandlingCostsToggle(toEnable ? 'on' : 'off'));
+    await this.setChecked(page, this.addHandlingCostsToggle(toEnable ? 'on' : 'off'));
 
     await page.click(this.finishButton);
 

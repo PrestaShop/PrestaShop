@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-  import PSNumber from '@app/widgets/ps-number';
+  import PSNumber from '@app/widgets/ps-number.vue';
   import Vue from 'vue';
 
   const {$} = window;

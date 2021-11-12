@@ -295,6 +295,7 @@ input[type="color"]:hover,
   .translatable-field {
     .btn.dropdown-toggle {
       height: $input-height-base;
+      white-space: nowrap;
     }
   }
 }
@@ -321,5 +322,11 @@ input[type="tel"] {
     max-width: 83.33333%;
     padding: 14px 0;
     margin: auto;
+  }
+
+  .form-group {
+    .btn[id^="add_condition_"] {
+      white-space: nowrap;
+    }
   }
 }

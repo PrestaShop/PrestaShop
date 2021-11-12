@@ -35,7 +35,7 @@ class AddAttribute extends BOBasePage {
   /**
    * Fill attribute form and save it
    * @param page {Page} Browser tab
-   * @param attributeData {attributeData} Data to set on new/edit attribute form
+   * @param attributeData {AttributeData} Data to set on new/edit attribute form
    * @return {Promise<string>}
    */
   async addEditAttribute(page, attributeData) {
@@ -48,7 +48,7 @@ class AddAttribute extends BOBasePage {
     await this.setValue(page, this.metaTitleInput, attributeData.metaTitle);
 
     // Set indexable toggle
-    await page.check(this.indexableToggle(attributeData.indexable ? 'on' : 'off'));
+    await this.setChecked(page, this.indexableToggle(attributeData.indexable ? 'on' : 'off'));
 
     // Set attribute type
     await this.selectByVisibleText(page, this.attributeTypeSelect, attributeData.attributeType);

@@ -1,0 +1,60 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% set layoutTitle = 'Information about customer %name%'|trans({'%name%': customerInformation.personalInformation.firstName[0:1] ~ '. ' ~ customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') %}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/personal_information.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/orders.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/carts.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/bought_products.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/viewed_products.html.twig' %}
+    </div>
+
+    <div class="col">
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/private_note.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/messages.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/discounts.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/sent_emails.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/last_connections.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/groups.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/addresses.html.twig' %}
+    </div>
+  </div>
+
+  <div class="row">
+    {{ renderhook('displayAdminCustomers', {'id_customer': customerInformation.customerId.value}) }}
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  {% include '@PrestaShop/Admin/Sell/Customer/Blocks/javascript.html.twig' %}
+{% endblock %}

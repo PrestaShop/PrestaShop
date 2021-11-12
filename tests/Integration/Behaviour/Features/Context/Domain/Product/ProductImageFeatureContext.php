@@ -244,7 +244,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         $directories = str_split((string) $imageId);
         $path = implode('/', $directories);
 
-        return _PS_PROD_IMG_DIR_ . $path;
+        return _PS_PRODUCT_IMG_DIR_ . $path;
     }
 
     /**
@@ -371,7 +371,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     {
         $imageFolder = implode('/', str_split((string) $imageId));
 
-        return _PS_PROD_IMG_DIR_ . '/' . $imageFolder . '/' . $imageId . '.jpg';
+        return _PS_PRODUCT_IMG_DIR_ . '/' . $imageFolder . '/' . $imageId . '.jpg';
     }
 
     /**

@@ -135,7 +135,7 @@ class WebService extends BOBasePage {
   async filterWebserviceTable(page, filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.webserviceFilterInput(filterBy), value.toString());
+        await this.setValue(page, this.webserviceFilterInput(filterBy), value);
         break;
       case 'select':
         await this.selectByVisibleText(page, this.webserviceFilterInput(filterBy), value ? 'Yes' : 'No');
@@ -247,7 +247,7 @@ class WebService extends BOBasePage {
       page.click(this.bulkActionsDeleteButton),
       this.waitForVisibleSelector(page, this.deleteModal),
     ]);
-    await this.confirmDeleteWebService(page, this.modalDeleteButton);
+    await this.confirmDeleteWebService(page);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -256,7 +256,7 @@ class WebService extends BOBasePage {
    * Enable / disable by Bulk Actions
    * @param page {Page} Browser tab
    * @param enable {boolean} True if we need to bulk enable status, false if not
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
   async bulkSetStatus(page, enable = true) {
     // Click on Select All
@@ -273,13 +273,15 @@ class WebService extends BOBasePage {
 
     // Click on enable/Disable and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column to get text value
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -287,7 +289,7 @@ class WebService extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTable(page, i, column);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

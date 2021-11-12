@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BadgeColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -62,15 +63,26 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
     private $risks;
 
     /**
+     * @var string
+     */
+    private $contextDateFormat;
+
+    /**
      * @param HookDispatcherInterface $hookDispatcher
      * @param ConfigurationInterface $configuration
      * @param int $languageId
+     * @param string $contextDateFormat
      */
-    public function __construct(HookDispatcherInterface $hookDispatcher, ConfigurationInterface $configuration, int $languageId)
-    {
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        ConfigurationInterface $configuration,
+        int $languageId,
+        string $contextDateFormat
+    ) {
         parent::__construct($hookDispatcher);
 
         $this->configuration = $configuration;
+        $this->contextDateFormat = $contextDateFormat;
         foreach (Risk::getRisks($languageId) as $risk) {
             /* @var $risk Risk */
             $this->risks[$risk->name] = $risk->id;
@@ -107,9 +119,10 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                     ])
             )
             ->add(
-                (new DataColumn('date_add'))
+                (new DateTimeColumn('date_add'))
                     ->setName($this->trans('Date', [], 'Admin.Global'))
                     ->setOptions([
+                        'format' => $this->contextDateFormat,
                         'field' => 'date_add',
                     ])
             )

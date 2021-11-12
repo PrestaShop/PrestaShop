@@ -179,7 +179,7 @@ class Taxes extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column to get text value
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -187,7 +187,7 @@ class Taxes extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableTaxes(page, i, column);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -295,22 +295,37 @@ class Taxes extends BOBasePage {
   /**
    * Update Tax Options
    * @param page {Page} Browser tab
-   * @param taxOptionData {taxOptionData} Data to set on new/edit tax option
+   * @param taxOptionData {{enabled: boolean, displayInShoppingCart: boolean, basedOn: string,
+   * useEcoTax: boolean, ecoTax: ?string}} Data to set on new/edit tax option
    * @returns {Promise<string>}
    */
   async updateTaxOption(page, taxOptionData) {
-    await page.check(this.taxStatusToggleInput(taxOptionData.enabled ? 1 : 0));
+    await this.setChecked(page, this.taxStatusToggleInput(taxOptionData.enabled ? 1 : 0));
     if (taxOptionData.enabled) {
-      await page.check(this.displayTaxInCartToggleInput(taxOptionData.displayInShoppingCart ? 1 : 0));
+      await this.setChecked(page, this.displayTaxInCartToggleInput(taxOptionData.displayInShoppingCart ? 1 : 0));
     }
 
     await this.selectByVisibleText(page, this.taxAddressTypeSelect, taxOptionData.basedOn);
 
-    await page.check(this.useEcoTaxToggleInput(taxOptionData.useEcoTax ? 1 : 0));
+    await this.setChecked(page, this.useEcoTaxToggleInput(taxOptionData.useEcoTax ? 1 : 0));
 
     if (taxOptionData.useEcoTax && taxOptionData.ecoTax !== undefined) {
       await this.selectByVisibleText(page, this.ecoTaxSelect, taxOptionData.ecoTax);
     }
+
+    // Click on save tax Option
+    await this.clickAndWaitForNavigation(page, this.saveTaxOptionButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Enable/Disable eco tax
+   * @param page {Page} Browser tab
+   * @param enableEcoTax {boolean} True if we need to enable ecoTax
+   * @returns {Promise<string>}
+   */
+  async enableEcoTax(page, enableEcoTax = true) {
+    await this.setChecked(page, this.useEcoTaxToggleInput(enableEcoTax ? 1 : 0));
 
     // Click on save tax Option
     await this.clickAndWaitForNavigation(page, this.saveTaxOptionButton);
@@ -382,7 +397,7 @@ class Taxes extends BOBasePage {
 
   /**
    * Click on previous
-   * @param {Page} Browser tab
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {

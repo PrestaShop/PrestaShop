@@ -1,26 +1,29 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
 
-// Import pages
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
+
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
+const customerServicePage = require('@pages/BO/customerService/customerService');
+const viewPage = require('@pages/BO/customerService/customerService/view');
+
+// Import FO pages
 const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const contactUsPage = require('@pages/FO/contactUs');
-const customerServicePage = require('@pages/BO/customerService/customerService');
-const viewPage = require('@pages/BO/customerService/customerService/view');
 
 // Import data
 const ContactUsFakerData = require('@data/faker/contactUs');
 const {DefaultCustomer} = require('@data/demo/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customerService_customerService_changeStatus';
 
@@ -32,7 +35,7 @@ const contactUsData = new ContactUsFakerData({subject: 'Customer service', refer
 Send message by customer to customer service in FO
 Change message status in BO
  */
-describe('Change customer message status', async () => {
+describe('BO - Customer Service : Change status', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -97,7 +100,7 @@ describe('Change customer message status', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to customer service page', async function () {
+    it('should go to \'Customer Service > Customer Service\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -131,7 +134,7 @@ describe('Change customer message status', async () => {
         await expect(newStatus).to.contains(test.args.statusToCheck);
       });
 
-      it('should go to customer service page', async function () {
+      it('should go to \'Customer Service > Customer Service\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrderMessagesPage${index}`, baseContext);
 
         await dashboardPage.goToSubMenu(
@@ -154,7 +157,7 @@ describe('Change customer message status', async () => {
   });
 
   describe('Delete the order message', async () => {
-    it('should go to customer service page', async function () {
+    it('should go to \'Customer Service > Customer Service\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPageToDelete', baseContext);
 
       await dashboardPage.goToSubMenu(

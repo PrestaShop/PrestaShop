@@ -55,10 +55,10 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import PSPagination from '@app/widgets/ps-pagination';
-  import StockHeader from './header/stock-header';
-  import Search from './header/search';
-  import LowFilter from './header/filters/low-filter';
+  import PSPagination from '@app/widgets/ps-pagination.vue';
+  import StockHeader from './header/stock-header.vue';
+  import Search from './header/search.vue';
+  import LowFilter from './header/filters/low-filter.vue';
 
   const FIRST_PAGE = 1;
 

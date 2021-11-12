@@ -42,7 +42,7 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import PSButton from '@app/widgets/ps-button';
+  import PSButton from '@app/widgets/ps-button.vue';
 
   export default Vue.extend({
     computed: {

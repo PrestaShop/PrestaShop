@@ -31,7 +31,13 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Attachment;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use RuntimeException;
 use Tests\Resources\DummyFileUploader;
 
@@ -46,20 +52,22 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
     public function addAttachment(string $reference, TableNode $tableNode): void
     {
         $data = $this->localizeByRows($tableNode);
-        $fileName = $data['file_name'];
+        $addCommand = new AddAttachmentCommand(
+            $data['name'],
+            $data['description']
+        );
+        $destination = $this->uploadDummyFile($data['file_name']);
+        $fileSize = filesize($destination);
+        $addCommand->setFileInformation(
+            pathinfo($destination, PATHINFO_BASENAME),
+            $fileSize,
+            mime_content_type($destination),
+            $data['file_name']
+        );
 
-        $destination = $this->uploadDummyFile($fileName);
-
-        $attachment = new Attachment();
-        $attachment->description = $data['description'];
-        $attachment->name = $data['name'];
-        $attachment->file_name = $fileName;
-        $attachment->mime = mime_content_type($destination);
-        $attachment->file = pathinfo($destination, PATHINFO_BASENAME);
-
-        $attachment->add();
-
-        $this->getSharedStorage()->set($reference, (int) $attachment->id);
+        /** @var AttachmentId $attachmentId */
+        $attachmentId = $this->getCommandBus()->handle($addCommand);
+        $this->getSharedStorage()->set($reference, $attachmentId->getValue());
     }
 
     /**
@@ -73,30 +81,93 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
         $attachment = $this->getAttachment($reference);
         $data = $this->localizeByRows($tableNode);
 
-        Assert::assertEquals($data['description'], $attachment->description);
-        Assert::assertEquals($data['name'], $attachment->name);
-        Assert::assertEquals($data['file_name'], $attachment->file_name);
-        Assert::assertEquals($data['mime'], $attachment->mime);
-        Assert::assertEquals($data['size'], $attachment->file_size);
+        Assert::assertEquals($data['name'], $attachment->getLocalizedNames());
+        Assert::assertEquals($data['description'], $attachment->getLocalizedDescriptions());
+        Assert::assertEquals($data['file_name'], $attachment->getFileName());
+        Assert::assertEquals($data['mime'], $attachment->getMimeType());
+        Assert::assertEquals((int) $data['size'], $attachment->getFileSize());
+    }
+
+    /**
+     * @When I search for attachment matching :searchPhrase I get following results:
+     *
+     * @param string $searchPhrase
+     */
+    public function searchAttachment(string $searchPhrase, TableNode $tableNode): void
+    {
+        /** @var AttachmentInformation[] $foundAttachments */
+        $foundAttachments = $this->getCommandBus()->handle(new SearchAttachment($searchPhrase));
+        $expectedAttachments = $this->localizeByColumns($tableNode);
+
+        Assert::assertEquals(count($expectedAttachments), count($foundAttachments));
+        foreach ($expectedAttachments as $expectedAttachment) {
+            $expectedAttachmentId = (int) $this->getSharedStorage()->get($expectedAttachment['attachment_id']);
+            $matchingAttachment = null;
+            foreach ($foundAttachments as $foundAttachment) {
+                if ($foundAttachment->getAttachmentId() === $expectedAttachmentId) {
+                    $matchingAttachment = $foundAttachment;
+                    break;
+                }
+            }
+            if (null === $matchingAttachment) {
+                throw new RuntimeException(sprintf('Could not find expected attachment %s', $expectedAttachment['attachment_id']));
+            }
+
+            $attachmentNames = $matchingAttachment->getLocalizedNames();
+            foreach ($expectedAttachment['name'] as $langId => $name) {
+                Assert::assertTrue(isset($attachmentNames[$langId]));
+                Assert::assertEquals($name, $attachmentNames[$langId]);
+            }
+            $attachmentDescriptions = $matchingAttachment->getLocalizedDescriptions();
+            foreach ($expectedAttachment['description'] as $langId => $description) {
+                Assert::assertTrue(isset($attachmentDescriptions[$langId]));
+                Assert::assertEquals($description, $attachmentDescriptions[$langId]);
+            }
+
+            Assert::assertEquals($expectedAttachment['mime'], $matchingAttachment->getMimeType());
+            Assert::assertEquals($expectedAttachment['file_name'], $matchingAttachment->getFileName());
+            Assert::assertEquals((int) $expectedAttachment['size'], $matchingAttachment->getFileSize());
+        }
+    }
+
+    /**
+     * @When I delete attachment :attachmentReference
+     *
+     * @param string $attachmentReference
+     */
+    public function deleteAttachment(string $attachmentReference): void
+    {
+        $this->getCommandBus()->handle(
+            new DeleteAttachmentCommand((int) $this->getSharedStorage()->get($attachmentReference))
+        );
+    }
+
+    /**
+     * @When I search for attachment matching :searchPhrase I get no results
+     *
+     * @param string $searchPhrase
+     */
+    public function searchAttachmentFails(string $searchPhrase): void
+    {
+        $caughtException = null;
+        try {
+            $this->getCommandBus()->handle(new SearchAttachment($searchPhrase));
+        } catch (EmptySearchException $e) {
+            $caughtException = $e;
+        }
+        Assert::assertNotNull($caughtException, 'Expected to get no results for this search');
     }
 
     /**
      * @param string $reference
      *
-     * @return Attachment
-     *
-     * @throws PrestaShopException
+     * @return AttachmentInformation
      */
-    private function getAttachment(string $reference): Attachment
+    private function getAttachment(string $reference): AttachmentInformation
     {
         $id = $this->getSharedStorage()->get($reference);
-        $attachment = new Attachment($id);
 
-        if (!$attachment->id) {
-            throw new RuntimeException(sprintf('Failed to load attachment with id %d', $id));
-        }
-
-        return $attachment;
+        return $this->getCommandBus()->handle(new GetAttachmentInformation((int) $id));
     }
 
     /**

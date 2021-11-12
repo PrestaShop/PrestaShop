@@ -218,7 +218,7 @@ class Monitoring extends BOBasePage {
    * @param page {Page} Browser tab
    * @param tableName {string} Table name to get all rows column content
    * @param column {string} Column name to get text column
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, tableName, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page, tableName);
@@ -228,9 +228,9 @@ class Monitoring extends BOBasePage {
       let rowContent = await this.getTextContent(page, this.tableColumn(tableName, i, column));
 
       if (column === 'active') {
-        rowContent = await this.getStatus(page, tableName, i).toString();
+        rowContent = (await this.getStatus(page, tableName, i)).toString();
       }
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

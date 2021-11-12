@@ -3495,5 +3495,35 @@
       <title>Modify back office order data after creating it</title>
       <description>This hook allows to modify order created from back office data after it is created</description>
     </hook>
+    <hook id="actionAdminOrdersTrackingNumberUpdate">
+      <name>actionAdminOrdersTrackingNumberUpdate</name>
+      <title>After setting the tracking number for the order</title>
+      <description>This hook allows you to execute code after the unique tracking number for the order was added</description>
+    </hook>
+    <hook id="displayBackOfficeMenu">
+      <name>displayBackOfficeEmployeeMenu</name>
+      <title>Administration Employee menu</title>
+      <description>This hook is displayed in the employee menu</description>
+    </hook>
+    <hook id="actionCustomerLogoutBefore">
+      <name>actionCustomerLogoutBefore</name>
+      <title>Before customer logout</title>
+      <description>This hook allows you to execute code before customer logout</description>
+    </hook>
+    <hook id="actionCustomerLogoutAfter">
+      <name>actionCustomerLogoutAfter</name>
+      <title>After customer logout</title>
+      <description>This hook allows you to execute code after customer logout</description>
+    </hook>
+    <hook id="displayCheckoutSummaryTop">
+      <name>displayCheckoutSummaryTop</name>
+      <title>Cart summary top</title>
+      <description>This hook allows you to display new elements in top of cart summary</description>
+    </hook>
+    <hook id="actionPresentPaymentOptions">
+      <name>actionPresentPaymentOptions</name>
+      <title>Payment options Presenter</title>
+      <description>This hook is called before payment options are presented</description>
+    </hook>
   </entities>
 </entity_hook>

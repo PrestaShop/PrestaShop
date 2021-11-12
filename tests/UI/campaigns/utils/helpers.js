@@ -2,12 +2,15 @@ require('./globals');
 
 const playwright = require('playwright');
 
+/**
+ * @module BrowserHelper
+ * @description Helper used to wrap low level functions from playwright using global parameters.
+ */
 module.exports = {
   /**
-   * Create playwright browser
-   *
-   * @param attempt, number of attempts to restart browser creation if function throw error
-   * @return {Promise<browser>}
+   * Create playwright browser with options on global
+   * @param attempt {number} Number of attempts to restart browser creation if function throw error
+   * @return {Promise<Browser>}
    */
   async createBrowser(attempt = 1) {
     try {
@@ -35,11 +38,10 @@ module.exports = {
 
   /**
    * Create a browser context
-   *
-   * @param browser
-   * @return {Promise<*>}
+   * @param browser {Browser} Created browser context with options on global
+   * @return {Promise<BrowserContext>}
    */
-  async createBrowserContext(browser) {
+  createBrowserContext(browser) {
     return browser.newContext(
       {
         acceptDownloads: global.BROWSER.acceptDownloads,
@@ -55,9 +57,8 @@ module.exports = {
 
   /**
    * Create new tab in browser
-   *
-   * @param context
-   * @return {Promise<*>}
+   * @param context {BrowserContext} Context created
+   * @return {Promise<Page>}
    */
   async newTab(context) {
     const page = await context.newPage();
@@ -70,27 +71,25 @@ module.exports = {
 
   /**
    * Destroy browser instance, that delete as well all files downloaded
-   *
-   * @param browserContext
-   * @return {Promise<*>}
+   * @param browserContext {BrowserContext} Instance of the browser context to destroy
+   * @return {Promise<void>}
    */
   async closeBrowserContext(browserContext) {
-    return browserContext.close();
+    await browserContext.close();
   },
 
   /**
    * Destroy browser instance, that delete as well all files downloaded
-   *
-   * @param browser
-   * @return {Promise<*>}
+   * @param browser {Browser} Instance of the browser to close
+   * @return {Promise<void>}
    */
   async closeBrowser(browser) {
-    return browser.close();
+    await browser.close();
   },
 
   /**
    * Intercept response errors
-   * @param page
+   * @param page {Page} Browser tab given
    */
   interceptResponseErrors(page) {
     page.on('response', (response) => {
@@ -106,7 +105,7 @@ module.exports = {
 
   /**
    * Intercept js errors
-   * @param page
+   * @param page {Page} Browser tab given
    */
   interceptJsErrors(page) {
     page.on('pageerror', (e) => {
@@ -121,7 +120,7 @@ module.exports = {
 
   /**
    * Intercept console errors
-   * @param page
+   * @param page {Page} Browser tab given
    */
   interceptConsoleErrors(page) {
     page.on('console', (msg) => {
@@ -136,7 +135,7 @@ module.exports = {
 
   /**
    * Intercept all errors (response, js, console)
-   * @param page
+   * @param page {Page} Browser tab given
    */
   interceptAllErrors(page) {
     this.interceptResponseErrors(page);
@@ -146,8 +145,8 @@ module.exports = {
 
   /**
    * Get last opened tab (The current active tab)
-   * @param browser
-   * @returns {Promise<*>}
+   * @param browser {Browser} Browser given
+   * @returns {Promise<Page>}
    */
   async getLastOpenedTab(browser) {
     // Get contexts

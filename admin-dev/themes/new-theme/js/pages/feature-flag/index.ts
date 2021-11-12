@@ -57,7 +57,7 @@ $(() => {
       }
     }
 
-    const modal = new (ConfirmModal as any)(
+    const modal = new ConfirmModal(
       {
         id: 'modal-confirm-submit-feature-flag',
         confirmTitle: $submitButton.data('modal-title'),

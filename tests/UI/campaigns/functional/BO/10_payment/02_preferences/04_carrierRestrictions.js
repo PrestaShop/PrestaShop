@@ -1,16 +1,20 @@
 require('module-alias/register');
-const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_payment_preferences_carrierRestrictions';
-
+// Import expect from chai
 const {expect} = require('chai');
 
+// Import utils
+const testContext = require('@utils/testContext');
 const helper = require('@utils/helpers');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const preferencesPage = require('@pages/BO/payment/preferences');
+
+// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
@@ -20,10 +24,12 @@ const foLoginPage = require('@pages/FO/login');
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
 
+const baseContext = 'functional_BO_payment_preferences_carrierRestrictions';
+
 let browserContext;
 let page;
 
-describe('Configure carrier restrictions and check FO', async () => {
+describe('BO - Payment - Preferences : Configure carrier restrictions and check FO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -82,14 +88,12 @@ describe('Configure carrier restrictions and check FO', async () => {
       await expect(pageTitle).to.contains(preferencesPage.pageTitle);
     });
 
-    const tests = [
+    [
       {args: {action: 'uncheck', paymentModule: 'ps_wirepayment', exist: false}},
       {args: {action: 'check', paymentModule: 'ps_wirepayment', exist: true}},
       {args: {action: 'uncheck', paymentModule: 'ps_checkpayment', exist: false}},
       {args: {action: 'check', paymentModule: 'ps_checkpayment', exist: true}},
-    ];
-
-    tests.forEach((test, index) => {
+    ].forEach((test, index) => {
       it(`should ${test.args.action} free prestashop carrier for '${test.args.paymentModule}'`, async function () {
         await testContext.addContextItem(
           this,
@@ -108,19 +112,21 @@ describe('Configure carrier restrictions and check FO', async () => {
         await expect(result).to.contains(preferencesPage.successfulUpdateMessage);
       });
 
-      it('should go to FO and add the first product to the cart', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `check_${test.args.paymentModule}_${test.args.exist}`,
-          baseContext,
-        );
+      it('should view my shop', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
         // Click on view my shop
         page = await preferencesPage.viewMyShop(page);
 
         // Change language in FO
         await homePage.changeLanguage(page, 'en');
+
+        const pageTitle = await homePage.getPageTitle(page);
+        await expect(pageTitle).to.contains(homePage.pageTitle);
+      });
+
+      it('should add the first product to the cart and proceed to checkout', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
         // Go to the first product page
         await homePage.goToProductPage(page, 1);
@@ -136,12 +142,7 @@ describe('Configure carrier restrictions and check FO', async () => {
       });
 
       it('should continue to delivery step', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `goToDeliveryStep${index}`,
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
         // Address step - Go to delivery step
         const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
@@ -149,12 +150,7 @@ describe('Configure carrier restrictions and check FO', async () => {
       });
 
       it('should continue to payment step and check the existence of payment method', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `goToPaymentStep${index}`,
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', `checkPaymentMethod${index}`, baseContext);
 
         // Delivery step - Go to payment step
         const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
@@ -163,9 +159,16 @@ describe('Configure carrier restrictions and check FO', async () => {
         // Payment step - Check payment method
         const isVisible = await checkoutPage.isPaymentMethodExist(page, test.args.paymentModule);
         await expect(isVisible).to.be.equal(test.args.exist);
+      });
 
-        // Go back to BO
-        page = await checkoutPage.closePage(browserContext, page, 0);
+      it('should go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
+
+        // Close current tab
+        page = await homePage.closePage(browserContext, page, 0);
+
+        const pageTitle = await preferencesPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(preferencesPage.pageTitle);
       });
     });
   });

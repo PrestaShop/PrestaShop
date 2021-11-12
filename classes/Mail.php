@@ -194,6 +194,12 @@ class MailCore extends ObjectModel
             $shop = new Shop((int) $idShop);
         }
 
+        if (!isset($shop)) {
+            self::dieOrLog($die, 'Error: parameter "idShop" is corrupted');
+
+            return false;
+        }
+
         $configuration = Configuration::getMultiple(
             [
                 'PS_SHOP_EMAIL',
@@ -314,7 +320,7 @@ class MailCore extends ObjectModel
         }
 
         /* Construct multiple recipients list if needed */
-        if (is_array($to) && isset($to)) {
+        if (is_array($to)) {
             foreach ($to as $key => $addr) {
                 $addr = trim($addr);
                 if (!Validate::isEmail($addr)) {
@@ -414,6 +420,7 @@ class MailCore extends ObjectModel
                 $moduleName = $res[1];
             }
 
+            $isoTemplate = '';
             foreach ($isoArray as $isoCode) {
                 $isoTemplate = $isoCode . '/' . $template;
                 $templatePath = self::getTemplateBasePath($isoTemplate, $moduleName, $shop->theme);
@@ -656,7 +663,7 @@ class MailCore extends ObjectModel
                 'Swift Error: ' . $e->getMessage(),
                 3,
                 null,
-                'Swift_Message'
+                'SwiftMessage'
             );
 
             return false;
@@ -688,7 +695,7 @@ class MailCore extends ObjectModel
     }
 
     /**
-     * @param $idMail Mail ID
+     * @param int $idMail Mail ID
      *
      * @return bool Whether removal succeeded
      */

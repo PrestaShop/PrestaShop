@@ -85,25 +85,14 @@ final class AddProductSpecificPriceHandler implements AddProductSpecificPriceHan
         $specificPrice->reduction_tax = $command->includesTax();
         $specificPrice->price = $command->getPrice();
         $specificPrice->from_quantity = $command->getFromQuantity();
-        $specificPrice->id_shop_group = $command->getShopGroupId() ?? 0;
         $specificPrice->id_shop = $command->getShopId() ?? 0;
         $specificPrice->id_product_attribute = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
         $specificPrice->id_currency = $command->getCurrencyId() ?? 0;
         $specificPrice->id_country = $command->getCountryId() ?? 0;
         $specificPrice->id_group = $command->getGroupId() ?? 0;
         $specificPrice->id_customer = $command->getCustomerId() ?? 0;
-        $specificPrice->from = DateTimeUtil::NULL_DATETIME;
-        $specificPrice->to = DateTimeUtil::NULL_DATETIME;
-
-        $from = $command->getDateTimeFrom();
-        if (null !== $from) {
-            $specificPrice->from = $from->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
-        }
-
-        $to = $command->getDateTimeTo();
-        if (null !== $to) {
-            $specificPrice->to = $to->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
-        }
+        $specificPrice->from = $command->getDateTimeFrom()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+        $specificPrice->to = $command->getDateTimeTo()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
 
         return $specificPrice;
     }

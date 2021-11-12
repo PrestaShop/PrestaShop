@@ -42,7 +42,8 @@ class Install extends CommonPage {
     // Selectors for step 4
     this.storeInformationStepPageTitle = '#infosShopBlock h2';
     this.shopNameInput = '#infosShop';
-    this.countrySelect = '#infosCountry';
+    this.countryChosenSelect = '#infosCountry_chosen';
+    this.countryChosenSearchInput = `${this.countryChosenSelect} .chosen-search input`;
     this.firstNameInput = '#infosFirstname';
     this.lastNameInput = '#infosName';
     this.emailInput = '#infosEmail';
@@ -55,6 +56,7 @@ class Install extends CommonPage {
     this.dbLoginInput = '#dbLogin';
     this.dbNameInput = '#dbName';
     this.dbPasswordInput = '#dbPassword';
+    this.dbPrefixInput = '#db_prefix';
     this.testDbConnectionButton = '#btTestDB';
     this.createDbButton = '#btCreateDB';
     this.dbResultCheckOkBlock = '#dbResultCheck.okBlock';
@@ -140,7 +142,7 @@ class Install extends CommonPage {
    * @return {Promise<void>}
    */
   async agreeToTermsAndConditions(page) {
-    await this.changeCheckboxValue(page, this.termsConditionsCheckbox);
+    await this.setChecked(page, this.termsConditionsCheckbox);
   }
 
   /**
@@ -150,7 +152,12 @@ class Install extends CommonPage {
    */
   async fillInformationForm(page) {
     await page.type(this.shopNameInput, global.INSTALL.SHOP_NAME);
-    await page.selectOption(this.countrySelect, global.INSTALL.COUNTRY);
+
+    // Choosing country
+    await page.click(this.countryChosenSelect);
+    await page.type(this.countryChosenSearchInput, global.INSTALL.COUNTRY);
+    await page.keyboard.press('Enter');
+
     await page.type(this.firstNameInput, global.BO.FIRSTNAME);
     await page.type(this.lastNameInput, global.BO.LASTNAME);
     await page.type(this.emailInput, global.BO.EMAIL);
@@ -168,6 +175,7 @@ class Install extends CommonPage {
     await this.setValue(page, this.dbNameInput, global.INSTALL.DB_NAME);
     await this.setValue(page, this.dbLoginInput, global.INSTALL.DB_USER);
     await this.setValue(page, this.dbPasswordInput, global.INSTALL.DB_PASSWD);
+    await this.setValue(page, this.dbPrefixInput, global.INSTALL.DB_PREFIX);
   }
 
   /**

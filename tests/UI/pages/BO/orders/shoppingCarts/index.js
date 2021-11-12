@@ -131,8 +131,8 @@ class ShoppingCarts extends BOBasePage {
   /**
    * Filter by date
    * @param page {Page} Browser tab
-   * @param dateFrom Value to set on filter date from input
-   * @param dateTo Value to set on filter date to input
+   * @param dateFrom {string} Value to set on filter date from input
+   * @param dateTo {string} Value to set on filter date to input
    * @returns {Promise<void>}
    */
   async filterByDate(page, dateFrom, dateTo) {
@@ -189,8 +189,8 @@ class ShoppingCarts extends BOBasePage {
   /**
    * Get content from all rows
    * @param page {Page} Browser tab
-   * @param columnName Column name on table
-   * @returns {Promise<[]>}
+   * @param columnName {string} Column name on table
+   * @returns {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -198,7 +198,7 @@ class ShoppingCarts extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

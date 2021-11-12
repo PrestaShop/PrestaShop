@@ -91,7 +91,6 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
         $dataRows = $tableNode->getRowsHash();
 
         return new ProductOptions(
-            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['active']),
             $dataRows['visibility'],
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['available_for_order']),
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['online_only']),
@@ -111,7 +110,6 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
     public function assertOptions(string $productReference, ProductOptions $expectedOptions): void
     {
         $properties = [
-            'active',
             'availableForOrder',
             'onlineOnly',
             'showPrice',
@@ -138,10 +136,6 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
      */
     private function fillCommand(array $data, UpdateProductOptionsCommand $command): void
     {
-        if (isset($data['active'])) {
-            $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
-        }
-
         if (isset($data['visibility'])) {
             $command->setVisibility($data['visibility']);
         }

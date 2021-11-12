@@ -58,7 +58,6 @@ class MaintenanceController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/maintenance.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Maintenance', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,

@@ -198,10 +198,12 @@ $(document).ready(() => {
     );
   });
 
-  window.addEventListener('popstate', (e) => {
-    const {state} = e;
-    window.location.href = state && state.current_url ? state.current_url : history;
-  });
+  if ($(prestashop.themeSelectors.listing.list).length) {
+    window.addEventListener('popstate', (e) => {
+      const {state} = e;
+      window.location.href = state && state.current_url ? state.current_url : history;
+    });
+  }
 
   $('body').on(
     'change',

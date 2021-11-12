@@ -48,7 +48,7 @@ if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$
 }
 
 // Use for image management (using the POST method of the browser to simulate the PUT method)
-$method = isset($_REQUEST['ps_method']) ? $_REQUEST['ps_method'] : $_SERVER['REQUEST_METHOD'];
+$method = $_REQUEST['ps_method'] ?? $_SERVER['REQUEST_METHOD'];
 
 if (isset($_SERVER['PHP_AUTH_USER'])) {
     $key = $_SERVER['PHP_AUTH_USER'];

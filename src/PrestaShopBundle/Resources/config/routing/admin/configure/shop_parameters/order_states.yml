@@ -1,24 +1,24 @@
 admin_order_states:
-    path: /
-    methods: [GET]
-    defaults:
-        _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderStateController::indexAction
-        _legacy_controller: AdminStatuses
-#        _legacy_link: AdminStatuses
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderStateController::indexAction
+    _legacy_controller: AdminStatuses
+#    _legacy_link: AdminStatuses
 
 admin_order_states_filter:
   path: /
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderStateController::searchGridAction
     _legacy_controller: AdminStatuses
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.order_states
     redirectRoute: admin_order_states
-#    _legacy_link: AdminStatuses:submitFilterstate
+#  _legacy_link: AdminStatuses:submitFilterstate
 
 admin_order_states_create:
   path: /new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderStateController::createAction
     _legacy_controller: AdminStatuses
@@ -26,7 +26,7 @@ admin_order_states_create:
 
 admin_order_states_edit:
   path: /{orderStateId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderStateController::editAction
     _legacy_controller: AdminStatuses
@@ -36,7 +36,7 @@ admin_order_states_edit:
 
 admin_order_states_toggle_delivery:
   path: /{orderStateId}/toggle-delivery
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderStateController::toggleDeliveryAction
     _legacy_controller: AdminStatuses
@@ -48,7 +48,7 @@ admin_order_states_toggle_delivery:
 
 admin_order_states_toggle_invoice:
   path: /{orderStateId}/toggle-invoice
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderStateController::toggleInvoiceAction
     _legacy_controller: AdminStatuses
@@ -60,7 +60,7 @@ admin_order_states_toggle_invoice:
 
 admin_order_states_toggle_send_email:
   path: /{orderStateId}/toggle-send-email
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderStateController::toggleSendEmailAction
     _legacy_controller: AdminStatuses

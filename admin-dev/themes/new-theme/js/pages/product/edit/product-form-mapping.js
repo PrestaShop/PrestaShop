@@ -40,5 +40,6 @@ export default {
     'product[pricing][tax_rules_group_id]',
     // 'product[shortcuts][retail_price][tax_rules_group_id]',
   ],
+  'product.price.wholesalePrice': 'product[pricing][wholesale_price]',
   'product.stock.hasVirtualProductFile': 'product[stock][virtual_product_file][has_file]',
 };

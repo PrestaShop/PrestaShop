@@ -293,7 +293,7 @@ export default class OrderProductEdit {
     const dataSelector = productPriceMatch === 'product' ? this.priceTaxExcludedInput : this.productEditInvoiceSelect;
 
     if (dataSelector) {
-      const modalEditPrice = new (ConfirmModal as any)(
+      const modalEditPrice = new ConfirmModal(
         {
           id: 'modal-confirm-new-price',
           confirmTitle: dataSelector.data('modal-edit-price-title'),

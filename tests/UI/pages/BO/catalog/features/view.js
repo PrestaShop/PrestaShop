@@ -124,7 +124,7 @@ class ViewFeature extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterTable(page, filterBy, value) {
-    await this.setValue(page, this.filterColumn(filterBy), value.toString());
+    await this.setValue(page, this.filterColumn(filterBy), value);
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
@@ -265,7 +265,7 @@ class ViewFeature extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param columnName Column name on table
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -273,7 +273,7 @@ class ViewFeature extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

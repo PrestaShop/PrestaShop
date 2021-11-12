@@ -90,7 +90,7 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import PSCheckbox from '@app/widgets/ps-checkbox';
+  import PSCheckbox from '@app/widgets/ps-checkbox.vue';
   import {EventBus} from '@app/utils/event-bus';
 
   export default Vue.extend({

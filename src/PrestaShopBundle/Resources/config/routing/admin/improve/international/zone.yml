@@ -16,7 +16,7 @@ admin_zones_search:
 
 admin_zones_create:
   path: /new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\ZoneController::createAction'
     _legacy_controller: AdminZones
@@ -24,7 +24,7 @@ admin_zones_create:
 
 admin_zones_edit:
   path: /{zoneId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\ZoneController::editAction'
     _legacy_controller: AdminZones
@@ -36,7 +36,7 @@ admin_zones_edit:
 
 admin_zones_delete:
   path: /{zoneId}/delete
-  methods: [POST, DELETE]
+  methods: [ POST, DELETE ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\ZoneController::deleteAction'
     _legacy_controller: AdminZones
@@ -60,7 +60,7 @@ admin_zones_toggle_status:
 
 admin_zones_bulk_delete:
   path: /bulk-delete
-  methods: [POST, DELETE]
+  methods: [ POST, DELETE ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\ZoneController::bulkDeleteAction'
     _legacy_controller: AdminZones

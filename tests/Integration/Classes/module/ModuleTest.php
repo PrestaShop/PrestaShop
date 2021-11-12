@@ -41,7 +41,6 @@ class ModuleTest extends TestCase
         return [
             ['bankwire'],
             ['cronjobs'],
-            ['gamification'],
             ['ganalytics'],
             ['ps_emailsubscription'],
             ['ps_featuredproducts'],

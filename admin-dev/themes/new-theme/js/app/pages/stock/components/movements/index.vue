@@ -104,11 +104,11 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import PSTable from '@app/widgets/ps-table/ps-table';
-  import PSSort from '@app/widgets/ps-table/ps-sort';
-  import PSAlert from '@app/widgets/ps-alert';
-  import PSLoader from '@app/widgets/ps-loader';
-  import MovementLine from './movement-line';
+  import PSTable from '@app/widgets/ps-table/ps-table.vue';
+  import PSSort from '@app/widgets/ps-table/ps-sort.vue';
+  import PSAlert from '@app/widgets/ps-alert.vue';
+  import PSLoader from '@app/widgets/ps-loader.vue';
+  import MovementLine from './movement-line.vue';
 
   const DEFAULT_SORT = 'desc';
 

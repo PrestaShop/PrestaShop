@@ -73,11 +73,11 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import PSTags from '@app/widgets/ps-tags';
-  import PSButton from '@app/widgets/ps-button';
-  import PSAlert from '@app/widgets/ps-alert';
+  import PSTags from '@app/widgets/ps-tags.vue';
+  import PSButton from '@app/widgets/ps-button.vue';
+  import PSAlert from '@app/widgets/ps-alert.vue';
   import {EventBus} from '@app/utils/event-bus';
-  import Filters from './filters';
+  import Filters from './filters.vue';
 
   export default Vue.extend({
     components: {

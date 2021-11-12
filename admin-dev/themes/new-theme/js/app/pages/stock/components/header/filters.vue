@@ -149,10 +149,10 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import PSSelect from '@app/widgets/ps-select';
-  import PSDatePicker from '@app/widgets/ps-datepicker';
-  import PSRadio from '@app/widgets/ps-radio';
-  import FilterComponent from './filters/filter-component';
+  import PSSelect from '@app/widgets/ps-select.vue';
+  import PSDatePicker from '@app/widgets/ps-datepicker.vue';
+  import PSRadio from '@app/widgets/ps-radio.vue';
+  import FilterComponent from './filters/filter-component.vue';
 
   export default Vue.extend({
     computed: {

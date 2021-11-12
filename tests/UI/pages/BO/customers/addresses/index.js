@@ -136,7 +136,7 @@ class Addresses extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column to get all rows content
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -144,7 +144,7 @@ class Addresses extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableAddresses(page, i, column);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -298,10 +298,7 @@ class Addresses extends BOBasePage {
     }
 
     // Click on checkbox if not selected
-    const isCheckboxSelected = await this.isCheckboxSelected(page, this.requiredFieldCheckBox(id));
-    if (valueWanted !== isCheckboxSelected) {
-      await page.$eval(`${this.requiredFieldCheckBox(id)} + i`, el => el.click());
-    }
+    await this.setCheckedWithIcon(page, this.requiredFieldCheckBox(id), valueWanted);
 
     // Save setting
     await this.clickAndWaitForNavigation(page, this.saveButton);

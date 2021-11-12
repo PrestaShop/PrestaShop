@@ -50,26 +50,19 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
   });
 
   describe('Filter modules by status', async () => {
-    [
-      {
-        enabled: false,
-      },
-      {
-        enabled: true,
-      },
-    ].forEach((test) => {
-      it(`should filter by status enabled : '${test.enabled}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `filterByStatus${test.enabled}`, baseContext);
+    [false, true].forEach((status, index) => {
+      it(`should filter by status enabled : '${status}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `filterByStatus${index}`, baseContext);
 
-        await moduleManagerPage.filterByStatus(page, test.enabled);
+        await moduleManagerPage.filterByStatus(page, status);
 
         const modules = await moduleManagerPage.getAllModulesStatus(page);
 
-        await modules.map(
+        modules.map(
           module => expect(
             module.status,
-            `${module.name} is not ${test.enabled ? 'enabled' : 'disabled'}`,
-          ).to.equal(test.enabled),
+            `${module.name} is not ${status ? 'enabled' : 'disabled'}`,
+          ).to.equal(status),
         );
       });
     });

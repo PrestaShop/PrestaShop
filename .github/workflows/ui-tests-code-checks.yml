@@ -2,11 +2,11 @@ name: UI tests code checks
 
 on:
   pull_request:
-      types: [opened,edited,reopened,synchronize,labeled]
+    types: [ opened, edited, reopened, synchronize, labeled ]
 
 defaults:
   run:
-      working-directory: ./tests/UI/
+    working-directory: ./tests/UI/
 
 jobs:
 
@@ -60,8 +60,8 @@ jobs:
         run: npm install
 
       - name: Generate mocha reports with failed steps
-        run: GENERATE_FAILED_STEPS=true npm run all-tests
+        run: GENERATE_FAILED_STEPS=true npm run test:all
         continue-on-error: true
 
       - name: Checking doubles in steps identifiers
-        run: npm run step-identifiers-checker
+        run: npm run check:step-identifiers

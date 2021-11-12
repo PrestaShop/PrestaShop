@@ -37,7 +37,7 @@ class AddEmployee extends BOBasePage {
   /**
    * Fill form for add/edit page Employee
    * @param page {Page} Browser tab
-   * @param employeeData {employeeData} Data to set on add/edit employee form
+   * @param employeeData {EmployeeData} Data to set on add/edit employee form
    * @returns {Promise<string>}
    */
   async createEditEmployee(page, employeeData) {
@@ -49,7 +49,7 @@ class AddEmployee extends BOBasePage {
     await this.selectByVisibleText(page, this.languageSelect, employeeData.language);
     await this.selectDefaultPage(page, employeeData.defaultPage);
     // replace toggle by 1 in the selector if active = YES / 0 if active = NO
-    await page.check(this.statusToggleInput(employeeData.active ? 1 : 0));
+    await this.setChecked(page, this.statusToggleInput(employeeData.active ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

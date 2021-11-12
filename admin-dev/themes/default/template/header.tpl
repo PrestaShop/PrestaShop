@@ -76,7 +76,6 @@
 		var employee_token = '{getAdminToken tab='AdminEmployees'}';
 		var choose_language_translate = '{l|escape s='Choose language:' js=1 d='Admin.Actions'}';
 		var default_language = '{$default_language|intval}';
-		var admin_modules_link = '{$link->getAdminLink("AdminModulesCatalog", true, ['route' => "admin_module_catalog_post"])|addslashes}';
 		var admin_notification_get_link = adminNotificationGetLink = '{$link->getAdminLink("AdminCommon")|addslashes}';
 		var admin_notification_push_link = adminNotificationPushLink ='{$link->getAdminLink("AdminCommon", true, ['route' => 'admin_common_notifications_ack'])|addslashes}';
 		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
@@ -364,16 +363,19 @@
             <li class="text-left text-nowrap username" data-mobile="true" data-from="employee_links" data-target="menu">{l|escape s='Welcome back %name%' sprintf=['%name%' => $employee->firstname] d='Admin.Navigation.Header'}</li>
             <li class="employee-wrapper-profile"><a class="admin-link" href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}"><i class="material-icons">edit</i> {l|escape s='Your profile' d='Admin.Navigation.Header'}</a></li>
             <li class="divider"></li>
-            <li><a href="{l|escape s='https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17
-' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">book</i> {l|escape s='Resources' d='Admin.Navigation.Header'}</a></li>
-            <li><a href="{l|escape s='https://www.prestashop.com/en/training?utm_source=back-office&utm_medium=profile&utm_campaign=training-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">school</i> {l|escape s='Training' d='Admin.Navigation.Header'}</a></li>
-            <li><a href="{l|escape s='https://www.prestashop.com/en/experts?utm_source=back-office&utm_medium=profile&utm_campaign=expert-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">person_pin_circle</i> {l|escape s='Find an Expert' d='Admin.Navigation.Header'}</a></li>
-            <li><a href="{l|escape s='https://addons.prestashop.com?utm_source=back-office&utm_medium=profile&utm_campaign=addons-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">extension</i> {l|escape s='PrestaShop Marketplace' d='Admin.Navigation.Header'}</a></li>
-            <li><a href="{l|escape s='https://www.prestashop.com/en/contact?utm_source=back-office&utm_medium=profile&utm_campaign=help-center-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">help</i> {l|escape s='Help Center' d='Admin.Global'}</a></li>
-            {if $host_mode}
-              <li><a href="https://www.prestashop.com/cloud/" target="_blank" rel="noopener noreferrer nofollow"><i class="material-icons">settings_applications</i> {l|escape s='My PrestaShop account' d='Admin.Navigation.Header'}</a></li>
-            {/if}
-            <li class="divider"></li>
+
+            {foreach from=$displayBackOfficeEmployeeMenu item=$menuItem}
+              {assign var=menuItemProperties value=$menuItem->getProperties()}
+              <li class="{$menuItem->getClass()}">
+                <a class="dropdown-item" href="{$menuItemProperties.link}" target="_blank" rel="noopener noreferrer nofollow">
+                  {if isset($menuItemProperties.icon)}<i class="material-icons">{$menuItemProperties.icon}</i> {/if}{$menuItem->getContent()}
+                </a>
+              </li>
+              {if $menuItem@last}
+                <p class="divider"></p>
+              {/if}
+            {/foreach}
+
             <li class="signout text-center" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{$logout_link|escape:'html':'UTF-8'}"><i class="material-icons visible-xs">power_settings_new</i> {l|escape s='Sign out' d='Admin.Navigation.Header'}</a></li>
           </ul>
         </li>

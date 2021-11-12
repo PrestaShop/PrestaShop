@@ -47,9 +47,9 @@ class DescriptionType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formIsUsedToEditAProduct = !empty($options['product_id']);
-        if ($formIsUsedToEditAProduct) {
-            $productId = (int) $options['product_id'];
+        $productId = (int) $options['product_id'];
+
+        if ($productId) {
             $builder
                 ->add('images', ImageDropzoneType::class, [
                     'product_id' => $productId,
@@ -104,7 +104,11 @@ class DescriptionType extends TranslatorAwareType
                 ],
                 'label_tag_name' => 'h2',
             ])
-            ->add('categories', CategoriesType::class)
+            ->add('categories', CategoriesType::class, [
+                'label' => $this->trans('Categories', 'Admin.Global'),
+                'label_tag_name' => 'h2',
+                'product_id' => $productId,
+            ])
             ->add('manufacturer', ManufacturerType::class)
             ->add('related_products', UnavailableType::class, [
                 'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
