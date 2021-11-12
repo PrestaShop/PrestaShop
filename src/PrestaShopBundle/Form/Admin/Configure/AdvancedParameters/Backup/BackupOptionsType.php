@@ -32,6 +32,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
+
 /**
  * Class BackupOptionsType builds form for backup options.
  */
