@@ -26,13 +26,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
-class SearchProductsForAssociation
+class SearchCombinationsForAssociation
 {
     /**
      * This is the minimum length of search phrase
@@ -70,6 +70,7 @@ class SearchProductsForAssociation
         if (null !== $limit && $limit <= 0) {
             throw new ProductConstraintException('Search limit must be a positive integer or null', ProductConstraintException::INVALID_SEARCH_LIMIT);
         }
+
         if (mb_strlen($phrase) < static::SEARCH_PHRASE_MIN_LENGTH) {
             throw new ProductConstraintException(sprintf(
                 'Search phase must have a minimum length of %d characters.',

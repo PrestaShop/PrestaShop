@@ -1934,9 +1934,11 @@ class AdminImportControllerCore extends AdminController
 
         // Category default now takes the value of the first new category during import
         if (isset($product->id_category[0])) {
-            $product->id_category_default = (int) $product->id_category[0];
+            if (empty($product->id_category_default) || !in_array($product->id_category_default, $product->id_category)) {
+                $product->id_category_default = (int) $product->id_category[0];
+            }
         } else {
-            if (!isset($product->id_category_default) || !$product->id_category_default) {
+            if (empty($product->id_category_default)) {
                 $defaultProductShop = new Shop($product->id_shop_default);
                 $product->id_category_default = Category::getRootCategory(null, Validate::isLoadedObject($defaultProductShop) ? $defaultProductShop : null)->id;
             }

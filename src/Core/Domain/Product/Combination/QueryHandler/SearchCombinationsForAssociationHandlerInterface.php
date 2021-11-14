@@ -23,17 +23,22 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-define('_PS_ROOT_DIR_', __DIR__ . '/..');
-define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/tests-legacy/resources/modules/');
-require_once dirname(__FILE__).'/../admin-dev/bootstrap.php';
-require_once _PS_CONFIG_DIR_.'autoload.php';
-require_once dirname(__FILE__).'/../config/bootstrap.php';
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForAssociation;
 
 /**
- * Following code makes tests run under phpstorm
- * Else we get error : Class 'PHPUnit_Util_Configuration' not found
- * @see https://stackoverflow.com/questions/33299149/phpstorm-8-and-phpunit-problems-with-runinseparateprocess
+ * Search a list of combination that you can associate with, the query result contains minimum information
+ * to display the product (the returned list can contain product which have no combinations).
  */
-if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
-    define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../vendor/autoload.php');
+interface SearchCombinationsForAssociationHandlerInterface
+{
+    /**
+     * @param SearchCombinationsForAssociation $query
+     *
+     * @return CombinationForAssociation[]
+     */
+    public function handle(SearchCombinationsForAssociation $query): array;
 }

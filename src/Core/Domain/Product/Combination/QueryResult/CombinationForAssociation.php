@@ -28,27 +28,22 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 
-use PrestaShop\Decimal\DecimalNumber;
-
-/**
- * Transfers combination data for listing
- */
-class EditableCombinationForListing
+class CombinationForAssociation
 {
+    /**
+     * @var int
+     */
+    private $productId;
+
     /**
      * @var int
      */
     private $combinationId;
 
     /**
-     * @var CombinationAttributeInformation[]
-     */
-    private $attributesInformation;
-
-    /**
      * @var string
      */
-    private $combinationName;
+    private $name;
 
     /**
      * @var string
@@ -56,53 +51,32 @@ class EditableCombinationForListing
     private $reference;
 
     /**
-     * @var bool
-     */
-    private $default;
-
-    /**
-     * @var DecimalNumber
-     */
-    private $impactOnPrice;
-
-    /**
-     * @var int
-     */
-    private $quantity;
-
-    /**
      * @var string
      */
     private $imageUrl;
 
     /**
+     * @param int $productId
      * @param int $combinationId
-     * @param string $combinationName
+     * @param string $name
      * @param string $reference
-     * @param CombinationAttributeInformation[] $attributesInformation
-     * @param bool $default
-     * @param DecimalNumber $impactOnPrice
-     * @param int $quantity
      * @param string $imageUrl
      */
-    public function __construct(
-        int $combinationId,
-        string $combinationName,
-        string $reference,
-        array $attributesInformation,
-        bool $default,
-        DecimalNumber $impactOnPrice,
-        int $quantity,
-        string $imageUrl
-    ) {
+    public function __construct(int $productId, int $combinationId, string $name, string $reference, string $imageUrl)
+    {
+        $this->productId = $productId;
         $this->combinationId = $combinationId;
-        $this->attributesInformation = $attributesInformation;
-        $this->combinationName = $combinationName;
+        $this->name = $name;
         $this->reference = $reference;
-        $this->default = $default;
-        $this->impactOnPrice = $impactOnPrice;
-        $this->quantity = $quantity;
         $this->imageUrl = $imageUrl;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProductId(): int
+    {
+        return $this->productId;
     }
 
     /**
@@ -114,19 +88,11 @@ class EditableCombinationForListing
     }
 
     /**
-     * @return CombinationAttributeInformation[]
-     */
-    public function getAttributesInformation(): array
-    {
-        return $this->attributesInformation;
-    }
-
-    /**
      * @return string
      */
-    public function getCombinationName(): string
+    public function getName(): string
     {
-        return $this->combinationName;
+        return $this->name;
     }
 
     /**
@@ -135,30 +101,6 @@ class EditableCombinationForListing
     public function getReference(): string
     {
         return $this->reference;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDefault(): bool
-    {
-        return $this->default;
-    }
-
-    /**
-     * @return DecimalNumber
-     */
-    public function getImpactOnPrice(): DecimalNumber
-    {
-        return $this->impactOnPrice;
-    }
-
-    /**
-     * @return int
-     */
-    public function getQuantity(): int
-    {
-        return $this->quantity;
     }
 
     /**
