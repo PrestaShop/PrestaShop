@@ -57,7 +57,7 @@ class PDFCore
     /**
      * @var Smarty
      */
-    private $smarty;
+    protected $smarty;
 
     const TEMPLATE_INVOICE = 'Invoice';
     const TEMPLATE_ORDER_RETURN = 'OrderReturn';
