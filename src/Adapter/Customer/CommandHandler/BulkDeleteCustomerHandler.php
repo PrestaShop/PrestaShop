@@ -29,8 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\BulkDeleteCustomerHandlerInterface;
-use PrestaShopLogger;
-use Context;
+use Symfony\Component\Translation\TranslatorInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Handles command that deletes customers in bulk action.
@@ -39,6 +39,18 @@ use Context;
  */
 final class BulkDeleteCustomerHandler extends AbstractCustomerHandler implements BulkDeleteCustomerHandlerInterface
 {
+    /**
+     * @param TranslatorInterface $translator
+     * @param LoggerInterface $logger
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        LoggerInterface $logger
+    )
+    {
+        parent::__construct($translator, $logger);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -49,16 +61,17 @@ final class BulkDeleteCustomerHandler extends AbstractCustomerHandler implements
 
             $this->assertCustomerWasFound($customerId, $customer);
 
-            PrestaShopLogger::addLog(
-                Context::getContext()->getTranslator()->trans(
+            $this->logger->notice(
+                $this->translator->trans(
                     'Customer deleted: (' . $customer->id . ')',
                     [],
                     'Admin.Advparameters.Notification'
                 ),
-                1,
-                null,
-                'Customer',
-                $customer->id
+                [
+                    'allow_duplicate' => true,
+                    'object_type' => $this->objectTypeLabel,
+                    'object_id' => $customer->id
+                ]
             );
 
             if ($command->getDeleteMethod()->isAllowedToRegisterAfterDelete()) {

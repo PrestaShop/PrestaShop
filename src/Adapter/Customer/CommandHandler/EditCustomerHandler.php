@@ -35,8 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
-use PrestaShopLogger;
-use Context;
+use Symfony\Component\Translation\TranslatorInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Handles commands which edits given customer with provided data.
@@ -57,10 +57,19 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
 
     /**
      * @param Hashing $hashing
+     * @param TranslatorInterface $translator
+     * @param LoggerInterface $logger
      * @param string $legacyCookieKey
      */
-    public function __construct(Hashing $hashing, $legacyCookieKey)
+    public function __construct(
+        Hashing $hashing,
+        TranslatorInterface $translator,
+        LoggerInterface $logger,
+        $legacyCookieKey
+    )
     {
+        parent::__construct($translator, $logger);
+
         $this->hashing = $hashing;
         $this->legacyCookieKey = $legacyCookieKey;
     }
@@ -107,16 +116,17 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
             throw new CustomerException('Failed to update customer');
         }
 
-        PrestaShopLogger::addLog(
-            Context::getContext()->getTranslator()->trans(
+        $this->logger->notice(
+            $this->translator->trans(
                 'Customer updated: (' . $customer->id . ')',
                 [],
                 'Admin.Advparameters.Notification'
             ),
-            1,
-            null,
-            'Customer',
-            $customer->id
+            [
+                'allow_duplicate' => true,
+                'object_type' => $this->objectTypeLabel,
+                'object_id' => $customer->id
+            ]
         );
     }
 

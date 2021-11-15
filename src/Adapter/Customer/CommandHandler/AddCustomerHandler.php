@@ -36,8 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailE
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
-use PrestaShopLogger;
-use Context;
+use Symfony\Component\Translation\TranslatorInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Handles command that adds new customer
@@ -58,10 +58,19 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
 
     /**
      * @param Hashing $hashing
+     * @param TranslatorInterface $translator
+     * @param LoggerInterface $logger
      * @param string $legacyCookieKey
      */
-    public function __construct(Hashing $hashing, $legacyCookieKey)
+    public function __construct(
+        Hashing $hashing,
+        TranslatorInterface $translator,
+        LoggerInterface $logger,
+        $legacyCookieKey
+    )
     {
+        parent::__construct($translator, $logger);
+
         $this->hashing = $hashing;
         $this->legacyCookieKey = $legacyCookieKey;
     }
@@ -90,16 +99,17 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
 
         $customer->add();
 
-        PrestaShopLogger::addLog(
-            Context::getContext()->getTranslator()->trans(
+        $this->logger->notice(
+            $this->translator->trans(
                 'Customer created: (' . $customer->id . ')',
                 [],
                 'Admin.Advparameters.Notification'
             ),
-            1,
-            null,
-            'Customer',
-            $customer->id
+            [
+                'allow_duplicate' => true,
+                'object_type' => $this->objectTypeLabel,
+                'object_id' => $customer->id
+            ]
         );
 
         return new CustomerId((int) $customer->id);

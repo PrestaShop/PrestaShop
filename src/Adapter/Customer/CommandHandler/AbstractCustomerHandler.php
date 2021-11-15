@@ -30,6 +30,8 @@ use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\MissingCustomerRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use Symfony\Component\Translation\TranslatorInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Provides reusable methods for customer command handlers.
@@ -38,6 +40,30 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
  */
 abstract class AbstractCustomerHandler
 {
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param LoggerInterface $logger
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        LoggerInterface $logger
+    ) {
+        $this->translator = $translator;
+        $this->logger = $logger;
+
+        $this->objectTypeLabel = $this->translator->trans('Customer', [], 'Admin.Global');
+    }
+
     /**
      * @param CustomerId $customerId
      * @param Customer $customer
