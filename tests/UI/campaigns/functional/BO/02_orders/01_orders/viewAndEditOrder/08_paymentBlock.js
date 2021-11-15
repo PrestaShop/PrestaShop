@@ -592,10 +592,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it('should add payment when amount is equal to the rest to the new invoice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'testAmountSupTotal', baseContext);
 
-      let invoice = '';
-      if (invoiceID >= 10) {
-        invoice = `#IN0000${invoiceID + 1}`;
-      } else invoice = `#IN00000${invoiceID + 1}`;
+      const invoice = `#IN0000${invoiceID >= 10 ? '' : '0'}${invoiceID + 1}`;
 
       const validationMessage = await viewOrderPage.addPayment(page, paymentDataAmountEqualRest, invoice);
       expect(validationMessage, 'Successful message is not correct!').to.equal(viewOrderPage.successfulUpdateMessage);
@@ -615,7 +612,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       filePath = await viewOrderPage.downloadInvoice(page, 3);
 
       const exist = await files.doesFileExist(filePath);
-      await expect(exist).to.be.true;
+      await expect(exist, 'File doesn\'t exist!').to.be.true;
 
       const paymentMethodExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.paymentMethod);
       await expect(paymentMethodExist, 'Payment method does not exist in invoice!').to.be.true;
@@ -626,7 +623,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   });
 
   // Post-condition - Delete currency
-  describe('Delete currency created ', async () => {
+  describe('Delete created currency ', async () => {
     it('should go to \'International > Localization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage2', baseContext);
 

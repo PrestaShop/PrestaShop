@@ -916,9 +916,11 @@ class Order extends BOBasePage {
     if (paymentData.currency !== '€') {
       await this.selectByVisibleText(page, this.paymentCurrencySelect, paymentData.currency);
     }
+
     if (invoice !== '') {
       await this.selectByVisibleText(page, this.paymentInvoiceSelect, invoice);
     }
+
     await this.clickAndWaitForNavigation(page, this.paymentAddButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
