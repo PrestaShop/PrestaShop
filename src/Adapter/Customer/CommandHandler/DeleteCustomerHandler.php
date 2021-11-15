@@ -29,8 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\DeleteCustomerHandlerInterface;
-use \PrestaShopLogger;
-use \Context;
+use PrestaShopLogger;
+use Context;
 
 /**
  * Handles delete customer command.
