@@ -36,6 +36,7 @@ $(() => {
     'TranslatableInput',
     'EventEmitter',
     'TextWithLengthCounter',
+    'DeltaQuantityInput',
   ]);
 
   new ProductSuppliersManager(ProductMap.suppliers.combinationSuppliers, false);
