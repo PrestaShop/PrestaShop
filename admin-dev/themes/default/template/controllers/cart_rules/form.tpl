@@ -78,6 +78,9 @@
 
     {if isset($refresh_cart) }
       if (typeof window.parent.order_create !== "undefined") {
+		  {if isset($created_cart_rule) }
+		  window.parent.order_create.addCreatedCartRuleToCart({$created_cart_rule});
+		  {/if}
         window.parent.order_create.refreshCart();
       }
       window.parent.$.fancybox.close();

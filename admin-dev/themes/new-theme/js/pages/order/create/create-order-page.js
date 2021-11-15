@@ -69,6 +69,7 @@ export default class CreateOrderPage {
     this.loadCartFromUrlParams();
 
     return {
+      addCreatedCartRuleToCart: (cartRuleId) => this.addCreatedCartRuleToCart(cartRuleId),
       refreshAddressesList: (refreshCartAddresses) => this.refreshAddressesList(refreshCartAddresses),
       refreshCart: (refreshCart) => this.refreshCart(refreshCart),
       search: (string) => this.customerManager.search(string),
@@ -640,5 +641,12 @@ export default class CreateOrderPage {
   refreshCart() {
     const cartId = $(createOrderMap.cartBlock).data('cartId');
     this.cartProvider.getCart(cartId);
+  }
+
+  /**
+   * Adds newly created cart rule to cart
+   */
+  addCreatedCartRuleToCart(cartRuleId) {
+    this.cartRuleManager.addCartRuleToCart(cartRuleId, this.cartId);
   }
 }
