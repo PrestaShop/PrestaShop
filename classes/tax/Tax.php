@@ -228,30 +228,6 @@ class TaxCore extends ObjectModel
     }
 
     /**
-     * Return the product tax rate using the tax rules system.
-     *
-     * @param int $id_product
-     * @param int $id_country
-     * @param int $id_state
-     * @param string $zipcode
-     *
-     * @return Tax
-     *
-     * @deprecated since 1.5
-     */
-    public static function getProductTaxRateViaRules($id_product, $id_country, $id_state, $zipcode)
-    {
-        Tools::displayAsDeprecated();
-
-        if (!isset(self::$_product_tax_via_rules[$id_product . '-' . $id_country . '-' . $id_state . '-' . $zipcode])) {
-            $tax_rate = TaxRulesGroup::getTaxesRate((int) Product::getIdTaxRulesGroupByIdProduct((int) $id_product), (int) $id_country, (int) $id_state, $zipcode);
-            self::$_product_tax_via_rules[$id_product . '-' . $id_country . '-' . $zipcode] = $tax_rate;
-        }
-
-        return self::$_product_tax_via_rules[$id_product . '-' . $id_country . '-' . $zipcode];
-    }
-
-    /**
      * Returns the product tax rate.
      *
      * @param int $id_product

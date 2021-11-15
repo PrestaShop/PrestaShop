@@ -264,30 +264,4 @@ class TaxRulesGroupCore extends ObjectModel
 		WHERE `id_tax_rules_group` = ' . (int) $this->id
         );
     }
-
-    /**
-     * @deprecated since 1.5
-     */
-    public static function getTaxesRate($id_tax_rules_group, $id_country, $id_state, $zipcode)
-    {
-        Tools::displayAsDeprecated();
-        $rate = 0;
-        foreach (TaxRulesGroup::getTaxes($id_tax_rules_group, $id_country, $id_state, $zipcode) as $tax) {
-            $rate += (float) $tax->rate;
-        }
-
-        return $rate;
-    }
-
-    /**
-     * Return taxes associated to this para.
-     *
-     * @deprecated since 1.5
-     */
-    public static function getTaxes($id_tax_rules_group, $id_country, $id_state, $id_county)
-    {
-        Tools::displayAsDeprecated();
-
-        return [];
-    }
 }
