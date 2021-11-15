@@ -31,8 +31,8 @@ class OrderHistory extends FOBasePage {
     this.messageRow = row => `${this.boxMessagesSection} div:nth-child(${row}).message.row`;
     // Add message block
     this.orderMessageForm = '.order-message-form';
-    this.productSelect = `${this.orderMessageForm} select.product`;
-    this.messageTextarea = `${this.orderMessageForm} textarea.msg-text`;
+    this.productSelect = `${this.orderMessageForm} select.js-test-product`;
+    this.messageTextarea = `${this.orderMessageForm} textarea.js-test-msg-text`;
     this.sendMessageButton = `${this.orderMessageForm} button.form-control-submit`;
   }
 
