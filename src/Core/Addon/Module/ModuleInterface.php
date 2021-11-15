@@ -30,6 +30,12 @@ use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 
 interface ModuleInterface extends AddonInterface
 {
+    public function getInstance();
+
+    public function hasValidInstance();
+
+    public function get(string $name);
+
     public function onInstall(): bool;
 
     public function onPostInstall(): bool;

@@ -30,10 +30,10 @@ use Currency;
 use Exception;
 use Hook;
 use Module as LegacyModule;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 
 class ModulePresenter implements PresenterInterface
 {
@@ -52,13 +52,13 @@ class ModulePresenter implements PresenterInterface
     }
 
     /**
-     * @param Module $module
+     * @param ModuleInterface $module
      *
      * @return array
      */
     public function present($module)
     {
-        if (!($module instanceof Module)) {
+        if (!($module instanceof ModuleInterface)) {
             throw new Exception('ModulePresenter can only present instance of Module');
         }
 
