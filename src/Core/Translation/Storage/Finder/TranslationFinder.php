@@ -223,13 +223,26 @@ class TranslationFinder
         }
 
         $notes = $metadata['notes'][0]['content'];
-        if (1 !== preg_match('/Line: (?<line>\d+)/', $notes, $matches)) {
-            return $defaultMetadata;
+        $originalFile = $metadata['file']['original'];
+        /*
+         * We have 2 different cases :
+         * When it's a PHP file, the notes contains "Line: XX", where XX is the line number
+         * When it's a template file, the notes contains "Context:\nFile: the-template-file-name:XX" , where XX is the line number
+         */
+        if (
+            1 === preg_match('/Line: (?<line>\d+)/', $notes, $matches)
+            || 1 === preg_match(
+                '/Context:\nFile: ' . preg_quote($originalFile, DIRECTORY_SEPARATOR) . ':(?<line>\d+)/',
+                $notes,
+                $matches
+            )
+        ) {
+            return [
+                'file' => $originalFile,
+                'line' => (int) $matches['line'],
+            ];
         }
 
-        return [
-            'file' => $metadata['file']['original'],
-            'line' => (int) $matches['line'],
-        ];
+        return $defaultMetadata;
     }
 }
