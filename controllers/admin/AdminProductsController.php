@@ -3210,7 +3210,7 @@ class AdminProductsControllerCore extends AdminController
                             if (isset($position) && $product->updatePosition($way, $position)) {
                                 $category = new Category((int) $id_category);
                                 if (Validate::isLoadedObject($category)) {
-                                    hook::Exec('categoryUpdate', ['category' => $category]);
+                                    Hook::exec('actionCategoryUpdate', ['category' => $category]);
                                 }
                                 echo 'ok position ' . (int) $position . ' for product ' . (int) $pos[2] . "\r\n";
                             } else {
