@@ -1174,7 +1174,7 @@ class ShopCore extends ObjectModel
                 && (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'shop') > 1);
         }
 
-        return self::$feature_active;
+        return static::$feature_active;
     }
 
     public function copyShopData($old_id, $tables_import = false, $deleted = false)
