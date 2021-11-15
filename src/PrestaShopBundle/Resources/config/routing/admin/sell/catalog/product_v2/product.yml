@@ -5,7 +5,7 @@ _images:
   resource: 'image.yml'
 
 _specific_prices:
-    resource: 'specific_price.yml'
+  resource: 'specific_price.yml'
 
 admin_products_v2_index:
   path: /

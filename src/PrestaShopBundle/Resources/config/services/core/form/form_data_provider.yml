@@ -188,4 +188,3 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SpecificPriceFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
-
