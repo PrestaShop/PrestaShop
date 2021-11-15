@@ -173,7 +173,7 @@ class LogoUploader
 
     public function isSvgMimeType(string $mimeType): bool
     {
-        return (bool) in_array($mimeType, self::SVG_MIMETYPES);
+        return in_array($mimeType, self::SVG_MIMETYPES);
     }
 
     private function updateInMultiShopContext(&$idShop, &$idShopGroup, $fieldName)
