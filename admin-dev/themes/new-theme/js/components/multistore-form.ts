@@ -35,7 +35,30 @@ const initMultistoreForm = () => {
   const $modalItem = $(MultistoreHeaderMap.modal);
   const translations = $(MultistoreHeaderMap.header).data('translations');
 
-  const generateFormValuesHash = () => multistoreForm.serialize();
+  const generateFormValuesHash = () => {
+    const formValues = multistoreForm.serializeArray().reduce((obj: any, item: any) => {
+      const form = multistoreForm[0] as HTMLFormElement;
+      const formElement = form.elements[item.name] as HTMLFormElement;
+
+      if ($(formElement).prop('disabled')) { // Ignore if element is disabled
+        return obj;
+      }
+      const fieldValues = obj;
+
+      if (formElement instanceof HTMLTextAreaElement) {
+        fieldValues[item.name] = item.value
+          .replace(/<[^>]*>?/gm, '') // remove html tags
+          .replace(/\r?\n|\r/g, '') //remove line breaks
+          .replace(/(\.\s)/g, '.'); //remove space after dots added by TinyMCE
+      } else {
+        fieldValues[item.name] = item.value;
+      }
+
+      return fieldValues;
+    });
+
+    return JSON.stringify(formValues);
+  };
 
   /**
    * @param {string} path
@@ -66,22 +89,14 @@ const initMultistoreForm = () => {
   };
 
   if (multistoreForm) {
-    let originalFormValuesHash = generateFormValuesHash();
-
-    window.tinyMCE.each($('textarea'), (textarea: HTMLTextAreaElement) => {
-      const editor = window.tinyMCE.get(textarea.id);
-
-      // overrides the textarea value after initialization to have the P tags
-      editor.on('init', () => {
-        textarea.value = editor.getContent(); // eslint-disable-line no-param-reassign
-        originalFormValuesHash = generateFormValuesHash();
-      });
-    });
+    const originalFormValuesHash = generateFormValuesHash();
 
     // Bind click on header's links
     $modalItem.find('a').each((index, itemLink) => {
       $(itemLink).on('click', () => {
-        if (originalFormValuesHash !== generateFormValuesHash()) {
+        const formValuesHash = generateFormValuesHash();
+
+        if (originalFormValuesHash !== formValuesHash) {
           const targetUrl = $(itemLink).attr('href');
           showConfirmModal(`${targetUrl}`);
 
