@@ -127,7 +127,7 @@ class Order extends BOBasePage {
 
     // Merchandise returns tab
     this.merchandiseReturnsTab = '#orderReturnsTab';
-    this.merchandiseReturnsGridTable = '#merchandise-returns-grid-table';
+    this.merchandiseReturnsGridTable = '#js-test-merchandise-returns-grid-table';
     this.merchandiseReturnsTableBody = `${this.merchandiseReturnsGridTable} tbody`;
     this.merchandiseReturnsTableRow = row => `${this.merchandiseReturnsTableBody} tr:nth-child(${row})`;
     this.merchandiseReturnsTableColumn = (row, column) => `${this.merchandiseReturnsTableRow(row)}`
@@ -313,7 +313,7 @@ class Order extends BOBasePage {
    * @returns {Promise<number>}
    */
   getDocumentsNumber(page) {
-    return this.getNumberFromText(page, `${this.documentTab} .count`);
+    return this.getNumberFromText(page, `${this.documentTab} .js-test-count`);
   }
 
   /**
