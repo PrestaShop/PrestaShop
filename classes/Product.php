@@ -400,6 +400,14 @@ class ProductCore extends ObjectModel
     protected static $_combinations = [];
 
     /**
+     * Associations between the ids of base combinations and their duplicates.
+     * Used for duplicating specific prices when duplicating a product.
+     *
+     * @var array
+     */
+    protected static $_combination_associations = [];
+
+    /**
      * @deprecated Since 1.5.6.1
      *
      * @var array
@@ -4966,6 +4974,7 @@ class ProductCore extends ObjectModel
             $return &= $combination->save();
 
             $id_product_attribute_new = (int) $combination->id;
+            self::$_combination_associations[$id_product_attribute_old] = $id_product_attribute_new;
 
             if ($result_images = Product::_getAttributeImageAssociations($id_product_attribute_old)) {
                 $combination_images['old'][$id_product_attribute_old] = $result_images;
@@ -5366,7 +5375,7 @@ class ProductCore extends ObjectModel
     {
         foreach (SpecificPrice::getIdsByProductId((int) $old_product_id) as $data) {
             $specific_price = new SpecificPrice((int) $data['id_specific_price']);
-            if (!$specific_price->duplicate((int) $product_id)) {
+            if (!$specific_price->duplicate((int) $product_id, self::$_combination_associations)) {
                 return false;
             }
         }
