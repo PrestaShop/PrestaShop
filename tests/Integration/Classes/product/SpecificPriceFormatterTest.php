@@ -93,11 +93,6 @@ class SpecificPriceFormatterTest extends KernelTestCase
         $currency->iso_code = $currencyData['code'];
         $context->currency = $currency;
 
-        $language = new Language();
-        $language->iso_code = 'EN';
-        $language->locale = 'en-US';
-        $context->language = $language;
-
         $specificPriceFormatter = new SpecificPriceFormatter(
             $specificPrices[0],
             $isTaxIncluded,
@@ -329,6 +324,8 @@ class SpecificPriceFormatterTest extends KernelTestCase
     {
         $mockLanguage = $this->getMockBuilder(Language::class)->getMock();
         $mockLanguage->id = 1;
+        $mockLanguage->iso_code = 'EN';
+        $mockLanguage->locale = 'en-US';
 
         return $mockLanguage;
     }
@@ -347,6 +344,13 @@ class SpecificPriceFormatterTest extends KernelTestCase
 
         $mockContext->language = $this->getMockLanguage();
         $mockContext->shop = $this->getMockShop();
+
+        $localeRepo = self::$container->get('prestashop.core.localization.locale.repository');
+        $mockContext->method('getCurrentLocale')->willReturn(
+            $localeRepo->getLocale(
+                $mockContext->language->locale
+            )
+        );
 
         return $mockContext;
     }

@@ -236,7 +236,6 @@ class OrderSlipCore extends ObjectModel
         $order = new Order($this->id_order);
         $products = [];
         foreach ($result as $row) {
-            $order->setProductPrices($row);
             $products[] = $row;
         }
 
