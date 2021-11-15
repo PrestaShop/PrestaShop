@@ -32,11 +32,11 @@ export default class ProductSuppliersManager {
    *
    * @param {string} suppliersFormId
    * @param {boolean} forceUpdateDefault
-   * @param {ProductFormModel|null} productFormModel
+   * @param {ProductFormModel} productFormModel
    *
    * @returns {{}}
    */
-  constructor(suppliersFormId, forceUpdateDefault, productFormModel = null) {
+  constructor(suppliersFormId, forceUpdateDefault, productFormModel) {
     this.productFormModel = productFormModel;
     this.forceUpdateDefault = forceUpdateDefault;
     this.suppliersMap = SuppliersMap(suppliersFormId);
