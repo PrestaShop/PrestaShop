@@ -1,6 +1,6 @@
 admin_products_specific_prices_list:
   path: /{productId}/specific-prices/list
-  methods: [GET]
+  methods: [ GET ]
   options:
     expose: true
   defaults:
@@ -11,7 +11,7 @@ admin_products_specific_prices_list:
 
 admin_products_specific_prices_create:
   path: /{productId}/specific-prices/create
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   options:
     expose: true
   defaults:
@@ -22,7 +22,7 @@ admin_products_specific_prices_create:
 
 admin_products_specific_prices_edit:
   path: /specific-prices/{specificPriceId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   options:
     expose: true
   defaults:
