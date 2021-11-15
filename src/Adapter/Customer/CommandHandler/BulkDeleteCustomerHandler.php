@@ -29,8 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\BulkDeleteCustomerHandlerInterface;
-use \PrestaShopLogger;
-use \Context;
+use PrestaShopLogger;
+use Context;
 
 /**
  * Handles command that deletes customers in bulk action.

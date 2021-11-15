@@ -35,8 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
-use \PrestaShopLogger;
-use \Context;
+use PrestaShopLogger;
+use Context;
 
 /**
  * Handles commands which edits given customer with provided data.
