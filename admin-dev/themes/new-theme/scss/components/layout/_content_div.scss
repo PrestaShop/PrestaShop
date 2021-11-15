@@ -1,8 +1,6 @@
 .content-div {
   // stylelint-disable
-  padding-top:
-    $size-header-height + $size-header-toolbar-height +
-    ($grid-gutter-width / 2);
+  padding-top: 1rem;
   // stylelint-enable
   padding-right: $grid-gutter-width / 2;
   padding-bottom: $grid-gutter-width / 2;
@@ -18,7 +16,6 @@
   }
 
   @include media-breakpoint-down(sm) {
-    padding-top: 10.4rem;
     padding-right: 1rem;
     padding-left: 1rem;
 
@@ -54,6 +51,10 @@
       $grid-gutter-width + 2.5rem;
     // stylelint-enable
   }
+}
+
+#main-div {
+  padding-top: 2.5rem;
 }
 
 .page-sidebar-closed:not(.mobile) {

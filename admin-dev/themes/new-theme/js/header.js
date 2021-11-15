@@ -33,7 +33,6 @@ export default class Header {
       this.initMultiStores();
       this.initNotificationsToggle();
       this.initSearch();
-      this.initContentDivOffset();
       refreshNotifications();
     });
   }
@@ -168,10 +167,10 @@ export default class Header {
     };
 
     // update the offset now
-    onToolbarResize();
+    //onToolbarResize();
 
     // update when resizing the window
-    $(window).resize(onToolbarResize);
+    //$(window).resize(onToolbarResize);
 
     // update when replacing the header with a vue header
     $(document).on('vueHeaderMounted', onToolbarResize);

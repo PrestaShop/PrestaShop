@@ -82,13 +82,14 @@
   {include file='components/layout/nav_bar.tpl'}
 {/if}
 
+{if isset($page_header_toolbar)}{$page_header_toolbar}{/if}
+
 <div id="main-div">
     {if $install_dir_exists}
       <div class="alert alert-warning">
         {l s='For security reasons, you must also delete the /install folder.' d='Admin.Login.Notification'}
       </div>
     {else}
-      {if isset($page_header_toolbar)}{$page_header_toolbar}{/if}
       {if isset($modal_module_list)}{$modal_module_list}{/if}
 
       <div class="{if $display_header}content-div{/if} {if !isset($page_header_toolbar)}-notoolbar{/if} {if $current_tab_level == 3}with-tabs{/if}">
