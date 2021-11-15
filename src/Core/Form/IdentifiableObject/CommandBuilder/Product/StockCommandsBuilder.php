@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShopBundle\Form\Admin\Type\DeltaQuantityType;
 
 /**
  * Builds commands from product stock form type
@@ -48,9 +49,7 @@ final class StockCommandsBuilder implements ProductCommandsBuilderInterface
         $quantityData = $formData['stock'];
         $command = new UpdateProductStockInformationCommand($productId->getValue());
 
-        /*
-         * Quantity field is a @see DeltaQuantityType type so on submits it contains the delta quantity
-         */
+        /* @see DeltaQuantityType */
         if (isset($quantityData['quantities']['quantity'])) {
             $command->setDeltaQuantity((int) $quantityData['quantities']['quantity']);
         }

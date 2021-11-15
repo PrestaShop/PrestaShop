@@ -44,7 +44,7 @@ class UpdateCombinationStockCommand
     /**
      * @var int|null
      */
-    private $quantity;
+    private $deltaQuantity;
 
     /**
      * @var int|null
@@ -91,19 +91,19 @@ class UpdateCombinationStockCommand
     /**
      * @return int|null
      */
-    public function getQuantity(): ?int
+    public function getDeltaQuantity(): ?int
     {
-        return $this->quantity;
+        return $this->deltaQuantity;
     }
 
     /**
-     * @param int $quantity
+     * @param int $deltaQuantity
      *
      * @return UpdateCombinationStockCommand
      */
-    public function setQuantity(int $quantity): UpdateCombinationStockCommand
+    public function setDeltaQuantity(int $deltaQuantity): UpdateCombinationStockCommand
     {
-        $this->quantity = $quantity;
+        $this->deltaQuantity = $deltaQuantity;
 
         return $this;
     }
