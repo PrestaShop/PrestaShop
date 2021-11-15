@@ -177,7 +177,7 @@ class Order extends BOBasePage {
     this.partialRefundSubmitButton = 'button#cancel_product_save';
 
     // Messages block
-    this.messageBlock = '#messageCard';
+    this.messageBlock = '#js-test-messageCard';
     this.messageBlockTitle = `${this.messageBlock} .card-header-title`;
     this.orderMessageSelect = '#order_message_order_message';
     this.displayToCustometCheckbox = `${this.messageBlock} .md-checkbox label`;
