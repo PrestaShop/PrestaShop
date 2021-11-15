@@ -55,6 +55,10 @@
 
 #main-div {
   padding-top: 2.5rem;
+
+  @include media-breakpoint-down(md) {
+    padding-top: 3.5rem;
+  }
 }
 
 .page-sidebar-closed:not(.mobile) {

@@ -45,12 +45,16 @@
       position: fixed;
       top: 5rem;
       left: 75%;
-      display: block;
+      display: none;
       font-family: "Material Icons", sans-serif;
       font-size: 1.5rem;
       color: $white;
       pointer-events: none;
       content: "\e5cd";
+
+      @at-root .expanded & {
+        display: block;
+      }
 
       @include media-breakpoint-only(md) {
         left: 50%;
