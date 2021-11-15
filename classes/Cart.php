@@ -4011,14 +4011,6 @@ class CartCore extends ObjectModel
             'invoice' => AddressFormat::getFormattedLayoutData($invoice),
         ];
 
-        /*
-         * First add all applicable cartRules before calculating the totals and the discounts
-         */
-        if (CartRule::isFeatureActive() && $this->id) {
-            $context = Context::getContext()->cloneContext();
-            $context->cart = $this;
-            CartRule::autoAddToCart($context);
-        }
         $base_total_tax_inc = $this->getOrderTotal(true);
         $base_total_tax_exc = $this->getOrderTotal(false);
 
@@ -4056,7 +4048,7 @@ class CartCore extends ObjectModel
             'invoice_state' => State::getNameById($invoice->id_state),
             'formattedAddresses' => $formatted_addresses,
             'products' => array_values($products),
-            'discounts' => array_values($this->getCartRules(CartRule::FILTER_ACTION_ALL, false)),
+            'discounts' => array_values($this->getCartRules()),
             'is_virtual_cart' => (int) $this->isVirtualCart(),
             'total_discounts' => $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS),
             'total_discounts_tax_exc' => $this->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
