@@ -26,7 +26,7 @@
 {% extends '::base.html.twig' %}
 
 {% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme' ~ rtl_suffix ~ '.css') }}"/>
 {% endblock %}
 
 {% block title %}
