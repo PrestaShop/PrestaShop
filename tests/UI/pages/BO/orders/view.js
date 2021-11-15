@@ -99,7 +99,7 @@ class Order extends BOBasePage {
     this.historyTabContent = '#historyTabContent';
     this.secondOrderStatusesSelect = '#update_order_status_new_order_status_id';
     this.secondUpdateStatusButton = `${this.historyTabContent} .card-details-form button.btn-primary`;
-    this.statusGridTable = '#history-grid-table';
+    this.statusGridTable = '#js-test-history-grid-table';
     this.statusTableBody = `${this.statusGridTable} tbody`;
     this.statusTableRow = row => `${this.statusTableBody} tr:nth-child(${row})`;
     this.statusTableColumn = (row, column) => `${this.statusTableRow(row)} td.js-test-${column}-column`;
