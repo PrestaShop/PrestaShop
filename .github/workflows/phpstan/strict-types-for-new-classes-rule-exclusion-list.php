@@ -392,7 +392,7 @@ $baseline = [
     'PrestaShopBundle\Api\Stock\Movement',
     'PrestaShopBundle\Api\Stock\MovementsCollection',
     'PrestaShopBundle\Command\SecurityAnnotationLinterCommand',
-    'PrestaShopBundle\Controller\Admin\TranslationsController',
+    'PrestaShopBundle\Controller\Admin\Improve\International\TranslationsController',
     'PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController',
     'PrestaShopBundle\Controller\Admin\SupplierController',
     'PrestaShopBundle\Command\LegacyLinkLinterCommand',

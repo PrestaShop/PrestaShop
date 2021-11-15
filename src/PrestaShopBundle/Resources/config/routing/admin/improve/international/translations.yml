@@ -2,7 +2,7 @@ admin_international_translation_overview:
   path: /
   methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\TranslationsController::overviewAction
+    _controller: PrestaShopBundle\Controller\Admin\Improve\International\TranslationsController::overviewAction
     _legacy_controller: AdminTranslations
     _legacy_link: AdminTranslationSf
 
@@ -10,7 +10,7 @@ admin_international_translations_export_catalogues:
   path: /export
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\TranslationsController::exportCataloguesAction
+    _controller: PrestaShopBundle\Controller\Admin\Improve\International\TranslationsController::exportCataloguesAction
     _legacy_controller: AdminTranslations
     _legacy_link: AdminTranslations:submitExport
 
@@ -18,7 +18,7 @@ admin_international_translations_show_settings:
   path: /settings
   methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\TranslationsController::showSettingsAction
+    _controller: PrestaShopBundle\Controller\Admin\Improve\International\TranslationsController::showSettingsAction
     _legacy_controller: AdminTranslations
     _legacy_link: AdminTranslations:settings
 
@@ -26,14 +26,14 @@ admin_international_translations_modify:
   path: /modify
   methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\TranslationsController::modifyTranslationsAction
+    _controller: PrestaShopBundle\Controller\Admin\Improve\International\TranslationsController::modifyTranslationsAction
     _legacy_controller: AdminTranslations
 
 admin_international_translations_add_update_language:
   path: /add-update-language
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\TranslationsController::addUpdateLanguageAction
+    _controller: PrestaShopBundle\Controller\Admin\Improve\International\TranslationsController::addUpdateLanguageAction
     _legacy_controller: AdminTranslations
     _legacy_link: AdminTranslations:submitAddLanguage
 
@@ -41,6 +41,6 @@ admin_international_translations_copy_language:
   path: /copy
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\TranslationsController::copyLanguageAction
+    _controller: PrestaShopBundle\Controller\Admin\Improve\International\TranslationsController::copyLanguageAction
     _legacy_controller: AdminTranslations
     _legacy_link: AdminTranslations:submitCopyLang
