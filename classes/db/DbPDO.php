@@ -404,10 +404,10 @@ class DbPDOCore extends Db
             ) ENGINE=' . $engineToTest);
 
             $result = $link->query('SELECT * FROM `' . $prefix . 'test`');
+            
+            $link->query('DROP TABLE `' . $prefix . 'test`');
 
             if ($result) {
-                $link->query('DROP TABLE `' . $prefix . 'test`');
-
                 return true;
             }
         }

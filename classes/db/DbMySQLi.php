@@ -461,9 +461,9 @@ class DbMySQLiCore extends Db
 
             $result = $link->query('SELECT * FROM `' . $prefix . 'test`');
 
-            if ($result) {
-                $link->query('DROP TABLE `' . $prefix . 'test`');
+            $link->query('DROP TABLE `' . $prefix . 'test`');
 
+            if ($result) {
                 return true;
             }
         }
