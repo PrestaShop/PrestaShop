@@ -38,6 +38,7 @@ module.exports = {
       reference: 'demo_5',
       category: 'Art',
       price: 29.00,
+      priceTaxIncl: 34.8,
       quantity: 1500,
       status: true,
     },

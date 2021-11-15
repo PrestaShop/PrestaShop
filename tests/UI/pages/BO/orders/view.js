@@ -79,8 +79,11 @@ class Order extends BOBasePage {
     this.addProductRowStockLocation = '#addProductLocation';
     this.addProductAvailable = '#addProductAvailable';
     this.addProductTotalPrice = '#addProductTotalPrice';
+    this.addProductInvoiceSelect = '#add_product_row_invoice';
     this.addProductAddButton = '#add_product_row_add';
     this.addProductCancelButton = '#add_product_row_cancel';
+    this.addProductModalConfirmNewInvoice = '#modal-confirm-new-invoice';
+    this.addProductCreateNewInvoiceButton = `${this.addProductModalConfirmNewInvoice} .btn-confirm-submit`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#orderProductsTablePaginationNumberSelector';
@@ -115,12 +118,16 @@ class Order extends BOBasePage {
     this.paymentMethodInput = '#order_payment_payment_method';
     this.transactionIDInput = '#order_payment_transaction_id';
     this.paymentAmountInput = '#order_payment_amount';
+    this.paymentCurrencySelect = '#order_payment_id_currency';
+    this.paymentInvoiceSelect = '#order_payment_id_invoice';
     this.paymentAddButton = `${this.orderPaymentsBlock} .btn.btn-primary.btn-sm`;
     this.paymentWarning = `${this.orderPaymentsBlock} .alert-danger`;
     this.paymentsGridTable = '#js-test-payments-grid-table';
     this.paymentsTableBody = `${this.paymentsGridTable} tbody`;
     this.paymentsTableRow = row => `${this.paymentsTableBody} tr:nth-child(${row})`;
     this.paymentsTableColumn = (row, column) => `${this.paymentsTableRow(row)} td.js-test-${column}-column`;
+    this.paymentsTableDetailsButton = row => `${this.paymentsTableRow(row)} button.js-payment-details-btn`;
+    this.paymentTableRowDetails = row => `${this.paymentsTableRow(row)}.js-test-payment-details`;
 
     // Carriers tab
     this.carriersTab = '#orderShippingTab';
@@ -380,12 +387,13 @@ class Order extends BOBasePage {
   /**
    * Download invoice
    * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<void>}
    */
-  async downloadInvoice(page) {
+  async downloadInvoice(page, row = 1) {
     await this.goToDocumentsTab(page);
 
-    return this.downloadDocument(page, 1);
+    return this.downloadDocument(page, row);
   }
 
   /**
@@ -762,14 +770,21 @@ class Order extends BOBasePage {
    * Add product to cart
    * @param page {Page} Browser tab
    * @param quantity {number} Product quantity to add
+   * @param createNewInvoice {boolean} True if we need to create new invoice
    * @returns {Promise<string>}
    */
-  async addProductToCart(page, quantity = 0) {
+  async addProductToCart(page, quantity = 1, createNewInvoice = false) {
     await this.closeGrowlMessage(page);
-    if (quantity !== 0) {
+    if (quantity !== 1) {
       await this.addQuantity(page, quantity);
     }
+    if (createNewInvoice) {
+      await this.selectByVisibleText(page, this.addProductInvoiceSelect, 'Create a new invoice');
+    }
     await this.waitForSelectorAndClick(page, this.addProductAddButton, 1000);
+    if (createNewInvoice) {
+      await this.waitForSelectorAndClick(page, this.addProductCreateNewInvoiceButton);
+    }
     return this.getGrowlMessageContent(page);
   }
 
@@ -876,6 +891,7 @@ class Order extends BOBasePage {
     return this.elementVisible(page, this.paginationNextLink, 1000);
   }
 
+  // Payments block
   /**
    * Get payments number
    * @param page {Page} Browser tab
@@ -885,28 +901,83 @@ class Order extends BOBasePage {
     return this.getNumberFromText(page, this.orderPaymentsTitle);
   }
 
-  async addPayment(page, paymentData) {
+  /**
+   * Add payment
+   * @param page {Page} Browser tab
+   * @param paymentData {object} Data to set on payment line
+   * @param invoice {string} Invoice number to select
+   * @returns {Promise<string>}
+   */
+  async addPayment(page, paymentData, invoice = '') {
     await this.setValue(page, this.paymentDateInput, paymentData.date);
     await this.setValue(page, this.paymentMethodInput, paymentData.paymentMethod);
     await this.setValue(page, this.transactionIDInput, paymentData.transactionID);
     await this.setValue(page, this.paymentAmountInput, paymentData.amount);
+    if (paymentData.currency !== '€') {
+      await this.selectByVisibleText(page, this.paymentCurrencySelect, paymentData.currency);
+    }
+    if (invoice !== '') {
+      await this.selectByVisibleText(page, this.paymentInvoiceSelect, invoice);
+    }
     await this.clickAndWaitForNavigation(page, this.paymentAddButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
+  /**
+   * Get invoice ID
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<number>}
+   */
+  getInvoiceID(page, row = 1) {
+    return this.getNumberFromText(page, this.paymentsTableColumn(row, 'invoice'));
+  }
+
+  /**
+   * Get payment warning
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
   getPaymentWarning(page) {
     return this.getTextContent(page, this.paymentWarning);
   }
 
+  /**
+   * Get payment details
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<{date: string, amount: string, paymentMethod: string, invoice: string, transactionID: string}>}
+   */
   async getPaymentsDetails(page, row = 1) {
     return {
       date: await this.getTextContent(page, this.paymentsTableColumn(row, 'date')),
       paymentMethod: await this.getTextContent(page, this.paymentsTableColumn(row, 'payment-method')),
-      transactionID: await this.getNumberFromText(page, this.paymentsTableColumn(row, 'transaction-id')),
+      transactionID: await this.getTextContent(page, this.paymentsTableColumn(row, 'transaction-id')),
       amount: await this.getTextContent(page, this.paymentsTableColumn(row, 'amount')),
       invoice: await this.getTextContent(page, this.paymentsTableColumn(row, 'invoice')),
     };
+  }
+
+  /**
+   * Display payment details
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table - Start by 2
+   * @returns {Promise<string>}
+   */
+  async displayPaymentDetail(page, row = 2) {
+    await this.waitForSelectorAndClick(page, this.paymentsTableDetailsButton(row - 1));
+
+    return this.getTextContent(page, this.paymentTableRowDetails(row));
+  }
+
+  /**
+   * Get currency select options
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getCurrencySelectOptions(page) {
+    return this.getTextContent(page, this.paymentCurrencySelect);
   }
 }
 
