@@ -58,7 +58,7 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
     public function handle(UpdateCombinationStockCommand $command): void
     {
         $properties = new CombinationStockProperties(
-            $command->getQuantity(),
+            $command->getDeltaQuantity(),
             $command->getMinimalQuantity(),
             $command->getLocation(),
             $command->getLowStockThreshold(),

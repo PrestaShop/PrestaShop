@@ -34,7 +34,7 @@ class CombinationStockProperties
     /**
      * @var int|null
      */
-    private $quantity;
+    private $deltaQuantity;
 
     /**
      * @var int|null
@@ -77,7 +77,7 @@ class CombinationStockProperties
         ?bool $lowStockAlertEnabled = null,
         ?DateTimeInterface $availableDate = null
     ) {
-        $this->quantity = $quantity;
+        $this->deltaQuantity = $quantity;
         $this->minimalQuantity = $minimalQuantity;
         $this->location = $location;
         $this->lowStockThreshold = $lowStockThreshold;
@@ -88,9 +88,9 @@ class CombinationStockProperties
     /**
      * @return int|null
      */
-    public function getQuantity(): ?int
+    public function getDeltaQuantity(): ?int
     {
-        return $this->quantity;
+        return $this->deltaQuantity;
     }
 
     /**

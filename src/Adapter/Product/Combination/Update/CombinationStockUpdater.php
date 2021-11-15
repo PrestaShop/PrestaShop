@@ -31,12 +31,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
-use PrestaShopException;
+use StockAvailable;
 
 /**
  * Updates stock for product combination
@@ -59,18 +59,26 @@ class CombinationStockUpdater
     private $stockManager;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param StockAvailableRepository $stockAvailableRepository
      * @param CombinationRepository $combinationRepository
      * @param StockManager $stockManager
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         StockAvailableRepository $stockAvailableRepository,
         CombinationRepository $combinationRepository,
-        StockManager $stockManager
+        StockManager $stockManager,
+        ConfigurationInterface $configuration
     ) {
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationRepository = $combinationRepository;
         $this->stockManager = $stockManager;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -99,8 +107,8 @@ class CombinationStockUpdater
     {
         $updatableProperties = [];
 
-        if (null !== $properties->getQuantity()) {
-            $combination->quantity = $properties->getQuantity();
+        if (null !== $properties->getDeltaQuantity()) {
+            $combination->quantity = $properties->getDeltaQuantity();
             $updatableProperties[] = 'quantity';
         }
 
@@ -138,53 +146,50 @@ class CombinationStockUpdater
      */
     private function updateStockAvailable(Combination $combination, CombinationStockProperties $properties): void
     {
-        $updateQuantity = null !== $properties->getQuantity();
+        $updateQuantity = null !== $properties->getDeltaQuantity();
         $updateLocation = null !== $properties->getLocation();
 
         if (!$updateQuantity && !$updateLocation) {
             return;
         }
 
-        $newQuantity = $properties->getQuantity();
-        $newLocation = $properties->getLocation();
-
         $stockAvailable = $this->stockAvailableRepository->getForCombination(new CombinationId((int) $combination->id));
 
         if ($updateQuantity) {
-            $this->saveMovement($combination, (int) $stockAvailable->quantity, $newQuantity);
-            $stockAvailable->quantity = $newQuantity;
+            $this->updateQuantity($stockAvailable, $properties->getDeltaQuantity());
         }
 
         if ($updateLocation) {
-            $stockAvailable->location = $newLocation;
+            $stockAvailable->location = $properties->getLocation();
         }
 
         $this->stockAvailableRepository->update($stockAvailable);
     }
 
     /**
-     * @param Combination $combination
-     * @param int $oldQuantity
-     * @param int $newQuantity
+     * @param StockAvailable $stockAvailable
+     * @param int $deltaQuantity
      *
-     * @throws CoreException
+     * @todo: this method is indetical to ProductStockUpdater:updateQuantity, whats the best way to reuse it?
      */
-    private function saveMovement(Combination $combination, int $oldQuantity, int $newQuantity): void
+    private function updateQuantity(StockAvailable $stockAvailable, int $deltaQuantity): void
     {
-        $combinationId = $combination->id;
-        $deltaQuantity = $newQuantity - $oldQuantity;
+        $stockAvailable->quantity += $deltaQuantity;
 
-        if (0 === $deltaQuantity) {
-            return;
-        }
+        if (0 !== $deltaQuantity) {
+            if ($deltaQuantity > 0) {
+                $movementReasonId = (int) $this->configuration->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION');
+            } else {
+                $movementReasonId = (int) $this->configuration->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION');
+            }
 
-        try {
-            $this->stockManager->saveMovement($combination->id_product, $combinationId, $deltaQuantity);
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when trying to save stock movement for combination %d', $combinationId),
-                0,
-                $e
+            $this->stockManager->saveMovement(
+                $stockAvailable->id_product,
+                $stockAvailable->id_product_attribute,
+                $deltaQuantity,
+                [
+                    'id_stock_mvt_reason' => $movementReasonId,
+                ]
             );
         }
     }
