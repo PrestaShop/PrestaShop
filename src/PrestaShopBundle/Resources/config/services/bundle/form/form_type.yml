@@ -944,15 +944,15 @@ services:
     public: true
     parent: 'form.type.translatable.aware'
     arguments:
-        - '@=service("prestashop.core.form.choice_provider.all_languages").getChoices()'
-        - '@=service("prestashop.core.form.choice_provider.accessible_tab").getChoices()'
-        - '@=service("prestashop.core.form.choice_provider.profile").getChoices()'
-        - '@=service("prestashop.adapter.multistore_feature").isActive()'
-        - '@=service("prestashop.adapter.employee.avatar_provider").getDefaultAvatarUrl()'
-        - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
-        - '@router'
+      - '@=service("prestashop.core.form.choice_provider.all_languages").getChoices()'
+      - '@=service("prestashop.core.form.choice_provider.accessible_tab").getChoices()'
+      - '@=service("prestashop.core.form.choice_provider.profile").getChoices()'
+      - '@=service("prestashop.adapter.multistore_feature").isActive()'
+      - '@=service("prestashop.adapter.employee.avatar_provider").getDefaultAvatarUrl()'
+      - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
+      - '@router'
     tags:
-        - { name: form.type }
+      - { name: form.type }
 
   form.type.change_password:
     class: 'PrestaShopBundle\Form\Admin\Type\ChangePasswordType'
