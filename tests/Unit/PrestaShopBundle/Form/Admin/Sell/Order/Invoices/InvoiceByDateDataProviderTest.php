@@ -29,12 +29,9 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
 use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType;
-use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsDataProvider;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider;
 use PrestaShopBundle\Form\Exception\DataProviderException;
