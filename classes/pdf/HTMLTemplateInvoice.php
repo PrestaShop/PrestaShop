@@ -501,17 +501,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     {
         $id_lang = Context::getContext()->language->id;
         $id_shop = (int) $this->order->id_shop;
-        $format = '%1$s%2$06d';
 
-        if (Configuration::get('PS_INVOICE_USE_YEAR')) {
-            $format = Configuration::get('PS_INVOICE_YEAR_POS') ? '%1$s%3$s-%2$06d' : '%1$s%2$06d-%3$s';
-        }
+	    $invoiceNumber = $this->order_invoice->getInvoiceNumberFormatted( $id_lang, $id_shop );
 
-        return sprintf(
-            $format,
-            Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, $id_shop),
-            $this->order_invoice->number,
-            date('Y', strtotime($this->order_invoice->date_add))
-        ) . '.pdf';
+        return $invoiceNumber . '.pdf';
     }
 }
