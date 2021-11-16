@@ -78,6 +78,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_products_specific_prices_edit', [
                     'liteDisplaying' => $request->query->has('liteDisplaying'),
+                    // This action is only used inside a dedicated modal so we always enforce the lite display in the redirection url
                     'specificPriceId' => $result->getIdentifiableObjectId(),
                 ]);
             }

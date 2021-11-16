@@ -343,7 +343,6 @@ class ProductController extends FrameworkBundleAdminController
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
         $categoryTreeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_tree_selector_form_builder');
-        $specificPriceFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.specific_price_form_builder');
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
             'categoryTreeSelectorForm' => $categoryTreeFormBuilder->getForm()->createView(),
