@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ChoiceTree from '@components/form/choice-tree';
 import AddonsConnector from '../../components/addons-connector';
 import employeeFormMap from './employee-form-map';
-import ChoiceTree from "@components/form/choice-tree";
 
 /**
  * Class responsible for javascript actions in employee add/edit page.
