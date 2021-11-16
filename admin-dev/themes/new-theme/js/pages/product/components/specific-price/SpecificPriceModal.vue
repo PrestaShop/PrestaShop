@@ -93,8 +93,7 @@
     components: {Modal},
     data() {
       return {
-        openForCreate: false,
-        openForUpdate: false,
+        isOpen: false,
         loadingForm: false,
         url: null,
         submittingForm: false,
@@ -135,7 +134,7 @@
             },
           );
           this.loadingForm = true;
-          this.openForCreate = true;
+          this.isOpen = true;
         });
       },
       watchEditButtons() {
@@ -150,7 +149,7 @@
             },
           );
           this.loadingForm = true;
-          this.openForUpdate = true;
+          this.isOpen = true;
         });
       },
       onFrameLoaded() {
@@ -167,18 +166,14 @@
         const successAlertsCount = Number(form.dataset.alertsSuccess);
 
         if (successAlertsCount !== 0) {
-          if (this.openForCreate) {
-            this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceCreated);
-          }
-          if (this.openForUpdate) {
+          if (this.isOpen) {
             this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceUpdated);
           }
           this.closeModal();
         }
       },
       closeModal() {
-        this.openForCreate = false;
-        this.openForUpdate = false;
+        this.isOpen = false;
         this.submittingForm = false;
       },
     },

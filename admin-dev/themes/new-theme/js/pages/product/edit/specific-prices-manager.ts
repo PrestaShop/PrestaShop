@@ -58,7 +58,6 @@ export default class SpecificPricesManager {
   }
 
   private initListeners(): void {
-    this.eventEmitter.on(ProductEventMap.specificPrice.specificPriceCreated, () => this.specificPriceList.renderList());
     this.eventEmitter.on(ProductEventMap.specificPrice.specificPriceUpdated, () => this.specificPriceList.renderList());
   }
 
