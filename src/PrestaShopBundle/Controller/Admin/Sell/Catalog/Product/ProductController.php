@@ -36,8 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductComman
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPositionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPositionException;
@@ -287,7 +287,7 @@ class ProductController extends FrameworkBundleAdminController
             /** @var ProductForEditing $editableProduct */
             $editableProduct = $this->getQueryBus()->handle(new GetProductForEditing((int) $productId));
             $this->getCommandBus()->handle(
-                new ToggleProductStatusCommand((int) $productId, !$editableProduct->isActive())
+                new UpdateProductStatusCommand((int) $productId, !$editableProduct->isActive())
             );
             $this->addFlash(
                 'success',

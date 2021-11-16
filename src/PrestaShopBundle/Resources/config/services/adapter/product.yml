@@ -403,14 +403,6 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand
 
-  prestashop.adapter.product.command_handler.toggle_product_status_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\ToggleProductStatusHandler
-    arguments:
-      - '@prestashop.adapter.product.repository.product_repository'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand
-
   prestashop.adapter.product.query_handler.get_related_products_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetRelatedProductsHandler
     arguments:
