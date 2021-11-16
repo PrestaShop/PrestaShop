@@ -109,7 +109,7 @@ class CombinationStockUpdater
         $updatableProperties = [];
 
         if (null !== $properties->getDeltaQuantity()) {
-            $combination->quantity = $properties->getDeltaQuantity();
+            $combination->quantity = $combination->quantity + $properties->getDeltaQuantity()->getDeltaQuantity();
             $updatableProperties[] = 'quantity';
         }
 
