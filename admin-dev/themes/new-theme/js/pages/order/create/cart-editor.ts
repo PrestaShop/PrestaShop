@@ -30,7 +30,7 @@ import createOrderMap from './create-order-map';
 
 const {$} = window;
 
-export interface CartAddress {
+export interface CartAddressIds {
   deliveryAddressId: string;
   invoiceAddressId: string;
 }
@@ -61,7 +61,7 @@ export default class CartEditor {
    * @param {Number} cartId
    * @param {Object} addresses
    */
-  changeCartAddresses(cartId: number, addresses: CartAddress): void {
+  changeCartAddresses(cartId: number, addresses: CartAddressIds): void {
     $.post(
       this.router.generate('admin_carts_edit_addresses', {cartId}),
       addresses,
