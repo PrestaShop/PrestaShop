@@ -25,7 +25,7 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Update;
+namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
 use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
