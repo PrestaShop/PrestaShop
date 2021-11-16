@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
@@ -64,21 +65,29 @@ class CombinationStockUpdater
     private $configuration;
 
     /**
+     * @var MovementReasonRepository
+     */
+    private $movementReasonRepository;
+
+    /**
      * @param StockAvailableRepository $stockAvailableRepository
      * @param CombinationRepository $combinationRepository
      * @param StockManager $stockManager
+     * @param MovementReasonRepository $movementReasonRepository
      * @param ConfigurationInterface $configuration
      */
     public function __construct(
         StockAvailableRepository $stockAvailableRepository,
         CombinationRepository $combinationRepository,
         StockManager $stockManager,
+        MovementReasonRepository $movementReasonRepository,
         ConfigurationInterface $configuration
     ) {
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationRepository = $combinationRepository;
         $this->stockManager = $stockManager;
         $this->configuration = $configuration;
+        $this->movementReasonRepository = $movementReasonRepository;
     }
 
     /**
@@ -164,26 +173,19 @@ class CombinationStockUpdater
     /**
      * @param StockAvailable $stockAvailable
      * @param int $deltaQuantity
-     *
-     * @todo: this method is indetical to ProductStockUpdater:updateQuantity, whats the best way to reuse it?
      */
     private function updateQuantity(StockAvailable $stockAvailable, int $deltaQuantity): void
     {
         $stockAvailable->quantity += $deltaQuantity;
+        $movementReasonId = $this->movementReasonRepository->getIdForEmployeeEdition($deltaQuantity > 0);
 
         if (0 !== $deltaQuantity) {
-            if ($deltaQuantity > 0) {
-                $movementReasonId = (int) $this->configuration->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION');
-            } else {
-                $movementReasonId = (int) $this->configuration->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION');
-            }
-
             $this->stockManager->saveMovement(
                 $stockAvailable->id_product,
                 $stockAvailable->id_product_attribute,
                 $deltaQuantity,
                 [
-                    'id_stock_mvt_reason' => $movementReasonId,
+                    'id_stock_mvt_reason' => $movementReasonId->getValue(),
                 ]
             );
         }

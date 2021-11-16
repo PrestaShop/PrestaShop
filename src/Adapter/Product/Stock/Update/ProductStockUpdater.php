@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -73,15 +74,22 @@ class ProductStockUpdater
     private $advancedStockEnabled;
 
     /**
+     * @var MovementReasonRepository
+     */
+    private $movementReasonRepository;
+
+    /**
      * @param StockManager $stockManager
      * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
+     * @param MovementReasonRepository $movementReasonRepository
      * @param Configuration $configuration
      */
     public function __construct(
         StockManager $stockManager,
         ProductRepository $productRepository,
         StockAvailableRepository $stockAvailableRepository,
+        MovementReasonRepository $movementReasonRepository,
         Configuration $configuration
     ) {
         $this->stockManager = $stockManager;
@@ -89,6 +97,7 @@ class ProductStockUpdater
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->configuration = $configuration;
         $this->advancedStockEnabled = $this->configuration->getBoolean('PS_ADVANCED_STOCK_MANAGEMENT');
+        $this->movementReasonRepository = $movementReasonRepository;
     }
 
     /**
@@ -207,20 +216,15 @@ class ProductStockUpdater
     private function updateQuantity(StockAvailable $stockAvailable, int $deltaQuantity): void
     {
         $stockAvailable->quantity += $deltaQuantity;
+        $movementReasonId = $this->movementReasonRepository->getIdForEmployeeEdition($deltaQuantity > 0);
 
         if (0 !== $deltaQuantity) {
-            if ($deltaQuantity > 0) {
-                $movementReasonId = $this->configuration->getInt('PS_STOCK_MVT_INC_EMPLOYEE_EDITION');
-            } else {
-                $movementReasonId = $this->configuration->getInt('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION');
-            }
-
             $this->stockManager->saveMovement(
                 $stockAvailable->id_product,
                 $stockAvailable->id_product_attribute,
                 $deltaQuantity,
                 [
-                    'id_stock_mvt_reason' => $movementReasonId,
+                    'id_stock_mvt_reason' => $movementReasonId->getValue(),
                 ]
             );
         }

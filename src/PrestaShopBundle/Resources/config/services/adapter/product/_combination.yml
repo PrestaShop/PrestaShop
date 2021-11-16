@@ -90,6 +90,7 @@ services:
       - '@prestashop.adapter.product.stock.repository.stock_available_repository'
       - '@prestashop.adapter.product.combination.repository.combination_repository'
       - '@prestashop.core.stock.stock_manager'
+      - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
       - '@prestashop.adapter.legacy.configuration'
 
   prestashop.adapter.product.combination.create.combination_creator:
