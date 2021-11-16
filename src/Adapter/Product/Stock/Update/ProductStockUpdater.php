@@ -206,14 +206,14 @@ class ProductStockUpdater
      */
     private function updateQuantity(StockAvailable $stockAvailable, DeltaQuantity $deltaQuantity): void
     {
-        $deltaQtyValue = $deltaQuantity->getDeltaQuantity();
-        $stockAvailable->quantity += $deltaQtyValue;
+        $deltaQuantityValue = $deltaQuantity->getDeltaQuantity();
+        $stockAvailable->quantity += $deltaQuantityValue;
 
-        if (0 !== $deltaQtyValue) {
+        if (0 !== $deltaQuantityValue) {
             $this->stockManager->saveMovement(
                 $stockAvailable->id_product,
                 $stockAvailable->id_product_attribute,
-                $deltaQtyValue,
+                $deltaQuantityValue,
                 [
                     'id_stock_mvt_reason' => $deltaQuantity->getMovementReasonId()->getValue(),
                 ]
