@@ -54,12 +54,11 @@ class AdministrationConfigurationErrorFactoryTest extends TestCase
                     '%s is invalid. Please enter an integer lower than %s.',
                     [
                         static::COOKIE_FIELD_NAME,
-                        GeneralDataProvider::MAX_COOKIE_VALUE
-
+                        GeneralDataProvider::MAX_COOKIE_VALUE,
                     ],
                     'Admin.Notifications.Error',
                     null,
-                    $expectedTranslation
+                    $expectedTranslation,
                 ],
             ]
         );
