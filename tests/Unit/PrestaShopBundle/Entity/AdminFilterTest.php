@@ -33,7 +33,7 @@ class AdminFilterTest extends TestCase
 {
     private $emptyFilter;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->emptyFilter = AdminFilter::getProductCatalogEmptyFilter();
     }
@@ -47,7 +47,6 @@ class AdminFilterTest extends TestCase
         $this->assertEmpty($this->emptyFilter['filter_column_price']);
         $this->assertEmpty($this->emptyFilter['filter_column_sav_quantity']);
         $this->assertEmpty($this->emptyFilter['filter_column_active']);
-
     }
 
     /**
@@ -62,13 +61,11 @@ class AdminFilterTest extends TestCase
         $this->assertSame($expected, $setFilter['filter_column_name']);
     }
 
-
-
-    public function productFilterProviderByName() : array
+    public function productFilterProviderByName(): array
     {
         return [
-            'quote_in_name'         => [['filter_column_name' => 't\'est'], 't\'est'],
-            'double_quote_in_name'  => [['filter_column_name' => 't\"est'], 't\"est'],
+            'quote_in_name' => [['filter_column_name' => 't\'est'], 't\'est'],
+            'double_quote_in_name' => [['filter_column_name' => 't\"est'], 't\"est'],
         ];
     }
 }
