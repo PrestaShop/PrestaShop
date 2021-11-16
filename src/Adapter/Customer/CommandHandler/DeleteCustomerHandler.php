@@ -40,18 +40,6 @@ use Psr\Log\LoggerInterface;
 final class DeleteCustomerHandler extends AbstractCustomerHandler implements DeleteCustomerHandlerInterface
 {
     /**
-     * @param TranslatorInterface $translator
-     * @param LoggerInterface $logger
-     */
-    public function __construct(
-        TranslatorInterface $translator,
-        LoggerInterface $logger
-    )
-    {
-        parent::__construct($translator, $logger);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function handle(DeleteCustomerCommand $command)
