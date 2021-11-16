@@ -3,6 +3,7 @@ extends: default
 ignore: |
   /themes/classic/_dev/node_modules/
   /themes/node_modules/
+  .github/ISSUE_TEMPLATE/
 
 rules:
   braces:
