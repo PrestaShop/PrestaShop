@@ -32,6 +32,7 @@ GitHub contributors:
 - Alexander Simonchik
 - Alexandra Even
 - Alexandre Alouit
+- Alexandre BRU
 - Alexandre Debusschere
 - Alexandre Segura
 - alexdee2007
@@ -324,6 +325,7 @@ GitHub contributors:
 - Ian Fung
 - Ibrahima Sow
 - idnovate
+- Igor Stępień
 - indesign47
 - Inetbiz
 - ironwo0d
@@ -444,6 +446,7 @@ GitHub contributors:
 - Lukas Laurinaitis
 - Lyo Nick
 - LyoNick
+- M. Parvazi
 - M-Mommsen
 - M03G
 - MacRoy
@@ -474,6 +477,7 @@ GitHub contributors:
 - Martin Finkenflügel
 - Martin Fojtík
 - Marvin Sauraye
+- Marwa Chelly
 - Mateusz Furga
 - Mateusz Nastalski
 - Mathias Reker
@@ -841,6 +845,7 @@ GitHub contributors:
 - yanngarras
 - Yannick A
 - Yannick Armand
+- Yohann Tilotti
 - Yolandavdvegt
 - Yoozio
 - Yosra Akrout
