@@ -102,6 +102,10 @@
         left: 50%;
       }
     }
+    
+    &:not(.expanded)::before {
+      display: none;
+    }
 
     @include media-breakpoint-only(sm) {
       width: 60%;
