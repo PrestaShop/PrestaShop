@@ -57,7 +57,6 @@ export default {
     categoriesUpdated: 'categoriesUpdated',
   },
   specificPrice: {
-    specificPriceCreated: 'specificPriceCreated',
     specificPriceUpdated: 'specificPriceUpdated',
   },
 };
