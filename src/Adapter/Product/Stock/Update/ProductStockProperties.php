@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
 use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\DeltaQuantity;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 
 class ProductStockProperties
@@ -39,7 +40,7 @@ class ProductStockProperties
     private $packStockType;
 
     /**
-     * @var int|null
+     * @var DeltaQuantity|null
      */
     private $deltaQuantity;
 
@@ -85,7 +86,7 @@ class ProductStockProperties
 
     /**
      * @param PackStockType|null $packStockType
-     * @param int|null $deltaQuantity
+     * @param DeltaQuantity|null $deltaQuantity
      * @param OutOfStockType|null $outOfStockType
      * @param int|null $minimalQuantity
      * @param string|null $location
@@ -97,7 +98,7 @@ class ProductStockProperties
      */
     public function __construct(
         ?PackStockType $packStockType = null,
-        ?int $deltaQuantity = null,
+        ?DeltaQuantity $deltaQuantity = null,
         ?OutOfStockType $outOfStockType = null,
         ?int $minimalQuantity = null,
         ?string $location = null,
@@ -128,9 +129,9 @@ class ProductStockProperties
     }
 
     /**
-     * @return int|null
+     * @return DeltaQuantity|null
      */
-    public function getDeltaQuantity(): ?int
+    public function getDeltaQuantity(): ?DeltaQuantity
     {
         return $this->deltaQuantity;
     }

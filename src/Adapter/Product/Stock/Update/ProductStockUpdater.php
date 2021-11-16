@@ -30,11 +30,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\DeltaQuantity;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
@@ -73,22 +73,15 @@ class ProductStockUpdater
     private $advancedStockEnabled;
 
     /**
-     * @var MovementReasonRepository
-     */
-    private $movementReasonRepository;
-
-    /**
      * @param StockManager $stockManager
      * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
-     * @param MovementReasonRepository $movementReasonRepository
      * @param Configuration $configuration
      */
     public function __construct(
         StockManager $stockManager,
         ProductRepository $productRepository,
         StockAvailableRepository $stockAvailableRepository,
-        MovementReasonRepository $movementReasonRepository,
         Configuration $configuration
     ) {
         $this->stockManager = $stockManager;
@@ -96,7 +89,6 @@ class ProductStockUpdater
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->configuration = $configuration;
         $this->advancedStockEnabled = $this->configuration->getBoolean('PS_ADVANCED_STOCK_MANAGEMENT');
-        $this->movementReasonRepository = $movementReasonRepository;
     }
 
     /**
@@ -170,7 +162,7 @@ class ProductStockUpdater
             $updatableProperties[] = 'pack_stock_type';
         }
         if (null !== $properties->getDeltaQuantity()) {
-            $product->quantity = $stockAvailable->quantity + $properties->getDeltaQuantity();
+            $product->quantity = $stockAvailable->quantity + $properties->getDeltaQuantity()->getDeltaQuantity();
             $updatableProperties[] = 'quantity';
         }
         if (null !== $properties->getAvailableDate()) {
@@ -210,20 +202,20 @@ class ProductStockUpdater
 
     /**
      * @param StockAvailable $stockAvailable
-     * @param int $deltaQuantity
+     * @param DeltaQuantity $deltaQuantity
      */
-    private function updateQuantity(StockAvailable $stockAvailable, int $deltaQuantity): void
+    private function updateQuantity(StockAvailable $stockAvailable, DeltaQuantity $deltaQuantity): void
     {
-        $stockAvailable->quantity += $deltaQuantity;
-        $movementReasonId = $this->movementReasonRepository->getIdForEmployeeEdition($deltaQuantity > 0);
+        $deltaQtyValue = $deltaQuantity->getDeltaQuantity();
+        $stockAvailable->quantity += $deltaQtyValue;
 
-        if (0 !== $deltaQuantity) {
+        if (0 !== $deltaQtyValue) {
             $this->stockManager->saveMovement(
                 $stockAvailable->id_product,
                 $stockAvailable->id_product_attribute,
-                $deltaQuantity,
+                $deltaQtyValue,
                 [
-                    'id_stock_mvt_reason' => $movementReasonId->getValue(),
+                    'id_stock_mvt_reason' => $deltaQuantity->getMovementReasonId()->getValue(),
                 ]
             );
         }

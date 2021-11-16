@@ -27,6 +27,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateProductStockInformationHandler
     arguments:
       - '@prestashop.adapter.product.stock.update.product_stock_updater'
+      - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand
@@ -46,5 +47,4 @@ services:
       - '@prestashop.core.stock.stock_manager'
       - '@prestashop.adapter.product.repository.product_repository'
       - '@prestashop.adapter.product.stock.repository.stock_available_repository'
-      - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
       - '@prestashop.adapter.legacy.configuration'
