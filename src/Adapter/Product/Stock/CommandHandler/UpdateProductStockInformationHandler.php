@@ -67,9 +67,9 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
      */
     public function handle(UpdateProductStockInformationCommand $command): void
     {
-        $deltaQty = null;
+        $deltaQuantity = null;
         if (null !== $command->getDeltaQuantity()) {
-            $deltaQty = new DeltaQuantity(
+            $deltaQuantity = new DeltaQuantity(
                 $command->getDeltaQuantity(),
                 $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
             );
@@ -78,7 +78,7 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
             $command->getProductId(),
             new ProductStockProperties(
                 $command->getPackStockType(),
-                $deltaQty,
+                $deltaQuantity,
                 $command->getOutOfStockType(),
                 $command->getMinimalQuantity(),
                 $command->getLocation(),
