@@ -67,16 +67,16 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
      */
     public function handle(UpdateCombinationStockCommand $command): void
     {
-        $deltaQty = null;
+        $deltaQuantity = null;
         if (null !== $command->getDeltaQuantity()) {
-            $deltaQty = new DeltaQuantity(
+            $deltaQuantity = new DeltaQuantity(
                 $command->getDeltaQuantity(),
                 $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
             );
         }
 
         $properties = new CombinationStockProperties(
-            $deltaQty,
+            $deltaQuantity,
             $command->getMinimalQuantity(),
             $command->getLocation(),
             $command->getLowStockThreshold(),
