@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% form_theme employeeOptionsForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme employeeOptionsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block employee_options_form %}
   {{ form_start(employeeOptionsForm, {'action': path('admin_employees_save_options') }) }}
