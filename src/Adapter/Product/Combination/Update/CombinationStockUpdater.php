@@ -30,11 +30,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\DeltaQuantity;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use StockAvailable;
@@ -65,29 +65,21 @@ class CombinationStockUpdater
     private $configuration;
 
     /**
-     * @var MovementReasonRepository
-     */
-    private $movementReasonRepository;
-
-    /**
      * @param StockAvailableRepository $stockAvailableRepository
      * @param CombinationRepository $combinationRepository
      * @param StockManager $stockManager
-     * @param MovementReasonRepository $movementReasonRepository
      * @param ConfigurationInterface $configuration
      */
     public function __construct(
         StockAvailableRepository $stockAvailableRepository,
         CombinationRepository $combinationRepository,
         StockManager $stockManager,
-        MovementReasonRepository $movementReasonRepository,
         ConfigurationInterface $configuration
     ) {
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationRepository = $combinationRepository;
         $this->stockManager = $stockManager;
         $this->configuration = $configuration;
-        $this->movementReasonRepository = $movementReasonRepository;
     }
 
     /**
@@ -172,20 +164,20 @@ class CombinationStockUpdater
 
     /**
      * @param StockAvailable $stockAvailable
-     * @param int $deltaQuantity
+     * @param DeltaQuantity $deltaQuantity
      */
-    private function updateQuantity(StockAvailable $stockAvailable, int $deltaQuantity): void
+    private function updateQuantity(StockAvailable $stockAvailable, DeltaQuantity $deltaQuantity): void
     {
-        $stockAvailable->quantity += $deltaQuantity;
-        $movementReasonId = $this->movementReasonRepository->getIdForEmployeeEdition($deltaQuantity > 0);
+        $deltaQtyValue = $deltaQuantity->getDeltaQuantity();
+        $stockAvailable->quantity += $deltaQtyValue;
 
-        if (0 !== $deltaQuantity) {
+        if (0 !== $deltaQtyValue) {
             $this->stockManager->saveMovement(
                 $stockAvailable->id_product,
                 $stockAvailable->id_product_attribute,
-                $deltaQuantity,
+                $deltaQtyValue,
                 [
-                    'id_stock_mvt_reason' => $movementReasonId->getValue(),
+                    'id_stock_mvt_reason' => $deltaQuantity->getMovementReasonId()->getValue(),
                 ]
             );
         }
