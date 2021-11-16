@@ -26,7 +26,7 @@
   <div id="specific-price-form-modal">
     <modal
       class="specific-price-modal"
-      v-if="openForCreate || openForUpdate"
+      v-if="isOpen"
       @close="closeModal"
     >
       <template #body>
