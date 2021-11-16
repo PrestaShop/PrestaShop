@@ -66,6 +66,9 @@ class AlertsTrackingExtension extends AbstractTypeExtension
             return;
         }
 
+        /*
+         * Example: ['alerts' => ['success' => ['Success message'], 'error' => ['Invalid data']]]
+         */
         $view->vars['alerts'] = $this->flashBag->peekAll();
     }
 
