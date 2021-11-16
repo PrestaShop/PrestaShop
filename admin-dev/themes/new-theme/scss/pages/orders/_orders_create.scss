@@ -1,7 +1,9 @@
 #order-creation-container {
   .custom-fields-container {
-    max-height: 300px;
     padding-bottom: 0.9375rem;
+    padding-top: 0.6rem;
+    background: #fafbfc;
+    border-radius: 4px;
 
     .custom-file {
       overflow: hidden;
