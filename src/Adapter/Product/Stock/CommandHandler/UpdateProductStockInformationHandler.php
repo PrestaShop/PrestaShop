@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockProperties;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\CommandHandler\UpdateProductStockInformationHandlerInterface;
 
