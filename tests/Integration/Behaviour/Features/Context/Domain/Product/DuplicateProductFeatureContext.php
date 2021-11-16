@@ -28,8 +28,13 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 
 class DuplicateProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -46,6 +51,36 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
         ));
 
         $this->getSharedStorage()->set($newProductReference, $newProductId->getValue());
+    }
+
+    /**
+     * @When I bulk duplicate following products:
+     *
+     * @param TableNode $productsList
+     */
+    public function bulkDuplicate(TableNode $productsList): void
+    {
+        $productIds = [];
+        foreach ($productsList->getColumnsHash() as $productInfo) {
+            $productIds[] = $this->getSharedStorage()->get($productInfo['reference']);
+        }
+
+        try {
+            $newProductIds = $this->getCommandBus()->handle(new BulkDuplicateProductCommand($productIds));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+            return;
+        }
+
+        foreach($newProductIds as $newProductId) {
+            foreach ($productsList->getColumnsHash() as $productInfo) {
+                $oldProduct = $this->getProductForEditing($productInfo['reference']);
+                $newProduct = $this->getQueryBus()->handle(new GetProductForEditing($newProductId->getValue()));
+                if ($oldProduct->getDetails()->getReference() === $newProduct->getDetails()->getReference()) {
+                    $this->getSharedStorage()->set($productInfo['copy_reference'], $newProductId->getValue());
+                }
+            }
+        }
     }
 
     /**

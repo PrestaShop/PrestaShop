@@ -53,10 +53,13 @@ final class BulkDuplicateProductHandler implements BulkDuplicateProductHandlerIn
     /**
      * {@inheritdoc}
      */
-    public function handle(BulkDuplicateProductCommand $command): void
+    public function handle(BulkDuplicateProductCommand $command): array
     {
+        $newProducts = [];
         foreach ($command->getProductIds() as $productId) {
-            $this->productDuplicator->duplicate($productId);
+            $newProducts[] = $this->productDuplicator->duplicate($productId);
         }
+
+        return $newProducts;
     }
 }

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Defines contract to handle @see BulkDuplicateProductCommand
@@ -35,6 +36,8 @@ interface BulkDuplicateProductHandlerInterface
 {
     /**
      * @param BulkDuplicateProductCommand $command
+     *
+     * @return array<ProductId>
      */
-    public function handle(BulkDuplicateProductCommand $command): void;
+    public function handle(BulkDuplicateProductCommand $command): array;
 }
