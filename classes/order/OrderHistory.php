@@ -544,13 +544,13 @@ class OrderHistoryCore extends ObjectModel
                         Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $invoice]);
                         $pdf = new PDF($invoice, PDF::TEMPLATE_INVOICE, $context->smarty);
                         $file_attachement['invoice']['content'] = $pdf->render(false);
-                        $file_attachement['invoice']['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
+                        $file_attachement['invoice']['name'] = $pdf->filename;
                         $file_attachement['invoice']['mime'] = 'application/pdf';
                     }
                     if ($result['pdf_delivery'] && $order->delivery_number) {
                         $pdf = new PDF($invoice, PDF::TEMPLATE_DELIVERY_SLIP, $context->smarty);
                         $file_attachement['delivery']['content'] = $pdf->render(false);
-                        $file_attachement['delivery']['name'] = Configuration::get('PS_DELIVERY_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->delivery_number) . '.pdf';
+                        $file_attachement['delivery']['name'] = $pdf->filename;
                         $file_attachement['delivery']['mime'] = 'application/pdf';
                     }
 
