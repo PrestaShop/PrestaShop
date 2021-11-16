@@ -28,11 +28,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
 use DateTimeInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\DeltaQuantity;
 
 class CombinationStockProperties
 {
     /**
-     * @var int|null
+     * @var DeltaQuantity|null
      */
     private $deltaQuantity;
 
@@ -62,7 +63,7 @@ class CombinationStockProperties
     private $availableDate;
 
     /**
-     * @param int|null $quantity
+     * @param DeltaQuantity|null $deltaQuantity
      * @param int|null $minimalQuantity
      * @param string|null $location
      * @param int|null $lowStockThreshold
@@ -70,25 +71,26 @@ class CombinationStockProperties
      * @param DateTimeInterface|null $availableDate
      */
     public function __construct(
-        ?int $quantity = null,
+        ?DeltaQuantity $deltaQuantity = null,
         ?int $minimalQuantity = null,
         ?string $location = null,
         ?int $lowStockThreshold = null,
         ?bool $lowStockAlertEnabled = null,
         ?DateTimeInterface $availableDate = null
     ) {
-        $this->deltaQuantity = $quantity;
+        $this->deltaQuantity = $deltaQuantity;
         $this->minimalQuantity = $minimalQuantity;
         $this->location = $location;
         $this->lowStockThreshold = $lowStockThreshold;
         $this->lowStockAlertEnabled = $lowStockAlertEnabled;
         $this->availableDate = $availableDate;
+        $this->deltaQuantity = $deltaQuantity;
     }
 
     /**
-     * @return int|null
+     * @return DeltaQuantity|null
      */
-    public function getDeltaQuantity(): ?int
+    public function getDeltaQuantity(): ?DeltaQuantity
     {
         return $this->deltaQuantity;
     }

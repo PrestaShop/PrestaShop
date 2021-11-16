@@ -33,9 +33,11 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationFromListingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\DeltaQuantity;
 
 /**
  * Handles @see UpdateCombinationFromListingCommand using legacy object model
@@ -58,18 +60,26 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
     private $combinationStockUpdater;
 
     /**
+     * @var MovementReasonRepository
+     */
+    private $movementReasonRepository;
+
+    /**
      * @param CombinationRepository $combinationRepository
      * @param DefaultCombinationUpdater $defaultCombinationUpdater
      * @param CombinationStockUpdater $combinationStockUpdater
+     * @param MovementReasonRepository $movementReasonRepository
      */
     public function __construct(
         CombinationRepository $combinationRepository,
         DefaultCombinationUpdater $defaultCombinationUpdater,
-        CombinationStockUpdater $combinationStockUpdater
+        CombinationStockUpdater $combinationStockUpdater,
+        MovementReasonRepository $movementReasonRepository
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->defaultCombinationUpdater = $defaultCombinationUpdater;
         $this->combinationStockUpdater = $combinationStockUpdater;
+        $this->movementReasonRepository = $movementReasonRepository;
     }
 
     /**
@@ -88,10 +98,13 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
             $this->defaultCombinationUpdater->setDefaultCombination($command->getCombinationId());
         }
 
-        $this->combinationStockUpdater->update(
-            $command->getCombinationId(),
-            new CombinationStockProperties($command->getQuantity())
-        );
+        if (null !== $command->getQuantity()) {
+            $deltaQty = new DeltaQuantity(
+                $command->getQuantity(),
+                $this->movementReasonRepository->getIdForEmployeeEdition($command->getQuantity() > 0)
+            );
+            $this->combinationStockUpdater->update($command->getCombinationId(), new CombinationStockProperties($deltaQty));
+        }
     }
 
     /**
