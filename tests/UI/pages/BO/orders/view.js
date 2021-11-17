@@ -127,11 +127,12 @@ class Order extends BOBasePage {
 
     // Merchandise returns tab
     this.merchandiseReturnsTab = '#orderReturnsTab';
-    this.merchandiseReturnsGridTable = '#js-test-merchandise-returns-grid-table';
+    this.merchandisereturnCount = `${this.merchandiseReturnsTab} span[data-role='count']`
+    this.merchandiseReturnsGridTable = 'table[data-role=\'merchandise-returns-grid-table\']';
     this.merchandiseReturnsTableBody = `${this.merchandiseReturnsGridTable} tbody`;
     this.merchandiseReturnsTableRow = row => `${this.merchandiseReturnsTableBody} tr:nth-child(${row})`;
     this.merchandiseReturnsTableColumn = (row, column) => `${this.merchandiseReturnsTableRow(row)}`
-      + ` td.js-test-merchandise-${column}`;
+      + ` td[data-role='merchandise-${column}']`;
 
     // Refund form
     this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
@@ -891,7 +892,7 @@ class Order extends BOBasePage {
    * @returns {Promise<number>}
    */
   getMerchandiseReturnsNumber(page) {
-    return this.getNumberFromText(page, `${this.merchandiseReturnsTab} .count`);
+    return this.getNumberFromText(page, this.merchandisereturnCount);
   }
 
   /**
