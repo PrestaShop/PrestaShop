@@ -60,20 +60,20 @@ Feature: Update product combination stock information in Back Office (BO)
       | location                   | Storage nr1 |
       | available date             | 2021-10-10  |
     When I update combination "product1SBlack" stock with following details:
-      | quantity            | 100         |
+      | quantity            | -101        |
       | minimal quantity    | 1           |
       | location            | Storage nr2 |
       | low stock threshold | 10          |
     Then combination "product1SBlack" should have following stock details:
       | combination stock detail   | value       |
-      | quantity                   | 100         |
+      | quantity                   | -1          |
       | minimal quantity           | 1           |
       | low stock threshold        | 10          |
       | low stock alert is enabled | true        |
       | location                   | Storage nr2 |
       | available date             | 2021-10-10  |
     When I update combination "product1SBlack" stock with following details:
-      | quantity                   | 0          |
+      | quantity                   | 1          |
       | minimal quantity           | 0          |
       | location                   |            |
       | low stock threshold        | 0          |
