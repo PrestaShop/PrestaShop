@@ -29,7 +29,10 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Module;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateModulePermissionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ModulePermission;
@@ -80,6 +83,23 @@ class PermissionFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When /^I (disable|enable) (view|add|edit|delete|all) permission for tab (.*) for profile (.*)/
+     *
+     * @param string $action
+     * @param string $permission
+     * @param string $profileReference
+     */
+    public function updateTabPermission(string $action, string $permission, string $tabName, string $profileReference): void
+    {
+        $this->getCommandBus()->handle(new UpdateTabPermissionsCommand(
+            $this->getSharedStorage()->get($profileReference),
+            Tab::getIdFromClassName($tabName),
+            $permission,
+            $action === 'enable'
+        ));
+    }
+
+    /**
      * @Then profile :profileReference should have the following permissions for modules:
      *
      * @param string $profileReference
@@ -110,6 +130,23 @@ class PermissionFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         }
+    }
+
+    /**
+     * @When /^I (disable|enable) (view|configure|uninstall) permission for module (.*) for profile (.*)/
+     *
+     * @param string $action
+     * @param string $permission
+     * @param string $profileReference
+     */
+    public function updateModulePermission(string $action, string $permission, string $moduleName, string $profileReference): void
+    {
+        $this->getCommandBus()->handle(new UpdateModulePermissionsCommand(
+            $this->getSharedStorage()->get($profileReference),
+            Module::getModuleIdByName($moduleName),
+            $permission,
+            $action === 'enable'
+        ));
     }
 
     /**
