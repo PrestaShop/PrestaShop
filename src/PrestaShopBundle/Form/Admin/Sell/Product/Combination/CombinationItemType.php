@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+use PrestaShopBundle\Form\Admin\Type\DeltaQuantityType;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\SubmittableInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -39,6 +40,8 @@ use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 class CombinationItemType extends TranslatorAwareType
 {
@@ -83,10 +86,22 @@ class CombinationItemType extends TranslatorAwareType
                 ],
             ])
             ->add('final_price_te', HiddenType::class)
-            ->add('quantity', SubmittableInputType::class, [
+            ->add('quantity', DeltaQuantityType::class, [
+                'submittable' => true,
+//                'type' => SubmittableInputType::class,
                 'attr' => [
                     'class' => 'combination-quantity',
                 ],
+//                'type_options' => [
+//                    'required' => false,
+//                    'label' => $this->trans('Edit quantity', 'Admin.Catalog.Feature'),
+//                    'label_tag_name' => 'h4',
+//                    'constraints' => [
+//                        new NotBlank(),
+//                        new Type(['type' => 'numeric']),
+//                    ],
+//                    'default_empty_data' => 0,
+//                ],
             ])
             ->add('is_default', RadioType::class, [
                 'label' => false,

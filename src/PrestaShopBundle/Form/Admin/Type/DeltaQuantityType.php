@@ -32,6 +32,9 @@ use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Quantity field that displays the initial quantity (not editable) and allows editing with delta quantity
@@ -49,7 +52,15 @@ class DeltaQuantityType extends TranslatorAwareType
             ->add('quantity', TextPreviewType::class, [
                 'block_prefix' => 'delta_quantity_quantity',
             ])
-            ->add('delta', NumberType::class, [
+        ;
+
+        //@todo: clean up. (dont forget prestashop_ui_kit)
+        if ($options['submittable']) {
+            $builder->add('delta', SubmittableInputType::class, [
+                'block_prefix' => 'delta_quantity_delta',
+            ]);
+        } else {
+            $builder->add('delta', NumberType::class, [
                 'scale' => 0,
                 'default_empty_data' => 0,
                 'label' => $this->trans('Add or subtract items', 'Admin.Global'),
@@ -57,23 +68,36 @@ class DeltaQuantityType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'delta-quantity-delta-container',
                 ],
-            ])
-        ;
-        $builder->get('quantity')->addViewTransformer(new NumberToLocalizedStringTransformer(0, false));
+            ]);
+            // Thanks to this transformer the input data is the quantity value (as integer) and the output is the
+            // edited delta (as an integer as well)
+            $builder->addModelTransformer(new CallbackTransformer(
+                function (?int $initialQuantity) {
+                    return [
+                        'quantity' => (int) $initialQuantity,
+                        'delta' => 0,
+                    ];
+                },
+                function (array $inputData) {
+                    return (int) $inputData['delta'];
+                }
+            ));
+        }
 
-        // Thanks to this transformer the input data is the quantity value (as integer) and the output is the
-        // edited delta (as an integer as well)
-        $builder->addModelTransformer(new CallbackTransformer(
-            function (int $initialQuantity) {
-                return [
-                    'quantity' => $initialQuantity,
-                    'delta' => 0,
-                ];
-            },
-            function (array $inputData) {
-                return (int) $inputData['delta'];
-            }
-        ));
+        $builder->get('quantity')->addViewTransformer(new NumberToLocalizedStringTransformer(0, false));
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefault('submittable', false);
+        $resolver->setAllowedTypes('submittable', 'bool');
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options): void
+    {
+        $view->vars['submittable'] = $options['submittable'];
     }
 
     /**

@@ -34,6 +34,7 @@ import initFilters from '@pages/product/components/filters';
 import ConfirmModal from '@components/modal';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
+import DeltaQuantityInput from "@components/form/delta-quantity-input";
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -270,6 +271,7 @@ export default class CombinationsManager {
     const { referenceKey } = CombinationsMap.combinationItemForm;
     const { tokenKey } = CombinationsMap.combinationItemForm;
 
+    //@todo: init delta quantity. and fix styling
     /* eslint-disable */
     new SubmittableInput(CombinationsMap.quantityInputWrapper, input =>
       this.combinationsService.updateListedCombination(

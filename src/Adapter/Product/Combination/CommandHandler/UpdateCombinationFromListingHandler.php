@@ -98,13 +98,13 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
             $this->defaultCombinationUpdater->setDefaultCombination($command->getCombinationId());
         }
 
-        if (null === $command->getQuantity()) {
+        if (null === $command->getDeltaQuantity()) {
             return;
         }
 
         $deltaQuantity = new DeltaQuantity(
-            $command->getQuantity(),
-            $this->movementReasonRepository->getIdForEmployeeEdition($command->getQuantity() > 0)
+            $command->getDeltaQuantity(),
+            $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
         );
         $this->combinationStockUpdater->update($command->getCombinationId(), new CombinationStockProperties($deltaQuantity));
     }
@@ -124,8 +124,8 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
             $updatableProperties[] = 'price';
         }
 
-        if (null !== $command->getQuantity()) {
-            $combination->quantity = $command->getQuantity();
+        if (null !== $command->getDeltaQuantity()) {
+            $combination->quantity = $command->getDeltaQuantity();
             $updatableProperties[] = 'quantity';
         }
 
