@@ -31,8 +31,8 @@ class OrderHistory extends FOBasePage {
     this.messageRow = row => `${this.boxMessagesSection} div:nth-child(${row}).message.row`;
     // Add message block
     this.orderMessageForm = '.order-message-form';
-    this.productSelect = `${this.orderMessageForm} select.js-test-product`;
-    this.messageTextarea = `${this.orderMessageForm} textarea.js-test-msg-text`;
+    this.productSelect = `${this.orderMessageForm} select[data-role='product']`;
+    this.messageTextarea = `${this.orderMessageForm} textarea[data-role='msg-text']`;
     this.sendMessageButton = `${this.orderMessageForm} button.form-control-submit`;
   }
 
@@ -131,6 +131,7 @@ class OrderHistory extends FOBasePage {
     if (messageText.product !== '') {
       await this.selectByVisibleText(page, this.productSelect, messageText.product);
     }
+
     await this.setValue(page, this.messageTextarea, messageText.message);
     await this.clickAndWaitForNavigation(page, this.sendMessageButton);
 

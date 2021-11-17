@@ -194,7 +194,7 @@ class Order extends BOBasePage {
     this.partialRefundSubmitButton = 'button#cancel_product_save';
 
     // Messages block
-    this.messageBlock = '#js-test-messageCard';
+    this.messageBlock = 'div[data-role=\'message-card\']';
     this.messageBlockTitle = `${this.messageBlock} .card-header-title`;
     this.orderMessageSelect = '#order_message_order_message';
     this.displayToCustometCheckbox = `${this.messageBlock} .md-checkbox label`;
@@ -1266,9 +1266,11 @@ class Order extends BOBasePage {
     if (messageData.displayToCustomer) {
       await this.setChecked(page, this.displayToCustometCheckbox, messageData.displayToCustomer);
     }
+
     if (messageData.message !== '') {
       await this.setValue(page, this.messageTextarea, messageData.message);
     }
+
     await this.waitForSelectorAndClick(page, this.sendMessageButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -1294,6 +1296,7 @@ class Order extends BOBasePage {
     if (messageFrom === 'employee') {
       return this.elementVisible(page, this.messageEmployeeBlockContent(messageID), 1000);
     }
+
     return this.elementVisible(page, this.messageCustomerBlockContent(messageID), 1000);
   }
 
