@@ -36,7 +36,7 @@ class AddQuickAccess extends BOBasePage {
   async setQuickAccessLink(page, quickAccessLinkData) {
     await this.setValue(page, this.nameInput, quickAccessLinkData.name);
     await this.setValue(page, this.urlInput, quickAccessLinkData.url);
-    await page.check(this.newWindowToggle(quickAccessLinkData.openNewWindow ? 'on' : 'off'));
+    await this.setChecked(page, this.newWindowToggle(quickAccessLinkData.openNewWindow ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     // Return successful message

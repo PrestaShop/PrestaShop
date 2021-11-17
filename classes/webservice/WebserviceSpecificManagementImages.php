@@ -27,6 +27,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 {
     /** @var WebserviceOutputBuilder */
     protected $objOutput;
+    /** @var string */
     protected $output;
 
     /** @var WebserviceRequest */
@@ -119,9 +120,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         return $this->wsObject;
     }
 
-    /*
-    * This method need $this->imgToDisplay to be set if output don't needs to be XML
-    */
+    /**
+     * This method need $this->imgToDisplay to be set if output don't needs to be XML
+     *
+     * @return string
+     */
     public function getContent()
     {
         if ($this->output != '') {
@@ -164,6 +167,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 return file_get_contents($this->imgToDisplay);
             }
         }
+
+        return '';
     }
 
     public function manage()
@@ -294,41 +299,19 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 break;
             // normal images management : like the most entity images (categories, manufacturers..)...
             case 'categories':
+                return $this->manageDeclinatedImages(_PS_CAT_IMG_DIR_);
             case 'manufacturers':
+                return $this->manageDeclinatedImages(_PS_MANU_IMG_DIR_);
             case 'suppliers':
+                return $this->manageDeclinatedImages(_PS_SUPP_IMG_DIR_);
             case 'stores':
-                switch ($this->wsObject->urlSegment[1]) {
-                    case 'categories':
-                        $directory = _PS_CAT_IMG_DIR_;
-
-                        break;
-                    case 'manufacturers':
-                        $directory = _PS_MANU_IMG_DIR_;
-
-                        break;
-                    case 'suppliers':
-                        $directory = _PS_SUPP_IMG_DIR_;
-
-                        break;
-                    case 'stores':
-                        $directory = _PS_STORE_IMG_DIR_;
-
-                        break;
-                }
-
-                return $this->manageDeclinatedImages($directory);
-
-                break;
+                return $this->manageDeclinatedImages(_PS_STORE_IMG_DIR_);
 
             // product image management : many image for one entity (product)
             case 'products':
                 return $this->manageProductImages();
-
-                break;
             case 'customizations':
                 return $this->manageCustomizationImages();
-
-                break;
             // images root node management : many image for one entity (product)
             case '':
                 $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image_types', []);
@@ -355,7 +338,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     /**
      * Management of general images.
      *
-     * @return bool
+     * @return bool|void
      *
      * @throws WebserviceException
      */
@@ -621,7 +604,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         // in case of declinated images list of a product is get
         if ($this->output != '') {
             return true;
-        } elseif (isset($image_size) && $image_size != '') {
+        } elseif (isset($image_size) && $image_size != '' && isset($image_id)) {
             // If a size was given try to display it
 
             // Check the given size
@@ -632,7 +615,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
                 throw $exception->setDidYouMean($image_size, $normal_image_size_names);
             }
-            if (!file_exists($filename)) {
+            if (!isset($filename) || !file_exists($filename)) {
                 throw new WebserviceException('This image does not exist on disk', [59, 500]);
             }
 
@@ -681,7 +664,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
     protected function manageProductImages()
     {
-        $this->manageDeclinatedImages(_PS_PROD_IMG_DIR_);
+        $this->manageDeclinatedImages(_PS_PRODUCT_IMG_DIR_);
     }
 
     protected function getCustomizations()
@@ -810,7 +793,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      * @param array $image_sizes The
      * @param string $directory
      *
-     * @return bool
+     * @return bool|void
      *
      * @throws WebserviceException
      */
@@ -1006,6 +989,12 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 $imaged = imagepng($dest_image, $new_path, (int) $quality);
 
                 break;
+
+            case 'webp':
+                $quality = (Configuration::get('PS_WEBP_QUALITY') === false ? 80 : Configuration::get('PS_WEBP_QUALITY'));
+                $imaged = imagewebp($dest_image, $new_path, (int) $quality);
+
+                break;
             case 'jpeg':
             default:
                 $quality = (Configuration::get('PS_JPEG_QUALITY') === false ? 90 : Configuration::get('PS_JPEG_QUALITY'));
@@ -1015,7 +1004,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     $product_picture_width = (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH');
                     $product_picture_height = (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT');
                     if (!ImageManager::resize($new_path, $new_path . '_small', $product_picture_width, $product_picture_height)) {
-                        $this->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while uploading the image.', [], 'Admin.Notifications.Error');
+                        $this->getWsObject()->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while uploading the image.', [], 'Admin.Notifications.Error');
                     }
                 }
 
@@ -1058,7 +1047,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      * @param array $image_types
      * @param string $parent_path
      *
-     * @return bool
+     * @return bool|void
      *
      * @throws WebserviceException
      */
@@ -1154,21 +1143,21 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         throw new WebserviceException('Bad image : ' . $error, [76, 400]);
                     }
 
-                    if ($this->imageType == 'products') {
+                    if ($this->imageType == 'products' && isset($image, $product)) {
                         $image = new Image($image->id);
-                        if (!(Configuration::get('PS_OLD_FILESYSTEM') && file_exists(_PS_PROD_IMG_DIR_ . $product->id . '-' . $image->id . '.jpg'))) {
+                        if (!(Configuration::get('PS_OLD_FILESYSTEM') && file_exists(_PS_PRODUCT_IMG_DIR_ . $product->id . '-' . $image->id . '.jpg'))) {
                             $image->createImgFolder();
                         }
 
                         if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($file['tmp_name'], $tmp_name)) {
                             throw new WebserviceException('An error occurred during the image upload', [76, 400]);
-                        } elseif (!ImageManager::resize($tmp_name, _PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format)) {
+                        } elseif (!ImageManager::resize($tmp_name, _PS_PRODUCT_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format)) {
                             throw new WebserviceException('An error occurred while copying image', [76, 400]);
                         } else {
                             $images_types = ImageType::getImagesTypes('products');
                             foreach ($images_types as $imageType) {
-                                if (!ImageManager::resize($tmp_name, _PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
-                                    $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error');
+                                if (!ImageManager::resize($tmp_name, _PS_PRODUCT_IMG_DIR_ . $image->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
+                                    $this->getWsObject()->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error');
                                 }
                             }
                         }
@@ -1176,7 +1165,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
                         Hook::exec('actionWatermark', ['id_image' => $image->id, 'id_product' => $image->id_product]);
 
-                        $this->imgToDisplay = _PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format;
+                        $this->imgToDisplay = _PS_PRODUCT_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format;
                         $this->objOutput->setFieldsToDisplay('full');
                         $this->output = $this->objOutput->renderEntity($image, 1);
                         $image_content = ['sqlId' => 'content', 'value' => base64_encode(file_get_contents($this->imgToDisplay)), 'encode' => 'base64'];
@@ -1190,7 +1179,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         $images_types = ImageType::getImagesTypes($this->imageType);
                         foreach ($images_types as $imageType) {
                             if (!ImageManager::resize($tmp_name, $parent_path . $this->wsObject->urlSegment[2] . '-' . stripslashes($imageType['name']) . '.jpg', $imageType['width'], $imageType['height'])) {
-                                $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error');
+                                $this->getWsObject()->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error');
                             }
                         }
                         @unlink(_PS_TMP_IMG_DIR_ . $tmp_name);

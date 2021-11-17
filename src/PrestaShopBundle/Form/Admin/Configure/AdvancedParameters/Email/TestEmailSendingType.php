@@ -50,6 +50,10 @@ class TestEmailSendingType extends TranslatorAwareType
             ->add('smtp_username', HiddenType::class)
             ->add('smtp_password', HiddenType::class)
             ->add('smtp_port', HiddenType::class)
-            ->add('smtp_encryption', HiddenType::class);
+            ->add('smtp_encryption', HiddenType::class)
+            ->add('dkim_enable', HiddenType::class)
+            ->add('dkim_key', HiddenType::class)
+            ->add('dkim_domain', HiddenType::class)
+            ->add('dkim_selector', HiddenType::class);
     }
 }

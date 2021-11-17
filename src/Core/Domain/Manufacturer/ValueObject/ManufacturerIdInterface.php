@@ -24,12 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject;
 
 /**
- * ManufacturerIdInterface represents a relation with a Manufacturer.
+ * This interface allows to explicitly define whether the manufacturer relation is optional or required.
  *
  * @see ManufacturerId
  * @see NoManufacturerId

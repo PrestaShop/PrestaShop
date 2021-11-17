@@ -27,7 +27,7 @@ class GroupCore extends ObjectModel
 {
     public $id;
 
-    /** @var string Lastname */
+    /** @var string|array<int, string> */
     public $name;
 
     /** @var string Reduction */
@@ -37,7 +37,7 @@ class GroupCore extends ObjectModel
     public $price_display_method;
 
     /** @var bool Show prices */
-    public $show_prices = 1;
+    public $show_prices = true;
 
     /** @var string Object creation date */
     public $date_add;
@@ -209,7 +209,7 @@ class GroupCore extends ObjectModel
             Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', 1);
         }
 
-        return parent::update($autodate, $null_values);
+        return parent::update($null_values);
     }
 
     public function delete()
@@ -272,8 +272,8 @@ class GroupCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param $table
-     * @param $has_active_column
+     * @param string|null $table Name of table linked to entity
+     * @param bool $has_active_column True if the table has an active column
      *
      * @return bool
      */
@@ -313,8 +313,8 @@ class GroupCore extends ObjectModel
     /**
      * Adding restrictions modules to the group with id $id_group.
      *
-     * @param $id_group
-     * @param $modules
+     * @param int $id_group
+     * @param array $modules
      * @param array $shops
      *
      * @return bool

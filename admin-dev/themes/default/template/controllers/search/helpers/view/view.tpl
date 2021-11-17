@@ -57,8 +57,7 @@ $(function() {
             {foreach $features key=key item=feature}
                 {foreach $feature key=k item=val name=feature_list}
                     <tr>
-                        <td><a href="{$val.link}"{if $smarty.foreach.feature_list.first}><strong>{$key}</strong>{/if}</a></td>
-                        <td><a href="{$val.link}">{$val.value}</a></td>
+                        <td><a href="{$val.link}"><strong>{$key}</strong></a></td>
                     </tr>
                 {/foreach}
             {/foreach}

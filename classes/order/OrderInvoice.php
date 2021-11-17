@@ -112,7 +112,7 @@ class OrderInvoiceCore extends ObjectModel
             'total_wrapping_tax_excl' => ['type' => self::TYPE_FLOAT],
             'total_wrapping_tax_incl' => ['type' => self::TYPE_FLOAT],
             'shop_address' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000],
-            'note' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000],
+            'note' => ['type' => self::TYPE_HTML],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];
@@ -265,7 +265,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * This method allow to add stock information on a product detail.
      *
-     * @param array &$product
+     * @param array $product
      */
     protected function setProductCurrentStock(&$product)
     {
@@ -281,7 +281,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * This method allow to add image information on a product detail.
      *
-     * @param array &$product
+     * @param array $product
      */
     protected function setProductImageInformations(&$product)
     {
@@ -578,8 +578,8 @@ class OrderInvoiceCore extends ObjectModel
      *
      * @since 1.5
      *
-     * @param $date_from
-     * @param $date_to
+     * @param string $date_from
+     * @param string $date_to
      *
      * @return array collection of OrderInvoice
      */
@@ -602,7 +602,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5.0.3
      *
-     * @param $id_order_state
+     * @param int $id_order_state
      *
      * @return array collection of OrderInvoice
      */
@@ -624,8 +624,8 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5.0.3
      *
-     * @param $date_from
-     * @param $date_to
+     * @param string $date_from
+     * @param string $date_to
      *
      * @return array collection of invoice
      */
@@ -647,7 +647,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5
      *
-     * @param $id_order_invoice
+     * @param int $id_order_invoice
      */
     public static function getCarrier($id_order_invoice)
     {
@@ -662,7 +662,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5
      *
-     * @param $id_order_invoice
+     * @param int $id_order_invoice
      */
     public static function getCarrierId($id_order_invoice)
     {

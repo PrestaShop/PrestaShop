@@ -43,7 +43,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * Render merchandise returns grid and options.
      *
      * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller'))",
      *     redirectRoute="admin_merchandise_returns_index"
      * )
      *

@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace LegacyTests\Unit\Core\Module;
+namespace Tests\Unit\Core\Module;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
@@ -37,7 +37,7 @@ class HookConfiguratorTest extends TestCase
     private $hookConfigurator;
     private $hookRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->hookRepository = $this->createMock(HookRepository::class);
 

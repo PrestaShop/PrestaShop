@@ -14,7 +14,7 @@
     color: $white;
     text-align: center;
     letter-spacing: -0.2px;
-    background-color: #6c868e;
+    background-color: $gray-500;
     @include border-radius(2px);
   }
 
@@ -23,15 +23,15 @@
     font-weight: 600;
     font-stretch: normal;
     line-height: normal;
-    color: #363a41;
+    color: $gray-700;
     text-align: center;
     letter-spacing: -0.2px;
     background-color: transparent;
-    border: 1px solid #6c858c;
+    border: 1px solid $gray-500;
   }
 
   .btn-tertiary:hover {
-    background-color: #363a41;
+    background-color: $gray-700;
   }
 
   .layout-configuration {
@@ -56,7 +56,7 @@
         font-weight: 400;
         font-stretch: normal;
         line-height: 1.33;
-        color: #6c868e;
+        color: $gray-500;
         letter-spacing: normal;
       }
     }

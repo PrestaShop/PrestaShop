@@ -70,8 +70,7 @@ class CheckoutSessionCore
     public function getCustomerAddressesCount()
     {
         return count($this->getCustomer()->getSimpleAddresses(
-            $this->context->language->id,
-            true // no cache
+            $this->context->language->id
         ));
     }
 

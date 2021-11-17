@@ -30,13 +30,13 @@ class CMSCategoryCore extends ObjectModel
     /** @var int CMSCategory ID */
     public $id_cms_category;
 
-    /** @var array<string> Name */
+    /** @var string|array<int, string> Name */
     public $name;
 
     /** @var bool Status for display */
     public $active = 1;
 
-    /** @var array<string> Description */
+    /** @var string|array<int, string> Description */
     public $description;
 
     /** @var int Parent CMSCategory ID */
@@ -48,16 +48,16 @@ class CMSCategoryCore extends ObjectModel
     /** @var int Parents number */
     public $level_depth;
 
-    /** @var array<string> string used in rewrited URL */
+    /** @var string|array<int, string> string used in rewrited URL */
     public $link_rewrite;
 
-    /** @var array<string> Meta title */
+    /** @var string|array<int, string> Meta title */
     public $meta_title;
 
-    /** @var array<string> Meta keywords */
+    /** @var string|array<int, string> Meta keywords */
     public $meta_keywords;
 
-    /** @var array<string> Meta description */
+    /** @var string|array<int, string> Meta description */
     public $meta_description;
 
     /** @var string Object creation date */
@@ -126,8 +126,9 @@ class CMSCategoryCore extends ObjectModel
      *
      * @param int $max_depth Maximum depth of the tree (i.e. 2 => 3 levels depth)
      * @param int $currentDepth specify the current depth in the tree (don't use it, only for rucursivity!)
-     * @param array $excluded_ids_array specify a list of ids to exclude of results
-     * @param int $idLang Specify the id of the language used
+     * @param int|null $id_lang Specify the id of the language used
+     * @param array|null $excluded_ids_array specify a list of ids to exclude of results
+     * @param Link|null $link
      *
      * @return array Subcategories lite tree
      */
@@ -234,7 +235,7 @@ class CMSCategoryCore extends ObjectModel
     /**
      * Recursively add specified CMSCategory childs to $toDelete array.
      *
-     * @param array &$toDelete Array reference where categories ID will be saved
+     * @param array $to_delete Array reference where categories ID will be saved
      * @param array|int $id_cms_category Parent CMSCategory ID
      */
     protected function recursiveDelete(&$to_delete, $id_cms_category)
@@ -271,10 +272,10 @@ class CMSCategoryCore extends ObjectModel
 
         $this->clearCache();
 
+        /** @var array<CMSCategory> $cmsCategories */
         $cmsCategories = $this->getAllChildren();
         $cmsCategories[] = $this;
         foreach ($cmsCategories as $cmsCategory) {
-            /* @var CMSCategory */
             $cmsCategory->deleteCMS();
             $cmsCategory->deleteLite();
             CMSCategory::cleanPositions($cmsCategory->id_parent);
@@ -580,30 +581,6 @@ class CMSCategoryCore extends ObjectModel
 			LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = ' . (int) $id_lang . ')
 			WHERE `name` LIKE \'%' . pSQL($query) . '%\' AND c.`id_cms_category` != 1');
         }
-    }
-
-    /**
-     * Retrieve CMSCategory by name and parent CMSCategory id.
-     *
-     * @param int $id_lang Language ID
-     * @param string $CMSCategory_name Searched CMSCategory name
-     * @param int $id_parent_CMSCategory parent CMSCategory ID
-     *
-     * @return array Corresponding CMSCategory
-     *
-     * @deprecated 1.5.3.0
-     */
-    public static function searchByNameAndParentCMSCategoryId($id_lang, $CMSCategory_name, $id_parent_CMSCategory)
-    {
-        Tools::displayAsDeprecated();
-
-        return Db::getInstance()->getRow('
-		SELECT c.*, cl.*
-	    FROM `' . _DB_PREFIX_ . 'cms_category` c
-	    LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = ' . (int) $id_lang . ')
-	    WHERE `name` = \'' . pSQL($CMSCategory_name) . '\'
-		AND c.`id_cms_category` != 1
-		AND c.`id_parent` = ' . (int) $id_parent_CMSCategory);
     }
 
     /**

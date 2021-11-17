@@ -42,7 +42,7 @@ class FileSystemTest extends TestCase
      */
     private $fixturesPath;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fs = new FileSystem();
         $this->fixturesPath = __DIR__ . DIRECTORY_SEPARATOR . 'fixtures';

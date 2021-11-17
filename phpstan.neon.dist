@@ -1,25 +1,52 @@
 parameters:
-	level: 4
-	bootstrapFiles:
-		- .github/workflows/phpstan/autoload.php
-	paths:
-		- src
-		- webservice
-	ignoreErrors:
-		- '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
-		- '#^Unsafe usage of new static\(\)\.$#'
-		## Relative to Attribute PHP 8
-		- '#^Access to an undefined property Attribute\:\:\$id\.$#'
-		- '#^Call to an undefined method Attribute\:\:delete\(\)\.$#'
-		- '#^Call to an undefined static method Attribute\:\:checkAttributeQty\(\)\.$#'
-		- '#^Call to an undefined static method Attribute\:\:getAttributeMinimalQty\(\)\.$#'
-		- '#^Call to an undefined static method Attribute\:\:getAttributes\(\)\.$#'
-	universalObjectCratesClasses:
-		- Cookie
-		- ObjectModel
-		- Order
-		- OrderInvoice
-		- Product
+  level: 5
+  bootstrapFiles:
+    - .github/workflows/phpstan/autoload.php
+  paths:
+    - admin-dev
+    - app
+    - bin
+    - cache
+    # - classes
+    - config
+    # - controllers
+    - docs
+    - download
+    - img
+    # - install-dev
+    # - js
+    - localization
+    - mails
+    # - modules
+    - override
+    - pdf
+    - src
+    # - tests
+    - themes
+    - tools
+    - translations
+    - upload
+    - webservice
+  excludePaths:
+    - admin-dev/filemanager
+    - admin-dev/themes
+    - classes/lang/KeysReference
+  ignoreErrors:
+    - '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
+    - '#^Unsafe usage of new static\(\)\.$#'
+    - '#^Constructor of class PrestaShopBundle\\Service\\DataProvider\\Marketplace\\ApiClient has an unused parameter \$toolsAdapter\.$#'
+    - '#constructor expects Symfony\\Contracts\\Translation\\TranslatorInterface\|null, Symfony\\Component\\Translation\\TranslatorInterface given\.$#'
+    - '#^Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface\:\:dispatch\(\) invoked with 2 parameters, 1 required\.$#'
+    - '~^Access to an undefined property PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleInterface::\$(attributes|disk|database)\.$~'
+    ## Smarty functions
+    - '#^Function smartyRegisterFunction not found\.$#'
+  reportUnmatchedIgnoredErrors: false
+  universalObjectCratesClasses:
+    - Cookie
+    - ObjectModel
+    - Order
+    - OrderInvoice
+    - Product
 
 
 services:

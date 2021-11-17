@@ -57,7 +57,7 @@ class SEOCommandsBuilder implements ProductCommandsBuilderInterface
         }
 
         if (isset($redirectionData['type'])) {
-            $targetId = (int) ($redirectionData['target'] ?? 0);
+            $targetId = (int) ($redirectionData['target']['id'] ?? 0);
             $command->setRedirectOption($redirectionData['type'], $targetId);
         }
 

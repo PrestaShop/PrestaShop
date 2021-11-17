@@ -36,11 +36,14 @@ let config = {
     path: path.resolve(__dirname, '../assets/js'),
     filename: '[name].js',
   },
+  resolve: {
+    preferRelative: true,
+  },
   module: {
     rules: [
       {
         test: /\.js/,
-        loader: 'babel-loader',
+        loader: 'esbuild-loader',
       },
       {
         test: /\.scss$/,

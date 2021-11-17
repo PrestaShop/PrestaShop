@@ -182,7 +182,7 @@ class AddOrder extends BOBasePage {
    */
   async setDeliveryOption(page, deliveryOptionName, isFreeShipping = false) {
     await this.selectByVisibleText(page, this.deliveryOptionSelect, deliveryOptionName);
-    await page.check(this.freeShippingToggleInput(isFreeShipping ? 1 : 0));
+    await this.setChecked(page, this.freeShippingToggleInput(isFreeShipping ? 1 : 0));
   }
 
   /* Summary methods */

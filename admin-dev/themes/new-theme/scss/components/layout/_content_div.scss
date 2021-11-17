@@ -25,22 +25,6 @@
     .container {
       padding: 0;
     }
-
-    .col {
-      padding: 0;
-    }
-
-    // remove gutters (except on product page)
-    // @todo remove the :not() once the product page has been made responsive
-    body:not(.adminproducts) & .row {
-      margin-right: 0;
-      margin-left: 0;
-
-      [class*="col-"] {
-        padding-right: 0;
-        padding-left: 0;
-      }
-    }
   }
 
   &.-notoolbar {

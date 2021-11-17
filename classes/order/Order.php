@@ -332,7 +332,7 @@ class OrderCore extends ObjectModel
     /**
      * Does NOT delete a product but "cancel" it (which means return/refund/delete it depending of the case).
      *
-     * @param $order
+     * @param Order $order
      * @param OrderDetail $order_detail
      * @param int $quantity
      *
@@ -342,7 +342,7 @@ class OrderCore extends ObjectModel
      */
     public function deleteProduct($order, $order_detail, $quantity)
     {
-        if (!(int) $this->getCurrentState() || !validate::isLoadedObject($order_detail)) {
+        if (!(int) $this->getCurrentState() || !Validate::isLoadedObject($order_detail)) {
             return false;
         }
 
@@ -430,7 +430,7 @@ class OrderCore extends ObjectModel
         $this->total_paid_tax_excl -= $product_price_tax_excl + $shipping_diff_tax_excl;
         $this->total_paid_real -= $product_price_tax_incl + $shipping_diff_tax_incl;
 
-        $fields = [
+        $fieldsFloatType = [
             'total_shipping',
             'total_shipping_tax_excl',
             'total_shipping_tax_incl',
@@ -443,14 +443,11 @@ class OrderCore extends ObjectModel
         ];
 
         /* Prevent from floating precision issues */
-        foreach ($fields as $field) {
+        foreach ($fieldsFloatType as $field) {
             if ($this->{$field} < 0) {
                 $this->{$field} = 0;
             }
-        }
 
-        /* Prevent from floating precision issues */
-        foreach ($fields as $field) {
             $this->{$field} = number_format($this->{$field}, Context::getContext()->getComputingPrecision(), '.', '');
         }
 
@@ -505,8 +502,8 @@ class OrderCore extends ObjectModel
      * Get order history.
      *
      * @param int $id_lang Language id
-     * @param int $id_order_state Filter a specific order status
-     * @param int $no_hidden Filter no hidden status
+     * @param int|bool $id_order_state Filter a specific order status
+     * @param int|bool $no_hidden Filter no hidden status
      * @param int $filters Flag to use specific field filter
      *
      * @return array History entries ordered by date DESC
@@ -717,7 +714,7 @@ class OrderCore extends ObjectModel
      * If advanced stock management is active, get physical stock of this product in the warehouse associated to the ptoduct for the current order
      * Else get the available quantity of the product in fucntion of the shop associated to the order
      *
-     * @param array &$product
+     * @param array $product
      */
     protected function setProductCurrentStock(&$product)
     {
@@ -735,7 +732,7 @@ class OrderCore extends ObjectModel
     /**
      * This method allow to add image information on a product detail.
      *
-     * @param array &$product
+     * @param array $product
      */
     protected function setProductImageInformations(&$product)
     {
@@ -820,7 +817,7 @@ class OrderCore extends ObjectModel
     {
         Tools::displayAsDeprecated('Use Order::getCartRules() instead');
 
-        return Order::getCartRules();
+        return static::getCartRules();
     }
 
     public function getCartRules()
@@ -1030,10 +1027,10 @@ class OrderCore extends ObjectModel
     /**
      * @deprecated since 1.5.0.2
      *
-     * @param $date_from
-     * @param $date_to
-     * @param $id_customer
-     * @param $type
+     * @param string $date_from
+     * @param string $date_to
+     * @param int|null $id_customer
+     * @param string|null $type
      *
      * @return array
      */
@@ -1060,7 +1057,7 @@ class OrderCore extends ObjectModel
     /**
      * @deprecated 1.5.0.3
      *
-     * @param $id_order_state
+     * @param int $id_order_state
      *
      * @return array
      */
@@ -1219,7 +1216,7 @@ class OrderCore extends ObjectModel
     {
         Tools::displayAsDeprecated('Use Order::addCartRule($id_cart_rule, $name, array(\'tax_incl\' => $value, \'tax_excl\' => \'0.00\')) instead');
 
-        return Order::addCartRule($id_cart_rule, $name, ['tax_incl' => $value, 'tax_excl' => '0.00']);
+        return static::addCartRule($id_cart_rule, $name, ['tax_incl' => $value, 'tax_excl' => '0.00']);
     }
 
     /**
@@ -1229,6 +1226,7 @@ class OrderCore extends ObjectModel
      * @param string $name
      * @param array $values
      * @param int $id_order_invoice
+     * @param bool|null $free_shipping
      *
      * @return bool
      */
@@ -1245,8 +1243,9 @@ class OrderCore extends ObjectModel
             $cart_rule = new CartRule($id_cart_rule);
             $free_shipping = $cart_rule->free_shipping;
         }
-        $order_cart_rule->free_shipping = (int) $free_shipping;
-        $order_cart_rule->add();
+        $order_cart_rule->free_shipping = (bool) $free_shipping;
+
+        return $order_cart_rule->add();
     }
 
     public function getNumberOfDays()
@@ -1498,7 +1497,7 @@ class OrderCore extends ObjectModel
             return false;
         }
 
-        $id_shop = shop::getTotalShops() > 1 ? $id_shop : null;
+        $id_shop = Shop::getTotalShops() > 1 ? $id_shop : null;
 
         $number = Configuration::get('PS_DELIVERY_NUMBER', null, null, $id_shop);
         // If delivery slip start number has been set, you clean the value of this configuration
@@ -1592,8 +1591,8 @@ class OrderCore extends ObjectModel
     /**
      * The combination (reference, email) should be unique, of multiple entries are found, then we take the first one.
      *
-     * @param $reference Order reference
-     * @param $email customer email address
+     * @param string $reference Order reference
+     * @param string $email customer email address
      *
      * @return Order The first order found
      */
@@ -1855,7 +1854,7 @@ class OrderCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param float $amount_paid
+     * @param string $amount_paid
      * @param string $payment_method
      * @param string $payment_transaction_id
      * @param Currency $currency
@@ -1960,7 +1959,7 @@ class OrderCore extends ObjectModel
         foreach ($delivery_slips as $key => $delivery) {
             $delivery->is_delivery = true;
             $delivery->date_add = $delivery->delivery_date;
-            if (!$invoice->delivery_number) {
+            if (isset($invoice) && !$invoice->delivery_number) {
                 unset($delivery_slips[$key]);
             }
         }
@@ -2493,7 +2492,7 @@ class OrderCore extends ObjectModel
      * If you provide $limitToOrderDetails, only these item will be taken into account. This option is useful for order slip for example,
      * where only sublist of the order is refunded.
      *
-     * @param $limitToOrderDetails Optional array of OrderDetails to take into account. False by default to take all OrderDetails from the current Order.
+     * @param bool|array $limitToOrderDetails Optional array of OrderDetails to take into account. False by default to take all OrderDetails from the current Order.
      *
      * @return array a list of tax rows applied to the given OrderDetails (or all OrderDetails linked to the current Order)
      */
@@ -2583,7 +2582,7 @@ class OrderCore extends ObjectModel
             }
 
             foreach ($tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $unit_amount) {
-                $total_tax_base = 0;
+                $total_tax_base = $total_amount = 0;
                 switch ($round_type) {
                     case Order::ROUND_ITEM:
                         $total_tax_base = $quantity * Tools::ps_round($discounted_price_tax_excl, Context::getContext()->getComputingPrecision(), $this->round_mode);

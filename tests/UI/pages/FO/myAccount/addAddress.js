@@ -102,6 +102,21 @@ class AddAddress extends FOBasePage {
   async isVatNumberRequired(page) {
     return this.elementVisible(page, `${this.vatNumberInput}:required`, 1000);
   }
+
+  /**
+   * Is country exist
+   * @param page {Page} Browser tab
+   * @param countryName {string} String of the country name
+   * @returns {Promise<boolean>}
+   */
+  async countryExist(page, countryName) {
+    const options = await page.$$eval(
+      `${this.countrySelect} option`,
+      all => all.map(option => option.textContent),
+    );
+
+    return options.indexOf(countryName) !== -1;
+  }
 }
 
 module.exports = new AddAddress();

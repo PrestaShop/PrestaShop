@@ -34,39 +34,22 @@
   {% endblock %}
 
   {% block backup_alerts %}
-    {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_warning.html.twig' %}
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_info.html.twig' %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
+    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_warning.html.twig' %}
+    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_info.html.twig' %}
   {% endblock %}
 
   {% block backup_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': backupGrid} %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': backupGrid} %}
   {% endblock %}
 
   {% block backup_options %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/options.html.twig' %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/options.html.twig' %}
   {% endblock %}
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
+  {{ parent() }}
 
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/backup.bundle.js') }}"></script>

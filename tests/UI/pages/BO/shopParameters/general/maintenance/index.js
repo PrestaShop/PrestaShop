@@ -38,7 +38,7 @@ class ShopParamsMaintenance extends BOBasePage {
    * @return {Promise<string>}
    */
   async changeShopStatus(page, toEnable = true) {
-    await page.check(this.shopStatusToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.shopStatusToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

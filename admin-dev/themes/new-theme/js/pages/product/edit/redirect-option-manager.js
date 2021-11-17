@@ -24,6 +24,9 @@
  */
 
 import EntitySearchInput from '@components/entity-search-input';
+import ComponentsMap from '@components/components-map';
+import ProductMap from '@pages/product/product-map';
+import ProductEventMap from '@pages/product/product-event-map';
 
 const {$} = window;
 
@@ -37,12 +40,17 @@ const {$} = window;
  * and values of the target.
  */
 export default class RedirectOptionManager {
-  constructor($redirectTypeInput, $redirectTargetInput) {
-    this.$redirectTypeInput = $redirectTypeInput;
-    this.$redirectTargetInput = $redirectTargetInput;
-    this.$redirectTargetRow = this.$redirectTargetInput.closest('.form-group');
-    this.$redirectTargetLabel = $('.form-control-label', this.$redirectTargetRow).first();
-    this.$redirectTargetHint = $('.typeahead-hint', this.$redirectTargetRow);
+  /**
+   * @param {EventEmitter} eventEmitter
+   */
+  constructor(eventEmitter) {
+    this.eventEmitter = eventEmitter;
+    this.$redirectTypeInput = $(ProductMap.seo.redirectOption.typeInput);
+    this.$redirectTargetInput = $(ProductMap.seo.redirectOption.targetInput);
+    this.$searchInput = $(ComponentsMap.entitySearchInput.searchInputSelector, this.$redirectTargetRow);
+    this.$redirectTargetRow = this.$redirectTargetInput.closest(ProductMap.seo.redirectOption.groupSelector);
+    this.$redirectTargetLabel = $(ProductMap.seo.redirectOption.labelSelector, this.$redirectTargetRow).first();
+    this.$redirectTargetHint = $(ProductMap.seo.redirectOption.helpSelector, this.$redirectTargetRow);
     this.buildAutoCompleteSearchInput();
     this.watchRedirectType();
   }
@@ -59,31 +67,33 @@ export default class RedirectOptionManager {
       switch (redirectType) {
         case '301-category':
         case '302-category':
-          this.entitySearchInput.setRemoteUrl(this.$redirectTargetInput.data('categorySearchUrl'));
-          this.$redirectTargetInput.prop('placeholder', this.$redirectTargetInput.data('categoryPlaceholder'));
+          this.entitySearchInput.setOption('remoteUrl', this.$redirectTargetInput.data('categorySearchUrl'));
+          this.$searchInput.prop('placeholder', this.$redirectTargetInput.data('categoryPlaceholder'));
           this.$redirectTargetLabel.html(this.$redirectTargetInput.data('categoryLabel'));
           // If previous type was not a category we reset the selected value
           if (this.lastSelectedType !== '301-category' && this.lastSelectedType !== '302-category') {
-            this.entitySearchInput.setValue(null);
+            this.entitySearchInput.setValues(null);
           }
           this.$redirectTargetHint.html(this.$redirectTargetInput.data('categoryHelp'));
+          this.entitySearchInput.setOption('allowDelete', true);
           this.showTarget();
           break;
         case '301-product':
         case '302-product':
-          this.entitySearchInput.setRemoteUrl(this.$redirectTargetInput.data('productSearchUrl'));
-          this.$redirectTargetInput.prop('placeholder', this.$redirectTargetInput.data('productPlaceholder'));
+          this.entitySearchInput.setOption('remoteUrl', this.$redirectTargetInput.data('productSearchUrl'));
+          this.$searchInput.prop('placeholder', this.$redirectTargetInput.data('productPlaceholder'));
           this.$redirectTargetLabel.html(this.$redirectTargetInput.data('productLabel'));
           // If previous type was not a category we reset the selected value
           if (this.lastSelectedType !== '301-product' && this.lastSelectedType !== '302-product') {
-            this.entitySearchInput.setValue(null);
+            this.entitySearchInput.setValues(null);
           }
           this.$redirectTargetHint.html(this.$redirectTargetInput.data('productHelp'));
+          this.entitySearchInput.setOption('allowDelete', false);
           this.showTarget();
           break;
         case '404':
         default:
-          this.entitySearchInput.setValue(null);
+          this.entitySearchInput.setValues(null);
           this.hideTarget();
           break;
       }
@@ -92,7 +102,29 @@ export default class RedirectOptionManager {
   }
 
   buildAutoCompleteSearchInput() {
-    this.entitySearchInput = new EntitySearchInput(this.$redirectTargetInput);
+    const redirectType = this.$redirectTypeInput.val();
+    // On first load only allow delete for category target
+    let initialAllowDelete;
+
+    switch (redirectType) {
+      case '301-category':
+      case '302-category':
+        initialAllowDelete = true;
+        break;
+      default:
+        initialAllowDelete = false;
+        break;
+    }
+
+    this.entitySearchInput = new EntitySearchInput(this.$redirectTargetInput, {
+      allowDelete: initialAllowDelete,
+      onRemovedContent: () => {
+        this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
+      },
+      onSelectedContent: () => {
+        this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
+      },
+    });
   }
 
   showTarget() {

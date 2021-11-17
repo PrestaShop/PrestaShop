@@ -222,12 +222,18 @@ class Customers extends BOBasePage {
    * @param row {number} Row on table
    * @param column {String} Column to update
    * @param valueWanted {boolean} True if we want to enable, false to disable
-   * @return {Promise<boolean>}, return true if action is done, false otherwise
+   * @return {Promise<string|false>} Return message if action performed, false otherwise
    */
-  async updateToggleColumnValue(page, row, column, valueWanted = true) {
+  async setToggleColumnValue(page, row, column, valueWanted = true) {
     if (await this.getToggleColumnValue(page, row, column) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.customersListToggleColumn(row, column));
-      return true;
+      // Click and wait for message
+      const [message] = await Promise.all([
+        this.getGrowlMessageContent(page),
+        page.click(this.customersListToggleColumn(row, column)),
+      ]);
+
+      await this.closeGrowlMessage(page);
+      return message;
     }
 
     return false;
@@ -241,7 +247,7 @@ class Customers extends BOBasePage {
    * @return {Promise<boolean>}
    */
   setCustomerStatus(page, row, valueWanted = true) {
-    return this.updateToggleColumnValue(page, row, 'active', valueWanted);
+    return this.setToggleColumnValue(page, row, 'active', valueWanted);
   }
 
   /**
@@ -252,7 +258,7 @@ class Customers extends BOBasePage {
    * @return {Promise<boolean>}
    */
   setNewsletterStatus(page, row, valueWanted = true) {
-    return this.updateToggleColumnValue(page, row, 'newsletter', valueWanted);
+    return this.setToggleColumnValue(page, row, 'newsletter', valueWanted);
   }
 
   /**
@@ -263,7 +269,7 @@ class Customers extends BOBasePage {
    * @return {Promise<boolean>}
    */
   setPartnerOffersStatus(page, row, valueWanted = true) {
-    return this.updateToggleColumnValue(page, row, 'optin', valueWanted);
+    return this.setToggleColumnValue(page, row, 'optin', valueWanted);
   }
 
   /**
@@ -404,7 +410,7 @@ class Customers extends BOBasePage {
    */
   async chooseRegistrationAndDelete(page, allowRegistrationAfterDelete) {
     // Choose deletion method
-    await page.check(this.deleteCustomerModalMethodInput(allowRegistrationAfterDelete ? 0 : 1));
+    await this.setChecked(page, this.deleteCustomerModalMethodInput(allowRegistrationAfterDelete ? 0 : 1));
 
     // Click on delete button and wait for action to finish
     await this.clickAndWaitForNavigation(page, this.deleteCustomerModalDeleteButton);
@@ -471,11 +477,7 @@ class Customers extends BOBasePage {
     }
 
     // Click on checkbox if not selected
-    const isCheckboxSelected = await this.isCheckboxSelected(page, this.requiredFieldCheckBox(id));
-
-    if (valueWanted !== isCheckboxSelected) {
-      await page.$eval(`${this.requiredFieldCheckBox(id)} + i`, el => el.click());
-    }
+    await this.setCheckedWithIcon(page, this.requiredFieldCheckBox(id), valueWanted);
 
     // Save setting
     await this.clickAndWaitForNavigation(page, this.saveButton);

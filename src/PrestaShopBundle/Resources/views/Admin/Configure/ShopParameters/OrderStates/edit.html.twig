@@ -28,14 +28,10 @@
   '%name%': editableOrderState.localizedNames[contextLangId]
 }, 'Admin.Actions') %}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderStates/Blocks/form.html.twig' %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderStates/Blocks/form.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}

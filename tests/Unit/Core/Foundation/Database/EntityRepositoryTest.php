@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Database\Exception as DatabaseExceptio
 
 class EntityRepositoryTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $mockDb = $this->createMock(DatabaseInterface::class);
         $mockDb->method('select')->withAnyParameters()->willReturn([]);
@@ -61,7 +61,7 @@ class EntityRepositoryTest extends TestCase
 
     public function testCallToFindByDoesNotThrow()
     {
-        $this->assertInternalType('array', $this->repository->findByStuff('hey'));
+        $this->assertIsArray($this->repository->findByStuff('hey'));
     }
 
     public function testCallToFindOneByDoesNotThrow()

@@ -36,7 +36,7 @@ class ColorBrightnessCalculatorTest extends TestCase
      */
     private $colorBrightnessCalculator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->colorBrightnessCalculator = new ColorBrightnessCalculator();
     }

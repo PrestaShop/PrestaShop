@@ -103,4 +103,9 @@ class CurrencyConstraintException extends CurrencyException
      * @var int Code is used when empty data is used when toggling currencies
      */
     public const EMPTY_BULK_TOGGLE = 13;
+
+    /**
+     * @var int When currency id value is invalid
+     */
+    public const INVALID_ID = 14;
 }

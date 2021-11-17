@@ -41,7 +41,7 @@ class ModulesProviderTest extends TestCase
      */
     private $provider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $loader = $this->getMockBuilder(LoaderInterface::class)
             ->getMock();

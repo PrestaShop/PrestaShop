@@ -1,0 +1,45 @@
+name: 🚀 Feature Request
+description: Suggest an idea for this project
+labels: [ "Feature" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to fill out this bug report. Please take the time to provide as much detail as possible. Following our [bug report guidelines](https://devdocs.prestashop.com/1.7/contribute/contribute-reporting-issues/#best-practices-for-writing-an-issue) will help maintainers qualify your report faster.
+  - type: checkboxes
+    attributes:
+      label: Prerequisites
+      options:
+        - label: I understand and accept the project's [code of conduct](https://github.com/PrestaShop/PrestaShop/blob/develop/CODE_OF_CONDUCT.md)
+          required: true
+        - label: I have already [searched in existing features request](https://github.com/PrestaShop/PrestaShop/issues?q=is%3Aissue+label%3AImprovement%2CFeature%2CDeveloper+Feature+) and found no previous suggestion of this feature.
+          required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Is your feature request related to a problem?
+      description: A clear and concise description of what the problem is.
+      placeholder: I'm always frustrated when...
+    validations:
+      required: false
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you'd want to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: alternative
+    attributes:
+      label: Alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've considered.
+    validations:
+      required: false
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context or screenshots about the feature request here.
+    validations:
+      required: false

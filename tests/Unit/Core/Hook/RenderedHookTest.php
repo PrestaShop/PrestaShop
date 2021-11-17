@@ -47,7 +47,7 @@ class RenderedHookTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->hookStub = $this->createMock(HookInterface::class);
 
@@ -62,7 +62,7 @@ class RenderedHookTest extends TestCase
 
     public function testGetContent()
     {
-        $this->assertInternalType('array', $this->renderedHook->getContent());
+        $this->assertIsArray($this->renderedHook->getContent());
         $this->assertSame($this->content(), $this->renderedHook->getContent());
     }
 
@@ -70,7 +70,7 @@ class RenderedHookTest extends TestCase
     {
         /** @see RenderedHookTest::content() */
         $expected = '<h1>Hello World</h1><p>How are you?</p> '; // one extra space in the end is intended.
-        $this->assertInternalType('string', $this->renderedHook->outputContent());
+        $this->assertIsString($this->renderedHook->outputContent());
         $this->assertSame($expected, $this->renderedHook->outputContent());
     }
 

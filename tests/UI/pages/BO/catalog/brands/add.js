@@ -71,7 +71,7 @@ class AddBrand extends BOBasePage {
     await this.uploadFile(page, this.logoFileInput, brandData.logo);
 
     // Set Enabled value
-    await page.check(this.statusToggleInput(brandData.enabled ? 1 : 0));
+    await this.setChecked(page, this.statusToggleInput(brandData.enabled ? 1 : 0));
 
     // Save Created brand
     await this.clickAndWaitForNavigation(page, this.saveButton);

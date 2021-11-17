@@ -29,7 +29,6 @@ namespace PrestaShopBundle\EventListener;
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Util\ClassUtils;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use ReflectionClass;

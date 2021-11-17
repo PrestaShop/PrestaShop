@@ -30,32 +30,26 @@
 
     <form class="js-shipping-form d-none">
       <div class="form-group row">
-        <div class="col-3">
-        <span class="float-right">
+        <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="delivery-option-select">
           {{ 'Delivery option'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </span>
-        </div>
-        <div class="col-4">
+        </label>
+        <div class="col-md-6 col-xl-4">
           <select class="form-control" id="delivery-option-select" name="carrier-id"></select>
         </div>
       </div>
       <div class="form-group row">
-        <div class="col-3">
-        <span class="float-right">
+        <span class="col-md-6 col-xl-3 text-md-right col-form-label">
           {{ 'Shipping price (Tax incl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </span>
-        </div>
-        <div class="col-4">
-          <p><strong class="js-total-shipping-tax-inc"></strong></p>
+        <div class="col-md-6 col-xl-4">
+          <span class="js-total-shipping-tax-inc font-weight-bold"></span>
         </div>
       </div>
       <div class="form-group row">
-        <div class="col-3">
-        <span class="float-right">
+        <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="free-shipping_0">
           {{ 'Free shipping'|trans({}, 'Admin.Shipping.Feature') }}
-        </span>
-        </div>
-        <div class="col-4">
+        </label>
+        <div class="col-md-6 col-xl-4">
         <span class="ps-switch">
           <input id="free-shipping_0" class="js-free-shipping-switch" name="free_shipping" value="0" type="radio">
           <label for="free-shipping_0">{{ 'No'|trans({}, 'Admin.Global') }}</label>
@@ -66,12 +60,10 @@
         </div>
       </div>
       <div class="form-group row {% if not recycledPackagingEnabled %}d-none{% endif %}">
-        <div class="col-3">
-        <span class="float-right">
+        <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="recycled-packaging_0">
           {{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </span>
-        </div>
-        <div class="col-4">
+        </label>
+        <div class="col-md-6 col-xl-4">
           <span class="ps-switch">
             <input id="recycled-packaging_0" class="js-recycled-packaging-switch" name="recycled_packaging" value="0" checked="" type="radio">
             <label for="recycled-packaging_0">{{ 'No'|trans({}, 'Admin.Global') }}</label>
@@ -82,12 +74,10 @@
         </div>
       </div>
       <div class="form-group row {% if not giftSettingsEnabled %}d-none{% endif %}">
-        <div class="col-3">
-        <span class="float-right">
+        <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="is-gift_0">
           {{ 'Gift'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </span>
-        </div>
-        <div class="col-4">
+        </label>
+        <div class="col-md-6 col-xl-4">
           <span class="ps-switch">
             <input id="is-gift_0" class="js-is-gift-switch" name="is_gift" value="0" checked="" type="radio">
             <label for="is-gift_0">{{ 'No'|trans({}, 'Admin.Global') }}</label>
@@ -97,16 +87,12 @@
           </span>
         </div>
 
-    </span>
-
       </div>
       <div class="form-group row type-text {% if not giftSettingsEnabled %}d-none{% endif %}">
-        <div class="col-3">
-        <label class="float-right">
+        <label class="col-md-6 col-xl-3 text-md-right col-form-label" for="cart_gift_message">
           {{ 'Gift message'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </label>
-        </div>
-        <div class="col-4">
+        <div class="col-md-6 col-xl-4">
           <textarea id="cart_gift_message" name="cart_gift_message" class="form-control" cols="40" rows="4"></textarea>
         </div>
       </div>

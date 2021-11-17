@@ -222,7 +222,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
      *
      * @return int|null customer rank or null if customer is not ranked
      */
-    private function getCustomerRankBySales($customerId)
+    private function getCustomerRankBySales($customerId): ?int
     {
         $sql = 'SELECT SUM(total_paid_real) FROM ' . _DB_PREFIX_ . 'orders WHERE id_customer = ' . (int) $customerId . ' AND valid = 1';
 
@@ -248,7 +248,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
      *
      * @return OrdersInformation
      */
-    private function getCustomerOrders(Customer $customer)
+    private function getCustomerOrders(Customer $customer): OrdersInformation
     {
         $validOrders = [];
         $invalidOrders = [];
@@ -595,7 +595,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     private function assertCustomerWasFound(CustomerId $customerId, Customer $customer)
     {
         if (!$customer->id) {
-            throw new CustomerNotFoundException($customerId, sprintf('Customer with id "%s" was not found.', $customerId->getValue()));
+            throw new CustomerNotFoundException(sprintf('Customer with id "%d" was not found.', $customerId->getValue()));
         }
     }
 }

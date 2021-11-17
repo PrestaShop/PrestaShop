@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.product.options.redirect_target_provider:
+    class: PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider
+    arguments:
+      - '@prestashop.adapter.product.repository.product_preview_repository'
+      - '@prestashop.adapter.category.repository.category_preview_repository'
+      - '@prestashop.adapter.legacy.context'

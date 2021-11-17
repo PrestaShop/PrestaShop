@@ -31,13 +31,13 @@ class ContactCore extends ObjectModel
 {
     public $id;
 
-    /** @var array<string> Name */
+    /** @var string|array<int, string> Name */
     public $name;
 
     /** @var string E-mail */
     public $email;
 
-    /** @var array<string> Detailed description */
+    /** @var string|array<int, string> Detailed description */
     public $description;
 
     /** @var bool */

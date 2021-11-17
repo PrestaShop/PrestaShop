@@ -49,7 +49,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->formCloner = new FormCloner();

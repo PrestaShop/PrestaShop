@@ -4,7 +4,7 @@ const {expect} = require('chai');
 
 const helper = require('@utils/helpers');
 
-// Import pages
+// Import FO pages
 const homePage = require('@pages/FO/home');
 const loginPage = require('@pages/FO/login');
 const contactUsPage = require('@pages/FO/contactUs');
@@ -33,8 +33,7 @@ Check header links:
 - Cart
 - Logo
  */
-
-describe('Check links in header page', async () => {
+describe('FO - Header and Footer : Check links in header page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -64,7 +63,7 @@ describe('Check links in header page', async () => {
     await expect(pageTitle, 'Fail to open FO login page').to.contains(contactUsPage.pageTitle);
   });
 
-  it('should check languages link', async function () {
+  it('should check \'languages\' link', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkLanguagesLink', baseContext);
 
     await homePage.changeLanguage(page, 'fr');

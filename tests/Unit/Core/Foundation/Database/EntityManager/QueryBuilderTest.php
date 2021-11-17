@@ -36,7 +36,7 @@ class QueryBuilderTest extends TestCase
 {
     private $queryBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $mockDb = $this->createMock(DatabaseInterface::class);
         $mockDb->method('escape')->withAnyParameters()->willReturn('escaped');

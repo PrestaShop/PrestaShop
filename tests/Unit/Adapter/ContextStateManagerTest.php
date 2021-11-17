@@ -39,7 +39,7 @@ namespace Tests\Unit\Adapter {
     {
         protected $legacyContext;
 
-        protected function setUp()
+        protected function setUp(): void
         {
             parent::setUp();
             $this->legacyContext = new LegacyContext();

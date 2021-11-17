@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Address;
-use Attribute;
 use Carrier;
 use Cart;
 use CartRule;
@@ -57,6 +56,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCom
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use Product;
+use ProductAttribute;
 use Shop;
 use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -251,7 +251,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $orderDetail->createList(
             $order,
             $cart,
-            $order->getCurrentOrderState(),
+            $order->getCurrentState(),
             $cartProducts,
             !empty($invoice->id) ? $invoice->id : 0
         );
@@ -383,7 +383,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         if ($result < 0) {
             // If product has attribute, minimal quantity is set with minimal quantity of attribute
             $minimalQuantity = $combination
-                ? Attribute::getAttributeMinimalQty($combination->id) :
+                ? ProductAttribute::getAttributeMinimalQty($combination->id) :
                 $product->minimal_quantity
             ;
 

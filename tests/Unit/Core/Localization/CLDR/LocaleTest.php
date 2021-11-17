@@ -65,7 +65,7 @@ class LocaleTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $localeData = new LocaleData();
         $localeData->setLocaleCode('fr-FR');

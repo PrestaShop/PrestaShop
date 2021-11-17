@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Exception;
 use Module as LegacyModule;
@@ -34,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
-use PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
@@ -42,6 +40,8 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -89,11 +89,6 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $modulePath;
 
     /**
-     * @var PrestaTrustChecker|null
-     */
-    private $prestaTrustChecker = null;
-
-    /**
      * Key of the cache content.
      *
      * @var string
@@ -117,7 +112,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     /**
      * Keep loaded modules in cache.
      *
-     * @var ArrayCache
+     * @var DoctrineProvider
      */
     private $loadedModules;
 
@@ -143,25 +138,11 @@ class ModuleRepository implements ModuleRepositoryInterface
         // Cache related variables
         $this->cacheFilePath = $isoLang . '_local_modules';
         $this->cacheProvider = $cacheProvider;
-        $this->loadedModules = new ArrayCache();
+        $this->loadedModules = new DoctrineProvider(new ArrayAdapter());
 
         if ($this->cacheProvider && $this->cacheProvider->contains($this->cacheFilePath)) {
             $this->cache = $this->cacheProvider->fetch($this->cacheFilePath);
         }
-    }
-
-    /**
-     * Setter for the optional PrestaTrust checker.
-     *
-     * @param PrestaTrustChecker $checker
-     *
-     * @return $this
-     */
-    public function setPrestaTrustChecker(PrestaTrustChecker $checker)
-    {
-        $this->prestaTrustChecker = $checker;
-
-        return $this;
     }
 
     public function __destruct()
@@ -177,6 +158,8 @@ class ModuleRepository implements ModuleRepositoryInterface
             $this->cacheProvider->delete($this->cacheFilePath);
         }
         $this->cache = [];
+
+        $this->loadedModules->deleteAll();
     }
 
     /**
@@ -200,14 +183,8 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getFilteredList(AddonListFilter $filter, $skip_main_class_attributes = false)
     {
-        if ($filter->status >= AddonListFilterStatus::ON_DISK
-            && $filter->status != AddonListFilterStatus::ALL) {
-            /** @var Module[] $modules */
-            $modules = $this->getModulesOnDisk($skip_main_class_attributes);
-        } else {
-            /** @var Module[] $modules */
-            $modules = $this->getList();
-        }
+        /** @var Module[] $modules */
+        $modules = $this->getList($skip_main_class_attributes);
 
         foreach ($modules as $key => &$module) {
             // Part One : Removing addons not related to the selected product type
@@ -282,17 +259,6 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         return $modules;
-    }
-
-    /**
-     * @return AddonInterface[] retrieve the universe of Modules
-     */
-    public function getList()
-    {
-        return array_merge(
-            $this->getAddonsCatalogModules(),
-            $this->getModulesOnDisk()
-        );
     }
 
     /**
@@ -381,7 +347,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         foreach ($this->adminModuleProvider->getCatalogModulesNames() as $name) {
             try {
                 $module = $this->getModule($name);
-                if ($module instanceof Module) {
+                if ($module instanceof ModuleInterface) {
                     $modules[$name] = $module;
                 }
             } catch (\ParseError $e) {
@@ -418,12 +384,13 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @param string $name The technical name of the module
      * @param bool $skip_main_class_attributes
+     * @param bool $cache decide if the cache is used or not to get the module details
      *
      * @return Module
      */
-    public function getModule($name, $skip_main_class_attributes = false)
+    public function getModule($name, $skip_main_class_attributes = false, bool $cache = true)
     {
-        if ($this->loadedModules->contains($name)) {
+        if ($this->loadedModules->contains($name) && $cache) {
             return $this->loadedModules->fetch($name);
         }
 
@@ -505,9 +472,6 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         $module = new Module($attributes, $disk, $database);
         $this->loadedModules->save($name, $module);
-        if ($this->prestaTrustChecker) {
-            $this->prestaTrustChecker->loadDetailsIntoModule($module);
-        }
 
         return $module;
     }
@@ -548,7 +512,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @return \PrestaShop\PrestaShop\Adapter\Module\Module[]
      */
-    private function getModulesOnDisk($skip_main_class_attributes = false)
+    public function getList($skip_main_class_attributes = false)
     {
         $modules = [];
         $modulesDirsList = $this->finder->directories()
@@ -565,7 +529,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
             try {
                 $module = $this->getModule($moduleName, $skip_main_class_attributes);
-                if ($module instanceof Module) {
+                if ($module instanceof ModuleInterface) {
                     $modules[$moduleName] = $module;
                 }
             } catch (\ParseError $e) {

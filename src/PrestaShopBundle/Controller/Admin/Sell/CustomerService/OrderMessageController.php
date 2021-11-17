@@ -50,7 +50,7 @@ class OrderMessageController extends FrameworkBundleAdminController
     /**
      * Show list of Order messages
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param OrderMessageFilters $filters
      * @param Request $request
@@ -81,7 +81,7 @@ class OrderMessageController extends FrameworkBundleAdminController
      * Create new order message
      *
      * @AdminSecurity(
-     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     "is_granted('create', request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_messages_index"
      * )
      *
@@ -126,7 +126,7 @@ class OrderMessageController extends FrameworkBundleAdminController
      * Edit existing order message
      *
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_messages_index"
      * )
      *
@@ -160,7 +160,7 @@ class OrderMessageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        if (!isset($form) || !isset($orderMessageName)) {
+        if (!isset($form)) {
             return $this->redirectToRoute('admin_order_messages_index');
         }
 
@@ -176,7 +176,7 @@ class OrderMessageController extends FrameworkBundleAdminController
      * Delete single order message
      *
      * @AdminSecurity(
-     *     "is_granted(['delete'], request.get('_legacy_controller'))",
+     *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_messages_index"
      * )
      *
@@ -201,7 +201,7 @@ class OrderMessageController extends FrameworkBundleAdminController
      * Delete order messages in bulk action
      *
      * @AdminSecurity(
-     *     "is_granted(['delete'], request.get('_legacy_controller'))",
+     *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_messages_index"
      * )
      *

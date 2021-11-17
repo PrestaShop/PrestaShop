@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Adapter\EntityTranslation\EntityTranslatorFactory;
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\Exception\DataLangClassNameNotFoundException;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageImageManager;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
@@ -57,7 +58,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     private const TRANSLATION_PACK_CACHE_DIR = _PS_TRANSLATIONS_DIR_;
 
     /** Path to the symfony translations directory */
-    private const SF_TRANSLATIONS_DIR = _PS_ROOT_DIR_ . '/app/Resources/translations';
+    private const SF_TRANSLATIONS_DIR = _PS_ROOT_DIR_ . '/translations';
 
     /** @var int */
     public $id;
@@ -75,10 +76,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public $language_code;
 
     /** @var string date format http://http://php.net/manual/en/function.date.php with the date only */
-    public $date_format_lite = 'Y-m-d';
+    public $date_format_lite = 'Y‑m‑d'; // note the use of non-breaking hyphens (U+2011)
 
     /** @var string date format http://http://php.net/manual/en/function.date.php with hours and minutes */
-    public $date_format_full = 'Y-m-d H:i:s';
+    public $date_format_full = 'Y‑m‑d H:i:s'; // note the use of non-breaking hyphens (U+2011)
 
     /** @var bool true if this language is right to left language */
     public $is_rtl = false;
@@ -323,8 +324,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * @param string $iso_from
      * @param string $theme_from
-     * @param bool $iso_to
-     * @param bool $theme_to
+     * @param string|bool $iso_to
+     * @param string|bool $theme_to
      * @param bool $select
      * @param bool $check
      * @param bool $modules
@@ -346,6 +347,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $pPath_from = _PS_ROOT_DIR_ . '/themes/' . (string) $theme_from . '/pdf/';
         $mPath_from = _PS_MAIL_DIR_ . (string) $iso_from . '/';
 
+        $lPath_to = $tPath_to = $pPath_to = $mPath_to = '';
         if ($copy) {
             $lPath_to = _PS_TRANSLATIONS_DIR_ . (string) $iso_to . '/';
             $tPath_to = _PS_ROOT_DIR_ . '/themes/' . (string) $theme_to . '/';
@@ -522,9 +524,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * duplicate translated rows from xxx_lang tables
      * from the shop default language.
      *
-     * @param $tableName
-     * @param $shopDefaultLangId
-     * @param $shopId
+     * @param string $tableName
+     * @param int $shopDefaultLangId
+     * @param int $shopId
      *
      * @return bool
      *
@@ -580,16 +582,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $sql .= ' WHERE `' . bqSQL($identifier) . '` IN (SELECT `' . bqSQL($identifier) . '` FROM `' . bqSQL($tableName) . '`) )';
 
         return Db::getInstance()->execute($sql);
-    }
-
-    /**
-     * @deprecated 1.6.1.1 Use Tools::deleteDirectory($dir) instead
-     *
-     * @param string $dir is the path of the directory to delete
-     */
-    public static function recurseDeleteDir($dir)
-    {
-        return Tools::deleteDirectory($dir);
     }
 
     /**
@@ -688,7 +680,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @see loadLanguages()
      *
      * @param bool $active Select only active languages
-     * @param int|false $id_shop Shop ID
+     * @param int|bool $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
      * @return array<int|array> Language information
@@ -1147,19 +1139,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return true;
     }
 
-    /**
-     * @deprecated Since 1.7.7, use LanguageImageManager
-     */
-    protected static function _copyNoneFlag($id)
-    {
-        @trigger_error(
-            __FUNCTION__ . 'is deprecated since version 1.7.7. Use ' . LanguageImageManager::class . ' instead.',
-            E_USER_DEPRECATED
-        );
-
-        return true;
-    }
-
     public static function isInstalled($iso_code)
     {
         if (static::$_cache_language_installation === null) {
@@ -1348,22 +1327,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * @param array $lang_pack
-     * @param array $errors
-     *
-     * @deprecated This method is deprecated since 1.7.6.0 use GenerateThemeMailsCommand instead
-     */
-    public static function installEmailsLanguagePack($lang_pack, &$errors = [])
-    {
-        @trigger_error(
-            'Language::installEmailsLanguagePack() is deprecated since version 1.7.6.0 Use GenerateThemeMailsCommand instead.',
-            E_USER_DEPRECATED
-        );
-
-        static::generateEmailsLanguagePack($lang_pack, $errors, true);
-    }
-
-    /**
      * Installs a language pack and updates language sensitive information
      *
      * @param string $iso Language ISO code
@@ -1548,7 +1511,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             $rows = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
             if (!empty($rows)) {
                 // get all values
-                $tableNames = array_map('reset', $rows);
+                $tableNames = [];
+                foreach ($rows as $row) {
+                    $tableNames[] = reset($row);
+                }
                 static::updateMultilangTables($lang, $tableNames);
             }
         }
@@ -1690,17 +1656,13 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         $themesDir = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'themes';
 
-        $processor = new RtlStylesheetProcessor(
+        return new RtlStylesheetProcessor(
             $adminDir,
             $themesDir,
             [
-                _PS_MODULE_DIR_ . 'gamification',
-                _PS_MODULE_DIR_ . 'welcome',
                 _PS_MODULE_DIR_ . 'cronjobs',
             ]
         );
-
-        return $processor;
     }
 
     /**

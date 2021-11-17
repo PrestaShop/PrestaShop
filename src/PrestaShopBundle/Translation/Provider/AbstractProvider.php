@@ -200,7 +200,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     /**
      * Get the Catalogue from database only.
      *
-     * @param null $theme
+     * @param string|null $theme
      *
      * @return MessageCatalogue A MessageCatalogue instance
      */
@@ -257,7 +257,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     }
 
     /**
-     * @param array $paths a list of paths when we can look for translations
+     * @param string|array<string> $paths a list of paths when we can look for translations
      * @param string $locale the Symfony (not the PrestaShop one) locale
      * @param string|null $pattern a regular expression
      *

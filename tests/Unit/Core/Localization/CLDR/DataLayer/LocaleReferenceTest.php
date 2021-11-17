@@ -44,7 +44,7 @@ class LocaleReferenceTest extends TestCase
 
     protected $stubLocaleData;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->stubLocaleData = new CldrLocaleData();
         $this->stubLocaleData->foo = ['bar', 'baz'];

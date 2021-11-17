@@ -59,7 +59,7 @@ class ImageManager
      *
      * @return string The HTML < img > tag
      */
-    public function getThumbnailForListing($imageId, $imageType = 'jpg', $tableName = 'product', $imageDir = _PS_PROD_IMG_DIR_)
+    public function getThumbnailForListing($imageId, $imageType = 'jpg', $tableName = 'product', $imageDir = _PS_PRODUCT_IMG_DIR_)
     {
         $thumbPath = $this->getThumbnailTag($imageId, $imageType, $tableName, $imageDir);
 
@@ -79,7 +79,7 @@ class ImageManager
     {
         $imageType = 'jpg';
         $tableName = 'product';
-        $imageDir = _PS_PROD_IMG_DIR_;
+        $imageDir = _PS_PRODUCT_IMG_DIR_;
 
         $imagePath = $this->getImagePath($imageId, $imageType, $tableName, $imageDir);
         $thumbnailCachedImageName = $this->makeCachedImageName($imageId, $imageType, $tableName);

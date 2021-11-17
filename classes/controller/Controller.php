@@ -162,6 +162,16 @@ abstract class ControllerCore
     abstract public function viewAccess();
 
     /**
+     * Errors displayed after post processing
+     *
+     * @var array<string>
+     */
+    public $errors = [];
+
+    /** @var string */
+    public $layout;
+
+    /**
      * Initialize the page.
      *
      * @throws Exception
@@ -419,7 +429,7 @@ abstract class ControllerCore
      * @param int|null $offset
      * @param bool $check_path
      *
-     * @return true
+     * @return void
      */
     public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
     {
@@ -585,7 +595,7 @@ abstract class ControllerCore
      * Adds jQuery plugin(s) to queued JS file list.
      *
      * @param string|array $name
-     * @param string null $folder
+     * @param string|null $folder
      * @param bool $css
      */
     public function addJqueryPlugin($name, $folder = null, $css = true)
@@ -675,7 +685,7 @@ abstract class ControllerCore
     /**
      * Custom error handler.
      *
-     * @param string $errno
+     * @param int $errno
      * @param string $errstr
      * @param string $errfile
      * @param int $errline
@@ -684,7 +694,13 @@ abstract class ControllerCore
      */
     public static function myErrorHandler($errno, $errstr, $errfile, $errline)
     {
-        if (error_reporting() === 0) {
+        /**
+         * Prior to PHP 8.0.0, the $errno value was always 0 if the expression which caused the diagnostic was prepended by the @ error-control operator.
+         *
+         * @see https://www.php.net/manual/fr/function.set-error-handler.php
+         * @see https://www.php.net/manual/en/language.operators.errorcontrol.php
+         */
+        if (!(error_reporting() & $errno)) {
             return false;
         }
 

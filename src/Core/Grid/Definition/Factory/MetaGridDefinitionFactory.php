@@ -46,10 +46,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    public const GRID_ID = 'meta';
-
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
+
+    public const GRID_ID = 'meta';
 
     /**
      * {@inheritdoc}

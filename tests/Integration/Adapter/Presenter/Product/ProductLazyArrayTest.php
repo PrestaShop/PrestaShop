@@ -92,7 +92,13 @@ class ProductLazyArrayTest extends TestCase
         'out_of_stock' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
     ];
 
-    public function setUp()
+    private const PRODUCT_AVAILABLE_NOW = 'This product is available now';
+    private const PRODUCT_AVAILABLE_LATER = 'This product is available on backorder';
+    private const PRODUCT_NOT_AVAILABLE = 'This product is not available for order';
+    private const PRODUCT_ATTRIBUTE_NOT_AVAILABLE = 'Product available with different options';
+    private const PRODUCT_WITH_NOT_ENOUGH_STOCK = 'There are not enough products in stock';
+
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -157,6 +163,208 @@ class ProductLazyArrayTest extends TestCase
             $this->mockConfiguration
         );
         $this->assertNotNull($productLazyArray);
+    }
+
+    /**
+     * @param array $product
+     * @param string $availabilityMessage
+     *
+     * @dataProvider providerQuantityInformationCases
+     */
+    public function testQuantityInformations(
+        array $product,
+        string $availabilityMessage
+    ): void {
+        $language = $this->mockLanguage;
+
+        $this->mockProductPresentationSettings
+            ->method('shouldShowPrice')
+            ->willReturn(true);
+
+        $this->mockConfiguration
+            ->method('get')
+            ->willReturnCallback(function (string $key) use ($language) {
+                if ('PS_LABEL_OOS_PRODUCTS_BOD' === $key) {
+                    return [
+                        $language->id => static::PRODUCT_NOT_AVAILABLE,
+                    ];
+                }
+
+                return true;
+            })
+        ;
+
+        $this->mockProductPresentationSettings->showLabelOOSListingPages = true;
+        $this->mockProductPresentationSettings->stock_management_enabled = true;
+        $this->mockProductPresentationSettings->showPrices = true;
+        $this->mockProductPresentationSettings->catalog_mode = false;
+
+        $productLazyArray = new ProductLazyArray(
+            $this->mockProductPresentationSettings,
+            $product,
+            $this->mockLanguage,
+            $this->mockImageRetriever,
+            $this->mockLink,
+            $this->mockPriceFormatter,
+            $this->mockProductColorsRetriever,
+            $this->mockTranslatorInterface,
+            $this->mockHookManager,
+            $this->mockConfiguration
+        );
+
+        $this->assertEquals($availabilityMessage, $productLazyArray->availability_message);
+    }
+
+    public function providerQuantityInformationCases(): iterable
+    {
+        $product = array_merge(
+            $this->baseProduct, ['show_price' => 1]
+        );
+
+        // Product page: in stock
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 1,
+                    'stock_quantity' => 1000,
+                    'quantity' => 1000,
+                    'show_availability' => 1,
+                    'available_date' => false,
+                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
+                ]
+            ),
+            static::PRODUCT_AVAILABLE_NOW,
+        ];
+
+        // not enough stock, not allowed to order when out of stock
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 11,
+                    'stock_quantity' => 10,
+                    'quantity' => 10,
+                    'show_availability' => 1,
+                    'available_date' => false,
+                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+                ]
+            ),
+            static::PRODUCT_WITH_NOT_ENOUGH_STOCK,
+        ];
+
+        // completely out of stock, not allowed to order when out of stock
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 1,
+                    'stock_quantity' => 0,
+                    'quantity' => 0,
+                    'show_availability' => 1,
+                    'available_date' => false,
+                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+                ]
+            ),
+            static::PRODUCT_NOT_AVAILABLE,
+        ];
+
+        // out of stock, but allowed to order when out of stock
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 11,
+                    'stock_quantity' => 10,
+                    'quantity' => 10,
+                    'show_availability' => 1,
+                    'available_date' => false,
+                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+                ]
+            ),
+            static::PRODUCT_AVAILABLE_LATER,
+        ];
+
+        // the combination is out of stock,
+        // product is not available in different one,
+        // not allowed to order when out of stock
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 1,
+                    'quantity_all_versions' => 10,
+                    'quantity_wanted' => 11,
+                    'stock_quantity' => 10,
+                    'quantity' => 10,
+                    'show_availability' => 1,
+                    'available_date' => false,
+                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
+                    'availability_message' => static::PRODUCT_ATTRIBUTE_NOT_AVAILABLE,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+                ]
+            ),
+            static::PRODUCT_WITH_NOT_ENOUGH_STOCK,
+        ];
+
+        // combinations is out of stock,
+        // product is available in different one (higher "quantity_all_versions"),
+        // allowed to order when out of stock
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 1,
+                    'quantity_all_versions' => 1000,
+                    'quantity_wanted' => 11,
+                    'stock_quantity' => 10,
+                    'quantity' => 10,
+                    'show_availability' => 1,
+                    'available_date' => false,
+                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
+                    'availability_message' => static::PRODUCT_ATTRIBUTE_NOT_AVAILABLE,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+                ]
+            ),
+            static::PRODUCT_AVAILABLE_LATER,
+        ];
+
+        // product with combinations
+        // the one we want is out of stock, other combinations too
+        // not allowed to order when out of stock
+        // it should show the availability message for the "out of stock" status
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 1,
+                    'quantity_wanted' => 5,
+                    'stock_quantity' => 4,
+                    'quantity' => 4,
+                    'quantity_all_versions' => 4,
+                    'show_availability' => 1,
+                    'available_date' => false,
+                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+                ]
+            ),
+            static::PRODUCT_WITH_NOT_ENOUGH_STOCK,
+        ];
     }
 
     /**
@@ -247,10 +455,7 @@ class ProductLazyArrayTest extends TestCase
                 return true;
             })
         ;
-        $this->mockProductPresentationSettings
-            ->method('shouldShowLabelOOSOnListingPages')
-            ->willReturn(true)
-        ;
+        $this->mockProductPresentationSettings->showLabelOOSListingPages = true;
 
         $productLazyArray = new ProductLazyArray(
             $this->mockProductPresentationSettings,

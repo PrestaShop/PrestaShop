@@ -168,9 +168,9 @@ class SpecificPriceRuleCore extends ObjectModel
             return;
         }
 
+        /** @var array<SpecificPriceRule> $rules */
         $rules = new PrestaShopCollection('SpecificPriceRule');
         foreach ($rules as $rule) {
-            /* @var SpecificPriceRule $rule */
             $rule->apply($products);
         }
     }
@@ -216,7 +216,7 @@ class SpecificPriceRuleCore extends ObjectModel
     public function getAffectedProducts($products = false)
     {
         $conditions_group = $this->getConditions();
-        $current_shop_id = Context::getContext()->shop->id;
+        $shop_id = $this->id_shop ?: Context::getContext()->shop->id;
 
         $result = [];
 
@@ -227,7 +227,7 @@ class SpecificPriceRuleCore extends ObjectModel
                 $query->select('p.`id_product`')
                     ->from('product', 'p')
                     ->leftJoin('product_shop', 'ps', 'p.`id_product` = ps.`id_product`')
-                    ->where('ps.id_shop = ' . (int) $current_shop_id);
+                    ->where('ps.id_shop = ' . (int) $shop_id);
 
                 $attributes_join_added = false;
 
@@ -286,7 +286,7 @@ class SpecificPriceRuleCore extends ObjectModel
                         ->select('NULL as `id_product_attribute`')
                         ->from('product', 'p')
                         ->leftJoin('product_shop', 'ps', 'p.`id_product` = ps.`id_product`')
-                        ->where('ps.id_shop = ' . (int) $current_shop_id);
+                        ->where('ps.id_shop = ' . (int) $shop_id);
                     $query->where('p.`id_product` IN (' . implode(', ', array_map('intval', $products)) . ')');
                     $result = Db::getInstance()->executeS($query);
                 }

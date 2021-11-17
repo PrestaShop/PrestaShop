@@ -29,7 +29,7 @@
  */
 class PrestaShopBackupCore
 {
-    /** @var int Object id */
+    /** @var string Object id */
     public $id;
 
     /** @var string Last error messages */
@@ -41,7 +41,9 @@ class PrestaShopBackupCore
     /** @var string custom backup directory. */
     public $customBackupDir = null;
 
+    /** @var bool|string */
     public $psBackupAll = true;
+    /** @var bool|string */
     public $psBackupDropTable = true;
 
     /**
@@ -68,18 +70,18 @@ class PrestaShopBackupCore
      *
      * @param string $dir
      *
-     * @return bool bo
+     * @return bool
      */
     public function setCustomBackupPath($dir)
     {
         $customDir = DIRECTORY_SEPARATOR . trim($dir, '/') . DIRECTORY_SEPARATOR;
         if (is_dir((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . $customDir)) {
             $this->customBackupDir = $customDir;
-        } else {
-            return false;
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -290,7 +292,7 @@ class PrestaShopBackupCore
             fwrite($fp, $schema[0]['Create Table'] . ";\n\n");
 
             if (!in_array($schema[0]['Table'], $ignoreInsertTable)) {
-                $data = Db::getInstance()->query('SELECT * FROM `' . $schema[0]['Table'] . '`', false);
+                $data = Db::getInstance()->query('SELECT * FROM `' . $schema[0]['Table'] . '`');
                 $sizeof = Db::getInstance()->numRows();
                 $lines = explode("\n", $schema[0]['Create Table']);
 

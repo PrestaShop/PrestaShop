@@ -1,16 +1,16 @@
 admin_languages_index:
   path: /
-  methods: [GET]
+  methods: [ GET ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:index'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::indexAction'
     _legacy_controller: AdminLanguages
     _legacy_link: AdminLanguages
 
 admin_languages_search:
   path: /
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.language
     redirectRoute: admin_languages_index
     _legacy_controller: AdminLanguages
@@ -20,17 +20,17 @@ admin_languages_search:
 
 admin_languages_create:
   path: /new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:create'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::createAction'
     _legacy_controller: AdminLanguages
     _legacy_link: AdminLanguages:addlang
 
 admin_languages_edit:
   path: /{languageId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:edit'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::editAction'
     _legacy_controller: AdminLanguages
     _legacy_link: AdminLanguages:updatelang
   requirements:
@@ -38,9 +38,9 @@ admin_languages_edit:
 
 admin_languages_delete:
   path: /{languageId}/delete
-  methods: [POST, DELETE]
+  methods: [ POST, DELETE ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:delete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::deleteAction'
     _legacy_controller: AdminLanguages
     _legacy_link: AdminLanguages:deletelang
   requirements:
@@ -48,25 +48,25 @@ admin_languages_delete:
 
 admin_languages_bulk_delete:
   path: /bulk-delete
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:bulkDelete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::bulkDeleteAction'
     _legacy_controller: AdminLanguages
     _legacy_link: AdminLanguages:submitBulkdeletelang
 
 admin_languages_toggle_status:
   path: /{languageId}/toggle-status
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:toggleStatus'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::toggleStatusAction'
     _legacy_controller: AdminLanguages
     _legacy_link: AdminLanguages:statuslang
 
 admin_languages_bulk_toggle_status:
   path: /bulk-toggle-status/{status}
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:bulkToggleStatus'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::bulkToggleStatusAction'
     _legacy_controller: AdminLanguages
     _legacy_link: AdminLanguages:submitBulkupdatelang
   requirements:

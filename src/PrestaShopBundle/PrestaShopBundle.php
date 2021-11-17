@@ -35,7 +35,6 @@ use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\OptionsFormHookNameCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\OverrideTranslatorServiceCompilerPass;
-use PrestaShopBundle\DependencyInjection\Compiler\OverrideTwigServiceCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\PopulateTranslationProvidersPass;
 use PrestaShopBundle\DependencyInjection\Compiler\RemoveXmlCompiledContainerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\RouterPass;
@@ -66,7 +65,6 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new RemoveXmlCompiledContainerPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());
-        $container->addCompilerPass(new OverrideTwigServiceCompilerPass());
         $container->addCompilerPass(new ModulesDoctrineCompilerPass());
         $container->addCompilerPass(new CommandAndQueryCollectorPass());
         $container->addCompilerPass(new OptionsFormHookNameCollectorPass());

@@ -71,14 +71,15 @@
   </div>
 </template>
 
-<script>
-  import PSTags from '@app/widgets/ps-tags';
-  import PSButton from '@app/widgets/ps-button';
-  import PSAlert from '@app/widgets/ps-alert';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSTags from '@app/widgets/ps-tags.vue';
+  import PSButton from '@app/widgets/ps-button.vue';
+  import PSAlert from '@app/widgets/ps-alert.vue';
   import {EventBus} from '@app/utils/event-bus';
-  import Filters from './filters';
+  import Filters from './filters.vue';
 
-  export default {
+  export default Vue.extend({
     components: {
       Filters,
       PSTags,
@@ -86,22 +87,23 @@
       PSAlert,
     },
     computed: {
-      error() {
+      error(): boolean {
         return (this.alertType === 'ALERT_TYPE_DANGER');
       },
     },
     methods: {
-      onClick() {
-        const {tag} = this.$refs.psTags;
-        this.$refs.psTags.add(tag);
+      onClick(): void {
+        const refPsTags = this.$refs.psTags as VTags;
+        const {tag} = refPsTags;
+        refPsTags.add(tag);
       },
-      onSearch() {
+      onSearch(): void {
         this.$emit('search', this.tags);
       },
-      applyFilter(filters) {
+      applyFilter(filters: Array<any>): void {
         this.$emit('applyFilter', filters);
       },
-      onCloseAlert() {
+      onCloseAlert(): void {
         this.showAlert = false;
       },
     },
@@ -111,7 +113,7 @@
       },
     },
     mounted() {
-      EventBus.$on('displayBulkAlert', (type) => {
+      EventBus.$on('displayBulkAlert', (type: string) => {
         this.alertType = type === 'success' ? 'ALERT_TYPE_SUCCESS' : 'ALERT_TYPE_DANGER';
         this.showAlert = true;
         setTimeout(() => {
@@ -119,11 +121,13 @@
         }, 5000);
       });
     },
-    data: () => ({
-      tags: [],
-      showAlert: false,
-      alertType: 'ALERT_TYPE_DANGER',
-      duration: false,
-    }),
-  };
+    data() {
+      return {
+        tags: [],
+        showAlert: false,
+        alertType: 'ALERT_TYPE_DANGER',
+        duration: false,
+      };
+    },
+  });
 </script>

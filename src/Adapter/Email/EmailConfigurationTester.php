@@ -98,7 +98,11 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
             Tools::htmlentitiesUTF8($config['smtp_username']),
             $password,
             Tools::htmlentitiesUTF8($config['smtp_port']),
-            Tools::htmlentitiesUTF8($config['smtp_encryption'])
+            Tools::htmlentitiesUTF8($config['smtp_encryption']),
+            (bool) $config['dkim_enable'],
+            (string) $config['dkim_key'],
+            (string) $config['dkim_domain'],
+            (string) $config['dkim_selector']
         );
 
         $errors = [];

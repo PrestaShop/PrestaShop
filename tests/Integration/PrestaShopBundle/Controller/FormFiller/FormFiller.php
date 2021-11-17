@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\FormFiller;
 
-use FormField;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
+use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Form;
 
 class FormFiller

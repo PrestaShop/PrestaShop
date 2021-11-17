@@ -60,7 +60,7 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 
         yield [
             [
-                'basic' => [
+                'specifications' => [
                     'features' => [],
                 ],
             ],
@@ -69,7 +69,7 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 
         yield [
             [
-                'basic' => [
+                'specifications' => [
                     'features' => [
                         'feature_values' => [],
                     ],
@@ -86,7 +86,7 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'basic' => [
+                'specifications' => [
                     'features' => [
                         'feature_values' => [
                             ['feature_id' => 42, 'feature_value_id' => 51],
@@ -109,7 +109,7 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'basic' => [
+                'specifications' => [
                     'features' => [
                         'feature_values' => [
                             ['feature_id' => 42, 'custom_value' => $localizedValues],
@@ -128,7 +128,7 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'basic' => [
+                'specifications' => [
                     'features' => [
                         'feature_values' => [
                             ['feature_id' => 42, 'custom_value_id' => 69, 'custom_value' => $localizedValues],
@@ -148,7 +148,7 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'basic' => [
+                'specifications' => [
                     'features' => [
                         'feature_values' => [
                             ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value_id' => 69, 'custom_value' => $localizedValues],
@@ -168,7 +168,7 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'basic' => [
+                'specifications' => [
                     'features' => [
                         'feature_values' => [
                             ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value' => $localizedValues],
@@ -192,7 +192,7 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'basic' => [
+                'specifications' => [
                     'features' => [
                         'feature_values' => [
                             ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value' => $localizedValues],
@@ -216,7 +216,7 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'basic' => [
+                'specifications' => [
                     'features' => [
                         'feature_values' => [
                             ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value' => $localizedValues],
@@ -238,7 +238,7 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'basic' => [
+                'specifications' => [
                     'features' => [
                         'feature_values' => [
                             ['feature_id' => 42, 'custom_value' => $localizedValues],
@@ -267,7 +267,7 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
     {
         yield [
             [
-                'basic' => [
+                'specifications' => [
                     'features' => [
                         'feature_values' => [
                             ['feature_id' => 42],

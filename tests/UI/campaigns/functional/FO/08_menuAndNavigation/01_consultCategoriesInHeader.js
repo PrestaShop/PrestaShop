@@ -23,7 +23,7 @@ Go to FO
 Check all categories and subcategories links in header
  */
 
-describe('Check categories and subcategories links in header', async () => {
+describe('FO - Menu and Navigation : Check categories and subcategories links in header', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

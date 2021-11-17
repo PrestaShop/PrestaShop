@@ -33,7 +33,7 @@ require_once dirname(__FILE__).'/../config/config.inc.php';
 // Cart is needed for some requests
 Context::getContext()->cart = new Cart();
 Context::getContext()->container = ContainerBuilder::getContainer('webservice', _PS_MODE_DEV_);
-Context::getContext()->currency = Context::getContext()->currency ?? new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+Context::getContext()->currency = Context::getContext()->currency ?? new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
 
 //set http auth headers for apache+php-cgi work around
 if (isset($_SERVER['HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
@@ -48,7 +48,7 @@ if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$
 }
 
 // Use for image management (using the POST method of the browser to simulate the PUT method)
-$method = isset($_REQUEST['ps_method']) ? $_REQUEST['ps_method'] : $_SERVER['REQUEST_METHOD'];
+$method = $_REQUEST['ps_method'] ?? $_SERVER['REQUEST_METHOD'];
 
 if (isset($_SERVER['PHP_AUTH_USER'])) {
     $key = $_SERVER['PHP_AUTH_USER'];

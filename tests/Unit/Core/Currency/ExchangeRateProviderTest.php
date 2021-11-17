@@ -29,6 +29,7 @@ namespace Tests\Unit\Core\Currency;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
+use PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException;
 use PrestaShop\PrestaShop\Core\Currency\ExchangeRateProvider;
 use Symfony\Component\Cache\Adapter\AdapterInterface as CacheInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -57,7 +58,7 @@ class ExchangeRateProviderTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->cache = new ArrayAdapter();
@@ -227,12 +228,11 @@ class ExchangeRateProviderTest extends TestCase
         $this->assertEquals(1.12026, $exchangeRate->round(6));
     }
 
-    /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException
-     * @expectedExceptionMessage Currency feed could not be fetched
-     */
     public function testNoFeedNoCache()
     {
+        $this->expectException(CurrencyFeedException::class);
+        $this->expectExceptionMessage('Currency feed could not be fetched');
+
         $unknownFilePath = 'file:://unknown.file.path.to.simulate.circuit.breaker.fail';
         $circuitBreaker = $this->buildCircuitBreakerMock('', $unknownFilePath);
         $exchangeRateProvider = new ExchangeRateProvider(
@@ -245,12 +245,11 @@ class ExchangeRateProviderTest extends TestCase
         $exchangeRateProvider->getExchangeRate('ALL');
     }
 
-    /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException
-     * @expectedExceptionMessage Invalid currency XML feed
-     */
     public function testInvalidFeedAndCache()
     {
+        $this->expectException(CurrencyFeedException::class);
+        $this->expectExceptionMessage('Invalid currency XML feed');
+
         $cacheItem = $this->cache->getItem(ExchangeRateProvider::CACHE_KEY_XML);
         $cacheItem->set('invalid xml');
         $this->cache->save($cacheItem);
@@ -266,12 +265,11 @@ class ExchangeRateProviderTest extends TestCase
         $exchangeRateProvider->getExchangeRate('ALL');
     }
 
-    /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException
-     * @expectedExceptionMessage Exchange rate for currency with ISO code XYZ was not found
-     */
     public function testUnknownCurrency()
     {
+        $this->expectException(CurrencyFeedException::class);
+        $this->expectExceptionMessage('Exchange rate for currency with ISO code XYZ was not found');
+
         $circuitBreaker = $this->buildCircuitBreakerMock($this->feedContent, $this->feedFilePath);
 
         $exchangeRateProvider = new ExchangeRateProvider(
@@ -284,12 +282,11 @@ class ExchangeRateProviderTest extends TestCase
         $exchangeRateProvider->getExchangeRate('XYZ');
     }
 
-    /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException
-     * @expectedExceptionMessage Exchange rate for currency with ISO code XYZ was not found
-     */
     public function testUnknownDefaultCurrency()
     {
+        $this->expectException(CurrencyFeedException::class);
+        $this->expectExceptionMessage('Exchange rate for currency with ISO code XYZ was not found');
+
         $circuitBreaker = $this->buildCircuitBreakerMock($this->feedContent, $this->feedFilePath);
 
         $exchangeRateProvider = new ExchangeRateProvider(

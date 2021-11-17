@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
-use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 class ProductCore extends ObjectModel
@@ -284,7 +283,7 @@ class ProductCore extends ObjectModel
      *
      * @var bool Tells if the product uses the advanced stock management
      */
-    public $advanced_stock_management = 0;
+    public $advanced_stock_management = false;
 
     /**
      * @deprecated since 1.7.8
@@ -399,6 +398,14 @@ class ProductCore extends ObjectModel
 
     /** @var array */
     protected static $_combinations = [];
+
+    /**
+     * Associations between the ids of base combinations and their duplicates.
+     * Used for duplicating specific prices when duplicating a product.
+     *
+     * @var array
+     */
+    protected static $_combination_associations = [];
 
     /**
      * @deprecated Since 1.5.6.1
@@ -911,7 +918,7 @@ class ProductCore extends ObjectModel
             }
         }
 
-        if (!isset($moved_product) || !isset($position)) {
+        if (!isset($moved_product)) {
             return false;
         }
 
@@ -1836,8 +1843,8 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @param int[] $combinations
-     * @param $langId
+     * @param array<int> $combinations
+     * @param int $langId
      *
      * @return array
      */
@@ -2489,7 +2496,7 @@ class ProductCore extends ObjectModel
             WHERE `id_product` = ' . (int) $this->id
         );
 
-        if (isset($update_attachment_cache) && (bool) $update_attachment_cache === true) {
+        if ((bool) $update_attachment_cache === true) {
             Product::updateCacheAttachment((int) $this->id);
         }
 
@@ -3233,7 +3240,7 @@ class ProductCore extends ObjectModel
      * @param string|false $ending Date in mysql format Y-m-d
      * @param Context|null $context
      *
-     * @return array|false
+     * @return array|int|false
      */
     public static function getPricesDrop(
         $id_lang,
@@ -3299,7 +3306,7 @@ class ProductCore extends ObjectModel
         }
 
         if ($count) {
-            return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            $count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT COUNT(DISTINCT p.`id_product`)
             FROM `' . _DB_PREFIX_ . 'product` p
             ' . Shop::addSqlAssociation('product', 'p') . '
@@ -3308,6 +3315,8 @@ class ProductCore extends ObjectModel
             ' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
             ' . ((!$beginning && !$ending) ? 'AND p.`id_product` IN(' . ((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0) . ')' : '') . '
             ' . $sql_groups);
+
+            return $count === false ? $count : (int) $count;
         }
 
         if (strpos($order_by, '.') > 0) {
@@ -4003,7 +4012,7 @@ class ProductCore extends ObjectModel
         }
         $sql->leftJoin('order_detail_tax', 'odt', 'odt.id_order_detail = od.id_order_detail');
         $sql->leftJoin('tax', 't', 't.id_tax = odt.id_tax');
-        $res = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS($sql);
+        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
         if (!is_array($res) || empty($res)) {
             return null;
         }
@@ -4669,8 +4678,10 @@ class ProductCore extends ObjectModel
     /**
      * Link accessories with product. No need to inflate a full Product (better performances).
      *
-     * @param array $accessories_id Accessories ids
-     * @param int Product identifier
+     * @param array<int> $accessories_id Accessories ids
+     * @param int $product_id Product identifier
+     *
+     * @return void
      */
     public static function changeAccessoriesForProduct($accessories_id, $product_id)
     {
@@ -4935,6 +4946,7 @@ class ProductCore extends ObjectModel
 
         foreach ($result as $row) {
             $id_product_attribute_old = (int) $row['id_product_attribute'];
+            $result2 = [];
             if (!isset($combinations[$id_product_attribute_old])) {
                 $id_combination = null;
                 $id_shop = null;
@@ -4962,6 +4974,7 @@ class ProductCore extends ObjectModel
             $return &= $combination->save();
 
             $id_product_attribute_new = (int) $combination->id;
+            self::$_combination_associations[$id_product_attribute_old] = $id_product_attribute_new;
 
             if ($result_images = Product::_getAttributeImageAssociations($id_product_attribute_old)) {
                 $combination_images['old'][$id_product_attribute_old] = $result_images;
@@ -4975,7 +4988,9 @@ class ProductCore extends ObjectModel
                     $return &= Db::getInstance()->insert('product_attribute_combination', $row2);
                 }
             } else {
-                Shop::setContext($context_old, $context_shop_id_old);
+                if (isset($context_old, $context_shop_id_old)) {
+                    Shop::setContext($context_old, $context_shop_id_old);
+                }
             }
 
             //Copy suppliers
@@ -5321,6 +5336,7 @@ class ProductCore extends ObjectModel
             SELECT `id_customization_field`, `type`, `required`
             FROM `' . _DB_PREFIX_ . 'customization_field`
             WHERE `id_product` = ' . (int) $product_id . '
+            AND `is_deleted` = 0
             ORDER BY `id_customization_field`')) === false) {
             return false;
         }
@@ -5359,7 +5375,7 @@ class ProductCore extends ObjectModel
     {
         foreach (SpecificPrice::getIdsByProductId((int) $old_product_id) as $data) {
             $specific_price = new SpecificPrice((int) $data['id_specific_price']);
-            if (!$specific_price->duplicate((int) $product_id)) {
+            if (!$specific_price->duplicate((int) $product_id, self::$_combination_associations)) {
                 return false;
             }
         }
@@ -7784,12 +7800,13 @@ class ProductCore extends ObjectModel
     /**
      * Set Advanced Stock Management status for this product
      *
-     * @param int $value 0 for disabled, 1 for enabled
+     * @param bool $value 0 for disabled, 1 for enabled
      */
     public function setAdvancedStockManagement($value)
     {
-        $this->advanced_stock_management = (int) $value;
-        if (Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP && Context::getContext()->shop->getContextShopGroup()->share_stock == 1) {
+        $this->advanced_stock_management = (bool) $value;
+        if (Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP
+            && Context::getContext()->shop->getContextShopGroup()->share_stock == 1) {
             Db::getInstance()->execute(
                 '
                 UPDATE `' . _DB_PREFIX_ . 'product_shop`
@@ -7847,8 +7864,8 @@ class ProductCore extends ObjectModel
         $result = true;
         $collection_download = new PrestaShopCollection('ProductDownload');
         $collection_download->where('id_product', '=', $this->id);
+        /** @var ProductDownload $product_download */
         foreach ($collection_download as $product_download) {
-            /* @var ProductDownload $product_download */
             $result &= $product_download->delete($product_download->checkFile());
         }
 
@@ -8205,14 +8222,14 @@ class ProductCore extends ObjectModel
     public function getRedirectType()
     {
         switch ($this->redirect_type) {
-            case ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY:
-            case ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND:
+            case RedirectType::TYPE_CATEGORY_PERMANENT:
+            case RedirectType::TYPE_CATEGORY_TEMPORARY:
                 return 'category';
 
                 break;
 
-            case ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY:
-            case ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND:
+            case RedirectType::TYPE_PRODUCT_PERMANENT:
+            case RedirectType::TYPE_PRODUCT_TEMPORARY:
                 return 'product';
 
                 break;
@@ -8334,7 +8351,7 @@ class ProductCore extends ObjectModel
      * @param bool $include_tax
      * @param bool $formated
      *
-     * @return ecotax
+     * @return string|float
      */
     public function getEcotax($precision = null, $include_tax = true, $formated = false)
     {

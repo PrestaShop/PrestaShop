@@ -110,9 +110,9 @@
                 {{ form_errors(formFeatures) }}
                 <div
                   class="feature-collection nostyle"
-                  data-prototype="{% filter escape %}
+                  data-prototype="{% apply escape %}
                     {{ include('@Product/ProductPage/Forms/form_feature.html.twig', { 'form': formFeatures.vars.prototype }) }}
-                  {% endfilter %}"
+                  {% endapply %}"
                 >
                   {% for feature in formFeatures %}
                     {{ include('@Product/ProductPage/Forms/form_feature.html.twig', { 'form': feature }) }}

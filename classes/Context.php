@@ -106,6 +106,12 @@ class ContextCore
     /** @var ContainerBuilder */
     public $container;
 
+    /** @var float */
+    public $virtualTotalTaxExcluded = 0;
+
+    /** @var float */
+    public $virtualTotalTaxIncluded = 0;
+
     /** @var Translator */
     protected $translator = null;
 
@@ -288,6 +294,7 @@ class ContextCore
 
         return isset($_SERVER['HTTP_USER_AGENT'], Context::getContext()->cookie)
             && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
+            && defined('_PS_THEME_MOBILE_DIR_')
             && @filemtime(_PS_THEME_MOBILE_DIR_)
             && !Context::getContext()->cookie->no_mobile;
     }
@@ -307,8 +314,7 @@ class ContextCore
     }
 
     /**
-     * @param $testInstance Context
-     * Unit testing purpose only
+     * @param Context $testInstance Unit testing purpose only
      */
     public static function setInstanceForTesting($testInstance)
     {
@@ -465,7 +471,7 @@ class ContextCore
      */
     protected function getTranslationResourcesDirectories()
     {
-        $locations = [_PS_ROOT_DIR_ . '/app/Resources/translations'];
+        $locations = [_PS_ROOT_DIR_ . '/translations'];
 
         if (null !== $this->shop) {
             $activeThemeLocation = _PS_ROOT_DIR_ . '/themes/' . $this->shop->theme_name . '/translations';
