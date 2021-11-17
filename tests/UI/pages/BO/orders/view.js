@@ -102,10 +102,10 @@ class Order extends BOBasePage {
     this.historyTabContent = '#historyTabContent';
     this.secondOrderStatusesSelect = '#update_order_status_new_order_status_id';
     this.secondUpdateStatusButton = `${this.historyTabContent} .card-details-form button.btn-primary`;
-    this.statusGridTable = '#js-test-history-grid-table';
+    this.statusGridTable = 'table[data-role=\'history-grid-table\']';
     this.statusTableBody = `${this.statusGridTable} tbody`;
     this.statusTableRow = row => `${this.statusTableBody} tr:nth-child(${row})`;
-    this.statusTableColumn = (row, column) => `${this.statusTableRow(row)} td.js-test-${column}-column`;
+    this.statusTableColumn = (row, column) => `${this.statusTableRow(row)} td[data-role='${column}-column']`;
     this.resendEmailButton = row => `${this.statusTableRow(row)} td form[action*='resend-email'] button`;
     this.orderNoteOpenButton = `${this.historyTabContent} a.js-order-notes-toggle-btn`;
     this.orderNoteCloseButton = `${this.orderNoteOpenButton}.is-opened`;
