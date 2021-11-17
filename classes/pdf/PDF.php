@@ -192,4 +192,30 @@ class PDFCore
 
         return $class;
     }
+
+    /**
+     * Get the PDF filename based on the objects.
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        if (!empty($this->filename)) {
+            return $this->filename;
+        }
+
+        foreach ($this->objects as $object) {
+            $template = $this->getTemplateObject($object);
+            if (!$template) {
+                continue;
+            }
+
+            $this->filename = $template->getFilename();
+            if (count($this->objects) > 1) {
+                $this->filename = $template->getBulkFilename();
+            }
+        }
+
+        return $this->filename;
+    }
 }
