@@ -91,12 +91,6 @@ class CombinationValidator extends AbstractObjectModelValidator
         $this->validateCombinationProperty($combination, 'low_stock_threshold', ProductConstraintException::INVALID_LOW_STOCK_THRESHOLD);
         $this->validateCombinationProperty($combination, 'low_stock_alert', ProductConstraintException::INVALID_LOW_STOCK_ALERT);
         $this->validateCombinationProperty($combination, 'available_date', ProductConstraintException::INVALID_AVAILABLE_DATE);
-        $this->validateObjectModelProperty(
-            $combination,
-            'quantity',
-            ProductStockConstraintException::class,
-            ProductStockConstraintException::INVALID_QUANTITY
-        );
     }
 
     /**

@@ -108,6 +108,8 @@ tests-legacy/resources/modules/ps_reminder
 
 tests/Resources/img/l/*
 !tests/Resources/img/l/.gitkeep
+tests/Resources/img/m/*
+!tests/Resources/img/m/.gitkeep
 tests/Resources/img/p/*
 !tests/Resources/img/p/.gitkeep
 tests/Resources/img/os/*

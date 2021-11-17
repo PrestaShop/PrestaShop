@@ -152,7 +152,12 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         $kernel = self::$kernel;
 
         $employee = new Employee();
-        Context::getContext()->employee = $employee->getByEmail('test@prestashop.com');
+        $context = Context::getContext();
+        $context->employee = $employee->getByEmail('test@prestashop.com');
+        $localeRepo = self::$kernel->getContainer()->get('prestashop.core.localization.locale.repository');
+        $context->currentLocale = $localeRepo->getLocale(
+            $context->language->getLocale()
+        );
     }
 
     /**
