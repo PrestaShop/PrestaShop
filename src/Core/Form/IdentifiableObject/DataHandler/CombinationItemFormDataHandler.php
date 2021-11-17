@@ -65,8 +65,8 @@ class CombinationItemFormDataHandler implements FormDataHandlerInterface
         if (isset($data['impact_on_price']['value'])) {
             $command->setImpactOnPrice((string) $data['impact_on_price']['value']);
         }
-        if (isset($data['quantity']['value'])) {
-            $command->setQuantity((int) $data['quantity']['value']);
+        if (isset($data['quantity']['delta']['value'])) {
+            $command->setDeltaQuantity((int) $data['quantity']['delta']['value']);
         }
         if (isset($data['is_default'])) {
             $command->setDefault((bool) $data['is_default']);

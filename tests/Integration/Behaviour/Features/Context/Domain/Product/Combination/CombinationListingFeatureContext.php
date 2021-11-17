@@ -62,7 +62,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
             $command->setImpactOnPrice($dataRows['impact on price']);
         }
         if (isset($dataRows['quantity'])) {
-            $command->setQuantity((int) $dataRows['quantity']);
+            $command->setDeltaQuantity((int) $dataRows['quantity']);
         }
         if (isset($dataRows['is default'])) {
             $command->setDefault(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']));

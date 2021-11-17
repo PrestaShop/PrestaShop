@@ -94,6 +94,7 @@ export default class CombinationsGridRenderer {
       $referenceInput.data('initial-value', combination.reference);
       $quantityInput.val(combination.quantity);
       $quantityInput.data('initial-value', combination.quantity);
+      $quantityInput.find('.initial-quantity').text(combination.quantity);
       $impactOnPriceInput.val(combination.impactOnPrice);
       $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
       $(ProductMap.combinations.tableRow.editButton(rowIndex), $row).data('id', combination.id);

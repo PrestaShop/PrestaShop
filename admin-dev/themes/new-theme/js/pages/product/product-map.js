@@ -79,7 +79,7 @@ export default {
     referenceInputWrapper: '.combination-reference',
     sortableColumns: '.ps-sortable-column',
     combinationItemForm: {
-      quantityKey: 'combination_item[quantity][value]',
+      quantityKey: 'combination_item[quantity][delta][value]',
       impactOnPriceKey: 'combination_item[impact_on_price][value]',
       referenceKey: 'combination_item[reference][value]',
       tokenKey: 'combination_item[_token]',
@@ -97,7 +97,8 @@ export default {
       referenceInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_reference_value`,
       impactOnPriceInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_impact_on_price_value`,
       finalPriceTeInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_final_price_te`,
-      quantityInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_quantity_value`,
+      quantityInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_quantity_quantity`,
+      deltaQuantityInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_quantity_delta_value`,
       isDefaultInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_is_default`,
       editButton: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_edit`,
       deleteButton: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_delete`,

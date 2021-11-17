@@ -50,7 +50,7 @@ class UpdateCombinationFromListingCommand
     /**
      * @var int|null
      */
-    private $quantity;
+    private $deltaQuantity;
 
     /**
      * @var bool|null
@@ -101,9 +101,9 @@ class UpdateCombinationFromListingCommand
     /**
      * @return int|null
      */
-    public function getQuantity(): ?int
+    public function getDeltaQuantity(): ?int
     {
-        return $this->quantity;
+        return $this->deltaQuantity;
     }
 
     /**
@@ -111,9 +111,9 @@ class UpdateCombinationFromListingCommand
      *
      * @return self
      */
-    public function setQuantity(int $quantity): self
+    public function setDeltaQuantity(int $quantity): self
     {
-        $this->quantity = $quantity;
+        $this->deltaQuantity = $quantity;
 
         return $this;
     }
