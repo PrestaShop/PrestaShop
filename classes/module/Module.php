@@ -2448,7 +2448,17 @@ abstract class ModuleCore implements ModuleInterface
 
         $roles = static::$cache_lgc_access;
 
-        $profileRoles = Db::getInstance()->executeS('
+        if ($idProfile == _PS_ADMIN_PROFILE_) {
+            foreach ($roles as $moduleName => $permissions) {
+                $roles[$moduleName] = array_merge($permissions, [
+                    'add' => '1',
+                    'view' => '1',
+                    'configure' => '1',
+                    'uninstall' => '1',
+                ]);
+            }
+        } else {
+            $profileRoles = Db::getInstance()->executeS('
             SELECT `slug`,
                 `slug` LIKE "%CREATE" as "add",
                 `slug` LIKE "%READ" as "view",
@@ -2461,15 +2471,16 @@ abstract class ModuleCore implements ModuleInterface
             ORDER BY a.slug
         ');
 
-        foreach ($profileRoles as $role) {
-            preg_match(
-                '/ROLE_MOD_MODULE_(?P<moduleName>[A-Z0-9_]+)_(?P<auth>[A-Z]+)/',
-                $role['slug'],
-                $matches
-            );
+            foreach ($profileRoles as $role) {
+                preg_match(
+                    '/ROLE_MOD_MODULE_(?P<moduleName>[A-Z0-9_]+)_(?P<auth>[A-Z]+)/',
+                    $role['slug'],
+                    $matches
+                );
 
-            if (($key = array_search('1', $role))) {
-                $roles[$matches['moduleName']][$key] = '1';
+                if (($key = array_search('1', $role))) {
+                    $roles[$matches['moduleName']][$key] = '1';
+                }
             }
         }
 
