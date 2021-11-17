@@ -137,13 +137,6 @@ class PDFCore
                 continue;
             }
 
-            if (empty($this->filename)) {
-                $this->filename = $template->getFilename();
-                if (count($this->objects) > 1) {
-                    $this->filename = $template->getBulkFilename();
-                }
-            }
-
             $template->assignHookData($object);
 
             $this->pdf_renderer->createHeader($template->getHeader());
@@ -162,7 +155,7 @@ class PDFCore
                 ob_clean();
             }
 
-            return $this->pdf_renderer->render($this->filename, $display);
+            return $this->pdf_renderer->render($this->getFilename(), $display);
         }
     }
 
