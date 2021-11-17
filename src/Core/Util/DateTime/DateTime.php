@@ -46,6 +46,11 @@ final class DateTime
     public const DEFAULT_DATETIME_FORMAT = 'Y-m-d H:i:s';
 
     /**
+     * ISO Date time format string
+     */
+    public const ISO_DATETIME_FORMAT = 'c';
+
+    /**
      * DateTime value which should be considered same as null
      */
     public const NULL_DATETIME = '0000-00-00 00:00:00';

@@ -76,10 +76,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public $language_code;
 
     /** @var string date format http://http://php.net/manual/en/function.date.php with the date only */
-    public $date_format_lite = 'Y-m-d';
+    public $date_format_lite = 'Y‑m‑d'; // note the use of non-breaking hyphens (U+2011)
 
     /** @var string date format http://http://php.net/manual/en/function.date.php with hours and minutes */
-    public $date_format_full = 'Y-m-d H:i:s';
+    public $date_format_full = 'Y‑m‑d H:i:s'; // note the use of non-breaking hyphens (U+2011)
 
     /** @var bool true if this language is right to left language */
     public $is_rtl = false;
