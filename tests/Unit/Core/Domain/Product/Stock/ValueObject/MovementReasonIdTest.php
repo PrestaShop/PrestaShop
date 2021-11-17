@@ -23,61 +23,53 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject;
+namespace Tests\Unit\Core\Domain\Product\Stock\ValueObject;
 
+use Generator;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\MovementReasonConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\MovementReasonId;
 
-/**
- * Stock movement reason identifier.
- */
-class MovementReasonId
+class MovementReasonIdTest extends TestCase
 {
     /**
-     * Configuration keys for mapping MovementReason to id.
+     * @dataProvider getValidValues
      *
-     * @todo: add other keys
-     */
-    public const MOVEMENT_REASON_DECREASE_BY_EMPLOYEE_EDITION = 'PS_STOCK_MVT_INC_EMPLOYEE_EDITION';
-    public const MOVEMENT_REASON_INCREASE_BY_EMPLOYEE_EDITION = 'PS_STOCK_MVT_DEC_EMPLOYEE_EDITION';
-
-    /**
-     * @var int
-     */
-    private $value;
-
-    /**
-     * @param int $movementReasonId
-     *
-     * @throws MovementReasonConstraintException
-     */
-    public function __construct(int $movementReasonId)
-    {
-        $this->assertIsGreaterThanZero($movementReasonId);
-
-        $this->value = $movementReasonId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->value;
-    }
-
-    /**
      * @param int $value
      */
-    private function assertIsGreaterThanZero(int $value): void
+    public function testItIsSuccessfullyConstructed(int $value): void
     {
-        if (0 >= $value) {
-            throw new MovementReasonConstraintException(
-                sprintf('Stock MovementReasonId %s is invalid.', $value),
-                MovementReasonConstraintException::INVALID_ID
-            );
-        }
+        $specificPriceId = new MovementReasonId($value);
+
+        Assert::assertSame($value, $specificPriceId->getValue());
+    }
+
+    /**
+     * @dataProvider getInvalidValues
+     *
+     * @param int $value
+     */
+    public function testItThrowsExceptionWhenInvalidValueIsProvided(int $value): void
+    {
+        $this->expectException(MovementReasonConstraintException::class);
+
+        new MovementReasonId($value);
+    }
+
+    public function getValidValues(): Generator
+    {
+        yield [1];
+        yield [10];
+        yield [5000000001];
+    }
+
+    public function getInvalidValues(): Generator
+    {
+        yield [0];
+        yield [-1];
+        yield [-999];
     }
 }
