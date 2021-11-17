@@ -4,7 +4,8 @@ require('module-alias/register');
 const helper = require('@utils/helpers');
 const mailHelper = require('@utils/mailHelper');
 
-// Import login steps
+// Import common tests
+const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/configSMTP');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -42,8 +43,8 @@ const createEmployeeData = new EmployeeFaker({
 let mailListener;
 
 describe('BO - Login : Password reminder', async () => {
-  // eslint-disable-next-line global-require
-  require('@commonTests/configSMTP');
+  // Pre-Condition : Setup config SMTP
+  setupSmtpConfigTest(baseContext);
 
   // before and after functions
   before(async function () {
@@ -182,6 +183,6 @@ describe('BO - Login : Password reminder', async () => {
     });
   });
 
-  // eslint-disable-next-line global-require
-  require('@commonTests/resetSMTP');
+  // Post-Condition : Reset SMTP config
+  resetSmtpConfigTest(baseContext);
 });

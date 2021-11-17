@@ -1,5 +1,4 @@
 require('module-alias/register');
-
 // Import utils
 const helper = require('@utils/helpers');
 
@@ -16,29 +15,27 @@ const {DefaultCustomer} = require('@data/demo/customer');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'commonTests-configSMTP';
-
 // Import expect from chai
 const {expect} = require('chai');
 
 let browserContext;
 let page;
 
-// maildev config
+// Maildev config
 const {smtpServer, smtpPort} = global.maildevConfig;
 
-describe('Config SMTP', async () => {
-  // before and after functions
-  before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
-  });
+function setupSmtpConfigTest(baseContext = 'commonTests-configSMTP') {
+  describe('PRE-TEST: Setup SMTP config', async () => {
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
+    });
 
-  after(async () => {
-    await helper.closeBrowserContext(browserContext);
-  });
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
+    });
 
-  describe('Go to BO to setup the smtp parameters', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -76,4 +73,50 @@ describe('Config SMTP', async () => {
       await loginCommon.logoutBO(this, page);
     });
   });
-});
+}
+
+function resetSmtpConfigTest(baseContext = 'commonTests-configSMTP') {
+  describe('POST-TEST: Reset SMTP config', async () => {
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
+    });
+
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
+    });
+
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go to \'Advanced Parameters > E-mail\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPageForResetSmtpParams', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.emailLink,
+      );
+
+      await emailPage.closeSfToolBar(page);
+
+      const pageTitle = await emailPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(emailPage.pageTitle);
+    });
+
+    it('should reset parameters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetMailParameters', baseContext);
+
+      const successParametersReset = await emailPage.resetDefaultParameters(page);
+      await expect(successParametersReset).to.contains(emailPage.successfulUpdateMessage);
+    });
+
+    it('should logout from BO', async function () {
+      await loginCommon.logoutBO(this, page);
+    });
+  });
+}
+
+module.exports = {setupSmtpConfigTest, resetSmtpConfigTest};
