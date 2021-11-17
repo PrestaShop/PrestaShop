@@ -112,6 +112,8 @@ tests/Resources/img/l/*
 !tests/Resources/img/l/.gitkeep
 tests/Resources/img/p/*
 !tests/Resources/img/p/.gitkeep
+tests/Resources/img/m/*
+!tests/Resources/img/m/.gitkeep
 tests/Resources/img/os/*
 !tests/Resources/img/os/.gitkeep
 tests/Resources/img/genders/*
@@ -123,6 +125,7 @@ tests/Resources/img/tmp/.gitkeep
 !tests/Resources/download/.gitkeep
 tests/Resources/download/*
 tests/Unit/.phpunit.result.cache
+.phpunit.result.cache
 
 /admin-dev/autoupgrade/*
 !/admin-dev/autoupgrade/index.php
