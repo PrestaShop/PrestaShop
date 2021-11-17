@@ -33,6 +33,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\CommandHandler\UpdateTabPermissionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Exception\PermissionUpdateException;
+use Profile;
 
 /**
  * Updates permissions for tab (Menu) using legacy object model
@@ -56,6 +57,9 @@ final class UpdateTabPermissionsHandler implements UpdateTabPermissionsHandlerIn
                 $command->isActive(),
                 false // Do not apply to all children
             );
+
+            // Reset cache so that following queries are up-to-date
+            Profile::resetStaticCache();
         } catch (Exception $e) {
             // If role slug is not found it raises an exception
             $result = 'error';
