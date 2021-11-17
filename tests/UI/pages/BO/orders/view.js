@@ -122,12 +122,12 @@ class Order extends BOBasePage {
     this.paymentInvoiceSelect = '#order_payment_id_invoice';
     this.paymentAddButton = `${this.orderPaymentsBlock} .btn.btn-primary.btn-sm`;
     this.paymentWarning = `${this.orderPaymentsBlock} .alert-danger`;
-    this.paymentsGridTable = '#js-test-payments-grid-table';
+    this.paymentsGridTable = 'table[data-role=\'payments-grid-table\']';
     this.paymentsTableBody = `${this.paymentsGridTable} tbody`;
     this.paymentsTableRow = row => `${this.paymentsTableBody} tr:nth-child(${row})`;
-    this.paymentsTableColumn = (row, column) => `${this.paymentsTableRow(row)} td.js-test-${column}-column`;
+    this.paymentsTableColumn = (row, column) => `${this.paymentsTableRow(row)} td[data-role='${column}-column']`;
     this.paymentsTableDetailsButton = row => `${this.paymentsTableRow(row)} button.js-payment-details-btn`;
-    this.paymentTableRowDetails = row => `${this.paymentsTableRow(row)}.js-test-payment-details`;
+    this.paymentTableRowDetails = row => `${this.paymentsTableRow(row)}[data-role='payment-details']`;
 
     // Carriers tab
     this.carriersTab = '#orderShippingTab';

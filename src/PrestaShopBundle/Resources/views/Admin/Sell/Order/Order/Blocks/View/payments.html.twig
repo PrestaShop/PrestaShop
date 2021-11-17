@@ -36,7 +36,7 @@
         'linkedOrders': orderForViewing.linkedOrders
     } %}
 
-    <table class="table" id="js-test-payments-grid-table">
+    <table class="table" data-role="payments-grid-table">
       <thead>
         <tr>
           <th class="table-head-date">{{ 'Date'|trans({}, 'Admin.Global') }}</th>
@@ -50,18 +50,18 @@
       <tbody>
       {% for payment in orderForViewing.payments.payments %}
         <tr>
-          <td class="js-test-date-column">{{ payment.date|date_format_full }}</td>
-          <td class="js-test-payment-method-column">{{ payment.paymentMethod }}</td>
-          <td class='js-test-transaction-id-column'>{{ payment.transactionId }}</td>
-          <td class="js-test-amount-column">{{ payment.amount }}</td>
-          <td class="js-test-invoice-column">{% if payment.invoiceNumber %}{{ payment.invoiceNumber }}{% endif %}</td>
+          <td data-role="date-column">{{ payment.date|date_format_full }}</td>
+          <td data-role="payment-method-column">{{ payment.paymentMethod }}</td>
+          <td data-role="transaction-id-column">{{ payment.transactionId }}</td>
+          <td data-role="amount-column">{{ payment.amount }}</td>
+          <td data-role="invoice-column">{% if payment.invoiceNumber %}{{ payment.invoiceNumber }}{% endif %}</td>
           <td class="text-right">
             <button class="btn btn-sm btn-outline-secondary js-payment-details-btn">
               {{ 'Details'|trans({}, 'Admin.Global') }}
             </button>
           </td>
         </tr>
-        <tr class="js-test-payment-details d-none">
+        <tr class="d-none" data-role="payment-details">
           <td colspan="6">
             <p class="mb-0">
               <strong>{{ 'Card number'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
