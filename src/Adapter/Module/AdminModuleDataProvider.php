@@ -166,16 +166,6 @@ class AdminModuleDataProvider implements ModuleInterface
     }
 
     /**
-     * Clears module list cache.
-     */
-    public function clearModuleListCache()
-    {
-        if (file_exists(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST)) {
-            @unlink(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-        }
-    }
-
-    /**
      * @deprecated since version 1.7.3.0
      *
      * @return array
@@ -431,14 +421,8 @@ class AdminModuleDataProvider implements ModuleInterface
         if (!$this->catalog_modules) {
             $params = ['format' => 'json'];
             $requests = [
-                AddonListFilterOrigin::ADDONS_MUST_HAVE => 'must-have',
                 AddonListFilterOrigin::ADDONS_SERVICE => 'service',
-                AddonListFilterOrigin::ADDONS_NATIVE => 'native',
-                AddonListFilterOrigin::ADDONS_NATIVE_ALL => 'native_all',
             ];
-            if ($this->addonsDataProvider->isAddonsAuthenticated()) {
-                $requests[AddonListFilterOrigin::ADDONS_CUSTOMER] = 'customer';
-            }
 
             try {
                 $listAddons = [];

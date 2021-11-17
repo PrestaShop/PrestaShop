@@ -3966,19 +3966,6 @@ exit;
         $end_point = 'api.addons.prestashop.com';
 
         switch ($request) {
-            case 'native':
-                $post_data .= '&method=listing&action=native';
-
-                break;
-            case 'must-have':
-                $post_data .= '&method=listing&action=must-have';
-
-                break;
-            case 'customer':
-                $post_data .= '&method=listing&action=customer&username=' . urlencode(trim(Context::getContext()->cookie->username_addons))
-                    . '&password=' . urlencode(trim(Context::getContext()->cookie->password_addons));
-
-                break;
             case 'check_customer':
                 $post_data .= '&method=check_customer&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
 

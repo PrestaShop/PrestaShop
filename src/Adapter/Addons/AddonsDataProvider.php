@@ -168,17 +168,8 @@ class AddonsDataProvider implements AddonsInterface
 
         try {
             switch ($action) {
-                case 'native':
-                    return $this->marketplaceClient->getNativesModules();
                 case 'service':
                     return $this->marketplaceClient->getServices();
-                case 'native_all':
-                    return $this->marketplaceClient->setIsoCode('all')
-                        ->getNativesModules();
-                case 'must-have':
-                    return $this->marketplaceClient->getMustHaveModules();
-                case 'customer':
-                    return $this->marketplaceClient->getCustomerModules($params['username_addons'], $params['password_addons']);
                 case 'customer_themes':
                     return $this->marketplaceClient
                         ->setUserMail($params['username_addons'])
